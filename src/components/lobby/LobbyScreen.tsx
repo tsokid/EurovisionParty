@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
-import { useLeaderboard } from '../../hooks/useLeaderboard';
 import PlayerCard from './PlayerCard';
 import Button from '../ui/Button';
 
@@ -10,8 +9,7 @@ interface LobbyScreenProps {
 }
 
 export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
-  const { room, player, roomPassword } = useGameStore();
-  const { players, isLoading: playersLoading } = useLeaderboard(room?.id);
+  const { room, player, players, roomPassword } = useGameStore();
   const [copied, setCopied] = useState(false);
   const [advancing, setAdvancing] = useState(false);
 
@@ -137,7 +135,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
           Players ({players.length})
         </h3>
 
-        {playersLoading && players.length === 0 ? (
+        {players.length === 0 ? (
           <div className="text-center text-white/30 py-8">Loading...</div>
         ) : (
           <div className="flex flex-col gap-2">
