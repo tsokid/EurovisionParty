@@ -1,5 +1,18 @@
 import { create } from 'zustand';
-import type { Room, Player, Notification, TabId } from '../lib/types';
+import type { Room, Player, Notification, TabId, QuizAnswer, QuizQuestion } from '../lib/types';
+
+/** Persisted quiz progress — survives tab switches (in-memory) */
+export interface QuizProgress {
+  roomId: string;
+  playerId: string;
+  phase: 'waiting' | 'intro' | 'playing' | 'results' | 'complete';
+  roundNumber: number;
+  questionIndex: number;
+  /** Question IDs for current round — reconstructed into QuizQuestion[] on restore */
+  questionIds: number[];
+  usedQuestionIds: number[];
+  roundAnswers: QuizAnswer[];
+}
 
 interface GameState {
   // --- State ---
@@ -12,6 +25,8 @@ interface GameState {
   error: string | null;
   /** Plain-text password kept in memory for sharing invites */
   roomPassword: string | null;
+  /** Quiz progress — persists across tab switches */
+  quizProgress: QuizProgress | null;
 
   // --- Actions ---
   setRoom: (room: Room | null) => void;
@@ -24,6 +39,7 @@ interface GameState {
   setActiveTab: (tab: TabId) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  setQuizProgress: (progress: QuizProgress | null) => void;
   reset: () => void;
 }
 
@@ -36,6 +52,7 @@ const initialState = {
   isLoading: false,
   error: null,
   roomPassword: null,
+  quizProgress: null as QuizProgress | null,
 };
 
 export const useGameStore = create<GameState>()((set) => ({
@@ -78,6 +95,8 @@ export const useGameStore = create<GameState>()((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
 
   setError: (error) => set({ error }),
+
+  setQuizProgress: (quizProgress) => set({ quizProgress }),
 
   reset: () => set(initialState),
 }));
