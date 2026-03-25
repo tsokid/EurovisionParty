@@ -151,7 +151,7 @@ export function useRoom(): UseRoomReturn {
         }
         if (!roomData) throw new Error('Failed to generate unique room code');
 
-        // Insert player (creator)
+        // Insert player (creator) — mark as host
         const { data: playerData, error: playerErr } = await supabase
           .from('players')
           .insert({
@@ -159,6 +159,7 @@ export function useRoom(): UseRoomReturn {
             user_id: user.id,
             name: hostName,
             avatar_emoji: emoji,
+            is_host: true,
           })
           .select()
           .single();

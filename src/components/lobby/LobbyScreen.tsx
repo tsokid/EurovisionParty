@@ -166,7 +166,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
         )}
       </div>
 
-      {/* Game controls — any player can start */}
+      {/* Game controls */}
       {room && (
         <motion.div
           className="glass-strong sticky bottom-0 z-30 p-4 rounded-t-2xl"
@@ -185,16 +185,26 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
               </span>
             )}
           </div>
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            onClick={handleAdvance}
-            loading={advancing}
-            disabled={players.length < 2}
-          >
-            🚀 Start the Party!
-          </Button>
+          {player?.is_host ? (
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              onClick={handleAdvance}
+              loading={advancing}
+              disabled={players.length < 2}
+            >
+              🚀 Start the Party!
+            </Button>
+          ) : (
+            <motion.p
+              className="text-center text-white/40 text-sm py-3"
+              animate={{ opacity: [0.4, 0.8, 0.4] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              ⏳ Waiting for the host to start...
+            </motion.p>
+          )}
         </motion.div>
       )}
     </div>
