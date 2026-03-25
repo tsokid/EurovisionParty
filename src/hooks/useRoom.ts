@@ -1,0 +1,350 @@
+import { useEffect, useCallback, useRef } from 'react';
+import { supabase } from '../lib/supabase';
+import { useGameStore } from '../stores/gameStore';
+import { generateRoomCode } from '../lib/roomCode';
+import { PHASE_ORDER } from '../lib/constants';
+import type { Room } from '../lib/types';
+import type { RealtimeChannel } from '@supabase/supabase-js';
+
+// --- localStorage helpers for multi-room rejoin ---
+const STORAGE_KEY = 'europarty_rooms';
+
+interface RoomSession {
+  playerId: string;
+  roomId: string;
+}
+
+export function saveRoomSession(roomCode: string, playerId: string, roomId: string) {
+  try {
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    existing[roomCode.toUpperCase()] = { playerId, roomId };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+  } catch { /* ignore */ }
+}
+
+export function getRoomSession(roomCode: string): RoomSession | null {
+  try {
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    return existing[roomCode.toUpperCase()] || null;
+  } catch {
+    return null;
+  }
+}
+
+/** Clean up stale localStorage entries (keep only last 10) */
+export function cleanupStaleSessions() {
+  try {
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const keys = Object.keys(existing);
+    if (keys.length > 10) {
+      // Keep only last 10 entries
+      const toKeep = keys.slice(-10);
+      const cleaned: Record<string, RoomSession> = {};
+      for (const k of toKeep) cleaned[k] = existing[k];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+    }
+  } catch { /* ignore */ }
+}
+
+interface UseRoomReturn {
+  room: Room | null;
+  createRoom: (hostName: string, emoji: string, password: string) => Promise<string>;
+  joinRoom: (code: string, name: string, emoji: string, password: string) => Promise<Room>;
+  advancePhase: (roomId: string) => Promise<void>;
+  leaveRoom: () => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export function useRoom(): UseRoomReturn {
+  const { room, setRoom, setPlayer, setRoomPassword, setLoading, setError, isLoading, error } =
+    useGameStore();
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const subscribedRoomIdRef = useRef<string | null>(null);
+
+  // --- Realtime subscription to room row for phase changes ---
+  const subscribeToRoom = useCallback(
+    (roomId: string) => {
+      // Avoid duplicate subscriptions (use ref, not state, to avoid stale closures)
+      if (subscribedRoomIdRef.current === roomId) return;
+
+      // Tear down previous channel
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+      }
+
+      const channel = supabase
+        .channel(`room:${roomId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'rooms',
+            filter: `id=eq.${roomId}`,
+          },
+          (payload) => {
+            const updated = payload.new as Room;
+            setRoom(updated);
+          }
+        )
+        .subscribe((status, err) => {
+          if (err) console.error('[useRoom] Realtime error:', status, err);
+        });
+
+      channelRef.current = channel;
+      subscribedRoomIdRef.current = roomId;
+    },
+    [setRoom]
+  );
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+      }
+    };
+  }, []);
+
+  // Auto-subscribe when room is in store but no subscription exists (supports rejoin)
+  useEffect(() => {
+    if (room && !subscribedRoomIdRef.current) {
+      subscribeToRoom(room.id);
+    }
+  }, [room, subscribeToRoom]);
+
+  // --- Create room ---
+  const createRoom = useCallback(
+    async (hostName: string, emoji: string, password: string): Promise<string> => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) throw new Error('Not authenticated');
+
+        // Retry up to 3 times if room code collides
+        let code = '';
+        let roomData: Record<string, unknown> | null = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          code = generateRoomCode();
+          const { data, error: roomErr } = await supabase
+            .rpc('create_room_with_password', {
+              p_code: code,
+              p_host_name: hostName,
+              p_password: password,
+            })
+            .single();
+
+          if (!roomErr) {
+            roomData = data;
+            break;
+          }
+          // If it's a unique constraint violation, retry with new code
+          if (roomErr.message?.includes('duplicate') || roomErr.message?.includes('unique')) {
+            continue;
+          }
+          throw roomErr;
+        }
+        if (!roomData) throw new Error('Failed to generate unique room code');
+
+        // Insert player (creator)
+        const { data: playerData, error: playerErr } = await supabase
+          .from('players')
+          .insert({
+            room_id: roomData.id,
+            user_id: user.id,
+            name: hostName,
+            avatar_emoji: emoji,
+          })
+          .select()
+          .single();
+
+        if (playerErr) throw playerErr;
+
+        setRoom(roomData as Room);
+        setPlayer(playerData);
+        setRoomPassword(password);
+        subscribeToRoom(roomData.id);
+
+        // Save session to localStorage for rejoin support
+        saveRoomSession(code, playerData.id, roomData.id);
+
+        return code;
+      } catch (err: unknown) {
+        let message = err instanceof Error ? err.message : 'Failed to create room';
+        // Map server errors to friendly messages
+        if (message.includes('Rate limit')) message = 'Too many rooms created. Please wait an hour.';
+        if (message.includes('already taken')) message = 'That name is taken in this room. Choose another.';
+        if (message.includes('Room is full')) message = 'Room is full. No more players can join.';
+        setError(message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setRoom, setPlayer, setRoomPassword, setLoading, setError, subscribeToRoom]
+  );
+
+  // --- Join room ---
+  const joinRoom = useCallback(
+    async (code: string, name: string, emoji: string, password: string): Promise<Room> => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) throw new Error('Not authenticated');
+
+        // Verify room code + password via RPC
+        const { data: roomData, error: roomErr } = await supabase
+          .rpc('verify_room_password', {
+            p_code: code.toUpperCase(),
+            p_password: password,
+          })
+          .single();
+
+        if (roomErr) {
+          // Map Postgres exceptions to user-friendly messages
+          const msg = roomErr.message || '';
+          if (msg.includes('Incorrect password')) throw new Error('Wrong password. Try again.');
+          if (msg.includes('Room not found')) throw new Error('Room not found. Check the code.');
+          throw roomErr;
+        }
+        if (!roomData) throw new Error('Room not found');
+
+        // Check max players
+        const { count } = await supabase
+          .from('players')
+          .select('id', { count: 'exact', head: true })
+          .eq('room_id', roomData.id)
+          .eq('is_active', true);
+        if (count !== null && count >= (roomData.max_players ?? 20)) {
+          throw new Error('Room is full');
+        }
+
+        // Check if user already has an active player in this room (prevents double-join)
+        const { data: existingPlayer } = await supabase
+          .from('players')
+          .select('*')
+          .eq('room_id', roomData.id)
+          .eq('user_id', user.id)
+          .eq('is_active', true)
+          .maybeSingle();
+
+        let playerData;
+        if (existingPlayer) {
+          // Already in the room — rejoin with existing player
+          playerData = existingPlayer;
+        } else {
+          // Insert new player
+          const { data: newPlayer, error: playerErr } = await supabase
+            .from('players')
+            .insert({
+              room_id: roomData.id,
+              user_id: user.id,
+              name,
+              avatar_emoji: emoji,
+            })
+            .select()
+            .single();
+
+          if (playerErr) throw playerErr;
+          playerData = newPlayer;
+        }
+
+        const typedRoom = roomData as Room;
+        setRoom(typedRoom);
+        setPlayer(playerData);
+        setRoomPassword(password);
+        subscribeToRoom(typedRoom.id);
+
+        // Save session to localStorage for rejoin support
+        saveRoomSession(typedRoom.code, playerData.id, typedRoom.id);
+
+        return typedRoom;
+      } catch (err: unknown) {
+        let message = err instanceof Error ? err.message : 'Failed to join room';
+        // Map server errors to friendly messages
+        if (message.includes('already taken')) message = 'That name is taken in this room. Choose another.';
+        if (message.includes('Room is full') || message.includes('max')) message = 'Room is full. No more players can join.';
+        setError(message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setRoom, setPlayer, setRoomPassword, setLoading, setError, subscribeToRoom]
+  );
+
+  // --- Advance phase (host-only via RPC) ---
+  const advancePhase = useCallback(
+    async (roomId: string): Promise<void> => {
+      setError(null);
+      try {
+        const { player: currentPlayer } = useGameStore.getState();
+        if (!currentPlayer) throw new Error('Not in a room');
+
+        const { data: nextPhase, error: rpcErr } = await supabase.rpc('advance_room_phase', {
+          p_room_id: roomId,
+          p_player_id: currentPlayer.id,
+        });
+
+        if (rpcErr) {
+          const msg = rpcErr.message || '';
+          if (msg.includes('Only the host')) throw new Error('Only the host can advance the phase.');
+          if (msg.includes('final phase')) throw new Error('Already at the final phase.');
+          throw rpcErr;
+        }
+      } catch (err: unknown) {
+        let message = err instanceof Error ? err.message : 'Failed to advance phase';
+        setError(message);
+        throw err;
+      }
+    },
+    [setError]
+  );
+
+  // --- Leave room ---
+  const leaveRoom = useCallback(
+    async (): Promise<void> => {
+      const { room: currentRoom, player: currentPlayer, reset } = useGameStore.getState();
+      if (!currentRoom || !currentPlayer) return;
+
+      try {
+        // Mark player as inactive
+        await supabase
+          .from('players')
+          .update({ is_active: false })
+          .eq('id', currentPlayer.id);
+
+        // Remove localStorage session
+        try {
+          const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          delete existing[currentRoom.code.toUpperCase()];
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+        } catch { /* ignore */ }
+
+        // Tear down realtime
+        if (channelRef.current) {
+          supabase.removeChannel(channelRef.current);
+          channelRef.current = null;
+        }
+        subscribedRoomIdRef.current = null;
+
+        // Reset store
+        reset();
+      } catch (err) {
+        console.error('[useRoom] leaveRoom failed:', err);
+      }
+    },
+    []
+  );
+
+  return { room, createRoom, joinRoom, advancePhase, leaveRoom, isLoading, error };
+}

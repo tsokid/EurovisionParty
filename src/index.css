@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+
+  --color-euro-deep: #0f0520;
+  --color-euro-purple-dark: #1a0533;
+  --color-euro-purple: #6b21a8;
+  --color-euro-purple-light: #a855f7;
+  --color-euro-pink: #ec4899;
+  --color-euro-pink-light: #f9a8d4;
+  --color-euro-gold: #fbbf24;
+  --color-euro-gold-light: #fde68a;
+  --color-euro-cyan: #22d3ee;
+  --color-euro-green: #34d399;
+  --color-euro-red: #f87171;
+  --color-euro-white: #faf5ff;
+  --color-euro-glass: rgba(255, 255, 255, 0.08);
+  --color-euro-glass-border: rgba(255, 255, 255, 0.12);
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.bg-euro-gradient {
+  background: linear-gradient(135deg, #0f0520 0%, #1a0533 25%, #2d1050 50%, #1a0533 75%, #0f0520 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glow-text {
+  text-shadow: 0 0 7px rgba(168,85,247,0.6), 0 0 20px rgba(168,85,247,0.4), 0 0 40px rgba(168,85,247,0.2);
+}
+.glow-text-gold {
+  text-shadow: 0 0 7px rgba(251,191,36,0.6), 0 0 20px rgba(251,191,36,0.4), 0 0 40px rgba(251,191,36,0.2);
+}
+.glow-text-pink {
+  text-shadow: 0 0 7px rgba(236,72,153,0.6), 0 0 20px rgba(236,72,153,0.4), 0 0 40px rgba(236,72,153,0.2);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(168,85,247,0.4); }
+  50% { box-shadow: 0 0 20px rgba(168,85,247,0.8), 0 0 40px rgba(236,72,153,0.4); }
+}
+@keyframes score-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-score-pop { animation: score-pop 0.3s ease-out; }
+
+.timer-ring { transition: stroke-dashoffset 1s linear; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(168,85,247,0.3); border-radius: 2px; }
+
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.safe-top { padding-top: env(safe-area-inset-top, 0px); }
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+body { margin: 0; overscroll-behavior: none; }
+#root { min-height: 100svh; }
+
+/* ===== LIGHT MODE ===== */
+[data-theme="light"] .bg-euro-gradient {
+  background: linear-gradient(135deg, #f5f0ff 0%, #ede4ff 25%, #e8d8ff 50%, #ede4ff 75%, #f5f0ff 100%);
+}
+
+[data-theme="light"] .glass {
+  background: rgba(107, 33, 168, 0.06);
+  border-color: rgba(107, 33, 168, 0.12);
+}
+
+[data-theme="light"] .glass-strong {
+  background: rgba(107, 33, 168, 0.08);
+  border-color: rgba(107, 33, 168, 0.15);
+}
+
+[data-theme="light"] .glow-text {
+  text-shadow: 0 0 7px rgba(107,33,168,0.3), 0 0 20px rgba(107,33,168,0.15);
+}
+[data-theme="light"] .glow-text-gold {
+  text-shadow: 0 0 7px rgba(202,138,4,0.4), 0 0 20px rgba(202,138,4,0.2);
+}
+[data-theme="light"] .glow-text-pink {
+  text-shadow: 0 0 7px rgba(219,39,119,0.4), 0 0 20px rgba(219,39,119,0.2);
+}
+
+/* Override text colors in light mode */
+[data-theme="light"] { color: #1a0533; }
+[data-theme="light"] .text-white { color: #1a0533; }
+[data-theme="light"] .text-euro-white { color: #1a0533; }
+[data-theme="light"] .text-white\/60,
+[data-theme="light"] .text-white\/50,
+[data-theme="light"] .text-white\/40,
+[data-theme="light"] .text-white\/30,
+[data-theme="light"] .text-white\/20 { color: rgba(26,5,51,0.5); }
+[data-theme="light"] .placeholder\:text-white\/20::placeholder { color: rgba(26,5,51,0.3); }
+[data-theme="light"] .bg-white\/5 { background-color: rgba(107,33,168,0.05); }
+[data-theme="light"] .bg-white\/10 { background-color: rgba(107,33,168,0.08); }
+[data-theme="light"] .border-white\/10 { border-color: rgba(107,33,168,0.12); }
+[data-theme="light"] .border-white\/20 { border-color: rgba(107,33,168,0.15); }

@@ -1,0 +1,6521 @@
+{
+  "version": "2.0",
+  "year": 2026,
+  "totalQuestions": 500,
+  "categories": [
+    "2026",
+    "history",
+    "trivia",
+    "records",
+    "geography",
+    "staging",
+    "lyrics"
+  ],
+  "difficulties": [
+    "easy",
+    "medium",
+    "hard"
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won the very first Eurovision Song Contest in 1956?",
+      "options": [
+        "Switzerland",
+        "Luxembourg",
+        "France",
+        "Netherlands"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 2,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "ABBA represented Sweden with which Eurovision-winning song in 1974?",
+      "options": [
+        "Fernando",
+        "Waterloo",
+        "Dancing Queen",
+        "Mamma Mia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 3,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country has won Eurovision the most times?",
+      "options": [
+        "Sweden",
+        "Luxembourg",
+        "Ireland",
+        "France"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 4,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Celine Dion represented which country at Eurovision 1988?",
+      "options": [
+        "France",
+        "Canada",
+        "Switzerland",
+        "Belgium"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 5,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "In what year did the Eurovision Song Contest first air on television?",
+      "options": [
+        "1950",
+        "1956",
+        "1960",
+        "1963"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 6,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which city hosted Eurovision 2023?",
+      "options": [
+        "Turin",
+        "Rotterdam",
+        "Liverpool",
+        "Lisbon"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 7,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Loreen won Eurovision twice — in 2012 and which other year?",
+      "options": [
+        "2019",
+        "2021",
+        "2023",
+        "2022"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 8,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which country finished last at Eurovision 2024?",
+      "options": [
+        "Germany",
+        "France",
+        "United Kingdom",
+        "Austria"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 9,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Ukraine won Eurovision 2022 with Kalush Orchestra. What was their song?",
+      "options": [
+        "Shum",
+        "Stefania",
+        "1944",
+        "Suitcase"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 10,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which country hosted Eurovision 2021 after the 2020 contest was cancelled?",
+      "options": [
+        "Israel",
+        "Netherlands",
+        "Italy",
+        "Portugal"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 11,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which country gave the first-ever 'nul points' in Eurovision history?",
+      "options": [
+        "Norway",
+        "Austria",
+        "Germany",
+        "Netherlands"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 12,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "How many times has Norway received 'nul points' at Eurovision — more than any other country?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 13,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "In 1969, four countries tied for first place. Which was NOT one of them?",
+      "options": [
+        "Spain",
+        "UK",
+        "France",
+        "Sweden"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 14,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Conchita Wurst won Eurovision 2014 with 'Rise Like a Phoenix'. What was her birth name?",
+      "options": [
+        "Thomas Neuwirth",
+        "Peter Brunner",
+        "Klaus Wagner",
+        "Hans Müller"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 15,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which country made its Eurovision debut latest — in 2015?",
+      "options": [
+        "Kosovo",
+        "Australia",
+        "Kazakhstan",
+        "Georgia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 16,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Which non-European country competes in Eurovision?",
+      "options": [
+        "Japan",
+        "Australia",
+        "Brazil",
+        "Canada"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 17,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Eurovision 2025 is hosted in which Swiss city?",
+      "options": [
+        "Zurich",
+        "Geneva",
+        "Bern",
+        "Basel"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 18,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Which country's capital city is Reykjavik — a regular Eurovision participant?",
+      "options": [
+        "Norway",
+        "Finland",
+        "Iceland",
+        "Denmark"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 19,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "San Marino is a tiny nation — what larger country completely surrounds it?",
+      "options": [
+        "France",
+        "Austria",
+        "Italy",
+        "Switzerland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 20,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision was held in Kyiv twice — in 2005 and which other year?",
+      "options": [
+        "2014",
+        "2017",
+        "2018",
+        "2020"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 21,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete the lyric — ABBA, Waterloo 1974: 'Waterloo — I was defeated, you won the war. Waterloo — ...'",
+      "options": [
+        "Promise to love you for ever more",
+        "Couldn't escape if I wanted to",
+        "Knowing my fate is to be with you",
+        "Finally facing my Waterloo"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 22,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete the lyric — Loreen, Euphoria 2012: 'I'm breathing — you're it, every piece of me. Flying — I'm in ... ...'",
+      "options": [
+        "Love with you",
+        "Heaven's arms",
+        "Pure ecstasy",
+        "Endless sky"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 23,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete the lyric — Dana International, Diva 1998: 'Veni, vidi, vici — she's the ...'",
+      "options": [
+        "Queen",
+        "Goddess",
+        "Diva",
+        "Winner"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 24,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Måneskin, Zitti e buoni 2021: 'Siamo fuori di testa, ma ...'",
+      "options": [
+        "diversi da loro",
+        "siamo i migliori",
+        "non ci fermiamo",
+        "abbiamo ragione"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 25,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Jamala, 1944: 'When strangers are coming — they come to your house, they ...'",
+      "options": [
+        "take your gold",
+        "kill you all",
+        "burn your home",
+        "steal your soul"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 26,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Salvador Sobral, Amar Pelos Dois 2017: 'Se tu não tens amor, ...'",
+      "options": [
+        "não tens nada mais",
+        "eu tenho por nós dois",
+        "perdeste o coração",
+        "a vida não tem paz"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 27,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Lorde Tamara, Uno 2021 (Malta): 'I just wanna dance — with my ...'",
+      "options": [
+        "Heart on fire",
+        "Hands in the air",
+        "Body on the floor",
+        "Eyes on you"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 28,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Verka Serduchka, Dancing Lasha Tumbai 2007: 'dancing, lasha tumbai — ...'",
+      "options": [
+        "Ukraine, goodbye!",
+        "Russia, goodbye!",
+        "Europe, goodbye!",
+        "Together, goodbye!"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 29,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Ruslana, Wild Dances 2004: 'Hey! Wild dances fill my heart with ...'",
+      "options": [
+        "Fire and desire",
+        "Passion and art",
+        "Fury and light",
+        "Magic and might"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 30,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Lordi, Hard Rock Hallelujah 2006: 'Hard rock hallelujah! The saints are ...'",
+      "options": [
+        "crippled and falling",
+        "rising from the dead",
+        "crying in the night",
+        "marching into hell"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 31,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "Which country does Klavdia represent at Eurovision 2025?",
+      "options": [
+        "Cyprus",
+        "Greece",
+        "Albania",
+        "Georgia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 32,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "What is the title of Austria's entry at Eurovision 2025?",
+      "options": [
+        "Voyage",
+        "Wasted Love",
+        "Baller",
+        "SERVING"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 33,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "Which country performs 'Espresso Macchiato' at Eurovision 2025?",
+      "options": [
+        "Italy",
+        "Latvia",
+        "Estonia",
+        "Finland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 34,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "What is Sweden's song title at Eurovision 2025?",
+      "options": [
+        "Lighter",
+        "Ich Komme",
+        "Bara Bada Bastu",
+        "GAJA"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 35,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "Klavdia's song at Eurovision 2025 is called what?",
+      "options": [
+        "Halara",
+        "Asteromata",
+        "Zari",
+        "Foteini"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 36,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Which artist represents Norway at Eurovision 2025?",
+      "options": [
+        "Sissal",
+        "Tommy Cash",
+        "Kyle Alessandro",
+        "VÆB"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 37,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is Finland's entry title at Eurovision 2025?",
+      "options": [
+        "Strobe Lights",
+        "Ich Komme",
+        "SURVIVOR",
+        "Poison Cake"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 38,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Which country performs 'GAJA' at Eurovision 2025?",
+      "options": [
+        "Latvia",
+        "Lithuania",
+        "Poland",
+        "Czech Republic"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 39,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Tommy Cash represents which country at Eurovision 2025?",
+      "options": [
+        "Latvia",
+        "Lithuania",
+        "Finland",
+        "Estonia"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 40,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is Germany's song at Eurovision 2025?",
+      "options": [
+        "Baller",
+        "Voyage",
+        "maman",
+        "Wasted Love"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 41,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Which group represents Latvia at Eurovision 2025?",
+      "options": [
+        "Tautumeitas",
+        "Katažyna",
+        "Ziferblat",
+        "NAPA"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 42,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What is the title of Ukraine's entry at Eurovision 2025?",
+      "options": [
+        "Freedom",
+        "Voyage",
+        "Bird of Pray",
+        "Ohrid"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 43,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Which artist represents France at Eurovision 2025?",
+      "options": [
+        "Zaz",
+        "Louane",
+        "Aya Nakamura",
+        "Indila"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 44,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Gabry Ponte represents which country at Eurovision 2025?",
+      "options": [
+        "Italy",
+        "San Marino",
+        "Malta",
+        "Switzerland"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 45,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What is the title of Iceland's entry at Eurovision 2025?",
+      "options": [
+        "Hallucination",
+        "RÓT",
+        "Bur Man Laimi",
+        "Run With U"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 46,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "What is the maximum number of points a country can award in Eurovision voting?",
+      "options": [
+        "10",
+        "12",
+        "15",
+        "20"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 47,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "What does 'douze points' mean in French?",
+      "options": [
+        "Ten points",
+        "Twelve points",
+        "Two points",
+        "Bonus points"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 48,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "What is the highest score ever recorded in Eurovision history?",
+      "options": [
+        "758",
+        "804",
+        "933",
+        "1002"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 49,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Which artist holds the record for winning Eurovision twice?",
+      "options": [
+        "Johnny Logan",
+        "Loreen",
+        "Both equally",
+        "Neither — no one won twice until 2023"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 50,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Johnny Logan won Eurovision three times — as performer and once as what?",
+      "options": [
+        "Host",
+        "Songwriter",
+        "Jury member",
+        "Conductor"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 51,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which country has the worst average placement in Eurovision history?",
+      "options": [
+        "Germany",
+        "Austria",
+        "Norway",
+        "Lithuania"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 52,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "What year did Eurovision introduce the split jury/televote scoring system?",
+      "options": [
+        "2008",
+        "2009",
+        "2013",
+        "2016"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 53,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which country has been relegated due to poor performance the most times?",
+      "options": [
+        "Austria",
+        "Germany",
+        "Luxembourg",
+        "Morocco"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 54,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What language is most commonly used in Eurovision winning entries?",
+      "options": [
+        "French",
+        "English",
+        "Spanish",
+        "German"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 55,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "How many countries vote in the Eurovision Grand Final?",
+      "options": [
+        "All competing countries",
+        "Only qualifying countries",
+        "Only EBU member countries",
+        "All countries plus diaspora"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 56,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "How long can a Eurovision entry be at maximum?",
+      "options": [
+        "2 minutes",
+        "3 minutes",
+        "4 minutes",
+        "5 minutes"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 57,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Which famous rock band won Eurovision in 2006 for Finland?",
+      "options": [
+        "Nightwish",
+        "HIM",
+        "Lordi",
+        "Apocalyptica"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 58,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What is the name of the trophy awarded to Eurovision winners?",
+      "options": [
+        "The Microphone Trophy",
+        "The Crystal Microphone",
+        "The Gold Microphone",
+        "The Eurovision Cup"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 59,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Which country CANNOT host Eurovision even if they win?",
+      "options": [
+        "Andorra",
+        "Kosovo",
+        "Kazakhstan",
+        "All of the above"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 60,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "The 'Big Five' countries get automatic entry to the final. Which is NOT one of them?",
+      "options": [
+        "Spain",
+        "Italy",
+        "Netherlands",
+        "Germany"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 61,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What was unusual about the 1969 Eurovision result that led to rule changes?",
+      "options": [
+        "A country withdrew after winning",
+        "Four countries tied for first",
+        "The winner was disqualified",
+        "Votes were lost in transmission"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 62,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which country boycotted Eurovision in 1979 because they objected to Israel hosting?",
+      "options": [
+        "Egypt",
+        "Iraq",
+        "Jordan",
+        "Saudi Arabia"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 63,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What was Lordi's monster theme at Eurovision 2006 called?",
+      "options": [
+        "Hard Rock Hallelujah",
+        "Blood Red Sandman",
+        "Devil is a Loser",
+        "Would You Love a Monsterman"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 64,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "Which Eurovision prop has become iconic and is referenced every year?",
+      "options": [
+        "Pyrotechnics",
+        "Wind machines",
+        "Giant LED screens",
+        "All of the above"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 65,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Hatari from Iceland brought what controversial political props on stage in 2019?",
+      "options": [
+        "Palestinian flags",
+        "Protest banners",
+        "BDSM costumes with protest signs",
+        "Empty picture frames"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 66,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "SuRie from the UK had her Eurovision 2018 performance interrupted by what?",
+      "options": [
+        "Technical failure",
+        "A stage invader grabbing her mic",
+        "Power outage",
+        "A protester in the crowd"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 67,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Which country's act brought real sand and a camel onto the Eurovision stage?",
+      "options": [
+        "Morocco",
+        "Israel",
+        "Turkey",
+        "Egypt"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 68,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which country won Eurovision 2024?",
+      "options": [
+        "Croatia",
+        "Israel",
+        "Switzerland",
+        "Ukraine"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 69,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Nemo from Switzerland won Eurovision 2024 with which song?",
+      "options": [
+        "The Code",
+        "True Colors",
+        "Fiamma",
+        "Volcano"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 70,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which country hosted Eurovision 2024?",
+      "options": [
+        "Israel",
+        "Sweden",
+        "Switzerland",
+        "UK"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 71,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which Swedish pop group catapulted to fame after winning Eurovision 1974?",
+      "options": [
+        "Roxette",
+        "ABBA",
+        "Ace of Base",
+        "Europe"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 72,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country does Céline Dion originally come from?",
+      "options": [
+        "Switzerland",
+        "France",
+        "Canada",
+        "Belgium"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 73,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Duncan Laurence won Eurovision 2019 for the Netherlands. What was his song?",
+      "options": [
+        "Calm After the Storm",
+        "Arcade",
+        "The Netherlands",
+        "Beautiful Mess"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 74,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Portugal ended a 49-year Eurovision drought by winning in 2017. Who was the artist?",
+      "options": [
+        "Diogo Piçarra",
+        "Salvador Sobral",
+        "Conan Osiris",
+        "Elisa"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 75,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Katrina and the Waves won for the UK in 1997 with which song?",
+      "options": [
+        "Flying Without Wings",
+        "Love Shine a Light",
+        "Better the Devil You Know",
+        "Hold Me Now"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 76,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which Eurovision 2003 entry famously used a postcards segment to protest the Iraq war?",
+      "options": [
+        "Belgium",
+        "UK",
+        "France",
+        "Germany"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 77,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "How many semifinal rounds does Eurovision have?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 78,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "How many countries qualify from each Eurovision semifinal to the grand final?",
+      "options": [
+        "8",
+        "10",
+        "12",
+        "15"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 79,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Eurovision is organized by which broadcasting union?",
+      "options": [
+        "EBU",
+        "BBC",
+        "UER",
+        "ABU"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 80,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Countries that qualify from the semifinal vote only in their OWN semifinal. TRUE or FALSE?",
+      "options": [
+        "True",
+        "False — they vote in both",
+        "False — they don't vote at all in semis",
+        "Only the Big Five don't vote in semis"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 81,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Eurovision 2025 host country Switzerland — what is its capital city?",
+      "options": [
+        "Zurich",
+        "Geneva",
+        "Bern",
+        "Basel"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 82,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Which Eurovision host city is located in Ukraine?",
+      "options": [
+        "Odessa",
+        "Kyiv",
+        "Lviv",
+        "Kharkiv"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 83,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision 2018 was held in Lisbon. What country is that?",
+      "options": [
+        "Spain",
+        "Brazil",
+        "Portugal",
+        "Italy"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 84,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "Which Eurovision host city is located in the Netherlands?",
+      "options": [
+        "Amsterdam",
+        "The Hague",
+        "Rotterdam",
+        "Utrecht"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 85,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "The Hump-Backed Song, a famous Finnish Eurovision quirk, refers to what?",
+      "options": [
+        "Songs in Finnish language",
+        "Songs that start slow and build up",
+        "Finland always voting for Norway",
+        "Finland's bad Eurovision results"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 86,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete the lyric — Sandie Shaw, Puppet on a String 1967: 'I wonder if one day that you'll say that you ...'",
+      "options": [
+        "love me too",
+        "care for me",
+        "want me too",
+        "need me true"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 87,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Alexander Rybak, Fairytale 2009: 'Years ago when I was younger, I kinda liked a girl I knew. She was mine and we were ...'",
+      "options": [
+        "sweethearts",
+        "lovers",
+        "sweethearts ever after",
+        "nothing but sweethearts"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 88,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Conchita Wurst, Rise Like a Phoenix 2014: 'I rose to arms with my ...'",
+      "options": [
+        "heart of gold",
+        "flaming torch",
+        "faith in the dawn",
+        "broken chains"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 89,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Netta, Toy 2018: 'I'm not your toy, you stupid ...'",
+      "options": [
+        "man",
+        "boy",
+        "clown",
+        "fool"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 90,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Dschinghis Khan, Dschinghis Khan 1979: 'Dschinghis Khan! He had seven sons. Seven sons had ...'",
+      "options": [
+        "Dschinghis Khan",
+        "he alone",
+        "the mighty Khan",
+        "each one strong"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 91,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "Which is the host country for Eurovision 2025?",
+      "options": [
+        "Sweden",
+        "Italy",
+        "Switzerland",
+        "Netherlands"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 92,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "What is the UK's song title at Eurovision 2025?",
+      "options": [
+        "Wasted Love",
+        "What The Hell Just Happened?",
+        "Laika Party",
+        "Serving"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 93,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is France's song at Eurovision 2025?",
+      "options": [
+        "Voyage",
+        "maman",
+        "C'est la vie",
+        "Deslocado"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 94,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Which country performs 'Lighter' at Eurovision 2025?",
+      "options": [
+        "Denmark",
+        "Norway",
+        "Sweden",
+        "Finland"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 95,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What is Croatia's entry title at Eurovision 2025?",
+      "options": [
+        "Dobrodošli",
+        "Mila",
+        "Poison Cake",
+        "Ohrid"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 96,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Which country performs 'Trag de tine' at Eurovision 2025?",
+      "options": [
+        "Romania",
+        "Moldova",
+        "Serbia",
+        "Montenegro"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 97,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Alexander Rybak scored the then-record points winning for Norway. In what year?",
+      "options": [
+        "2007",
+        "2008",
+        "2009",
+        "2010"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 98,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which country won Eurovision 2016 with the song '1944'?",
+      "options": [
+        "Russia",
+        "Poland",
+        "Ukraine",
+        "Bulgaria"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 99,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which Croatian entry at Eurovision 1999 featured an iconic key change and wind machine combo?",
+      "options": [
+        "Marija Magdalena",
+        "Everything I Want",
+        "Nostalgija",
+        "Oro"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 100,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What rule prevents countries from singing in their national language — or does it?",
+      "options": [
+        "Entries must be in national language",
+        "Entries can be in any language since 1999",
+        "Entries must be in English or French",
+        "Entries must be in an EBU-approved language"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 101,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision 2023?",
+      "options": [
+        "Finland",
+        "Sweden",
+        "Ukraine",
+        "Australia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 102,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Loreen's 2023 winning song was called what?",
+      "options": [
+        "Tattoo",
+        "Euphoria",
+        "Heroes",
+        "Waterloo"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 103,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Which country has the most Eurovision wins in total?",
+      "options": [
+        "Sweden",
+        "Luxembourg",
+        "Ireland",
+        "UK"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 104,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "The Eurovision Grand Final typically airs on which night of the week?",
+      "options": [
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 105,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What is a 'postcards' segment in Eurovision?",
+      "options": [
+        "When countries send greetings to rivals",
+        "Short video clips shown before each act performs",
+        "The interval act",
+        "The opening ceremony"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 106,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Eurovision 2015 was held in Vienna. What country is Vienna in?",
+      "options": [
+        "Germany",
+        "Switzerland",
+        "Austria",
+        "Netherlands"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 107,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Eleni Foureira's 'Fuego' for Cyprus nearly won in 2018. Who actually won that year?",
+      "options": [
+        "Israel",
+        "Ireland",
+        "Czech Republic",
+        "Austria"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 108,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Israel's Netta won in 2018 with which song?",
+      "options": [
+        "Golden Boy",
+        "Toy",
+        "A Million Voices",
+        "Replay"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 109,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which year saw the first public televote used in Eurovision?",
+      "options": [
+        "1990",
+        "1994",
+        "1997",
+        "2000"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 110,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which country withdrew from Eurovision in 2012 citing financial difficulties during the Euro crisis?",
+      "options": [
+        "Greece",
+        "Portugal",
+        "Slovakia",
+        "Cyprus"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 111,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete the lyric — Loreen, Tattoo 2023: 'You're in my ...'",
+      "options": [
+        "heart forever",
+        "blood forever",
+        "soul forever",
+        "dreams forever"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 112,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Nemo, The Code 2024: 'I found the code — I found the ...'",
+      "options": [
+        "key to set me free",
+        "answer deep in me",
+        "truth inside of me",
+        "light that guides me"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 113,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Kalush Orchestra, Stefania 2022: 'Stefania, Stefania, ...'",
+      "options": [
+        "Mamo ridna ya do tebe linu",
+        "Oy u luzi chervona kalyna",
+        "Hey, my dear mother",
+        "Polia zelenyi"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 114,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Arcade by Duncan Laurence 2019: 'I'd rather bleed than have you ...'",
+      "options": [
+        "go away",
+        "leave me dry",
+        "turn away",
+        "say goodbye"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 115,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Heroes by Måns Zelmerlöw 2015: 'We are the heroes of our ...'",
+      "options": [
+        "own time",
+        "hearts tonight",
+        "time tonight",
+        "lives and times"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 116,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "Which country does JJ represent at Eurovision 2025?",
+      "options": [
+        "Germany",
+        "Austria",
+        "Switzerland",
+        "Luxembourg"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 117,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Ireland's entry at Eurovision 2025 is called what?",
+      "options": [
+        "Hallucination",
+        "Hear Me",
+        "Laika Party",
+        "Strobe Lights"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 118,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is Italy's song at Eurovision 2025?",
+      "options": [
+        "Tutta l'Italia",
+        "Volevo essere un duro",
+        "Mila",
+        "Voyage"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 119,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Which country performs 'Tavo Akys' at Eurovision 2025?",
+      "options": [
+        "Latvia",
+        "Estonia",
+        "Lithuania",
+        "Finland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 120,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What is Malta's entry at Eurovision 2025?",
+      "options": [
+        "SURVIVOR",
+        "SERVING",
+        "Run With U",
+        "Strobe Lights"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 121,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won the first Eurovision held outside Europe (in Tel Aviv)?",
+      "options": [
+        "Sweden",
+        "Denmark",
+        "Norway",
+        "Israel"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 122,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which band represented Finland and won with 'Hard Rock Hallelujah' in 2006?",
+      "options": [
+        "Apocalyptica",
+        "HIM",
+        "Lordi",
+        "Nightwish"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 123,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which 2004 Eurovision winner went on to become a global pop star?",
+      "options": [
+        "Ruslana",
+        "Elena Paparizou",
+        "Tatu",
+        "Sertab Erener"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 124,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What is the name of the UK's Eurovision broadcaster?",
+      "options": [
+        "ITV",
+        "Channel 4",
+        "BBC",
+        "Sky"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 125,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which Eurovision act was disqualified for using a pre-recorded vocal track?",
+      "options": [
+        "Milli Vanilli at Eurovision",
+        "Milena at Eurovision 1999",
+        "Zvonimir at Eurovision 2000",
+        "No act has ever been formally disqualified for this"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 126,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "Sweden has won Eurovision how many times as of 2024?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 127,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Ireland won three consecutive Eurovisions in which years?",
+      "options": [
+        "1989–1991",
+        "1990–1992",
+        "1992–1994",
+        "1993–1995"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 128,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision 2016 was held in Stockholm. Which country is that?",
+      "options": [
+        "Norway",
+        "Denmark",
+        "Sweden",
+        "Finland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 129,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Which Eurovision act famously used drone technology in their performance?",
+      "options": [
+        "Ukraine 2022",
+        "Israel 2018",
+        "Sweden 2015",
+        "Australia 2016"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 130,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Which country's 2017 entry featured a man on a hamster wheel as part of the staging?",
+      "options": [
+        "Hungary",
+        "Austria",
+        "France",
+        "Latvia"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 131,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country is famous for always giving Cyprus 12 points?",
+      "options": [
+        "Turkey",
+        "Greece",
+        "Israel",
+        "Bulgaria"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 132,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country's Eurovision win prompted the phrase 'douze points' to become mainstream?",
+      "options": [
+        "France",
+        "Ireland",
+        "Sweden",
+        "None — it was always the phrase"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 133,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Graham Norton is the famous Eurovision commentator for which country?",
+      "options": [
+        "Ireland",
+        "Australia",
+        "USA",
+        "United Kingdom"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 134,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "How many members does the jury panel have per country in Eurovision?",
+      "options": [
+        "3",
+        "5",
+        "7",
+        "10"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 135,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which country accumulated the most 'nul points' finishes before withdrawing from Eurovision?",
+      "options": [
+        "Morocco",
+        "Luxembourg",
+        "Turkey",
+        "Monaco"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 136,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which year was the last time a song NOT in English or a native language won Eurovision?",
+      "options": [
+        "1995",
+        "1998",
+        "1999",
+        "2003"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 137,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "Switzerland's entry at Eurovision 2025 is titled what?",
+      "options": [
+        "The Code",
+        "Voyage",
+        "maman",
+        "Wasted Love"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 138,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Which artist represents Belgium at Eurovision 2025?",
+      "options": [
+        "Loïc Nottet",
+        "Eliot",
+        "Red Sebastian",
+        "Tom Dice"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 139,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is Serbia's entry title at Eurovision 2025?",
+      "options": [
+        "Ohrid",
+        "Mila",
+        "Dobrodošli",
+        "Poison Cake"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 140,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What is the title of Georgia's entry at Eurovision 2025?",
+      "options": [
+        "Bird of Pray",
+        "Freedom",
+        "Survive",
+        "New Day Will Rise"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 141,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete the lyric — Waterloo, ABBA 1974: 'Waterloo — couldn't escape if I ...'",
+      "options": [
+        "Tried to run",
+        "Wanted to",
+        "Had the chance",
+        "Ran away"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 142,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Euphoria, Loreen 2012: 'Every piece of me — you ...'",
+      "options": [
+        "set me free",
+        "hold the key",
+        "are the dream",
+        "fill the space"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 143,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Fairytale, Alexander Rybak 2009: 'I'm in love with a fairytale, even though it ...'",
+      "options": [
+        "hurts",
+        "fades away",
+        "breaks my heart",
+        "isn't real"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 144,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country does Loreena McKennitt come from — though she never competed in Eurovision?",
+      "options": [
+        "Ireland",
+        "Scotland",
+        "Canada",
+        "Wales"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 145,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Satellite by Lena won Eurovision 2010 for which country?",
+      "options": [
+        "Austria",
+        "Germany",
+        "Switzerland",
+        "Netherlands"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 146,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which country withdrew from Eurovision 2023 after concerns about show content?",
+      "options": [
+        "Russia",
+        "Belarus",
+        "Hungary",
+        "No country withdrew"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 147,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What year did Russia first compete in Eurovision?",
+      "options": [
+        "1993",
+        "1994",
+        "1995",
+        "1996"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 148,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Russia was banned from Eurovision in which year following the invasion of Ukraine?",
+      "options": [
+        "2021",
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 149,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "Which is the smallest country by population to have ever won Eurovision?",
+      "options": [
+        "Luxembourg",
+        "San Marino",
+        "Monaco",
+        "Andorra"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 150,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What is a 'key change' in Eurovision slang?",
+      "options": [
+        "Changing the lyrics mid-song",
+        "Suddenly modulating to a higher pitch near the end",
+        "Switching lead vocalist",
+        "Changing the tempo"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 151,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Toto Cutugno represented Italy and won Eurovision in which decade?",
+      "options": [
+        "1970s",
+        "1980s",
+        "1990s",
+        "2000s"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 152,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which iconic DJ/producer represented San Marino at Eurovision 2025?",
+      "options": [
+        "David Guetta",
+        "Gabry Ponte",
+        "Bob Sinclar",
+        "Tiësto"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 153,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "What is the record for most points awarded in a single year (combined jury + public)?",
+      "options": [
+        "Arcade — Duncan Laurence 2019",
+        "Tattoo — Loreen 2023",
+        "Euphoria — Loreen 2012",
+        "Stefania — Kalush Orchestra 2022"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 154,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which country has participated in Eurovision the most times without ever winning?",
+      "options": [
+        "Portugal (before 2017)",
+        "Malta",
+        "Cyprus",
+        "Norway"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 155,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Eurovision 2022 was held in Turin. In which country is Turin?",
+      "options": [
+        "France",
+        "Spain",
+        "Italy",
+        "Switzerland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 156,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "What song did Dusty Springfield sing at Eurovision? (Trick question!)",
+      "options": [
+        "Puppet on a String",
+        "Congratulations",
+        "She never competed in Eurovision",
+        "Boom Bang-a-Bang"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 157,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Cliff Richard famously came second at Eurovision with which song?",
+      "options": [
+        "Congratulations",
+        "Summer Holiday",
+        "Bachelor Boy",
+        "Power to All Our Friends"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 158,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Who was the first non-European country allowed to compete in Eurovision?",
+      "options": [
+        "Australia",
+        "Israel",
+        "Morocco",
+        "Canada"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 159,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "What is Denmark's song at Eurovision 2025?",
+      "options": [
+        "Lighter",
+        "Hallucination",
+        "RÓT",
+        "Bur Man Laimi"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 160,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Which country performs 'Run With U' at Eurovision 2025?",
+      "options": [
+        "Armenia",
+        "Georgia",
+        "Azerbaijan",
+        "Albania"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 161,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is Spain's song title at Eurovision 2025?",
+      "options": [
+        "maman",
+        "ESA DIVA",
+        "Voyage",
+        "C'est la vie"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 162,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Which country performs 'Deslocado' at Eurovision 2025?",
+      "options": [
+        "Spain",
+        "Brazil",
+        "Portugal",
+        "Italy"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 163,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What is Montenegro's entry at Eurovision 2025?",
+      "options": [
+        "Mila",
+        "Dobrodošli",
+        "Ohrid",
+        "Poison Cake"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 164,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision 2021 with Måneskin?",
+      "options": [
+        "Italy",
+        "France",
+        "Norway",
+        "Switzerland"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 165,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "What was Måneskin's song at Eurovision 2021?",
+      "options": [
+        "Beggin'",
+        "Zitti e buoni",
+        "MAMMAMIA",
+        "I Wanna Be Your Slave"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 166,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "Which scoring positions get announced out loud by each country spokesperson?",
+      "options": [
+        "Only 12 points",
+        "8, 10 and 12 points",
+        "1 through 12 points",
+        "10 and 12 points"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 167,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What happens if the televote results are not received in time from a country?",
+      "options": [
+        "That country is disqualified",
+        "An aggregate backup vote is used",
+        "No points are given",
+        "Extra time is granted"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 168,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "What is the name of the Eurovision stage element where performers walk out to greet the crowd?",
+      "options": [
+        "The Catwalk",
+        "The Bridge",
+        "The Runway",
+        "The Ramp"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 169,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "In the Eurovision scoreboard reveal, which scores are shown first?",
+      "options": [
+        "Televote first, then jury",
+        "Jury first, then televote",
+        "Combined all at once",
+        "Random order"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 170,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which country staged the most expensive Eurovision ever (estimated €50m+)?",
+      "options": [
+        "Ukraine 2005",
+        "Russia 2009",
+        "Germany 2011",
+        "Azerbaijan 2012"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 171,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete the lyric — Hard Rock Hallelujah, Lordi 2006: 'Hard Rock Hallelujah! Hallelujah! ...'",
+      "options": [
+        "Rock forever",
+        "Hallelujah!",
+        "The devil's calling",
+        "We will prevail"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 172,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Rise Like a Phoenix, Conchita 2014: 'There's no turning back now — ...'",
+      "options": [
+        "ashes to ashes, dust to dust",
+        "straight to the top now",
+        "baby I was born this way",
+        "I was made from fire"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 173,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Ding Dinge Dong, Teach-In (Netherlands) 1975: 'Ding dinge dong, ...'",
+      "options": [
+        "bells are ringing all day long",
+        "hear the bells ring",
+        "every little bell will sing",
+        "the sun is shining bright"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 174,
+      "category": "2025",
+      "difficulty": "easy",
+      "question": "Israel is represented at Eurovision 2025 by which artist?",
+      "options": [
+        "Netta",
+        "Eden Golan",
+        "Yuval Raphael",
+        "Imri Ziv"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 175,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is Israel's song title at Eurovision 2025?",
+      "options": [
+        "Hurricane",
+        "New Day Will Rise",
+        "Golden Boy",
+        "Toy"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 176,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Which country performs 'Zjerm' at Eurovision 2025?",
+      "options": [
+        "Georgia",
+        "Azerbaijan",
+        "Albania",
+        "Armenia"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 177,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What does 'Asteromata' — Greece's Eurovision 2025 song — mean in Greek?",
+      "options": [
+        "Starry eyes",
+        "Golden hair",
+        "Broken heart",
+        "Night sky"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 178,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which famous TV show features a Eurovision parody episode that made it globally known?",
+      "options": [
+        "Friends",
+        "The Simpsons",
+        "Father Ted",
+        "Seinfeld"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 179,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "The movie 'Eurovision Song Contest: The Story of Fire Saga' starred which actor as an Icelandic singer?",
+      "options": [
+        "Adam Sandler",
+        "Will Ferrell",
+        "Ben Stiller",
+        "Jack Black"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 180,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What does EBU stand for?",
+      "options": [
+        "European Broadcasting Union",
+        "European Broadcast Universe",
+        "Eurovision Broadcasting Unit",
+        "European Broadcast United"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 181,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "What is the longest gap between Eurovision wins for any country?",
+      "options": [
+        "Portugal — 49 years",
+        "Italy — 31 years",
+        "Spain — 45 years",
+        "Germany — 27 years"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 182,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision 2019 was held in Tel Aviv. In which country?",
+      "options": [
+        "Palestine",
+        "Jordan",
+        "Egypt",
+        "Israel"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 183,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "Which is the only North African country to have competed in Eurovision?",
+      "options": [
+        "Egypt",
+        "Tunisia",
+        "Morocco",
+        "Algeria"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 184,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Verka Serduchka's 2007 staging featured performers in what kind of costumes?",
+      "options": [
+        "Space suits",
+        "Star-shaped silver hats and outfits",
+        "Traditional Ukrainian folk dress",
+        "Black feathered wings"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 185,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "How many countries are in the 'Big Five' automatic finalists?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 186,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "The Big Five pay the most to EBU, which is why they get automatic entry. Which five are they?",
+      "options": [
+        "UK, France, Germany, Spain, Italy",
+        "UK, France, Germany, Spain, Netherlands",
+        "UK, France, Germany, Italy, Sweden",
+        "UK, France, Spain, Italy, Switzerland"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 187,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision most recently before 2024?",
+      "options": [
+        "Ukraine",
+        "Sweden",
+        "Italy",
+        "Australia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 188,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which Balkan country became a surprising fan favourite at Eurovision in the 2000s with dramatic entries?",
+      "options": [
+        "Bosnia & Herzegovina",
+        "Serbia",
+        "Croatia",
+        "North Macedonia"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 189,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which is the only decade in which the same country won Eurovision three times?",
+      "options": [
+        "1960s",
+        "1970s",
+        "1980s",
+        "1990s"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 190,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "Sissal represents which country at Eurovision 2025?",
+      "options": [
+        "Norway",
+        "Iceland",
+        "Sweden",
+        "Denmark"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 191,
+      "category": "2025",
+      "difficulty": "medium",
+      "question": "What is the Czech Republic's song title at Eurovision 2025?",
+      "options": [
+        "Hallucination",
+        "Hear Me",
+        "Kiss Kiss Goodbye",
+        "Strobe Lights"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 192,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "What is North Macedonia's entry title at Eurovision 2025?",
+      "options": [
+        "Mila",
+        "Ohrid",
+        "Dobrodošli",
+        "Poison Cake"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 193,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "Armenia's artist at Eurovision 2025 is PARG — what is their song?",
+      "options": [
+        "Zjerm",
+        "SURVIVOR",
+        "Freedom",
+        "Hear Me"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 194,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete the lyric — Heroes, Måns Zelmerlöw 2015: 'We are the heroes of our time — but we're ...'",
+      "options": [
+        "dancing in the night",
+        "running out of time",
+        "chasing down the sun",
+        "losing every time"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 195,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete the lyric — Zitti e buoni, Måneskin 2021: 'Siamo fuori di testa, ma diversi da ...'",
+      "options": [
+        "voi",
+        "loro",
+        "tutti",
+        "sempre"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 196,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Which country's national selection is called 'Melodifestivalen'?",
+      "options": [
+        "Norway",
+        "Denmark",
+        "Finland",
+        "Sweden"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 197,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Norway's national Eurovision selection is called what?",
+      "options": [
+        "Melodi Grand Prix",
+        "Melodifestivalen",
+        "Uuden Musiikin Kilpailu",
+        "Eesti Laul"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 198,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "What prop did Lordi carry on stage at Eurovision 2006 that became iconic?",
+      "options": [
+        "Flaming guitars",
+        "Battle axes and monster costumes",
+        "Coffins",
+        "Giant speakers"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 199,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which Eurovision 2014 interval act became a global viral sensation?",
+      "options": [
+        "Running Man dance routine",
+        "Riverdance revival",
+        "The Copenhagen Wheel",
+        "Audience wave display"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 200,
+      "category": "2025",
+      "difficulty": "hard",
+      "question": "VÆB represents Iceland at Eurovision 2025 — what is their song called?",
+      "options": [
+        "Hallucination",
+        "RÓT",
+        "Bur Man Laimi",
+        "Zjerm"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 201,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Which country performs 'Nân' at Eurovision 2026?",
+      "options": [
+        "Cyprus",
+        "Albania",
+        "Georgia",
+        "Croatia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 202,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Australia's song at Eurovision 2026?",
+      "options": [
+        "Sunrise",
+        "Eclipse",
+        "Moonlight",
+        "Aurora"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 203,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Who represents Australia at Eurovision 2026?",
+      "options": [
+        "Kylie Minogue",
+        "Tina Arena",
+        "Delta Goodrem",
+        "Jessica Mauboy"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 204,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Austria's entry at Eurovision 2026?",
+      "options": [
+        "Vienna Calling",
+        "Wasted Love",
+        "Tanzschein",
+        "Firestorm"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 205,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Who represents Austria at Eurovision 2026?",
+      "options": [
+        "JJ",
+        "Cesár Sampson",
+        "Cosmó",
+        "Thomas Neuwirth"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 206,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Belgium's song at Eurovision 2026?",
+      "options": [
+        "Strobe Lights",
+        "Dancing on the Ice",
+        "Rhythm Inside",
+        "Je t'aime"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 207,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Croatia's song at Eurovision 2026?",
+      "options": [
+        "Andromeda",
+        "Nova Zora",
+        "Kraj mene",
+        "Ferto"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 208,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Denmark's song at Eurovision 2026?",
+      "options": [
+        "Lighter",
+        "Før vi går hjem",
+        "Too Epic",
+        "YA YA YA"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 209,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Estonia's entry at Eurovision 2026?",
+      "options": [
+        "Supernatural",
+        "Too Epic To Be True",
+        "Warrior",
+        "Forever"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 210,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Who represents Estonia at Eurovision 2026?",
+      "options": [
+        "Kerli",
+        "Elina Nechayeva",
+        "Vanilla Ninja",
+        "Ott Lepland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 211,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Finland's entry at Eurovision 2026?",
+      "options": [
+        "Cha Cha Cha",
+        "Ich Komme",
+        "Liekinheitin",
+        "Looking for Love"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 212,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is France's song at Eurovision 2026?",
+      "options": [
+        "maman",
+        "Voilà",
+        "Regarde !",
+        "Mon amour"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 213,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Who represents France at Eurovision 2026?",
+      "options": [
+        "Louane",
+        "Zaz",
+        "Monroe",
+        "Angèle"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 214,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Germany's entry at Eurovision 2026?",
+      "options": [
+        "Satellite",
+        "Baller",
+        "Fire",
+        "Atemlos"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 215,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Who represents Germany at Eurovision 2026?",
+      "options": [
+        "Lena",
+        "Malik Harris",
+        "Sarah Engels",
+        "S!sters"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 216,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Greece's song at Eurovision 2026?",
+      "options": [
+        "Asteromata",
+        "Zari",
+        "Ferto",
+        "Halara"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 217,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Italy's song at Eurovision 2026?",
+      "options": [
+        "Brividi",
+        "Zitti e buoni",
+        "Per sempre sì",
+        "Grande Amore"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 218,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Latvia's entry at Eurovision 2026?",
+      "options": [
+        "Bur Man Laimi",
+        "Ēnā",
+        "Supernova",
+        "Rain of Revolution"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 219,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Luxembourg's entry at Eurovision 2026?",
+      "options": [
+        "Mother Nature",
+        "La vie en rose",
+        "S.O.S",
+        "Waterfall"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 220,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Malta's entry at Eurovision 2026?",
+      "options": [
+        "SERVING",
+        "Bella",
+        "Firestarter",
+        "Chameleon"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 221,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Belgium at Eurovision 2026?",
+      "options": [
+        "Loïc Nottet",
+        "Hooverphonic",
+        "Essyla",
+        "Tom Dice"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 222,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Croatia at Eurovision 2026?",
+      "options": [
+        "Marko Bošnjak",
+        "Jacques Houdek",
+        "LELEK",
+        "Franka"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 223,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Cyprus at Eurovision 2026?",
+      "options": [
+        "Shansea",
+        "Tamta",
+        "Elena Tsagrinou",
+        "Antigoni"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 224,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Cyprus's song at Eurovision 2026?",
+      "options": [
+        "El diablo",
+        "JALLA",
+        "Ela",
+        "Running"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 225,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Denmark at Eurovision 2026?",
+      "options": [
+        "Leonora",
+        "Jesper Groth",
+        "Søren Torpegaard Lund",
+        "Reiley"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 226,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Finland at Eurovision 2026?",
+      "options": [
+        "Käärijä",
+        "Erika Vikman",
+        "Linda Lampenius & Pete Parkkonen",
+        "Uuden Musiikin"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 227,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Italy at Eurovision 2026?",
+      "options": [
+        "Mahmood",
+        "Blanco",
+        "Sal Da Vinci",
+        "Marco Mengoni"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 228,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Luxembourg at Eurovision 2026?",
+      "options": [
+        "Lion Ceccah",
+        "Eva Marija",
+        "Atvara",
+        "Essyla"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 229,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Latvia at Eurovision 2026?",
+      "options": [
+        "Sudden Lights",
+        "Citi Zēni",
+        "Atvara",
+        "Aminata"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 230,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Lithuania's entry at Eurovision 2026?",
+      "options": [
+        "Tavo Akys",
+        "Sólo quiero más",
+        "Mother Nature",
+        "YA YA YA"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 231,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Lithuania at Eurovision 2026?",
+      "options": [
+        "Monika Liu",
+        "Silvester Belt",
+        "Lion Ceccah",
+        "IEVA"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 232,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Moldova's entry at Eurovision 2026?",
+      "options": [
+        "Trag de tine",
+        "SugarPlum",
+        "Viva, Moldova!",
+        "Dancing Lasha"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 233,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Moldova at Eurovision 2026?",
+      "options": [
+        "Pasha Parfeni",
+        "Zdob și Zdub",
+        "Satoshi",
+        "Aliona Moon"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 234,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Montenegro's entry at Eurovision 2026?",
+      "options": [
+        "Dobrodošli",
+        "Nova Zora",
+        "Zemlja",
+        "Balkan Fire"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 235,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Norway's entry at Eurovision 2026?",
+      "options": [
+        "Lighter",
+        "Melodi Grand Prix",
+        "YA YA YA",
+        "Give That Wolf a Banana"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 236,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Norway at Eurovision 2026?",
+      "options": [
+        "Kyle Alessandro",
+        "Alexander Rybak",
+        "Lovv",
+        "Jorn"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 237,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Romania's entry at Eurovision 2026?",
+      "options": [
+        "Llámame",
+        "Choke Me",
+        "Locura",
+        "Fire"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 238,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Serbia's entry at Eurovision 2026?",
+      "options": [
+        "Mila",
+        "Nova Zora",
+        "Kraj mene",
+        "Pesma"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 239,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Serbia at Eurovision 2026?",
+      "options": [
+        "Princ",
+        "LAVINA",
+        "Hurricane",
+        "Teya Dora"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 240,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Sweden's entry at Eurovision 2026?",
+      "options": [
+        "Tattoo",
+        "Bara Bada Bastu",
+        "My System",
+        "Euphoria"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 241,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who won Melodifestivalen 2026 to represent Sweden?",
+      "options": [
+        "Dotter",
+        "Cornelia Jakobs",
+        "Felicia",
+        "Loreen"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 242,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Ukraine's entry at Eurovision 2026?",
+      "options": [
+        "Bird of Pray",
+        "Stefania",
+        "Ridnym",
+        "Shum"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 243,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents Ukraine at Eurovision 2026?",
+      "options": [
+        "Kalush Orchestra",
+        "Ziferblat",
+        "Leléka",
+        "Go-A"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 244,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is the UK's entry at Eurovision 2026?",
+      "options": [
+        "Space Man",
+        "Lose Control",
+        "Eins Zwei Drei",
+        "What The Hell"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 245,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Who represents the UK at Eurovision 2026?",
+      "options": [
+        "Sam Ryder",
+        "Mae Muller",
+        "Remember Monday",
+        "LOOK MUM NO COMPUTER"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 246,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "What does 'JALLA' mean in Cypriot dialect?",
+      "options": [
+        "Dance",
+        "More",
+        "Love",
+        "Joy"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 247,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "What does 'Tanzschein' mean in German?",
+      "options": [
+        "Dance Party",
+        "Dance Permit",
+        "Dancing Star",
+        "Dance Floor"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 248,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "What does 'Regarde' mean in French?",
+      "options": [
+        "Listen",
+        "Look/Watch",
+        "Feel",
+        "Sing"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 249,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "What does 'Ridnym' translate to in English?",
+      "options": [
+        "For my country",
+        "To the loved ones",
+        "Freedom",
+        "Home"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 250,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Vanilla Ninja previously represented which country at Eurovision?",
+      "options": [
+        "Germany",
+        "Finland",
+        "Switzerland",
+        "Sweden"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 251,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "ABBA's Waterloo was performed in which language?",
+      "options": [
+        "Swedish",
+        "Norwegian",
+        "English",
+        "Danish"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 252,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which famous interval act at Eurovision 1994 became a global sensation?",
+      "options": [
+        "Can-can",
+        "Riverdance",
+        "Flamenco",
+        "Zorba the Greek"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 253,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Bucks Fizz won Eurovision 1981 for the UK — what were they famous for doing on stage?",
+      "options": [
+        "Playing violins",
+        "Ripping off skirts",
+        "Wearing matching suits",
+        "Dancing in formation"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 254,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Sandie Shaw won Eurovision 1967 for the UK — what was unusual about her performance?",
+      "options": [
+        "She sang in French",
+        "She performed barefoot",
+        "She had a live band",
+        "She wore a costume"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 255,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision 2021 with Måneskin?",
+      "options": [
+        "France",
+        "Italy",
+        "Switzerland",
+        "Norway"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 256,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which band won Eurovision 2021?",
+      "options": [
+        "Kalush Orchestra",
+        "Måneskin",
+        "Maneskin",
+        "Go-A"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 257,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision 2022?",
+      "options": [
+        "Poland",
+        "Ukraine",
+        "Russia",
+        "Moldova"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 258,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision 2023?",
+      "options": [
+        "Finland",
+        "Ukraine",
+        "Sweden",
+        "Croatia"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 259,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Who won Eurovision 2023 for Sweden?",
+      "options": [
+        "Cornelia Jakobs",
+        "Dotter",
+        "Loreen",
+        "Zara Larsson"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 260,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision 2024?",
+      "options": [
+        "Croatia",
+        "Israel",
+        "Switzerland",
+        "Sweden"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 261,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Who won Eurovision 2024 for Switzerland?",
+      "options": [
+        "Gjon's Tears",
+        "Nemo",
+        "Luca Hänni",
+        "Vincent Gross"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 262,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "What was Nemo's winning song at Eurovision 2024?",
+      "options": [
+        "The Code",
+        "Fiamma",
+        "Volcano",
+        "True Colors"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 263,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which city hosted Eurovision 2024?",
+      "options": [
+        "Stockholm",
+        "Liverpool",
+        "Malmö",
+        "Basel"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 264,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which city hosted Eurovision 2023?",
+      "options": [
+        "Turin",
+        "Rotterdam",
+        "Liverpool",
+        "Lisbon"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 265,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which city hosted Eurovision 2022?",
+      "options": [
+        "Rome",
+        "Naples",
+        "Turin",
+        "Milan"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 266,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Loreen won Eurovision twice — she's the only person to do so as a performer. True or false?",
+      "options": [
+        "True — she is the only one",
+        "False — Johnny Logan also won twice as a performer",
+        "False — Celine Dion won twice",
+        "False — Dana International won twice"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 267,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Alexander Rybak won Eurovision 2009 with a record-breaking score. Which country did he represent?",
+      "options": [
+        "Sweden",
+        "Denmark",
+        "Norway",
+        "Finland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 268,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Duncan Laurence won Eurovision 2019 for the Netherlands with which song?",
+      "options": [
+        "Calm After the Storm",
+        "Arcade",
+        "On My Way",
+        "Beautiful Mess"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 269,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Salvador Sobral won Eurovision 2017 for Portugal with which song?",
+      "options": [
+        "Deslocado",
+        "Sobreviver",
+        "Amar Pelos Dois",
+        "Lisboa"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 270,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Jamala won Eurovision 2016 for Ukraine with which song?",
+      "options": [
+        "Wild Dances",
+        "Stefania",
+        "1944",
+        "Shum"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 271,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Lena won Eurovision 2010 for Germany with which song?",
+      "options": [
+        "Satellite",
+        "Taken By a Stranger",
+        "Mr. Curiosity",
+        "Schau"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 272,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which year did Eurovision 2015 take place in Vienna?",
+      "options": [
+        "2013",
+        "2014",
+        "2015",
+        "2016"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 273,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Mans Zelmerlow won Eurovision 2015 for Sweden with which song?",
+      "options": [
+        "Euphoria",
+        "Heroes",
+        "Tattoo",
+        "Beautiful"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 274,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Netta won Eurovision 2018 for Israel with which song?",
+      "options": [
+        "Golden Boy",
+        "Hurricane",
+        "Toy",
+        "Replay"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 275,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Dana International won Eurovision 1998 for Israel with which song?",
+      "options": [
+        "Toy",
+        "Golden Boy",
+        "Diva",
+        "Hurricane"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 276,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Ruslana won Eurovision 2004 for Ukraine with which song?",
+      "options": [
+        "Shum",
+        "Wild Dances",
+        "1944",
+        "Hey Mister"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 277,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which UK singer famously performed barefoot at Eurovision 1967?",
+      "options": [
+        "Lulu",
+        "Sandie Shaw",
+        "Cliff Richard",
+        "Mary Hopkin"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 278,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Lordi won Eurovision 2006 for Finland — what genre are they?",
+      "options": [
+        "Death metal",
+        "Monster rock",
+        "Heavy metal",
+        "Pop"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 279,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Portugal won their first Eurovision in 2017 — how many years had they been competing?",
+      "options": [
+        "39",
+        "44",
+        "49",
+        "53"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 280,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which country has hosted Eurovision the most times as of 2026?",
+      "options": [
+        "Ireland",
+        "UK",
+        "Luxembourg",
+        "Sweden"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 281,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "In the 1969 Eurovision four-way tie — which country was NOT one of the winners?",
+      "options": [
+        "Spain",
+        "UK",
+        "France",
+        "Sweden"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 282,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which country boycotted Eurovision 1979 protesting Israel as host?",
+      "options": [
+        "Egypt",
+        "Iraq",
+        "Jordan",
+        "Saudi Arabia"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 283,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Eurovision 2020 was cancelled. The UK was represented by which artist?",
+      "options": [
+        "James Newman",
+        "Mae Muller",
+        "Michael Rice",
+        "Mimi Webb"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 284,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "What controversy hit the 2018 UK performance by SuRie?",
+      "options": [
+        "Mic failure",
+        "Stage invader grabbed her mic",
+        "Power cut",
+        "Wrong backing track"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 285,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Gjon's Tears represented Switzerland at Eurovision 2021. What place did they finish?",
+      "options": [
+        "3rd",
+        "4th",
+        "5th",
+        "6th"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 286,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Austria hosted Eurovision in 1967 and 2015 — in which palace was the 1967 contest held?",
+      "options": [
+        "Schönbrunn",
+        "Belvedere",
+        "Hofburg",
+        "Prater"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 287,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which was the FIRST year Eurovision introduced semi-finals?",
+      "options": [
+        "2002",
+        "2003",
+        "2004",
+        "2005"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 288,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Toto Cutugno won Eurovision for Italy in which year?",
+      "options": [
+        "1988",
+        "1989",
+        "1990",
+        "1991"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 289,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Ireland won three consecutive Eurovisions from 1992 to 1994. Who won in 1993?",
+      "options": [
+        "Linda Martin",
+        "Niamh Kavanagh",
+        "Paul Harrington & Charlie McGettigan",
+        "Marc Roberts"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 290,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Céline Dion's Eurovision winning song 'Ne partez pas sans moi' was in which language?",
+      "options": [
+        "English",
+        "Swiss German",
+        "French",
+        "Italian"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 291,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What does EBU stand for in the context of Eurovision?",
+      "options": [
+        "European Broadcasting Union",
+        "European Broadcast Universe",
+        "Eurovision Broadcasting Unit",
+        "European Broadcast United"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 292,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "The Eurovision Grand Final airs on which day of the week?",
+      "options": [
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 293,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What is the maximum number of points any country can award another?",
+      "options": [
+        "10",
+        "12",
+        "15",
+        "20"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 294,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What does 'douze points' mean in French?",
+      "options": [
+        "Ten points",
+        "Twelve points",
+        "Two points",
+        "Perfect score"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 295,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "How many semi-final shows does Eurovision have?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 296,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Which country famously gives Greece 12 points almost every year?",
+      "options": [
+        "Turkey",
+        "Bulgaria",
+        "Cyprus",
+        "Romania"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 297,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "The Eurovision trophy is made of which material?",
+      "options": [
+        "Gold",
+        "Crystal/glass",
+        "Silver",
+        "Bronze"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 298,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Graham Norton provides Eurovision commentary for which country?",
+      "options": [
+        "Ireland",
+        "Australia",
+        "USA",
+        "United Kingdom"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 299,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What is the Green Room at Eurovision?",
+      "options": [
+        "A rehearsal room",
+        "The backstage area where artists wait during voting",
+        "A press area",
+        "The host dressing room"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 300,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "How long is the maximum allowed running time for a Eurovision entry?",
+      "options": [
+        "2 minutes",
+        "3 minutes",
+        "4 minutes",
+        "5 minutes"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 301,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Sweden's national Eurovision selection show is called what?",
+      "options": [
+        "Melodi Grand Prix",
+        "UMK",
+        "Melodifestivalen",
+        "Eesti Laul"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 302,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Norway's national Eurovision selection is called what?",
+      "options": [
+        "Melodi Grand Prix",
+        "Melodifestivalen",
+        "Sanremo",
+        "Eurovision Norge"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 303,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Italy's Eurovision entry comes via which famous music festival?",
+      "options": [
+        "Cannes",
+        "Venice",
+        "Sanremo",
+        "Milan"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 304,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Which country's national selection is called 'Eesti Laul'?",
+      "options": [
+        "Latvia",
+        "Lithuania",
+        "Finland",
+        "Estonia"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 305,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Which country's national selection is called 'Festival da Canção'?",
+      "options": [
+        "Spain",
+        "Italy",
+        "Portugal",
+        "France"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 306,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Australia participates in Eurovision through which broadcaster?",
+      "options": [
+        "ABC",
+        "SBS",
+        "Channel Nine",
+        "Channel Seven"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 307,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "In what year did Australia FIRST participate in Eurovision?",
+      "options": [
+        "2013",
+        "2014",
+        "2015",
+        "2016"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 308,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "How many jury members does each country have in Eurovision?",
+      "options": [
+        "3",
+        "5",
+        "7",
+        "10"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 309,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Russia was banned from Eurovision in which year?",
+      "options": [
+        "2021",
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 310,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "The 'United by Music' slogan has been used since which year?",
+      "options": [
+        "2020",
+        "2021",
+        "2022",
+        "2023"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 311,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Which country has won the most Melodifestivalen contests internally?",
+      "options": [
+        "Loreen",
+        "ABBA",
+        "Carola",
+        "Charlotte Perrelli"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 312,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What are 'postcards' in Eurovision?",
+      "options": [
+        "Fan mail shown on screen",
+        "Short video intros before each act",
+        "The running order reveal",
+        "Voting recap segments"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 313,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Eurovision 2026 hosts are Victoria Swarovski and who else?",
+      "options": [
+        "Thomas Thurner",
+        "Michael Ostrowski",
+        "Roland Weißmann",
+        "Conchita Wurst"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 314,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "How many countries qualify from each Eurovision semi-final?",
+      "options": [
+        "8",
+        "10",
+        "12",
+        "15"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 315,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "The Wiener Stadthalle previously hosted Eurovision in which year?",
+      "options": [
+        "2005",
+        "2010",
+        "2015",
+        "2020"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 316,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which 2024 Eurovision winner returned their trophy to protest Israel's 2026 inclusion?",
+      "options": [
+        "Loreen",
+        "JJ",
+        "Nemo",
+        "Kalush Orchestra"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 317,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "How many countries boycotted Eurovision 2026 over Israel's inclusion?",
+      "options": [
+        "2",
+        "3",
+        "5",
+        "7"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 318,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which Eurovision winner went on to become a member of parliament?",
+      "options": [
+        "Lordi",
+        "Ruslana",
+        "Dana International",
+        "Conchita Wurst"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 319,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What year did Eurovision first use a public televote?",
+      "options": [
+        "1990",
+        "1994",
+        "1997",
+        "2000"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 320,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What year did the separate jury/televote announcement system begin?",
+      "options": [
+        "2013",
+        "2014",
+        "2015",
+        "2016"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 321,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which country's EBU debt caused expulsion from Eurovision 2016?",
+      "options": [
+        "Romania",
+        "Bulgaria",
+        "Turkey",
+        "Morocco"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 322,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Stage designer Florian Wieder has now designed how many consecutive Eurovision stages including 2026?",
+      "options": [
+        "3",
+        "5",
+        "7",
+        "9"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 323,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "In what language must the national spokesperson deliver their votes?",
+      "options": [
+        "English only",
+        "French only",
+        "English or French",
+        "Their national language"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 324,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which broadcaster took over managing Germany's Eurovision entry from NDR in 2026?",
+      "options": [
+        "ZDF",
+        "SWR",
+        "ARD",
+        "WDR"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 325,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Austria's 'Vienna Calling' national final selected their 2026 act. What is the format called?",
+      "options": [
+        "Österreich entscheidet",
+        "Vienna Calling",
+        "ORF Final",
+        "Grand Prix Austria"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 326,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "How many times has Ireland won Eurovision — the joint record with Sweden?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 327,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "How many times has Sweden won Eurovision — the joint record with Ireland?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 328,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "What is 'nul points' in Eurovision?",
+      "options": [
+        "Getting exactly 1 point",
+        "Getting zero points in the final",
+        "Not qualifying from the semi",
+        "Being disqualified"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 329,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "How many 'Big Five' countries automatically qualify for the Grand Final?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 330,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "The Big Five consists of France, Germany, Italy, UK and which country?",
+      "options": [
+        "Austria",
+        "Spain",
+        "Sweden",
+        "Switzerland"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 331,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Which country has received 'nul points' the most times in history?",
+      "options": [
+        "Germany",
+        "Austria",
+        "Norway",
+        "UK"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 332,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "What was the first year ALL voting moved to combined jury+televote in the final?",
+      "options": [
+        "2009",
+        "2010",
+        "2013",
+        "2016"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 333,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Ireland won three consecutive Eurovisions from which years?",
+      "options": [
+        "1989-1991",
+        "1990-1992",
+        "1992-1994",
+        "1993-1995"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 334,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Which scoring positions does each country announce out loud?",
+      "options": [
+        "Only 12",
+        "8, 10 and 12",
+        "1 through 12",
+        "10 and 12"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 335,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Finland waited how many years after their debut before winning Eurovision?",
+      "options": [
+        "34",
+        "40",
+        "44",
+        "50"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 336,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Which year was the REST OF THE WORLD voting aggregate first introduced?",
+      "options": [
+        "2022",
+        "2023",
+        "2024",
+        "2025"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 337,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "The most countries to compete in a single Eurovision was 44. In which year?",
+      "options": [
+        "2008",
+        "2011",
+        "2015",
+        "2018"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 338,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Eurovision 2026 has 35 countries — the lowest since which year?",
+      "options": [
+        "1999",
+        "2001",
+        "2003",
+        "2005"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 339,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Alexander Rybak's 2009 victory set a new record for highest winning score. How many points?",
+      "options": [
+        "367",
+        "387",
+        "407",
+        "423"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 340,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "In 2022, Ukraine won despite which country leading the jury vote?",
+      "options": [
+        "Italy",
+        "UK",
+        "Sweden",
+        "Moldova"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 341,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "What percentage of the vote does the jury account for in the Grand Final?",
+      "options": [
+        "25%",
+        "40%",
+        "50%",
+        "60%"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 342,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Germany received nul points at Eurovision 2015 — what was their entry?",
+      "options": [
+        "Satellite",
+        "That's What I Am",
+        "Black Smoke",
+        "Deja Vu"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 343,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Who holds the record for winning Eurovision most times as a SONGWRITER?",
+      "options": [
+        "ABBA",
+        "Johnny Logan",
+        "Ralph Siegel",
+        "Brendan Graham"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 344,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "What is the maximum points total a country can receive from ALL juries combined?",
+      "options": [
+        "468",
+        "504",
+        "520",
+        "576"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 345,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which decade saw the same country win Eurovision three times?",
+      "options": [
+        "1960s",
+        "1970s",
+        "1980s",
+        "1990s"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 346,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Vienna sits on which famous European river?",
+      "options": [
+        "Rhine",
+        "Elbe",
+        "Danube",
+        "Vistula"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 347,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Albania's capital city — where Eurovision artist Alis is from — is called what?",
+      "options": [
+        "Skopje",
+        "Tirana",
+        "Prishtina",
+        "Sofia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 348,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Latvia's capital city is called what?",
+      "options": [
+        "Vilnius",
+        "Tallinn",
+        "Riga",
+        "Minsk"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 349,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Lithuania's capital city is called what?",
+      "options": [
+        "Vilnius",
+        "Tallinn",
+        "Riga",
+        "Minsk"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 350,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Estonia's capital city is called what?",
+      "options": [
+        "Vilnius",
+        "Tallinn",
+        "Riga",
+        "Minsk"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 351,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Luxembourg's capital city is called what?",
+      "options": [
+        "Luxembourg City",
+        "Echternach",
+        "Esch-sur-Alzette",
+        "Diekirch"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 352,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "San Marino is completely surrounded by which country?",
+      "options": [
+        "France",
+        "Austria",
+        "Italy",
+        "Switzerland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 353,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Australia competes in Eurovision despite being on which continent?",
+      "options": [
+        "Africa",
+        "Asia",
+        "Oceania",
+        "South America"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 354,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Eurovision 2023 was held in Liverpool. What country is Liverpool in?",
+      "options": [
+        "Ireland",
+        "Scotland",
+        "Wales",
+        "England"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 355,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Eurovision 2019 was held in Tel Aviv. What country is that?",
+      "options": [
+        "Palestine",
+        "Jordan",
+        "Egypt",
+        "Israel"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 356,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "How many countries share a border with Austria?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 357,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "The Rathausplatz Eurovision Village in Vienna is next to which famous building?",
+      "options": [
+        "The Opera House",
+        "The Parliament",
+        "Vienna City Hall",
+        "The Imperial Palace"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 358,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Montenegro borders Serbia to the north and which country to the west?",
+      "options": [
+        "Croatia",
+        "Albania",
+        "Bosnia",
+        "Slovenia"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 359,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision 2018 was held in Lisbon. What country is Lisbon in?",
+      "options": [
+        "Spain",
+        "Brazil",
+        "Portugal",
+        "Italy"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 360,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision 2016 was held in Stockholm. What country is Stockholm in?",
+      "options": [
+        "Norway",
+        "Denmark",
+        "Sweden",
+        "Finland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 361,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision 2017 was held in Kyiv. What country is Kyiv in?",
+      "options": [
+        "Russia",
+        "Belarus",
+        "Ukraine",
+        "Poland"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 362,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Which was the only North African country to have competed in Eurovision?",
+      "options": [
+        "Tunisia",
+        "Egypt",
+        "Morocco",
+        "Algeria"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 363,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "The Wiener Stadthalle is located in which district of Vienna?",
+      "options": [
+        "1st Bezirk",
+        "7th Bezirk",
+        "15th Bezirk",
+        "21st Bezirk"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 364,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "Vienna's Schönbrunn Palace was the imperial summer residence of which dynasty?",
+      "options": [
+        "Hohenzollern",
+        "Habsburg",
+        "Romanov",
+        "Bourbon"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 365,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "Estonia's Vanilla Ninja represented Switzerland at Eurovision 2005 — in which city?",
+      "options": [
+        "Zurich",
+        "Lausanne",
+        "Geneva",
+        "Basel"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 366,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What prop is considered a Eurovision cliché used almost every year?",
+      "options": [
+        "Pyrotechnics",
+        "Wind machines",
+        "LED screens",
+        "All of these"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 367,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What is a 'key change' meant to create in a Eurovision performance?",
+      "options": [
+        "Comedy effect",
+        "Dramatic emotional peak",
+        "Technical complexity",
+        "Cultural reference"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 368,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What is the 'Turquoise Carpet' event at Eurovision?",
+      "options": [
+        "The green room party",
+        "The opening ceremony",
+        "The winner's photo call",
+        "The rehearsal run"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 369,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What is the maximum number of performers allowed on stage during a Eurovision act?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "8"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 370,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Croatia's 2024 entry Baby Lasagna was famous for what visual staging element?",
+      "options": [
+        "Actual fire",
+        "Chicken costumes",
+        "Industrial factory aesthetic",
+        "Mirror ball suit"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 371,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Which country's 2017 entry featured a man on a hamster wheel on stage?",
+      "options": [
+        "Hungary",
+        "Austria",
+        "France",
+        "Latvia"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 372,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Verka Serduchka's 2007 staging featured performers in what costume?",
+      "options": [
+        "Space suits",
+        "Star-shaped silver hats",
+        "Traditional Ukrainian dress",
+        "Black feathered wings"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 373,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Which act famously used drone technology in their 2015 staging?",
+      "options": [
+        "Ukraine 2022",
+        "Israel 2018",
+        "Sweden 2015",
+        "Australia 2016"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 374,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Ukraine's 2022 Kalush Orchestra mixed hip hop with which traditional genre?",
+      "options": [
+        "Opera",
+        "Folk",
+        "Classical",
+        "Jazz"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 375,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "What musical instrument featured prominently in Luxembourg's 2026 act by Eva Marija?",
+      "options": [
+        "Piano",
+        "Harp",
+        "Violin",
+        "Cello"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 376,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Hatari from Iceland wore controversial BDSM-inspired costumes at Eurovision in which year?",
+      "options": [
+        "2017",
+        "2018",
+        "2019",
+        "2020"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 377,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "What was controversial about Madonna's interval act at Eurovision 2019?",
+      "options": [
+        "She performed in Hebrew",
+        "She wore a Palestinian flag",
+        "She showed Palestine flag imagery and sang out of tune",
+        "She refused to take the stage"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 378,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Teya & Salena from Austria at Eurovision 2023 gained viral fame for which prop?",
+      "options": [
+        "A giant piano",
+        "A shopping cart",
+        "Feather boa",
+        "A mirror"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 379,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "The Eurovision 2026 stage design in Vienna is inspired by which art movement?",
+      "options": [
+        "Bauhaus",
+        "Viennese Secession",
+        "Art Deco",
+        "Abstract Expressionism"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 380,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Florian Wieder's 2026 stage design uses three leitmotifs. 'The Leaf' and 'The Curved Line' are two — what is the third?",
+      "options": [
+        "The Circle",
+        "The Wave",
+        "The Construct",
+        "The Spiral"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 381,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Which country's 2024 entry used a wind machine so powerful it became a meme?",
+      "options": [
+        "Finland",
+        "Croatia",
+        "Israel",
+        "Australia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 382,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Which famous Eurovision act entered the stage on a white horse?",
+      "options": [
+        "Hungary 2017",
+        "Georgia 2016",
+        "Turkey 2010",
+        "Armenia 2014"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 383,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "The Eurovision 2026 green room design is inspired by what Viennese institution?",
+      "options": [
+        "The Opera House",
+        "Viennese coffee houses",
+        "The Burgtheater",
+        "Schönbrunn Palace"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 384,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Which year did Eurovision introduce the LED wristbands given to all audience members?",
+      "options": [
+        "2012",
+        "2013",
+        "2014",
+        "2015"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 385,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Australia's 2019 act Kate Miller-Heidke performed suspended on what structure?",
+      "options": [
+        "A crane",
+        "A giant spring/pole",
+        "A trapeze",
+        "A rotating platform"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 386,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete: ABBA, Waterloo — 'My my, at Waterloo, Napoleon did surrender. Oh yeah, ...'",
+      "options": [
+        "and I have met my destiny",
+        "and history did not defend her",
+        "and I feel fine today",
+        "and now it's time to surrender"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 387,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete: Loreen, Euphoria 2012 — 'You lift me up, you ...'",
+      "options": [
+        "set me free",
+        "melt me down",
+        "fill my soul",
+        "light my way"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 388,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete: Loreen, Tattoo 2023 — 'You're in my ...'",
+      "options": [
+        "heart forever",
+        "blood forever",
+        "soul forever",
+        "dreams forever"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 389,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete: Netta, Toy 2018 — 'I'm not your toy, you stupid ...'",
+      "options": [
+        "man",
+        "boy",
+        "clown",
+        "fool"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 390,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete: Dana International, Diva 1998 — 'Venus, Aphrodite — she's the ...'",
+      "options": [
+        "Queen",
+        "Diva",
+        "Goddess",
+        "Star"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 391,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete: Mans Zelmerlow, Heroes 2015 — 'We are the heroes of our ...'",
+      "options": [
+        "own time",
+        "hearts tonight",
+        "time tonight",
+        "lives and times"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 392,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "Complete: Lordi, Hard Rock Hallelujah 2006 — 'Hard Rock Hallelujah! Hallelujah! ...'",
+      "options": [
+        "Rock forever!",
+        "Hallelujah!",
+        "The saints are marching!",
+        "We will rise!"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 393,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: Alexander Rybak, Fairytale 2009 — 'I'm in love with a fairytale, even though it ...'",
+      "options": [
+        "hurts",
+        "fades away",
+        "breaks my heart",
+        "isn't real"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 394,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: Conchita Wurst, Rise Like a Phoenix 2014 — 'I rose to arms with my ...'",
+      "options": [
+        "heart of gold",
+        "faith burning bright",
+        "flaming torch",
+        "broken chains"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 395,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: Duncan Laurence, Arcade 2019 — 'I'd rather bleed than have you ...'",
+      "options": [
+        "go away",
+        "leave me dry",
+        "turn away",
+        "say goodbye"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 396,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: Nemo, The Code 2024 — 'I found the code — I found the ...'",
+      "options": [
+        "key to set me free",
+        "answer deep in me",
+        "truth inside of me",
+        "light that guides me"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 397,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: Ruslana, Wild Dances 2004 — 'Hey! Wild dances fill my heart with ...'",
+      "options": [
+        "fire and desire",
+        "passion and art",
+        "fury and light",
+        "magic and might"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 398,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: Måneskin, Zitti e buoni 2021 — 'Siamo fuori di testa, ma diversi da ...'",
+      "options": [
+        "voi",
+        "loro",
+        "tutti",
+        "sempre"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 399,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: JJ, Wasted Love 2025 — 'My love was ...'",
+      "options": [
+        "wasted on you",
+        "lost in you",
+        "given freely",
+        "just a dream"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 400,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "Complete: Kalush Orchestra, Stefania 2022 — 'Stefania, Stefania, mamo ridna ...'",
+      "options": [
+        "ya do tebe linu",
+        "oy u luzi kalyna",
+        "hey my dear mother",
+        "polia zelenyi"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 401,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Jamala, 1944 — 'When strangers are coming — they come to your house, they ...'",
+      "options": [
+        "take your gold",
+        "kill you all",
+        "burn your home",
+        "steal your soul"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 402,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Verka Serduchka, Dancing Lasha Tumbai 2007 — 'Dancing, lasha tumbai — ...'",
+      "options": [
+        "Ukraine, goodbye!",
+        "Russia, goodbye!",
+        "Europe, goodbye!",
+        "Together, goodbye!"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 403,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Mans Zelmerlow, Heroes 2015 — 'We are the heroes of our time — but we're ...'",
+      "options": [
+        "dancing in the night",
+        "running out of time",
+        "chasing down the sun",
+        "losing every time"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 404,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Salvador Sobral, Amar Pelos Dois 2017 — 'Se tu não tens amor, ...'",
+      "options": [
+        "não tens nada mais",
+        "eu tenho por nós dois",
+        "perdeste o coração",
+        "a vida não tem paz"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 405,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Hard Rock Hallelujah, Lordi 2006 — 'The saints are crippled on this sinners ...'",
+      "options": [
+        "night",
+        "road",
+        "ground",
+        "stage"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 406,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Euphoria, Loreen 2012 — 'Every piece of me — you ...'",
+      "options": [
+        "set me free",
+        "hold the key",
+        "are the dream",
+        "fill the space"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 407,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Fairytale, Rybak 2009 — 'Years ago when I was younger, I kinda liked a girl I knew. She was mine and ...'",
+      "options": [
+        "we were sweethearts",
+        "we were nothing but sweethearts",
+        "we were sweethearts forever",
+        "I loved her so"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 408,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Toy, Netta 2018 — 'Clap snap, clap your hands, clap snap ...'",
+      "options": [
+        "here I am",
+        "shake that body",
+        "do what I say",
+        "make it pop"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 409,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Wild Dances, Ruslana 2004 — 'Come and dance with me, ...'",
+      "options": [
+        "wild dances free!",
+        "under the moon!",
+        "ancient fires bright!",
+        "hear my heart beat!"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 410,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Complete: Rise Like a Phoenix, Conchita 2014 — 'And I could not breathe ...'",
+      "options": [
+        "I cried for you",
+        "I bled for you",
+        "you held me still",
+        "you turned away"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 411,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Eurovision 2026 is the 70th edition. In which year was the 1st edition?",
+      "options": [
+        "1954",
+        "1955",
+        "1956",
+        "1957"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 412,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "How many countries participate in Eurovision 2026?",
+      "options": [
+        "33",
+        "34",
+        "35",
+        "36"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 413,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Which country won Eurovision 2025 prompting Austria to host 2026?",
+      "options": [
+        "Switzerland",
+        "Italy",
+        "Austria",
+        "France"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 414,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Bulgaria returns to Eurovision 2026 after how many years away?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 415,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Moldova returns to Eurovision 2026 after how many years away?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 416,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Romania returns to Eurovision 2026 after how many years away?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 417,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Which five countries boycotted Eurovision 2026?",
+      "options": [
+        "Iceland Ireland Netherlands Slovenia Spain",
+        "Germany France Italy UK Spain",
+        "Poland Hungary Romania Serbia Spain",
+        "Norway Denmark Finland Sweden Spain"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 418,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "San Marino's returning artist Senhit previously competed in 2011 and which other year?",
+      "options": [
+        "2017",
+        "2019",
+        "2021",
+        "2023"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 419,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Eva Marija from Luxembourg was inspired to play violin after watching which Eurovision winner?",
+      "options": [
+        "Loreen 2012",
+        "Alexander Rybak 2009",
+        "Conchita Wurst 2014",
+        "Nemo 2024"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 420,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Which 2026 Eurovision act describes their performance genre as 'hip hop meets folk'?",
+      "options": [
+        "Kalush Orchestra (2022 flashback)",
+        "LELEK Croatia",
+        "Satoshi Moldova",
+        "LAVINA Serbia"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 421,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "What language is Luxembourg's 2026 entry 'Mother Nature' performed in?",
+      "options": [
+        "Luxembourgish",
+        "French",
+        "German",
+        "English"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 422,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Which is the ONLY 2026 Eurovision song performed in German?",
+      "options": [
+        "Austria's Tanzschein",
+        "Germany's Fire",
+        "UK's Eins Zwei Drei",
+        "Moldova's Viva Moldova"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 423,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which famous pop duo's career was launched by their Eurovision 1974 win?",
+      "options": [
+        "Roxette",
+        "ABBA",
+        "Ace of Base",
+        "Europe"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 424,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "The Will Ferrell film 'The Story of Fire Saga' is set in which country?",
+      "options": [
+        "Norway",
+        "Sweden",
+        "Denmark",
+        "Iceland"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 425,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Father Ted's Eurovision episode features which fictional song?",
+      "options": [
+        "A Song for Europe",
+        "My Lovely Horse",
+        "Eurovision Dream",
+        "Ted's Big Song"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 426,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which Croatian singer performed the iconic 'Marija Magdalena' at Eurovision 1999?",
+      "options": [
+        "Severina",
+        "Toše Proeski",
+        "Jacques Houdek",
+        "Doris Dragović"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 427,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Plastic Bertrand represented which country at Eurovision 1983?",
+      "options": [
+        "Belgium",
+        "France",
+        "Luxembourg",
+        "Switzerland"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 428,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Diodato was Italy's representative in the cancelled 2020 Eurovision. What was his song?",
+      "options": [
+        "Soldi",
+        "Fai rumore",
+        "Zitti e buoni",
+        "Brividi"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 429,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What connects Lordi 2006, Conchita Wurst 2014 and Nemo 2024 as winners?",
+      "options": [
+        "All wore elaborate costumes",
+        "All won by large margins",
+        "All won for central European countries",
+        "All were solo artists"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 430,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which Eurovision winner was the first openly non-binary winner?",
+      "options": [
+        "Conchita Wurst",
+        "Nemo",
+        "Måneskin",
+        "Duncan Laurence"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 431,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Vienna is nicknamed the City of what?",
+      "options": [
+        "Light",
+        "Music",
+        "Dreams",
+        "Love"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 432,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "Which Austrian composer, born in Vienna, wrote 'Eine kleine Nachtmusik'?",
+      "options": [
+        "Beethoven",
+        "Schubert",
+        "Mozart",
+        "Haydn"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 433,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Which year did Eurovision introduce the live televote?",
+      "options": [
+        "1994",
+        "1997",
+        "1999",
+        "2001"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 434,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "What is the maximum total points a winning country can receive from televote alone?",
+      "options": [
+        "468",
+        "504",
+        "576",
+        "624"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 435,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "How many performers maximum can appear on stage during a Eurovision act?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "8"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 436,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What is the approximate total running time of the Eurovision Grand Final broadcast?",
+      "options": [
+        "2 hours",
+        "3 hours",
+        "4 hours",
+        "5 hours"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 437,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Brotherhood of Man won Eurovision 1976 for the UK with which song?",
+      "options": [
+        "Save Your Kisses for Me",
+        "Puppet on a String",
+        "Boom Bang-a-Bang",
+        "Congratulations"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 438,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Katrina and the Waves won Eurovision 1997 for the UK with which song?",
+      "options": [
+        "Love Shine a Light",
+        "Flying Without Wings",
+        "Hold Me Now",
+        "Power to All Our Friends"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 439,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which was the most expensive Eurovision ever held (est. €50m+)?",
+      "options": [
+        "Russia 2009",
+        "Germany 2011",
+        "Azerbaijan 2012",
+        "Ukraine 2017"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 440,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "How many songs did each country contribute at the FIRST Eurovision in 1956?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 441,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is Serbia's group name at Eurovision 2026?",
+      "options": [
+        "Hurricane",
+        "Konstrakta",
+        "LAVINA",
+        "Teya Dora"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 442,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Who represents San Marino at Eurovision 2026?",
+      "options": [
+        "Valentina Monetta",
+        "Serhat",
+        "Senhit",
+        "Gabry Ponte"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 443,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is San Marino's song at Eurovision 2026?",
+      "options": [
+        "Adrenalina",
+        "Tutta l'Italia",
+        "Superstar",
+        "Say Na Na Na"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 444,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Who represents Greece at Eurovision 2026?",
+      "options": [
+        "Klavdia",
+        "Stefania",
+        "Akylas",
+        "Elena Paparizou"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 445,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Georgia's song at Eurovision 2026?",
+      "options": [
+        "Take Me as I Am",
+        "For You and For Me",
+        "TBA",
+        "Waterfall"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 446,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which year did Austria win Eurovision for the first time?",
+      "options": [
+        "1964",
+        "1965",
+        "1966",
+        "1967"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 447,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Austria's first Eurovision win came with Udo Jürgens and which song?",
+      "options": [
+        "Merci Chérie",
+        "Poupée de cire",
+        "Un banc un arbre",
+        "La La La"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 448,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "How many times had Austria won Eurovision before 2025?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 449,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "What was the gap in years between Austria's 2014 win and their 2025 win?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 450,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What is the name of the Eurovision app for Vienna 2026?",
+      "options": [
+        "EuroApp",
+        "Vienna 2026",
+        "ivie",
+        "Eurovision Go"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 451,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Which Austrian city bid against Vienna to host Eurovision 2026?",
+      "options": [
+        "Salzburg",
+        "Graz",
+        "Innsbruck",
+        "Linz"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 452,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Eurovision 2021 was held in Rotterdam. What country is Rotterdam in?",
+      "options": [
+        "Belgium",
+        "Netherlands",
+        "Denmark",
+        "Germany"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 453,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "What is the minimum number of points a country can give another in Eurovision?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 454,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "Since 2016, jury points and televote points are announced separately. Who announces jury points first?",
+      "options": [
+        "The televote",
+        "The national spokesperson",
+        "The EBU representative",
+        "The jury chairperson"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 455,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Which 2026 Eurovision act features a classical violinist paired with a pop vocalist?",
+      "options": [
+        "Finland — Lampenius & Parkkonen",
+        "Luxembourg — Eva Marija",
+        "Latvia — Atvara",
+        "Serbia — LAVINA"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 456,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Romania's Eurovision 2026 artist Alexandra Căpitănescu won which TV show?",
+      "options": [
+        "Romanian Idol",
+        "X Factor Romania",
+        "The Voice of Romania 2023",
+        "Românii au talent"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 457,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which country did Celine Dion represent at Eurovision 1988?",
+      "options": [
+        "France",
+        "Canada",
+        "Switzerland",
+        "Belgium"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 458,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "The Eurovision Song Contest always begins with which fanfare?",
+      "options": [
+        "Ode to Joy",
+        "Prélude du Te Deum",
+        "Triumphal March",
+        "La Marseillaise"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 459,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "How many volunteer staff did ORF recruit for Eurovision 2026?",
+      "options": [
+        "300",
+        "500",
+        "800",
+        "1200"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 460,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What new voting element was introduced at Eurovision 2023?",
+      "options": [
+        "Online jury voting",
+        "Rest of the World televote aggregate",
+        "National jury live voting",
+        "Audience in-venue vote"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 461,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Which country performs 'Fire' at Eurovision 2026?",
+      "options": [
+        "Austria",
+        "Australia",
+        "Germany",
+        "Greece"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 462,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Which country performs 'Bella' at Eurovision 2026?",
+      "options": [
+        "Italy",
+        "Moldova",
+        "Malta",
+        "Luxembourg"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 463,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Which country performs 'Andromeda' at Eurovision 2026?",
+      "options": [
+        "Serbia",
+        "Bulgaria",
+        "Croatia",
+        "Montenegro"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 464,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Belgium's Essyla was a finalist on which TV show?",
+      "options": [
+        "The Voice Belgique",
+        "Belgium's Got Talent",
+        "Idol Belgium",
+        "X Factor Belgium"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 465,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Georgia's Eurovision 2026 group Bzikebi previously won which contest?",
+      "options": [
+        "Junior Eurovision 2006",
+        "Junior Eurovision 2007",
+        "Junior Eurovision 2008",
+        "Junior Eurovision 2009"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 466,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Jacques Houdek represented Croatia at Eurovision 2017 — what was unique about his performance?",
+      "options": [
+        "He played piano",
+        "He sang a duet with himself in two vocal styles",
+        "He performed in three languages",
+        "He had a surprise guest"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 467,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which Eurovision 2024 act caused controversy by wrapping themselves in a Palestine flag?",
+      "options": [
+        "Ireland",
+        "Iceland",
+        "Netherlands",
+        "Slovenia"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 468,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Which Eurovision 2026 entry features BDSM-inspired leather costumes?",
+      "options": [
+        "Serbia — LAVINA",
+        "Romania — Choke Me",
+        "Montenegro — Nova Zora",
+        "Lithuania — Lion Ceccah"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 469,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which country received the first ever perfect 12 from all juries simultaneously?",
+      "options": [
+        "ABBA Sweden 1974",
+        "Norway 2009",
+        "Portugal 2017",
+        "Ukraine 2022"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 470,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What does the Eurovision 2026 logo 'Chameleon Heart' consist of?",
+      "options": [
+        "50 layers of the Eurovision heart",
+        "60 layers of the Eurovision heart",
+        "70 layers of the Eurovision heart",
+        "80 layers of the Eurovision heart"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 471,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Which 2026 country performs a song in the Cypriot dialect?",
+      "options": [
+        "Greece",
+        "Cyprus",
+        "Malta",
+        "Albania"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 472,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is the Grand Final date for Eurovision 2026?",
+      "options": [
+        "12 May",
+        "14 May",
+        "16 May",
+        "18 May"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 473,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is the Semi-Final 1 date for Eurovision 2026?",
+      "options": [
+        "10 May",
+        "12 May",
+        "14 May",
+        "16 May"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 474,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "What is the Semi-Final 2 date for Eurovision 2026?",
+      "options": [
+        "11 May",
+        "12 May",
+        "14 May",
+        "15 May"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 475,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Which country does Norway's Eurovision 2026 artist Lovv represent?",
+      "options": [
+        "Sweden",
+        "Denmark",
+        "Finland",
+        "Norway"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 476,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Conchita Wurst's real name is Thomas Neuwirth. Which country does he come from?",
+      "options": [
+        "Germany",
+        "Switzerland",
+        "Austria",
+        "Luxembourg"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 477,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which Eurovision winner later ran for political office in their country?",
+      "options": [
+        "Conchita Wurst",
+        "Ruslana",
+        "Lordi",
+        "Alexander Rybak"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 478,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Eurovision is broadcast in approximately how many countries worldwide?",
+      "options": [
+        "50",
+        "100",
+        "160",
+        "200"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 479,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "How many songs competed at the very first Eurovision Song Contest in 1956?",
+      "options": [
+        "7",
+        "10",
+        "14",
+        "20"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 480,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Australia's Kate Miller-Heidke at Eurovision 2019 performed on a spring/pole — how high did she go?",
+      "options": [
+        "2 metres",
+        "3 metres",
+        "4 metres",
+        "6 metres"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 481,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Which 2026 Eurovision entry is described as mixing pop and upbeat dance music?",
+      "options": [
+        "Albania — Nân",
+        "Bulgaria — Bangaranga",
+        "Cyprus — JALLA",
+        "Norway — YA YA YA"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 482,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Delta Goodrem's Eurovision 2026 song 'Eclipse' features which distinctive instrument?",
+      "options": [
+        "Harp",
+        "Violin",
+        "Cello",
+        "Harpsichord"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 483,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "In which year was Russia last allowed to compete in Eurovision?",
+      "options": [
+        "2020",
+        "2021",
+        "2022 semi-final",
+        "They were excluded before competing in 2022"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 484,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What is the name of the official Eurovision nightclub during the contest week?",
+      "options": [
+        "EuroNight",
+        "EuroClub",
+        "EuroBar",
+        "EuroParty"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 485,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "The EuroClub at Eurovision 2026 is located at which Vienna venue?",
+      "options": [
+        "Wiener Stadthalle",
+        "Rathausplatz",
+        "Prater Dome",
+        "Vienna City Hall"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 486,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "How many points does a country get for coming first in a jury vote?",
+      "options": [
+        "10",
+        "12",
+        "15",
+        "25"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 487,
+      "category": "2026",
+      "difficulty": "hard",
+      "question": "Albania's Alis says the song 'Nân' came to him how?",
+      "options": [
+        "While watching a documentary",
+        "In a dream",
+        "During a studio session",
+        "After a personal loss"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 488,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which country has the unique distinction of winning Eurovision in their debut year?",
+      "options": [
+        "Australia",
+        "Switzerland 1956",
+        "Luxembourg",
+        "San Marino"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 489,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What restriction applies to lyrics in Eurovision entries?",
+      "options": [
+        "Must be in official national language",
+        "No political statements",
+        "No swear words",
+        "Both B and C"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 490,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What is the 'douze points' moment — when does it typically happen during voting?",
+      "options": [
+        "First announcement",
+        "Middle of voting",
+        "End of each country's vote",
+        "When only 12 countries are left"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 491,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "France's Monroe is how old at Eurovision 2026?",
+      "options": [
+        "15",
+        "17",
+        "19",
+        "21"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 492,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which year did Croatia first compete in Eurovision?",
+      "options": [
+        "1991",
+        "1992",
+        "1993",
+        "1994"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 493,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "San Marino first competed in Eurovision in which year?",
+      "options": [
+        "2006",
+        "2008",
+        "2010",
+        "2012"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 494,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "What record did Portugal break at Eurovision 2017 besides winning for the first time?",
+      "options": [
+        "Youngest winner",
+        "Quietest entry to win",
+        "Oldest winner ever",
+        "First win without English"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 495,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Which broadcaster controls the Eurovision Song Contest format and rules?",
+      "options": [
+        "ORF",
+        "BBC",
+        "EBU",
+        "RAI"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 496,
+      "category": "2026",
+      "difficulty": "easy",
+      "question": "Israel's 2026 entry is performed by whom?",
+      "options": [
+        "Eden Golan",
+        "Yuval Raphael",
+        "Noa Kirel",
+        "Noam Bettan"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 497,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "What is Israel's song at Eurovision 2026?",
+      "options": [
+        "Hurricane",
+        "October Rain",
+        "Michelle",
+        "Toy"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 498,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which year saw the largest number of countries withdraw from Eurovision due to a rule dispute?",
+      "options": [
+        "1970",
+        "1999",
+        "2016",
+        "2026"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 499,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What does the EBU require host broadcasters to guarantee to host Eurovision?",
+      "options": [
+        "50,000 hotel beds",
+        "Venue capacity over 10,000",
+        "Full nationwide broadcast",
+        "All three of these"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 500,
+      "category": "2026",
+      "difficulty": "medium",
+      "question": "Which Eurovision 2026 act performs in a massive black cloak with silver face paint?",
+      "options": [
+        "Albania — Alis",
+        "Lithuania — Lion Ceccah",
+        "Montenegro — Tamara",
+        "Serbia — LAVINA"
+      ],
+      "correct": 1
+    }
+  ]
+}
