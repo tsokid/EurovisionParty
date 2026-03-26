@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useLeaderboard } from '../../hooks/useLeaderboard';
 import { useGameStore } from '../../stores/gameStore';
@@ -21,13 +22,14 @@ const RANK_STYLES: Record<number, { emoji: string; color: string; bg: string }> 
 };
 
 export default function LeaderboardScreen() {
+  const { t } = useTranslation();
   const { room, player: currentPlayer } = useGameStore();
   const { players, isLoading } = useLeaderboard(room?.id);
 
   if (!room) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-white/50">Loading...</p>
+        <p className="text-white/50">{t('common.loading')}</p>
       </div>
     );
   }
@@ -36,7 +38,7 @@ export default function LeaderboardScreen() {
     <div className="flex flex-col h-full px-4 py-2">
       {/* Header */}
       <h2 className="glow-text text-xl font-bold mb-4 text-center">
-        {'\uD83C\uDFC6'} Leaderboard
+        {t('leaderboard.title')}
       </h2>
 
       {/* Loading */}
@@ -54,7 +56,7 @@ export default function LeaderboardScreen() {
       {!isLoading && players.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 gap-4">
           <div className="text-5xl">{'\uD83C\uDFC6'}</div>
-          <p className="text-white/50 text-sm">No players yet</p>
+          <p className="text-white/50 text-sm">{t('leaderboard.noPlayers')}</p>
         </div>
       )}
 
@@ -112,15 +114,15 @@ export default function LeaderboardScreen() {
                     </p>
                     {isCurrentPlayer && (
                       <span className="text-[10px] text-euro-gold bg-euro-gold/20 rounded-full px-1.5 py-0.5">
-                        You
+                        {t('common.you')}
                       </span>
                     )}
                   </div>
                   {/* Score breakdown */}
                   <div className="flex gap-2 text-[10px] text-white/30 mt-0.5">
-                    <span>Quiz: {p.quiz_points}</span>
-                    <span>Pred: {p.pred_points}</span>
-                    <span>Duel: {p.duel_points}</span>
+                    <span>{t('leaderboard.quiz', { points: p.quiz_points })}</span>
+                    <span>{t('leaderboard.pred', { points: p.pred_points })}</span>
+                    <span>{t('leaderboard.duel', { points: p.duel_points })}</span>
                   </div>
                 </div>
 
@@ -134,7 +136,7 @@ export default function LeaderboardScreen() {
                   >
                     {p.total_points}
                   </p>
-                  <p className="text-[10px] text-white/30">pts</p>
+                  <p className="text-[10px] text-white/30">{t('common.pts')}</p>
                 </div>
               </div>
             </motion.div>

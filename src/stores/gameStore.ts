@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Room, Player, Notification, TabId, QuizAnswer, QuizQuestion } from '../lib/types';
+import type { Room, Player, Notification, TabId, QuizAnswer } from '../lib/types';
 
 /** Persisted quiz progress — survives tab switches (in-memory) */
 export interface QuizProgress {

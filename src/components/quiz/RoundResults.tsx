@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
@@ -21,6 +22,7 @@ export default function RoundResults({
   onContinue,
   isLastRound,
 }: RoundResultsProps) {
+  const { t } = useTranslation();
   const [animatedScore, setAnimatedScore] = useState(0);
 
   const totalScore = answers.reduce((sum, a) => sum + a.points_awarded, 0);
@@ -67,7 +69,7 @@ export default function RoundResults({
           animate={{ scale: 1 }}
           transition={{ type: 'spring', damping: 12 }}
         >
-          Round {roundNumber} Complete!
+          {t('roundResults.complete', { num: roundNumber })}
         </motion.h2>
 
         {/* Animated score */}
@@ -77,7 +79,7 @@ export default function RoundResults({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, type: 'spring', damping: 15 }}
         >
-          <p className="text-white/60 text-sm font-medium mb-1">Points Earned</p>
+          <p className="text-white/60 text-sm font-medium mb-1">{t('roundResults.pointsEarned')}</p>
           <p className="text-5xl font-extrabold glow-text-gold tabular-nums">
             {animatedScore}
           </p>
@@ -87,16 +89,14 @@ export default function RoundResults({
         <div className="flex justify-center gap-6 mb-6">
           <div className="text-center">
             <p className="text-2xl font-bold text-white">
-              {correctCount}/{QUESTIONS_PER_ROUND}
+              {t('roundResults.correctCount', { count: correctCount, total: QUESTIONS_PER_ROUND })}
             </p>
-            <p className="text-xs text-white/50">Correct</p>
           </div>
           <div className="w-px bg-white/10" />
           <div className="text-center">
             <p className="text-2xl font-bold text-white tabular-nums">
-              {avgTime.toFixed(1)}s
+              {t('roundResults.avgTime', { time: avgTime.toFixed(1) })}
             </p>
-            <p className="text-xs text-white/50">Avg Time</p>
           </div>
         </div>
 
@@ -138,7 +138,7 @@ export default function RoundResults({
 
         {/* Continue button */}
         <Button fullWidth onClick={onContinue}>
-          {isLastRound ? 'View Final Results' : `Next Round (${roundNumber + 1}/${MAX_ROUNDS})`}
+          {isLastRound ? t('roundResults.finalResults') : t('roundResults.nextRound', { current: roundNumber + 1, max: MAX_ROUNDS })}
         </Button>
       </Card>
     </motion.div>

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import ConfettiOverlay from '../ui/ConfettiOverlay';
 import type { Player } from '../../lib/types';
 
@@ -14,6 +15,7 @@ export default function WinnerCrown({
   visible,
   onDismiss,
 }: WinnerCrownProps) {
+  const { t } = useTranslation();
   // Memoize random star positions so they don't change on re-render
   const starPositions = useMemo(() =>
     Array.from({ length: 6 }, () => ({
@@ -66,7 +68,7 @@ export default function WinnerCrown({
               delay: 0.6,
             }}
           >
-            WINNER!
+            {t('winnerCrown.winner')}
           </motion.h1>
 
           {/* Winner avatar */}
@@ -96,14 +98,14 @@ export default function WinnerCrown({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.4 }}
           >
-            <p className="text-white/50 text-sm mb-1">Final Score</p>
+            <p className="text-white/50 text-sm mb-1">{t('winnerCrown.finalScore')}</p>
             <p className="text-5xl font-black glow-text-gold tabular-nums">
               {winner.total_points}
             </p>
             <div className="flex gap-4 mt-2 text-xs text-white/40">
-              <span>Quiz: {winner.quiz_points}</span>
-              <span>Pred: {winner.pred_points}</span>
-              <span>Duel: {winner.duel_points}</span>
+              <span>{t('leaderboard.quiz', { points: winner.quiz_points })}</span>
+              <span>{t('leaderboard.pred', { points: winner.pred_points })}</span>
+              <span>{t('leaderboard.duel', { points: winner.duel_points })}</span>
             </div>
           </motion.div>
 
@@ -137,7 +139,7 @@ export default function WinnerCrown({
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5 }}
           >
-            Tap anywhere to close
+            {t('winnerCrown.tapClose')}
           </motion.p>
         </motion.div>
       )}

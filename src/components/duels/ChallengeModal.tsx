@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
@@ -40,17 +41,17 @@ function canChallenge(
   const activeDuel = pairDuels.find((d) =>
     ['pending', 'accepted', 'answering'].includes(d.status),
   );
-  if (activeDuel) return { allowed: false, reason: 'Duel in progress' };
+  if (activeDuel) return { allowed: false, reason: 'challengeModal.duelInProgress' };
 
   // Rule 4: a rematch already exists between the pair → max 2 plays reached
   const rematchExists = pairDuels.some((d) => d.is_rematch);
-  if (rematchExists) return { allowed: false, reason: 'Max duels reached' };
+  if (rematchExists) return { allowed: false, reason: 'challengeModal.maxDuels' };
 
   // Rule 3: this player already sent a challenge to this opponent (non-rematch)
   const myPrevChallenge = pairDuels.find(
     (d) => d.challenger_id === playerId && !d.is_rematch,
   );
-  if (myPrevChallenge) return { allowed: false, reason: 'Already challenged once' };
+  if (myPrevChallenge) return { allowed: false, reason: 'challengeModal.alreadyChallenged' };
 
   return { allowed: true };
 }
@@ -62,6 +63,7 @@ export default function ChallengeModal({
   isLoading = false,
   duels = [],
 }: ChallengeModalProps) {
+  const { t } = useTranslation();
   const { player, players } = useGameStore();
   const [challengingId, setChallengingId] = useState<string | null>(null);
 
@@ -80,16 +82,16 @@ export default function ChallengeModal({
       {/* Header */}
       <div className="text-center mb-4">
         <div className="text-3xl mb-2">{'\u2694\uFE0F'}</div>
-        <h3 className="glow-text text-xl font-bold">Challenge a Player!</h3>
+        <h3 className="glow-text text-xl font-bold">{t('challengeModal.title')}</h3>
         <p className="text-white/50 text-sm mt-1">
-          Pick your opponent for a 3-question duel
+          {t('challengeModal.subtitle')}
         </p>
       </div>
 
       {/* Player list */}
       {opponents.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-white/40 text-sm">No other players available</p>
+          <p className="text-white/40 text-sm">{t('challengeModal.noPlayers')}</p>
         </div>
       ) : (
         <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -113,7 +115,7 @@ export default function ChallengeModal({
                     {opponent.name}
                   </p>
                   <p className="text-white/40 text-xs">
-                    {opponent.total_points} pts
+                    {opponent.total_points} {t('common.pts')}
                   </p>
                 </div>
                 {check.allowed ? (
@@ -123,11 +125,11 @@ export default function ChallengeModal({
                     disabled={isLoading && challengingId === opponent.id}
                     loading={isLoading && challengingId === opponent.id}
                   >
-                    Challenge!
+                    {t('challengeModal.challengeBtn')}
                   </Button>
                 ) : (
                   <span className="text-xs text-white/30 italic whitespace-nowrap">
-                    {check.reason}
+                    {t(check.reason!)}
                   </span>
                 )}
               </motion.div>
@@ -139,7 +141,7 @@ export default function ChallengeModal({
       {/* Close button */}
       <div className="mt-4">
         <Button variant="ghost" fullWidth onClick={onClose}>
-          Cancel
+          {t('challengeModal.cancelBtn')}
         </Button>
       </div>
     </Modal>

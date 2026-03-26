@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { validateName } from '../../lib/nameFilter';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -23,6 +24,7 @@ export default function NameEntry({
   error,
   initialRoomCode = '',
 }: NameEntryProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [roomCode, setRoomCode] = useState(initialRoomCode);
   const [password, setPassword] = useState('');
@@ -60,10 +62,10 @@ export default function NameEntry({
             {/* Title */}
             <div className="text-center">
               <h2 className="text-2xl font-bold text-euro-white glow-text">
-                {mode === 'create' ? 'Create Your Room' : 'Join a Room'}
+                {mode === 'create' ? t('nameEntry.createTitle') : t('nameEntry.joinTitle')}
               </h2>
               <p className="text-sm text-white/50 mt-1">
-                Pick a name to get started
+                {t('nameEntry.subtitle')}
               </p>
             </div>
 
@@ -74,7 +76,7 @@ export default function NameEntry({
                   htmlFor="room-code"
                   className="block text-sm font-medium text-white/70 mb-1.5"
                 >
-                  Room Code
+                  {t('nameEntry.roomCodeLabel')}
                 </label>
                 <input
                   id="room-code"
@@ -83,7 +85,7 @@ export default function NameEntry({
                   onChange={(e) =>
                     setRoomCode(e.target.value.toUpperCase().slice(0, 6))
                   }
-                  placeholder="e.g. ABCD"
+                  placeholder={t('nameEntry.roomCodePlaceholder')}
                   maxLength={6}
                   autoComplete="off"
                   className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-center text-xl font-bold tracking-[0.3em] text-euro-gold placeholder:text-white/20 placeholder:tracking-normal placeholder:text-base placeholder:font-normal focus:outline-none focus:border-euro-purple-light focus:ring-1 focus:ring-euro-purple-light/50 transition-colors min-h-[48px]"
@@ -97,14 +99,14 @@ export default function NameEntry({
                 htmlFor="player-name"
                 className="block text-sm font-medium text-white/70 mb-1.5"
               >
-                Your Name
+                {t('nameEntry.nameLabel')}
               </label>
               <input
                 id="player-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value.slice(0, 20))}
-                placeholder="Enter your name"
+                placeholder={t('nameEntry.namePlaceholder')}
                 maxLength={20}
                 autoComplete="off"
                 className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-euro-purple-light focus:ring-1 focus:ring-euro-purple-light/50 transition-colors min-h-[48px]"
@@ -115,7 +117,7 @@ export default function NameEntry({
                 ) : (
                   <span />
                 )}
-                <p className="text-xs text-white/30">{name.length}/20</p>
+                <p className="text-xs text-white/30">{t('nameEntry.nameCount', { current: name.length })}</p>
               </div>
             </div>
 
@@ -125,7 +127,7 @@ export default function NameEntry({
                 htmlFor="room-password"
                 className="block text-sm font-medium text-white/70 mb-1.5"
               >
-                {mode === 'create' ? 'Set Room Password' : 'Room Password'}
+                {mode === 'create' ? t('nameEntry.passwordCreateLabel') : t('nameEntry.passwordJoinLabel')}
               </label>
               <div className="relative">
                 <input
@@ -135,8 +137,8 @@ export default function NameEntry({
                   onChange={(e) => setPassword(e.target.value.slice(0, 30))}
                   placeholder={
                     mode === 'create'
-                      ? 'Choose a password (6+ chars)'
-                      : 'Enter room password'
+                      ? t('nameEntry.passwordCreatePlaceholder')
+                      : t('nameEntry.passwordJoinPlaceholder')
                   }
                   maxLength={30}
                   autoComplete="off"
@@ -147,15 +149,15 @@ export default function NameEntry({
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors text-sm leading-none"
                   tabIndex={-1}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t('nameEntry.hidePassword') : t('nameEntry.showPassword')}
                 >
-                  {showPassword ? 'Hide' : 'Show'}
+                  {showPassword ? t('nameEntry.hidePassword') : t('nameEntry.showPassword')}
                 </button>
               </div>
               <p className="text-xs text-white/30 mt-1">
                 {mode === 'create'
-                  ? 'Share this password with your friends to join'
-                  : 'Ask the room creator for the password'}
+                  ? t('nameEntry.passwordCreateHint')
+                  : t('nameEntry.passwordJoinHint')}
               </p>
             </div>
 
@@ -179,7 +181,7 @@ export default function NameEntry({
               loading={isLoading}
               disabled={!canSubmit}
             >
-              🎶 Let's Party!
+              {t('nameEntry.submitBtn')}
             </Button>
 
             {onBack && (
@@ -188,7 +190,7 @@ export default function NameEntry({
                 onClick={onBack}
                 className="w-full text-center text-sm text-white/40 hover:text-white/60 py-2 transition-colors"
               >
-                ← Back
+                {t('nameEntry.backBtn')}
               </button>
             )}
           </form>

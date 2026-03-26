@@ -1,22 +1,24 @@
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../../stores/gameStore';
 import type { TabId } from '../../lib/types';
 
 interface NavTab {
   id: TabId;
-  label: string;
+  labelKey: string;
   emoji: string;
 }
 
 const TABS: NavTab[] = [
-  { id: 'quiz', label: 'Quiz', emoji: '🧠' },
-  { id: 'predictions', label: 'Predict', emoji: '🔮' },
-  { id: 'duels', label: 'Duels', emoji: '⚔️' },
-  { id: 'leaderboard', label: 'Board', emoji: '🏆' },
+  { id: 'quiz', labelKey: 'nav.quiz', emoji: '🧠' },
+  { id: 'predictions', labelKey: 'nav.predict', emoji: '🔮' },
+  { id: 'duels', labelKey: 'nav.duels', emoji: '⚔️' },
+  { id: 'leaderboard', labelKey: 'nav.board', emoji: '🏆' },
 ];
 
 export default function BottomNav() {
+  const { t } = useTranslation();
   const { activeTab, setActiveTab, room, notifications } = useGameStore();
   const isVotingOrLater = room?.phase === 'voting_live' || room?.phase === 'final';
 
@@ -31,6 +33,7 @@ export default function BottomNav() {
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
           const badgeCount = tab.id === 'duels' ? duelNotifCount : 0;
+          const label = tab.id === 'predictions' && isVotingOrLater ? t('nav.results') : t(tab.labelKey);
 
           return (
             <button
@@ -40,7 +43,7 @@ export default function BottomNav() {
                 'flex-1 flex flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] transition-colors relative',
                 isActive ? 'text-euro-gold' : 'text-white/50',
               )}
-              aria-label={tab.label}
+              aria-label={label}
               aria-current={isActive ? 'page' : undefined}
             >
               {/* Active indicator bar */}
@@ -61,7 +64,7 @@ export default function BottomNav() {
                 )}
               </span>
               <span className="text-[10px] font-medium">
-                {tab.id === 'predictions' && isVotingOrLater ? 'Results' : tab.label}
+                {label}
               </span>
             </button>
           );

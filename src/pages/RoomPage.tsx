@@ -108,7 +108,7 @@ export function RoomPage() {
   }
 
   // Active game phases — show tabbed content
-  const isVotingOrLater = currentRoom.phase === 'voting_live' || currentRoom.phase === 'final';
+  const isVotingOrLater = (currentRoom.phase as string) === 'voting_live' || (currentRoom.phase as string) === 'final';
 
   const renderActiveTab = () => {
     switch (activeTab) {

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
 import { useNotifications } from '../../hooks/useNotifications';
@@ -8,51 +9,55 @@ interface NotificationPanelProps {
   onClose: () => void;
 }
 
-function formatNotification(type: string, payload: Record<string, unknown>): { icon: string; text: string } {
-  switch (type) {
-    case 'duel_challenge':
-      return {
-        icon: '\u2694\uFE0F',
-        text: `${payload.challengerName ?? 'Someone'} challenged you to a duel!`,
-      };
-    case 'duel_won':
-      return {
-        icon: '\uD83C\uDFC6',
-        text: `You won a duel! +${payload.points ?? 0} points`,
-      };
-    case 'duel_lost':
-      return {
-        icon: '\uD83D\uDE14',
-        text: `You lost a duel. Better luck next time!`,
-      };
-    case 'duel_accepted':
-      return {
-        icon: '\u26A1',
-        text: `Your duel challenge was accepted! Time to answer.`,
-      };
-    case 'duel_declined':
-      return {
-        icon: '\u274C',
-        text: `Your duel challenge was declined.`,
-      };
-    case 'duel_rematch':
-      return {
-        icon: '\uD83D\uDD01',
-        text: `${payload.challengerName ?? 'Someone'} wants a rematch!`,
-      };
-    case 'duel_decision':
-      return {
-        icon: '\uD83D\uDCA1',
-        text: payload.decision === 'steal'
-          ? `Your opponent stole your duel points!`
-          : `Your opponent doubled their duel points.`,
-      };
-    default:
-      return {
-        icon: '\uD83D\uDD14',
-        text: (payload.message as string) ?? 'New notification',
-      };
-  }
+function useFormatNotification() {
+  const { t } = useTranslation();
+
+  return (type: string, payload: Record<string, unknown>): { icon: string; text: string } => {
+    switch (type) {
+      case 'duel_challenge':
+        return {
+          icon: '\u2694\uFE0F',
+          text: t('notifications.duelChallenge', { name: payload.challengerName ?? 'Someone' }),
+        };
+      case 'duel_won':
+        return {
+          icon: '\uD83C\uDFC6',
+          text: t('notifications.duelWon', { points: payload.points ?? 0 }),
+        };
+      case 'duel_lost':
+        return {
+          icon: '\uD83D\uDE14',
+          text: t('notifications.duelLost'),
+        };
+      case 'duel_accepted':
+        return {
+          icon: '\u26A1',
+          text: t('notifications.duelAccepted'),
+        };
+      case 'duel_declined':
+        return {
+          icon: '\u274C',
+          text: t('notifications.duelDeclined'),
+        };
+      case 'duel_rematch':
+        return {
+          icon: '\uD83D\uDD01',
+          text: t('notifications.duelRematch', { name: payload.challengerName ?? 'Someone' }),
+        };
+      case 'duel_decision':
+        return {
+          icon: '\uD83D\uDCA1',
+          text: payload.decision === 'steal'
+            ? t('notifications.duelSteal')
+            : t('notifications.duelDouble'),
+        };
+      default:
+        return {
+          icon: '\uD83D\uDD14',
+          text: (payload.message as string) ?? t('notifications.newNotification'),
+        };
+    }
+  };
 }
 
 /** Which tab a notification type should navigate to */
@@ -62,19 +67,26 @@ function getNotificationTab(type: string): 'duels' | 'quiz' | 'leaderboard' | nu
   return null;
 }
 
-function timeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return 'just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  return `${Math.floor(hours / 24)}d ago`;
+function useTimeAgo() {
+  const { t } = useTranslation();
+
+  return (dateStr: string): string => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return t('common.justNow');
+    if (minutes < 60) return t('common.agoMinutes', { minutes });
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return t('common.agoHours', { hours });
+    return t('common.agoDays', { days: Math.floor(hours / 24) });
+  };
 }
 
 export default function NotificationPanel({ open, onClose }: NotificationPanelProps) {
+  const { t } = useTranslation();
   const { notifications, player, setActiveTab } = useGameStore();
   const { markAsRead, markAllRead } = useNotifications(player?.id);
+  const formatNotification = useFormatNotification();
+  const timeAgo = useTimeAgo();
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
@@ -114,7 +126,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
               {/* Header */}
               <div className="flex items-center justify-between p-3 border-b border-white/10">
                 <h3 className="text-sm font-bold text-white">
-                  Notifications {unreadCount > 0 && (
+                  {t('notifications.title', { defaultValue: 'Notifications' })} {unreadCount > 0 && (
                     <span className="text-euro-gold">({unreadCount})</span>
                   )}
                 </h3>
@@ -123,7 +135,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                     onClick={() => markAllRead()}
                     className="text-xs text-euro-purple-light hover:text-white transition-colors"
                   >
-                    Mark all read
+                    {t('notifications.markAllRead', { defaultValue: 'Mark all read' })}
                   </button>
                 )}
               </div>
@@ -133,7 +145,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                 {notifications.length === 0 ? (
                   <div className="p-6 text-center">
                     <p className="text-3xl mb-2">{'\uD83D\uDD14'}</p>
-                    <p className="text-white/40 text-sm">No notifications yet</p>
+                    <p className="text-white/40 text-sm">{t('notifications.empty', { defaultValue: 'No notifications yet' })}</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-white/5">
@@ -159,7 +171,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                               </p>
                               {tab && !notif.is_read && (
                                 <span className="text-[10px] text-euro-purple-light">
-                                  Tap to view →
+                                  {t('notifications.tapToView', { defaultValue: 'Tap to view →' })}
                                 </span>
                               )}
                             </div>

@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import Timer from '../ui/Timer';
 import AnswerButton from './AnswerButton';
 import ConfettiOverlay from '../ui/ConfettiOverlay';
 import { TIMER_SECONDS } from '../../lib/constants';
+import { getLocalizedQuestion } from '../../lib/questionLocale';
 import type { QuizQuestion } from '../../lib/types';
 
 interface QuestionCardProps {
@@ -24,6 +26,8 @@ export default function QuestionCard({
   onAnswer,
   timeRemaining,
 }: QuestionCardProps) {
+  const { t } = useTranslation();
+  const { question: localQ, options } = getLocalizedQuestion(question);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
@@ -79,7 +83,7 @@ export default function QuestionCard({
         {/* Header: progress + timer */}
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm text-white/60 font-medium">
-            Question {questionIndex + 1} of {totalQuestions}
+            {t('questionCard.progress', { current: questionIndex + 1, total: totalQuestions })}
           </span>
           <Timer seconds={TIMER_SECONDS} remaining={timeRemaining} size={56} />
         </div>
@@ -98,12 +102,12 @@ export default function QuestionCard({
 
         {/* Question text */}
         <h2 className="text-lg font-bold text-white mb-6 leading-relaxed">
-          {question.question}
+          {localQ}
         </h2>
 
         {/* Answer options */}
         <div className="flex flex-col gap-3 flex-1">
-          {question.options.map((option, idx) => (
+          {options.map((option, idx) => (
             <AnswerButton
               key={idx}
               text={option}
@@ -127,11 +131,11 @@ export default function QuestionCard({
               className="mt-4 text-center"
             >
               {answeredCorrectly ? (
-                <p className="text-euro-green font-bold text-lg">Correct!</p>
+                <p className="text-euro-green font-bold text-lg">{t('questionCard.correct')}</p>
               ) : selectedIndex === null || selectedIndex === -1 ? (
-                <p className="text-euro-gold font-bold text-lg">Time's up!</p>
+                <p className="text-euro-gold font-bold text-lg">{t('questionCard.timeUp')}</p>
               ) : (
-                <p className="text-euro-red font-bold text-lg">Wrong!</p>
+                <p className="text-euro-red font-bold text-lg">{t('questionCard.wrong')}</p>
               )}
             </motion.div>
           )}

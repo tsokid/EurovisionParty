@@ -162,7 +162,7 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
     try {
       const totalScore = answers.reduce((sum, a) => sum + a.points, 0);
 
-      const { data: result, error: rpcErr } = await supabase.rpc('submit_duel_answers', {
+      const { error: rpcErr } = await supabase.rpc('submit_duel_answers', {
         p_duel_id: duelId,
         p_player_id: playerId,
         p_answers: answers,

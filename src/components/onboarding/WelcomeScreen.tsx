@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Button from '../ui/Button';
 import ThemeToggle from '../ui/ThemeToggle';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
 
 interface WelcomeScreenProps {
   onCreateRoom: () => void;
@@ -20,10 +22,13 @@ export default function WelcomeScreen({
   onCreateRoom,
   onJoinRoom,
 }: WelcomeScreenProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-svh bg-euro-gradient flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
-      {/* Theme toggle — top right */}
-      <div className="absolute top-5 right-5 z-10">
+      {/* Theme toggle & language switcher — top right */}
+      <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
+        <LanguageSwitcher />
         <ThemeToggle />
       </div>
 
@@ -80,7 +85,7 @@ export default function WelcomeScreen({
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        Eurovision Grand Final Party Game
+        {t('welcome.subtitle')}
       </motion.p>
 
       {/* Action buttons */}
@@ -96,7 +101,7 @@ export default function WelcomeScreen({
           fullWidth
           onClick={onCreateRoom}
         >
-          🎉 Create Room
+          {t('welcome.createRoom')}
         </Button>
 
         <Button
@@ -105,7 +110,7 @@ export default function WelcomeScreen({
           fullWidth
           onClick={onJoinRoom}
         >
-          🚪 Join Room
+          {t('welcome.joinRoom')}
         </Button>
       </motion.div>
 
@@ -116,7 +121,7 @@ export default function WelcomeScreen({
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        Vienna 2026 🇦🇹
+        {t('welcome.location')}
       </motion.p>
     </div>
   );

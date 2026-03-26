@@ -1,8 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
 import { COUNTRIES_2026, COUNTRY_MAP } from '../../lib/countries2026';
+import { getLocalizedCountryName } from '../../lib/countryLocale';
 import { supabase } from '../../lib/supabase';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -20,6 +22,7 @@ interface ScoredPrediction {
 }
 
 export default function PredictionsScreen() {
+  const { t } = useTranslation();
   const { room, player } = useGameStore();
 
   const [activeTab, setActiveTab] = useState<PredictionTab>('top5');
@@ -53,7 +56,7 @@ export default function PredictionsScreen() {
           }
         }
       })
-      .finally(() => setIsLoadingExisting(false));
+      .then(() => setIsLoadingExisting(false), () => setIsLoadingExisting(false));
   }, [room, player]);
 
   const currentList = activeTab === 'top5' ? top5 : worst5;
@@ -156,7 +159,7 @@ export default function PredictionsScreen() {
   if (!room || !player) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-white/50">Loading...</p>
+        <p className="text-white/50">{t('common.loading')}</p>
       </div>
     );
   }
@@ -170,24 +173,23 @@ export default function PredictionsScreen() {
     return (
       <div className="flex flex-col h-full px-4 py-2">
         <div className="text-center mb-4">
-          <h2 className="glow-text text-xl font-bold mb-1">🔮 Your Predictions</h2>
+          <h2 className="glow-text text-xl font-bold mb-1">{t('predictions.title')}</h2>
           <Card className="inline-block">
-            <span className="text-sm text-white/50">Total prediction score: </span>
-            <span className="text-lg font-bold glow-text-gold">{totalPts}pts</span>
+            <span className="text-sm text-white/50">{t('predictions.totalScore', { points: totalPts })}</span>
           </Card>
         </div>
 
         <div className="flex-1 overflow-y-auto space-y-4">
           <div>
             <h3 className="text-sm font-semibold text-euro-gold mb-2 flex items-center gap-2">
-              🏆 Top 5 <Badge variant="gold">{existingPrediction.top5_points ?? 0}pts</Badge>
+              {t('predictions.top5Tab')} <Badge variant="gold">{existingPrediction.top5_points ?? 0}{t('common.pts')}</Badge>
             </h3>
             <div className="space-y-1">
               {t5Countries.map((c, i) => (
                 <div key={c.id} className="flex items-center gap-2 glass rounded-lg px-3 py-1.5">
                   <span className="w-5 text-xs font-bold text-white/40">{i + 1}</span>
                   <span>{c.flag}</span>
-                  <span className="text-sm text-white">{c.name}</span>
+                  <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
                 </div>
               ))}
             </div>
@@ -195,14 +197,14 @@ export default function PredictionsScreen() {
 
           <div>
             <h3 className="text-sm font-semibold text-euro-pink mb-2 flex items-center gap-2">
-              💩 Worst 5 <Badge variant="purple">{existingPrediction.worst5_points ?? 0}pts</Badge>
+              {t('predictions.worst5Tab')} <Badge variant="purple">{existingPrediction.worst5_points ?? 0}{t('common.pts')}</Badge>
             </h3>
             <div className="space-y-1">
               {w5Countries.map((c, i) => (
                 <div key={c.id} className="flex items-center gap-2 glass rounded-lg px-3 py-1.5">
                   <span className="w-5 text-xs font-bold text-white/40">{i + 1}</span>
                   <span>{c.flag}</span>
-                  <span className="text-sm text-white">{c.name}</span>
+                  <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
                 </div>
               ))}
             </div>
@@ -221,32 +223,32 @@ export default function PredictionsScreen() {
       <div className="flex flex-col h-full px-4 py-2">
         <div className="text-center mb-4">
           <div className="text-4xl mb-2">✅</div>
-          <h2 className="glow-text text-xl font-bold">Predictions Submitted!</h2>
-          <p className="text-white/50 text-sm">Waiting for official results to score...</p>
+          <h2 className="glow-text text-xl font-bold">{t('predictions.submitted')}</h2>
+          <p className="text-white/50 text-sm">{t('predictions.waitingResults')}</p>
         </div>
 
         {t5Countries.length > 0 && (
           <div className="flex-1 overflow-y-auto space-y-4">
             <div>
-              <h3 className="text-sm font-semibold text-euro-gold mb-2">🏆 Your Top 5</h3>
+              <h3 className="text-sm font-semibold text-euro-gold mb-2">{t('predictions.yourTop5')}</h3>
               <div className="space-y-1">
                 {t5Countries.map((c, i) => (
                   <div key={c.id} className="flex items-center gap-2 glass rounded-lg px-3 py-1.5">
                     <span className="w-5 text-xs font-bold text-white/40">{i + 1}</span>
                     <span>{c.flag}</span>
-                    <span className="text-sm text-white">{c.name}</span>
+                    <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-euro-pink mb-2">💩 Your Worst 5</h3>
+              <h3 className="text-sm font-semibold text-euro-pink mb-2">{t('predictions.yourWorst5')}</h3>
               <div className="space-y-1">
                 {w5Countries.map((c, i) => (
                   <div key={c.id} className="flex items-center gap-2 glass rounded-lg px-3 py-1.5">
                     <span className="w-5 text-xs font-bold text-white/40">{i + 1}</span>
                     <span>{c.flag}</span>
-                    <span className="text-sm text-white">{c.name}</span>
+                    <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
                   </div>
                 ))}
               </div>
@@ -261,9 +263,9 @@ export default function PredictionsScreen() {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4 px-4">
         <div className="text-4xl">🔒</div>
-        <h2 className="text-xl font-bold text-white">Predictions Locked</h2>
+        <h2 className="text-xl font-bold text-white">{t('predictions.locked')}</h2>
         <p className="text-white/50 text-center text-sm">
-          Predictions open when the game advances to the Predictions phase.
+          {t('predictions.lockedDesc')}
         </p>
       </div>
     );
@@ -283,7 +285,7 @@ export default function PredictionsScreen() {
     <div className="flex flex-col h-full px-4 py-2">
       {/* Title */}
       <h2 className="glow-text text-xl font-bold mb-4 text-center">
-        {'\uD83D\uDD2E'} Make Your Predictions
+        {t('predictions.makePredictions')}
       </h2>
 
       {/* Tab switcher */}
@@ -299,7 +301,7 @@ export default function PredictionsScreen() {
                 : 'glass text-white/60',
             )}
           >
-            {tab === 'top5' ? '\uD83C\uDFC6 Top 5' : '\uD83D\uDCA9 Worst 5'}
+            {tab === 'top5' ? t('predictions.top5Tab') : t('predictions.worst5Tab')}
           </button>
         ))}
       </div>
@@ -325,7 +327,7 @@ export default function PredictionsScreen() {
                 <div className="flex-1 glass rounded-xl px-3 py-2 flex items-center gap-2">
                   <span className="text-lg">{country.flag}</span>
                   <span className="text-white text-sm font-medium flex-1">
-                    {country.name}
+                    {getLocalizedCountryName(country)}
                   </span>
 
                   {/* Reorder buttons */}
@@ -354,7 +356,7 @@ export default function PredictionsScreen() {
                 </div>
               ) : (
                 <div className="flex-1 border-2 border-dashed border-white/10 rounded-xl px-3 py-2 text-white/30 text-sm">
-                  Tap a country below
+                  {t('predictions.selectCountry')}
                 </div>
               )}
             </motion.div>
@@ -365,7 +367,7 @@ export default function PredictionsScreen() {
       {/* Country picker grid */}
       <div className="flex-1 overflow-y-auto">
         <p className="text-xs text-white/40 mb-2 font-medium">
-          Select countries:
+          {t('predictions.selectCountries')}
         </p>
         <div className="grid grid-cols-4 gap-2">
           {COUNTRIES_2026.map((country) => {
@@ -385,7 +387,7 @@ export default function PredictionsScreen() {
               >
                 <span className="text-xl">{country.flag}</span>
                 <span className="text-[10px] text-white/70 leading-tight truncate w-full">
-                  {country.name}
+                  {getLocalizedCountryName(country)}
                 </span>
               </motion.button>
             );
@@ -401,7 +403,7 @@ export default function PredictionsScreen() {
           loading={isSubmitting}
           onClick={handleSubmit}
         >
-          {isComplete ? 'Submit Predictions' : 'Fill all 10 slots to submit'}
+          {isComplete ? t('predictions.submitBtn') : t('predictions.fillSlots')}
         </Button>
       </div>
 

@@ -6516,6 +6516,2006 @@
         "Serbia — LAVINA"
       ],
       "correct": 1
+    },
+    {
+      "id": 501,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "In what year did Greece win the Eurovision Song Contest for the first time?",
+      "question_el": "Ποια χρονιά κέρδισε η Ελλάδα τον Διαγωνισμό Τραγουδιού της Eurovision για πρώτη φορά;",
+      "options": [
+        "2001",
+        "2003",
+        "2005",
+        "2007"
+      ],
+      "options_el": [
+        "2001",
+        "2003",
+        "2005",
+        "2007"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 502,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Who won Eurovision 2005 for Greece with 'My Number One'?",
+      "question_el": "Ποια κέρδισε τη Eurovision 2005 για την Ελλάδα με το 'My Number One';",
+      "options": [
+        "Despina Vandi",
+        "Helena Paparizou",
+        "Kalomira",
+        "Anna Vissi"
+      ],
+      "options_el": [
+        "Δέσποινα Βανδή",
+        "Έλενα Παπαρίζου",
+        "Καλομοίρα",
+        "Άννα Βίσση"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 503,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "In what year did Greece first participate in the Eurovision Song Contest?",
+      "question_el": "Ποια χρονιά συμμετείχε η Ελλάδα για πρώτη φορά στη Eurovision;",
+      "options": [
+        "1970",
+        "1974",
+        "1976",
+        "1980"
+      ],
+      "options_el": [
+        "1970",
+        "1974",
+        "1976",
+        "1980"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 504,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which Greek broadcaster is responsible for selecting Greece's Eurovision entry?",
+      "question_el": "Ποιος ελληνικός ραδιοτηλεοπτικός φορέας επιλέγει τη συμμετοχή της Ελλάδας στη Eurovision;",
+      "options": [
+        "ANT1",
+        "MEGA",
+        "ERT",
+        "SKAI"
+      ],
+      "options_el": [
+        "ANT1",
+        "MEGA",
+        "ΕΡΤ",
+        "SKAI"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 505,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "In which city did Greece host the Eurovision Song Contest in 2006?",
+      "question_el": "Σε ποια πόλη φιλοξένησε η Ελλάδα τη Eurovision το 2006;",
+      "options": [
+        "Thessaloniki",
+        "Athens",
+        "Patras",
+        "Heraklion"
+      ],
+      "options_el": [
+        "Θεσσαλονίκη",
+        "Αθήνα",
+        "Πάτρα",
+        "Ηράκλειο"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 506,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which duo represented Greece at Eurovision 2001 with the song 'Die for You'?",
+      "question_el": "Ποιο ντουέτο εκπροσώπησε την Ελλάδα στη Eurovision 2001 με το τραγούδι 'Die for You';",
+      "options": [
+        "Antique",
+        "Koza Mostra",
+        "Argo",
+        "Fly"
+      ],
+      "options_el": [
+        "Antique",
+        "Koza Mostra",
+        "Argo",
+        "Fly"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 507,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "What was the name of Greece's first Eurovision entry in 1974?",
+      "question_el": "Ποιο ήταν το τραγούδι της πρώτης ελληνικής συμμετοχής στη Eurovision το 1974;",
+      "options": [
+        "Panagia Mou, Panagia Mou",
+        "Krassi, Thalassa ke t' Agori Mou",
+        "Kratisses",
+        "Methismeno Feggari"
+      ],
+      "options_el": [
+        "Παναγιά Μου, Παναγιά Μου",
+        "Κρασί, Θάλασσα και τ' Αγόρι Μου",
+        "Κράτησες",
+        "Μεθυσμένο Φεγγάρι"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 508,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Who represented Greece at Eurovision 1974 with the country's debut entry?",
+      "question_el": "Ποια εκπροσώπησε την Ελλάδα στη Eurovision 1974 στην πρώτη συμμετοχή της χώρας;",
+      "options": [
+        "Nana Mouskouri",
+        "Marinella",
+        "Elpida",
+        "Vicky Leandros"
+      ],
+      "options_el": [
+        "Νάνα Μούσχουρη",
+        "Μαρινέλλα",
+        "Ελπίδα",
+        "Βίκυ Λέανδρος"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 509,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which Greek singer represented his country at Eurovision in both 2004 and 2009?",
+      "question_el": "Ποιος Έλληνας τραγουδιστής εκπροσώπησε τη χώρα του στη Eurovision τόσο το 2004 όσο και το 2009;",
+      "options": [
+        "Giorgos Alkaios",
+        "Sakis Rouvas",
+        "Kostas Martakis",
+        "Michalis Hatzigiannis"
+      ],
+      "options_el": [
+        "Γιώργος Αλκαίος",
+        "Σάκης Ρουβάς",
+        "Κώστας Μαρτάκης",
+        "Μιχάλης Χατζηγιάννης"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 510,
+      "category": "history",
+      "difficulty": "easy",
+      "question": "Which singer performed 'Secret Combination' for Greece at Eurovision 2008?",
+      "question_el": "Ποια τραγουδίστρια ερμήνευσε το 'Secret Combination' για την Ελλάδα στη Eurovision 2008;",
+      "options": [
+        "Helena Paparizou",
+        "Kalomira",
+        "Demy",
+        "Stefania"
+      ],
+      "options_el": [
+        "Έλενα Παπαρίζου",
+        "Καλομοίρα",
+        "Demy",
+        "Stefania"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 511,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "What place did Antique achieve at Eurovision 2001 with 'Die for You'?",
+      "question_el": "Ποια θέση κατέκτησαν οι Antique στη Eurovision 2001 με το 'Die for You';",
+      "options": [
+        "1st",
+        "3rd",
+        "5th",
+        "7th"
+      ],
+      "options_el": [
+        "1η",
+        "3η",
+        "5η",
+        "7η"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 512,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "In what year did Elpida represent Greece at Eurovision with 'Socrates'?",
+      "question_el": "Ποια χρονιά εκπροσώπησε η Ελπίδα την Ελλάδα στη Eurovision με το τραγούδι 'Σωκράτης';",
+      "options": [
+        "1977",
+        "1979",
+        "1981",
+        "1983"
+      ],
+      "options_el": [
+        "1977",
+        "1979",
+        "1981",
+        "1983"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 513,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "What was the name of Sakis Rouvas's entry at Eurovision 2004?",
+      "question_el": "Ποιο ήταν το τραγούδι του Σάκη Ρουβά στη Eurovision 2004;",
+      "options": [
+        "This Is Our Night",
+        "Shake It",
+        "My Number One",
+        "Secret Combination"
+      ],
+      "options_el": [
+        "This Is Our Night",
+        "Shake It",
+        "My Number One",
+        "Secret Combination"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 514,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "What place did Sakis Rouvas achieve at Eurovision 2004 with 'Shake It'?",
+      "question_el": "Ποια θέση πήρε ο Σάκης Ρουβάς στη Eurovision 2004 με το 'Shake It';",
+      "options": [
+        "1st",
+        "3rd",
+        "5th",
+        "7th"
+      ],
+      "options_el": [
+        "1η",
+        "3η",
+        "5η",
+        "7η"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 515,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "What was the name of Sakis Rouvas's Eurovision 2009 entry?",
+      "question_el": "Ποιο ήταν το τραγούδι του Σάκη Ρουβά στη Eurovision 2009;",
+      "options": [
+        "Shake It",
+        "This Is Our Night",
+        "My Number One",
+        "Yassou Maria"
+      ],
+      "options_el": [
+        "Shake It",
+        "This Is Our Night",
+        "My Number One",
+        "Γεια σου Μαρία"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 516,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "What place did Sakis Rouvas achieve at Eurovision 2009 with 'This Is Our Night'?",
+      "question_el": "Ποια θέση πήρε ο Σάκης Ρουβάς στη Eurovision 2009 με το 'This Is Our Night';",
+      "options": [
+        "3rd",
+        "5th",
+        "7th",
+        "9th"
+      ],
+      "options_el": [
+        "3η",
+        "5η",
+        "7η",
+        "9η"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 517,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Who represented Greece at Eurovision 2010 with 'OPA'?",
+      "question_el": "Ποιος εκπροσώπησε την Ελλάδα στη Eurovision 2010 με το 'OPA';",
+      "options": [
+        "Sakis Rouvas",
+        "Giorgos Alkaios",
+        "Loukas Yiorkas",
+        "Kostas Martakis"
+      ],
+      "options_el": [
+        "Σάκης Ρουβάς",
+        "Γιώργος Αλκαίος",
+        "Λούκας Γιώρκας",
+        "Κώστας Μαρτάκης"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 518,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Who won the Eurovision 2011 for Greece with the song 'Watch My Dance'?",
+      "question_el": "Ποιος εκπροσώπησε την Ελλάδα στη Eurovision 2011 με το τραγούδι 'Watch My Dance';",
+      "options": [
+        "Giorgos Alkaios",
+        "Sakis Rouvas",
+        "Loukas Yiorkas feat. Stereo Mike",
+        "Eleftheria Eleftheriou"
+      ],
+      "options_el": [
+        "Γιώργος Αλκαίος",
+        "Σάκης Ρουβάς",
+        "Λούκας Γιώρκας feat. Stereo Mike",
+        "Ελευθερία Ελευθερίου"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 519,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "In which venue did Greece host Eurovision 2006?",
+      "question_el": "Σε ποιο χώρο φιλοξενήθηκε η Eurovision 2006 στην Ελλάδα;",
+      "options": [
+        "Athens Olympic Stadium",
+        "Olympic Indoor Hall",
+        "Megaron Mousikis",
+        "Panathenaic Stadium"
+      ],
+      "options_el": [
+        "Ολυμπιακό Στάδιο Αθηνών",
+        "Ολυμπιακό Κλειστό Γυμναστήριο",
+        "Μέγαρο Μουσικής",
+        "Παναθηναϊκό Στάδιο"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 520,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Who co-presented the Eurovision Song Contest 2006 in Athens alongside Maria Menounos?",
+      "question_el": "Ποιος συμπαρουσίασε τον Διαγωνισμό Eurovision 2006 στην Αθήνα μαζί με τη Μαρία Μενούνος;",
+      "options": [
+        "Helena Paparizou",
+        "Giorgos Kapoutzidis",
+        "Sakis Rouvas",
+        "Anna Vissi"
+      ],
+      "options_el": [
+        "Έλενα Παπαρίζου",
+        "Γιώργος Καπουτζίδης",
+        "Σάκης Ρουβάς",
+        "Άννα Βίσση"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 521,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Who represented Greece at Eurovision 2012 with 'Aphrodisiac'?",
+      "question_el": "Ποια εκπροσώπησε την Ελλάδα στη Eurovision 2012 με το 'Aphrodisiac';",
+      "options": [
+        "Demy",
+        "Eleftheria Eleftheriou",
+        "Helena Paparizou",
+        "Stefania"
+      ],
+      "options_el": [
+        "Demy",
+        "Ελευθερία Ελευθερίου",
+        "Έλενα Παπαρίζου",
+        "Stefania"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 522,
+      "category": "history",
+      "difficulty": "medium",
+      "question": "Which Greek singer performed 'Better Love' at Eurovision 2017?",
+      "question_el": "Ποια Ελληνίδα τραγουδίστρια ερμήνευσε το 'Better Love' στη Eurovision 2017;",
+      "options": [
+        "Stefania",
+        "Helena Paparizou",
+        "Demy",
+        "Amanda Tenfjord"
+      ],
+      "options_el": [
+        "Stefania",
+        "Έλενα Παπαρίζου",
+        "Demy",
+        "Amanda Tenfjord"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 523,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "What place did Greece achieve in its debut Eurovision appearance in 1974?",
+      "question_el": "Ποια θέση πήρε η Ελλάδα στην πρώτη της εμφάνιση στη Eurovision το 1974;",
+      "options": [
+        "7th",
+        "11th",
+        "13th",
+        "Last"
+      ],
+      "options_el": [
+        "7η",
+        "11η",
+        "13η",
+        "Τελευταία"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 524,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Which Greek artist represented Greece at Eurovision 1976 with 'Panagia Mou'?",
+      "question_el": "Ποιος Έλληνας καλλιτέχνης εκπροσώπησε την Ελλάδα στη Eurovision 1976 με το 'Παναγιά Μου';",
+      "options": [
+        "Marinella",
+        "Mariza Koch",
+        "Pasxalis",
+        "Tolis Voskopoulos"
+      ],
+      "options_el": [
+        "Μαρινέλλα",
+        "Μαρίζα Κωχ",
+        "Πασχάλης",
+        "Τόλης Βοσκόπουλος"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 525,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "In which year did Pasxalis, Marianna, Robert and Bessy represent Greece at Eurovision?",
+      "question_el": "Ποια χρονιά οι Πασχάλης, Μαριάννα, Ρόμπερτ και Μπέσσυ εκπροσώπησαν την Ελλάδα στη Eurovision;",
+      "options": [
+        "1975",
+        "1977",
+        "1978",
+        "1980"
+      ],
+      "options_el": [
+        "1975",
+        "1977",
+        "1978",
+        "1980"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 526,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "What was the title of Greece's entry performed by Pasxalis and company at Eurovision 1978?",
+      "question_el": "Ποιος ήταν ο τίτλος του ελληνικού τραγουδιού στη Eurovision 1978 που ερμήνευσαν ο Πασχάλης και η παρέα του;",
+      "options": [
+        "Mathima Solfege",
+        "Charlie Chaplin",
+        "Socrates",
+        "Panagia Mou"
+      ],
+      "options_el": [
+        "Μάθημα Σολφέζ",
+        "Charlie Chaplin",
+        "Σωκράτης",
+        "Παναγιά Μου"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 527,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "In what year did Greece withdraw from the Eurovision Song Contest for the first time?",
+      "question_el": "Ποια χρονιά αποσύρθηκε η Ελλάδα από τη Eurovision για πρώτη φορά;",
+      "options": [
+        "1975",
+        "1982",
+        "1984",
+        "1986"
+      ],
+      "options_el": [
+        "1975",
+        "1982",
+        "1984",
+        "1986"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 528,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Who represented Greece at Eurovision 2021 in Rotterdam with 'Last Dance'?",
+      "question_el": "Ποια εκπροσώπησε την Ελλάδα στη Eurovision 2021 στο Ρότερνταμ με το 'Last Dance';",
+      "options": [
+        "Amanda Tenfjord",
+        "Stefania",
+        "Demy",
+        "Katerine Duska"
+      ],
+      "options_el": [
+        "Amanda Tenfjord",
+        "Stefania",
+        "Demy",
+        "Katerine Duska"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 529,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "What place did Stefania achieve at Eurovision 2021 with 'Last Dance'?",
+      "question_el": "Ποια θέση πήρε η Stefania στη Eurovision 2021 με το 'Last Dance';",
+      "options": [
+        "5th",
+        "10th",
+        "15th",
+        "20th"
+      ],
+      "options_el": [
+        "5η",
+        "10η",
+        "15η",
+        "20η"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 530,
+      "category": "history",
+      "difficulty": "hard",
+      "question": "Who represented Greece at Eurovision 2019 with 'Better Love'?",
+      "question_el": "Ποια εκπροσώπησε την Ελλάδα στη Eurovision 2019 με το 'Better Love';",
+      "options": [
+        "Demy",
+        "Yianna Terzi",
+        "Katerine Duska",
+        "Stefania"
+      ],
+      "options_el": [
+        "Demy",
+        "Γιάννα Τερζή",
+        "Katerine Duska",
+        "Stefania"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 531,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Helena Paparizou was born in Sweden to parents of which nationality?",
+      "question_el": "Η Έλενα Παπαρίζου γεννήθηκε στη Σουηδία από γονείς ποιας εθνικότητας;",
+      "options": [
+        "Swedish",
+        "Greek",
+        "Cypriot",
+        "Turkish"
+      ],
+      "options_el": [
+        "Σουηδικής",
+        "Ελληνικής",
+        "Κυπριακής",
+        "Τουρκικής"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 532,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Before her solo Eurovision career, Helena Paparizou was a member of which pop duo?",
+      "question_el": "Πριν την σόλο καριέρα της στη Eurovision, η Έλενα Παπαρίζου ήταν μέλος ποιου ντουέτο;",
+      "options": [
+        "Antique",
+        "One",
+        "Argo",
+        "Hi-5"
+      ],
+      "options_el": [
+        "Antique",
+        "One",
+        "Argo",
+        "Hi-5"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 533,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Which country consistently exchanges 12 points with Greece in Eurovision voting?",
+      "question_el": "Ποια χώρα ανταλλάσσει παραδοσιακά 12 βαθμούς με την Ελλάδα στην ψηφοφορία της Eurovision;",
+      "options": [
+        "Turkey",
+        "Cyprus",
+        "Albania",
+        "Italy"
+      ],
+      "options_el": [
+        "Τουρκία",
+        "Κύπρος",
+        "Αλβανία",
+        "Ιταλία"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 534,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Kalomira, who represented Greece in 2008, was raised in which country?",
+      "question_el": "Η Καλομοίρα, που εκπροσώπησε την Ελλάδα το 2008, μεγάλωσε σε ποια χώρα;",
+      "options": [
+        "Greece",
+        "United States",
+        "Australia",
+        "United Kingdom"
+      ],
+      "options_el": [
+        "Ελλάδα",
+        "Ηνωμένες Πολιτείες",
+        "Αυστραλία",
+        "Ηνωμένο Βασίλειο"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 535,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What traditional Greek instrument is the bouzouki?",
+      "question_el": "Τι είδους μουσικό όργανο είναι το μπουζούκι;",
+      "options": [
+        "Wind instrument",
+        "String instrument",
+        "Percussion instrument",
+        "Keyboard instrument"
+      ],
+      "options_el": [
+        "Πνευστό",
+        "Έγχορδο",
+        "Κρουστό",
+        "Πληκτροφόρο"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 536,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Which member of Antique later became a Eurovision solo winner?",
+      "question_el": "Ποιο μέλος των Antique έγινε αργότερα σόλο νικητής στη Eurovision;",
+      "options": [
+        "Nikos Panagiotidis",
+        "Helena Paparizou",
+        "Sakis Rouvas",
+        "Despina Vandi"
+      ],
+      "options_el": [
+        "Νίκος Παναγιωτίδης",
+        "Έλενα Παπαρίζου",
+        "Σάκης Ρουβάς",
+        "Δέσποινα Βανδή"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 537,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What was the slogan of the Eurovision Song Contest 2006 hosted in Athens?",
+      "question_el": "Ποιο ήταν το σύνθημα του Διαγωνισμού Eurovision 2006 που φιλοξενήθηκε στην Αθήνα;",
+      "options": [
+        "We Are One",
+        "Feel the Rhythm",
+        "United by Music",
+        "Celebrate Diversity"
+      ],
+      "options_el": [
+        "We Are One",
+        "Feel the Rhythm",
+        "United by Music",
+        "Celebrate Diversity"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 538,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "Amanda Tenfjord represented Greece at Eurovision 2022 with which song?",
+      "question_el": "Η Amanda Tenfjord εκπροσώπησε την Ελλάδα στη Eurovision 2022 με ποιο τραγούδι;",
+      "options": [
+        "Last Dance",
+        "Die Together",
+        "Oniro Mou",
+        "Better Love"
+      ],
+      "options_el": [
+        "Last Dance",
+        "Die Together",
+        "Oniro Mou",
+        "Better Love"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 539,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "In which Scandinavian country was Helena Paparizou born?",
+      "question_el": "Σε ποια σκανδιναβική χώρα γεννήθηκε η Έλενα Παπαρίζου;",
+      "options": [
+        "Norway",
+        "Denmark",
+        "Finland",
+        "Sweden"
+      ],
+      "options_el": [
+        "Νορβηγία",
+        "Δανία",
+        "Φινλανδία",
+        "Σουηδία"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 540,
+      "category": "trivia",
+      "difficulty": "easy",
+      "question": "What was the band name that performed 'Alcohol Is Free' for Greece in 2013?",
+      "question_el": "Ποιο ήταν το συγκρότημα που ερμήνευσε το 'Alcohol Is Free' για την Ελλάδα το 2013;",
+      "options": [
+        "Koza Mostra",
+        "Antique",
+        "Argo",
+        "Fly"
+      ],
+      "options_el": [
+        "Koza Mostra",
+        "Antique",
+        "Argo",
+        "Fly"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 541,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Koza Mostra featured which singer as a collaborator on 'Alcohol Is Free' at Eurovision 2013?",
+      "question_el": "Οι Koza Mostra συνεργάστηκαν με ποιον τραγουδιστή στο 'Alcohol Is Free' στη Eurovision 2013;",
+      "options": [
+        "Sakis Rouvas",
+        "Agathon Iakovidis",
+        "Giorgos Alkaios",
+        "Michalis Hatzigiannis"
+      ],
+      "options_el": [
+        "Σάκης Ρουβάς",
+        "Αγάθωνας Ιακωβίδης",
+        "Γιώργος Αλκαίος",
+        "Μιχάλης Χατζηγιάννης"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 542,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What musical style did Koza Mostra blend with ska-punk in their Eurovision 2013 performance?",
+      "question_el": "Ποιο μουσικό στυλ συνδύασαν οι Koza Mostra με ska-punk στην εμφάνισή τους στη Eurovision 2013;",
+      "options": [
+        "Rebetiko",
+        "Laiko",
+        "Greek folk / Zeibekiko",
+        "Entechno"
+      ],
+      "options_el": [
+        "Ρεμπέτικο",
+        "Λαϊκό",
+        "Ελληνικό παραδοσιακό / Ζεϊμπέκικο",
+        "Έντεχνο"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 543,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Despina Vandi, a major Greek pop star, has what connection to Eurovision?",
+      "question_el": "Η Δέσποινα Βανδή, μεγάλο αστέρι της ελληνικής pop, τι σχέση έχει με τη Eurovision;",
+      "options": [
+        "She won in 1998",
+        "She was a backing vocalist at Eurovision",
+        "She represented Greece in 1997",
+        "She hosted Eurovision 2006"
+      ],
+      "options_el": [
+        "Κέρδισε το 1998",
+        "Ήταν φωνητική συνοδός στη Eurovision",
+        "Εκπροσώπησε την Ελλάδα το 1997",
+        "Παρουσίασε τη Eurovision 2006"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 544,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Nana Mouskouri has a connection to early Greek Eurovision history. What was her role?",
+      "question_el": "Η Νάνα Μούσχουρη έχει σχέση με την πρώιμη ιστορία της Ελλάδας στη Eurovision. Ποιος ήταν ο ρόλος της;",
+      "options": [
+        "She represented Luxembourg in 1963",
+        "She represented Greece in 1974",
+        "She hosted Eurovision 1980",
+        "She won for Greece in 1970"
+      ],
+      "options_el": [
+        "Εκπροσώπησε το Λουξεμβούργο το 1963",
+        "Εκπροσώπησε την Ελλάδα το 1974",
+        "Παρουσίασε τη Eurovision 1980",
+        "Κέρδισε για την Ελλάδα το 1970"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 545,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What nationality is Amanda Tenfjord, who represented Greece at Eurovision 2022?",
+      "question_el": "Ποια είναι η εθνικότητα της Amanda Tenfjord, που εκπροσώπησε την Ελλάδα στη Eurovision 2022;",
+      "options": [
+        "Greek",
+        "Norwegian-Greek",
+        "Swedish-Greek",
+        "Australian-Greek"
+      ],
+      "options_el": [
+        "Ελληνική",
+        "Νορβηγο-ελληνική",
+        "Σουηδο-ελληνική",
+        "Αυστραλο-ελληνική"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 546,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What is the title of the Greek national selection show historically used by ERT?",
+      "question_el": "Ποιος είναι ο τίτλος του ελληνικού εθνικού τελικού που χρησιμοποιούσε ιστορικά η ΕΡΤ;",
+      "options": [
+        "Melodifestivalen",
+        "Elliniki Epilogi",
+        "Eurosong",
+        "Festival Thessalonikis"
+      ],
+      "options_el": [
+        "Melodifestivalen",
+        "Ελληνική Επιλογή",
+        "Eurosong",
+        "Φεστιβάλ Θεσσαλονίκης"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 547,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Who represented Greece at Eurovision 2018 with 'Oniro Mou'?",
+      "question_el": "Ποια εκπροσώπησε την Ελλάδα στη Eurovision 2018 με το 'Oniro Mou';",
+      "options": [
+        "Demy",
+        "Yianna Terzi",
+        "Stefania",
+        "Amanda Tenfjord"
+      ],
+      "options_el": [
+        "Demy",
+        "Γιάννα Τερζή",
+        "Stefania",
+        "Amanda Tenfjord"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 548,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "What is Anna Vissi's connection to the Eurovision Song Contest?",
+      "question_el": "Ποια είναι η σχέση της Άννας Βίσση με τον Διαγωνισμό Eurovision;",
+      "options": [
+        "She represented Cyprus in 1982",
+        "She never participated at all",
+        "She represented Greece in 2006",
+        "She hosted Eurovision 2006"
+      ],
+      "options_el": [
+        "Εκπροσώπησε την Κύπρο το 1982",
+        "Δεν συμμετείχε ποτέ",
+        "Εκπροσώπησε την Ελλάδα το 2006",
+        "Παρουσίασε τη Eurovision 2006"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 549,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "Stefania, who represented Greece at Eurovision 2021, grew up in which country?",
+      "question_el": "Η Stefania, που εκπροσώπησε την Ελλάδα στη Eurovision 2021, μεγάλωσε σε ποια χώρα;",
+      "options": [
+        "Greece",
+        "Netherlands",
+        "Germany",
+        "Belgium"
+      ],
+      "options_el": [
+        "Ελλάδα",
+        "Ολλανδία",
+        "Γερμανία",
+        "Βέλγιο"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 550,
+      "category": "trivia",
+      "difficulty": "medium",
+      "question": "How many times did Sakis Rouvas present the Eurovision Song Contest?",
+      "question_el": "Πόσες φορές παρουσίασε ο Σάκης Ρουβάς τη Eurovision;",
+      "options": [
+        "Never",
+        "Once (2006)",
+        "Twice",
+        "Three times"
+      ],
+      "options_el": [
+        "Ποτέ",
+        "Μία φορά (2006)",
+        "Δύο φορές",
+        "Τρεις φορές"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 551,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What was Greece's entry language at Eurovision 2005 when Helena Paparizou won?",
+      "question_el": "Σε ποια γλώσσα ήταν η ελληνική συμμετοχή στη Eurovision 2005 όταν κέρδισε η Έλενα Παπαρίζου;",
+      "options": [
+        "Greek",
+        "English",
+        "Mix of English and Greek",
+        "French"
+      ],
+      "options_el": [
+        "Ελληνικά",
+        "Αγγλικά",
+        "Μείγμα Αγγλικών και Ελληνικών",
+        "Γαλλικά"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 552,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Who choreographed Helena Paparizou's winning Eurovision 2005 performance?",
+      "question_el": "Ποιος σχεδίασε τη χορογραφία της νικήτριας εμφάνισης της Έλενας Παπαρίζου στη Eurovision 2005;",
+      "options": [
+        "Fokas Evangelinos",
+        "Sakis Rouvas",
+        "Nikos Papadopoulos",
+        "Travis Payne"
+      ],
+      "options_el": [
+        "Φωκάς Ευαγγελινός",
+        "Σάκης Ρουβάς",
+        "Νίκος Παπαδόπουλος",
+        "Travis Payne"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 553,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "What did Fokas Evangelinos, a key figure in Greek Eurovision history, specialize in?",
+      "question_el": "Σε τι ειδικεύεται ο Φωκάς Ευαγγελινός, βασική μορφή της ελληνικής ιστορίας στη Eurovision;",
+      "options": [
+        "Songwriting",
+        "Staging and choreography",
+        "Vocal coaching",
+        "Costume design"
+      ],
+      "options_el": [
+        "Τραγουδοποιία",
+        "Σκηνοθεσία και χορογραφία",
+        "Φωνητική διδασκαλία",
+        "Σχεδιασμός κοστουμιών"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 554,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Which Greek entry at Eurovision was notably sung entirely in the Greek language after the free language rule was introduced in 1999?",
+      "question_el": "Ποια ελληνική συμμετοχή στη Eurovision τραγουδήθηκε εξ ολοκλήρου στα ελληνικά μετά την ελεύθερη επιλογή γλώσσας το 1999;",
+      "options": [
+        "Shake It (2004)",
+        "My Number One (2005)",
+        "Oniro Mou (Yianna Terzi, 2018)",
+        "Alcohol Is Free (2013)"
+      ],
+      "options_el": [
+        "Shake It (2004)",
+        "My Number One (2005)",
+        "Oniro Mou (Γιάννα Τερζή, 2018)",
+        "Alcohol Is Free (2013)"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 555,
+      "category": "trivia",
+      "difficulty": "hard",
+      "question": "Who wrote 'My Number One', the winning Greek entry at Eurovision 2005?",
+      "question_el": "Ποιος έγραψε το 'My Number One', το νικητήριο ελληνικό τραγούδι στη Eurovision 2005;",
+      "options": [
+        "Helena Paparizou",
+        "Christos Dantis and Natalia Germanou",
+        "Nikos Karvelas",
+        "Phoebus"
+      ],
+      "options_el": [
+        "Έλενα Παπαρίζου",
+        "Χρήστος Δάντης και Ναταλία Γερμανού",
+        "Νίκος Καρβέλας",
+        "Φοίβος"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 556,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "How many times has Greece won the Eurovision Song Contest?",
+      "question_el": "Πόσες φορές έχει κερδίσει η Ελλάδα τη Eurovision;",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "options_el": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 557,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "What is Greece's best ever placement at Eurovision?",
+      "question_el": "Ποια είναι η καλύτερη θέση της Ελλάδας στη Eurovision;",
+      "options": [
+        "1st",
+        "2nd",
+        "3rd",
+        "5th"
+      ],
+      "options_el": [
+        "1η",
+        "2η",
+        "3η",
+        "5η"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 558,
+      "category": "records",
+      "difficulty": "easy",
+      "question": "What place did Kalomira achieve for Greece at Eurovision 2008?",
+      "question_el": "Ποια θέση πήρε η Καλομοίρα για την Ελλάδα στη Eurovision 2008;",
+      "options": [
+        "1st",
+        "3rd",
+        "5th",
+        "7th"
+      ],
+      "options_el": [
+        "1η",
+        "3η",
+        "5η",
+        "7η"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 559,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "How many points did Helena Paparizou score to win Eurovision 2005?",
+      "question_el": "Πόσους βαθμούς πήρε η Έλενα Παπαρίζου για να κερδίσει τη Eurovision 2005;",
+      "options": [
+        "210",
+        "230",
+        "260",
+        "280"
+      ],
+      "options_el": [
+        "210",
+        "230",
+        "260",
+        "280"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 560,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "What place did 'Alcohol Is Free' by Koza Mostra achieve at Eurovision 2013?",
+      "question_el": "Ποια θέση πήρε το 'Alcohol Is Free' των Koza Mostra στη Eurovision 2013;",
+      "options": [
+        "3rd",
+        "6th",
+        "10th",
+        "14th"
+      ],
+      "options_el": [
+        "3η",
+        "6η",
+        "10η",
+        "14η"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 561,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "What place did Amanda Tenfjord achieve at Eurovision 2022 with 'Die Together'?",
+      "question_el": "Ποια θέση πήρε η Amanda Tenfjord στη Eurovision 2022 με το 'Die Together';",
+      "options": [
+        "5th",
+        "8th",
+        "11th",
+        "15th"
+      ],
+      "options_el": [
+        "5η",
+        "8η",
+        "11η",
+        "15η"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 562,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "In which decade did Greece achieve the most top-5 finishes at Eurovision?",
+      "question_el": "Σε ποια δεκαετία πέτυχε η Ελλάδα τις περισσότερες θέσεις στο top-5 στη Eurovision;",
+      "options": [
+        "1980s",
+        "1990s",
+        "2000s",
+        "2010s"
+      ],
+      "options_el": [
+        "1980s",
+        "1990s",
+        "2000s",
+        "2010s"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 563,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "How many times has Greece finished in the top 3 at Eurovision?",
+      "question_el": "Πόσες φορές τερμάτισε η Ελλάδα στο top 3 στη Eurovision;",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "options_el": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 564,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "How many countries participated in Eurovision 2006, hosted by Greece?",
+      "question_el": "Πόσες χώρες συμμετείχαν στη Eurovision 2006, που φιλοξένησε η Ελλάδα;",
+      "options": [
+        "30",
+        "34",
+        "37",
+        "42"
+      ],
+      "options_el": [
+        "30",
+        "34",
+        "37",
+        "42"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 565,
+      "category": "records",
+      "difficulty": "medium",
+      "question": "What was the winning entry of Eurovision 2006, hosted by Greece?",
+      "question_el": "Ποιο ήταν το νικητήριο τραγούδι της Eurovision 2006, που φιλοξενήθηκε στην Ελλάδα;",
+      "options": [
+        "Molitva (Serbia)",
+        "Hard Rock Hallelujah (Finland)",
+        "My Number One (Greece)",
+        "Wild Dances (Ukraine)"
+      ],
+      "options_el": [
+        "Molitva (Σερβία)",
+        "Hard Rock Hallelujah (Φινλανδία)",
+        "My Number One (Ελλάδα)",
+        "Wild Dances (Ουκρανία)"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 566,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "What is Greece's worst ever placement at the Eurovision Grand Final?",
+      "question_el": "Ποια είναι η χειρότερη θέση της Ελλάδας σε τελικό της Eurovision;",
+      "options": [
+        "17th",
+        "19th",
+        "20th",
+        "Last place"
+      ],
+      "options_el": [
+        "17η",
+        "19η",
+        "20η",
+        "Τελευταία θέση"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 567,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "In how many Eurovision contests has Greece failed to qualify for the Grand Final from the semi-finals?",
+      "question_el": "Σε πόσους διαγωνισμούς Eurovision δεν κατάφερε η Ελλάδα να προκριθεί στον τελικό από τους ημιτελικούς;",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "options_el": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 568,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "Which Greek Eurovision entry received the highest televote score in its year?",
+      "question_el": "Ποια ελληνική συμμετοχή στη Eurovision πήρε την υψηλότερη βαθμολογία τηλεψηφοφορίας στη χρονιά της;",
+      "options": [
+        "My Number One (2005)",
+        "Shake It (2004)",
+        "Secret Combination (2008)",
+        "Alcohol Is Free (2013)"
+      ],
+      "options_el": [
+        "My Number One (2005)",
+        "Shake It (2004)",
+        "Secret Combination (2008)",
+        "Alcohol Is Free (2013)"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 569,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "How many consecutive years did Greece qualify for the Grand Final from 2004 to 2013?",
+      "question_el": "Πόσα συνεχόμενα χρόνια προκρίθηκε η Ελλάδα στον τελικό από το 2004 έως το 2013;",
+      "options": [
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "options_el": [
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 570,
+      "category": "records",
+      "difficulty": "hard",
+      "question": "What position did 'Oniro Mou' by Yianna Terzi achieve at Eurovision 2018?",
+      "question_el": "Ποια θέση πήρε το 'Oniro Mou' της Γιάννας Τερζή στη Eurovision 2018;",
+      "options": [
+        "10th",
+        "14th",
+        "Did not qualify for the final",
+        "19th"
+      ],
+      "options_el": [
+        "10η",
+        "14η",
+        "Δεν προκρίθηκε στον τελικό",
+        "19η"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 571,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "What is the main theme of Helena Paparizou's winning song 'My Number One'?",
+      "question_el": "Ποιο είναι το κύριο θέμα του νικητήριου τραγουδιού 'My Number One' της Έλενας Παπαρίζου;",
+      "options": [
+        "Political protest",
+        "Love and devotion",
+        "Homesickness",
+        "Friendship"
+      ],
+      "options_el": [
+        "Πολιτική διαμαρτυρία",
+        "Αγάπη και αφοσίωση",
+        "Νοσταλγία",
+        "Φιλία"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 572,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "What language is 'My Number One' by Helena Paparizou primarily sung in?",
+      "question_el": "Σε ποια γλώσσα τραγουδιέται κυρίως το 'My Number One' της Έλενας Παπαρίζου;",
+      "options": [
+        "Greek",
+        "English",
+        "French",
+        "Swedish"
+      ],
+      "options_el": [
+        "Ελληνικά",
+        "Αγγλικά",
+        "Γαλλικά",
+        "Σουηδικά"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 573,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "What does the title 'Alcohol Is Free' suggest about the song's theme?",
+      "question_el": "Τι υπονοεί ο τίτλος 'Alcohol Is Free' για το θέμα του τραγουδιού;",
+      "options": [
+        "A serious anti-drinking message",
+        "A humorous celebration and partying anthem",
+        "A political protest song",
+        "A romantic ballad"
+      ],
+      "options_el": [
+        "Σοβαρό μήνυμα κατά του αλκοόλ",
+        "Χιουμοριστικός ύμνος γιορτής και διασκέδασης",
+        "Τραγούδι πολιτικής διαμαρτυρίας",
+        "Ρομαντική μπαλάντα"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 574,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "What does 'Oniro Mou' mean in English?",
+      "question_el": "Τι σημαίνει το 'Oniro Mou' στα αγγλικά;",
+      "options": [
+        "My Love",
+        "My Dream",
+        "My Heart",
+        "My Song"
+      ],
+      "options_el": [
+        "Αγάπη Μου",
+        "Όνειρό Μου",
+        "Καρδιά Μου",
+        "Τραγούδι Μου"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 575,
+      "category": "lyrics",
+      "difficulty": "easy",
+      "question": "In 'Die for You' by Antique, what is the song about?",
+      "question_el": "Στο 'Die for You' των Antique, ποιο είναι το θέμα του τραγουδιού;",
+      "options": [
+        "A horror story",
+        "An intense love declaration",
+        "A travel adventure",
+        "A farewell to friends"
+      ],
+      "options_el": [
+        "Ιστορία τρόμου",
+        "Μια έντονη ερωτική δήλωση",
+        "Μια ταξιδιωτική περιπέτεια",
+        "Αποχαιρετισμός σε φίλους"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 576,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "In what language was 'Oniro Mou' by Yianna Terzi (2018) sung?",
+      "question_el": "Σε ποια γλώσσα τραγουδήθηκε το 'Oniro Mou' της Γιάννας Τερζή (2018);",
+      "options": [
+        "English",
+        "Greek",
+        "A mix of English and Greek",
+        "French"
+      ],
+      "options_el": [
+        "Αγγλικά",
+        "Ελληνικά",
+        "Μείγμα αγγλικών και ελληνικών",
+        "Γαλλικά"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 577,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "What language was 'Alcohol Is Free' by Koza Mostra primarily sung in?",
+      "question_el": "Σε ποια γλώσσα τραγουδήθηκε κυρίως το 'Alcohol Is Free' των Koza Mostra;",
+      "options": [
+        "Greek",
+        "English",
+        "A mix of Greek and English",
+        "Italian"
+      ],
+      "options_el": [
+        "Ελληνικά",
+        "Αγγλικά",
+        "Μείγμα ελληνικών και αγγλικών",
+        "Ιταλικά"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 578,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "What is the meaning behind 'Secret Combination' by Kalomira?",
+      "question_el": "Ποιο είναι το νόημα του 'Secret Combination' της Καλομοίρας;",
+      "options": [
+        "A treasure hunt",
+        "Finding the perfect romantic chemistry",
+        "A mathematical puzzle",
+        "Cooking a special recipe"
+      ],
+      "options_el": [
+        "Κυνήγι θησαυρού",
+        "Εύρεση της τέλειας ρομαντικής χημείας",
+        "Μαθηματικός γρίφος",
+        "Μαγείρεμα ειδικής συνταγής"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 579,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "In what language was Amanda Tenfjord's 'Die Together' (Eurovision 2022) sung?",
+      "question_el": "Σε ποια γλώσσα τραγουδήθηκε το 'Die Together' της Amanda Tenfjord (Eurovision 2022);",
+      "options": [
+        "Greek",
+        "English",
+        "Norwegian",
+        "A mix of Greek and English"
+      ],
+      "options_el": [
+        "Ελληνικά",
+        "Αγγλικά",
+        "Νορβηγικά",
+        "Μείγμα ελληνικών και αγγλικών"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 580,
+      "category": "lyrics",
+      "difficulty": "medium",
+      "question": "What is the theme of Stefania's 'Last Dance' (Eurovision 2021)?",
+      "question_el": "Ποιο είναι το θέμα του 'Last Dance' της Stefania (Eurovision 2021);",
+      "options": [
+        "A party song",
+        "Missing someone and a final farewell",
+        "A victory celebration",
+        "A summer holiday"
+      ],
+      "options_el": [
+        "Τραγούδι πάρτι",
+        "Νοσταλγία για κάποιον και τελευταίος αποχαιρετισμός",
+        "Γιορτή νίκης",
+        "Καλοκαιρινές διακοπές"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 581,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "What was the original Greek title of Greece's 1974 debut Eurovision entry by Marinella?",
+      "question_el": "Ποιος ήταν ο ελληνικός τίτλος του πρώτου ελληνικού τραγουδιού στη Eurovision 1974 από τη Μαρινέλλα;",
+      "options": [
+        "Σωκράτης",
+        "Κρασί, Θάλασσα και τ' Αγόρι Μου",
+        "Παναγιά Μου, Παναγιά Μου",
+        "Μεθυσμένο Φεγγάρι"
+      ],
+      "options_el": [
+        "Σωκράτης",
+        "Κρασί, Θάλασσα και τ' Αγόρι Μου",
+        "Παναγιά Μου, Παναγιά Μου",
+        "Μεθυσμένο Φεγγάρι"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 582,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Which of these Greek Eurovision songs contained lyrics in both Greek and English?",
+      "question_el": "Ποιο από αυτά τα ελληνικά τραγούδια της Eurovision περιείχε στίχους και στα ελληνικά και στα αγγλικά;",
+      "options": [
+        "Oniro Mou (2018)",
+        "Alcohol Is Free (2013)",
+        "My Number One (2005)",
+        "Socrates (1979)"
+      ],
+      "options_el": [
+        "Oniro Mou (2018)",
+        "Alcohol Is Free (2013)",
+        "My Number One (2005)",
+        "Socrates (1979)"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 583,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "What does the title 'Die for You' by Antique convey in the context of the song?",
+      "question_el": "Τι μεταφέρει ο τίτλος 'Die for You' των Antique στο πλαίσιο του τραγουδιού;",
+      "options": [
+        "Literal death",
+        "Willingness to sacrifice everything for love",
+        "A farewell to a dying friend",
+        "A war song"
+      ],
+      "options_el": [
+        "Κυριολεκτικός θάνατος",
+        "Προθυμία να θυσιάσει τα πάντα για την αγάπη",
+        "Αποχαιρετισμός σε φίλο που πεθαίνει",
+        "Πολεμικό τραγούδι"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 584,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Which Greek Eurovision song referenced the ancient Greek philosopher in its title?",
+      "question_el": "Ποιο ελληνικό τραγούδι της Eurovision αναφέρεται σε αρχαίο Έλληνα φιλόσοφο στον τίτλο του;",
+      "options": [
+        "Plato's Dream (1990)",
+        "Socrates (1979)",
+        "Aristotle (1985)",
+        "Homer's Odyssey (1988)"
+      ],
+      "options_el": [
+        "Το Όνειρο του Πλάτωνα (1990)",
+        "Σωκράτης (1979)",
+        "Αριστοτέλης (1985)",
+        "Η Οδύσσεια του Ομήρου (1988)"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 585,
+      "category": "lyrics",
+      "difficulty": "hard",
+      "question": "Which Greek entry was the first to be performed entirely in English at Eurovision?",
+      "question_el": "Ποια ελληνική συμμετοχή ήταν η πρώτη που ερμηνεύτηκε εξ ολοκλήρου στα αγγλικά στη Eurovision;",
+      "options": [
+        "Die for You (2001)",
+        "Shake It (2004)",
+        "My Number One (2005)",
+        "I Anixi (2001)"
+      ],
+      "options_el": [
+        "Die for You (2001)",
+        "Shake It (2004)",
+        "My Number One (2005)",
+        "I Anixi (2001)"
+      ],
+      "correct": 0
+    },
+    {
+      "id": 586,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What was notable about Helena Paparizou's staging at Eurovision 2005?",
+      "question_el": "Τι ήταν αξιοσημείωτο στη σκηνική εμφάνιση της Έλενας Παπαρίζου στη Eurovision 2005;",
+      "options": [
+        "She sang alone on a dark stage",
+        "Energetic dance routine with Greek-inspired choreography",
+        "She played the bouzouki",
+        "A full orchestra accompanied her"
+      ],
+      "options_el": [
+        "Τραγούδησε μόνη σε σκοτεινή σκηνή",
+        "Δυναμική χορογραφία με ελληνική αισθητική",
+        "Έπαιξε μπουζούκι",
+        "Πλήρης ορχήστρα τη συνόδευε"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 587,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What was distinctive about Koza Mostra's appearance at Eurovision 2013?",
+      "question_el": "Τι ξεχωριστό είχε η εμφάνιση των Koza Mostra στη Eurovision 2013;",
+      "options": [
+        "Formal suits",
+        "Kilts and mohawks, blending punk with Greek folk",
+        "Traditional Greek costumes",
+        "All-white outfits"
+      ],
+      "options_el": [
+        "Επίσημα κοστούμια",
+        "Κιλτ και μοϊκάνες, μείγμα πανκ και ελληνικού παραδοσιακού",
+        "Παραδοσιακά ελληνικά κοστούμια",
+        "Ολόλευκα ρούχα"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 588,
+      "category": "staging",
+      "difficulty": "easy",
+      "question": "What visual element was prominent in Stefania's 'Last Dance' staging at Eurovision 2021?",
+      "question_el": "Ποιο οπτικό στοιχείο ήταν κυρίαρχο στη σκηνοθεσία του 'Last Dance' της Stefania στη Eurovision 2021;",
+      "options": [
+        "Pyrotechnics",
+        "A large rotating platform and special effects",
+        "Live animals on stage",
+        "A live orchestra"
+      ],
+      "options_el": [
+        "Πυροτεχνήματα",
+        "Μεγάλη περιστρεφόμενη πλατφόρμα και ειδικά εφέ",
+        "Ζώα στη σκηνή",
+        "Ζωντανή ορχήστρα"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 589,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "What choreographic style did Sakis Rouvas use in his Eurovision 2004 performance of 'Shake It'?",
+      "question_el": "Τι χορογραφικό στυλ χρησιμοποίησε ο Σάκης Ρουβάς στην εμφάνισή του στη Eurovision 2004 με το 'Shake It';",
+      "options": [
+        "Traditional Greek dance",
+        "Athletic dance moves including a famous trampoline jump",
+        "Ballet",
+        "Hip-hop"
+      ],
+      "options_el": [
+        "Παραδοσιακός ελληνικός χορός",
+        "Αθλητικές κινήσεις χορού με περίφημο άλμα τραμπολίνου",
+        "Μπαλέτο",
+        "Hip-hop"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 590,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "What was special about Greece's staging at Eurovision 2006 as the host country?",
+      "question_el": "Τι ιδιαίτερο είχε η σκηνοθεσία της Ελλάδας στη Eurovision 2006 ως χώρα-οικοδέσποινα;",
+      "options": [
+        "Anna Vissi performed with a live band",
+        "Anna Vissi used dramatic lighting with wind effects",
+        "They used ancient Greek columns on stage",
+        "A full traditional orchestra performed"
+      ],
+      "options_el": [
+        "Η Άννα Βίσση εμφανίστηκε με ζωντανό συγκρότημα",
+        "Η Άννα Βίσση χρησιμοποίησε δραματικό φωτισμό με εφέ ανέμου",
+        "Χρησιμοποίησαν αρχαίες ελληνικές κολώνες στη σκηνή",
+        "Ερμηνεία με πλήρη παραδοσιακή ορχήστρα"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 591,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "Which Greek staging director became famous for creating spectacular Eurovision performances for multiple countries?",
+      "question_el": "Ποιος Έλληνας σκηνοθέτης έγινε διάσημος για τη δημιουργία θεαματικών εμφανίσεων στη Eurovision για πολλές χώρες;",
+      "options": [
+        "Nikos Karvelas",
+        "Fokas Evangelinos",
+        "Giorgos Lanthimos",
+        "Yorgos Theofanous"
+      ],
+      "options_el": [
+        "Νίκος Καρβέλας",
+        "Φωκάς Ευαγγελινός",
+        "Γιώργος Λάνθιμος",
+        "Γιώργος Θεοφάνους"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 592,
+      "category": "staging",
+      "difficulty": "medium",
+      "question": "What instrument was featured on stage during 'Alcohol Is Free' by Koza Mostra?",
+      "question_el": "Ποιο μουσικό όργανο εμφανίστηκε στη σκηνή κατά τη διάρκεια του 'Alcohol Is Free' των Koza Mostra;",
+      "options": [
+        "Piano",
+        "Bouzouki",
+        "Violin",
+        "Drums"
+      ],
+      "options_el": [
+        "Πιάνο",
+        "Μπουζούκι",
+        "Βιολί",
+        "Τύμπανα"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 593,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "What notable staging element did Kalomira use during 'Secret Combination' at Eurovision 2008?",
+      "question_el": "Ποιο αξιοσημείωτο σκηνικό στοιχείο χρησιμοποίησε η Καλομοίρα στο 'Secret Combination' στη Eurovision 2008;",
+      "options": [
+        "A grand piano",
+        "Synchronized LED screens and backup dancers with Greek flags",
+        "Ancient Greek statues",
+        "A rotating stage"
+      ],
+      "options_el": [
+        "Ένα μεγάλο πιάνο",
+        "Συγχρονισμένες οθόνες LED και χορευτές με ελληνικές σημαίες",
+        "Αρχαία ελληνικά αγάλματα",
+        "Περιστρεφόμενη σκηνή"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 594,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "What was distinctive about Amanda Tenfjord's staging for 'Die Together' at Eurovision 2022?",
+      "question_el": "Τι ξεχωριστό είχε η σκηνοθεσία της Amanda Tenfjord για το 'Die Together' στη Eurovision 2022;",
+      "options": [
+        "A large group of dancers",
+        "Minimalist staging with Amanda alone at the piano",
+        "Pyrotechnics and fire effects",
+        "Traditional Greek dance ensemble"
+      ],
+      "options_el": [
+        "Μεγάλη ομάδα χορευτών",
+        "Μινιμαλιστική σκηνοθεσία με την Amanda μόνη στο πιάνο",
+        "Πυροτεχνήματα και εφέ φωτιάς",
+        "Παραδοσιακό ελληνικό χορευτικό σύνολο"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 595,
+      "category": "staging",
+      "difficulty": "hard",
+      "question": "Which country did Fokas Evangelinos also stage performances for at Eurovision, besides Greece?",
+      "question_el": "Για ποια χώρα σκηνοθέτησε επίσης εμφανίσεις στη Eurovision ο Φωκάς Ευαγγελινός, εκτός από την Ελλάδα;",
+      "options": [
+        "Sweden",
+        "Russia",
+        "France",
+        "Italy"
+      ],
+      "options_el": [
+        "Σουηδία",
+        "Ρωσία",
+        "Γαλλία",
+        "Ιταλία"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 596,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "In which European country is Athens, the host city of Eurovision 2006?",
+      "question_el": "Σε ποια ευρωπαϊκή χώρα βρίσκεται η Αθήνα, η πόλη που φιλοξένησε τη Eurovision 2006;",
+      "options": [
+        "Italy",
+        "Greece",
+        "Turkey",
+        "Cyprus"
+      ],
+      "options_el": [
+        "Ιταλία",
+        "Ελλάδα",
+        "Τουρκία",
+        "Κύπρος"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 597,
+      "category": "geography",
+      "difficulty": "easy",
+      "question": "Cyprus, Greece's traditional Eurovision voting ally, is located in which sea?",
+      "question_el": "Η Κύπρος, ο παραδοσιακός σύμμαχος της Ελλάδας στη Eurovision, βρίσκεται σε ποια θάλασσα;",
+      "options": [
+        "Black Sea",
+        "Adriatic Sea",
+        "Mediterranean Sea",
+        "North Sea"
+      ],
+      "options_el": [
+        "Μαύρη Θάλασσα",
+        "Αδριατική Θάλασσα",
+        "Μεσόγειος Θάλασσα",
+        "Βόρεια Θάλασσα"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 598,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "In which city was the Eurovision 2005 held, where Helena Paparizou won for Greece?",
+      "question_el": "Σε ποια πόλη διεξήχθη η Eurovision 2005, όπου η Έλενα Παπαρίζου κέρδισε για την Ελλάδα;",
+      "options": [
+        "Istanbul",
+        "Kyiv",
+        "Athens",
+        "Copenhagen"
+      ],
+      "options_el": [
+        "Κωνσταντινούπολη",
+        "Κίεβο",
+        "Αθήνα",
+        "Κοπεγχάγη"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 599,
+      "category": "geography",
+      "difficulty": "medium",
+      "question": "Helena Paparizou was born in the Swedish city of Gothenburg. In which country did she build most of her music career?",
+      "question_el": "Η Έλενα Παπαρίζου γεννήθηκε στο Γκέτεμποργκ της Σουηδίας. Σε ποια χώρα ανέπτυξε κυρίως τη μουσική της καριέρα;",
+      "options": [
+        "Sweden",
+        "Greece",
+        "United Kingdom",
+        "Germany"
+      ],
+      "options_el": [
+        "Σουηδία",
+        "Ελλάδα",
+        "Ηνωμένο Βασίλειο",
+        "Γερμανία"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 600,
+      "category": "geography",
+      "difficulty": "hard",
+      "question": "The Olympic Indoor Hall (Galatsi), venue for Eurovision 2006, is located in which area of Athens?",
+      "question_el": "Το Ολυμπιακό Κλειστό Γυμναστήριο (Γαλάτσι), χώρος διεξαγωγής της Eurovision 2006, βρίσκεται σε ποια περιοχή της Αθήνας;",
+      "options": [
+        "Maroussi",
+        "Galatsi",
+        "Piraeus",
+        "Glyfada"
+      ],
+      "options_el": [
+        "Μαρούσι",
+        "Γαλάτσι",
+        "Πειραιάς",
+        "Γλυφάδα"
+      ],
+      "correct": 1
     }
   ]
 }

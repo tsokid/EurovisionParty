@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
 import { PHASES } from '../../lib/constants';
@@ -7,8 +8,10 @@ import { useRoom } from '../../hooks/useRoom';
 import { useNavigate } from 'react-router-dom';
 import { PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
 
 export default function Header() {
+  const { t } = useTranslation();
   const { room, player, notifications, roomPassword } = useGameStore();
   const isHost = player?.is_host === true;
   const { theme, toggleTheme } = useThemeStore();
@@ -23,13 +26,14 @@ export default function Header() {
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
   const currentPhaseIdx = PHASE_ORDER.indexOf(room?.phase ?? 'lobby');
-  const phaseLabel = PHASES.find((p) => p.key === room?.phase)?.label ?? 'Lobby';
+  const currentPhaseKey = room?.phase ?? 'lobby';
+  const phaseLabel = t(`phases.${currentPhaseKey}.label`);
   const nextPhase = currentPhaseIdx < PHASE_ORDER.length - 1 ? PHASES[currentPhaseIdx + 1] : null;
 
   const getInviteText = () => {
     const link = `${window.location.origin}/room/${room?.code}`;
     const passwordLine = roomPassword ? `\nPassword: ${roomPassword}` : '';
-    return `Join my Eurovision party! 🎤✨\n\nRoom code: ${room?.code}${passwordLine}\n\n${link}`;
+    return t('lobby.inviteText', { code: room?.code, passwordLine, link });
   };
 
   const copyRoomCode = () => {
@@ -44,7 +48,7 @@ export default function Header() {
       if (navigator.share) {
         await navigator.share({ text });
       } else {
-        const subject = encodeURIComponent('🎤 Eurovision Party Invite!');
+        const subject = encodeURIComponent(t('lobby.inviteSubject'));
         const body = encodeURIComponent(text);
         window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
       }
@@ -62,7 +66,7 @@ export default function Header() {
 
   const handleAdvancePhase = async () => {
     if (!room || !nextPhase || advancing) return;
-    if (!window.confirm(`Advance to "${nextPhase.label}"? This affects all players.`)) return;
+    if (!window.confirm(t('header.advanceConfirm', { phase: t(`phases.${nextPhase.key}.label`) }))) return;
     setAdvancing(true);
     try {
       await advancePhase(room.id);
@@ -79,7 +83,7 @@ export default function Header() {
         <button
           onClick={copyRoomCode}
           className="flex items-center gap-1.5 rounded-full bg-euro-purple/30 px-3 py-1 text-sm font-semibold text-euro-purple-light active:scale-95 transition-transform min-h-[36px]"
-          aria-label="Share invite"
+          aria-label={t('header.shareAria')}
         >
           <span className="text-xs opacity-60">📤</span>
           <span className="tracking-widest">{room?.code ?? '----'}</span>
@@ -99,15 +103,16 @@ export default function Header() {
           {nextPhase && <span className="text-[10px] text-white/30">▼</span>}
         </button>
 
-        {/* Right: theme toggle + notification bell */}
+        {/* Right: theme toggle + language switcher + notification bell */}
         <div className="flex items-center gap-1">
           <button
             onClick={toggleTheme}
             className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full active:scale-95 transition-transform"
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            aria-label={t('header.switchTheme', { defaultValue: `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode` })}
           >
             <span className="text-lg">{theme === 'dark' ? '☀️' : '🌙'}</span>
           </button>
+          <LanguageSwitcher />
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             className="relative min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full active:scale-95 transition-transform"
@@ -134,7 +139,7 @@ export default function Header() {
             className="fixed inset-x-0 top-14 z-50 px-4 pt-2"
           >
             <div className="glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-md mx-auto">
-              <p className="text-xs text-white/40 mb-3 font-medium">Game Phases</p>
+              <p className="text-xs text-white/40 mb-3 font-medium">{t('header.gamePhases')}</p>
               <div className="space-y-1.5">
                 {PHASES.map((p, idx) => {
                   const isCurrent = p.key === room?.phase;
@@ -149,14 +154,14 @@ export default function Header() {
                       <span className="w-5 text-center text-xs">
                         {isPast ? '✓' : isCurrent ? '●' : isNext ? '→' : '○'}
                       </span>
-                      <span className="flex-1">{p.label}</span>
+                      <span className="flex-1">{t(`phases.${p.key}.label`)}</span>
                       {isNext && isHost && (
                         <button
                           onClick={handleAdvancePhase}
                           disabled={advancing}
                           className="text-[10px] bg-euro-purple/50 hover:bg-euro-purple/70 text-white px-2 py-1 rounded-md font-medium transition-colors"
                         >
-                          {advancing ? '...' : 'Advance →'}
+                          {advancing ? '...' : t('header.advance')}
                         </button>
                       )}
                     </div>
@@ -166,20 +171,20 @@ export default function Header() {
               {/* Leave room */}
               <button
                 onClick={async () => {
-                  if (window.confirm('Leave this room? Your progress will be saved if you rejoin.')) {
+                  if (window.confirm(t('header.leaveConfirm'))) {
                     await leaveRoom();
                     navigate('/', { replace: true });
                   }
                 }}
                 className="w-full mt-3 text-xs text-euro-red/60 hover:text-euro-red text-center py-2 rounded-lg hover:bg-euro-red/10 transition-colors"
               >
-                🚪 Leave Room
+                {t('header.leaveRoom')}
               </button>
               <button
                 onClick={() => setShowPhaseMenu(false)}
                 className="w-full mt-1 text-xs text-white/30 hover:text-white/50 text-center py-1"
               >
-                Close
+                {t('header.close')}
               </button>
             </div>
             {/* Backdrop */}
@@ -198,13 +203,13 @@ export default function Header() {
             className="fixed inset-x-0 top-14 z-50 px-4 pt-2"
           >
             <div className="glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-md mx-auto">
-              <p className="text-xs text-white/40 mb-2 font-medium">Invite Friends</p>
+              <p className="text-xs text-white/40 mb-2 font-medium">{t('header.inviteFriends')}</p>
               <div className="text-center mb-3">
                 <p className="text-3xl font-extrabold tracking-[0.25em] glow-text-gold text-euro-gold">
                   {room?.code}
                 </p>
                 {roomPassword && (
-                  <p className="text-xs text-white/50 mt-1">Password: <span className="text-white/80 font-medium">{roomPassword}</span></p>
+                  <p className="text-xs text-white/50 mt-1">{t('header.password', { password: roomPassword })}</p>
                 )}
               </div>
               <div className="flex gap-2">
@@ -212,13 +217,13 @@ export default function Header() {
                   onClick={shareInvite}
                   className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-euro-purple/40 py-2.5 text-sm font-medium text-euro-purple-light active:scale-95 transition-transform"
                 >
-                  📤 Share
+                  {t('header.share')}
                 </button>
                 <button
                   onClick={copyInvite}
                   className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-euro-purple/40 py-2.5 text-sm font-medium text-euro-purple-light active:scale-95 transition-transform"
                 >
-                  {inviteCopied ? '✅ Copied!' : '📋 Copy'}
+                  {inviteCopied ? t('header.copiedInvite') : t('header.copy')}
                 </button>
               </div>
             </div>

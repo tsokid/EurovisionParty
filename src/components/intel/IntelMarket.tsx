@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
 import { INTEL_COSTS } from '../../lib/constants';
 import { COUNTRY_MAP } from '../../lib/countries2026';
+import { getLocalizedCountryName } from '../../lib/countryLocale';
 import { supabase } from '../../lib/supabase';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
@@ -12,8 +14,8 @@ import type { IntelRevealType } from '../../lib/types';
 
 interface IntelCard {
   type: IntelRevealType;
-  title: string;
-  description: string;
+  titleKey: string;
+  descKey: string;
   icon: string;
   cost: number;
 }
@@ -21,28 +23,29 @@ interface IntelCard {
 const INTEL_CARDS: IntelCard[] = [
   {
     type: 'top3',
-    title: 'Top 3 Preview',
-    description: 'Reveals which countries finished in the top 3 positions',
+    titleKey: 'intel.top3Title',
+    descKey: 'intel.top3Desc',
     icon: '\uD83E\uDD47',
     cost: INTEL_COSTS.top3,
   },
   {
     type: 'top10',
-    title: 'Top 10 Preview',
-    description: 'Reveals the full top 10 countries in the final ranking',
+    titleKey: 'intel.top10Title',
+    descKey: 'intel.top10Desc',
     icon: '\uD83D\uDD1F',
     cost: INTEL_COSTS.top10,
   },
   {
     type: 'worst3',
-    title: 'Worst 3 Preview',
-    description: 'Reveals which countries finished in the bottom 3 positions',
+    titleKey: 'intel.worst3Title',
+    descKey: 'intel.worst3Desc',
     icon: '\uD83D\uDCA3',
     cost: INTEL_COSTS.worst3,
   },
 ];
 
 export default function IntelMarket() {
+  const { t } = useTranslation();
   const { room, player } = useGameStore();
   const [purchased, setPurchased] = useState<Set<IntelRevealType>>(new Set());
   const [revealedData, setRevealedData] = useState<
@@ -76,11 +79,11 @@ export default function IntelMarket() {
                   const countryCodes = revealResult.data as string[];
                   const revealed = countryCodes.map((code: string, i: number) => {
                     const c = COUNTRY_MAP.get(code);
-                    return c ? `${i + 1}. ${c.flag} ${c.name}` : `${i + 1}. ${code}`;
+                    return c ? `${i + 1}. ${c.flag} ${getLocalizedCountryName(c)}` : `${i + 1}. ${code}`;
                   });
                   setRevealedData(prev => ({ ...prev, [type]: revealed }));
                 } else {
-                  setRevealedData(prev => ({ ...prev, [type]: ['🔒 Results not entered yet'] }));
+                  setRevealedData(prev => ({ ...prev, [type]: [t('intel.notEntered')] }));
                 }
               });
           }
@@ -126,13 +129,13 @@ export default function IntelMarket() {
           const countryCodes = revealResult.data as string[];
           const revealed = countryCodes.map((code: string, i: number) => {
             const c = COUNTRY_MAP.get(code);
-            return c ? `${i + 1}. ${c.flag} ${c.name}` : `${i + 1}. ${code}`;
+            return c ? `${i + 1}. ${c.flag} ${getLocalizedCountryName(c)}` : `${i + 1}. ${code}`;
           });
           setRevealedData((prev) => ({ ...prev, [card.type]: revealed }));
         } else {
           setRevealedData((prev) => ({
             ...prev,
-            [card.type]: ['🔒 Results not entered yet', 'Intel purchased — reveal appears when results are in'],
+            [card.type]: [t('intel.notEntered')],
           }));
         }
       } catch (err) {
@@ -149,7 +152,7 @@ export default function IntelMarket() {
   if (!room || !player) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-white/50">Loading...</p>
+        <p className="text-white/50">{t('common.loading')}</p>
       </div>
     );
   }
@@ -159,16 +162,16 @@ export default function IntelMarket() {
       {/* Header */}
       <div className="text-center mb-4">
         <h2 className="glow-text text-xl font-bold mb-1">
-          {'\uD83D\uDD75\uFE0F'} Intel Market
+          {t('intel.title')}
         </h2>
         <p className="text-white/50 text-sm">
-          Spend points to peek at the results before they're official
+          {t('intel.subtitle')}
         </p>
       </div>
 
       {/* Available points */}
       <div className="glass rounded-xl px-4 py-2 mb-4 flex items-center justify-between">
-        <span className="text-white/60 text-sm">Available Points</span>
+        <span className="text-white/60 text-sm">{t('intel.availablePoints')}</span>
         <span className="text-euro-gold font-bold text-lg tabular-nums">
           {availablePoints}
         </span>
@@ -212,12 +215,12 @@ export default function IntelMarket() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <h3 className="text-white font-bold text-base">
-                              {card.title}
+                              {t(card.titleKey)}
                             </h3>
-                            <Badge variant="gold">{card.cost} pts</Badge>
+                            <Badge variant="gold">{card.cost} {t('common.pts')}</Badge>
                           </div>
                           <p className="text-white/50 text-sm mb-3">
-                            {card.description}
+                            {t(card.descKey)}
                           </p>
                           <Button
                             size="sm"
@@ -226,10 +229,10 @@ export default function IntelMarket() {
                             onClick={() => handleBuy(card)}
                           >
                             {isPurchased
-                              ? 'Purchased'
+                              ? t('intel.purchasedBtn')
                               : canAfford
-                                ? 'Buy Intel'
-                                : 'Not Enough Points'}
+                                ? t('intel.buyBtn')
+                                : t('intel.notEnough')}
                           </Button>
                         </div>
                       </div>
@@ -258,7 +261,7 @@ export default function IntelMarket() {
                       <div className="text-center">
                         <span className="text-3xl">{card.icon}</span>
                         <h3 className="text-white font-bold mt-2 mb-3">
-                          {card.title}
+                          {t(card.titleKey)}
                         </h3>
 
                         {revealedData[card.type] ? (
@@ -274,12 +277,12 @@ export default function IntelMarket() {
                           </div>
                         ) : (
                           <p className="text-white/50 text-sm">
-                            Loading reveal data...
+                            {t('intel.loadingReveal')}
                           </p>
                         )}
 
                         <p className="text-euro-gold/60 text-xs mt-3">
-                          Intel purchased for {card.cost} pts
+                          {t('intel.purchasedFor', { cost: card.cost })}
                         </p>
                       </div>
                     </Card>

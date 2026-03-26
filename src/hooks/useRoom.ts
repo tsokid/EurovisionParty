@@ -2,7 +2,6 @@ import { useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useGameStore } from '../stores/gameStore';
 import { generateRoomCode } from '../lib/roomCode';
-import { PHASE_ORDER } from '../lib/constants';
 import type { Room } from '../lib/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -128,7 +127,7 @@ export function useRoom(): UseRoomReturn {
 
         // Retry up to 3 times if room code collides
         let code = '';
-        let roomData: Record<string, unknown> | null = null;
+        let roomData: unknown = null;
         for (let attempt = 0; attempt < 3; attempt++) {
           code = generateRoomCode();
           const { data, error: roomErr } = await supabase
@@ -150,12 +149,13 @@ export function useRoom(): UseRoomReturn {
           throw roomErr;
         }
         if (!roomData) throw new Error('Failed to generate unique room code');
+        const typedRoom = roomData as unknown as Room;
 
         // Insert player (creator) — mark as host
         const { data: playerData, error: playerErr } = await supabase
           .from('players')
           .insert({
-            room_id: roomData.id,
+            room_id: typedRoom.id,
             user_id: user.id,
             name: hostName,
             avatar_emoji: emoji,
@@ -166,13 +166,13 @@ export function useRoom(): UseRoomReturn {
 
         if (playerErr) throw playerErr;
 
-        setRoom(roomData as Room);
+        setRoom(typedRoom);
         setPlayer(playerData);
         setRoomPassword(password);
-        subscribeToRoom(roomData.id);
+        subscribeToRoom(typedRoom.id as string);
 
         // Save session to localStorage for rejoin support
-        saveRoomSession(code, playerData.id, roomData.id);
+        saveRoomSession(code, playerData.id, typedRoom.id);
 
         return code;
       } catch (err: unknown) {
@@ -218,14 +218,15 @@ export function useRoom(): UseRoomReturn {
           throw roomErr;
         }
         if (!roomData) throw new Error('Room not found');
+        const typedRoomData = roomData as unknown as Room;
 
         // Check max players
         const { count } = await supabase
           .from('players')
           .select('id', { count: 'exact', head: true })
-          .eq('room_id', roomData.id)
+          .eq('room_id', typedRoomData.id)
           .eq('is_active', true);
-        if (count !== null && count >= (roomData.max_players ?? 20)) {
+        if (count !== null && count >= (typedRoomData.max_players ?? 20)) {
           throw new Error('Room is full');
         }
 
@@ -233,7 +234,7 @@ export function useRoom(): UseRoomReturn {
         const { data: existingPlayer } = await supabase
           .from('players')
           .select('*')
-          .eq('room_id', roomData.id)
+          .eq('room_id', typedRoomData.id)
           .eq('user_id', user.id)
           .eq('is_active', true)
           .maybeSingle();
@@ -247,7 +248,7 @@ export function useRoom(): UseRoomReturn {
           const { data: newPlayer, error: playerErr } = await supabase
             .from('players')
             .insert({
-              room_id: roomData.id,
+              room_id: typedRoomData.id,
               user_id: user.id,
               name,
               avatar_emoji: emoji,
@@ -259,16 +260,15 @@ export function useRoom(): UseRoomReturn {
           playerData = newPlayer;
         }
 
-        const typedRoom = roomData as Room;
-        setRoom(typedRoom);
+        setRoom(typedRoomData);
         setPlayer(playerData);
         setRoomPassword(password);
-        subscribeToRoom(typedRoom.id);
+        subscribeToRoom(typedRoomData.id);
 
         // Save session to localStorage for rejoin support
-        saveRoomSession(typedRoom.code, playerData.id, typedRoom.id);
+        saveRoomSession(typedRoomData.code, playerData.id, typedRoomData.id);
 
-        return typedRoom;
+        return typedRoomData;
       } catch (err: unknown) {
         let message = err instanceof Error ? err.message : 'Failed to join room';
         // Map server errors to friendly messages

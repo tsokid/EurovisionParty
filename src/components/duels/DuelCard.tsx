@@ -1,5 +1,5 @@
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import clsx from 'clsx';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
@@ -28,14 +28,14 @@ function getPlayerInfo(
 
 const statusConfig: Record<
   string,
-  { label: string; variant: 'gold' | 'purple' | 'green' | 'red' }
+  { labelKey: string; variant: 'gold' | 'purple' | 'green' | 'red' }
 > = {
-  pending: { label: 'Pending', variant: 'gold' },
-  accepted: { label: 'Active', variant: 'purple' },
-  answering: { label: 'Active', variant: 'purple' },
-  completed: { label: 'Completed', variant: 'green' },
-  expired: { label: 'Expired', variant: 'red' },
-  declined: { label: 'Declined', variant: 'red' },
+  pending: { labelKey: 'duelCard.statusPending', variant: 'gold' },
+  accepted: { labelKey: 'duelCard.statusActive', variant: 'purple' },
+  answering: { labelKey: 'duelCard.statusActive', variant: 'purple' },
+  completed: { labelKey: 'duelCard.statusCompleted', variant: 'green' },
+  expired: { labelKey: 'duelCard.statusExpired', variant: 'red' },
+  declined: { labelKey: 'duelCard.statusDeclined', variant: 'red' },
 };
 
 export default function DuelCard({
@@ -45,6 +45,7 @@ export default function DuelCard({
   onAnswer,
   declineInfo,
 }: DuelCardProps) {
+  const { t } = useTranslation();
   const { player, players } = useGameStore();
 
   const challenger = getPlayerInfo(duel.challenger_id, players);
@@ -70,9 +71,9 @@ export default function DuelCard({
         {/* Header with status */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-white/40 font-medium">
-            {duel.is_rematch ? 'Rematch' : 'Duel'}
+            {duel.is_rematch ? t('duelCard.rematch') : t('duelCard.duel')}
           </span>
-          <Badge variant={config.variant}>{config.label}</Badge>
+          <Badge variant={config.variant}>{t(config.labelKey)}</Badge>
         </div>
 
         {/* VS display */}
@@ -117,20 +118,20 @@ export default function DuelCard({
                 disabled={declineInfo !== undefined && declineInfo.used >= declineInfo.max}
               >
                 {declineInfo && declineInfo.used >= declineInfo.max
-                  ? 'No declines left'
-                  : 'Decline'}
+                  ? t('duelCard.noDeclines')
+                  : t('duelCard.declineBtn')}
               </Button>
               <Button
                 size="sm"
                 fullWidth
                 onClick={() => onAccept?.(duel.id)}
               >
-                Accept
+                {t('duelCard.acceptBtn')}
               </Button>
             </div>
             {declineInfo && (
               <p className="text-center text-[10px] text-white/30">
-                {declineInfo.used}/{declineInfo.max} declines used
+                {t('duelCard.declinesCount', { used: declineInfo.used, max: declineInfo.max })}
               </p>
             )}
           </div>
@@ -145,7 +146,7 @@ export default function DuelCard({
               onClick={() => onAnswer?.(duel.id)}
               className="animate-pulse"
             >
-              ⚔️ Answer Now!
+              {t('duelCard.answerNow')}
             </Button>
           </div>
         )}

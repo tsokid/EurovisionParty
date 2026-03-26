@@ -200,7 +200,9 @@ export interface Notification {
 export interface QuizQuestion {
   id: number;
   question: string;
+  question_el?: string;
   options: string[];
+  options_el?: string[];
   correct_index: number;
   category?: string;
   difficulty?: 'easy' | 'medium' | 'hard';
@@ -210,5 +212,6 @@ export interface QuizQuestion {
 export interface Country {
   id: string;
   name: string;
+  name_el: string;
   flag: string;
 }

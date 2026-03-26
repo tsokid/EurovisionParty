@@ -9,7 +9,9 @@ interface RawQuestion {
   category: string
   difficulty: string
   question: string
+  question_el?: string
   options: string[]
+  options_el?: string[]
   correct: number
 }
 
@@ -19,7 +21,9 @@ export const QUESTIONS: QuizQuestion[] = (
 ).questions.map((q) => ({
   id: q.id,
   question: q.question,
+  question_el: q.question_el,
   options: q.options,
+  options_el: q.options_el,
   correct_index: q.correct,
   category: q.category,
   difficulty: q.difficulty as 'easy' | 'medium' | 'hard',

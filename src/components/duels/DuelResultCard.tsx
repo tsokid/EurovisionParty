@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
@@ -19,6 +20,7 @@ function getPlayerInfo(playerId: string, players: Player[]): { name: string; emo
 }
 
 export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch }: DuelResultCardProps) {
+  const { t } = useTranslation();
   const { player, players } = useGameStore();
   const [deciding, setDeciding] = useState(false);
 
@@ -62,10 +64,10 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-white/40 font-medium">
-            {duel.is_rematch ? '🔄 Rematch' : '⚔️ Duel'}
+            {duel.is_rematch ? t('duelResult.rematchLabel') : t('duelResult.duelLabel')}
           </span>
           <Badge variant={isWinner ? 'green' : isLoser ? 'red' : 'gold'}>
-            {isWinner ? '🏆 Won!' : isLoser ? 'Lost' : isDraw ? 'Draw' : 'Completed'}
+            {isWinner ? t('duelResult.won') : isLoser ? t('duelResult.lost') : isDraw ? t('duelResult.draw') : t('duelResult.completed')}
           </Badge>
         </div>
 
@@ -105,11 +107,11 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
         {/* Decision already made */}
         {duel.winner_decision && (
           <div className="text-center py-2 rounded-lg bg-white/5 mb-2">
-            <p className="text-xs text-white/40">Decision made</p>
+            <p className="text-xs text-white/40">{t('duelResult.decisionMade')}</p>
             <p className="text-sm font-bold text-euro-gold">
               {duel.winner_decision === 'steal'
-                ? `🔥 Stole ${duel.points_transferred}pts`
-                : `✨ Doubled to +${duel.points_transferred}pts`}
+                ? t('duelResult.stolePoints', { amount: duel.points_transferred })
+                : t('duelResult.doubledPoints', { amount: duel.points_transferred })}
             </p>
           </div>
         )}
@@ -118,7 +120,7 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
         {needsDecision && onDecision && (
           <div className="space-y-2 mt-2">
             <p className="text-xs text-euro-gold text-center font-medium animate-pulse">
-              🎁 Choose your reward!
+              {t('duelResult.chooseReward')}
             </p>
             <div className="flex gap-2">
               {canSteal ? (
@@ -128,12 +130,12 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
                   onClick={() => handleDecision('steal')}
                   loading={deciding}
                 >
-                  🔥 Steal {stealAmount}pts
+                  {t('duelResult.stealBtn', { amount: stealAmount })}
                 </Button>
               ) : (
                 <div className="flex-1 text-center py-2.5 rounded-xl bg-white/5 border border-white/10 opacity-40">
-                  <p className="text-xs text-white/40">🔥 Steal</p>
-                  <p className="text-[10px] text-white/25">Opponent has 0pts</p>
+                  <p className="text-xs text-white/40">{t('duelResult.stealDisabled')}</p>
+                  <p className="text-[10px] text-white/25">{t('duelResult.opponentZero')}</p>
                 </div>
               )}
               <Button
@@ -143,13 +145,13 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
                 onClick={() => handleDecision('double')}
                 loading={deciding}
               >
-                ✨ Double +{myScore * 2}pts
+                {t('duelResult.doubleBtn', { amount: myScore * 2 })}
               </Button>
             </div>
             <p className="text-[10px] text-white/30 text-center">
               {canSteal
-                ? `Steal takes ${stealAmount}pts from opponent · Double from system`
-                : 'Opponent has no points · Double from system'}
+                ? t('duelResult.stealHint', { amount: stealAmount })
+                : t('duelResult.noPointsHint')}
             </p>
           </div>
         )}
@@ -162,12 +164,12 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
               fullWidth
               onClick={() => onRematch(duel.id)}
             >
-              🔄 Request Rematch
+              {t('duelResult.rematchBtn')}
             </Button>
           </div>
         )}
         {isLoser && hasRematch && (
-          <p className="text-[10px] text-white/25 text-center mt-2">Rematch requested</p>
+          <p className="text-[10px] text-white/25 text-center mt-2">{t('duelResult.rematchRequested')}</p>
         )}
       </Card>
     </motion.div>

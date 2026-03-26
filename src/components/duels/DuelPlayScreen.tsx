@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { QUESTIONS_BY_ID } from '../../lib/questions';
+import { getLocalizedQuestion } from '../../lib/questionLocale';
 import { calcDuelPoints } from '../../hooks/useDuels';
 import QuestionCard from '../quiz/QuestionCard';
 import Card from '../ui/Card';
@@ -17,10 +19,20 @@ interface DuelPlayScreenProps {
   onCancel: () => void;
 }
 
-export default function DuelPlayScreen({ duel, playerId, onComplete, onCancel }: DuelPlayScreenProps) {
+export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayScreenProps) {
+  const { t } = useTranslation();
   const questions: QuizQuestion[] = (duel.question_ids ?? [])
     .map((id) => QUESTIONS_BY_ID.get(id))
     .filter(Boolean) as QuizQuestion[];
+
+  // Localize questions for the current language
+  const localizedQuestions = useMemo(
+    () => questions.map((q) => {
+      const loc = getLocalizedQuestion(q);
+      return { ...q, question: loc.question, options: loc.options };
+    }),
+    [questions],
+  );
 
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<DuelAnswer[]>([]);
@@ -90,8 +102,8 @@ export default function DuelPlayScreen({ duel, playerId, onComplete, onCancel }:
   if (questions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4 px-4">
-        <p className="text-white/50">Error loading duel questions</p>
-        <Button size="sm" variant="ghost" onClick={onCancel}>Go Back</Button>
+        <p className="text-white/50">{t('duelPlay.errorLoading')}</p>
+        <Button size="sm" variant="ghost" onClick={onCancel}>{t('duelPlay.goBack')}</Button>
       </div>
     );
   }
@@ -105,14 +117,14 @@ export default function DuelPlayScreen({ duel, playerId, onComplete, onCancel }:
         className="flex flex-col items-center justify-center h-full gap-4 px-4"
       >
         <div className="text-5xl">⚔️</div>
-        <h2 className="glow-text text-2xl font-bold">Answers Submitted!</h2>
+        <h2 className="glow-text text-2xl font-bold">{t('duelPlay.submitted')}</h2>
         <Card className="text-center w-full max-w-xs">
-          <p className="text-sm text-white/50">Your duel score</p>
+          <p className="text-sm text-white/50">{t('duelPlay.yourScore')}</p>
           <p className="text-4xl font-bold glow-text-gold">{totalScore}</p>
           <p className="text-xs text-white/30 mt-1">out of 36 possible</p>
         </Card>
         <p className="text-sm text-white/40 text-center">
-          Waiting for opponent to answer...
+          {t('duelPlay.waitingOpponent')}
         </p>
       </motion.div>
     );
@@ -122,7 +134,7 @@ export default function DuelPlayScreen({ duel, playerId, onComplete, onCancel }:
     <div className="flex flex-col h-full px-4 py-2">
       {/* Duel header */}
       <div className="flex items-center justify-between mb-3">
-        <Badge variant="purple">Duel · Q{questionIndex + 1}/{questions.length}</Badge>
+        <Badge variant="purple">{t('duelPlay.header', { current: questionIndex + 1, total: questions.length })}</Badge>
         <div className="flex items-center gap-2">
           {answers.map((a, i) => (
             <span key={i} className={`text-xs font-bold ${a.points > 0 ? 'text-euro-green' : 'text-euro-red'}`}>
@@ -135,9 +147,9 @@ export default function DuelPlayScreen({ duel, playerId, onComplete, onCancel }:
       {/* Question */}
       <div className="flex-1">
         <QuestionCard
-          question={questions[questionIndex]}
+          question={localizedQuestions[questionIndex]}
           questionIndex={questionIndex}
-          totalQuestions={questions.length}
+          totalQuestions={localizedQuestions.length}
           onAnswer={handleAnswer}
           timeRemaining={countdown}
         />

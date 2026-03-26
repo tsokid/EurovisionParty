@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz } from '../../hooks/useQuiz';
 import { useGameStore } from '../../stores/gameStore';
@@ -21,6 +22,7 @@ import RoundResults from './RoundResults';
 type QuizPhase = 'waiting' | 'intro' | 'playing' | 'results' | 'complete';
 
 export default function QuizScreen() {
+  const { t } = useTranslation();
   const { room, player, setActiveTab, quizProgress, setQuizProgress } = useGameStore();
   const quiz = useQuiz();
 
@@ -236,7 +238,7 @@ export default function QuizScreen() {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3">
         <div className="w-8 h-8 border-2 border-euro-purple border-t-transparent rounded-full animate-spin" />
-        <p className="text-white/50 text-sm">Loading quiz...</p>
+        <p className="text-white/50 text-sm">{t('common.loading')}</p>
       </div>
     );
   }
@@ -255,16 +257,16 @@ export default function QuizScreen() {
           >
             <div className="text-5xl mb-2">🎵</div>
             <h2 className="glow-text text-2xl font-bold text-center">
-              Quiz Time!
+              {t('quiz.title')}
             </h2>
             <p className="text-white/60 text-center">
-              Round {roundNumber} of {MAX_ROUNDS}
+              {t('quiz.roundOf', { current: roundNumber, max: MAX_ROUNDS })}
             </p>
             <Button size="lg" onClick={handleStartRound}>
-              🎶 Start Round {roundNumber}
+              {t('quiz.startRound', { num: roundNumber })}
             </Button>
             <p className="text-xs text-white/30 text-center max-w-xs">
-              {QUESTIONS_PER_ROUND} questions · {TIMER_SECONDS}s each · Play at your own pace
+              {t('quiz.hint', { count: QUESTIONS_PER_ROUND, timer: TIMER_SECONDS })}
             </p>
           </motion.div>
         )}
@@ -332,13 +334,13 @@ export default function QuizScreen() {
               🏆
             </motion.div>
             <h2 className="glow-text text-3xl font-extrabold">
-              Quiz Complete!
+              {t('quiz.completeTitle')}
             </h2>
             <p className="text-white/60 text-center max-w-xs">
-              All {MAX_ROUNDS} rounds finished!
+              {t('quiz.completeDesc', { max: MAX_ROUNDS })}
             </p>
             <Card className="text-center">
-              <p className="text-sm text-white/50">Your quiz points</p>
+              <p className="text-sm text-white/50">{t('quiz.yourPoints')}</p>
               <p className="text-3xl font-bold glow-text-gold">
                 {player.quiz_points}
               </p>
@@ -348,7 +350,7 @@ export default function QuizScreen() {
               size="sm"
               onClick={() => setActiveTab('leaderboard')}
             >
-              📊 View Leaderboard
+              {t('quiz.viewBoard')}
             </Button>
           </motion.div>
         )}

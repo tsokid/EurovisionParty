@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../../stores/gameStore';
 import PlayerCard from './PlayerCard';
 import Button from '../ui/Button';
@@ -9,6 +10,7 @@ interface LobbyScreenProps {
 }
 
 export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
+  const { t } = useTranslation();
   const { room, player, players, roomPassword } = useGameStore();
   const [copied, setCopied] = useState(false);
   const [advancing, setAdvancing] = useState(false);
@@ -27,7 +29,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
   const getInviteText = () => {
     const link = `${window.location.origin}/room/${room?.code}`;
     const passwordLine = roomPassword ? `\nPassword: ${roomPassword}` : '';
-    return `Join my Eurovision party! 🎤✨\n\nRoom code: ${room?.code}${passwordLine}\n\n${link}`;
+    return t('lobby.inviteText', { code: room?.code, passwordLine, link });
   };
 
   const shareInvite = async () => {
@@ -38,7 +40,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
         await navigator.share({ text });
       } else {
         // Desktop fallback: mailto with subject + body
-        const subject = encodeURIComponent('🎤 Eurovision Party Invite!');
+        const subject = encodeURIComponent(t('lobby.inviteSubject'));
         const body = encodeURIComponent(text);
         window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
       }
@@ -72,7 +74,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
       {/* Room code hero */}
       <div className="text-center pt-8 pb-6 px-4">
         <p className="text-sm text-white/50 mb-2 font-medium">
-          Tap to copy, or share with friends!
+          {t('lobby.copyHint')}
         </p>
         <button
           onClick={copyCode}
@@ -96,7 +98,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
                 exit={{ scale: 0 }}
                 className="text-euro-green text-xl"
               >
-                ✓ Copied!
+                {t('lobby.copied')}
               </motion.span>
             ) : (
               <motion.span
@@ -118,13 +120,13 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
             onClick={shareInvite}
             className="inline-flex items-center gap-2 rounded-full bg-euro-purple/30 px-5 py-2 text-sm font-medium text-euro-purple-light active:scale-95 transition-transform"
           >
-            📤 Share Invite
+            {t('lobby.shareInvite')}
           </button>
           <button
             onClick={copyInvite}
             className="inline-flex items-center gap-2 rounded-full bg-euro-purple/30 px-5 py-2 text-sm font-medium text-euro-purple-light active:scale-95 transition-transform"
           >
-            {copied ? '✅ Copied!' : '📋 Copy Invite'}
+            {copied ? t('lobby.copyInviteDone') : t('lobby.copyInvite')}
           </button>
         </div>
       </div>
@@ -132,11 +134,11 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
       {/* Player list */}
       <div className="flex-1 px-4 pb-4">
         <h3 className="text-sm font-medium text-white/50 mb-3">
-          Players ({players.length})
+          {t('lobby.playersHeader', { count: players.length })}
         </h3>
 
         {players.length === 0 ? (
-          <div className="text-center text-white/30 py-8">Loading...</div>
+          <div className="text-center text-white/30 py-8">{t('common.loading')}</div>
         ) : (
           <div className="flex flex-col gap-2">
             <AnimatePresence mode="popLayout">
@@ -159,7 +161,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
             animate={{ opacity: [0.3, 0.7, 0.3] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
-            Waiting for players to join...
+            {t('lobby.waitingForPlayers')}
           </motion.p>
         )}
       </div>
@@ -175,11 +177,11 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-white/60">
               👥 <strong className="text-euro-white">{players.length}</strong>{' '}
-              {players.length === 1 ? 'player' : 'players'} joined
+              {t('lobby.joinedCount', { count: players.length, label: players.length === 1 ? t('common.player') : t('common.players') })}
             </span>
             {players.length < 2 && (
               <span className="text-xs text-euro-red/80">
-                Need {2 - players.length} more
+                {t('lobby.needMore', { needed: 2 - players.length })}
               </span>
             )}
           </div>
@@ -192,7 +194,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
               loading={advancing}
               disabled={players.length < 2}
             >
-              🚀 Start the Party!
+              {t('lobby.startParty')}
             </Button>
           ) : (
             <motion.p
@@ -200,7 +202,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
               animate={{ opacity: [0.4, 0.8, 0.4] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              ⏳ Waiting for the host to start...
+              {t('lobby.waitingHost')}
             </motion.p>
           )}
         </motion.div>

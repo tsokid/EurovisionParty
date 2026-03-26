@@ -1,8 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
 import { COUNTRIES_2026, COUNTRY_MAP } from '../../lib/countries2026';
+import { getLocalizedCountryName } from '../../lib/countryLocale';
 import { supabase } from '../../lib/supabase';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -12,6 +14,7 @@ import type { Country } from '../../lib/types';
 type ResultsPhase = 'entry' | 'confirm' | 'scoring' | 'done';
 
 export default function ResultsEntry() {
+  const { t } = useTranslation();
   const { room, player } = useGameStore();
   const [ranking, setRanking] = useState<Country[]>([]);
   const [phase, setPhase] = useState<ResultsPhase>('entry');
@@ -105,8 +108,8 @@ export default function ResultsEntry() {
     return (
       <div className="flex flex-col h-full px-4 py-2">
         <div className="text-center mb-4">
-          <h2 className="glow-text text-xl font-bold mb-1">🏆 Official Results</h2>
-          <p className="text-white/50 text-sm">Rankings confirmed & predictions scored</p>
+          <h2 className="glow-text text-xl font-bold mb-1">{t('resultsEntry.officialResults')}</h2>
+          <p className="text-white/50 text-sm">{t('resultsEntry.rankingsConfirmed')}</p>
         </div>
         <div className="flex-1 overflow-y-auto space-y-1">
           {ranking.map((country, idx) => (
@@ -124,15 +127,15 @@ export default function ResultsEntry() {
                 {idx + 1}
               </span>
               <span className="text-lg">{country.flag}</span>
-              <span className="text-sm text-white font-medium">{country.name}</span>
-              {idx === 0 && <Badge variant="gold">Winner</Badge>}
+              <span className="text-sm text-white font-medium">{getLocalizedCountryName(country)}</span>
+              {idx === 0 && <Badge variant="gold">{t('resultsEntry.winner')}</Badge>}
             </div>
           ))}
         </div>
         {scoringResults.length > 0 && (
           <Card className="mt-3">
             <p className="text-xs text-euro-gold text-center font-medium">
-              ✅ {scoringResults.length} players scored
+              {t('resultsEntry.playersScored', { count: scoringResults.length })}
             </p>
           </Card>
         )}
@@ -147,8 +150,8 @@ export default function ResultsEntry() {
         <motion.div className="text-5xl" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: 'linear' }}>
           ⚡
         </motion.div>
-        <h2 className="glow-text text-xl font-bold">Scoring Predictions...</h2>
-        <p className="text-white/50 text-sm text-center">Comparing everyone's picks against the official results</p>
+        <h2 className="glow-text text-xl font-bold">{t('resultsEntry.scoring')}</h2>
+        <p className="text-white/50 text-sm text-center">{t('resultsEntry.scoringDesc')}</p>
       </div>
     );
   }
@@ -158,8 +161,8 @@ export default function ResultsEntry() {
     return (
       <div className="flex flex-col h-full px-4 py-2">
         <div className="text-center mb-4">
-          <h2 className="glow-text text-xl font-bold mb-1">⚠️ Confirm Results</h2>
-          <p className="text-white/50 text-sm">This will score all predictions. Double-check!</p>
+          <h2 className="glow-text text-xl font-bold mb-1">{t('resultsEntry.confirmTitle')}</h2>
+          <p className="text-white/50 text-sm">{t('resultsEntry.confirmSubtitle')}</p>
         </div>
         <div className="flex-1 overflow-y-auto space-y-1 mb-4">
           {ranking.map((country, idx) => (
@@ -168,16 +171,16 @@ export default function ResultsEntry() {
                 {idx + 1}
               </span>
               <span className="text-lg">{country.flag}</span>
-              <span className="text-sm text-white font-medium">{country.name}</span>
+              <span className="text-sm text-white font-medium">{getLocalizedCountryName(country)}</span>
             </div>
           ))}
         </div>
         <div className="flex gap-3 pb-2">
           <Button variant="ghost" fullWidth onClick={() => setPhase('entry')}>
-            ← Edit
+            {t('resultsEntry.editBtn')}
           </Button>
           <Button fullWidth loading={isSubmitting} onClick={handleSubmitResults}>
-            ✅ Confirm & Score
+            {t('resultsEntry.confirmBtn')}
           </Button>
         </div>
         {error && <p className="text-euro-red text-sm text-center mt-2">{error}</p>}
@@ -189,9 +192,9 @@ export default function ResultsEntry() {
   return (
     <div className="flex flex-col h-full px-4 py-2">
       <div className="text-center mb-3">
-        <h2 className="glow-text text-xl font-bold mb-1">📋 Enter Official Results</h2>
+        <h2 className="glow-text text-xl font-bold mb-1">{t('resultsEntry.title')}</h2>
         <p className="text-white/50 text-sm">
-          Tap countries in order: 1st place → last place ({ranking.length}/{COUNTRIES_2026.length})
+          {t('resultsEntry.subtitle', { current: ranking.length, total: COUNTRIES_2026.length })}
         </p>
       </div>
 
@@ -214,7 +217,7 @@ export default function ResultsEntry() {
               </span>
               <div className="flex-1 glass rounded-lg px-2 py-1.5 flex items-center gap-2">
                 <span className="text-base">{country.flag}</span>
-                <span className="text-xs text-white font-medium flex-1">{country.name}</span>
+                <span className="text-xs text-white font-medium flex-1">{getLocalizedCountryName(country)}</span>
                 <button onClick={() => handleMoveUp(idx)} disabled={idx === 0}
                   className="text-white/30 hover:text-white disabled:opacity-20 text-xs px-0.5">▲</button>
                 <button onClick={() => handleMoveDown(idx)} disabled={idx === ranking.length - 1}
@@ -231,7 +234,7 @@ export default function ResultsEntry() {
       {remaining.length > 0 && (
         <div className="flex-1 overflow-y-auto">
           <p className="text-xs text-white/40 mb-2">
-            Tap to add (position #{ranking.length + 1}):
+            {t('resultsEntry.addPosition', { num: ranking.length + 1 })}
           </p>
           <div className="grid grid-cols-4 gap-2">
             {remaining.map(country => (
@@ -243,7 +246,7 @@ export default function ResultsEntry() {
               >
                 <span className="text-xl">{country.flag}</span>
                 <span className="text-[10px] text-white/70 leading-tight truncate w-full text-center">
-                  {country.name}
+                  {getLocalizedCountryName(country)}
                 </span>
               </motion.button>
             ))}
@@ -260,7 +263,7 @@ export default function ResultsEntry() {
         >
           {ranking.length < COUNTRIES_2026.length
             ? `Add ${COUNTRIES_2026.length - ranking.length} more countries`
-            : '📋 Review & Confirm Results'}
+            : t('resultsEntry.reviewBtn')}
         </Button>
       </div>
     </div>

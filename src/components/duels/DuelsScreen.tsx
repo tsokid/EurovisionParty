@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDuels } from '../../hooks/useDuels';
 import { useGameStore } from '../../stores/gameStore';
@@ -21,6 +22,7 @@ function getMaxDeclines(playerCount: number): number {
 }
 
 export default function DuelsScreen() {
+  const { t } = useTranslation();
   const { room, player, players } = useGameStore();
   const {
     duels, pendingDuels, activeDuels, pendingDecisions,
@@ -86,8 +88,8 @@ export default function DuelsScreen() {
     }
   }, [player, room, createDuel]);
 
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
+  const [, setActionLoading] = useState<string | null>(null);
+  const [, setActionError] = useState<string | null>(null);
 
   const handleAccept = useCallback(async (duelId: string) => {
     if (!player || !room) return;
@@ -150,7 +152,7 @@ export default function DuelsScreen() {
   const handleRematch = useCallback(async (duelId: string) => {
     if (!player || !room) return;
     try {
-      const rematch = await requestRematch(duelId, player.id, room.id);
+      await requestRematch(duelId, player.id, room.id);
       const originalDuel = duels.find((d) => d.id === duelId);
       const opponentId = originalDuel?.challenger_id === player.id
         ? originalDuel?.challenged_id
@@ -184,12 +186,12 @@ export default function DuelsScreen() {
     <div className="flex flex-col h-full px-4 py-2">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="glow-text text-xl font-bold">{'\u2694\uFE0F'} Duels</h2>
+          <h2 className="glow-text text-xl font-bold">{t('duels.title')}</h2>
           <p className="text-[11px] text-white/30 mt-0.5">
-            Declines: {declineInfo.used}/{declineInfo.max} used
+            {t('duels.declinesUsed', { used: declineInfo.used, max: declineInfo.max })}
           </p>
         </div>
-        <Button size="sm" onClick={() => setShowChallengeModal(true)}>Challenge</Button>
+        <Button size="sm" onClick={() => setShowChallengeModal(true)}>{t('duels.challengeBtn')}</Button>
       </div>
 
       <div className="flex-1 overflow-y-auto space-y-6">
@@ -197,7 +199,7 @@ export default function DuelsScreen() {
         {myPendingDecisions.length > 0 && (
           <section>
             <h3 className="text-sm font-semibold text-euro-gold mb-2 flex items-center gap-2">
-              ⏳ Pending Decisions
+              {t('duels.pendingDecisions')}
               <span className="glass rounded-full px-2 py-0.5 text-xs">{myPendingDecisions.length}</span>
             </h3>
             <div className="space-y-3">
@@ -212,7 +214,7 @@ export default function DuelsScreen() {
         {receivedPending.length > 0 && (
           <section>
             <h3 className="text-sm font-semibold text-euro-gold mb-2 flex items-center gap-2">
-              📨 Incoming Challenges
+              {t('duels.incomingChallenges')}
               <span className="glass rounded-full px-2 py-0.5 text-xs">{receivedPending.length}</span>
             </h3>
             <div className="space-y-3">
@@ -229,7 +231,7 @@ export default function DuelsScreen() {
         {sentPending.length > 0 && (
           <section>
             <h3 className="text-sm font-semibold text-white/50 mb-2 flex items-center gap-2">
-              📤 Sent
+              {t('duels.sentChallenges')}
               <span className="glass rounded-full px-2 py-0.5 text-xs">{sentPending.length}</span>
             </h3>
             <div className="space-y-3">
@@ -243,10 +245,10 @@ export default function DuelsScreen() {
                           <span className="text-2xl">{opponent?.avatar_emoji ?? '?'}</span>
                           <div>
                             <p className="text-sm font-medium text-white">{opponent?.name ?? 'Player'}</p>
-                            <p className="text-xs text-white/40">Waiting for response...</p>
+                            <p className="text-xs text-white/40">{t('duels.waitingResponse')}</p>
                           </div>
                         </div>
-                        <Badge variant="gold">Sent</Badge>
+                        <Badge variant="gold">{t('duels.sentChallenges')}</Badge>
                       </div>
                     </Card>
                   </motion.div>
@@ -260,7 +262,7 @@ export default function DuelsScreen() {
         {myTurn.length > 0 && (
           <section>
             <h3 className="text-sm font-semibold text-euro-cyan mb-2 flex items-center gap-2">
-              ⚔️ Your Turn
+              {t('duels.yourTurn')}
               <span className="glass rounded-full px-2 py-0.5 text-xs">{myTurn.length}</span>
             </h3>
             <div className="space-y-3">
@@ -275,7 +277,7 @@ export default function DuelsScreen() {
         {waitingForOpponent.length > 0 && (
           <section>
             <h3 className="text-sm font-semibold text-white/50 mb-2 flex items-center gap-2">
-              ⏳ Waiting for Opponent
+              {t('duels.waitingOpponent')}
               <span className="glass rounded-full px-2 py-0.5 text-xs">{waitingForOpponent.length}</span>
             </h3>
             <div className="space-y-3">
@@ -289,16 +291,16 @@ export default function DuelsScreen() {
                     <Card>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs text-white/40 font-medium">
-                          {duel.is_rematch ? '🔄 Rematch' : '⚔️ Duel'}
+                          {duel.is_rematch ? t('duelResult.rematchLabel') : t('duelResult.duelLabel')}
                         </span>
-                        <Badge variant="purple">Opponent Answering</Badge>
+                        <Badge variant="purple">{t('duels.opponentAnswering')}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex flex-col items-center gap-1 flex-1">
                           <span className="text-2xl">{me?.avatar_emoji ?? '🎤'}</span>
                           <span className="text-sm text-white font-medium">{me?.name ?? 'You'}</span>
                           <span className="text-lg font-bold text-euro-green">{myScore}</span>
-                          <span className="text-[10px] text-white/30">Done ✓</span>
+                          <span className="text-[10px] text-white/30">{t('duels.doneCheck')}</span>
                         </div>
                         <div className="flex-shrink-0 px-2 text-center">
                           <span className="text-xs font-extrabold text-white/20">VS</span>
@@ -308,7 +310,7 @@ export default function DuelsScreen() {
                           <span className="text-2xl">{opponent?.avatar_emoji ?? '🎤'}</span>
                           <span className="text-sm text-white font-medium">{opponent?.name ?? 'Player'}</span>
                           <span className="text-lg font-bold text-white/30">?</span>
-                          <span className="text-[10px] text-white/30 animate-pulse">Answering...</span>
+                          <span className="text-[10px] text-white/30 animate-pulse">{t('duels.answering')}</span>
                         </div>
                       </div>
                     </Card>
@@ -322,7 +324,7 @@ export default function DuelsScreen() {
         {/* Results */}
         {completedDuels.length > 0 && (
           <section>
-            <h3 className="text-sm font-semibold text-white/50 mb-2">🏁 Results</h3>
+            <h3 className="text-sm font-semibold text-white/50 mb-2">{t('duels.resultsSection')}</h3>
             <div className="space-y-3">
               {completedDuels.map((duel) => (
                 <DuelResultCard
@@ -341,9 +343,9 @@ export default function DuelsScreen() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-16 gap-4">
             <div className="text-5xl">{'\u2694\uFE0F'}</div>
             <p className="text-white/50 text-center text-sm max-w-xs">
-              No duels yet! Challenge another player to a 3-question battle.
+              {t('duels.emptyState')}
             </p>
-            <Button onClick={() => setShowChallengeModal(true)}>Challenge Someone</Button>
+            <Button onClick={() => setShowChallengeModal(true)}>{t('duels.challengeSomeone')}</Button>
           </motion.div>
         )}
 

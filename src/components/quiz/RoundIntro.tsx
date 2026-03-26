@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MAX_ROUNDS, QUESTIONS_PER_ROUND } from '../../lib/constants';
 
@@ -15,6 +16,7 @@ export default function RoundIntro({
   onDismiss,
   categoryHints,
 }: RoundIntroProps) {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function RoundIntro({
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', damping: 15, stiffness: 200 }}
           >
-            Round {roundNumber}
+            {t('roundIntro.round', { num: roundNumber })}
           </motion.h1>
 
           {/* Of N */}
@@ -64,7 +66,7 @@ export default function RoundIntro({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            of {MAX_ROUNDS}
+            {t('roundIntro.ofMax', { max: MAX_ROUNDS })}
           </motion.p>
 
           {/* Question count */}
@@ -75,7 +77,7 @@ export default function RoundIntro({
             transition={{ delay: 0.4 }}
           >
             <span className="text-white font-semibold">
-              {QUESTIONS_PER_ROUND} Questions
+              {t('roundIntro.questions', { count: QUESTIONS_PER_ROUND })}
             </span>
           </motion.div>
 
@@ -106,7 +108,7 @@ export default function RoundIntro({
             transition={{ delay: 0.8 }}
             onClick={() => { setVisible(false); onDismiss(); }}
           >
-            Tap to Start →
+            {t('roundIntro.tapStart')}
           </motion.button>
         </motion.div>
       )}
