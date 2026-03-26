@@ -11,6 +11,8 @@ interface DuelCardProps {
   onAccept?: (duelId: string) => void;
   onDecline?: (duelId: string) => void;
   onAnswer?: (duelId: string) => void;
+  /** Current player's decline usage — shown on the Decline button */
+  declineInfo?: { used: number; max: number };
 }
 
 function getPlayerInfo(
@@ -41,6 +43,7 @@ export default function DuelCard({
   onAccept,
   onDecline,
   onAnswer,
+  declineInfo,
 }: DuelCardProps) {
   const { player, players } = useGameStore();
 
@@ -104,22 +107,32 @@ export default function DuelCard({
 
         {/* Action buttons for pending challenges (received) */}
         {duel.status === 'pending' && isChallenged && (
-          <div className="flex gap-2 mt-3">
-            <Button
-              size="sm"
-              variant="ghost"
-              fullWidth
-              onClick={() => onDecline?.(duel.id)}
-            >
-              Decline
-            </Button>
-            <Button
-              size="sm"
-              fullWidth
-              onClick={() => onAccept?.(duel.id)}
-            >
-              Accept
-            </Button>
+          <div className="flex flex-col gap-1.5 mt-3">
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                fullWidth
+                onClick={() => onDecline?.(duel.id)}
+                disabled={declineInfo !== undefined && declineInfo.used >= declineInfo.max}
+              >
+                {declineInfo && declineInfo.used >= declineInfo.max
+                  ? 'No declines left'
+                  : 'Decline'}
+              </Button>
+              <Button
+                size="sm"
+                fullWidth
+                onClick={() => onAccept?.(duel.id)}
+              >
+                Accept
+              </Button>
+            </div>
+            {declineInfo && (
+              <p className="text-center text-[10px] text-white/30">
+                {declineInfo.used}/{declineInfo.max} declines used
+              </p>
+            )}
           </div>
         )}
 

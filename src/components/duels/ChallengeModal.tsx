@@ -16,17 +16,18 @@ interface ChallengeModalProps {
 
 /**
  * Check if the current player can challenge this opponent.
- * Rules:
- * - Only 1 active duel per pair (pending, accepted, answering)
- * - If a previous duel was declined, allow ONE more challenge
- * - If a completed duel exists (with or without rematch), no more challenges
+ *
+ * Rule 2: Only one pending challenge to any given opponent at a time.
+ * Rule 3: A player can only challenge the same opponent ONCE (rematches are
+ *         separate and initiated by the loser via the result card).
+ * Rule 4: Players can play each other at most twice (original + 1 rematch).
+ *         Once a rematch duel exists between the pair, no new challenges.
  */
 function canChallenge(
   playerId: string,
   opponentId: string,
   duels: Duel[],
 ): { allowed: boolean; reason?: string } {
-  // Get all duels between these two players (in either direction)
   const pairDuels = duels.filter(
     (d) =>
       (d.challenger_id === playerId && d.challenged_id === opponentId) ||
@@ -35,29 +36,22 @@ function canChallenge(
 
   if (pairDuels.length === 0) return { allowed: true };
 
-  // If any duel is still active (pending/accepted/answering), block
+  // Rule 2: active duel between the pair → blocked
   const activeDuel = pairDuels.find((d) =>
     ['pending', 'accepted', 'answering'].includes(d.status),
   );
-  if (activeDuel) {
-    return { allowed: false, reason: 'Challenge already sent' };
-  }
+  if (activeDuel) return { allowed: false, reason: 'Duel in progress' };
 
-  // If any completed duel exists, block (they can only rematch through the result card)
-  const completedDuel = pairDuels.find((d) => d.status === 'completed');
-  if (completedDuel) {
-    return { allowed: false, reason: 'Already dueled' };
-  }
+  // Rule 4: a rematch already exists between the pair → max 2 plays reached
+  const rematchExists = pairDuels.some((d) => d.is_rematch);
+  if (rematchExists) return { allowed: false, reason: 'Max duels reached' };
 
-  // Count declined duels initiated by this player
-  const declinedByMe = pairDuels.filter(
-    (d) => d.status === 'declined' && d.challenger_id === playerId,
+  // Rule 3: this player already sent a challenge to this opponent (non-rematch)
+  const myPrevChallenge = pairDuels.find(
+    (d) => d.challenger_id === playerId && !d.is_rematch,
   );
-  if (declinedByMe.length >= 2) {
-    return { allowed: false, reason: 'Declined twice' };
-  }
+  if (myPrevChallenge) return { allowed: false, reason: 'Already challenged once' };
 
-  // One decline = allow one more try
   return { allowed: true };
 }
 

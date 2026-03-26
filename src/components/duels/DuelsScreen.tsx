@@ -12,6 +12,14 @@ import DuelResultCard from './DuelResultCard';
 import ChallengeModal from './ChallengeModal';
 import type { Duel, DuelAnswer, DuelDecision } from '../../lib/types';
 
+/** Client-side mirror of the DB get_max_declines() function */
+function getMaxDeclines(playerCount: number): number {
+  if (playerCount <= 5) return 2;
+  if (playerCount <= 10) return 3;
+  if (playerCount <= 15) return 4;
+  return 5;
+}
+
 export default function DuelsScreen() {
   const { room, player, players } = useGameStore();
   const {
@@ -55,6 +63,10 @@ export default function DuelsScreen() {
 
   // Check if a rematch already exists for a duel
   const hasRematch = (duelId: string) => duels.some((d) => d.parent_duel_id === duelId);
+
+  // Decline limit info for current player
+  const maxDeclines = getMaxDeclines(players.length);
+  const declineInfo = { used: player?.decline_count ?? 0, max: maxDeclines };
 
   // Create challenge
   const handleChallenge = useCallback(async (opponentId: string) => {
@@ -171,7 +183,12 @@ export default function DuelsScreen() {
   return (
     <div className="flex flex-col h-full px-4 py-2">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="glow-text text-xl font-bold">{'\u2694\uFE0F'} Duels</h2>
+        <div>
+          <h2 className="glow-text text-xl font-bold">{'\u2694\uFE0F'} Duels</h2>
+          <p className="text-[11px] text-white/30 mt-0.5">
+            Declines: {declineInfo.used}/{declineInfo.max} used
+          </p>
+        </div>
         <Button size="sm" onClick={() => setShowChallengeModal(true)}>Challenge</Button>
       </div>
 
@@ -201,7 +218,7 @@ export default function DuelsScreen() {
             <div className="space-y-3">
               <AnimatePresence>
                 {receivedPending.map((duel) => (
-                  <DuelCard key={duel.id} duel={duel} onAccept={handleAccept} onDecline={handleDecline} />
+                  <DuelCard key={duel.id} duel={duel} onAccept={handleAccept} onDecline={handleDecline} declineInfo={declineInfo} />
                 ))}
               </AnimatePresence>
             </div>

@@ -75,6 +75,7 @@ export interface Player {
   total_points: number;
   is_host: boolean;
   is_active: boolean;
+  decline_count: number;
   last_seen_at: string | null;
   joined_at: string;
 }

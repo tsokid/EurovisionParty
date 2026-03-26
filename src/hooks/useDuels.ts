@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { selectRoundQuestions } from '../lib/questionRandomizer';
+import { useGameStore } from '../stores/gameStore';
 import type { Duel, DuelAnswer, DuelDecision } from '../lib/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -128,12 +129,25 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
   const declineDuel = useCallback(async (duelId: string): Promise<void> => {
     setError(null);
     try {
-      const { data, error: updateErr } = await supabase
-        .from('duels')
-        .update({ status: 'declined' })
-        .eq('id', duelId).select().single();
-      if (updateErr) throw updateErr;
-      if (data) setDuels((prev) => prev.map((d) => d.id === duelId ? (data as Duel) : d));
+      const { player } = useGameStore.getState();
+      if (!player) throw new Error('Not in a room');
+
+      const { data: result, error: rpcErr } = await supabase.rpc('decline_duel', {
+        p_duel_id: duelId,
+        p_player_id: player.id,
+      });
+
+      if (rpcErr) throw rpcErr;
+
+      // Update duel status locally
+      setDuels((prev) => prev.map((d) =>
+        d.id === duelId ? { ...d, status: 'declined' } : d
+      ));
+
+      // Sync player's new decline_count into the store
+      if (result?.decline_count !== undefined) {
+        useGameStore.getState().updatePlayer({ decline_count: result.decline_count });
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to decline duel');
       throw err;
