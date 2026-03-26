@@ -6,6 +6,7 @@ import { useRejoin } from '../hooks/useRejoin';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { useNotifications } from '../hooks/useNotifications';
 import { supabase } from '../lib/supabase';
+import type { Room } from '../lib/types';
 import AppShell from '../components/layout/AppShell';
 import LobbyScreen from '../components/lobby/LobbyScreen';
 import QuizScreen from '../components/quiz/QuizScreen';
@@ -20,7 +21,7 @@ export function RoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
   const { room, advancePhase } = useRoom();
-  const { room: storeRoom, player, players, activeTab } = useGameStore();
+  const { room: storeRoom, player, players, activeTab, setRoom } = useGameStore();
   const [showWinner, setShowWinner] = useState(true);
 
   // Try to rejoin from DB if store is empty (e.g. page refresh)
@@ -41,6 +42,24 @@ export function RoomPage() {
     }, 5 * 60 * 1000); // every 5 min
     return () => { if (heartbeatRef.current) clearInterval(heartbeatRef.current); };
   }, [playerId]);
+
+  // Polling fallback: check room phase every 3 s while in lobby
+  // Covers the case where Realtime lags or drops (all users, not just host)
+  const currentPhase = storeRoom?.phase;
+  useEffect(() => {
+    if (!storeRoom || currentPhase !== 'lobby') return;
+    const id = setInterval(async () => {
+      const { data } = await supabase
+        .from('rooms')
+        .select('*')
+        .eq('id', storeRoom.id)
+        .single();
+      if (data && (data as Room).phase !== 'lobby') {
+        setRoom(data as Room);
+      }
+    }, 3000);
+    return () => clearInterval(id);
+  }, [storeRoom?.id, currentPhase, setRoom]);
 
   // Redirect based on rejoin status
   useEffect(() => {

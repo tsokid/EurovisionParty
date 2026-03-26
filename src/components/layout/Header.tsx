@@ -9,14 +9,16 @@ import { PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
 
 export default function Header() {
-  const { room, player, notifications } = useGameStore();
+  const { room, player, notifications, roomPassword } = useGameStore();
   const isHost = player?.is_host === true;
   const { theme, toggleTheme } = useThemeStore();
   const { advancePhase, leaveRoom } = useRoom();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [inviteCopied, setInviteCopied] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showPhaseMenu, setShowPhaseMenu] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
   const [advancing, setAdvancing] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
@@ -24,12 +26,37 @@ export default function Header() {
   const phaseLabel = PHASES.find((p) => p.key === room?.phase)?.label ?? 'Lobby';
   const nextPhase = currentPhaseIdx < PHASE_ORDER.length - 1 ? PHASES[currentPhaseIdx + 1] : null;
 
-  const copyRoomCode = async () => {
-    if (!room?.code) return;
+  const getInviteText = () => {
+    const link = `${window.location.origin}/room/${room?.code}`;
+    const passwordLine = roomPassword ? `\nPassword: ${roomPassword}` : '';
+    return `Join my Eurovision party! 🎤✨\n\nRoom code: ${room?.code}${passwordLine}\n\n${link}`;
+  };
+
+  const copyRoomCode = () => {
+    setShowInvite((v) => !v);
+    setShowPhaseMenu(false);
+    setShowNotifications(false);
+  };
+
+  const shareInvite = async () => {
+    const text = getInviteText();
     try {
-      await navigator.clipboard.writeText(room.code);
+      if (navigator.share) {
+        await navigator.share({ text });
+      } else {
+        const subject = encodeURIComponent('🎤 Eurovision Party Invite!');
+        const body = encodeURIComponent(text);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+      }
+    } catch { /* cancelled */ }
+  };
+
+  const copyInvite = async () => {
+    try {
+      await navigator.clipboard.writeText(getInviteText());
+      setInviteCopied(true);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      setTimeout(() => { setInviteCopied(false); setCopied(false); }, 2000);
     } catch { /* noop */ }
   };
 
@@ -48,13 +75,13 @@ export default function Header() {
   return (
     <>
       <header className="glass safe-top sticky top-0 z-40 h-14 flex items-center justify-between px-4 shrink-0">
-        {/* Left: Room code badge */}
+        {/* Left: Room code badge — tap to open invite panel */}
         <button
           onClick={copyRoomCode}
           className="flex items-center gap-1.5 rounded-full bg-euro-purple/30 px-3 py-1 text-sm font-semibold text-euro-purple-light active:scale-95 transition-transform min-h-[36px]"
-          aria-label="Copy room code"
+          aria-label="Share invite"
         >
-          <span className="text-xs opacity-60">🔗</span>
+          <span className="text-xs opacity-60">📤</span>
           <span className="tracking-widest">{room?.code ?? '----'}</span>
           <AnimatePresence mode="wait">
             {copied && (
@@ -157,6 +184,45 @@ export default function Header() {
             </div>
             {/* Backdrop */}
             <div className="fixed inset-0 -z-10" onClick={() => setShowPhaseMenu(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Invite panel */}
+      <AnimatePresence>
+        {showInvite && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="fixed inset-x-0 top-14 z-50 px-4 pt-2"
+          >
+            <div className="glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-md mx-auto">
+              <p className="text-xs text-white/40 mb-2 font-medium">Invite Friends</p>
+              <div className="text-center mb-3">
+                <p className="text-3xl font-extrabold tracking-[0.25em] glow-text-gold text-euro-gold">
+                  {room?.code}
+                </p>
+                {roomPassword && (
+                  <p className="text-xs text-white/50 mt-1">Password: <span className="text-white/80 font-medium">{roomPassword}</span></p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={shareInvite}
+                  className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-euro-purple/40 py-2.5 text-sm font-medium text-euro-purple-light active:scale-95 transition-transform"
+                >
+                  📤 Share
+                </button>
+                <button
+                  onClick={copyInvite}
+                  className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-euro-purple/40 py-2.5 text-sm font-medium text-euro-purple-light active:scale-95 transition-transform"
+                >
+                  {inviteCopied ? '✅ Copied!' : '📋 Copy'}
+                </button>
+              </div>
+            </div>
+            <div className="fixed inset-0 -z-10" onClick={() => setShowInvite(false)} />
           </motion.div>
         )}
       </AnimatePresence>

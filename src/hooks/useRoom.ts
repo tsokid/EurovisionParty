@@ -291,7 +291,7 @@ export function useRoom(): UseRoomReturn {
         const { player: currentPlayer } = useGameStore.getState();
         if (!currentPlayer) throw new Error('Not in a room');
 
-        const { data: nextPhase, error: rpcErr } = await supabase.rpc('advance_room_phase', {
+        const { error: rpcErr } = await supabase.rpc('advance_room_phase', {
           p_room_id: roomId,
           p_player_id: currentPlayer.id,
         });
@@ -302,8 +302,16 @@ export function useRoom(): UseRoomReturn {
           if (msg.includes('final phase')) throw new Error('Already at the final phase.');
           throw rpcErr;
         }
+
+        // Immediately refetch room so host transitions without waiting for Realtime
+        const { data: updatedRoom } = await supabase
+          .from('rooms')
+          .select('*')
+          .eq('id', roomId)
+          .single();
+        if (updatedRoom) useGameStore.getState().setRoom(updatedRoom as Room);
       } catch (err: unknown) {
-        let message = err instanceof Error ? err.message : 'Failed to advance phase';
+        const message = err instanceof Error ? err.message : 'Failed to advance phase';
         setError(message);
         throw err;
       }
