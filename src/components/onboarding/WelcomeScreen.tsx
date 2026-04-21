@@ -90,7 +90,7 @@ export default function WelcomeScreen({
 
       {/* Action buttons */}
       <motion.div
-        className="flex flex-col gap-4 w-full max-w-xs"
+        className="flex flex-col gap-4 w-full max-w-sm"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.5 }}

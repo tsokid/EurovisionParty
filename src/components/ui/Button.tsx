@@ -46,7 +46,7 @@ export default function Button({
       whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
       disabled={disabled || loading}
       className={clsx(
-        'rounded-full font-semibold transition-opacity inline-flex items-center justify-center gap-2 cursor-pointer',
+        'rounded-full font-semibold transition-opacity inline-flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap',
         variantStyles[variant],
         sizeStyles[size],
         fullWidth && 'w-full',
