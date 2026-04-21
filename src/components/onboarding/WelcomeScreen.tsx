@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '../ui/Button';
 import ThemeToggle from '../ui/ThemeToggle';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
+import MuteToggle from '../ui/MuteToggle';
 
 interface WelcomeScreenProps {
   onCreateRoom: () => void;
@@ -26,8 +27,9 @@ export default function WelcomeScreen({
 
   return (
     <div className="min-h-svh bg-euro-gradient flex flex-col items-center px-6 pt-16 pb-8 relative overflow-hidden">
-      {/* Theme toggle & language switcher — top right */}
+      {/* Theme toggle & language switcher & mute — top right */}
       <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
+        <MuteToggle />
         <LanguageSwitcher />
         <ThemeToggle />
       </div>

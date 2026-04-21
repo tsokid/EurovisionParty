@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
+import MuteToggle from '../ui/MuteToggle';
 
 export default function Header() {
   const { t } = useTranslation();
@@ -112,6 +113,7 @@ export default function Header() {
           >
             <span className="text-lg">{theme === 'dark' ? '☀️' : '🌙'}</span>
           </button>
+          <MuteToggle />
           <LanguageSwitcher />
           <button
             onClick={() => setShowNotifications(!showNotifications)}

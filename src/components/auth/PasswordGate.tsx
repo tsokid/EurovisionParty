@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { playIntro } from '../../lib/audio';
 import ThemeToggle from '../ui/ThemeToggle';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
+import MuteToggle from '../ui/MuteToggle';
 import Button from '../ui/Button';
 
 /** SHA-256("dumtektek") */
@@ -69,6 +70,7 @@ export default function PasswordGate({ children }: PasswordGateProps) {
   return (
     <div className="min-h-svh bg-euro-gradient flex flex-col items-center px-6 pt-16 pb-8 relative overflow-hidden">
       <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
+        <MuteToggle />
         <LanguageSwitcher />
         <ThemeToggle />
       </div>

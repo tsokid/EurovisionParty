@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../../stores/gameStore';
 import PlayerCard from './PlayerCard';
 import Button from '../ui/Button';
+import ThemeToggle from '../ui/ThemeToggle';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
+import MuteToggle from '../ui/MuteToggle';
 
 interface LobbyScreenProps {
   onAdvancePhase: () => Promise<void>;
@@ -70,7 +73,14 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
   };
 
   return (
-    <div className="flex flex-col min-h-full">
+    <div className="flex flex-col min-h-full relative">
+      {/* Floating controls — top right (lobby has no app header) */}
+      <div className="absolute top-3 right-3 z-20 flex items-center gap-1">
+        <MuteToggle />
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
+
       {/* Room code hero */}
       <div className="text-center pt-8 pb-6 px-4">
         <p className="text-sm text-white/50 mb-2 font-medium">

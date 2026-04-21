@@ -11,6 +11,10 @@
     "player": "player",
     "players": "players"
   },
+  "audio": {
+    "mute": "Mute sounds",
+    "unmute": "Unmute sounds"
+  },
   "gate": {
     "title": "Secret Password",
     "subtitle": "Enter the password to unlock the Eurovision Games",
