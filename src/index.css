@@ -117,6 +117,11 @@ body { margin: 0; overscroll-behavior: none; }
 /* --- Body ink --- */
 [data-theme="light"] { color: #1a0533; }
 [data-theme="light"] .text-euro-white { color: #1a0533; }
+[data-theme="light"] .text-euro-white\/90 { color: rgba(26,5,51,0.9); }
+[data-theme="light"] .text-euro-white\/80 { color: rgba(26,5,51,0.82); }
+[data-theme="light"] .text-euro-white\/70 { color: rgba(26,5,51,0.75); }
+[data-theme="light"] .text-euro-white\/60 { color: rgba(26,5,51,0.68); }
+[data-theme="light"] .text-euro-white\/50 { color: rgba(26,5,51,0.6); }
 
 /* Exclude button gradients (they stay dark & keep white text) */
 [data-theme="light"] .text-white:not(.bg-gradient-to-r):not(.bg-euro-red):not(.bg-euro-purple):not(.bg-euro-pink) {

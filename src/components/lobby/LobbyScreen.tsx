@@ -157,8 +157,8 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
         {/* Waiting message */}
         {players.length < 2 && (
           <motion.p
-            className="text-center text-white/30 text-sm mt-6"
-            animate={{ opacity: [0.3, 0.7, 0.3] }}
+            className="text-center text-white/60 text-sm mt-6 font-medium"
+            animate={{ opacity: [0.6, 1, 0.6] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
             {t('lobby.waitingForPlayers')}
@@ -175,9 +175,8 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-white/60">
-              👥 <strong className="text-euro-white">{players.length}</strong>{' '}
-              {t('lobby.joinedCount', { count: players.length, label: players.length === 1 ? t('common.player') : t('common.players') })}
+            <span className="text-sm text-white/70">
+              👥 {t('lobby.joinedCount', { count: players.length })}
             </span>
             {players.length < 2 && (
               <span className="text-xs text-euro-red/80">

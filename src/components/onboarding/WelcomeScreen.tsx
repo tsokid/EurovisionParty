@@ -25,7 +25,7 @@ export default function WelcomeScreen({
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-svh bg-euro-gradient flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
+    <div className="min-h-svh bg-euro-gradient flex flex-col items-center px-6 pt-16 pb-8 relative overflow-hidden">
       {/* Theme toggle & language switcher — top right */}
       <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
         <LanguageSwitcher />
@@ -55,13 +55,13 @@ export default function WelcomeScreen({
 
       {/* Logo / Title block */}
       <motion.div
-        className="text-center mb-4"
+        className="text-center mb-3"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
       >
         {/* Floating microphone */}
-        <div className="text-6xl mb-4 animate-float">🎤</div>
+        <div className="text-5xl mb-2 animate-float">🎤</div>
 
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
           <span className="glow-text text-euro-purple-light">Eurovision</span>{' '}
@@ -69,7 +69,7 @@ export default function WelcomeScreen({
         </h1>
 
         <motion.p
-          className="text-4xl sm:text-5xl font-extrabold glow-text-gold text-euro-gold mt-1"
+          className="text-3xl sm:text-4xl font-extrabold glow-text-gold text-euro-gold mt-1"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
@@ -78,9 +78,9 @@ export default function WelcomeScreen({
         </motion.p>
       </motion.div>
 
-      {/* Subtitle */}
+      {/* Subtitle — text-white/80 for contrast in both themes */}
       <motion.p
-        className="text-euro-white/70 text-lg text-center mb-10 max-w-xs"
+        className="text-white/80 text-base sm:text-lg text-center mb-6 max-w-xs font-medium"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
@@ -90,7 +90,7 @@ export default function WelcomeScreen({
 
       {/* Action buttons */}
       <motion.div
-        className="flex flex-col gap-4 w-full max-w-sm"
+        className="flex flex-col gap-3 w-full max-w-sm"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.5 }}
@@ -114,9 +114,9 @@ export default function WelcomeScreen({
         </Button>
       </motion.div>
 
-      {/* Bottom text */}
+      {/* Bottom text — mt-auto pushes to bottom, pt-10 guarantees gap from CTAs */}
       <motion.p
-        className="absolute bottom-8 text-sm text-white/30 font-medium"
+        className="mt-auto pt-10 text-sm text-white/50 font-medium"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
