@@ -85,42 +85,76 @@
 body { margin: 0; overscroll-behavior: none; }
 #root { min-height: 100svh; }
 
-/* ===== LIGHT MODE ===== */
+/* ===== LIGHT MODE =====
+   Ink color #1a0533 on pastel background → WCAG AA+ for body text.
+   `:not(.bg-gradient-to-r)` keeps button text white on dark purple→pink gradients.
+*/
 [data-theme="light"] .bg-euro-gradient {
   background: linear-gradient(135deg, #f5f0ff 0%, #ede4ff 25%, #e8d8ff 50%, #ede4ff 75%, #f5f0ff 100%);
 }
 
 [data-theme="light"] .glass {
-  background: rgba(107, 33, 168, 0.06);
-  border-color: rgba(107, 33, 168, 0.12);
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(107, 33, 168, 0.18);
 }
 
 [data-theme="light"] .glass-strong {
-  background: rgba(107, 33, 168, 0.08);
-  border-color: rgba(107, 33, 168, 0.15);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(107, 33, 168, 0.22);
 }
 
+/* Tighter glow in light mode — long blur shadows wash out on pastel bg */
 [data-theme="light"] .glow-text {
-  text-shadow: 0 0 7px rgba(107,33,168,0.3), 0 0 20px rgba(107,33,168,0.15);
+  text-shadow: 0 1px 2px rgba(107,33,168,0.25);
 }
 [data-theme="light"] .glow-text-gold {
-  text-shadow: 0 0 7px rgba(202,138,4,0.4), 0 0 20px rgba(202,138,4,0.2);
+  text-shadow: 0 1px 2px rgba(120,53,15,0.3);
 }
 [data-theme="light"] .glow-text-pink {
-  text-shadow: 0 0 7px rgba(219,39,119,0.4), 0 0 20px rgba(219,39,119,0.2);
+  text-shadow: 0 1px 2px rgba(157,23,77,0.3);
 }
 
-/* Override text colors in light mode */
+/* --- Body ink --- */
 [data-theme="light"] { color: #1a0533; }
-[data-theme="light"] .text-white { color: #1a0533; }
 [data-theme="light"] .text-euro-white { color: #1a0533; }
-[data-theme="light"] .text-white\/60,
-[data-theme="light"] .text-white\/50,
-[data-theme="light"] .text-white\/40,
-[data-theme="light"] .text-white\/30,
-[data-theme="light"] .text-white\/20 { color: rgba(26,5,51,0.5); }
-[data-theme="light"] .placeholder\:text-white\/20::placeholder { color: rgba(26,5,51,0.3); }
+
+/* Exclude button gradients (they stay dark & keep white text) */
+[data-theme="light"] .text-white:not(.bg-gradient-to-r):not(.bg-euro-red):not(.bg-euro-purple):not(.bg-euro-pink) {
+  color: #1a0533;
+}
+
+/* Preserve opacity hierarchy — do NOT collapse all tiers to one value */
+[data-theme="light"] .text-white\/90 { color: rgba(26,5,51,0.9); }
+[data-theme="light"] .text-white\/80 { color: rgba(26,5,51,0.82); }
+[data-theme="light"] .text-white\/70 { color: rgba(26,5,51,0.75); }
+[data-theme="light"] .text-white\/60 { color: rgba(26,5,51,0.68); }
+[data-theme="light"] .text-white\/50 { color: rgba(26,5,51,0.6); }
+[data-theme="light"] .text-white\/40 { color: rgba(26,5,51,0.5); }
+[data-theme="light"] .text-white\/30 { color: rgba(26,5,51,0.42); }
+[data-theme="light"] .text-white\/20 { color: rgba(26,5,51,0.35); }
+[data-theme="light"] .text-white\/15 { color: rgba(26,5,51,0.3); }
+[data-theme="light"] .text-white\/10 { color: rgba(26,5,51,0.25); }
+
+/* --- Brand accent colors: use darker saturated variants for readability --- */
+[data-theme="light"] .text-euro-gold { color: #b45309; }
+[data-theme="light"] .text-euro-gold-light { color: #92400e; }
+[data-theme="light"] .text-euro-purple-light { color: #6b21a8; }
+[data-theme="light"] .text-euro-pink { color: #be185d; }
+[data-theme="light"] .text-euro-pink-light { color: #9d174d; }
+[data-theme="light"] .text-euro-cyan { color: #0e7490; }
+[data-theme="light"] .text-euro-green { color: #047857; }
+[data-theme="light"] .text-euro-red { color: #b91c1c; }
+
+/* Placeholder text */
+[data-theme="light"] .placeholder\:text-white\/20::placeholder { color: rgba(26,5,51,0.4); }
+[data-theme="light"] .placeholder\:text-white\/30::placeholder { color: rgba(26,5,51,0.45); }
+
+/* Surfaces */
 [data-theme="light"] .bg-white\/5 { background-color: rgba(107,33,168,0.05); }
 [data-theme="light"] .bg-white\/10 { background-color: rgba(107,33,168,0.08); }
-[data-theme="light"] .border-white\/10 { border-color: rgba(107,33,168,0.12); }
-[data-theme="light"] .border-white\/20 { border-color: rgba(107,33,168,0.15); }
+[data-theme="light"] .bg-white\/20 { background-color: rgba(107,33,168,0.12); }
+[data-theme="light"] .border-white\/10 { border-color: rgba(107,33,168,0.15); }
+[data-theme="light"] .border-white\/20 { border-color: rgba(107,33,168,0.2); }
+
+/* Scrollbar */
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(107,33,168,0.4); }

@@ -49,8 +49,8 @@
     "needMore": "Need {{needed}} more",
     "startParty": "🚀 Start the Party!",
     "waitingHost": "⏳ Waiting for the host to start...",
-    "inviteText": "Join my Eurovision party! 🎤✨\n\nRoom code: {{code}}{{passwordLine}}\n\n{{link}}",
-    "inviteSubject": "🎤 Eurovision Party Invite!"
+    "inviteText": "Join my Eurovision Games! 🎤✨\n\nRoom code: {{code}}{{passwordLine}}\n\n{{link}}",
+    "inviteSubject": "🎤 Eurovision Games Invite!"
   },
   "header": {
     "shareAria": "Share invite",

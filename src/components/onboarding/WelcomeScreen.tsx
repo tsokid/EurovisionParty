@@ -63,9 +63,9 @@ export default function WelcomeScreen({
         {/* Floating microphone */}
         <div className="text-6xl mb-4 animate-float">🎤</div>
 
-        <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight">
-          <span className="glow-text text-euro-purple-light">Euro</span>
-          <span className="glow-text-pink text-euro-pink">Party</span>
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
+          <span className="glow-text text-euro-purple-light">Eurovision</span>{' '}
+          <span className="glow-text-pink text-euro-pink">Games</span>
         </h1>
 
         <motion.p

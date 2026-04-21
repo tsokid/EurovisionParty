@@ -13,15 +13,15 @@
   },
   "welcome": {
     "subtitle": "Παιχνίδι Μεγάλου Τελικού Eurovision",
-    "createRoom": "🎉 Δημιουργία Δωματίου",
-    "joinRoom": "🚪 Είσοδος σε Δωμάτιο",
+    "createRoom": "🎉 Δημιουργία Παιχνιδιού",
+    "joinRoom": "🚪 Είσοδος σε Παιχνίδι",
     "location": "Βιέννη 2026 🇦🇹"
   },
   "nameEntry": {
-    "createTitle": "Φτιάξε το Δωμάτιό σου",
-    "joinTitle": "Μπες σε Δωμάτιο",
+    "createTitle": "Φτιάξε το Παιχνίδι σου",
+    "joinTitle": "Μπες σε Παιχνίδι",
     "subtitle": "Διάλεξε ένα όνομα για να ξεκινήσεις",
-    "roomCodeLabel": "Κωδικός Δωματίου",
+    "roomCodeLabel": "Κωδικός Παιχνιδιού",
     "roomCodePlaceholder": "π.χ. ABCD",
     "nameLabel": "Το Όνομά σου",
     "namePlaceholder": "Γράψε το όνομά σου",
@@ -31,7 +31,7 @@
     "passwordCreatePlaceholder": "Διάλεξε κωδικό (6+ χαρ.)",
     "passwordJoinPlaceholder": "Εισήγαγε τον κωδικό",
     "passwordCreateHint": "Μοιράσου τον κωδικό με τους φίλους σου",
-    "passwordJoinHint": "Ζήτησε τον κωδικό από αυτόν που έφτιαξε το δωμάτιο",
+    "passwordJoinHint": "Ζήτησε τον κωδικό από αυτόν που έφτιαξε το παιχνίδι",
     "showPassword": "Εμφάνιση",
     "hidePassword": "Απόκρυψη",
     "submitBtn": "🎶 Πάμε!",
@@ -49,8 +49,8 @@
     "needMore": "Χρειάζονται {{needed}} ακόμα",
     "startParty": "🚀 Ξεκίνα το Πάρτι!",
     "waitingHost": "⏳ Αναμονή από τον οικοδεσπότη...",
-    "inviteText": "Μπες στο Eurovision πάρτι μου! 🎤✨\n\nΚωδικός δωματίου: {{code}}{{passwordLine}}\n\n{{link}}",
-    "inviteSubject": "🎤 Πρόσκληση Eurovision Party!"
+    "inviteText": "Έλα στο Eurovision Games! 🎤✨\n\nΚωδικός παιχνιδιού: {{code}}{{passwordLine}}\n\n{{link}}",
+    "inviteSubject": "🎤 Πρόσκληση Eurovision Games!"
   },
   "header": {
     "shareAria": "Πρόσκληση",
@@ -74,7 +74,7 @@
     "board": "Κατάταξη"
   },
   "phases": {
-    "lobby": { "label": "Αναμονή", "desc": "Οι παίκτες μπαίνουν στο δωμάτιο" },
+    "lobby": { "label": "Αναμονή", "desc": "Οι παίκτες μπαίνουν στο παιχνίδι" },
     "pre_night": { "label": "Προεκπομπή", "desc": "Κουίζ και μονομαχίες πριν τη ζωντανή μετάδοση" },
     "show_night": { "label": "Βραδιά Show", "desc": "Ο Μεγάλος Τελικός Eurovision είναι live!" },
     "predictions_open": { "label": "Προβλέψεις", "desc": "Υποβολή Top 5 και Worst 5 προβλέψεων" },
@@ -256,14 +256,14 @@
     "newNotification": "Νέα ειδοποίηση"
   },
   "errors": {
-    "tooManyRooms": "Πάρα πολλά δωμάτια. Περίμενε μία ώρα.",
+    "tooManyRooms": "Πάρα πολλά παιχνίδια. Περίμενε μία ώρα.",
     "nameTaken": "Αυτό το όνομα υπάρχει ήδη. Διάλεξε άλλο.",
-    "roomFull": "Το δωμάτιο είναι γεμάτο.",
+    "roomFull": "Το παιχνίδι είναι γεμάτο.",
     "notAuthenticated": "Δεν έγινε ταυτοποίηση",
-    "failedCreateRoom": "Αποτυχία δημιουργίας δωματίου",
-    "failedJoinRoom": "Αποτυχία εισόδου στο δωμάτιο",
+    "failedCreateRoom": "Αποτυχία δημιουργίας παιχνιδιού",
+    "failedJoinRoom": "Αποτυχία εισόδου στο παιχνίδι",
     "wrongPassword": "Λάθος κωδικός. Δοκίμασε ξανά.",
-    "roomNotFound": "Δεν βρέθηκε δωμάτιο. Έλεγξε τον κωδικό.",
+    "roomNotFound": "Δεν βρέθηκε παιχνίδι. Έλεγξε τον κωδικό.",
     "hostOnly": "Μόνο ο οικοδεσπότης μπορεί να αλλάξει φάση.",
     "finalPhase": "Είσαι ήδη στην τελική φάση.",
     "failedAdvance": "Αποτυχία αλλαγής φάσης",
@@ -275,7 +275,7 @@
     "rematchExists": "Η ρεβάνς έχει ήδη ζητηθεί",
     "duelNotFound": "Δεν βρέθηκε η αρχική μονομαχία",
     "failedRematch": "Αποτυχία αιτήματος ρεβάνς",
-    "noRoomContext": "Δεν υπάρχει δωμάτιο",
+    "noRoomContext": "Δεν υπάρχει παιχνίδι",
     "failedSubmitAnswer": "Αποτυχία υποβολής απάντησης",
     "failedFetchDuels": "Αποτυχία φόρτωσης μονομαχιών",
     "failedPurchase": "Η αγορά απέτυχε",

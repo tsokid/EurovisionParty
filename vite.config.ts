@@ -10,8 +10,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'EuroParty 2026',
-        short_name: 'EuroParty',
+        name: 'Eurovision Games 2026',
+        short_name: 'Eurovision Games',
         description: 'Eurovision Grand Final Party Game',
         theme_color: '#1a0533',
         background_color: '#0f0520',
