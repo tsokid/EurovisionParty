@@ -11,6 +11,13 @@
     "player": "player",
     "players": "players"
   },
+  "gate": {
+    "title": "Secret Password",
+    "subtitle": "Enter the password to unlock the Eurovision Games",
+    "placeholder": "Type the secret word",
+    "unlock": "Unlock",
+    "wrongPassword": "Wrong password. Try again."
+  },
   "welcome": {
     "subtitle": "Eurovision Grand Final Party Game",
     "createRoom": "🎉 Create Room",

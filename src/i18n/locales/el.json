@@ -11,6 +11,13 @@
     "player": "παίκτης",
     "players": "παίκτες"
   },
+  "gate": {
+    "title": "Μυστικός Κωδικός",
+    "subtitle": "Γράψε τον κωδικό για να ξεκλειδώσεις τα Eurovision Games",
+    "placeholder": "Γράψε τη μυστική λέξη",
+    "unlock": "Ξεκλείδωμα",
+    "wrongPassword": "Λάθος κωδικός. Προσπάθησε ξανά."
+  },
   "welcome": {
     "subtitle": "Παιχνίδι Μεγάλου Τελικού Eurovision",
     "createRoom": "🎉 Δημιουργία Παιχνιδιού",

@@ -6,6 +6,7 @@ import { useRejoin } from '../hooks/useRejoin';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { useNotifications } from '../hooks/useNotifications';
 import { supabase } from '../lib/supabase';
+import { playIntro } from '../lib/audio';
 import type { Room } from '../lib/types';
 import AppShell from '../components/layout/AppShell';
 import LobbyScreen from '../components/lobby/LobbyScreen';
@@ -42,6 +43,18 @@ export function RoomPage() {
     }, 5 * 60 * 1000); // every 5 min
     return () => { if (heartbeatRef.current) clearInterval(heartbeatRef.current); };
   }, [playerId]);
+
+  // Play Eurovision intro once when the game enters the 'final' phase
+  const finalPlayedRef = useRef(false);
+  useEffect(() => {
+    if (storeRoom?.phase === 'final' && !finalPlayedRef.current) {
+      finalPlayedRef.current = true;
+      playIntro();
+    }
+    if (storeRoom?.phase !== 'final') {
+      finalPlayedRef.current = false; // allow replay if game restarts
+    }
+  }, [storeRoom?.phase]);
 
   // Polling fallback: check room phase every 3 s while in lobby
   // Covers the case where Realtime lags or drops (all users, not just host)
