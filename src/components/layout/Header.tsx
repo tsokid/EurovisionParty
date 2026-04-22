@@ -10,6 +10,7 @@ import { PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 import MuteToggle from '../ui/MuteToggle';
+import ExitGameModal from '../room/ExitGameModal';
 
 export default function Header() {
   const { t } = useTranslation();
@@ -24,6 +25,7 @@ export default function Header() {
   const [showPhaseMenu, setShowPhaseMenu] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const [advancing, setAdvancing] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
   const currentPhaseIdx = PHASE_ORDER.indexOf(room?.phase ?? 'lobby');
@@ -172,18 +174,25 @@ export default function Header() {
                   );
                 })}
               </div>
-              {/* Leave room */}
-              <button
-                onClick={async () => {
-                  if (window.confirm(t('header.leaveConfirm'))) {
-                    await leaveRoom();
+              {/* Exit options */}
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={async () => {
+                    setShowPhaseMenu(false);
+                    await leaveRoom('away');
                     navigate('/', { replace: true });
-                  }
-                }}
-                className="w-full mt-3 text-xs text-euro-red/60 hover:text-euro-red text-center py-2 rounded-lg hover:bg-euro-red/10 transition-colors"
-              >
-                {t('header.leaveRoom')}
-              </button>
+                  }}
+                  className="flex-1 text-xs text-yellow-400/70 hover:text-yellow-400 text-center py-2 rounded-lg hover:bg-yellow-400/10 transition-colors border border-yellow-400/20"
+                >
+                  {t('exitStrip.visitOtherRooms')}
+                </button>
+                <button
+                  onClick={() => setShowExitModal(true)}
+                  className="flex-1 text-xs text-euro-red/60 hover:text-euro-red text-center py-2 rounded-lg hover:bg-euro-red/10 transition-colors border border-euro-red/20"
+                >
+                  {t('exitStrip.exitGame')}
+                </button>
+              </div>
               <button
                 onClick={() => setShowPhaseMenu(false)}
                 className="w-full mt-1 text-xs text-white/30 hover:text-white/50 text-center py-1"
@@ -240,6 +249,18 @@ export default function Header() {
         open={showNotifications}
         onClose={() => setShowNotifications(false)}
       />
+
+      {showExitModal && (
+        <ExitGameModal
+          onConfirm={async () => {
+            setShowExitModal(false);
+            setShowPhaseMenu(false);
+            await leaveRoom('exit');
+            navigate('/', { replace: true });
+          }}
+          onCancel={() => setShowExitModal(false)}
+        />
+      )}
     </>
   );
 }
