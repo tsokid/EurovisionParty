@@ -26,6 +26,7 @@ interface UseDuelsReturn {
   makeDecision: (duelId: string, playerId: string, decision: DuelDecision) => Promise<void>;
   requestRematch: (originalDuelId: string, loserId: string, roomId: string) => Promise<Duel>;
   fetchPlayerDuels: (playerId: string) => Promise<void>;
+  refetchDuels: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -61,6 +62,16 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
     return () => {
       if (channelRef.current) { supabase.removeChannel(channelRef.current); channelRef.current = null; }
     };
+  }, [roomId]);
+
+  const refetchDuels = useCallback(async (): Promise<void> => {
+    if (!roomId) return;
+    const { data } = await supabase
+      .from('duels')
+      .select('*')
+      .eq('room_id', roomId)
+      .order('created_at', { ascending: false });
+    if (data) setDuels(data as Duel[]);
   }, [roomId]);
 
   const fetchPlayerDuels = useCallback(async (playerId: string): Promise<void> => {
@@ -266,7 +277,7 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
   return {
     duels, pendingDuels, activeDuels, pendingDecisions,
     createDuel, acceptDuel, declineDuel, submitDuelAnswers,
-    makeDecision, requestRematch, fetchPlayerDuels,
+    makeDecision, requestRematch, fetchPlayerDuels, refetchDuels,
     isLoading, error,
   };
 }
