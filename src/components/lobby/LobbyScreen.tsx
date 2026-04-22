@@ -73,7 +73,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
   };
 
   return (
-    <div className="flex flex-col min-h-full relative">
+    <div className="flex flex-col min-h-full relative pt-20">
       {/* Floating controls — top right (lobby has no app header) */}
       <div className="absolute top-3 right-3 z-20 flex items-center gap-1">
         <MuteToggle />
@@ -81,8 +81,11 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
         <ThemeToggle />
       </div>
 
+      {/* Centered content column between top clearance and bottom sticky bar */}
+      <div className="flex-1 flex flex-col justify-center px-4 min-h-0">
+
       {/* Room code hero */}
-      <div className="text-center pt-8 pb-6 px-4">
+      <div className="text-center pb-4">
         <p className="text-sm text-white/50 mb-2 font-medium">
           {t('lobby.copyHint')}
         </p>
@@ -142,15 +145,15 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
       </div>
 
       {/* Player list */}
-      <div className="flex-1 px-4 pb-4">
-        <h3 className="text-sm font-medium text-white/50 mb-3">
+      <div>
+        <h3 className="text-sm font-medium text-white/60 mb-2">
           {t('lobby.playersHeader', { count: players.length })}
         </h3>
 
         {players.length === 0 ? (
-          <div className="text-center text-white/30 py-8">{t('common.loading')}</div>
+          <div className="text-center text-white/40 py-4">{t('common.loading')}</div>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto">
             <AnimatePresence mode="popLayout">
               {players.map((p) => (
                 <PlayerCard
@@ -167,7 +170,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
         {/* Waiting message */}
         {players.length < 2 && (
           <motion.p
-            className="text-center text-white/60 text-sm mt-6 font-medium"
+            className="text-center text-white/60 text-sm mt-4 font-medium"
             animate={{ opacity: [0.6, 1, 0.6] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
@@ -175,6 +178,8 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
           </motion.p>
         )}
       </div>
+
+      </div>{/* /centered content column */}
 
       {/* Game controls */}
       {room && (
