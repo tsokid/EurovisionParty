@@ -61,8 +61,8 @@
     "needMore": "Need {{needed}} more",
     "startParty": "🚀 Start the Party!",
     "waitingHost": "⏳ Waiting for the host to start...",
-    "inviteText": "Join my Eurovision Games! 🎤✨\nRoom Code: {{code}}{{passwordLine}}\nJoin here: {{link}}",
-    "invitePasswordLine": "\nPassword: {{password}}",
+    "inviteText": "🎤✨ Join my Eurovision Games! ✨🎤\n\n🔑 Room Code: {{code}}{{passwordLine}}\n\n👉 Join here:\n{{link}}",
+    "invitePasswordLine": "\n\n🔒 Password: {{password}}",
     "inviteSubject": "🎤 Eurovision Games Invite!"
   },
   "header": {
