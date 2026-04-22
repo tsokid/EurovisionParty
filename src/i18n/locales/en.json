@@ -295,5 +295,24 @@
     "failedPredictions": "Failed to submit predictions",
     "failedSaveResults": "Failed to save results",
     "declineLimitReached": "Decline limit reached"
+  },
+  "exitStrip": {
+    "visitOtherRooms": "💤 Visit Other Rooms",
+    "exitGame": "🚪 Exit Game"
+  },
+  "exitModal": {
+    "title": "Exit Game?",
+    "body": "This will remove you from the game. You can rejoin within 2 hours to recover your points. After that, your progress is gone permanently.",
+    "warn1": "You'll appear as left to other players",
+    "warn2": "You can rejoin within 2 hours to recover your points",
+    "warn3": "After 2 hours, access and points are gone forever",
+    "confirm": "Yes, Exit Game",
+    "cancel": "Cancel — Stay in Room"
+  },
+  "reconnect": {
+    "banner": "Reconnecting… your progress is safe"
+  },
+  "yourRooms": {
+    "title": "Your Rooms"
   }
 }

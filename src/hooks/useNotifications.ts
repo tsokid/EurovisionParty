@@ -9,6 +9,7 @@ interface UseNotificationsReturn {
   unreadCount: number;
   markAsRead: (id: string) => Promise<void>;
   markAllRead: () => Promise<void>;
+  refetchNotifications: () => Promise<void>;
 }
 
 export function useNotifications(playerId: string | null | undefined): UseNotificationsReturn {
@@ -69,6 +70,19 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
     };
   }, [playerId, addNotification]);
 
+  const refetchNotifications = useCallback(async () => {
+    if (!playerId) return;
+    const { data } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('player_id', playerId)
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (data) {
+      for (const n of data) addNotification(n as Notification);
+    }
+  }, [playerId, addNotification]);
+
   const markAsRead = useCallback(
     async (id: string) => {
       try {
@@ -110,5 +124,5 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
-  return { notifications, unreadCount, markAsRead, markAllRead };
+  return { notifications, unreadCount, markAsRead, markAllRead, refetchNotifications };
 }

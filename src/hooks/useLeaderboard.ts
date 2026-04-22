@@ -7,6 +7,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 interface UseLeaderboardReturn {
   players: Player[];
   isLoading: boolean;
+  refetchPlayers: () => Promise<void>;
 }
 
 export function useLeaderboard(roomId: string | null | undefined): UseLeaderboardReturn {
@@ -88,5 +89,5 @@ export function useLeaderboard(roomId: string | null | undefined): UseLeaderboar
     };
   }, [roomId, fetchPlayers, debouncedFetch, setPlayers]);
 
-  return { players, isLoading };
+  return { players, isLoading, refetchPlayers: fetchPlayers };
 }

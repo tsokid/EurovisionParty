@@ -1,0 +1,341 @@
+<style>
+  body { background: #1a0a2e; font-family: system-ui, sans-serif; }
+
+  .phone {
+    width: 375px;
+    min-height: 812px;
+    background: linear-gradient(160deg, #1a0a2e 0%, #2d1b69 50%, #0d1b4a 100%);
+    border-radius: 36px;
+    border: 2px solid rgba(255,255,255,0.12);
+    padding: 48px 24px 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sparkle { position: absolute; opacity: 0.35; font-size: 22px; }
+
+  .title-block { text-align: center; margin-bottom: 12px; }
+  .mic { font-size: 42px; display: block; margin-bottom: 6px; }
+  .title { font-size: 32px; font-weight: 900; letter-spacing: -0.5px; }
+  .purple { color: #c084fc; text-shadow: 0 0 20px rgba(192,132,252,0.5); }
+  .pink { color: #f472b6; text-shadow: 0 0 20px rgba(244,114,182,0.5); }
+  .gold { color: #fbbf24; font-size: 28px; font-weight: 900; text-shadow: 0 0 20px rgba(251,191,36,0.5); display: block; margin-top: 2px; }
+  .subtitle { color: rgba(255,255,255,0.7); font-size: 14px; text-align: center; margin-bottom: 20px; font-weight: 500; }
+
+  /* ── Your Rooms panel ── */
+  .rooms-panel {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .rooms-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 10px;
+  }
+  .room-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .room-row:last-child { margin-bottom: 0; }
+  .room-row.active:hover { background: rgba(192,132,252,0.15); }
+  .room-flag { font-size: 22px; }
+  .room-info { flex: 1; }
+  .room-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .room-meta { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+  .room-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+  .badge-live { background: rgba(74,222,128,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+  .badge-away { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+  .badge-over { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); }
+
+  /* ── CTA buttons ── */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+    letter-spacing: 0.01em;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.85);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .footer-text { margin-top: auto; font-size: 12px; color: rgba(255,255,255,0.35); padding-top: 20px; }
+
+  /* layout */
+  .screens { display: flex; gap: 32px; align-items: flex-start; justify-content: center; flex-wrap: wrap; padding: 24px; }
+  .screen-label { text-align: center; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+
+  /* Exit modal overlay */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    border-radius: 36px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 0 24px;
+    justify-content: center;
+  }
+  .modal-sheet {
+    background: linear-gradient(180deg, #1e0e3e 0%, #150a2e 100%);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 24px 20px 20px;
+    width: calc(100% - 32px);
+  }
+  .modal-handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+  .modal-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; text-align: center; }
+  .modal-sub { font-size: 13px; color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 20px; }
+  .modal-btn {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .modal-btn-icon { font-size: 22px; width: 32px; flex-shrink: 0; }
+  .modal-btn-text { display: flex; flex-direction: column; }
+  .modal-btn-label { font-size: 14px; font-weight: 700; }
+  .modal-btn-desc { font-size: 11px; font-weight: 500; margin-top: 1px; }
+  .btn-pause {
+    background: rgba(251,191,36,0.12);
+    border: 1px solid rgba(251,191,36,0.3);
+    color: #fbbf24;
+  }
+  .btn-abandon {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    color: #f87171;
+  }
+  .btn-cancel {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* reconnect banner */
+  .reconnect-banner {
+    position: absolute;
+    top: 56px;
+    left: 16px;
+    right: 16px;
+    background: rgba(251,191,36,0.15);
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+  }
+  .reconnect-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #fbbf24;
+    flex-shrink: 0;
+    animation: pulse-dot 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .reconnect-text { font-size: 12px; color: #fbbf24; font-weight: 600; }
+</style>
+
+<h2>Room Management — Three Key Screens</h2>
+<p class="subtitle">Home screen "Your Rooms" panel · Exit bottom sheet · Reconnection banner</p>
+
+<div class="screens">
+
+  <!-- Screen 1: Home with Your Rooms -->
+  <div>
+    <div class="screen-label">Home — returning user</div>
+    <div class="phone">
+      <span class="sparkle" style="top:8%;left:8%">✨</span>
+      <span class="sparkle" style="top:14%;right:10%">⭐</span>
+      <span class="sparkle" style="top:62%;left:5%">🌟</span>
+      <span class="sparkle" style="bottom:22%;right:7%">💫</span>
+
+      <div class="title-block">
+        <span class="mic">🎤</span>
+        <div class="title"><span class="purple">Eurovision</span> <span class="pink">Games</span></div>
+        <span class="gold">2026</span>
+      </div>
+
+      <p class="subtitle">Play along with friends at home</p>
+
+      <!-- Your Rooms panel -->
+      <div class="rooms-panel">
+        <div class="rooms-label">Your Rooms</div>
+
+        <div class="room-row active">
+          <div class="room-flag">🇸🇪</div>
+          <div class="room-info">
+            <div class="room-name">Stockholm Squad</div>
+            <div class="room-meta">Room ABC123 · 142 pts · Quiz in progress</div>
+          </div>
+          <div class="room-badge badge-live">LIVE</div>
+        </div>
+
+        <div class="room-row active">
+          <div class="room-flag">🎉</div>
+          <div class="room-info">
+            <div class="room-name">Fam Night</div>
+            <div class="room-meta">Room XYZ789 · 88 pts · Stepped away</div>
+          </div>
+          <div class="room-badge badge-away">AWAY</div>
+        </div>
+
+        <div class="room-row">
+          <div class="room-flag">🎵</div>
+          <div class="room-info">
+            <div class="room-name">Eurovision 2025</div>
+            <div class="room-meta">Room QRS456 · Game ended</div>
+          </div>
+          <div class="room-badge badge-over">ENDED</div>
+        </div>
+      </div>
+
+      <!-- Main CTAs -->
+      <button class="btn btn-primary">🎤 Create a New Room</button>
+      <button class="btn btn-secondary">🚪 Join with Code</button>
+
+      <p class="footer-text">Basel · Eurovision 2026 🇨🇭</p>
+    </div>
+  </div>
+
+  <!-- Screen 2: Exit bottom sheet -->
+  <div>
+    <div class="screen-label">Exit options — bottom sheet</div>
+    <div class="phone">
+      <span class="sparkle" style="top:8%;left:8%">✨</span>
+      <span class="sparkle" style="top:14%;right:10%">⭐</span>
+
+      <!-- Dimmed game screen behind -->
+      <div style="width:100%;flex:1;display:flex;flex-direction:column;align-items:center;padding-top:24px;opacity:0.4;">
+        <div style="color:rgba(255,255,255,0.6);font-size:13px;font-weight:700;margin-bottom:16px;">LEADERBOARD</div>
+        <div style="width:100%;background:rgba(255,255,255,0.05);border-radius:14px;padding:12px 16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:18px;">🥇</span>
+            <span style="color:#fff;font-size:13px;font-weight:700;flex:1;">Alex</span>
+            <span style="color:#fbbf24;font-size:13px;font-weight:700;">142 pts</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:18px;">🥈</span>
+            <span style="color:#fff;font-size:13px;font-weight:700;flex:1;">Maria</span>
+            <span style="color:#fbbf24;font-size:13px;font-weight:700;">118 pts</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🥉</span>
+            <span style="color:#fff;font-size:13px;font-weight:700;flex:1;">You</span>
+            <span style="color:#fbbf24;font-size:13px;font-weight:700;">88 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal overlay -->
+      <div class="modal-overlay">
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+          <div class="modal-title">Leave this room?</div>
+          <div class="modal-sub">Your points and progress are always saved.</div>
+
+          <button class="modal-btn btn-pause">
+            <span class="modal-btn-icon">💤</span>
+            <span class="modal-btn-text">
+              <span class="modal-btn-label">Step Away</span>
+              <span class="modal-btn-desc">Saved — rejoin any time from home</span>
+            </span>
+          </button>
+
+          <button class="modal-btn btn-abandon">
+            <span class="modal-btn-icon">🚪</span>
+            <span class="modal-btn-text">
+              <span class="modal-btn-label">Abandon Game</span>
+              <span class="modal-btn-desc">Others see you leave · points gone</span>
+            </span>
+          </button>
+
+          <button class="modal-btn btn-cancel">Stay in Room</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 3: Reconnection banner -->
+  <div>
+    <div class="screen-label">Lost connection — in-game banner</div>
+    <div class="phone">
+      <span class="sparkle" style="top:8%;left:8%">✨</span>
+
+      <!-- Reconnect banner at top -->
+      <div class="reconnect-banner">
+        <div class="reconnect-dot"></div>
+        <span class="reconnect-text">Reconnecting… your progress is safe</span>
+      </div>
+
+      <!-- Game screen (slightly dimmed) -->
+      <div style="width:100%;margin-top:48px;opacity:0.55;">
+        <div style="color:rgba(255,255,255,0.6);font-size:13px;font-weight:700;text-align:center;margin-bottom:20px;">QUESTION 4 OF 10</div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin-bottom:14px;">
+          <div style="color:#fff;font-size:15px;font-weight:700;text-align:center;margin-bottom:6px;">Which country won<br>Eurovision 2023?</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:13px 16px;color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;">🇸🇪 Sweden</div>
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:13px 16px;color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;">🇺🇦 Ukraine</div>
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:13px 16px;color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;">🇫🇮 Finland</div>
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:13px 16px;color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;">🇬🇧 United Kingdom</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

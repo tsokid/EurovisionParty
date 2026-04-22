@@ -50,7 +50,8 @@ interface UseRoomReturn {
   createRoom: (hostName: string, emoji: string, password: string) => Promise<string>;
   joinRoom: (code: string, name: string, emoji: string, password: string) => Promise<Room>;
   advancePhase: (roomId: string) => Promise<void>;
-  leaveRoom: () => Promise<void>;
+  leaveRoom: (mode?: 'away' | 'exit') => Promise<void>;
+  refetchRoom: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -89,6 +90,14 @@ export function useRoom(): UseRoomReturn {
         )
         .subscribe((status, err) => {
           if (err) console.error('[useRoom] Realtime error:', status, err);
+          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            useGameStore.getState().setIsReconnecting(true);
+          }
+          if (status === 'SUBSCRIBED') {
+            if (useGameStore.getState().isReconnecting) {
+              useGameStore.getState().setIsReconnecting(false);
+            }
+          }
         });
 
       channelRef.current = channel;
@@ -321,32 +330,27 @@ export function useRoom(): UseRoomReturn {
 
   // --- Leave room ---
   const leaveRoom = useCallback(
-    async (): Promise<void> => {
+    async (mode: 'away' | 'exit' = 'away'): Promise<void> => {
       const { room: currentRoom, player: currentPlayer, reset } = useGameStore.getState();
       if (!currentRoom || !currentPlayer) return;
 
       try {
-        // Mark player as inactive
         await supabase
           .from('players')
-          .update({ is_active: false })
+          .update({
+            status: mode === 'away' ? 'away' : 'exited',
+            left_at: mode === 'exit' ? new Date().toISOString() : null,
+          })
           .eq('id', currentPlayer.id);
 
-        // Remove localStorage session
-        try {
-          const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-          delete existing[currentRoom.code.toUpperCase()];
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
-        } catch { /* ignore */ }
+        // Keep localStorage entry so YourRoomsPanel can show the room with AWAY/ENDED badge
 
-        // Tear down realtime
         if (channelRef.current) {
           supabase.removeChannel(channelRef.current);
           channelRef.current = null;
         }
         subscribedRoomIdRef.current = null;
 
-        // Reset store
         reset();
       } catch (err) {
         console.error('[useRoom] leaveRoom failed:', err);
@@ -355,5 +359,16 @@ export function useRoom(): UseRoomReturn {
     []
   );
 
-  return { room, createRoom, joinRoom, advancePhase, leaveRoom, isLoading, error };
+  const refetchRoom = useCallback(async (): Promise<void> => {
+    const { room: currentRoom } = useGameStore.getState();
+    if (!currentRoom) return;
+    const { data } = await supabase
+      .from('rooms')
+      .select('*')
+      .eq('id', currentRoom.id)
+      .single();
+    if (data) setRoom(data as Room);
+  }, [setRoom]);
+
+  return { room, createRoom, joinRoom, advancePhase, leaveRoom, refetchRoom, isLoading, error };
 }
