@@ -9,7 +9,7 @@ import { getLocalizedQuestion } from '../../lib/questionLocale';
 import type { QuizQuestion } from '../../lib/types';
 
 interface QuestionCardProps {
-  question: QuizQuestion;
+  question: QuizQuestion | undefined;
   questionIndex: number;
   totalQuestions: number;
   onAnswer: (answerIndex: number, isCorrect: boolean) => void;
@@ -27,6 +27,7 @@ export default function QuestionCard({
   timeRemaining,
 }: QuestionCardProps) {
   const { t } = useTranslation();
+  // Hooks must run in the same order every render — declare them BEFORE any early return
   const { question: localQ, options } = getLocalizedQuestion(question);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
@@ -37,7 +38,7 @@ export default function QuestionCard({
     setSelectedIndex(null);
     setRevealed(false);
     setHasAnswered(false);
-  }, [question.id]);
+  }, [question?.id]);
 
   // Show timeout state when timer expires (parent handles auto-submit)
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function QuestionCard({
 
   const handleSelect = useCallback(
     (index: number) => {
-      if (hasAnswered || revealed) return;
+      if (hasAnswered || revealed || !question) return;
 
       setSelectedIndex(index);
       setHasAnswered(true);
@@ -65,8 +66,12 @@ export default function QuestionCard({
         }, ADVANCE_DELAY_MS);
       }, FEEDBACK_DELAY_MS);
     },
-    [hasAnswered, revealed, question.correct_index, onAnswer],
+    [hasAnswered, revealed, question, onAnswer],
   );
+
+  // Nothing to render if the parent hasn't provided a question (transient state,
+  // e.g. AnimatePresence exit frames, bounds overrun, or a missing-from-bank ID).
+  if (!question) return null;
 
   const answeredCorrectly = revealed && selectedIndex === question.correct_index;
 

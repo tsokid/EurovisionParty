@@ -66,12 +66,15 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
   }, [questionIndex, finished]);
 
   const handleAnswer = useCallback((answerIndex: number, isCorrect: boolean) => {
+    const currentQuestion = questions[questionIndex];
+    if (!currentQuestion) return; // guard against bounds / missing-ID edge cases
+
     const now = Date.now();
     const responseMs = now - questionStartTime;
     const points = calcDuelPoints(responseMs, isCorrect);
 
     const answer: DuelAnswer = {
-      questionId: questions[questionIndex].id,
+      questionId: currentQuestion.id,
       answerIndex,
       answeredAt: new Date(now).toISOString(),
       responseMs,
@@ -99,7 +102,7 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
     }
   }, [countdown, finished, handleAnswer]);
 
-  if (questions.length === 0) {
+  if (questions.length === 0 || questionIndex >= localizedQuestions.length) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4 px-4">
         <p className="text-white/50">{t('duelPlay.errorLoading')}</p>
