@@ -23,6 +23,7 @@ interface GameState {
   activeTab: TabId;
   isLoading: boolean;
   error: string | null;
+  isReconnecting: boolean;
   /** Plain-text password kept in memory for sharing invites */
   roomPassword: string | null;
   /** Quiz progress — persists across tab switches */
@@ -39,6 +40,7 @@ interface GameState {
   setActiveTab: (tab: TabId) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  setIsReconnecting: (v: boolean) => void;
   setQuizProgress: (progress: QuizProgress | null) => void;
   reset: () => void;
 }
@@ -51,6 +53,7 @@ const initialState = {
   activeTab: 'quiz' as TabId,
   isLoading: false,
   error: null,
+  isReconnecting: false,
   roomPassword: null,
   quizProgress: null as QuizProgress | null,
 };
@@ -95,6 +98,8 @@ export const useGameStore = create<GameState>()((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
 
   setError: (error) => set({ error }),
+
+  setIsReconnecting: (isReconnecting) => set({ isReconnecting }),
 
   setQuizProgress: (quizProgress) => set({ quizProgress }),
 
