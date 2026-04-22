@@ -33,7 +33,9 @@ export default function Header() {
 
   const getInviteText = () => {
     const link = `${window.location.origin}/room/${room?.code}`;
-    const passwordLine = roomPassword ? `\nPassword: ${roomPassword}` : '';
+    const passwordLine = roomPassword
+      ? t('lobby.invitePasswordLine', { password: roomPassword })
+      : '';
     return t('lobby.inviteText', { code: room?.code, passwordLine, link });
   };
 

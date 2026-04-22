@@ -61,7 +61,8 @@
     "needMore": "Χρειάζονται {{needed}} ακόμα",
     "startParty": "🚀 Ξεκίνα το Πάρτι!",
     "waitingHost": "⏳ Αναμονή από τον οικοδεσπότη...",
-    "inviteText": "Έλα στο Eurovision Games! 🎤✨\n\nΚωδικός παιχνιδιού: {{code}}{{passwordLine}}\n\n{{link}}",
+    "inviteText": "Έλα στο Eurovision Games! 🎤✨\nΚωδικός: {{code}}{{passwordLine}}\nΜπες εδώ: {{link}}",
+    "invitePasswordLine": "\nΚωδικός Πρόσβασης: {{password}}",
     "inviteSubject": "🎤 Πρόσκληση Eurovision Games!"
   },
   "header": {
