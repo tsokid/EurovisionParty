@@ -21,7 +21,7 @@ import WinnerCrown from '../components/leaderboard/WinnerCrown';
 export function RoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
-  const { room, advancePhase } = useRoom();
+  const { room, advancePhase, refetchRoom } = useRoom();
   const { room: storeRoom, player, players, activeTab, setRoom } = useGameStore();
   const [showWinner, setShowWinner] = useState(true);
 
@@ -31,8 +31,8 @@ export function RoomPage() {
   // Subscribe to leaderboard and notifications when in a room
   const roomId = storeRoom?.id ?? '';
   const playerId = player?.id ?? '';
-  useLeaderboard(roomId);
-  useNotifications(playerId);
+  const { refetchPlayers } = useLeaderboard(roomId);
+  const { refetchNotifications } = useNotifications(playerId);
 
   // Heartbeat: update last_seen_at every 5 minutes (for ghost cleanup)
   const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -73,6 +73,16 @@ export function RoomPage() {
     }, 3000);
     return () => clearInterval(id);
   }, [storeRoom?.id, currentPhase, setRoom]);
+
+  // Catch-up fetch: when isReconnecting transitions true→false, refetch all state
+  const isReconnecting = useGameStore((s) => s.isReconnecting);
+  const prevReconnectingRef = useRef(false);
+  useEffect(() => {
+    if (prevReconnectingRef.current && !isReconnecting) {
+      Promise.all([refetchRoom(), refetchPlayers(), refetchNotifications()]);
+    }
+    prevReconnectingRef.current = isReconnecting;
+  }, [isReconnecting, refetchRoom, refetchPlayers, refetchNotifications]);
 
   // Redirect based on rejoin status
   useEffect(() => {
