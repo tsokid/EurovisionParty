@@ -81,6 +81,8 @@ export function RoomPage() {
     } else if (rejoinStatus === 'not-member') {
       // Redirect to join form with room code pre-filled
       navigate(`/?join=${roomCode}`, { replace: true });
+    } else if (rejoinStatus === 'expired') {
+      navigate('/', { replace: true });
     }
   }, [rejoinStatus, roomCode, navigate]);
 
