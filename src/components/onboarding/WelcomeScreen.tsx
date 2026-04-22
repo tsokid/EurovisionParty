@@ -4,6 +4,7 @@ import Button from '../ui/Button';
 import ThemeToggle from '../ui/ThemeToggle';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 import MuteToggle from '../ui/MuteToggle';
+import YourRoomsPanel from '../home/YourRoomsPanel';
 
 interface WelcomeScreenProps {
   onCreateRoom: () => void;
@@ -89,6 +90,9 @@ export default function WelcomeScreen({
       >
         {t('welcome.subtitle')}
       </motion.p>
+
+      {/* Your Rooms — shown when user has prior rooms in localStorage */}
+      <YourRoomsPanel />
 
       {/* Action buttons */}
       <motion.div
