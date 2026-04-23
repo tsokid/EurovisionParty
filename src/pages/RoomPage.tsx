@@ -168,7 +168,7 @@ export function RoomPage() {
           bg-yellow-400/10 border border-yellow-400/25 text-yellow-400
           disabled:opacity-40 active:scale-95 transition-transform"
       >
-        💤 {t('exitStrip.visitOtherRooms')}
+        {t('exitStrip.visitOtherRooms')}
       </button>
       <button
         disabled={isReconnecting}
@@ -177,7 +177,7 @@ export function RoomPage() {
           bg-red-500/8 border border-red-500/20 text-red-400
           disabled:opacity-40 active:scale-95 transition-transform"
       >
-        🚪 {t('exitStrip.exitGame')}
+        {t('exitStrip.exitGame')}
       </button>
     </div>
   );
