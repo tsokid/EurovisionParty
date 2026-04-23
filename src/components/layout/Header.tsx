@@ -137,7 +137,7 @@ export default function Header() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-x-0 top-14 z-50 px-4 pt-2"
+            className="fixed inset-x-0 z-50 px-4 pt-2" style={{ top: 'var(--top-bar-height, 56px)' }}
           >
             <div className="glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-md mx-auto">
               <p className="text-xs text-white/40 mb-3 font-medium">{t('header.gamePhases')}</p>
@@ -189,7 +189,7 @@ export default function Header() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-x-0 top-14 z-50 px-4 pt-2"
+            className="fixed inset-x-0 z-50 px-4 pt-2" style={{ top: 'var(--top-bar-height, 56px)' }}
           >
             <div className="glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-md mx-auto">
               <p className="text-xs text-white/40 mb-2 font-medium">{t('header.inviteFriends')}</p>
