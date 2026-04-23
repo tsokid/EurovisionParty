@@ -156,38 +156,37 @@ export function RoomPage() {
     }
   };
 
+  const exitStrip = (
+    <div className="flex gap-2 px-4 py-2 border-t border-white/7 bg-euro-gradient shrink-0">
+      <button
+        disabled={isReconnecting}
+        onClick={async () => {
+          await leaveRoom('away');
+          navigate('/', { replace: true });
+        }}
+        className="flex-1 py-2.5 rounded-xl text-[12px] font-bold leading-tight text-center
+          bg-yellow-400/10 border border-yellow-400/25 text-yellow-400
+          disabled:opacity-40 active:scale-95 transition-transform"
+      >
+        💤 {t('exitStrip.visitOtherRooms')}
+      </button>
+      <button
+        disabled={isReconnecting}
+        onClick={() => setShowExitModal(true)}
+        className="flex-1 py-2.5 rounded-xl text-[12px] font-bold leading-tight text-center
+          bg-red-500/8 border border-red-500/20 text-red-400
+          disabled:opacity-40 active:scale-95 transition-transform"
+      >
+        🚪 {t('exitStrip.exitGame')}
+      </button>
+    </div>
+  );
+
   return (
     <>
-      <AppShell showHeader showNav>
+      <AppShell showHeader showNav bottomStrip={exitStrip}>
         {renderActiveTab()}
       </AppShell>
-
-      {/* Exit CTA strip — always visible at bottom during active phases */}
-      <div className="fixed bottom-0 inset-x-0 z-40 flex gap-2 px-4 pb-safe pt-2 border-t border-white/7 bg-euro-gradient/95 backdrop-blur-sm"
-        style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 8px)' }}
-      >
-        <button
-          disabled={isReconnecting}
-          onClick={async () => {
-            await leaveRoom('away');
-            navigate('/', { replace: true });
-          }}
-          className="flex-1 py-2.5 rounded-xl text-[12px] font-bold leading-tight text-center
-            bg-yellow-400/10 border border-yellow-400/25 text-yellow-400
-            disabled:opacity-40 active:scale-95 transition-transform"
-        >
-          💤 {t('exitStrip.visitOtherRooms')}
-        </button>
-        <button
-          disabled={isReconnecting}
-          onClick={() => setShowExitModal(true)}
-          className="flex-1 py-2.5 rounded-xl text-[12px] font-bold leading-tight text-center
-            bg-red-500/8 border border-red-500/20 text-red-400
-            disabled:opacity-40 active:scale-95 transition-transform"
-        >
-          🚪 {t('exitStrip.exitGame')}
-        </button>
-      </div>
 
       {showExitModal && (
         <ExitGameModal

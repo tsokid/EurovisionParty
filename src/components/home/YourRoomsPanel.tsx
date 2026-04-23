@@ -50,10 +50,33 @@ export default function YourRoomsPanel() {
       const playerIds = Object.values(stored).map((v) => v.playerId);
       if (!playerIds.length) return;
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('players')
         .select('id, status, left_at, total_points, rooms!inner(code, phase, host_name)')
         .in('id', playerIds);
+
+      if (error) {
+        console.error('[YourRoomsPanel] query failed:', error.message, error.details);
+        // Fallback: query without new columns (migration may not have run yet)
+        const { data: fallback, error: fbErr } = await supabase
+          .from('players')
+          .select('id, is_active, total_points, rooms!inner(code, phase, host_name)')
+          .in('id', playerIds);
+        if (fbErr) { console.error('[YourRoomsPanel] fallback failed:', fbErr.message); return; }
+        if (!fallback?.length) return;
+        const fallbackEntries: RoomEntry[] = (fallback as any[]).map((p) => ({
+          playerId: p.id,
+          roomCode: p.rooms.code,
+          hostName: p.rooms.host_name,
+          totalPoints: p.total_points,
+          status: p.is_active ? 'active' : 'exited',
+          leftAt: null,
+          phase: p.rooms.phase,
+        }));
+        fallbackEntries.sort((a, b) => ({ LIVE: 0, AWAY: 1, ENDED: 2 }[getBadge(a)] - ({ LIVE: 0, AWAY: 1, ENDED: 2 }[getBadge(b)])));
+        setRooms(fallbackEntries);
+        return;
+      }
 
       if (!data?.length) return;
 

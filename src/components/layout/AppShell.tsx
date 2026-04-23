@@ -8,20 +8,24 @@ interface AppShellProps {
   children: ReactNode;
   showHeader?: boolean;
   showNav?: boolean;
+  /** Rendered between main content and BottomNav — use for in-game exit strip */
+  bottomStrip?: ReactNode;
 }
 
 export default function AppShell({
   children,
   showHeader = true,
   showNav = true,
+  bottomStrip,
 }: AppShellProps) {
   const { t } = useTranslation();
   const isReconnecting = useGameStore((s) => s.isReconnecting);
 
   return (
     <div className="min-h-svh bg-euro-gradient flex flex-col">
+      {/* Reconnect banner — in normal flow above header, no overlay */}
       {isReconnecting && (
-        <div className="fixed top-3 left-3 right-3 z-50 flex items-center gap-2 bg-yellow-400/15 border border-yellow-400/40 rounded-xl px-3 py-2">
+        <div className="flex items-center gap-2 bg-yellow-400/15 border-b border-yellow-400/30 px-4 py-2.5 shrink-0">
           <span className="w-2 h-2 rounded-full bg-yellow-400 shrink-0 animate-pulse" />
           <span className="text-xs font-semibold text-yellow-400">
             {t('reconnect.banner')}
@@ -32,6 +36,9 @@ export default function AppShell({
       {showHeader && <Header />}
 
       <main className="flex-1 overflow-y-auto">{children}</main>
+
+      {/* Exit strip sits above BottomNav, not overlapping it */}
+      {bottomStrip}
 
       {showNav && <BottomNav />}
     </div>
