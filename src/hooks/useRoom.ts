@@ -90,13 +90,22 @@ export function useRoom(): UseRoomReturn {
         )
         .subscribe((status, err) => {
           if (err) console.error('[useRoom] Realtime error:', status, err);
+
           if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
             useGameStore.getState().setIsReconnecting(true);
+            // Safety valve: channel may recover without firing SUBSCRIBED again.
+            // Auto-clear the banner after 10s so it never stays stuck.
+            setTimeout(() => {
+              if (useGameStore.getState().isReconnecting) {
+                useGameStore.getState().setIsReconnecting(false);
+              }
+            }, 10_000);
           }
+
+          // Clear unconditionally on SUBSCRIBED — don't gate on current flag
+          // because the initial connection also fires this, ensuring a clean state.
           if (status === 'SUBSCRIBED') {
-            if (useGameStore.getState().isReconnecting) {
-              useGameStore.getState().setIsReconnecting(false);
-            }
+            useGameStore.getState().setIsReconnecting(false);
           }
         });
 
