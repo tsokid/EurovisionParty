@@ -78,7 +78,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="glass safe-top sticky top-0 z-40 h-14 flex items-center justify-between px-4 shrink-0">
+      <header className="glass h-14 flex items-center justify-between px-4 shrink-0">
         {/* Left: Room code badge — tap to open invite panel */}
         <button
           onClick={copyRoomCode}

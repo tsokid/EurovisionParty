@@ -8,23 +8,24 @@ interface AppShellProps {
   children: ReactNode;
   showHeader?: boolean;
   showNav?: boolean;
-  /** Rendered between main content and BottomNav — use for in-game exit strip */
-  bottomStrip?: ReactNode;
+  /** When provided, renders a 5th exit tab in BottomNav */
+  onExitPress?: () => void;
 }
 
 export default function AppShell({
   children,
   showHeader = true,
   showNav = true,
-  bottomStrip,
+  onExitPress,
 }: AppShellProps) {
   const { t } = useTranslation();
   const isReconnecting = useGameStore((s) => s.isReconnecting);
 
   return (
     <div className="min-h-svh bg-euro-gradient flex flex-col">
-      {/* Banner + Header wrapped in a single sticky block so dropdowns anchor correctly.
-          --top-bar-height is consumed by Header dropdowns to position themselves. */}
+      {/* Sticky top block: banner (when reconnecting) + header, stacked vertically.
+          Header no longer has sticky/top-0 of its own — this wrapper handles it.
+          --top-bar-height is read by Header dropdowns to position themselves. */}
       <div
         className="sticky top-0 z-40 flex flex-col shrink-0"
         style={{ '--top-bar-height': isReconnecting ? '92px' : '56px' } as CSSProperties}
@@ -42,10 +43,7 @@ export default function AppShell({
 
       <main className="flex-1 overflow-y-auto">{children}</main>
 
-      {/* Exit strip sits above BottomNav, not overlapping it */}
-      {bottomStrip}
-
-      {showNav && <BottomNav />}
+      {showNav && <BottomNav onExitPress={onExitPress} />}
     </div>
   );
 }
