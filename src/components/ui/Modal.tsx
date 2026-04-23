@@ -20,16 +20,16 @@ export default function Modal({ open, onClose, children }: ModalProps) {
         >
           {/* overlay */}
           <motion.div
-            className="absolute inset-0 bg-black/60"
+            className="absolute inset-0 bg-black/80"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           />
 
-          {/* content */}
+          {/* content — solid dark card, no transparency bleed */}
           <motion.div
-            className="glass-strong relative z-10 w-full max-w-sm rounded-2xl p-6"
+            className="relative z-10 w-full max-w-sm rounded-2xl p-6 bg-[#1a0a2e] border border-white/12 shadow-2xl"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
