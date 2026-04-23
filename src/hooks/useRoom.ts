@@ -335,13 +335,23 @@ export function useRoom(): UseRoomReturn {
       if (!currentRoom || !currentPlayer) return;
 
       try {
-        await supabase
+        // Try writing new status columns; fall back to is_active if migration not yet applied
+        const leavePayload: Record<string, unknown> = {
+          is_active: mode === 'away',
+        };
+        const { error: statusErr } = await supabase
           .from('players')
           .update({
+            ...leavePayload,
             status: mode === 'away' ? 'away' : 'exited',
             left_at: mode === 'exit' ? new Date().toISOString() : null,
           })
           .eq('id', currentPlayer.id);
+
+        if (statusErr?.message?.includes('status')) {
+          // Migration not applied — fall back
+          await supabase.from('players').update(leavePayload).eq('id', currentPlayer.id);
+        }
 
         // Keep localStorage entry so YourRoomsPanel can show the room with AWAY/ENDED badge
 
