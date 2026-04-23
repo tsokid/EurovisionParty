@@ -57,9 +57,10 @@ export function useRejoin(roomCode: string | undefined) {
         // 2. Try auth-based lookup first
         const { data: { user } } = await supabase.auth.getUser();
         let playerData: Player | null = null;
+        let statusColumnExists = true;
 
         if (user) {
-          const { data } = await supabase
+          const { data, error } = await supabase
             .from('players')
             .select('*')
             .eq('room_id', roomData.id)
@@ -67,22 +68,57 @@ export function useRejoin(roomCode: string | undefined) {
             .or(`status.in.(active,away),and(status.eq.exited,left_at.gt.${cutoff})`)
             .maybeSingle();
 
-          playerData = data as Player | null;
+          if (error?.message?.includes('status')) {
+            // Migration not yet applied — fall back to is_active
+            statusColumnExists = false;
+            const { data: fb } = await supabase
+              .from('players')
+              .select('*')
+              .eq('room_id', roomData.id)
+              .eq('user_id', user.id)
+              .eq('is_active', true)
+              .maybeSingle();
+            playerData = fb as Player | null;
+          } else {
+            playerData = data as Player | null;
+          }
         }
 
         // 3. Fallback: localStorage session
         if (!playerData) {
           const saved = getRoomSession(roomCode!);
           if (saved?.playerId) {
-            const { data } = await supabase
-              .from('players')
-              .select('*')
-              .eq('id', saved.playerId)
-              .eq('room_id', roomData.id)
-              .or(`status.in.(active,away),and(status.eq.exited,left_at.gt.${cutoff})`)
-              .maybeSingle();
+            let fbData: Player | null = null;
 
-            playerData = data as Player | null;
+            if (statusColumnExists) {
+              const { data, error } = await supabase
+                .from('players')
+                .select('*')
+                .eq('id', saved.playerId)
+                .eq('room_id', roomData.id)
+                .or(`status.in.(active,away),and(status.eq.exited,left_at.gt.${cutoff})`)
+                .maybeSingle();
+
+              if (error?.message?.includes('status')) {
+                statusColumnExists = false;
+              } else {
+                fbData = data as Player | null;
+              }
+            }
+
+            if (!fbData) {
+              // status column missing — use is_active
+              const { data } = await supabase
+                .from('players')
+                .select('*')
+                .eq('id', saved.playerId)
+                .eq('room_id', roomData.id)
+                .eq('is_active', true)
+                .maybeSingle();
+              fbData = data as Player | null;
+            }
+
+            playerData = fbData;
 
             if (playerData && user && playerData.user_id !== user.id) {
               await supabase
@@ -116,17 +152,23 @@ export function useRejoin(roomCode: string | undefined) {
         }
 
         // 4. Restore player to active
+        const restorePayload: Record<string, unknown> = {
+          is_active: true,
+          last_seen_at: new Date().toISOString(),
+        };
+        if (statusColumnExists) {
+          restorePayload.status = 'active';
+          restorePayload.left_at = null;
+        }
         await supabase
           .from('players')
-          .update({
-            status: 'active',
-            left_at: null,
-            last_seen_at: new Date().toISOString(),
-          })
+          .update(restorePayload)
           .eq('id', playerData.id);
 
-        playerData.status = 'active';
-        playerData.left_at = null;
+        if (statusColumnExists) {
+          playerData.status = 'active';
+          playerData.left_at = null;
+        }
 
         // 5. Hydrate store
         setRoom(roomData as Room);
