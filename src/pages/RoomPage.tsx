@@ -161,7 +161,7 @@ export function RoomPage() {
       <AppShell
         showHeader
         showNav
-        onExitPress={isReconnecting ? undefined : () => setShowChoiceModal(true)}
+        onExitPress={() => setShowChoiceModal(true)}
       >
         {renderActiveTab()}
       </AppShell>
