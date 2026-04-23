@@ -139,7 +139,7 @@ export default function Header() {
             exit={{ opacity: 0, y: -10 }}
             className="fixed inset-x-0 z-50 px-4 pt-2" style={{ top: 'var(--top-bar-height, 56px)' }}
           >
-            <div className="glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-md mx-auto">
+            <div className="bg-[#1a0a2e] rounded-2xl p-4 border border-white/12 shadow-2xl max-w-md mx-auto">
               <p className="text-xs text-white/40 mb-3 font-medium">{t('header.gamePhases')}</p>
               <div className="space-y-1.5">
                 {PHASES.map((p, idx) => {
@@ -191,7 +191,7 @@ export default function Header() {
             exit={{ opacity: 0, y: -10 }}
             className="fixed inset-x-0 z-50 px-4 pt-2" style={{ top: 'var(--top-bar-height, 56px)' }}
           >
-            <div className="glass rounded-2xl p-4 border border-white/10 shadow-xl max-w-md mx-auto">
+            <div className="bg-[#1a0a2e] rounded-2xl p-4 border border-white/12 shadow-2xl max-w-md mx-auto">
               <p className="text-xs text-white/40 mb-2 font-medium">{t('header.inviteFriends')}</p>
               <div className="text-center mb-3">
                 <p className="text-3xl font-extrabold tracking-[0.25em] glow-text-gold text-euro-gold">
