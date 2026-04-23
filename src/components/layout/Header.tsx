@@ -5,27 +5,22 @@ import { useGameStore } from '../../stores/gameStore';
 import { PHASES } from '../../lib/constants';
 import { useThemeStore } from '../../stores/themeStore';
 import { useRoom } from '../../hooks/useRoom';
-import { useNavigate } from 'react-router-dom';
 import { PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 import MuteToggle from '../ui/MuteToggle';
-import ExitGameModal from '../room/ExitGameModal';
-
 export default function Header() {
   const { t } = useTranslation();
   const { room, player, notifications, roomPassword } = useGameStore();
   const isHost = player?.is_host === true;
   const { theme, toggleTheme } = useThemeStore();
-  const { advancePhase, leaveRoom } = useRoom();
-  const navigate = useNavigate();
+  const { advancePhase } = useRoom();
   const [copied, setCopied] = useState(false);
   const [inviteCopied, setInviteCopied] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showPhaseMenu, setShowPhaseMenu] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const [advancing, setAdvancing] = useState(false);
-  const [showExitModal, setShowExitModal] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
   const currentPhaseIdx = PHASE_ORDER.indexOf(room?.phase ?? 'lobby');
@@ -174,25 +169,6 @@ export default function Header() {
                   );
                 })}
               </div>
-              {/* Exit options */}
-              <div className="mt-3 flex gap-2">
-                <button
-                  onClick={async () => {
-                    setShowPhaseMenu(false);
-                    await leaveRoom('away');
-                    navigate('/', { replace: true });
-                  }}
-                  className="flex-1 text-xs text-yellow-400/70 hover:text-yellow-400 text-center py-2 rounded-lg hover:bg-yellow-400/10 transition-colors border border-yellow-400/20"
-                >
-                  {t('exitStrip.visitOtherRooms')}
-                </button>
-                <button
-                  onClick={() => setShowExitModal(true)}
-                  className="flex-1 text-xs text-euro-red/60 hover:text-euro-red text-center py-2 rounded-lg hover:bg-euro-red/10 transition-colors border border-euro-red/20"
-                >
-                  {t('exitStrip.exitGame')}
-                </button>
-              </div>
               <button
                 onClick={() => setShowPhaseMenu(false)}
                 className="w-full mt-1 text-xs text-white/30 hover:text-white/50 text-center py-1"
@@ -250,17 +226,6 @@ export default function Header() {
         onClose={() => setShowNotifications(false)}
       />
 
-      {showExitModal && (
-        <ExitGameModal
-          onConfirm={async () => {
-            setShowExitModal(false);
-            setShowPhaseMenu(false);
-            await leaveRoom('exit');
-            navigate('/', { replace: true });
-          }}
-          onCancel={() => setShowExitModal(false)}
-        />
-      )}
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../stores/gameStore';
 import { useRoom } from '../hooks/useRoom';
 import { useRejoin } from '../hooks/useRejoin';
@@ -17,13 +18,16 @@ import IntelMarket from '../components/intel/IntelMarket';
 import ResultsEntry from '../components/results/ResultsEntry';
 import LeaderboardScreen from '../components/leaderboard/LeaderboardScreen';
 import WinnerCrown from '../components/leaderboard/WinnerCrown';
+import ExitGameModal from '../components/room/ExitGameModal';
 
 export function RoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
-  const { room, advancePhase, refetchRoom } = useRoom();
-  const { room: storeRoom, player, players, activeTab, setRoom } = useGameStore();
+  const { t } = useTranslation();
+  const { room, advancePhase, refetchRoom, leaveRoom } = useRoom();
+  const { room: storeRoom, player, players, activeTab, setRoom, isReconnecting } = useGameStore();
   const [showWinner, setShowWinner] = useState(true);
+  const [showExitModal, setShowExitModal] = useState(false);
 
   // Try to rejoin from DB if store is empty (e.g. page refresh)
   const { status: rejoinStatus } = useRejoin(roomCode);
@@ -75,7 +79,6 @@ export function RoomPage() {
   }, [storeRoom?.id, currentPhase, setRoom]);
 
   // Catch-up fetch: when isReconnecting transitions true→false, refetch all state
-  const isReconnecting = useGameStore((s) => s.isReconnecting);
   const prevReconnectingRef = useRef(false);
   useEffect(() => {
     if (prevReconnectingRef.current && !isReconnecting) {
@@ -154,8 +157,48 @@ export function RoomPage() {
   };
 
   return (
-    <AppShell showHeader showNav>
-      {renderActiveTab()}
-    </AppShell>
+    <>
+      <AppShell showHeader showNav>
+        {renderActiveTab()}
+      </AppShell>
+
+      {/* Exit CTA strip — always visible at bottom during active phases */}
+      <div className="fixed bottom-0 inset-x-0 z-40 flex gap-2 px-4 pb-safe pt-2 border-t border-white/7 bg-euro-gradient/95 backdrop-blur-sm"
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 8px)' }}
+      >
+        <button
+          disabled={isReconnecting}
+          onClick={async () => {
+            await leaveRoom('away');
+            navigate('/', { replace: true });
+          }}
+          className="flex-1 py-2.5 rounded-xl text-[12px] font-bold leading-tight text-center
+            bg-yellow-400/10 border border-yellow-400/25 text-yellow-400
+            disabled:opacity-40 active:scale-95 transition-transform"
+        >
+          💤 {t('exitStrip.visitOtherRooms')}
+        </button>
+        <button
+          disabled={isReconnecting}
+          onClick={() => setShowExitModal(true)}
+          className="flex-1 py-2.5 rounded-xl text-[12px] font-bold leading-tight text-center
+            bg-red-500/8 border border-red-500/20 text-red-400
+            disabled:opacity-40 active:scale-95 transition-transform"
+        >
+          🚪 {t('exitStrip.exitGame')}
+        </button>
+      </div>
+
+      {showExitModal && (
+        <ExitGameModal
+          onConfirm={async () => {
+            setShowExitModal(false);
+            await leaveRoom('exit');
+            navigate('/', { replace: true });
+          }}
+          onCancel={() => setShowExitModal(false)}
+        />
+      )}
+    </>
   );
 }
