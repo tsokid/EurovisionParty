@@ -74,17 +74,19 @@ export default function YourRoomsPanel() {
           .in('id', playerIds);
         if (fbErr) { console.error('[YourRoomsPanel] fallback failed:', fbErr.message); return; }
         if (!fallback?.length) return;
-        const fallbackEntries: RoomEntry[] = (fallback as any[]).map((p) => ({
-          playerId: p.id,
-          roomId: p.rooms.id,
-          roomCode: p.rooms.code,
-          hostName: p.rooms.host_name,
-          totalPoints: p.total_points,
-          status: p.is_active ? 'active' : 'exited',
-          leftAt: null,
-          phase: p.rooms.phase,
-          isHost: p.is_host ?? false,
-        }));
+        const fallbackEntries: RoomEntry[] = (fallback as any[])
+          .filter((p) => p.rooms)
+          .map((p) => ({
+            playerId: p.id,
+            roomId: p.rooms.id,
+            roomCode: p.rooms.code,
+            hostName: p.rooms.host_name,
+            totalPoints: p.total_points,
+            status: p.is_active ? 'active' : 'exited',
+            leftAt: null,
+            phase: p.rooms.phase,
+            isHost: p.is_host ?? false,
+          }));
         fallbackEntries.sort((a, b) => ({ LIVE: 0, AWAY: 1, ENDED: 2 }[getBadge(a)] - ({ LIVE: 0, AWAY: 1, ENDED: 2 }[getBadge(b)])));
         setRooms(fallbackEntries);
         return;
@@ -92,17 +94,19 @@ export default function YourRoomsPanel() {
 
       if (!data?.length) return;
 
-      const entries: RoomEntry[] = (data as any[]).map((p) => ({
-        playerId: p.id,
-        roomId: p.rooms.id,
-        roomCode: p.rooms.code,
-        hostName: p.rooms.host_name,
-        totalPoints: p.total_points,
-        status: p.status,
-        leftAt: p.left_at,
-        phase: p.rooms.phase,
-        isHost: p.is_host ?? false,
-      }));
+      const entries: RoomEntry[] = (data as any[])
+        .filter((p) => p.rooms)   // drop orphaned player rows (room deleted)
+        .map((p) => ({
+          playerId: p.id,
+          roomId: p.rooms.id,
+          roomCode: p.rooms.code,
+          hostName: p.rooms.host_name,
+          totalPoints: p.total_points,
+          status: p.status,
+          leftAt: p.left_at,
+          phase: p.rooms.phase,
+          isHost: p.is_host ?? false,
+        }));
 
       const order: Record<Badge, number> = { LIVE: 0, AWAY: 1, ENDED: 2 };
       entries.sort((a, b) => order[getBadge(a)] - order[getBadge(b)]);
