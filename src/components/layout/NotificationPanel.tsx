@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
 import { useNotifications } from '../../hooks/useNotifications';
-import Card from '../ui/Card';
 
 interface NotificationPanelProps {
   open: boolean;
@@ -110,7 +109,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 z-50"
+            className="fixed inset-0 bg-black/60 z-50"
             onClick={onClose}
           />
 
@@ -122,7 +121,10 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="fixed top-14 right-2 left-2 sm:left-auto sm:w-80 z-50 max-h-[70vh] flex flex-col"
           >
-            <Card variant="strong" className="flex flex-col overflow-hidden">
+            <div
+              className="flex flex-col overflow-hidden rounded-2xl border border-white/15 shadow-2xl shadow-black/50 bg-euro-purple-dark"
+              style={{ backgroundColor: 'rgba(26, 5, 51, 0.97)' }}
+            >
               {/* Header */}
               <div className="flex items-center justify-between p-3 border-b border-white/10">
                 <h3 className="text-sm font-bold text-white">
@@ -156,10 +158,10 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                         <button
                           key={notif.id}
                           onClick={() => handleNotificationClick(notif)}
-                          className={`w-full text-left px-3 py-3 flex items-start gap-3 transition-colors hover:bg-white/5 ${
+                          className={`w-full text-left px-3 py-3 flex items-start gap-3 transition-colors hover:bg-white/10 ${
                             notif.is_read
-                              ? 'opacity-50'
-                              : 'bg-euro-purple/10'
+                              ? 'opacity-70'
+                              : 'bg-euro-purple/40 border-l-4 border-euro-gold'
                           }`}
                         >
                           <span className="text-xl flex-shrink-0 mt-0.5">{icon}</span>
@@ -185,7 +187,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                   </div>
                 )}
               </div>
-            </Card>
+            </div>
           </motion.div>
         </>
       )}
