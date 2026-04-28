@@ -63,16 +63,21 @@ export default function WelcomeScreen({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
       >
-        {/* Floating microphone */}
-        <div className="text-5xl mb-2 animate-float">🎤</div>
+        {/* Eurovision Games logo (contains the wordmark) */}
+        <motion.img
+          src="/logo.png"
+          alt="Eurovision Games"
+          width={520}
+          height={520}
+          className="w-64 sm:w-72 h-auto mx-auto select-none drop-shadow-[0_0_30px_rgba(134,59,255,0.5)]"
+          draggable={false}
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        />
 
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-          <span className="glow-text text-euro-purple-light">Eurovision</span>{' '}
-          <span className="glow-text-pink text-euro-pink">Games</span>
-        </h1>
-
+        {/* Year sits just under the logo */}
         <motion.p
-          className="text-3xl sm:text-4xl font-extrabold glow-text-gold text-euro-gold mt-1"
+          className="text-3xl sm:text-4xl font-extrabold glow-text-gold text-euro-gold -mt-2"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
