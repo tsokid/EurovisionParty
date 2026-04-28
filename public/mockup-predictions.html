@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predictions Mockup – Option A</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:#06091f;color:#fff;min-height:100vh}
+
+  .shell{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh}
+
+  /* ── Header ── */
+  .hdr{background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08);
+       padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+  .hdr h1{font-size:1.1rem;font-weight:700;letter-spacing:.04em}
+  .hdr .pts{font-size:.78rem;color:#a78bfa;background:rgba(167,139,250,.13);
+            padding:4px 12px;border-radius:99px;border:1px solid rgba(167,139,250,.25)}
+
+  /* ── 3-col desktop / stack mobile ── */
+  .body{display:grid;grid-template-columns:210px 1fr 210px;gap:10px;padding:10px;align-items:start}
+  @media(max-width:860px){.body{grid-template-columns:1fr}}
+
+  /* ── Zone panels ── */
+  .zone{background:#0d1235;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;position:sticky;top:10px}
+  .zone-hdr{display:flex;align-items:center;gap:7px;padding:9px 12px;
+            font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+  .zone-top  .zone-hdr{background:rgba(251,191,36,.1);color:#fde68a;border-bottom:1px solid rgba(251,191,36,.15)}
+  .zone-worst .zone-hdr{background:rgba(239,68,68,.1);color:#fca5a5;border-bottom:1px solid rgba(239,68,68,.15)}
+  .zone-hdr span.sub{margin-left:auto;font-size:.62rem;opacity:.45;font-weight:500;text-transform:none;letter-spacing:0}
+
+  .slots{padding:6px}
+  .slot{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:9px;
+        margin-bottom:3px;min-height:40px;cursor:default;
+        border:1.5px dashed rgba(255,255,255,.1);background:rgba(255,255,255,.02);transition:.13s}
+  .slot.filled{border-style:solid;border-color:rgba(255,255,255,.14);
+               background:rgba(255,255,255,.06);cursor:grab}
+  .slot.filled:hover{background:rgba(255,255,255,.1)}
+  .slot-num{width:16px;text-align:center;font-size:.68rem;font-weight:800;
+            color:rgba(255,255,255,.25);flex-shrink:0}
+  .zone-top   .slot.filled .slot-num{color:#fbbf24}
+  .zone-worst .slot.filled .slot-num{color:#f87171}
+  .slot-flag{flex-shrink:0}
+  .slot-name{font-size:.75rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .slot-remove{width:16px;height:16px;border-radius:99px;border:none;
+               background:rgba(255,255,255,.09);color:rgba(255,255,255,.45);
+               font-size:.55rem;cursor:pointer;flex-shrink:0;display:none;
+               align-items:center;justify-content:center;line-height:1}
+  .slot.filled .slot-remove{display:flex}
+  .slot-remove:hover{background:rgba(239,68,68,.5);color:#fff}
+  .slot-empty-hint{font-size:.65rem;color:rgba(255,255,255,.18);flex:1}
+
+  /* ── Heart flag ── */
+  .heart-flag{
+    width:28px;height:28px;flex-shrink:0;position:relative;overflow:hidden;
+    clip-path:path("M14 25S2 16.5 2 9.5A7.5 7.5 0 0 1 14 4.2 7.5 7.5 0 0 1 26 9.5C26 16.5 14 25 14 25z");
+  }
+  .heart-flag img{width:100%;height:100%;object-fit:cover;object-position:center}
+  .heart-flag-sm{width:20px;height:20px;clip-path:path("M10 18S1 11.8 1 6.8A5.3 5.3 0 0 1 10 3 5.3 5.3 0 0 1 19 6.8C19 11.8 10 18 10 18z");flex-shrink:0}
+  .heart-flag-sm img{width:100%;height:100%;object-fit:cover}
+
+  /* ── Pool ── */
+  .pool-wrap{background:#0d1235;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden}
+  .pool-hdr{padding:9px 14px;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+            color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.07);
+            display:flex;align-items:center;justify-content:space-between}
+  .pool-hdr .zone-hint{font-size:.68rem;font-weight:600;letter-spacing:0;
+                       color:#a78bfa;text-transform:none;opacity:0;transition:.2s}
+  .pool-hdr .zone-hint.show{opacity:1}
+
+  .pool-toolbar{display:flex;gap:4px;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.07);flex-wrap:wrap}
+  .pool-toolbar button{padding:4px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.1);
+                       background:rgba(255,255,255,.04);color:rgba(255,255,255,.55);
+                       font-size:.68rem;cursor:pointer;transition:.11s}
+  .pool-toolbar button:hover{background:rgba(255,255,255,.1)}
+  .pool-toolbar button.act{background:rgba(167,139,250,.18);border-color:rgba(167,139,250,.5);color:#c4b5fd}
+
+  /* ── Zone tabs (mobile only) ── */
+  .zone-tabs{display:none}
+  @media(max-width:860px){
+    .zone-tabs{display:flex;gap:6px;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.07)}
+    .zone-tab{flex:1;padding:7px;border-radius:8px;border:1.5px solid rgba(255,255,255,.1);
+              background:transparent;color:rgba(255,255,255,.45);font-size:.75rem;
+              font-weight:700;cursor:pointer;transition:.12s}
+    .zone-tab.top.act{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.5);color:#fde68a}
+    .zone-tab.worst.act{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.5);color:#fca5a5}
+    .zones-mobile{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .zone{position:static}
+  }
+  @media(min-width:861px){.zones-mobile{display:contents}}
+
+  /* ── Country card ── */
+  .pool{display:flex;flex-direction:column;gap:3px;padding:6px;
+        max-height:540px;overflow-y:auto}
+  @media(max-width:860px){.pool{max-height:none}}
+  .pool::-webkit-scrollbar{width:3px}
+  .pool::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:99px}
+
+  .card{
+    display:flex;align-items:stretch;
+    border-radius:10px;border:1px solid rgba(255,255,255,.09);
+    background:#111638;
+    cursor:pointer;transition:.13s;overflow:hidden;min-height:46px;
+    user-select:none;
+  }
+  .card:hover:not(.used){background:#1a1f4a;border-color:rgba(167,139,250,.45);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.35)}
+  .card.used{opacity:.28;cursor:not-allowed;pointer-events:none}
+  .card.in-top{border-color:rgba(251,191,36,.45);background:rgba(251,191,36,.06)}
+  .card.in-worst{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+  .card.in-top:hover,.card.in-worst:hover{cursor:pointer;pointer-events:auto;opacity:1}
+  .card.in-top,.card.in-worst{opacity:1}
+
+  /* country section */
+  .card-country{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 10px 8px 10px;min-width:148px;max-width:152px;
+    border-right:1px solid rgba(255,255,255,.07);flex-shrink:0;
+  }
+  .card-cname{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e2e8ff}
+
+  /* artist / song */
+  .card-artist,.card-song{
+    display:flex;align-items:center;gap:6px;
+    padding:0 10px;flex:1;min-width:0;font-size:.73rem;color:rgba(255,255,255,.6);
+    white-space:nowrap;overflow:hidden;
+  }
+  .card-artist{border-right:1px solid rgba(255,255,255,.07)}
+  .card-icon{font-size:.75rem;flex-shrink:0;opacity:.5}
+  .card-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+  .card-arr{font-size:.7rem;opacity:.25;flex-shrink:0;color:#a78bfa}
+
+  /* ── Footer ── */
+  .footer{padding:10px 12px;background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.07);
+          display:flex;flex-direction:column;gap:7px}
+  .preview-row{display:flex;gap:6px;align-items:center}
+  .preview-label{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.35);min-width:52px;flex-shrink:0;letter-spacing:.05em;text-transform:uppercase}
+  .preview-flags{display:flex;gap:4px;align-items:center}
+  .pf-wrap{width:26px;height:26px;clip-path:path("M13 23S1 15.2 1 8.7A6.7 6.7 0 0 1 13 3.8 6.7 6.7 0 0 1 25 8.7C25 15.2 13 23 13 23z")}
+  .pf-wrap img{width:100%;height:100%;object-fit:cover}
+  .pf-empty{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.06);border:1.5px dashed rgba(255,255,255,.13)}
+
+  .submit-btn{width:100%;padding:13px;border-radius:11px;border:none;
+              font-size:.9rem;font-weight:800;letter-spacing:.07em;cursor:not-allowed;
+              background:linear-gradient(135deg,#4c1d95,#7c3aed,#a855f7,#ec4899);
+              color:#fff;transition:.2s;opacity:.3;position:relative;overflow:hidden}
+  .submit-btn.ready{opacity:1;cursor:pointer}
+  .submit-btn.ready:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 24px rgba(168,85,247,.4)}
+
+  .slot.drag-over{background:rgba(167,139,250,.15)!important;border-color:#a78bfa!important}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="hdr">
+    <h1>🔮 Your Predictions</h1>
+    <span class="pts" id="pts-badge">0 / 10 picked</span>
+  </div>
+
+  <div class="body">
+
+    <div class="zones-mobile">
+      <div class="zone zone-top">
+        <div class="zone-hdr">🏆 Top 5 <span class="sub">best finish</span></div>
+        <div class="slots" id="slots-top"></div>
+      </div>
+      <div class="zone zone-worst">
+        <div class="zone-hdr">💩 Worst 5 <span class="sub">last place</span></div>
+        <div class="slots" id="slots-worst"></div>
+      </div>
+    </div>
+
+    <div class="pool-wrap">
+      <div class="pool-hdr">
+        <span>Participants (26)</span>
+        <span class="zone-hint" id="zone-hint"></span>
+      </div>
+      <div class="zone-tabs">
+        <button class="zone-tab top act" id="tab-top" onclick="setActiveZone('top')">🏆 Top 5</button>
+        <button class="zone-tab worst" id="tab-worst" onclick="setActiveZone('worst')">💩 Worst 5</button>
+      </div>
+      <div class="pool-toolbar">
+        <button onclick="sortPool('az')">A↓</button>
+        <button onclick="sortPool('za')">Z↓</button>
+        <button onclick="sortPool('shuffle')">🔀</button>
+        <button onclick="filterPool('top')" id="btn-ft">🏆 Only</button>
+        <button onclick="filterPool('worst')" id="btn-fw">💩 Only</button>
+        <button onclick="filterPool('all')" id="btn-fall" class="act">All</button>
+      </div>
+      <div class="pool" id="pool"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="preview-row">
+      <span class="preview-label" style="color:#fbbf24">🏆 Top 5</span>
+      <div class="preview-flags" id="preview-top"></div>
+    </div>
+    <div class="preview-row">
+      <span class="preview-label" style="color:#f87171">💩 Worst</span>
+      <div class="preview-flags" id="preview-worst"></div>
+    </div>
+    <button class="submit-btn" id="submit-btn">Submit Predictions</button>
+  </div>
+
+</div>
+<script src="/mockup-predictions.js"></script>
+</body>
+</html>
