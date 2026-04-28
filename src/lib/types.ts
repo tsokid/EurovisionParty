@@ -8,7 +8,6 @@
 export type RoomPhase =
   | 'lobby'
   | 'pre_night'
-  | 'show_night'
   | 'predictions_open'
   | 'voting_live'
   | 'final';
