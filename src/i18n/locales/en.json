@@ -15,6 +15,11 @@
     "mute": "Mute sounds",
     "unmute": "Unmute sounds"
   },
+  "intro": {
+    "tapToEnter": "Tap to enter the show",
+    "play": "Play intro video",
+    "skip": "Skip"
+  },
   "gate": {
     "title": "Secret Password",
     "subtitle": "Enter the password to unlock the Eurovision Games",

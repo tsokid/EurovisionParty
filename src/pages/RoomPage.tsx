@@ -19,6 +19,9 @@ import LeaderboardScreen from '../components/leaderboard/LeaderboardScreen';
 import WinnerCrown from '../components/leaderboard/WinnerCrown';
 import ExitGameModal from '../components/room/ExitGameModal';
 import ExitChoiceModal from '../components/room/ExitChoiceModal';
+import RoomIntroOverlay from '../components/room/RoomIntroOverlay';
+
+const INTRO_SEEN_KEY = (code: string) => `eurovision-games-intro-seen-${code}`;
 
 export function RoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
@@ -28,6 +31,19 @@ export function RoomPage() {
   const [showWinner, setShowWinner] = useState(true);
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
+
+  // Intro curtain — shown once per room (localStorage-gated). Defaults to ON
+  // for any room code we haven't yet flagged as "seen".
+  const [showIntro, setShowIntro] = useState(() => {
+    if (typeof window === 'undefined' || !roomCode) return false;
+    return localStorage.getItem(INTRO_SEEN_KEY(roomCode.toUpperCase())) !== '1';
+  });
+  const dismissIntro = () => {
+    if (roomCode) {
+      try { localStorage.setItem(INTRO_SEEN_KEY(roomCode.toUpperCase()), '1'); } catch { /* ignore */ }
+    }
+    setShowIntro(false);
+  };
 
   // Try to rejoin from DB if store is empty (e.g. page refresh)
   const { status: rejoinStatus } = useRejoin(roomCode);
@@ -100,6 +116,12 @@ export function RoomPage() {
   }, [rejoinStatus, roomCode, navigate]);
 
   const currentRoom = storeRoom ?? room;
+
+  // First-entry intro curtain — overlays everything (including the "Joining…"
+  // splash) so the user sees the show-style intro the moment they arrive.
+  if (showIntro) {
+    return <RoomIntroOverlay onDismiss={dismissIntro} />;
+  }
 
   if (!currentRoom || !player) {
     return (
