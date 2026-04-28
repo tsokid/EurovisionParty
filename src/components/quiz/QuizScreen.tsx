@@ -6,6 +6,7 @@ import { useGameStore } from '../../stores/gameStore';
 import { selectRoundQuestions } from '../../lib/questionRandomizer';
 import { QUESTIONS } from '../../lib/questions';
 import { supabase } from '../../lib/supabase';
+import { fetchSeenQuestionIds } from '../../lib/usedQuestions';
 import {
   TIMER_SECONDS,
   QUESTIONS_PER_ROUND,
@@ -61,32 +62,39 @@ export default function QuizScreen() {
     }
 
     // No valid store — derive from DB (page refresh)
-    supabase
-      .from('quiz_answers')
-      .select('round_number, question_id')
-      .eq('player_id', player.id)
-      .then(({ data: answers }) => {
-        if (!answers?.length) return; // No answers yet → keep default (round 1, waiting)
+    // Fetch quiz answers to determine round progress, and ALL seen question IDs
+    // (quiz + duels) so no question is repeated regardless of game mode.
+    Promise.all([
+      supabase
+        .from('quiz_answers')
+        .select('round_number, question_id')
+        .eq('player_id', player.id),
+      fetchSeenQuestionIds(player.id, room.id),
+    ]).then(([{ data: answers }, allSeenIds]) => {
+      if (!answers?.length) {
+        // No quiz answers yet — but might have duel question IDs to exclude
+        if (allSeenIds.length) setUsedQuestionIds(allSeenIds);
+        return;
+      }
 
-        const countByRound: Record<number, number> = {};
-        const allAnsweredIds: number[] = [];
-        for (const a of answers) {
-          countByRound[a.round_number] = (countByRound[a.round_number] ?? 0) + 1;
-          allAnsweredIds.push(a.question_id);
-        }
+      const countByRound: Record<number, number> = {};
+      for (const a of answers) {
+        countByRound[a.round_number] = (countByRound[a.round_number] ?? 0) + 1;
+      }
 
-        for (let r = 1; r <= MAX_ROUNDS; r++) {
-          if ((countByRound[r] ?? 0) < QUESTIONS_PER_ROUND) {
-            setRoundNumber(r);
-            setUsedQuestionIds(allAnsweredIds);
-            setPhase('waiting'); // Resume at waiting; answered Qs stay scored in DB
-            return;
-          }
+      // allSeenIds already includes quiz + duel questions
+      setUsedQuestionIds(allSeenIds);
+
+      for (let r = 1; r <= MAX_ROUNDS; r++) {
+        if ((countByRound[r] ?? 0) < QUESTIONS_PER_ROUND) {
+          setRoundNumber(r);
+          setPhase('waiting');
+          return;
         }
-        // All rounds fully answered
-        setRoundNumber(MAX_ROUNDS);
-        setPhase('complete');
-      });
+      }
+      setRoundNumber(MAX_ROUNDS);
+      setPhase('complete');
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player?.id, room?.id]);
 

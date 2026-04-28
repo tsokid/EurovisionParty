@@ -88,8 +88,7 @@
   },
   "phases": {
     "lobby": { "label": "Lobby", "desc": "Players join the room and pick avatars" },
-    "pre_night": { "label": "Pre-Show", "desc": "Quiz rounds and duels before the live show" },
-    "show_night": { "label": "Show Night", "desc": "The Eurovision Grand Final is live!" },
+    "pre_night": { "label": "Pre-Night Show", "desc": "Quiz rounds and duels before the live show" },
     "predictions_open": { "label": "Predictions Open", "desc": "Submit your Top 5 and Worst 5 predictions" },
     "voting_live": { "label": "Voting Live", "desc": "Voting is underway — buy intel reveals" },
     "final": { "label": "Final Results", "desc": "Official results are in — see the leaderboard" }

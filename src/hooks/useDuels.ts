@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { selectRoundQuestions } from '../lib/questionRandomizer';
+import { fetchSeenQuestionIdsForDuel } from '../lib/usedQuestions';
 import { useGameStore } from '../stores/gameStore';
 import type { Duel, DuelAnswer, DuelDecision } from '../lib/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
@@ -92,13 +93,14 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
     }
   }, []);
 
-  // Create duel with 3 random questions
+  // Create duel with 3 random questions — exclude any question either player has seen
   const createDuel = useCallback(async (
     challengerId: string, challengedId: string, duelRoomId: string
   ): Promise<Duel> => {
     setError(null);
     try {
-      const questions = selectRoundQuestions().slice(0, DUEL_QUESTIONS_COUNT);
+      const seenIds = await fetchSeenQuestionIdsForDuel(challengerId, challengedId, duelRoomId);
+      const questions = selectRoundQuestions(seenIds).slice(0, DUEL_QUESTIONS_COUNT);
       const questionIds = questions.map((q) => q.id);
 
       const { data, error: insertErr } = await supabase
@@ -235,9 +237,12 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
       const originalDuel = duels.find((d) => d.id === originalDuelId);
       if (!originalDuel) throw new Error('Original duel not found');
 
-      // Get 3 new questions different from the original
-      const usedIds = originalDuel.question_ids ?? [];
-      const questions = selectRoundQuestions(usedIds).slice(0, DUEL_QUESTIONS_COUNT);
+      // Get 3 new questions — exclude everything both players have seen
+      const opponentIdForRematch = originalDuel.challenger_id === loserId
+        ? originalDuel.challenged_id
+        : originalDuel.challenger_id;
+      const seenIdsRematch = await fetchSeenQuestionIdsForDuel(loserId, opponentIdForRematch, duelRoomId);
+      const questions = selectRoundQuestions(seenIdsRematch).slice(0, DUEL_QUESTIONS_COUNT);
       const questionIds = questions.map((q) => q.id);
 
       // Loser becomes the challenger in the rematch
