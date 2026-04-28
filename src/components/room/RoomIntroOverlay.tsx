@@ -19,7 +19,7 @@ interface RoomIntroOverlayProps {
  */
 export default function RoomIntroOverlay({ onDismiss }: RoomIntroOverlayProps) {
   const { t } = useTranslation();
-  const { player } = useGameStore();
+  const { player, room } = useGameStore();
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -27,6 +27,9 @@ export default function RoomIntroOverlay({ onDismiss }: RoomIntroOverlayProps) {
   // Player name shown in the end card. Falls back to a friendly default.
   const displayName = (player?.name || t('intro.defaultName', { defaultValue: 'Friend' }))
     .toUpperCase();
+
+  // Personalised end-card subtitle: "get ready · room ABC123"
+  const roomCode = room?.code?.toUpperCase();
 
   const start = async () => {
     setEnded(false);
@@ -127,12 +130,23 @@ export default function RoomIntroOverlay({ onDismiss }: RoomIntroOverlayProps) {
           }`}
         >
           <div className="intro-stars mb-9">★ ★ ★ ★ ★</div>
-          <div className="intro-bigtext text-white">
-            {t('intro.youreIn', { defaultValue: "YOU'RE IN," })}
-          </div>
+          {player?.is_host ? (
+            <div className="intro-bigtext text-white">
+              {t('intro.hostLabel', { defaultValue: 'HOST:' })}
+            </div>
+          ) : (
+            <div className="intro-bigtext text-white">
+              {t('intro.youreIn', { defaultValue: "YOU'RE IN," })}
+            </div>
+          )}
           <div className="intro-bigtext intro-name break-words">{displayName}!</div>
           <div className="mt-7 text-[11px] sm:text-xs md:text-sm font-semibold tracking-[0.32em] uppercase text-white/55">
-            {t('intro.subtitle', { defaultValue: 'get ready · let the show begin' })}
+            {roomCode
+              ? t('intro.subtitleWithRoom', {
+                  defaultValue: 'get ready · room {{code}}',
+                  code: roomCode,
+                })
+              : t('intro.subtitle', { defaultValue: 'get ready · let the show begin' })}
           </div>
           <div className="mt-14 flex flex-col gap-3.5 w-full max-w-[380px]">
             <button onClick={replay} className="intro-btn intro-btn-primary">

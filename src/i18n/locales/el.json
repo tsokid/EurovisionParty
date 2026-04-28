@@ -20,7 +20,9 @@
     "play": "Αναπαραγωγή intro",
     "skip": "Παράλειψη",
     "youreIn": "ΕΙΣΑΙ ΜΕΣΑ,",
+    "hostLabel": "ΟΙΚΟΔΕΣΠΟΤΗΣ:",
     "subtitle": "ετοιμάσου · η εκπομπή ξεκινάει",
+    "subtitleWithRoom": "ετοιμάσου · δωμάτιο {{code}}",
     "replay": "ΠΑΛΙ",
     "enterRoom": "ΕΙΣΟΔΟΣ",
     "defaultName": "Φίλε"

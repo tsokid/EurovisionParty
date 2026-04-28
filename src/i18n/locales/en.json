@@ -20,7 +20,9 @@
     "play": "Play intro video",
     "skip": "Skip",
     "youreIn": "YOU'RE IN,",
+    "hostLabel": "HOST:",
     "subtitle": "get ready · let the show begin",
+    "subtitleWithRoom": "get ready · room {{code}}",
     "replay": "REPLAY",
     "enterRoom": "ENTER ROOM",
     "defaultName": "Friend"
