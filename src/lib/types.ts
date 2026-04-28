@@ -215,5 +215,9 @@ export interface Country {
   id: string;
   name: string;
   name_el: string;
+  /** Artist representing the country (placeholder until real lineup is set) */
+  artist?: string;
+  /** Song title (placeholder until real lineup is set) */
+  song?: string;
   flag: string;
 }

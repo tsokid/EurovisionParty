@@ -217,6 +217,8 @@
     "yourWorst5": "💩 Το Worst 5 σου",
     "selectCountry": "Πάτα μια χώρα",
     "selectCountries": "Επίλεξε χώρες:",
+    "participantsHeader": "Συμμετέχοντες ({{count}})",
+    "dragHint": "Σύρε και άσε για να αλλάξεις σειρά",
     "submitBtn": "Υποβολή Προβλέψεων",
     "fillSlots": "Συμπλήρωσε και τις 10 θέσεις",
     "submitted": "Οι Προβλέψεις Υποβλήθηκαν!",
