@@ -67,9 +67,9 @@ export default function WelcomeScreen({
         <motion.img
           src="/logo.png"
           alt="Eurovision Games"
-          width={520}
-          height={520}
-          className="w-64 sm:w-72 h-auto mx-auto select-none drop-shadow-[0_0_30px_rgba(134,59,255,0.5)]"
+          width={628}
+          height={397}
+          className="w-72 sm:w-80 h-auto mx-auto select-none drop-shadow-[0_0_24px_rgba(236,72,153,0.25)]"
           draggable={false}
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
