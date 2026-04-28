@@ -1,172 +1,149 @@
-import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useGameStore } from '../../stores/gameStore';
 
 interface RoomIntroOverlayProps {
-  /** Called once the user dismisses the intro (skip, video end, or video missing/error). */
+  /** Called when the user taps "Enter Room" on the end card (or skips). */
   onDismiss: () => void;
 }
 
 /**
- * Full-screen black "Tap to enter the show" curtain that appears the first
- * time a user enters a given room. Pressing the play button:
- *  1. Tries to play /intro-video.mp4 in fullscreen (mobile) or inline (desktop).
- *  2. Gracefully dismisses if the file is missing or playback fails.
- * A "Skip" affordance is always available.
+ * Three-state intro per the redesign handoff:
+ *   1. AUDIO GATE — pulsing gradient circle, "Tap to enter the show". User
+ *      gesture unlocks audio for the video.
+ *   2. VIDEO — plays /intro-video.mp4 with original audio inside a portrait
+ *      9:16 frame, optional letterbox bars top/bottom.
+ *   3. END CARD — five gold stars, "YOU'RE IN, {NAME}!", REPLAY + ENTER ROOM.
+ *
+ * Skip ✕ in the corner is always available so users are never trapped.
  */
 export default function RoomIntroOverlay({ onDismiss }: RoomIntroOverlayProps) {
   const { t } = useTranslation();
-  const [playing, setPlaying] = useState(false);
+  const { player } = useGameStore();
+  const [started, setStarted] = useState(false);
+  const [ended, setEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handlePlay = async () => {
-    setPlaying(true);
-    const video = videoRef.current;
-    if (!video) {
-      onDismiss();
-      return;
-    }
+  // Player name shown in the end card. Falls back to a friendly default.
+  const displayName = (player?.name || t('intro.defaultName', { defaultValue: 'Friend' }))
+    .toUpperCase();
 
+  const start = async () => {
+    setEnded(false);
+    setStarted(true);
+    const v = videoRef.current;
+    if (!v) return;
     try {
-      // Try fullscreen on mobile/desktop where supported. Failures are non-fatal.
-      try {
-        if (video.requestFullscreen) {
-          await video.requestFullscreen();
-        } else if ('webkitEnterFullscreen' in video) {
-          (video as HTMLVideoElement & { webkitEnterFullscreen: () => void })
-            .webkitEnterFullscreen();
-        }
-      } catch { /* fullscreen denied — play inline */ }
-
-      await video.play();
+      v.currentTime = 0;
+      v.muted = false;
+      v.volume = 1;
+      await v.play();
     } catch (err) {
-      console.warn('[RoomIntro] Video playback failed:', err);
-      onDismiss();
+      console.warn('[RoomIntro] Playback failed:', err);
+      // If video fails (missing file, codec, etc.) jump straight to end card.
+      setEnded(true);
     }
   };
 
-  const handleEnded = () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen?.().catch(() => { /* ignore */ });
-    }
-    onDismiss();
+  const replay = async () => {
+    const v = videoRef.current;
+    if (!v) return;
+    setEnded(false);
+    try {
+      v.currentTime = 0;
+      await v.play();
+    } catch { /* ignore */ }
   };
 
-  /** Fires if the video file is missing or fails to decode. */
-  const handleError = () => {
-    onDismiss();
-  };
+  // Wire up "ended" event on the video element
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onEnd = () => setEnded(true);
+    const onError = () => setEnded(true); // graceful fallback to end card
+    v.addEventListener('ended', onEnd);
+    v.addEventListener('error', onError);
+    return () => {
+      v.removeEventListener('ended', onEnd);
+      v.removeEventListener('error', onError);
+    };
+  }, []);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      {!playing && (
-        <>
-          {/* Skip control — top right */}
-          <button
-            onClick={onDismiss}
-            className="absolute top-5 right-5 text-white/40 hover:text-white/80 transition-colors text-sm font-medium tracking-wider uppercase px-3 py-2"
-            aria-label={t('intro.skip', { defaultValue: 'Skip' })}
-          >
-            {t('intro.skip', { defaultValue: 'Skip' })} ✕
-          </button>
-
-          {/* Big animated play button */}
-          <button
-            onClick={handlePlay}
-            className="relative cursor-pointer"
-            aria-label={t('intro.play', { defaultValue: 'Play intro' })}
-          >
-            {/* Outer pulsing glow halo */}
-            <motion.div
-              aria-hidden
-              className="absolute inset-0 rounded-full -m-12"
-              style={{
-                background:
-                  'radial-gradient(circle, rgba(236,72,153,0.45) 0%, rgba(134,59,255,0.25) 45%, transparent 70%)',
-                filter: 'blur(24px)',
-              }}
-              animate={{
-                scale: [1, 1.35, 1],
-                opacity: [0.55, 1, 0.55],
-              }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-            />
-
-            {/* Gradient circle button */}
-            <motion.div
-              className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full flex items-center justify-center"
-              style={{
-                background:
-                  'linear-gradient(135deg, #ec4899 0%, #863bff 55%, #47bfff 100%)',
-                boxShadow:
-                  '0 0 50px rgba(236,72,153,0.55), 0 0 90px rgba(134,59,255,0.35)',
-              }}
-              animate={{ scale: [1, 1.06, 1] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              {/* Play triangle, slightly nudged right for optical centering */}
-              <svg
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-14 h-14 sm:w-16 sm:h-16 text-white ml-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </motion.div>
-          </button>
-
-          {/* Wordmark */}
-          <motion.h1
-            className="mt-12 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-center px-4"
-            style={{
-              backgroundImage:
-                'linear-gradient(180deg, #fffbe6 0%, #fde68a 40%, #fbbf24 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              filter: 'drop-shadow(0 0 22px rgba(251,191,36,0.45))',
-            }}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
-          >
-            EUROVISION.GAMES
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            className="mt-3 text-xs sm:text-sm tracking-[0.35em] text-white/40 uppercase font-medium"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-          >
-            {t('intro.tapToEnter', { defaultValue: 'Tap to enter the show' })}
-          </motion.p>
-        </>
+    <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center overflow-hidden">
+      {/* Skip ✕ — always reachable */}
+      {!ended && (
+        <button
+          onClick={onDismiss}
+          aria-label={t('intro.skip', { defaultValue: 'Skip' })}
+          className="absolute top-4 right-4 z-[120] text-white/40 hover:text-white/80 transition-colors text-xs font-semibold uppercase tracking-[0.2em] px-3 py-2"
+        >
+          {t('intro.skip', { defaultValue: 'Skip' })} ✕
+        </button>
       )}
 
-      {/* Video element — preload="none" so it never errors before user taps play.
-          When playing, fills the screen (mobile auto-fullscreens via API above). */}
-      <video
-        ref={videoRef}
-        src="/intro-video.mp4"
-        preload="none"
-        playsInline
-        controls={false}
-        onEnded={handleEnded}
-        onError={handleError}
-        className={
-          playing
-            ? 'absolute inset-0 w-full h-full object-contain bg-black'
-            : 'hidden'
-        }
-      />
-    </motion.div>
+      {/* Portrait 9:16 frame — fills viewport on phones, letterbox left/right on desktop */}
+      <div className="relative h-full max-h-screen aspect-[9/16] bg-black overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
+        {/* Base video — original audio, fills the frame */}
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover z-[1]"
+          src="/intro-video.mp4"
+          playsInline
+          preload="auto"
+        />
+
+        {/* Letterbox bars (top + bottom 6%) — overlay the video for cinematic feel */}
+        <div className="absolute top-0 left-0 right-0 h-[6%] bg-black z-[8] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-[6%] bg-black z-[8] pointer-events-none" />
+
+        {/* AUDIO GATE — initial state */}
+        {!started && (
+          <button
+            onClick={start}
+            className={`absolute inset-0 z-[100] flex flex-col items-center justify-center px-6 cursor-pointer transition-opacity duration-500 ${
+              started ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}
+            style={{
+              background: 'radial-gradient(ellipse at center, #1a0830 0%, #000 70%)',
+            }}
+            aria-label={t('intro.play', { defaultValue: 'Tap to enter the show' })}
+          >
+            {/* Pulsing gradient orb with play triangle */}
+            <span className="intro-pulse mb-7 w-[110px] h-[110px] rounded-full flex items-center justify-center">
+              <span className="intro-play-icon" />
+            </span>
+            <h1 className="intro-wordmark m-0 mb-1.5">EUROVISION GAMES</h1>
+            <p className="m-0 text-[11px] tracking-[0.4em] uppercase text-white/55">
+              {t('intro.tapToEnter', { defaultValue: 'tap to enter the show' })}
+            </p>
+          </button>
+        )}
+
+        {/* END CARD — slides in after video ends (or on skip-to-end) */}
+        <div
+          className={`absolute inset-0 z-[90] flex flex-col items-start justify-center bg-black transition-opacity duration-500 px-[9%] ${
+            ended ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="intro-stars mb-9">★ ★ ★ ★ ★</div>
+          <div className="intro-bigtext text-white">
+            {t('intro.youreIn', { defaultValue: "YOU'RE IN," })}
+          </div>
+          <div className="intro-bigtext intro-name break-words">{displayName}!</div>
+          <div className="mt-7 text-[11px] sm:text-xs md:text-sm font-semibold tracking-[0.32em] uppercase text-white/55">
+            {t('intro.subtitle', { defaultValue: 'get ready · let the show begin' })}
+          </div>
+          <div className="mt-14 flex flex-col gap-3.5 w-full max-w-[380px]">
+            <button onClick={replay} className="intro-btn intro-btn-primary">
+              ▸ {t('intro.replay', { defaultValue: 'REPLAY' })}
+            </button>
+            <button onClick={onDismiss} className="intro-btn intro-btn-ghost">
+              → {t('intro.enterRoom', { defaultValue: 'ENTER ROOM' })}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

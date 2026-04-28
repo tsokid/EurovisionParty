@@ -16,9 +16,14 @@
     "unmute": "Unmute sounds"
   },
   "intro": {
-    "tapToEnter": "Tap to enter the show",
+    "tapToEnter": "tap to enter the show",
     "play": "Play intro video",
-    "skip": "Skip"
+    "skip": "Skip",
+    "youreIn": "YOU'RE IN,",
+    "subtitle": "get ready · let the show begin",
+    "replay": "REPLAY",
+    "enterRoom": "ENTER ROOM",
+    "defaultName": "Friend"
   },
   "gate": {
     "title": "Secret Password",
