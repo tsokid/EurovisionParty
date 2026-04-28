@@ -3,7 +3,7 @@ import type { RoomPhase } from './types'
 // ── Phase definitions ────────────────────────────────────────────────
 export const PHASES: { key: RoomPhase; label: string; description: string }[] = [
   { key: 'lobby',            label: 'Lobby',            description: 'Players join the room and pick avatars' },
-  { key: 'pre_night',        label: 'Pre-Show',         description: 'Quiz rounds and duels before the live show' },
+  { key: 'pre_night',        label: 'Pre-Night Show',   description: 'Quiz rounds and duels before the live show' },
   { key: 'predictions_open', label: 'Predictions Open', description: 'Show is live — submit your Top 5 and Worst 5!' },
   { key: 'voting_live',      label: 'Voting Live',      description: 'Voting is underway — buy intel reveals' },
   { key: 'final',            label: 'Final Results',    description: 'Official results are in — see the leaderboard' },
