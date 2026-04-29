@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import WelcomeScreen from '../components/onboarding/WelcomeScreen';
 import NameEntry from '../components/onboarding/NameEntry';
+import HomeSeoBlock from '../components/seo/HomeSeoBlock';
+import SiteFooter from '../components/seo/SiteFooter';
 import { useAuth } from '../hooks/useAuth';
 import { useRoom } from '../hooks/useRoom';
 
@@ -33,10 +35,14 @@ export function HomePage() {
 
   if (mode === 'welcome') {
     return (
-      <WelcomeScreen
-        onCreateRoom={() => setMode('create')}
-        onJoinRoom={() => setMode('join')}
-      />
+      <>
+        <WelcomeScreen
+          onCreateRoom={() => setMode('create')}
+          onJoinRoom={() => setMode('join')}
+        />
+        <HomeSeoBlock />
+        <SiteFooter />
+      </>
     );
   }
 

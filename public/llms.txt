@@ -1,0 +1,32 @@
+# Eurovision Games
+
+> Eurovision Games is a free, browser-based party game for the Eurovision Song Contest. Up to 10 players join a room, predict the Top 5 and Worst 5 of Eurovision 2026, battle in head-to-head trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No download, no account.
+
+## What it is
+
+- Real-time multiplayer rooms (2-10 players)
+- 4 game phases: lobby → predictions → voting live → final
+- 5 winner categories with optional sudden-death tiebreak
+- Mobile-first PWA (iOS / Android / desktop browser)
+- Free, no signup required to join a room
+
+## Who it's for
+
+- Eurovision fans hosting a watch party
+- Friends watching the contest from different cities
+- Trivia and quiz fans
+
+## Key pages
+
+- /eurovision-night — How to host the watch party
+- /eurovision-games — What the game does
+- /eurovision-party — Party hosting playbook
+- /eurovision-trivia — Sample trivia + how the duel works
+- /eurovision-2026-predictions — 2026 line-up + prediction format
+- /how-to-play — Rules in 2 minutes
+- /rules — Full rule book
+- /scoring — Exact scoring formulas
+- /faq — Frequently asked questions
+- /about — About the project
+- /privacy — Privacy policy
+- /terms — Terms of service
