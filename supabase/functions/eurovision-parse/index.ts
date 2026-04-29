@@ -29,27 +29,32 @@ Deno.serve(async () => {
       .insert({ job_id: job.id, year: job.year })
       .select()
       .single();
+    if (!run.data) {
+      console.error('parse_runs insert failed', run.error);
+      continue;
+    }
+    const runId = run.data.id;
 
     try {
       const { entries, httpStatus, source } = await parseEurovision(sched.source_url);
       const hash = await sha256(JSON.stringify(entries));
 
-      let upserted = 0;
-      for (const e of entries) {
-        const { error } = await sb.from('eurovision_2026_live').upsert(
-          {
+      const nowIso = new Date().toISOString();
+      const { error: upErr, count } = await sb
+        .from('eurovision_2026_live')
+        .upsert(
+          entries.map((e) => ({
             iso: e.iso,
             name: e.name,
             artist: e.artist,
             song: e.song,
             running_order: e.runningOrder,
             source,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: 'iso' },
+            updated_at: nowIso,
+          })),
+          { onConflict: 'iso', count: 'exact' },
         );
-        if (!error) upserted++;
-      }
+      const upserted = upErr ? 0 : (count ?? entries.length);
 
       await sb
         .from('parse_runs')
@@ -59,8 +64,9 @@ Deno.serve(async () => {
           status: entries.length === 0 ? 'blocked' : 'ok',
           rows_upserted: upserted,
           payload_hash: hash,
+          error: upErr ? String(upErr.message) : null,
         })
-        .eq('id', run.data!.id);
+        .eq('id', runId);
 
       await sb
         .from('parse_jobs')
@@ -77,7 +83,7 @@ Deno.serve(async () => {
           status: 'error',
           error: String(e),
         })
-        .eq('id', run.data!.id);
+        .eq('id', runId);
     }
   }
 

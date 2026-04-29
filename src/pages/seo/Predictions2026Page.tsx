@@ -22,7 +22,7 @@ export default function Predictions2026Page() {
     <>
       <SchemaHead
         title="Eurovision 2026 Predictions — Top 5 / Worst 5 Format & Strategy"
-        description="A complete predictions guide for Eurovision 2026 in Vienna: the 36 competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips."
+        description="A complete predictions guide for Eurovision 2026 in Vienna: the 35 competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips."
         canonical="https://eurovision.games/eurovision-2026-predictions"
         jsonLd={article}
       />
@@ -35,7 +35,7 @@ export default function Predictions2026Page() {
         </p>
 
         <h2>The 2026 line-up</h2>
-        <p>36 countries are confirmed for Eurovision 2026 across two semi-finals and the grand final:</p>
+        <p>35 countries are confirmed for Eurovision 2026 across two semi-finals and the grand final:</p>
         <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4">
           {COUNTRIES_2026.map((c) => (
             <li key={c}>{c}</li>
