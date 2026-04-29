@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import EurovisionParser from './EurovisionParser';
 
 export interface AdminModule {
   id: string;
@@ -7,4 +8,6 @@ export interface AdminModule {
   Component: ComponentType;
 }
 
-export const MODULES: AdminModule[] = [];
+export const MODULES: AdminModule[] = [
+  { id: 'eurovision', label: 'Eurovision Parser', emoji: '🛰️', Component: EurovisionParser },
+];
