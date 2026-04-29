@@ -129,7 +129,7 @@ export default function RoomIntroOverlay({ onDismiss }: RoomIntroOverlayProps) {
             ended ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         >
-          <div className="intro-stars mb-9">★ ★ ★ ★ ★</div>
+          <div className="intro-stars mb-6">★★★★★</div>
           {player?.is_host ? (
             <div className="intro-bigtext text-white">
               {t('intro.hostLabel', { defaultValue: 'HOST:' })}
@@ -148,12 +148,12 @@ export default function RoomIntroOverlay({ onDismiss }: RoomIntroOverlayProps) {
                 })
               : t('intro.subtitle', { defaultValue: 'get ready · let the show begin' })}
           </div>
-          <div className="mt-14 flex flex-col gap-3.5 w-full max-w-[380px]">
-            <button onClick={replay} className="intro-btn intro-btn-primary">
-              ▸ {t('intro.replay', { defaultValue: 'REPLAY' })}
-            </button>
-            <button onClick={onDismiss} className="intro-btn intro-btn-ghost">
+          <div className="mt-10 flex flex-col gap-3.5 w-full max-w-[380px]">
+            <button onClick={onDismiss} className="intro-btn intro-btn-primary">
               → {t('intro.enterRoom', { defaultValue: 'ENTER ROOM' })}
+            </button>
+            <button onClick={replay} className="intro-btn intro-btn-ghost">
+              ▸ {t('intro.replay', { defaultValue: 'REPLAY' })}
             </button>
           </div>
         </div>

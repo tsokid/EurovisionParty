@@ -9,6 +9,7 @@ import { PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 import MuteToggle from '../ui/MuteToggle';
+
 export default function Header() {
   const { t } = useTranslation();
   const { room, player, notifications, roomPassword } = useGameStore();
@@ -20,6 +21,7 @@ export default function Header() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showPhaseMenu, setShowPhaseMenu] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [advancing, setAdvancing] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
@@ -40,6 +42,7 @@ export default function Header() {
     setShowInvite((v) => !v);
     setShowPhaseMenu(false);
     setShowNotifications(false);
+    setShowProfile(false);
   };
 
   const shareInvite = async () => {
@@ -76,10 +79,17 @@ export default function Header() {
     }
   };
 
+  const toggleProfile = () => {
+    setShowProfile((v) => !v);
+    setShowPhaseMenu(false);
+    setShowInvite(false);
+    setShowNotifications(false);
+  };
+
   return (
     <>
       <header className="glass h-14 flex items-center justify-between px-4 shrink-0">
-        {/* Left: Room code badge — tap to open invite panel */}
+        {/* Left: Room code badge */}
         <button
           onClick={copyRoomCode}
           className="flex items-center gap-1.5 rounded-full bg-euro-purple/30 px-3 py-1 text-sm font-semibold text-euro-purple-light active:scale-95 transition-transform min-h-[36px]"
@@ -94,41 +104,116 @@ export default function Header() {
           </AnimatePresence>
         </button>
 
-        {/* Center: Phase indicator (clickable to show phase menu) */}
+        {/* Center: Phase indicator */}
         <button
-          onClick={() => setShowPhaseMenu(!showPhaseMenu)}
+          onClick={() => { setShowPhaseMenu(!showPhaseMenu); setShowInvite(false); setShowProfile(false); setShowNotifications(false); }}
           className="text-sm font-medium text-white/70 truncate max-w-[160px] flex items-center gap-1 active:scale-95 transition-transform"
         >
           {phaseLabel}
           {nextPhase && <span className="text-[10px] text-white/30">▼</span>}
         </button>
 
-        {/* Right: theme toggle + language switcher + notification bell */}
-        <div className="flex items-center gap-1">
-          <button
-            onClick={toggleTheme}
-            className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full active:scale-95 transition-transform"
-            aria-label={t('header.switchTheme', { defaultValue: `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode` })}
-          >
-            <span className="text-lg">{theme === 'dark' ? '☀️' : '🌙'}</span>
-          </button>
-          <MuteToggle />
-          <LanguageSwitcher />
-          <button
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full active:scale-95 transition-transform"
-            aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
-          >
-            <span className="text-lg">🔔</span>
-            {unreadCount > 0 && (
-              <motion.span key={unreadCount} initial={{ scale: 0 }} animate={{ scale: 1 }}
-                className="absolute -top-0.5 -right-0.5 bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </motion.span>
-            )}
-          </button>
-        </div>
+        {/* Right: Profile button (contains all settings + notifications) */}
+        <button
+          onClick={toggleProfile}
+          className="relative flex items-center gap-1.5 rounded-full bg-white/8 px-2.5 py-1 min-h-[36px] active:scale-95 transition-transform"
+          aria-label="Profile & Settings"
+        >
+          <span className="text-xl leading-none">{player?.avatar_emoji ?? '🎤'}</span>
+          <span className="text-xs font-semibold text-white/80 max-w-[72px] truncate hidden sm:block">
+            {player?.name ?? ''}
+          </span>
+          {unreadCount > 0 && (
+            <motion.span
+              key={unreadCount}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-1 -right-1 bg-euro-red text-white text-[9px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5"
+            >
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </motion.span>
+          )}
+        </button>
       </header>
+
+      {/* Profile dropdown */}
+      <AnimatePresence>
+        {showProfile && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="fixed inset-x-0 z-50 px-4 pt-2" style={{ top: 'var(--top-bar-height, 56px)' }}
+          >
+            <div className="bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl max-w-xs ml-auto overflow-hidden">
+              {/* Profile name row */}
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
+                <span className="text-3xl">{player?.avatar_emoji ?? '🎤'}</span>
+                <div className="min-w-0">
+                  <p className="font-semibold text-white text-sm leading-tight truncate">{player?.name ?? ''}</p>
+                  <p className="text-[11px] text-white/40 mt-0.5">{room?.code} · {player?.total_points ?? 0} pts</p>
+                </div>
+                {unreadCount > 0 && (
+                  <span className="ml-auto bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1 shrink-0">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </div>
+
+              {/* Settings rows */}
+              <div className="py-1">
+                {/* Notifications */}
+                <button
+                  onClick={() => { setShowProfile(false); setShowNotifications(true); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:bg-white/5 transition-colors"
+                >
+                  <span className="text-xl w-7 text-center">🔔</span>
+                  <span className="flex-1 text-left">
+                    {t('header.notifications', { defaultValue: 'Notifications' })}
+                  </span>
+                  {unreadCount > 0 && (
+                    <span className="bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-0.5">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Sound toggle */}
+                <div className="flex items-center gap-3 px-4 py-2">
+                  <span className="text-xl w-7 text-center">🔊</span>
+                  <span className="flex-1 text-sm text-white/80">
+                    {t('header.sound', { defaultValue: 'Sound' })}
+                  </span>
+                  <MuteToggle />
+                </div>
+
+                {/* Dark/Light mode */}
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:bg-white/5 transition-colors"
+                >
+                  <span className="text-xl w-7 text-center">{theme === 'dark' ? '☀️' : '🌙'}</span>
+                  <span className="flex-1 text-left">
+                    {theme === 'dark'
+                      ? t('header.lightMode', { defaultValue: 'Light Mode' })
+                      : t('header.darkMode', { defaultValue: 'Dark Mode' })}
+                  </span>
+                </button>
+
+                {/* Language */}
+                <div className="flex items-center gap-3 px-4 py-2">
+                  <span className="text-xl w-7 text-center">🌐</span>
+                  <span className="flex-1 text-sm text-white/80">
+                    {t('header.language', { defaultValue: 'Language' })}
+                  </span>
+                  <LanguageSwitcher />
+                </div>
+              </div>
+            </div>
+            <div className="fixed inset-0 -z-10" onClick={() => setShowProfile(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Phase progression dropdown */}
       <AnimatePresence>
@@ -176,7 +261,6 @@ export default function Header() {
                 {t('header.close')}
               </button>
             </div>
-            {/* Backdrop */}
             <div className="fixed inset-0 -z-10" onClick={() => setShowPhaseMenu(false)} />
           </motion.div>
         )}
@@ -225,7 +309,6 @@ export default function Header() {
         open={showNotifications}
         onClose={() => setShowNotifications(false)}
       />
-
     </>
   );
 }

@@ -176,6 +176,23 @@ export function useQuiz(): UseQuizReturn {
 
         if (!effectiveRoomId) throw new Error('No room context');
 
+        // Guard: already submitted this question (prevents double-tap errors)
+        if (answeredQuestions.has(questionId)) {
+          return {
+            id: `local-dup-${Date.now()}`,
+            room_id: effectiveRoomId,
+            player_id: playerId,
+            round_number: effectiveRoundNum,
+            question_id: questionId,
+            answer_index: answerIndex,
+            is_correct: isCorrect,
+            question_opened_at: questionOpenedAt,
+            answered_at: new Date().toISOString(),
+            response_seconds: null,
+            points_awarded: 0,
+          } as QuizAnswer;
+        }
+
         // Use server-side RPC for validated scoring
         const { data: rpcResult, error: rpcErr } = await supabase.rpc('submit_quiz_answer', {
           p_room_id: effectiveRoomId,

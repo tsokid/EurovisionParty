@@ -12,8 +12,8 @@ interface NavTab {
 
 const TABS: NavTab[] = [
   { id: 'quiz', labelKey: 'nav.quiz', emoji: '🧠' },
-  { id: 'predictions', labelKey: 'nav.predict', emoji: '🔮' },
   { id: 'duels', labelKey: 'nav.duels', emoji: '⚔️' },
+  { id: 'predictions', labelKey: 'nav.predict', emoji: '🔮' },
   { id: 'leaderboard', labelKey: 'nav.board', emoji: '🏆' },
 ];
 
@@ -33,7 +33,7 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
   ).length;
 
   return (
-    <nav className="glass safe-bottom sticky bottom-0 z-40 shrink-0">
+    <nav className="safe-bottom sticky bottom-0 z-40 shrink-0 border-t border-white/10" style={{ background: 'rgb(10, 5, 25)' }}>
       <div className="flex items-stretch">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;

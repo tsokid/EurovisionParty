@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import Timer from '../ui/Timer';
@@ -7,6 +7,18 @@ import ConfettiOverlay from '../ui/ConfettiOverlay';
 import { TIMER_SECONDS } from '../../lib/constants';
 import { getLocalizedQuestion } from '../../lib/questionLocale';
 import type { QuizQuestion } from '../../lib/types';
+
+function shuffleOptions(options: string[], correctIndex: number): { options: string[]; correctIndex: number } {
+  const indexed = options.map((o, i) => ({ o, i }));
+  for (let n = indexed.length - 1; n > 0; n--) {
+    const k = Math.floor(Math.random() * (n + 1));
+    [indexed[n], indexed[k]] = [indexed[k], indexed[n]];
+  }
+  return {
+    options: indexed.map((x) => x.o),
+    correctIndex: indexed.findIndex((x) => x.i === correctIndex),
+  };
+}
 
 interface QuestionCardProps {
   question: QuizQuestion | undefined;
@@ -28,7 +40,13 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const { t } = useTranslation();
   // Hooks must run in the same order every render — declare them BEFORE any early return
-  const { question: localQ, options } = getLocalizedQuestion(question);
+  const { question: localQ, options: rawOptions } = getLocalizedQuestion(question);
+  // Shuffle once per question (stable across re-renders for same question.id)
+  const { options, correctIndex: shuffledCorrectIndex } = useMemo(
+    () => question ? shuffleOptions(rawOptions, shuffledCorrectIndex) : { options: rawOptions, correctIndex: 0 },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [question?.id],
+  );
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
@@ -58,7 +76,7 @@ export default function QuestionCard({
       // Short delay before revealing correct answer
       setTimeout(() => {
         setRevealed(true);
-        const isCorrect = index === question.correct_index;
+        const isCorrect = index === shuffledCorrectIndex;
 
         // Auto-advance after feedback
         setTimeout(() => {
@@ -73,7 +91,7 @@ export default function QuestionCard({
   // e.g. AnimatePresence exit frames, bounds overrun, or a missing-from-bank ID).
   if (!question) return null;
 
-  const answeredCorrectly = revealed && selectedIndex === question.correct_index;
+  const answeredCorrectly = revealed && selectedIndex === shuffledCorrectIndex;
 
   return (
     <AnimatePresence mode="wait">
@@ -118,7 +136,7 @@ export default function QuestionCard({
               text={option}
               index={idx}
               selected={selectedIndex === idx}
-              isCorrect={idx === question.correct_index}
+              isCorrect={idx === shuffledCorrectIndex}
               revealed={revealed}
               onSelect={() => handleSelect(idx)}
               disabled={hasAnswered}
