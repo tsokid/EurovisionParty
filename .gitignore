@@ -30,3 +30,7 @@ dist-ssr
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Card source PNGs — optimized JPGs are committed instead
+public/cards/_source/*.png
+public/Cards/Source/*.png
