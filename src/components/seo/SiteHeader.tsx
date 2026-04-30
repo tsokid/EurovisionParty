@@ -89,9 +89,15 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-euro-deep/80 border-b border-white/10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-        <LocaleLink to="/" className="flex items-center gap-2 group" aria-label="Eurovision Games — home">
-          <span className="w-7 h-7 rounded-full bg-gradient-to-br from-euro-purple-light to-euro-pink shadow-lg shadow-euro-pink/20 flex items-center justify-center text-white text-sm" aria-hidden>✦</span>
-          <span className="font-bold text-white tracking-tight group-hover:text-euro-pink-light transition">Eurovision Games</span>
+        <LocaleLink to="/" className="flex items-center group shrink-0" aria-label="Eurovision Games — home">
+          <img
+            src="/logo.png"
+            alt="Eurovision Games"
+            width={628}
+            height={397}
+            className="h-9 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
+            draggable={false}
+          />
         </LocaleLink>
 
         {/* Desktop nav */}

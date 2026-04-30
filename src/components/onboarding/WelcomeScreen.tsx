@@ -41,7 +41,7 @@ export default function WelcomeScreen({
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-[calc(100svh-3.5rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-4 sm:py-10 lg:py-16 relative overflow-hidden">
+    <div className="min-h-[calc(100svh-3.5rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-3 sm:py-5 lg:py-8 relative overflow-hidden">
       {/* Scattered sparkle decorations */}
       {sparkles.map((s, i) => (
         <motion.span
@@ -64,27 +64,9 @@ export default function WelcomeScreen({
         </motion.span>
       ))}
 
-      {/* Stage container */}
+      {/* Stage container — logo lives in SiteHeader now, so the brand block
+          (♪ EuroVision 2026 wordmark + location pill) starts directly here. */}
       <div className="w-full max-w-[1140px] flex flex-col items-center justify-center flex-1 relative">
-        {/* Logo — centered above both columns */}
-        <motion.div
-          className="flex justify-center mb-3 sm:mb-8 lg:mb-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-        >
-          <motion.img
-            src="/logo.png"
-            alt="Eurovision Games"
-            width={628}
-            height={397}
-            className="w-44 sm:w-72 lg:w-80 h-auto select-none drop-shadow-[0_0_32px_rgba(236,72,153,0.28)]"
-            draggable={false}
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.div>
-
         {/* Two-column hero — flat 2x2 grid for responsive reorder */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-y-4 sm:gap-y-6 lg:gap-y-10 gap-x-10 lg:gap-x-16 items-start relative">
           {/* Vertical divider — desktop only */}
