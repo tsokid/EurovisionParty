@@ -24,7 +24,13 @@ interface Player {
   id: string;
   name: string;
   total_points: number;
+  is_host?: boolean | null;
 }
+
+// Map room id -> host player name. Built once when rooms are loaded by
+// querying players where is_host=true. Falls back to rooms.host_name when
+// the host record is missing (rare — happens if the host left the room).
+type HostMap = Record<string, string>;
 
 interface Winner {
   id: string;
@@ -36,30 +42,55 @@ interface Winner {
 
 export default function Winners() {
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [hostMap, setHostMap] = useState<HostMap>({});
   const [roomId, setRoomId] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [winners, setWinners] = useState<Winner[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
 
-  // Load rooms once
+  // Load rooms + host players in one shot. We need both because:
+  //   - rooms.host_name is the denormalized text the host typed at create time
+  //   - players.is_host=true is the live link to the actual host player row
+  // The live player record is the source of truth; rooms.host_name is the
+  // fallback in case the host has left the room (player row may be gone).
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase
+      const { data: roomData, error: roomErr } = await supabase
         .from('rooms')
         .select('id, code, phase, created_at, host_name')
         .order('created_at', { ascending: false })
         .limit(50);
-      if (error) { setMsg({ kind: 'err', text: error.message }); return; }
-      setRooms((data ?? []) as Room[]);
-      if (data && data.length > 0 && !roomId) setRoomId(data[0].id);
+      if (roomErr) { setMsg({ kind: 'err', text: roomErr.message }); return; }
+      const rs = (roomData ?? []) as Room[];
+      setRooms(rs);
+      if (rs.length > 0 && !roomId) setRoomId(rs[0].id);
+
+      // Pull hosts for those rooms in a single query
+      if (rs.length > 0) {
+        const ids = rs.map((r) => r.id);
+        const { data: hostPlayers } = await supabase
+          .from('players')
+          .select('room_id, name')
+          .eq('is_host', true)
+          .in('room_id', ids);
+        const map: HostMap = {};
+        for (const r of rs) {
+          // Prefer live player.name; fall back to rooms.host_name; final fallback '—'
+          const live = (hostPlayers ?? []).find((h) => (h as { room_id: string }).room_id === r.id);
+          map[r.id] = (live as { name?: string } | undefined)?.name
+            ?? r.host_name
+            ?? '—';
+        }
+        setHostMap(map);
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadRoom = useCallback(async (rid: string) => {
     const [{ data: pl }, { data: wn }] = await Promise.all([
-      supabase.from('players').select('id, name, total_points').eq('room_id', rid).order('total_points', { ascending: false }),
+      supabase.from('players').select('id, name, total_points, is_host').eq('room_id', rid).order('total_points', { ascending: false }),
       supabase.from('winners').select('id, category, player_id, metric_value, is_sudden_death_winner').eq('room_id', rid),
     ]);
     setPlayers((pl ?? []) as Player[]);
@@ -129,14 +160,17 @@ export default function Winners() {
             {rooms.length === 0 && <option>No rooms yet</option>}
             {rooms.map((r) => (
               <option key={r.id} value={r.id} className="bg-euro-purple-dark">
-                {r.code} · {r.host_name ?? '—'} · {r.phase} · {new Date(r.created_at).toLocaleDateString()}
+                {r.code} · host: {hostMap[r.id] ?? r.host_name ?? '—'} · {r.phase} · {new Date(r.created_at).toLocaleDateString()}
               </option>
             ))}
           </select>
           {room && (
             <p className="text-xs text-white/40 mt-2">
-              {room.host_name && <>Host: <span className="text-white/65 font-semibold">{room.host_name}</span> · </>}
-              ID: <span className="font-mono">{room.id.slice(0, 8)}…</span> · Players: {players.length}
+              Host: <span className="text-white/85 font-semibold">{hostMap[room.id] ?? room.host_name ?? '—'}</span>
+              {' · '}
+              ID: <span className="font-mono">{room.id.slice(0, 8)}…</span>
+              {' · '}
+              Players: {players.length}
             </p>
           )}
         </div>
