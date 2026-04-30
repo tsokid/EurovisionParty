@@ -103,33 +103,34 @@ drop table if exists public.eurovision_parse_schedule;
 -- ---------------------------------------------------------------------------
 -- 6. Seed 2026 jobs at idle
 -- ---------------------------------------------------------------------------
--- If a finalized results row already exists, leave it alone (never resurrect).
-insert into public.parse_jobs (year, kind, status, triggered_by_user)
-values (2026, 'participants', 'idle', false)
-on conflict (year, kind) do update
-  set status = case when public.parse_jobs.status = 'finalized'
-                    then 'finalized'
-                    else 'idle' end,
-      poll_count = 0, last_poll_at = null,
-      started_at = null, stopped_at = null, started_by = null;
 
-insert into public.parse_jobs (year, kind, status, triggered_by_user)
-values (2026, 'results', 'idle', false)
-on conflict (year, kind) do update
-  set status = case when public.parse_jobs.status = 'finalized'
-                    then 'finalized'
-                    else 'idle' end,
-      poll_count = 0, last_poll_at = null,
-      started_at = null, stopped_at = null, started_by = null;
-
--- The started_at column was NOT NULL with default now() in migration 020.
--- After 6, those rows have started_at = now(); reset to null since they're idle.
-update public.parse_jobs set started_at = null
-  where year = 2026 and status = 'idle';
-
--- Allow started_at to be null (idle jobs have never started)
+-- 6a. Drop NOT NULL + default on started_at FIRST. The seed inserts below
+--     leave started_at null (idle jobs have never started). In migration 020
+--     this column was NOT NULL DEFAULT now(); we relax both before any insert
+--     can collide with the constraint.
 alter table public.parse_jobs alter column started_at drop not null;
 alter table public.parse_jobs alter column started_at drop default;
+
+-- 6b. Upsert participants and results jobs at idle. Explicitly write
+--     started_at = null so any residual default behaviour is overridden.
+--     If a finalized results row already exists, leave it alone (never resurrect).
+insert into public.parse_jobs (year, kind, status, triggered_by_user, started_at)
+values (2026, 'participants', 'idle', false, null)
+on conflict (year, kind) do update
+  set status = case when public.parse_jobs.status = 'finalized'
+                    then 'finalized'
+                    else 'idle' end,
+      poll_count = 0, last_poll_at = null,
+      started_at = null, stopped_at = null, started_by = null;
+
+insert into public.parse_jobs (year, kind, status, triggered_by_user, started_at)
+values (2026, 'results', 'idle', false, null)
+on conflict (year, kind) do update
+  set status = case when public.parse_jobs.status = 'finalized'
+                    then 'finalized'
+                    else 'idle' end,
+      poll_count = 0, last_poll_at = null,
+      started_at = null, stopped_at = null, started_by = null;
 
 -- ---------------------------------------------------------------------------
 -- 7. Replace RPCs
