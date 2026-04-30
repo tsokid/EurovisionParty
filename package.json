@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "cards:build": "tsx scripts/optimize-cards.ts",
     "sitemap": "tsx scripts/seo/generate-sitemap.ts",
-    "prebuild": "npm run sitemap",
+    "llms-txt": "tsx scripts/seo/generate-llms-txt.ts",
+    "prebuild": "npm run sitemap && npm run llms-txt",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui"

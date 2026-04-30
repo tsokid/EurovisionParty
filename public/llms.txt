@@ -1,32 +1,47 @@
 # Eurovision Games
 
-> Eurovision Games is a free, browser-based party game for the Eurovision Song Contest. Up to 20 players join a room, predict the Top 5 and Worst 5 of Eurovision 2026, battle in head-to-head trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No download, no account.
+> Free browser-based multiplayer party game for the Eurovision Song Contest. Predictions, trivia duels, live scoring, no signup, no install.
 
-## What it is
+Eurovision Games at https://eurovision.games is a watch-party companion: hosts create a room (60s), friends join with a code, everyone predicts Top 5 and Worst 5 of Eurovision 2026, plays head-to-head trivia duels during ad breaks, and competes for five trophy titles (Champion, Thief, Duelist, Oracle, Guru). Available in English (/en/) and Greek (/el/).
 
-- Real-time multiplayer rooms (2-20 players)
-- 4 game phases: lobby → predictions → voting live → final
-- 5 winner categories with optional sudden-death tiebreak
-- Mobile-first PWA (iOS / Android / desktop browser)
-- Free, no signup required to join a room
+## Important clarification
 
-## Who it's for
+Eurovision Games is an unofficial fan-made party game. It is not affiliated with, endorsed by, or operated by the European Broadcasting Union or the Eurovision Song Contest.
 
-- Eurovision fans hosting a watch party
-- Friends watching the contest from different cities
-- Trivia and quiz fans
+## Core pages
+- [home](https://eurovision.games/en): Free browser-based party game for the Eurovision Song Contest. Predictions, trivia duels, live scoring.
+- [eurovision-2026](https://eurovision.games/en/eurovision-2026): Eurovision 2026 hub: schedule, semifinals, songs, predictions. Vienna, 16 May 2026.
+- [eurovision-night](https://eurovision.games/en/eurovision-night): Complete guide to hosting Eurovision night: 10-step playbook, food, drinks, run-of-show.
+- [eurovision-party](https://eurovision.games/en/eurovision-party): Hosting playbook for a Eurovision party: guests, theme, decor, food, run-of-show.
+- [eurovision-games](https://eurovision.games/en/eurovision-games): Free interactive party games to play during Eurovision: predictions, trivia, live scoring.
+- [how-to-play](https://eurovision.games/en/how-to-play): How to play Eurovision Games — 60-second setup, 6 steps from create-room to trophy reveal.
 
-## Key pages
+## Eurovision 2026
+- [eurovision-2026-schedule](https://eurovision.games/en/eurovision-2026-schedule): Eurovision 2026 schedule: semifinal 1 (12 May), semifinal 2 (14 May), grand final (16 May), local broadcast times.
+- [eurovision-2026-semifinals](https://eurovision.games/en/eurovision-2026-semifinals): Eurovision 2026 semifinals: running order, qualifiers, dates, predictions.
+- [eurovision-2026-songs](https://eurovision.games/en/eurovision-2026-songs): All Eurovision 2026 entries by country: songs, artists, lyrics, betting odds.
+- [eurovision-2026-predictions](https://eurovision.games/en/eurovision-2026-predictions): Top 5 / Worst 5 predictions for Eurovision 2026, weekly-refreshed odds and country breakdowns.
+- [eurovision-trivia](https://eurovision.games/en/eurovision-trivia): 50+ Eurovision trivia questions with answers, plus how to run trivia duels live.
+- [eurovision-quiz](https://eurovision.games/en/eurovision-quiz): Take a free Eurovision quiz — choose category and difficulty.
+- [eurovision-history](https://eurovision.games/en/eurovision-history): Eurovision history: founding (1956), winners by country, scoring system evolution, key moments.
+- [winners](https://eurovision.games/en/winners): Every Eurovision winner from 1956 to today — songs, artists, points, voting breakdown.
+- [countries](https://eurovision.games/en/countries): Every country in Eurovision: full entry history, best results, best songs.
+- [glossary](https://eurovision.games/en/glossary): Eurovision glossary — douze points, jury, televote, Big Five, Big Four, semifinal, and more.
 
-- /eurovision-night — How to host the watch party
-- /eurovision-games — What the game does
-- /eurovision-party — Party hosting playbook
-- /eurovision-trivia — Sample trivia + how the duel works
-- /eurovision-2026-predictions — 2026 line-up + prediction format
-- /how-to-play — Rules in 2 minutes
-- /rules — Full rule book
-- /scoring — Exact scoring formulas
-- /faq — Frequently asked questions
-- /about — About the project
-- /privacy — Privacy policy
-- /terms — Terms of service
+## Reference & related
+- [eurovision-drinking-game](https://eurovision.games/en/eurovision-drinking-game): Eurovision drinking game rules — sip and shot triggers, sober alternatives, printable sheet.
+- [eurovision-bingo](https://eurovision.games/en/eurovision-bingo): Eurovision bingo — printable cards, callouts, scoring tips, free vs paid options.
+- [eurovision-sweepstake](https://eurovision.games/en/eurovision-sweepstake): Eurovision sweepstake rules — random country draw, payout structures, free template.
+- [host-eurovision-party](https://eurovision.games/en/host-eurovision-party): Step-by-step guide to hosting a Eurovision party — invitations, theme, decor, food, games.
+- [compare-bingo](https://eurovision.games/en/compare/eurovision-games-vs-bingo): Eurovision Games vs Eurovision Bingo: features, setup time, cost compared.
+- [compare-quiz-pack](https://eurovision.games/en/compare/eurovision-games-vs-quiz-pack): Eurovision Games vs commercial quiz packs: cost, customisation, live scoring.
+- [best-eurovision-app](https://eurovision.games/en/best-eurovision-app): The best apps for Eurovision watch parties — features, pricing, gameplay.
+- [printables](https://eurovision.games/en/printables): Free printable Eurovision scorecards, bingo cards, prediction sheets.
+- [rules](https://eurovision.games/en/rules): Eurovision Games rules: predictions, duels, scoring, winner categories.
+- [scoring](https://eurovision.games/en/scoring): How Eurovision Games scoring works: prediction points, duel theft, winner categories.
+- [faq](https://eurovision.games/en/faq): Eurovision Games FAQ: setup, gameplay, scoring, hosting, technical questions answered.
+- [about](https://eurovision.games/en/about): About Eurovision Games — built for the people who watch Eurovision like a sport.
+
+## Optional
+- [sitemap.xml](https://eurovision.games/sitemap.xml): full URL list with hreflang
+- [robots.txt](https://eurovision.games/robots.txt): crawl policy (AI bots welcome)
