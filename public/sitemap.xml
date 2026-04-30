@@ -275,54 +275,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026-songs" />
   </url>
   <url>
-    <loc>https://eurovision.games/en/eurovision-drinking-game</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-drinking-game" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-drinking-game" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-drinking-game" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/eurovision-drinking-game</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-drinking-game" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-drinking-game" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-drinking-game" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/en/eurovision-bingo</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-bingo" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-bingo" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-bingo" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/eurovision-bingo</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-bingo" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-bingo" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-bingo" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/en/eurovision-sweepstake</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-sweepstake" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-sweepstake" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-sweepstake" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/eurovision-sweepstake</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-sweepstake" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-sweepstake" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-sweepstake" />
-  </url>
-  <url>
     <loc>https://eurovision.games/en/eurovision-quiz</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -337,22 +289,6 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-quiz" />
     <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-quiz" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-quiz" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/en/glossary</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/glossary" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/glossary" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/glossary" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/glossary</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/glossary" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/glossary" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/glossary" />
   </url>
   <url>
     <loc>https://eurovision.games/en/host-eurovision-party</loc>
@@ -445,69 +381,5 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries" />
     <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/en/compare/eurovision-games-vs-bingo</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/compare/eurovision-games-vs-bingo" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/compare/eurovision-games-vs-bingo" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/compare/eurovision-games-vs-bingo" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/compare/eurovision-games-vs-bingo</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/compare/eurovision-games-vs-bingo" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/compare/eurovision-games-vs-bingo" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/compare/eurovision-games-vs-bingo" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/en/compare/eurovision-games-vs-quiz-pack</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/compare/eurovision-games-vs-quiz-pack" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/compare/eurovision-games-vs-quiz-pack" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/compare/eurovision-games-vs-quiz-pack" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/compare/eurovision-games-vs-quiz-pack</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/compare/eurovision-games-vs-quiz-pack" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/compare/eurovision-games-vs-quiz-pack" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/compare/eurovision-games-vs-quiz-pack" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/en/best-eurovision-app</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/best-eurovision-app" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/best-eurovision-app" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/best-eurovision-app" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/best-eurovision-app</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/best-eurovision-app" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/best-eurovision-app" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/best-eurovision-app" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/en/printables</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/printables" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/printables" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/printables" />
-  </url>
-  <url>
-    <loc>https://eurovision.games/el/printables</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/printables" />
-    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/printables" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/printables" />
   </url>
 </urlset>

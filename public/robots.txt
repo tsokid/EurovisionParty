@@ -1,37 +1,69 @@
 # eurovision.games — robots.txt
+# Note: per robots.txt spec, when a User-agent block exists for a specific
+# bot, the wildcard (*) rules do NOT apply to that bot. Each AI-bot block
+# must repeat the disallows for /admin and /room/.
+
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /admin/
 Disallow: /room/
 
-# AI crawlers — explicitly allowed (we want to be cited)
+# AI crawlers — allowed for public pages only. Admin + game rooms stay
+# private (player names, room codes, share passwords, host email).
 User-agent: GPTBot
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 User-agent: Bytespider
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /room/
 
 Sitemap: https://eurovision.games/sitemap.xml
 

@@ -33,6 +33,26 @@ export function RoomPage() {
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
 
+  // Defense-in-depth: emit noindex,nofollow so even if a room URL leaks
+  // into a backlink or sitemap, search engines won't index the live game
+  // (player names, room code, share password). robots.txt also disallows
+  // /room/ but the meta tag handles bots that ignore robots.txt.
+  useEffect(() => {
+    let m = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
+    const created = !m;
+    if (!m) {
+      m = document.createElement('meta');
+      m.name = 'robots';
+      document.head.appendChild(m);
+    }
+    const prev = m.content;
+    m.content = 'noindex,nofollow';
+    return () => {
+      if (m && created) m.remove();
+      else if (m) m.content = prev;
+    };
+  }, []);
+
   // Intro curtain — shown once per room (localStorage-gated). Defaults to ON
   // for any room code we haven't yet flagged as "seen".
   const [showIntro, setShowIntro] = useState(() => {

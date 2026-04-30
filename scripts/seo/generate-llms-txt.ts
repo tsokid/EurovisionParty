@@ -21,11 +21,7 @@ const DESCRIPTIONS: Record<string, string> = {
   'eurovision-2026-schedule': 'Eurovision 2026 schedule: semifinal 1 (12 May), semifinal 2 (14 May), grand final (16 May), local broadcast times.',
   'eurovision-2026-semifinals': 'Eurovision 2026 semifinals: running order, qualifiers, dates, predictions.',
   'eurovision-2026-songs': 'All Eurovision 2026 entries by country: songs, artists, lyrics, betting odds.',
-  'eurovision-drinking-game': 'Eurovision drinking game rules — sip and shot triggers, sober alternatives, printable sheet.',
-  'eurovision-bingo': 'Eurovision bingo — printable cards, callouts, scoring tips, free vs paid options.',
-  'eurovision-sweepstake': 'Eurovision sweepstake rules — random country draw, payout structures, free template.',
   'eurovision-quiz': 'Take a free Eurovision quiz — choose category and difficulty.',
-  glossary: 'Eurovision glossary — douze points, jury, televote, Big Five, Big Four, semifinal, and more.',
   'host-eurovision-party': 'Step-by-step guide to hosting a Eurovision party — invitations, theme, decor, food, games.',
   'eurovision-history': 'Eurovision history: founding (1956), winners by country, scoring system evolution, key moments.',
   winners: 'Every Eurovision winner from 1956 to today — songs, artists, points, voting breakdown.',
@@ -36,22 +32,16 @@ const DESCRIPTIONS: Record<string, string> = {
   about: 'About Eurovision Games — built for the people who watch Eurovision like a sport.',
   privacy: 'Privacy policy: data we collect, what we do with it, how to delete it.',
   terms: 'Terms of use for Eurovision Games.',
-  'compare-bingo': 'Eurovision Games vs Eurovision Bingo: features, setup time, cost compared.',
-  'compare-quiz-pack': 'Eurovision Games vs commercial quiz packs: cost, customisation, live scoring.',
-  'best-eurovision-app': 'The best apps for Eurovision watch parties — features, pricing, gameplay.',
-  printables: 'Free printable Eurovision scorecards, bingo cards, prediction sheets.',
 };
 
 const TIER_1 = ['home', 'eurovision-2026', 'eurovision-night', 'eurovision-party', 'eurovision-games', 'how-to-play'] as const;
 const TIER_2 = [
   'eurovision-2026-schedule', 'eurovision-2026-semifinals', 'eurovision-2026-songs',
   'eurovision-2026-predictions', 'eurovision-trivia', 'eurovision-quiz',
-  'eurovision-history', 'winners', 'countries', 'glossary',
+  'eurovision-history', 'winners', 'countries',
 ] as const;
 const TIER_3 = [
-  'eurovision-drinking-game', 'eurovision-bingo', 'eurovision-sweepstake',
   'host-eurovision-party',
-  'compare-bingo', 'compare-quiz-pack', 'best-eurovision-app', 'printables',
   'rules', 'scoring', 'faq', 'about',
 ] as const;
 

@@ -26,17 +26,9 @@ Eurovision Games is an unofficial fan-made party game. It is not affiliated with
 - [eurovision-history](https://eurovision.games/en/eurovision-history): Eurovision history: founding (1956), winners by country, scoring system evolution, key moments.
 - [winners](https://eurovision.games/en/winners): Every Eurovision winner from 1956 to today — songs, artists, points, voting breakdown.
 - [countries](https://eurovision.games/en/countries): Every country in Eurovision: full entry history, best results, best songs.
-- [glossary](https://eurovision.games/en/glossary): Eurovision glossary — douze points, jury, televote, Big Five, Big Four, semifinal, and more.
 
 ## Reference & related
-- [eurovision-drinking-game](https://eurovision.games/en/eurovision-drinking-game): Eurovision drinking game rules — sip and shot triggers, sober alternatives, printable sheet.
-- [eurovision-bingo](https://eurovision.games/en/eurovision-bingo): Eurovision bingo — printable cards, callouts, scoring tips, free vs paid options.
-- [eurovision-sweepstake](https://eurovision.games/en/eurovision-sweepstake): Eurovision sweepstake rules — random country draw, payout structures, free template.
 - [host-eurovision-party](https://eurovision.games/en/host-eurovision-party): Step-by-step guide to hosting a Eurovision party — invitations, theme, decor, food, games.
-- [compare-bingo](https://eurovision.games/en/compare/eurovision-games-vs-bingo): Eurovision Games vs Eurovision Bingo: features, setup time, cost compared.
-- [compare-quiz-pack](https://eurovision.games/en/compare/eurovision-games-vs-quiz-pack): Eurovision Games vs commercial quiz packs: cost, customisation, live scoring.
-- [best-eurovision-app](https://eurovision.games/en/best-eurovision-app): The best apps for Eurovision watch parties — features, pricing, gameplay.
-- [printables](https://eurovision.games/en/printables): Free printable Eurovision scorecards, bingo cards, prediction sheets.
 - [rules](https://eurovision.games/en/rules): Eurovision Games rules: predictions, duels, scoring, winner categories.
 - [scoring](https://eurovision.games/en/scoring): How Eurovision Games scoring works: prediction points, duel theft, winner categories.
 - [faq](https://eurovision.games/en/faq): Eurovision Games FAQ: setup, gameplay, scoring, hosting, technical questions answered.
