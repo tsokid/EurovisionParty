@@ -83,7 +83,7 @@ export function extractWikipedia(html: string): ParsedEntry[] {
   const tables = html.match(/<table[^>]*class="[^"]*wikitable[^"]*"[\s\S]*?<\/table>/g) ?? [];
   const seen = new Set<string>();
   for (const tbl of tables) {
-    const rows = tbl.matchAll(/<tr>([\s\S]*?)<\/tr>/g);
+    const rows = tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g);
     for (const r of rows) {
       const cells = [...r[1].matchAll(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/g)].map((c) =>
         stripTags(c[1]).trim(),
