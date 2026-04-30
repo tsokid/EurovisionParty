@@ -1,19 +1,24 @@
 import { useEffect } from 'react';
+import type { HreflangLink } from '../../lib/seo/hreflang';
 
 interface Props {
   title: string;
   description: string;
   canonical: string;
   jsonLd?: object | object[];
+  hreflang?: HreflangLink[];
+  ogLocale?: 'en_US' | 'el_GR';
+  ogLocaleAlternate?: ('en_US' | 'el_GR')[];
 }
 
-export default function SchemaHead({ title, description, canonical, jsonLd }: Props) {
+export default function SchemaHead({ title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate }: Props) {
   useEffect(() => {
     const prevTitle = document.title;
     const prevDesc = readMeta('description');
     const prevOgTitle = readMeta('og:title', true);
     const prevOgDesc = readMeta('og:description', true);
     const prevOgUrl = readMeta('og:url', true);
+    const prevOgLocale = readMeta('og:locale', true);
     const prevCanonical = (document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null)?.href ?? null;
 
     document.title = title;
@@ -21,6 +26,7 @@ export default function SchemaHead({ title, description, canonical, jsonLd }: Pr
     setMeta('og:title', title, true);
     setMeta('og:description', description, true);
     setMeta('og:url', canonical, true);
+    if (ogLocale) setMeta('og:locale', ogLocale, true);
 
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     let createdCanonical = false;
@@ -31,6 +37,27 @@ export default function SchemaHead({ title, description, canonical, jsonLd }: Pr
       createdCanonical = true;
     }
     link.href = canonical;
+
+    // hreflang links
+    const hreflangTags: HTMLLinkElement[] = (hreflang ?? []).map((h) => {
+      const l = document.createElement('link');
+      l.rel = 'alternate';
+      l.hreflang = h.hreflang;
+      l.href = h.href;
+      l.dataset.dynamic = 'true';
+      document.head.appendChild(l);
+      return l;
+    });
+
+    // og:locale:alternate
+    const ogLocaleAltTags: HTMLMetaElement[] = (ogLocaleAlternate ?? []).map((loc) => {
+      const m = document.createElement('meta');
+      m.setAttribute('property', 'og:locale:alternate');
+      m.content = loc;
+      m.dataset.dynamic = 'true';
+      document.head.appendChild(m);
+      return m;
+    });
 
     const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     const tags: HTMLScriptElement[] = blocks.map((b) => {
@@ -43,18 +70,21 @@ export default function SchemaHead({ title, description, canonical, jsonLd }: Pr
     });
     return () => {
       tags.forEach((t) => t.remove());
+      hreflangTags.forEach((t) => t.remove());
+      ogLocaleAltTags.forEach((t) => t.remove());
       document.title = prevTitle;
       if (prevDesc !== null) setMeta('description', prevDesc);
       if (prevOgTitle !== null) setMeta('og:title', prevOgTitle, true);
       if (prevOgDesc !== null) setMeta('og:description', prevOgDesc, true);
       if (prevOgUrl !== null) setMeta('og:url', prevOgUrl, true);
+      if (prevOgLocale !== null) setMeta('og:locale', prevOgLocale, true);
       if (createdCanonical) {
         link?.remove();
       } else if (link && prevCanonical !== null) {
         link.href = prevCanonical;
       }
     };
-  }, [title, description, canonical, jsonLd]);
+  }, [title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate]);
   return null;
 }
 
