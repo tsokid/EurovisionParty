@@ -1,0 +1,7 @@
+{
+  "pageId": "_fixture",
+  "locale": "en",
+  "meta": { "title": "Fixture", "description": "Fixture description" },
+  "hero": { "title": "Hello", "lede": "World" },
+  "sections": []
+}
