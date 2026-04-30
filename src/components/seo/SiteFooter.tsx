@@ -55,7 +55,8 @@ export default function SiteFooter() {
         ))}
       </div>
       <p className="max-w-5xl mx-auto text-white/40 text-xs mt-6">
-        © Eurovision Games. Not affiliated with the European Broadcasting Union or the Eurovision Song Contest.
+        © Eurovision Games. Not affiliated with the European Broadcasting Union or the Eurovision Song Contest. Contact:{' '}
+        <a href="mailto:hello@eurovision.games" className="text-white/60 hover:text-white">hello@eurovision.games</a>
       </p>
     </footer>
   );

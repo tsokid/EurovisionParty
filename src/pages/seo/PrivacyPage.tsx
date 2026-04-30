@@ -57,7 +57,7 @@ export default function PrivacyPage() {
         <h2>Email OTP</h2>
         <p>
           Hosts authenticate via email one-time codes. We do not send marketing email. The email address is stored only to
-          identify your host account; you can delete it at any time by emailing us at <em>privacy@eurovision.games</em>.
+          identify your host account; you can delete it at any time by emailing us at <a href="mailto:privacy@eurovision.games">privacy@eurovision.games</a>.
         </p>
 
         <h2>Retention</h2>
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
         <h2>Your rights</h2>
         <p>
           Under GDPR (EU) and UK GDPR you have the right to access, correct, port, or delete your data. Email{' '}
-          <em>privacy@eurovision.games</em> with your request and we&apos;ll respond within 30 days.
+          <a href="mailto:privacy@eurovision.games">privacy@eurovision.games</a> with your request and we&apos;ll respond within 30 days.
         </p>
 
         <h2>Children</h2>
