@@ -127,7 +127,18 @@ create index if not exists parse_runs_year_kind_finished_idx
 -- ---------------------------------------------------------------------------
 -- 5. Drop the old schedule table (replaced by hardcoded cron expressions)
 -- ---------------------------------------------------------------------------
-drop policy if exists schedule_admin_all on public.eurovision_parse_schedule;
+-- `drop policy if exists` still raises if the *table* is missing, so guard
+-- the policy drop on the table existing first.
+do $sched$
+begin
+  if exists (
+    select 1 from pg_tables
+     where schemaname = 'public' and tablename = 'eurovision_parse_schedule'
+  ) then
+    execute 'drop policy if exists schedule_admin_all on public.eurovision_parse_schedule';
+  end if;
+end
+$sched$;
 drop table if exists public.eurovision_parse_schedule;
 
 -- ---------------------------------------------------------------------------
