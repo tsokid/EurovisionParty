@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { isLocale } from '../../lib/seo/locale';
 import { LocaleProvider } from '../../lib/seo/LocaleContext';
 import SiteHeader from './SiteHeader';
+import CookieConsent from '../cookie/CookieConsent';
 
 export default function LocaleRoot() {
   const params = useParams<{ locale: string }>();
@@ -28,6 +29,7 @@ export default function LocaleRoot() {
     <LocaleProvider locale={params.locale}>
       <SiteHeader />
       <Outlet />
+      <CookieConsent />
     </LocaleProvider>
   );
 }
