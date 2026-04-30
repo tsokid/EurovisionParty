@@ -11,6 +11,7 @@
     "cards:build": "tsx scripts/optimize-cards.ts",
     "sitemap": "tsx scripts/seo/generate-sitemap.ts",
     "llms-txt": "tsx scripts/seo/generate-llms-txt.ts",
+    "validate-schema": "tsx scripts/seo/validate-schema.ts",
     "prebuild": "npm run sitemap && npm run llms-txt",
     "test": "vitest run",
     "test:watch": "vitest",
