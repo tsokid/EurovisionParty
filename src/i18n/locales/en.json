@@ -363,6 +363,11 @@
     "roomCount_one": "{{count}} room",
     "roomCount_other": "{{count}} rooms"
   },
+  "betaBanner": {
+    "label": "Beta",
+    "body": "Eurovision Games is in active development. Expect rapid changes.",
+    "dismiss": "Dismiss beta banner"
+  },
   "homeSeo": {
     "headline": "Eurovision Games — host the perfect Eurovision night",
     "leadStrong": "Eurovision Games is a free, browser-based party game",

@@ -363,6 +363,11 @@
     "roomCount_one": "{{count}} δωμάτιο",
     "roomCount_other": "{{count}} δωμάτια"
   },
+  "betaBanner": {
+    "label": "Beta",
+    "body": "Το Eurovision Games βρίσκεται σε ενεργή ανάπτυξη. Περίμενε γρήγορες αλλαγές.",
+    "dismiss": "Κλείσιμο μηνύματος beta"
+  },
   "homeSeo": {
     "headline": "Eurovision Games — διοργάνωσε την τέλεια βραδιά Eurovision",
     "leadStrong": "Το Eurovision Games είναι ένα δωρεάν παιχνίδι πάρτι μέσα στο browser",

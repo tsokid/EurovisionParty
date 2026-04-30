@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { isLocale } from '../../lib/seo/locale';
 import { LocaleProvider } from '../../lib/seo/LocaleContext';
 import SiteHeader from './SiteHeader';
+import BetaBanner from './BetaBanner';
 import CookieConsent from '../cookie/CookieConsent';
 
 export default function LocaleRoot() {
@@ -27,6 +28,7 @@ export default function LocaleRoot() {
 
   return (
     <LocaleProvider locale={params.locale}>
+      <BetaBanner />
       <SiteHeader />
       <Outlet />
       <CookieConsent />
