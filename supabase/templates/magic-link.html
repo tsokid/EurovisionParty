@@ -1,0 +1,59 @@
+<!--
+  Eurovision Games — Admin OTP / Magic Link
+  Paste into Supabase → Auth → Email Templates → Magic Link.
+  Variables Supabase replaces: {{ .Token }}, {{ .ConfirmationURL }}, {{ .SiteURL }}, {{ .Email }}
+-->
+<!DOCTYPE html>
+<html lang="en" style="margin:0;padding:0;">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>Your Eurovision Games admin code</title>
+</head>
+<body style="margin:0;padding:0;background:#0b0420;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#ffffff;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0b0420;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background:#150836;border-radius:20px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;">
+          <!-- Header -->
+          <tr>
+            <td style="padding:28px 32px 16px 32px;background:linear-gradient(135deg,#6b21a8 0%,#db2777 100%);">
+              <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;color:rgba(255,255,255,0.85);">Eurovision Games</div>
+              <div style="font-size:22px;font-weight:800;color:#ffffff;margin-top:6px;">Admin sign-in code</div>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px;">
+              <p style="margin:0 0 16px 0;font-size:15px;line-height:1.55;color:rgba(255,255,255,0.85);">
+                You're signing in to <strong style="color:#ffffff;">eurovision.games/admin</strong> with the email <strong style="color:#ffffff;">{{ .Email }}</strong>.
+              </p>
+              <p style="margin:0 0 8px 0;font-size:13px;color:rgba(255,255,255,0.55);">Enter this 6-digit code:</p>
+              <div style="margin:8px 0 24px 0;padding:18px 20px;background:#0b0420;border:1px solid rgba(255,255,255,0.12);border-radius:14px;font-size:32px;font-weight:800;letter-spacing:0.32em;text-align:center;color:#ffffff;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;">
+                {{ .Token }}
+              </div>
+              <p style="margin:0 0 16px 0;font-size:13px;line-height:1.55;color:rgba(255,255,255,0.55);">
+                Or click the magic link to sign in directly:
+              </p>
+              <p style="margin:0 0 24px 0;">
+                <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 20px;background:#db2777;color:#ffffff;font-size:14px;font-weight:700;border-radius:10px;text-decoration:none;">Sign in to admin</a>
+              </p>
+              <p style="margin:0;font-size:12px;line-height:1.55;color:rgba(255,255,255,0.45);">
+                This code expires in <strong style="color:rgba(255,255,255,0.7);">10 minutes</strong>. If you didn't request it, ignore this email — your account is safe. The /admin route is allowlist-only and only sends codes to two addresses.
+              </p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="padding:18px 32px;background:#0b0420;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:rgba(255,255,255,0.4);">
+              Eurovision Games · A free, browser-based party game for Eurovision night.<br />
+              Not affiliated with the European Broadcasting Union (EBU) or the Eurovision Song Contest.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

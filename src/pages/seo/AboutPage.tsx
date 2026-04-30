@@ -50,8 +50,9 @@ export default function AboutPage() {
 
         <h2>Contact</h2>
         <p>
-          Bug reports, feature requests, hosting questions: email the maintainers at <em>hello@eurovision.games</em> (replace
-          this line with the live address before launch).
+          Bug reports, feature requests, hosting questions: <a href="mailto:hello@eurovision.games">hello@eurovision.games</a>.
+          Press & partnership enquiries: <a href="mailto:press@eurovision.games">press@eurovision.games</a>. We aim to reply
+          within 3 business days; during Eurovision week (May), expect 24 hours.
         </p>
 
         <p>

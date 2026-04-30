@@ -77,7 +77,8 @@ export default function TermsPage() {
         <h2>Termination</h2>
         <p>
           We can suspend or terminate accounts that violate these terms, especially for harassment or scale abuse. Hosts can
-          delete their account at any time by emailing <em>privacy@eurovision.games</em>.
+          delete their account at any time by emailing <a href="mailto:privacy@eurovision.games">privacy@eurovision.games</a>. For
+          DMCA / copyright notices, write to <a href="mailto:legal@eurovision.games">legal@eurovision.games</a>.
         </p>
 
         <h2>Governing law</h2>
