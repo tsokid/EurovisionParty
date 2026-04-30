@@ -103,7 +103,7 @@ export default function EurovisionDuelsPage() {
         lede="A duel turns the dead air between performances into a battlefield. Challenge anyone in your room to a 3-question Eurovision trivia fight — winner steals their points or doubles their own. Two of the five end-of-night trophies (Duelist, Thief) are decided here."
       />
 
-      <ContentLayout wide>
+      <ContentLayout>
         <Section title="What is a Eurovision duel?">
           <p>
             A duel is a private 3-question Eurovision trivia round between exactly two players in the same room.
