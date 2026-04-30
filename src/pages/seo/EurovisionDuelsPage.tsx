@@ -189,15 +189,6 @@ export default function EurovisionDuelsPage() {
           </p>
         </Section>
 
-        <Section title="Hosting tips">
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Set the cap to 3.</strong> Default per-pair cap. Bump to 5+ only for small rooms (3-5 players).</li>
-            <li><strong className="text-white">Encourage duels in the breaks.</strong> The interval act runs ~25 minutes — perfect duel window for everyone.</li>
-            <li><strong className="text-white">Refusing is allowed but tracked.</strong> No point penalty, but the Duelist trophy rewards participation.</li>
-            <li><strong className="text-white">Watch the leaderboard chip.</strong> If one player is running away with it, organize a Steal pile-on.</li>
-          </ul>
-        </Section>
-
         <Section title="Frequently asked questions">
           <FaqAccordion items={FAQ} />
         </Section>
