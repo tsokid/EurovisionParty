@@ -49,7 +49,6 @@
     body {
       font-family: var(--font-b);
       background: var(--bg);
-      /* Match app gradient: warm magenta left, cool indigo right */
       background-image:
         radial-gradient(ellipse 75% 65% at 15% 10%,  rgba(140,20,100,0.45) 0%, transparent 60%),
         radial-gradient(ellipse 55% 70% at 85% 90%,  rgba(50,10,160,0.38) 0%, transparent 65%),
@@ -90,7 +89,7 @@
       z-index: 1;
     }
 
-    /* ── Side panels (sticky by design — layout prevents scroll) ───────── */
+    /* ── Side panels ───────────────────────────────────────────────────── */
     .panel {
       display: flex;
       flex-direction: column;
@@ -174,7 +173,6 @@
 
     .slot.is-filled { border-style: solid; background: var(--surface-hover); }
 
-    /* Glow when a tile is selected (keyboard mode) */
     .has-selection .slot { border-style: solid; }
     .has-selection .panel--top   .slot { box-shadow: 0 0 0 1px var(--top-border); }
     .has-selection .panel--worst .slot { box-shadow: 0 0 0 1px var(--worst-border); }
@@ -206,10 +204,19 @@
       color: var(--text-1);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    /* Flag images inside slots */
+    .slot-country .flag-img {
+      width: 22px;
+      height: 16px;
+      border-radius: 2px;
+      object-fit: cover;
+      flex-shrink: 0;
     }
 
     .slot-remove {
@@ -268,7 +275,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* Sort only — filter buttons removed */
     .sort-row { display: flex; gap: 5px; align-items: center; }
 
     .sort-label {
@@ -315,7 +321,6 @@
       color: var(--text-2);
     }
 
-    /* Selection banner */
     .sel-banner {
       display: none;
       margin-top: 8px;
@@ -328,10 +333,13 @@
       font-weight: 600;
       color: var(--accent);
       letter-spacing: 0.04em;
+      align-items: center;
+      gap: 8px;
     }
-    .sel-banner.visible { display: block; }
+    .sel-banner .flag-img { width: 22px; height: 16px; border-radius: 2px; object-fit: cover; }
+    .sel-banner.visible { display: flex; }
 
-    /* ── Participant grid — 3 columns ──────────────────────────────────── */
+    /* ── Participant grid — 4 columns ──────────────────────────────────── */
     .grid {
       flex: 1;
       overflow-y: auto;
@@ -390,12 +398,19 @@
     .tile.is-ranked { opacity: 0.4; }
     .tile.is-ranked:hover { opacity: 0.75; transform: translateY(-1px); }
 
+    /* Flag image — replaces emoji */
     .tile-flag {
-      font-size: 2.4rem;
-      line-height: 1;
+      width: 44px;
+      height: 33px;
+      border-radius: 4px;
+      object-fit: cover;
       flex-shrink: 0;
-      width: 2.6rem;
-      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    /* Fallback for broken flag images */
+    .tile-flag[data-loaded="false"] {
+      background: var(--surface-hover);
+      border: 1px solid var(--border);
     }
 
     .tile-info { flex: 1; min-width: 0; }
@@ -497,7 +512,6 @@
 </head>
 <body>
 
-<!-- Scattered star sparkles (matching app aesthetic) -->
 <div class="stars" aria-hidden="true" id="stars"></div>
 
 <div class="app" id="app">
@@ -529,7 +543,7 @@
         Drag a tile to a slot &nbsp;·&nbsp; or click a tile, then click a slot
         &nbsp;·&nbsp; <kbd>Esc</kbd> to cancel
       </p>
-      <div class="sel-banner" id="sel-banner" aria-live="polite"></div>
+      <div class="sel-banner" id="sel-banner" role="status" aria-live="polite"></div>
     </div>
     <div class="grid" id="grid" role="list" aria-label="Participants — drag or click to predict"></div>
   </main>
@@ -550,46 +564,66 @@
 <script>
 'use strict';
 
+// ── Flag CDN helper ────────────────────────────────────────────────────────
+const FLAG_CDN = 'https://flagcdn.com/w40';
+
+function flagUrl(iso) {
+  return `${FLAG_CDN}/${iso.toLowerCase()}.png`;
+}
+
+function flagImg(iso, country, cssClass) {
+  const img = document.createElement('img');
+  img.src     = flagUrl(iso);
+  img.alt     = `${country} flag`;
+  img.width   = 40;
+  img.height  = 30;
+  img.className = cssClass || '';
+  img.loading = 'lazy';
+  img.onerror = () => { img.style.visibility = 'hidden'; };
+  return img;
+}
+
 // ── Data ──────────────────────────────────────────────────────────────────
+// iso: 2-letter lowercase country code used by flagcdn.com
 const PARTICIPANTS = [
-  { id: 'albania',     flag: '🇦🇱', country: 'Albania',     artist: 'Alis',                       song: 'Nān' },
-  { id: 'armenia',     flag: '🇦🇲', country: 'Armenia',     artist: 'Simón',                      song: 'Paloma Rumba' },
-  { id: 'australia',   flag: '🇦🇺', country: 'Australia',   artist: 'Delta Goodrem',              song: 'Eclipse' },
-  { id: 'austria',     flag: '🇦🇹', country: 'Austria',     artist: 'Cosmó',                      song: 'Tanzschein' },
-  { id: 'azerbaijan',  flag: '🇦🇿', country: 'Azerbaijan',  artist: 'Jlva',                       song: 'Just Go' },
-  { id: 'belgium',     flag: '🇧🇪', country: 'Belgium',     artist: 'Essyla',                     song: 'Dancing on the Ice' },
-  { id: 'bulgaria',    flag: '🇧🇬', country: 'Bulgaria',    artist: 'Dara',                       song: 'Bangaranga' },
-  { id: 'croatia',     flag: '🇭🇷', country: 'Croatia',     artist: 'Lelek',                      song: 'Andromeda' },
-  { id: 'cyprus',      flag: '🇨🇾', country: 'Cyprus',      artist: 'Antigoni',                   song: 'Jalla' },
-  { id: 'czechia',     flag: '🇨🇿', country: 'Czechia',     artist: 'Daniel Zizka',               song: 'Crossroads' },
-  { id: 'denmark',     flag: '🇩🇰', country: 'Denmark',     artist: 'Søren Torpegaard Lund',      song: 'Før vi går hjem' },
-  { id: 'estonia',     flag: '🇪🇪', country: 'Estonia',     artist: 'Vanilla Ninja',              song: 'Too Epic to Be True' },
-  { id: 'finland',     flag: '🇫🇮', country: 'Finland',     artist: 'Linda Lampenius & Pete P.', song: 'Liekinheitin' },
-  { id: 'france',      flag: '🇫🇷', country: 'France',      artist: 'Monroe',                     song: 'Regarde-moi' },
-  { id: 'georgia',     flag: '🇬🇪', country: 'Georgia',     artist: 'Bzikebi',                    song: 'On Replay' },
-  { id: 'germany',     flag: '🇩🇪', country: 'Germany',     artist: 'Nico Suave',                 song: 'Alles Gut' },
-  { id: 'greece',      flag: '🇬🇷', country: 'Greece',      artist: 'Elena Paparizou',            song: 'Fire & Ice' },
-  { id: 'iceland',     flag: '🇮🇸', country: 'Iceland',     artist: 'Daði Freyr',                 song: 'Think About Things II' },
-  { id: 'ireland',     flag: '🇮🇪', country: 'Ireland',     artist: 'Bambie Thug',                song: 'Doomsday Blue' },
-  { id: 'israel',      flag: '🇮🇱', country: 'Israel',      artist: 'Eden Golan',                 song: 'Hurricane II' },
-  { id: 'italy',       flag: '🇮🇹', country: 'Italy',       artist: 'Mahmood',                    song: 'Brividi Sempre' },
-  { id: 'latvia',      flag: '🇱🇻', country: 'Latvia',      artist: 'Sudden Lights',              song: 'Aijā' },
-  { id: 'lithuania',   flag: '🇱🇹', country: 'Lithuania',   artist: 'Silvester Belt',             song: 'Lamb' },
-  { id: 'luxembourg',  flag: '🇱🇺', country: 'Luxembourg',  artist: 'TALI',                       song: 'Fighter' },
-  { id: 'malta',       flag: '🇲🇹', country: 'Malta',       artist: 'Sarah Bonnici',              song: 'Loop' },
-  { id: 'moldova',     flag: '🇲🇩', country: 'Moldova',     artist: 'Zdob și Zdub',              song: 'Trenuletul II' },
-  { id: 'netherlands', flag: '🇳🇱', country: 'Netherlands', artist: 'Joost Klein',                song: 'Europapa' },
-  { id: 'norway',      flag: '🇳🇴', country: 'Norway',      artist: 'Gåte',                       song: 'Ulveham' },
-  { id: 'poland',      flag: '🇵🇱', country: 'Poland',      artist: 'Luna',                       song: 'The Tower' },
-  { id: 'portugal',    flag: '🇵🇹', country: 'Portugal',    artist: 'Iolanda',                    song: 'Grito' },
-  { id: 'serbia',      flag: '🇷🇸', country: 'Serbia',      artist: 'TEYA DORA',                  song: 'Ramonda' },
-  { id: 'spain',       flag: '🇪🇸', country: 'Spain',       artist: 'Nebulossa',                  song: 'ZORRA' },
-  { id: 'sweden',      flag: '🇸🇪', country: 'Sweden',      artist: 'Marcus & Martinus',          song: 'Unforgettable' },
-  { id: 'switzerland', flag: '🇨🇭', country: 'Switzerland', artist: 'Nemo',                       song: 'The Code' },
-  { id: 'ukraine',     flag: '🇺🇦', country: 'Ukraine',     artist: 'alyona alyona & Jerry Heil', song: 'Teresa & Maria' },
+  { id: 'albania',     iso: 'al', country: 'Albania',     artist: 'Alis',                        song: 'Nān' },
+  { id: 'armenia',     iso: 'am', country: 'Armenia',     artist: 'Simón',                       song: 'Paloma Rumba' },
+  { id: 'australia',   iso: 'au', country: 'Australia',   artist: 'Delta Goodrem',               song: 'Eclipse' },
+  { id: 'austria',     iso: 'at', country: 'Austria',     artist: 'Cosmó',                       song: 'Tanzschein' },
+  { id: 'azerbaijan',  iso: 'az', country: 'Azerbaijan',  artist: 'Jlva',                        song: 'Just Go' },
+  { id: 'belgium',     iso: 'be', country: 'Belgium',     artist: 'Essyla',                      song: 'Dancing on the Ice' },
+  { id: 'bulgaria',    iso: 'bg', country: 'Bulgaria',    artist: 'Dara',                        song: 'Bangaranga' },
+  { id: 'croatia',     iso: 'hr', country: 'Croatia',     artist: 'Lelek',                       song: 'Andromeda' },
+  { id: 'cyprus',      iso: 'cy', country: 'Cyprus',      artist: 'Antigoni',                    song: 'Jalla' },
+  { id: 'czechia',     iso: 'cz', country: 'Czechia',     artist: 'Daniel Zizka',                song: 'Crossroads' },
+  { id: 'denmark',     iso: 'dk', country: 'Denmark',     artist: 'Søren Torpegaard Lund',       song: 'Før vi går hjem' },
+  { id: 'estonia',     iso: 'ee', country: 'Estonia',     artist: 'Vanilla Ninja',               song: 'Too Epic to Be True' },
+  { id: 'finland',     iso: 'fi', country: 'Finland',     artist: 'Linda Lampenius & Pete P.',   song: 'Liekinheitin' },
+  { id: 'france',      iso: 'fr', country: 'France',      artist: 'Monroe',                      song: 'Regarde-moi' },
+  { id: 'georgia',     iso: 'ge', country: 'Georgia',     artist: 'Bzikebi',                     song: 'On Replay' },
+  { id: 'germany',     iso: 'de', country: 'Germany',     artist: 'Nico Suave',                  song: 'Alles Gut' },
+  { id: 'greece',      iso: 'gr', country: 'Greece',      artist: 'Elena Paparizou',             song: 'Fire & Ice' },
+  { id: 'iceland',     iso: 'is', country: 'Iceland',     artist: 'Daði Freyr',                  song: 'Think About Things II' },
+  { id: 'ireland',     iso: 'ie', country: 'Ireland',     artist: 'Bambie Thug',                 song: 'Doomsday Blue' },
+  { id: 'israel',      iso: 'il', country: 'Israel',      artist: 'Eden Golan',                  song: 'Hurricane II' },
+  { id: 'italy',       iso: 'it', country: 'Italy',       artist: 'Mahmood',                     song: 'Brividi Sempre' },
+  { id: 'latvia',      iso: 'lv', country: 'Latvia',      artist: 'Sudden Lights',               song: 'Aijā' },
+  { id: 'lithuania',   iso: 'lt', country: 'Lithuania',   artist: 'Silvester Belt',              song: 'Lamb' },
+  { id: 'luxembourg',  iso: 'lu', country: 'Luxembourg',  artist: 'TALI',                        song: 'Fighter' },
+  { id: 'malta',       iso: 'mt', country: 'Malta',       artist: 'Sarah Bonnici',               song: 'Loop' },
+  { id: 'moldova',     iso: 'md', country: 'Moldova',     artist: 'Zdob și Zdub',                song: 'Trenuletul II' },
+  { id: 'netherlands', iso: 'nl', country: 'Netherlands', artist: 'Joost Klein',                 song: 'Europapa' },
+  { id: 'norway',      iso: 'no', country: 'Norway',      artist: 'Gåte',                        song: 'Ulveham' },
+  { id: 'poland',      iso: 'pl', country: 'Poland',      artist: 'Luna',                        song: 'The Tower' },
+  { id: 'portugal',    iso: 'pt', country: 'Portugal',    artist: 'Iolanda',                     song: 'Grito' },
+  { id: 'serbia',      iso: 'rs', country: 'Serbia',      artist: 'TEYA DORA',                   song: 'Ramonda' },
+  { id: 'spain',       iso: 'es', country: 'Spain',       artist: 'Nebulossa',                   song: 'ZORRA' },
+  { id: 'sweden',      iso: 'se', country: 'Sweden',      artist: 'Marcus & Martinus',           song: 'Unforgettable' },
+  { id: 'switzerland', iso: 'ch', country: 'Switzerland', artist: 'Nemo',                        song: 'The Code' },
+  { id: 'ukraine',     iso: 'ua', country: 'Ukraine',     artist: 'alyona alyona & Jerry Heil',  song: 'Teresa & Maria' },
 ];
 
-const N       = PARTICIPANTS.length; // dynamic each year
+const N       = PARTICIPANTS.length;
 const TOP_N   = 5;
 const WORST_N = 5;
 
@@ -638,7 +672,9 @@ function toggleSel(id) {
   document.getElementById('app').classList.add('has-selection');
   const p = byId(id);
   const banner = document.getElementById('sel-banner');
-  banner.textContent = `${p.flag} ${p.country} selected — now click a slot`;
+  banner.innerHTML = '';
+  banner.appendChild(flagImg(p.iso, p.country, 'flag-img'));
+  banner.appendChild(document.createTextNode(`${p.country} selected — now click a slot`));
   banner.classList.add('visible');
 }
 function clearSel() {
@@ -646,11 +682,11 @@ function clearSel() {
   document.querySelectorAll('.tile.is-selected').forEach(t => t.classList.remove('is-selected'));
   document.getElementById('app').classList.remove('has-selection');
   const banner = document.getElementById('sel-banner');
-  banner.textContent = '';
+  banner.innerHTML = '';
   banner.classList.remove('visible');
 }
 
-// ── Event delegation — single listener handles all click interactions ─────
+// ── Event delegation ──────────────────────────────────────────────────────
 document.getElementById('app').addEventListener('click', e => {
   const rmBtn = e.target.closest('.slot-remove');
   const slot  = e.target.closest('.slot');
@@ -680,13 +716,14 @@ document.getElementById('app').addEventListener('click', e => {
   clearSel();
 });
 
-// Keyboard: Escape cancels selection, Enter/Space on focused slot
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') clearSel();
 });
 
 // ── Build slots ───────────────────────────────────────────────────────────
 function buildSlot(kind, index) {
+  // Worst 5: ascending from (N-4)th to Nth place
+  // e.g. for N=35: 31st, 32nd, 33rd, 34th, 35th
   const pos   = kind === 'top' ? index + 1 : (N - WORST_N + 1 + index);
   const label = ord(pos);
 
@@ -704,7 +741,6 @@ function buildSlot(kind, index) {
     <button class="slot-remove" aria-label="Remove from ${label} place">✕</button>
   `;
 
-  // Drag target
   el.addEventListener('dragover',  e => { e.preventDefault(); el.classList.add('is-over'); });
   el.addEventListener('dragleave', () => el.classList.remove('is-over'));
   el.addEventListener('drop', e => {
@@ -714,7 +750,6 @@ function buildSlot(kind, index) {
     if (id) place(id, kind, index);
   });
 
-  // Keyboard Enter/Space on slot
   el.addEventListener('keydown', e => {
     if ((e.key === 'Enter' || e.key === ' ') && selectedId) {
       e.preventDefault();
@@ -735,15 +770,24 @@ function buildTile(p) {
   el.setAttribute('tabindex', '0');
   el.setAttribute('aria-label', `${p.country}, ${p.artist}, ${p.song}`);
 
-  el.innerHTML = `
-    <span class="tile-flag" aria-hidden="true">${p.flag}</span>
-    <div class="tile-info">
-      <span class="tile-country">${p.country}</span>
-      <span class="tile-artist">${p.artist}</span>
-      <span class="tile-song">${p.song}</span>
-    </div>
-    <span class="tile-badge" aria-hidden="true"></span>
+  // Flag image (flagcdn.com 40px wide)
+  const flag = flagImg(p.iso, p.country, 'tile-flag');
+
+  const info = document.createElement('div');
+  info.className = 'tile-info';
+  info.innerHTML = `
+    <span class="tile-country">${p.country}</span>
+    <span class="tile-artist">${p.artist}</span>
+    <span class="tile-song">${p.song}</span>
   `;
+
+  const badge = document.createElement('span');
+  badge.className = 'tile-badge';
+  badge.setAttribute('aria-hidden', 'true');
+
+  el.appendChild(flag);
+  el.appendChild(info);
+  el.appendChild(badge);
 
   el.addEventListener('dragstart', e => {
     e.dataTransfer.setData('text/plain', p.id);
@@ -752,11 +796,10 @@ function buildTile(p) {
   });
   el.addEventListener('dragend', () => el.classList.remove('is-dragging'));
 
-  // Keyboard Enter/Space on tile
   el.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      e.target.click(); // delegated to app listener above
+      e.target.click();
     }
   });
 
@@ -798,7 +841,13 @@ function render() {
 
     if (p) {
       el.classList.add('is-filled');
-      body.innerHTML = `<span class="slot-country"><span aria-hidden="true">${p.flag}</span> ${p.country}</span>`;
+      // Rebuild slot body with flag image
+      body.innerHTML = '';
+      const countrySpan = document.createElement('span');
+      countrySpan.className = 'slot-country';
+      countrySpan.appendChild(flagImg(p.iso, p.country, 'flag-img'));
+      countrySpan.appendChild(document.createTextNode(p.country));
+      body.appendChild(countrySpan);
       rmBtn.style.display = 'flex';
       rmBtn.setAttribute('aria-label', `Remove ${p.country} from ${label} place`);
       el.setAttribute('aria-label', `${label} place: ${p.country}`);
@@ -813,8 +862,8 @@ function render() {
   // Counters
   const topCt   = picks.top.filter(Boolean).length;
   const worstCt = picks.worst.filter(Boolean).length;
-  document.getElementById('top-tally').textContent   = `${topCt} / ${TOP_N} placed`;
-  document.getElementById('worst-tally').textContent = `${worstCt} / ${WORST_N} placed`;
+  document.getElementById('top-tally').textContent    = `${topCt} / ${TOP_N} placed`;
+  document.getElementById('worst-tally').textContent  = `${worstCt} / ${WORST_N} placed`;
   document.getElementById('picked-label').textContent = `${topCt + worstCt} / ${TOP_N + WORST_N} picked`;
 }
 
@@ -837,7 +886,7 @@ function sortGrid(dir) {
     const order = PARTICIPANTS.map(p => p.id);
     tiles.sort((a, b) => order.indexOf(a.dataset.id) - order.indexOf(b.dataset.id));
   } else {
-    tiles.sort((a,b) => {
+    tiles.sort((a, b) => {
       const na = a.querySelector('.tile-country').textContent;
       const nb = b.querySelector('.tile-country').textContent;
       return dir === 'az' ? na.localeCompare(nb) : nb.localeCompare(na);
