@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
-type LangCode = 'en' | 'el';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { localizePath, stripLocaleFromPath, type Locale } from '../../lib/seo/locale';
 
 interface Lang {
-  code: LangCode;
+  code: Locale;
   flag: string;
   label: string;
 }
@@ -14,12 +14,16 @@ const LANGS: Lang[] = [
   { code: 'el', flag: '🇬🇷', label: 'Ελληνικά' },
 ];
 
+const STORAGE_KEY = 'europarty-lang';
+
 export default function LanguageSwitcher() {
-  const { i18n } = useTranslation();
+  const locale = useLocale();
+  const { pathname, search, hash } = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const current = LANGS.find((l) => l.code === i18n.language) ?? LANGS[0];
+  const current = LANGS.find((l) => l.code === locale) ?? LANGS[0];
 
   useEffect(() => {
     if (!open) return;
@@ -35,9 +39,17 @@ export default function LanguageSwitcher() {
     };
   }, [open]);
 
-  const select = (code: LangCode) => {
-    i18n.changeLanguage(code);
+  const select = (code: Locale) => {
     setOpen(false);
+    if (code === locale) return;
+    const stripped = stripLocaleFromPath(pathname);
+    const next = localizePath(code, stripped) + search + hash;
+    try {
+      localStorage.setItem(STORAGE_KEY, code);
+    } catch {
+      // ignore storage failures (private mode, etc.)
+    }
+    navigate(next);
   };
 
   return (
