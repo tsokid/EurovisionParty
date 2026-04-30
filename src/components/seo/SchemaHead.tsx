@@ -9,9 +9,24 @@ interface Props {
   hreflang?: HreflangLink[];
   ogLocale?: 'en_US' | 'el_GR';
   ogLocaleAlternate?: ('en_US' | 'el_GR')[];
+  // Per-page Open Graph + Twitter overrides. Static defaults live in index.html.
+  ogType?: 'website' | 'article';
+  ogImage?: string; // absolute URL
+  twitterTitle?: string;
+  twitterDescription?: string;
+  // Article-only (sets article:published_time / article:modified_time)
+  articlePublishedTime?: string; // ISO 8601
+  articleModifiedTime?: string;  // ISO 8601
+  // Page-level keywords (low SEO weight but harmless and useful for some
+  // social previews and internal tooling).
+  keywords?: string[];
 }
 
-export default function SchemaHead({ title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate }: Props) {
+export default function SchemaHead({
+  title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+  ogType, ogImage, twitterTitle, twitterDescription,
+  articlePublishedTime, articleModifiedTime, keywords,
+}: Props) {
   useEffect(() => {
     const prevTitle = document.title;
     const prevDesc = readMeta('description');
@@ -19,6 +34,12 @@ export default function SchemaHead({ title, description, canonical, jsonLd, href
     const prevOgDesc = readMeta('og:description', true);
     const prevOgUrl = readMeta('og:url', true);
     const prevOgLocale = readMeta('og:locale', true);
+    const prevOgType = readMeta('og:type', true);
+    const prevOgImage = readMeta('og:image', true);
+    const prevTwTitle = readMeta('twitter:title');
+    const prevTwDesc = readMeta('twitter:description');
+    const prevTwImage = readMeta('twitter:image');
+    const prevKeywords = readMeta('keywords');
     const prevCanonical = (document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null)?.href ?? null;
 
     document.title = title;
@@ -27,6 +48,14 @@ export default function SchemaHead({ title, description, canonical, jsonLd, href
     setMeta('og:description', description, true);
     setMeta('og:url', canonical, true);
     if (ogLocale) setMeta('og:locale', ogLocale, true);
+    if (ogType) setMeta('og:type', ogType, true);
+    if (ogImage) {
+      setMeta('og:image', ogImage, true);
+      setMeta('twitter:image', ogImage);
+    }
+    setMeta('twitter:title', twitterTitle ?? title);
+    setMeta('twitter:description', twitterDescription ?? description);
+    if (keywords && keywords.length) setMeta('keywords', keywords.join(', '));
 
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     let createdCanonical = false;
@@ -59,6 +88,27 @@ export default function SchemaHead({ title, description, canonical, jsonLd, href
       return m;
     });
 
+    // article:published_time / article:modified_time (only when ogType=article)
+    const articleMetaTags: HTMLMetaElement[] = [];
+    if (ogType === 'article') {
+      if (articlePublishedTime) {
+        const m = document.createElement('meta');
+        m.setAttribute('property', 'article:published_time');
+        m.content = articlePublishedTime;
+        m.dataset.dynamic = 'true';
+        document.head.appendChild(m);
+        articleMetaTags.push(m);
+      }
+      if (articleModifiedTime) {
+        const m = document.createElement('meta');
+        m.setAttribute('property', 'article:modified_time');
+        m.content = articleModifiedTime;
+        m.dataset.dynamic = 'true';
+        document.head.appendChild(m);
+        articleMetaTags.push(m);
+      }
+    }
+
     const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     const tags: HTMLScriptElement[] = blocks.map((b) => {
       const s = document.createElement('script');
@@ -72,19 +122,28 @@ export default function SchemaHead({ title, description, canonical, jsonLd, href
       tags.forEach((t) => t.remove());
       hreflangTags.forEach((t) => t.remove());
       ogLocaleAltTags.forEach((t) => t.remove());
+      articleMetaTags.forEach((t) => t.remove());
       document.title = prevTitle;
       if (prevDesc !== null) setMeta('description', prevDesc);
       if (prevOgTitle !== null) setMeta('og:title', prevOgTitle, true);
       if (prevOgDesc !== null) setMeta('og:description', prevOgDesc, true);
       if (prevOgUrl !== null) setMeta('og:url', prevOgUrl, true);
       if (prevOgLocale !== null) setMeta('og:locale', prevOgLocale, true);
+      if (prevOgType !== null) setMeta('og:type', prevOgType, true);
+      if (prevOgImage !== null) setMeta('og:image', prevOgImage, true);
+      if (prevTwTitle !== null) setMeta('twitter:title', prevTwTitle);
+      if (prevTwDesc !== null) setMeta('twitter:description', prevTwDesc);
+      if (prevTwImage !== null) setMeta('twitter:image', prevTwImage);
+      if (prevKeywords !== null) setMeta('keywords', prevKeywords);
       if (createdCanonical) {
         link?.remove();
       } else if (link && prevCanonical !== null) {
         link.href = prevCanonical;
       }
     };
-  }, [title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate]);
+  }, [title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+      ogType, ogImage, twitterTitle, twitterDescription,
+      articlePublishedTime, articleModifiedTime, keywords]);
   return null;
 }
 
