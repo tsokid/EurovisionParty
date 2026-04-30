@@ -42,8 +42,8 @@ export default function QuestionCard({
   // Hooks must run in the same order every render — declare them BEFORE any early return
   const { question: localQ, options: rawOptions } = getLocalizedQuestion(question);
   // Shuffle once per question (stable across re-renders for same question.id)
-  const { options, correctIndex: shuffledCorrectIndex } = useMemo(
-    () => question ? shuffleOptions(rawOptions, shuffledCorrectIndex) : { options: rawOptions, correctIndex: 0 },
+  const { options, correctIndex: shuffledCorrectIndex } = useMemo<{ options: string[]; correctIndex: number }>(
+    () => question ? shuffleOptions(rawOptions, question.correct_index) : { options: rawOptions, correctIndex: 0 },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [question?.id],
   );

@@ -10,10 +10,67 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
-    <title>Eurovision Games 2026</title>
+    <title>Eurovision Games · Predictions, Trivia &amp; Party Games for Eurovision 2026</title>
+    <meta name="description" content="Free multiplayer Eurovision party game. Predict Top 5 / Worst 5 of Eurovision 2026, battle friends in trivia duels, and crown 5 champions. No download." />
+    <meta property="og:title" content="Eurovision Games — Predictions &amp; Trivia for Eurovision 2026" />
+    <meta property="og:description" content="Free multiplayer Eurovision party game for hosting watch nights. Predictions, trivia duels, live scoring." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://eurovision.games/" />
+    <meta property="og:image" content="https://eurovision.games/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://eurovision.games/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Eurovision Games",
+        "url": "https://eurovision.games",
+        "logo": "https://eurovision.games/logo.png",
+        "sameAs": []
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Eurovision Games",
+        "url": "https://eurovision.games",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Any (Web)",
+        "browserRequirements": "Modern browser",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+      }
+    </script>
   </head>
   <body class="bg-euro-deep text-white font-sans antialiased">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Server-rendered fallback for crawlers/AI bots before JS hydrates.
+           Hidden visually once React mounts (root contents are replaced). -->
+      <noscript>
+        <main style="max-width:48rem;margin:0 auto;padding:3rem 1rem;color:#fff;font-family:system-ui,sans-serif">
+          <h1 style="font-size:2.5rem;font-weight:800">Eurovision Games — host the perfect Eurovision night</h1>
+          <p style="font-size:1.125rem;color:rgba(255,255,255,0.85);margin-top:1rem">
+            <strong>Eurovision Games is a free, browser-based party game</strong> where 2-10 friends predict the Eurovision 2026
+            Top 5 and Worst 5, battle in trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No
+            download, no account.
+          </p>
+          <p style="margin-top:1.5rem">
+            <a href="/how-to-play">How to play</a> ·
+            <a href="/eurovision-night">Eurovision night</a> ·
+            <a href="/eurovision-2026-predictions">2026 predictions</a> ·
+            <a href="/eurovision-trivia">Trivia</a> ·
+            <a href="/eurovision-party">Party</a> ·
+            <a href="/eurovision-games">Eurovision games</a> ·
+            <a href="/online-games">Online</a> ·
+            <a href="/mobile-games">Mobile</a> ·
+            <a href="/rules">Rules</a> ·
+            <a href="/scoring">Scoring</a> ·
+            <a href="/faq">FAQ</a> ·
+            <a href="/about">About</a>
+          </p>
+        </main>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

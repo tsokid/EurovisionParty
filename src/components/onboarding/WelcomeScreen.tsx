@@ -27,7 +27,7 @@ export default function WelcomeScreen({
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-svh bg-euro-gradient flex flex-col items-center px-6 pt-16 pb-8 relative overflow-hidden">
+    <div className="min-h-svh bg-euro-gradient flex flex-col items-center px-6 pt-16 pb-8 sm:pt-0 sm:justify-center relative overflow-hidden">
       {/* Theme toggle & language switcher & mute — top right */}
       <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
         <MuteToggle />
@@ -125,9 +125,9 @@ export default function WelcomeScreen({
         </Button>
       </motion.div>
 
-      {/* Bottom text — mt-auto pushes to bottom, pt-10 guarantees gap from CTAs */}
+      {/* Bottom text — mobile: mt-auto pushes to bottom; desktop: absolute bottom so centering above isn't pulled */}
       <motion.p
-        className="mt-auto pt-10 text-sm text-white/50 font-medium"
+        className="mt-auto pt-10 sm:absolute sm:bottom-8 sm:mt-0 sm:pt-0 text-sm text-white/50 font-medium"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}

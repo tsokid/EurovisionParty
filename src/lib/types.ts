@@ -214,9 +214,15 @@ export interface Country {
   id: string;
   name: string;
   name_el: string;
-  /** Artist representing the country (placeholder until real lineup is set) */
+  /** Artist representing the country */
   artist?: string;
-  /** Song title (placeholder until real lineup is set) */
+  /** Song title */
   song?: string;
+  /** Language(s) of the song */
+  language?: string;
+  /** Which semi-final the country competes/votes in: 1, 2, 'big5', 'host' */
+  semi?: 1 | 2 | 'big5' | 'host';
+  /** Running order within the semi-final (1-15) */
+  runningOrder?: number;
   flag: string;
 }

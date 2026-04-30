@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useId } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   DndContext,
@@ -315,12 +315,11 @@ function SubmittedView({ top5, worst5 }: { top5: Country[]; worst5: Country[] })
 export default function PredictionsScreen() {
   const { t } = useTranslation();
   const { room, player } = useGameStore();
-  const dndId = useId();
 
   const [top5, setTop5]   = useState<string[]>([]);
   const [worst5, setWorst5] = useState<string[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [mobileZone, setMobileZone] = useState<'top' | 'worst'>('top');
+  const [activeId] = useState<string | null>(null);
+  const [mobileZone] = useState<'top' | 'worst'>('top');
   const [poolSort, setPoolSort] = useState<'az' | 'za' | 'default'>('az');
   const [poolFilter, setPoolFilter] = useState<'all' | 'top' | 'worst'>('all');
 
@@ -339,22 +338,23 @@ export default function PredictionsScreen() {
       .eq('room_id', room.id)
       .eq('player_id', player.id)
       .maybeSingle()
-      .then(({ data }) => {
-        if (data) {
-          setExistingPrediction(data as ScoredPrediction);
-          setTop5(data.top5 as string[]);
-          setWorst5(data.worst5 as string[]);
-          if (data.scored_at || ((data.top5 as string[]).length === TOP_N && (data.worst5 as string[]).length === WORST_N)) {
-            setSubmitted(true);
+      .then(
+        ({ data }) => {
+          if (data) {
+            setExistingPrediction(data as ScoredPrediction);
+            setTop5(data.top5 as string[]);
+            setWorst5(data.worst5 as string[]);
+            if (data.scored_at || ((data.top5 as string[]).length === TOP_N && (data.worst5 as string[]).length === WORST_N)) {
+              setSubmitted(true);
+            }
           }
-        }
-        setIsLoadingExisting(false);
-      })
-      .catch(() => setIsLoadingExisting(false));
+          setIsLoadingExisting(false);
+        },
+        () => setIsLoadingExisting(false),
+      );
   }, [room?.id, player?.id]);
 
   const isPredictionsOpen = room?.phase === 'predictions_open';
-  const usedSet = new Set([...top5, ...worst5]);
 
   // Pool — sorted + filtered
   const pool = (() => {

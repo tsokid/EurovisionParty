@@ -272,3 +272,29 @@ body { margin: 0; overscroll-behavior: none; }
 }
 .intro-btn-ghost:hover { background: rgba(255,255,255,0.04); }
 
+
+/* Winner card — holographic shimmer + gold glow */
+@keyframes card-glow {
+  0%, 100% { box-shadow: 0 0 24px oklch(0.85 0.16 90 / 0.35), 0 0 56px oklch(0.85 0.16 90 / 0.15); }
+  50%      { box-shadow: 0 0 36px oklch(0.85 0.16 90 / 0.55), 0 0 84px oklch(0.85 0.16 90 / 0.30); }
+}
+@keyframes card-shimmer {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+.winner-card {
+  animation: card-glow 2.4s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.winner-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: card-shimmer 3.6s linear infinite;
+  mix-blend-mode: overlay;
+}
+@media (prefers-reduced-motion: reduce) {
+  .winner-card, .winner-card::after { animation: none; }
+}

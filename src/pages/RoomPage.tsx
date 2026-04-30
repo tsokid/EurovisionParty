@@ -17,6 +17,7 @@ import IntelMarket from '../components/intel/IntelMarket';
 import ResultsEntry from '../components/results/ResultsEntry';
 import LeaderboardScreen from '../components/leaderboard/LeaderboardScreen';
 import WinnerCrown from '../components/leaderboard/WinnerCrown';
+import WinnersScreen from '../components/winners/WinnersScreen';
 import ExitGameModal from '../components/room/ExitGameModal';
 import ExitChoiceModal from '../components/room/ExitChoiceModal';
 import RoomIntroOverlay from '../components/room/RoomIntroOverlay';
@@ -145,14 +146,22 @@ export function RoomPage() {
 
   // Final phase — show winner
   if (currentRoom.phase === 'final') {
+    const playerNameById = Object.fromEntries(players.map((p) => [p.id, p.name]));
+    const isHost = !!player?.is_host;
     return (
       <AppShell showHeader showNav={false}>
-        <LeaderboardScreen />
-        <WinnerCrown
-          winner={players.length > 0 ? [...players].sort((a, b) => b.total_points - a.total_points)[0] : null}
-          visible={showWinner}
-          onDismiss={() => setShowWinner(false)}
-        />
+        {currentRoom.results_confirmed ? (
+          <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />
+        ) : (
+          <>
+            <LeaderboardScreen />
+            <WinnerCrown
+              winner={players.length > 0 ? [...players].sort((a, b) => b.total_points - a.total_points)[0] : null}
+              visible={showWinner}
+              onDismiss={() => setShowWinner(false)}
+            />
+          </>
+        )}
       </AppShell>
     );
   }
