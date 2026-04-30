@@ -15,7 +15,7 @@ const CAT_LABELS: Record<Category, { emoji: string; label: string; metric: strin
 interface Room {
   id: string;
   code: string;
-  status: string;
+  phase: string;
   created_at: string;
   host_name?: string | null;
 }
@@ -47,7 +47,7 @@ export default function Winners() {
     (async () => {
       const { data, error } = await supabase
         .from('rooms')
-        .select('id, code, status, created_at')
+        .select('id, code, phase, created_at')
         .order('created_at', { ascending: false })
         .limit(50);
       if (error) { setMsg({ kind: 'err', text: error.message }); return; }
@@ -129,7 +129,7 @@ export default function Winners() {
             {rooms.length === 0 && <option>No rooms yet</option>}
             {rooms.map((r) => (
               <option key={r.id} value={r.id} className="bg-euro-purple-dark">
-                {r.code} · {r.status} · {new Date(r.created_at).toLocaleDateString()}
+                {r.code} · {r.phase} · {new Date(r.created_at).toLocaleDateString()}
               </option>
             ))}
           </select>

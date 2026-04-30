@@ -34,3 +34,10 @@ dist-ssr
 # Card source PNGs — optimized JPGs are committed instead
 public/cards/_source/*.png
 public/Cards/Source/*.png
+
+# Supabase CLI local state + edge function build artifacts
+supabase/.temp/
+supabase/functions/**/*.bundled.ts
+
+# Editor backup files
+*.bak
