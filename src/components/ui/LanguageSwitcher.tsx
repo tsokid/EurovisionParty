@@ -10,7 +10,9 @@ interface Lang {
 }
 
 const LANGS: Lang[] = [
-  { code: 'en', flag: '🇬🇧', label: 'English' },
+  // Use language code (EN) instead of country flag (🇬🇧) — "English" is not
+  // bound to any single country, so a flag would mis-attribute the language.
+  { code: 'en', flag: 'EN', label: 'English' },
   { code: 'el', flag: '🇬🇷', label: 'Ελληνικά' },
 ];
 

@@ -6,22 +6,26 @@ import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
-
-const crumbs: Crumb[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Privacy', href: '/privacy' },
-];
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { copy as copyAll } from './content/privacyCopy';
 
 export default function PrivacyPage() {
+  const locale = useLocale();
+  const c = copyAll[locale];
+
+  const crumbs: Crumb[] = [
+    { label: c.breadcrumbs.home, href: '/' },
+    { label: c.breadcrumbs.privacy, href: '/privacy' },
+  ];
+
   const PUBLISHED = '2026-04-30T00:00:00Z';
   const MODIFIED = '2026-04-30T00:00:00Z';
 
   const article = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Privacy Policy — Eurovision Games',
-    description:
-      'Privacy policy for Eurovision Games: what data we collect, how we use it, retention, cookies, your GDPR rights, and how to delete your data.',
+    headline: c.meta.title,
+    description: c.meta.schemaDescription,
     image: 'https://eurovision.games/logo.png',
     author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
     publisher: {
@@ -37,23 +41,22 @@ export default function PrivacyPage() {
   const webPage = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Privacy Policy — Eurovision Games',
+    name: c.meta.title,
     url: 'https://eurovision.games/privacy',
-    description:
-      'How Eurovision Games collects, stores, and deletes player data. GDPR-compliant; no advertising; no third-party tracking.',
+    description: c.meta.webPageDescription,
     dateModified: MODIFIED,
     mainEntity: {
       '@type': 'CreativeWork',
-      name: 'Eurovision Games privacy policy',
-      about: 'Personal data handling, retention periods, and user rights on eurovision.games',
+      name: c.meta.webPageMainEntityName,
+      about: c.meta.webPageMainEntityAbout,
     },
   };
 
   return (
     <>
       <SchemaHead
-        title="Privacy Policy — Eurovision Games"
-        description="What data Eurovision Games collects, why, and how to delete it. GDPR-compliant; no ads, no third-party tracking, no data sales."
+        title={c.meta.title}
+        description={c.meta.description}
         canonical="https://eurovision.games/privacy"
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
@@ -61,175 +64,130 @@ export default function PrivacyPage() {
         ogLocaleAlternate={['el_GR']}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
-        keywords={[
-          'eurovision games privacy',
-          'privacy policy',
-          'gdpr eurovision games',
-          'data deletion eurovision games',
-          'eurovision party game privacy',
-        ]}
+        keywords={c.meta.keywords}
         jsonLd={[article, webPage, breadcrumbJsonLd(crumbs)]}
       />
 
       <PageHero
         crumbs={crumbs}
-        chip="Privacy"
+        chip={c.hero.chip}
         chipTone="purple"
-        title="Privacy policy"
-        lede="Eurovision Games is a free browser-based party game. We do not sell data, we do not run third-party advertising, and we collect the minimum needed for the game to work. Last updated 30 April 2026."
+        title={c.hero.title}
+        lede={c.hero.lede}
       />
 
       <ContentLayout>
-        <Section title="What we collect">
-          <p>
-            Three categories — what each is for, and how long we keep it. Guest players (people who join a room with
-            just a name) are not tied to identifying data on our side.
-          </p>
+        <Section title={c.whatCollect.title}>
+          <p>{c.whatCollect.intro}</p>
           <DataTable
-            headers={['Data type', 'Purpose', 'Retention']}
+            headers={c.whatCollect.headers as unknown as string[]}
             align={['left', 'left', 'left']}
-            rows={[
-              [
-                <strong key="a-d" className="text-white">Host email</strong>,
-                'Authenticate the host via one-time code (OTP). No marketing email.',
-                'Until you delete your account.',
-              ],
-              [
-                <strong key="b-d" className="text-white">Player display name</strong>,
-                'Chosen by each player joining a room. Visible to other players in the same room only.',
-                'Stripped 30 days after the room ends.',
-              ],
-              [
-                <strong key="c-d" className="text-white">Game state</strong>,
-                'Predictions, trivia answers, duel outcomes, scores. Tied to a room ID, not to identifying data for guests.',
-                'Active room + 24 hours; aggregate stats anonymised after 30 days.',
-              ],
-              [
-                <strong key="d-d" className="text-white">Browser & connection data</strong>,
-                'IP and user-agent for security and abuse prevention. Not used for cross-session tracking.',
-                'Server logs retained 14 days.',
-              ],
-            ]}
+            rows={c.whatCollect.rows.map((row, i) => [
+              <strong key={`type-${i}`} className="text-white">{row.type}</strong>,
+              row.purpose,
+              row.retention,
+            ])}
           />
         </Section>
 
-        <Section title="What we do NOT collect">
+        <Section title={c.notCollect.title}>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">No real names, addresses, phone numbers, or payment details.</strong> The game is free and there&apos;s nothing to bill.</li>
-            <li><strong className="text-white">No cross-site tracking cookies.</strong> No advertising or behavioural profiling.</li>
-            <li><strong className="text-white">No microphone or camera input.</strong> The game is text and tap only.</li>
-            <li><strong className="text-white">No data sales.</strong> Ever. We&apos;re not in that business.</li>
+            {c.notCollect.items.map((item, i) => (
+              <li key={i}>
+                <strong className="text-white">{item.bold}</strong>{item.rest}
+              </li>
+            ))}
           </ul>
         </Section>
 
-        <Section title="Who has access">
-          <p>
-            Eurovision Games runs on two infrastructure providers. No other third parties see your data.
-          </p>
+        <Section title={c.whoHasAccess.title}>
+          <p>{c.whoHasAccess.intro}</p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li>
-              <strong className="text-white">Supabase (Postgres database, auth)</strong> — stores room state, host
-              accounts, and game data. Row-level security policies prevent cross-room data access.
-            </li>
-            <li>
-              <strong className="text-white">Vercel (hosting)</strong> — serves the app and retains short-term request
-              logs for security and abuse prevention.
-            </li>
-            <li>
-              <strong className="text-white">No-one else.</strong> No analytics broker, no advertising network, no CRM,
-              no data warehouse, no third-party email provider beyond the OTP transactional sender.
-            </li>
+            {c.whoHasAccess.items.map((item, i) => (
+              <li key={i}>
+                <strong className="text-white">{item.bold}</strong>{item.rest}
+              </li>
+            ))}
           </ul>
         </Section>
 
-        <Section title="Your rights">
-          <p>
-            Under GDPR (EU) and UK GDPR, you have the right to:
-          </p>
+        <Section title={c.rights.title}>
+          <p>{c.rights.intro}</p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Access</strong> — request a copy of the data we hold about you.</li>
-            <li><strong className="text-white">Rectification</strong> — correct inaccurate or incomplete data.</li>
-            <li><strong className="text-white">Erasure</strong> — request that we delete your data (the &quot;right to be forgotten&quot;).</li>
-            <li><strong className="text-white">Portability</strong> — receive your data in a machine-readable format.</li>
-            <li><strong className="text-white">Restriction & objection</strong> — limit or object to how we process your data.</li>
-            <li><strong className="text-white">Complain</strong> — lodge a complaint with your local data protection authority.</li>
+            {c.rights.items.map((item, i) => (
+              <li key={i}>
+                <strong className="text-white">{item.bold}</strong>{item.rest}
+              </li>
+            ))}
           </ul>
           <p>
-            Email{' '}
-            <a href="mailto:privacy@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            {c.rights.contactLead}
+            <a
+              href="mailto:privacy@eurovision.games"
+              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+            >
               privacy@eurovision.games
-            </a>{' '}
-            with your request and we&apos;ll respond within 30 days.
+            </a>
+            {c.rights.contactTail}
           </p>
         </Section>
 
-        <Section title="Data deletion">
+        <Section title={c.deletion.title}>
           <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-            <h3 className="text-white font-bold text-lg mb-2">How to delete your account</h3>
+            <h3 className="text-white font-bold text-lg mb-2">{c.deletion.cardTitle}</h3>
             <p className="text-white/80 text-[15px] leading-relaxed">
-              Email{' '}
-              <a href="mailto:privacy@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+              {c.deletion.cardLead}
+              <a
+                href="mailto:privacy@eurovision.games"
+                className="text-euro-pink-light hover:text-white underline underline-offset-2"
+              >
                 privacy@eurovision.games
-              </a>{' '}
-              from the address you signed up with. We delete the host email and detach any historical room data within
-              7 days. Guest player names are stripped automatically 30 days after the room ends — you do not need to
-              ask for that.
+              </a>
+              {c.deletion.cardTail}
             </p>
           </div>
-          <p>
-            If you joined a room as a guest and want your display name removed sooner, ask the room host to delete the
-            room (they can do that from the host dashboard) or email us with the room code.
-          </p>
+          <p>{c.deletion.note}</p>
         </Section>
 
-        <Section title="Cookies">
+        <Section title={c.cookies.title}>
           <p>
-            We use one strictly-necessary cookie category to keep your session alive (room code, language, consent
-            choice). Analytics cookies are off by default and opt-in. No advertising cookies, no cross-site tracking.
-            Full breakdown on the{' '}
+            {c.cookies.lead}
             <a href="/cookies" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-              cookies page
+              {c.cookies.linkLabel}
             </a>
-            .
+            {c.cookies.tail}
           </p>
         </Section>
 
-        <Section title="Children">
-          <p>
-            Eurovision Games is not directed at children under 13. Hosts should be adults; children playing in a hosted
-            room do so under the host&apos;s supervision.
-          </p>
+        <Section title={c.children.title}>
+          <p>{c.children.body}</p>
         </Section>
 
-        <Section title="Changes to this policy">
-          <p>
-            If we change this policy, we&apos;ll update the &quot;Last updated&quot; date in the hero above and post a note
-            in the FAQ. Material changes will be highlighted at the top of this page for at least 30 days.
-          </p>
+        <Section title={c.changes.title}>
+          <p>{c.changes.body}</p>
         </Section>
 
-        <Section title="Contact">
+        <Section title={c.contact.title}>
           <p>
-            Privacy questions and data requests:{' '}
-            <a href="mailto:privacy@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-              privacy@eurovision.games
+            {c.contact.lead}
+            <a
+              href="mailto:privacy@eurovision.games"
+              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+            >
+              {c.contact.privacyEmail}
             </a>
-            . General contact:{' '}
-            <a href="mailto:hello@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-              hello@eurovision.games
+            {c.contact.mid}
+            <a
+              href="mailto:hello@eurovision.games"
+              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+            >
+              {c.contact.generalEmail}
             </a>
-            . We aim to reply within 3 business days; during Eurovision week (May), within 24 hours.
+            {c.contact.tail}
           </p>
         </Section>
 
-        <RelatedCards
-          items={[
-            { href: '/cookies', title: 'Cookies & consent', blurb: 'What we store, how to flip analytics off, and where the data lives.' },
-            { href: '/terms', title: 'Terms of use', blurb: 'Player conduct, host responsibilities, and the EBU trademark disclaimer.' },
-            { href: '/about', title: 'About Eurovision Games', blurb: 'Why this exists, who built it, and the no-ads philosophy.' },
-            { href: '/faq', title: 'FAQ', blurb: 'Hosting, scoring, leaving rooms, and other common questions.' },
-          ]}
-        />
+        <RelatedCards items={c.related} />
       </ContentLayout>
       <SiteFooter />
     </>

@@ -5,22 +5,26 @@ import ContentLayout from '../../components/seo/ContentLayout';
 import Section from '../../components/seo/Section';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
-
-const crumbs: Crumb[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Terms', href: '/terms' },
-];
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { copy as copyAll } from './content/termsCopy';
 
 export default function TermsPage() {
+  const locale = useLocale();
+  const c = copyAll[locale];
+
+  const crumbs: Crumb[] = [
+    { label: c.breadcrumbs.home, href: '/' },
+    { label: c.breadcrumbs.terms, href: '/terms' },
+  ];
+
   const PUBLISHED = '2026-04-30T00:00:00Z';
   const MODIFIED = '2026-04-30T00:00:00Z';
 
   const article = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Terms of Use — Eurovision Games',
-    description:
-      'Terms of use for Eurovision Games: who we are, free-to-use rules, player conduct, account & rooms, disclaimer of warranties, limitation of liability, and the EBU trademark disclaimer.',
+    headline: c.meta.title,
+    description: c.meta.schemaDescription,
     image: 'https://eurovision.games/logo.png',
     author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
     publisher: {
@@ -36,23 +40,22 @@ export default function TermsPage() {
   const webPage = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Terms of Use — Eurovision Games',
+    name: c.meta.title,
     url: 'https://eurovision.games/terms',
-    description:
-      'Terms governing use of the Eurovision Games browser party game. Free, fan-made, not affiliated with the European Broadcasting Union.',
+    description: c.meta.webPageDescription,
     dateModified: MODIFIED,
     mainEntity: {
       '@type': 'CreativeWork',
-      name: 'Eurovision Games terms of use',
-      about: 'User agreement for the eurovision.games browser game',
+      name: c.meta.webPageMainEntityName,
+      about: c.meta.webPageMainEntityAbout,
     },
   };
 
   return (
     <>
       <SchemaHead
-        title="Terms of Use — Eurovision Games"
-        description="The agreement you accept when you use Eurovision Games. Free fan project, no affiliation with the EBU, player conduct rules and liability disclaimers."
+        title={c.meta.title}
+        description={c.meta.description}
         canonical="https://eurovision.games/terms"
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
@@ -60,164 +63,148 @@ export default function TermsPage() {
         ogLocaleAlternate={['el_GR']}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
-        keywords={[
-          'eurovision games terms',
-          'terms of use',
-          'eurovision party game terms',
-          'eurovision games disclaimer',
-          'fan game terms',
-        ]}
+        keywords={c.meta.keywords}
         jsonLd={[article, webPage, breadcrumbJsonLd(crumbs)]}
       />
 
       <PageHero
         crumbs={crumbs}
-        chip="Terms of use"
+        chip={c.hero.chip}
         chipTone="purple"
-        title="Terms of use"
-        lede="By using Eurovision Games you agree to these terms. The short version: it's a free fan project, play nicely, and we're not affiliated with the European Broadcasting Union. Last updated 30 April 2026."
+        title={c.hero.title}
+        lede={c.hero.lede}
       />
 
       <ContentLayout>
-        <Section title="Who we are">
+        <Section title={c.whoWeAre.title}>
           <p>
-            Eurovision Games (&quot;the Service&quot;, &quot;we&quot;, &quot;us&quot;) is an independent fan-built browser
-            party game for the Eurovision Song Contest. The Service is operated by the Eurovision Games maintainers and
-            is not a registered company, broadcaster, or commercial product. Contact:{' '}
-            <a href="mailto:hello@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            {c.whoWeAre.lead}
+            <a
+              href="mailto:hello@eurovision.games"
+              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+            >
               hello@eurovision.games
             </a>
-            .
+            {c.whoWeAre.contactTail}
           </p>
         </Section>
 
-        <Section title="Free to use">
-          <p>
-            The Service is free. There is no subscription, no in-app purchase, no paid tier, and no advertising. You
-            may use it for private Eurovision watch parties at no cost. Commercial use — paid Eurovision events,
-            broadcast use, sponsored play — requires written permission from the maintainers.
-          </p>
+        <Section title={c.free.title}>
+          <p>{c.free.intro}</p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">No fees.</strong> We do not charge to host or join a room.</li>
-            <li><strong className="text-white">No accounts for guests.</strong> Hosts authenticate via email OTP; guests join with a display name.</li>
-            <li><strong className="text-white">No download.</strong> Everything runs in your browser.</li>
+            {c.free.items.map((item, i) => (
+              <li key={i}>
+                <strong className="text-white">{item.bold}</strong>{item.rest}
+              </li>
+            ))}
           </ul>
         </Section>
 
-        <Section title="Player conduct">
-          <p>By using the Service, you agree not to:</p>
+        <Section title={c.conduct.title}>
+          <p>{c.conduct.intro}</p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Harass, threaten, or harm</strong> other players, in display names, in chat-like fields, or anywhere else.</li>
-            <li><strong className="text-white">Cheat or exploit.</strong> No automated tools, scripts, scrapers, or attempts to manipulate scoring beyond the in-game rules.</li>
-            <li><strong className="text-white">Impersonate</strong> another person, broadcaster, artist, or the Service itself.</li>
-            <li><strong className="text-white">Access rooms</strong> you have not been invited to, attempt to bypass row-level security, or reverse-engineer the Service.</li>
-            <li><strong className="text-white">Use the Service for hate speech</strong>, illegal content, or harassment of any group.</li>
+            {c.conduct.items.map((item, i) => (
+              <li key={i}>
+                <strong className="text-white">{item.bold}</strong>{item.rest}
+              </li>
+            ))}
           </ul>
-          <p>
-            We can suspend or remove access for violations — especially harassment or scale abuse — without notice.
-          </p>
+          <p>{c.conduct.closer}</p>
         </Section>
 
-        <Section title="Account & rooms">
-          <p>
-            Hosts authenticate via email one-time code. The host owns the room: they can change settings, advance the
-            game phase, and delete the room. Guests join with a display name visible only to other players in the same
-            room.
-          </p>
+        <Section title={c.account.title}>
+          <p>{c.account.intro}</p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Host responsibilities.</strong> The host is responsible for sharing the room code with the right people and removing anyone who breaks player conduct rules.</li>
-            <li><strong className="text-white">RLS protects data.</strong> Row-level security policies in the database prevent cross-room data access; players only see their own room.</li>
-            <li><strong className="text-white">Account deletion.</strong> Hosts can delete their account at any time by emailing{' '}
-              <a href="mailto:privacy@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            {c.account.items.map((item, i) => (
+              <li key={i}>
+                <strong className="text-white">{item.bold}</strong>{item.rest}
+              </li>
+            ))}
+            <li>
+              <strong className="text-white">{c.account.deletionItem.bold}</strong>
+              {c.account.deletionItem.lead}
+              <a
+                href="mailto:privacy@eurovision.games"
+                className="text-euro-pink-light hover:text-white underline underline-offset-2"
+              >
                 privacy@eurovision.games
-              </a>{' '}
-              — see the{' '}
+              </a>
+              {c.account.deletionItem.mid}
               <a href="/privacy" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-                Privacy Policy
-              </a>{' '}
-              for retention details.
+                {c.account.deletionItem.linkLabel}
+              </a>
+              {c.account.deletionItem.tail}
             </li>
           </ul>
         </Section>
 
-        <Section title="User content">
+        <Section title={c.userContent.title}>
           <p>
-            Names, predictions, trivia answers, and similar content you enter remain your own. By entering them you
-            grant the Service a non-exclusive, free licence to display them to other players in the same room and to
-            store them for the retention periods listed in the{' '}
+            {c.userContent.lead}
             <a href="/privacy" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-              Privacy Policy
+              {c.userContent.linkLabel}
             </a>
-            . You are responsible for ensuring you have the right to use any name, nickname, or input you provide.
+            {c.userContent.tail}
           </p>
         </Section>
 
-        <Section title="Disclaimer of warranties">
+        <Section title={c.warranties.title}>
           <p>
-            The Service is provided <strong className="text-white">&quot;as is&quot;</strong> and{' '}
-            <strong className="text-white">&quot;as available&quot;</strong>, without warranties of any kind, express or
-            implied. We aim for high uptime — especially during Eurovision week — but we do not guarantee
-            uninterrupted, error-free, or bug-free operation. Scheduled maintenance, broadcast-day load spikes, or
-            upstream provider outages may briefly affect play.
+            {c.warranties.lead}
+            <strong className="text-white">{c.warranties.asIs}</strong>
+            {c.warranties.mid}
+            <strong className="text-white">{c.warranties.asAvailable}</strong>
+            {c.warranties.tail}
           </p>
         </Section>
 
-        <Section title="Limitation of liability">
-          <p>
-            To the maximum extent permitted by law, Eurovision Games and its maintainers are not liable for indirect,
-            incidental, consequential, or punitive damages arising from use of the Service — including (without
-            limitation) lost predictions, missed trivia points, ruined parties, or interrupted broadcasts. The Service
-            is free; total aggregate liability is limited to the fees you paid to use it (which is zero).
-          </p>
+        <Section title={c.liability.title}>
+          <p>{c.liability.body}</p>
         </Section>
 
-        <Section title="Eurovision Song Contest disclaimer">
+        <Section title={c.ebu.title}>
           <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-            <h3 className="text-white font-bold text-lg mb-2">Not affiliated with the EBU</h3>
+            <h3 className="text-white font-bold text-lg mb-2">{c.ebu.cardTitle}</h3>
             <p className="text-white/85 text-[15px] leading-relaxed">
-              Eurovision Games is an independent fan project. <strong className="text-white">We are not affiliated
-              with, endorsed by, or sponsored by the European Broadcasting Union, the Eurovision Song Contest, the
-              host broadcaster, or any participating broadcaster.</strong> The trademark &quot;Eurovision&quot; and the
-              official Eurovision Song Contest branding belong to the EBU. We use &quot;Eurovision&quot;
-              descriptively only — to indicate the broadcast this game is designed to accompany. Country names, song
-              titles, artist names, and related marks remain the property of their respective owners.
+              {c.ebu.body}
+              <strong className="text-white">{c.ebu.bodyBold}</strong>
+              {c.ebu.bodyTail}
             </p>
           </div>
         </Section>
 
-        <Section title="Changes to these terms">
+        <Section title={c.changes.title}>
+          <p>{c.changes.body}</p>
+        </Section>
+
+        <Section title={c.contact.title}>
           <p>
-            We can update these terms at any time. Material changes will be announced in the FAQ and reflected in the
-            &quot;Last updated&quot; date in the hero above. Continued use of the Service after a material change
-            constitutes acceptance of the updated terms.
+            {c.contact.lead}
+            <a
+              href="mailto:hello@eurovision.games"
+              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+            >
+              {c.contact.helloEmail}
+            </a>
+            {c.contact.mid1}
+            <a
+              href="mailto:privacy@eurovision.games"
+              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+            >
+              {c.contact.privacyEmail}
+            </a>
+            {c.contact.mid2}
+            <a
+              href="mailto:legal@eurovision.games"
+              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+            >
+              {c.contact.legalEmail}
+            </a>
+            {c.contact.tail}
           </p>
         </Section>
 
-        <Section title="Contact">
-          <p>
-            General contact and bug reports:{' '}
-            <a href="mailto:hello@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-              hello@eurovision.games
-            </a>
-            . Privacy and data requests:{' '}
-            <a href="mailto:privacy@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-              privacy@eurovision.games
-            </a>
-            . DMCA / copyright notices:{' '}
-            <a href="mailto:legal@eurovision.games" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-              legal@eurovision.games
-            </a>
-            .
-          </p>
-        </Section>
-
-        <RelatedCards
-          items={[
-            { href: '/privacy', title: 'Privacy policy', blurb: 'Data we collect, retention, your GDPR rights, and how to delete your data.' },
-            { href: '/cookies', title: 'Cookies & consent', blurb: 'What we store, how to flip analytics off, and where the data lives.' },
-            { href: '/about', title: 'About Eurovision Games', blurb: 'Why this exists, who built it, and the no-ads, no-accounts philosophy.' },
-          ]}
-        />
+        <RelatedCards items={c.related} />
       </ContentLayout>
       <SiteFooter />
     </>

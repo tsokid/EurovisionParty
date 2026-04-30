@@ -8,44 +8,38 @@ import FaqAccordion from '../../components/seo/FaqAccordion';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
-import { COUNTRIES_2026 as CANON, BOYCOTTING_2026 } from '../../lib/countries2026';
-
-// Build the display list straight off the canonical participant table so the
-// SEO copy can never drift from the actual game line-up. Sorted alphabetically
-// and host (Austria) tagged inline for clarity.
-const COUNTRIES_2026 = [...CANON]
-  .map((c) => (c.semi === 'host' ? `${c.name} (host)` : c.name))
-  .sort((a, b) => a.localeCompare(b));
-
-const crumbs: Crumb[] = [
-  { label: 'Home', href: '/' },
-  { label: '2026 predictions', href: '/eurovision-2026-predictions' },
-];
-
-const FAQ = [
-  {
-    q: 'Can I change my list?',
-    a: 'Up until the host advances the phase. After that, locked.',
-  },
-  {
-    q: 'What about semi-final exits?',
-    a: 'Eurovision Games scores against the grand-final result. Countries that don\u2019t qualify count as "outside Top 5" — zero points if you picked them.',
-  },
-  {
-    q: 'How does the app know the results?',
-    a: 'The host enters jury and televote results live during the show; or the auto-parser pulls them from the official source.',
-  },
-];
+import { COUNTRIES_2026 as CANON } from '../../lib/countries2026';
+import { getLocalizedCountryName } from '../../lib/countryLocale';
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { copy as copyAll } from './content/predictionsCopy';
 
 export default function Predictions2026Page() {
+  const locale = useLocale();
+  const c = copyAll[locale];
+
+  // Build the display list straight off the canonical participant table so the
+  // SEO copy can never drift from the actual game line-up. Sorted alphabetically
+  // and host (Austria) tagged inline for clarity.
+  const COUNTRIES_2026 = [...CANON]
+    .map((country) => {
+      const name = getLocalizedCountryName(country);
+      return country.semi === 'host' ? `${name}${c.sections.lineup.hostSuffix}` : name;
+    })
+    .sort((a, b) => a.localeCompare(b, locale));
+
+  const crumbs: Crumb[] = [
+    { label: c.crumbs.home, href: '/' },
+    { label: c.crumbs.predictions, href: '/eurovision-2026-predictions' },
+  ];
+
   const PUBLISHED = '2026-04-30T00:00:00Z';
   const MODIFIED = '2026-04-30T00:00:00Z';
 
   const article = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Eurovision 2026 Predictions — Top 5 / Worst 5 Format',
-    description: 'A complete predictions guide for Eurovision 2026 in Vienna: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips.',
+    headline: c.meta.schemaTitle,
+    description: c.meta.schemaDescription,
     image: 'https://eurovision.games/logo.png',
     author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
     publisher: {
@@ -60,7 +54,7 @@ export default function Predictions2026Page() {
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: FAQ.map((f) => ({
+    mainEntity: c.faq.map((f) => ({
       '@type': 'Question',
       name: f.q,
       acceptedAnswer: { '@type': 'Answer', text: f.a },
@@ -70,121 +64,119 @@ export default function Predictions2026Page() {
   return (
     <>
       <SchemaHead
-        title="Eurovision 2026 Predictions — Top 5 / Worst 5 Format & Strategy"
-        description="A complete predictions guide for Eurovision 2026 in Vienna: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips."
+        title={c.meta.title}
+        description={c.meta.description}
         canonical="https://eurovision.games/eurovision-2026-predictions"
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
-        ogLocale="en_US"
-        ogLocaleAlternate={['el_GR']}
+        ogLocale={locale === 'el' ? 'el_GR' : 'en_US'}
+        ogLocaleAlternate={[locale === 'el' ? 'en_US' : 'el_GR']}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
-        keywords={[
-          'eurovision 2026 predictions',
-          'eurovision 2026 top 5',
-          'eurovision 2026 worst 5',
-          'eurovision predictions game',
-          'eurovision 2026 lineup',
-        ]}
+        keywords={c.meta.keywords}
         jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs)]}
       />
 
       <PageHero
         crumbs={crumbs}
-        chip="2026 format"
+        chip={c.hero.chip}
         chipTone="purple"
-        title="Eurovision 2026 predictions — Top 5 and Worst 5 format"
-        lede="Eurovision 2026 takes place in Vienna, Austria on Saturday 16 May 2026, hosted by ORF after JJ&apos;s 2025 win in Basel. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before the show starts, then watches them auto-score against the official jury and televote results in real time."
+        title={c.hero.title}
+        lede={c.hero.lede}
       />
 
       <ContentLayout>
-        <Section title="The 2026 line-up">
-          <p>
-            {COUNTRIES_2026.length} countries are confirmed for Eurovision 2026 across two semi-finals and the grand final:
-          </p>
+        <Section title={c.sections.lineup.title}>
+          <p>{c.sections.lineup.intro(COUNTRIES_2026.length)}</p>
           <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5 text-white/80">
-            {COUNTRIES_2026.map((c) => (
-              <li key={c}>{c}</li>
+            {COUNTRIES_2026.map((country) => (
+              <li key={country}>{country}</li>
             ))}
           </ul>
           <p className="text-sm text-white/60">
-            Withdrawn / boycotting in 2026: {BOYCOTTING_2026.join(', ')}. Spain&apos;s exit shrinks the &quot;Big Five&quot; to a Big
-            Four (France, Germany, Italy, United Kingdom).
+            {c.sections.lineup.withdrawnPre}
+            {c.withdrawn.join(', ')}
+            {c.sections.lineup.withdrawnPost}
           </p>
-          <p className="text-sm text-white/60">
-            The grand-final running order is fixed after the second semi-final; this page updates with live entries once the parser
-            publishes them.
-          </p>
+          <p className="text-sm text-white/60">{c.sections.lineup.runningOrder}</p>
         </Section>
 
-        <Section title="Prediction format">
-          <p>Each player builds two lists before the host advances the lobby phase:</p>
+        <Section title={c.sections.format.title}>
+          <p>{c.sections.format.intro}</p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Top 5</strong> — five countries you think will finish highest in the combined jury + televote.</li>
-            <li><strong className="text-white">Worst 5</strong> — five countries you think will finish lowest.</li>
+            <li><strong className="text-white">{c.sections.format.top5Label}</strong> — {c.sections.format.top5Body}</li>
+            <li><strong className="text-white">{c.sections.format.worst5Label}</strong> — {c.sections.format.worst5Body}</li>
           </ul>
           <p>
-            Lists are <strong className="text-white">ordered</strong>: a #1 pick that wins scores more than a #5 pick that wins. You cannot put the same
-            country in both lists. Lists lock when the host clicks <em>Advance to Predictions Locked</em>.
+            {c.sections.format.orderedPre}
+            <strong className="text-white">{c.sections.format.orderedEm}</strong>
+            {c.sections.format.orderedPost}
           </p>
         </Section>
 
-        <Section title="Scoring — Top 5">
-          <p>For each Top-5 pick, you score against the official combined jury + televote ranking:</p>
+        <Section title={c.sections.scoringTop5.title}>
+          <p>{c.sections.scoringTop5.intro}</p>
           <DataTable
-            headers={['Result', 'Points']}
+            headers={[c.sections.scoringTop5.headers.result, c.sections.scoringTop5.headers.points]}
             align={['left', 'right']}
             rows={[
-              ['Country at the exact position you predicted', <strong key="a" className="text-white">50</strong>],
-              ['Country in the official Top 5 but at a different position', <strong key="b" className="text-white">20</strong>],
-              ['Country outside the Top 5', <span key="c" className="text-white/50">0</span>],
+              [c.sections.scoringTop5.rows.exact, <strong key="a" className="text-white">50</strong>],
+              [c.sections.scoringTop5.rows.inListWrong, <strong key="b" className="text-white">20</strong>],
+              [c.sections.scoringTop5.rows.outside, <span key="c" className="text-white/50">0</span>],
             ]}
           />
-          <p>Maximum Top-5 points: 5 exact positions × 50 = <strong className="text-white">250</strong>.</p>
+          <p>
+            {c.sections.scoringTop5.max.pre}
+            <strong className="text-white">{c.sections.scoringTop5.max.post}</strong>.
+          </p>
         </Section>
 
-        <Section title="Scoring — Worst 5">
-          <p>Worst-5 is symmetrical — last place counts as position 1 in your list:</p>
+        <Section title={c.sections.scoringWorst5.title}>
+          <p>{c.sections.scoringWorst5.intro}</p>
           <DataTable
-            headers={['Result', 'Points']}
+            headers={[c.sections.scoringWorst5.headers.result, c.sections.scoringWorst5.headers.points]}
             align={['left', 'right']}
             rows={[
-              ['Country at the exact bottom position you predicted', <strong key="a" className="text-white">50</strong>],
-              ['Country in the official Worst 5 but at a different position', <strong key="b" className="text-white">20</strong>],
-              ['Country outside the Worst 5', <span key="c" className="text-white/50">0</span>],
+              [c.sections.scoringWorst5.rows.exact, <strong key="a" className="text-white">50</strong>],
+              [c.sections.scoringWorst5.rows.inListWrong, <strong key="b" className="text-white">20</strong>],
+              [c.sections.scoringWorst5.rows.outside, <span key="c" className="text-white/50">0</span>],
             ]}
           />
-          <p>Maximum Worst-5 points: <strong className="text-white">250</strong>. Combined predictions cap: <strong className="text-white">500</strong>.</p>
+          <p>
+            {c.sections.scoringWorst5.max.pre}
+            <strong className="text-white">{c.sections.scoringWorst5.max.cap}</strong>.
+          </p>
         </Section>
 
-        <Section title="Strategy tips">
+        <Section title={c.sections.strategy.title}>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Trust the betting markets, but don&apos;t copy them.</strong> Top-3 favourites usually deliver, but the #4-#10 range is where rankings re-shuffle wildly between jury and televote.</li>
-            <li><strong className="text-white">Worst 5 is where games are won.</strong> Most players over-think the top and ignore the bottom. Three correct Worst-5 picks = 30 free points.</li>
-            <li><strong className="text-white">Watch the semi-final running order.</strong> Late slots in the second semi tend to make grand-final spots they don&apos;t deserve — they&apos;re fresh in jury memory.</li>
-            <li><strong className="text-white">Don&apos;t bet against the host.</strong> Austria 2026 won&apos;t win, but they probably won&apos;t bottom either.</li>
+            {c.sections.strategy.tips.map((tip, i) => (
+              <li key={i}>
+                <strong className="text-white">{tip.strong}</strong>{tip.rest}
+              </li>
+            ))}
           </ul>
         </Section>
 
-        <Section title="Frequently asked questions">
-          <FaqAccordion items={FAQ} />
+        <Section title={c.sections.faqTitle}>
+          <FaqAccordion items={c.faq} />
         </Section>
 
         <CtaBanner
-          title="Lock your Top 5 before kick-off"
-          body="Create a room and invite up to 19 friends to predict."
-          primary={{ label: 'Create', href: '/' }}
-          secondary={{ label: 'How to play', href: '/how-to-play' }}
+          title={c.cta.title}
+          body={c.cta.body}
+          primary={{ label: c.cta.primary, href: '/' }}
+          secondary={{ label: c.cta.secondary, href: '/how-to-play' }}
         />
 
         <RelatedCards
           items={[
-            { href: '/eurovision-night', title: 'Eurovision night', blurb: 'The 10-step playbook for hosting a watch party.' },
-            { href: '/eurovision-trivia', title: 'Eurovision trivia', blurb: '10 sample questions and how the live bank works.' },
-            { href: '/duels', title: 'Eurovision duels', blurb: 'Head-to-head 3-question duels during the live show.' },
-            { href: '/scoring', title: 'Scoring formulas', blurb: 'Where predictions, duels, and quiz feed into the Champion total.' },
-            { href: '/how-to-play', title: 'How to play', blurb: 'The 60-second walkthrough from create-room to trophy reveal.' },
-            { href: '/faq', title: 'FAQ', blurb: 'Answers to common questions about hosting, joining, and scoring.' },
+            { href: '/eurovision-night', title: c.related.night.title, blurb: c.related.night.blurb },
+            { href: '/eurovision-trivia', title: c.related.trivia.title, blurb: c.related.trivia.blurb },
+            { href: '/duels', title: c.related.duels.title, blurb: c.related.duels.blurb },
+            { href: '/scoring', title: c.related.scoring.title, blurb: c.related.scoring.blurb },
+            { href: '/how-to-play', title: c.related.howToPlay.title, blurb: c.related.howToPlay.blurb },
+            { href: '/faq', title: c.related.faq.title, blurb: c.related.faq.blurb },
           ]}
         />
       </ContentLayout>

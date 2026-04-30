@@ -8,40 +8,26 @@ import FaqAccordion from '../../components/seo/FaqAccordion';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
-
-const crumbs: Crumb[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Duels', href: '/duels' },
-];
-
-const FAQ = [
-  {
-    q: 'What is a Eurovision duel?',
-    a: 'A duel is a 3-question, head-to-head trivia battle between two players in the same Eurovision Games room. The winner can either steal points from the loser or double their own points. Duels happen live during the show — typically during ad breaks or postcard interludes.',
-  },
-  {
-    q: 'When can I duel?',
-    a: 'Duels unlock from the Live Show phase and stay open through results. They are locked during Preshow (lobby + predictions). Quiz mode is also locked once Live Show starts — duels replace it.',
-  },
-  {
-    q: 'How many duels can I have with one person?',
-    a: 'The host sets a per-pair cap when creating the room (default 3, max 10). The cap counts rematches, so you cannot grind one opponent for points all night.',
-  },
-  {
-    q: 'How are duel points calculated?',
-    a: 'Each correct answer scores 12 minus elapsed seconds (12 at 0s, 1 at 11s, 0 after 12s or wrong). Whoever has the higher answer total wins the duel and gets a flat +12 bonus on top. The winner then chooses Steal (take winner_score from the loser) or Double (add winner_score to themselves).',
-  },
-];
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { copy as copyAll } from './content/duelsCopy';
 
 export default function EurovisionDuelsPage() {
+  const locale = useLocale();
+  const c = copyAll[locale];
+
+  const crumbs: Crumb[] = [
+    { label: c.crumbs.home, href: '/' },
+    { label: c.crumbs.duels, href: '/duels' },
+  ];
+
   const PUBLISHED = '2026-04-30T00:00:00Z';
   const MODIFIED = '2026-04-30T00:00:00Z';
 
   const article = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Eurovision Duels — Head-to-Head Trivia During the Live Show',
-    description: 'Rules, scoring, and strategy for 3-question head-to-head Eurovision trivia duels. Steal points or double your own.',
+    headline: c.meta.schemaTitle,
+    description: c.meta.schemaDescription,
     image: 'https://eurovision.games/logo.png',
     author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
     publisher: {
@@ -56,7 +42,7 @@ export default function EurovisionDuelsPage() {
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: FAQ.map((f) => ({
+    mainEntity: c.faq.map((f) => ({
       '@type': 'Question',
       name: f.q,
       acceptedAnswer: { '@type': 'Answer', text: f.a },
@@ -65,149 +51,159 @@ export default function EurovisionDuelsPage() {
   const howTo = {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
-    name: 'How to win a Eurovision duel',
-    description: 'A 3-question, 12-second-per-question head-to-head trivia battle. Speed plus accuracy wins; Steal or Double doubles down.',
+    name: c.meta.howToName,
+    description: c.meta.howToDescription,
     totalTime: 'PT2M',
-    step: [
-      { '@type': 'HowToStep', name: 'Pick an opponent', text: 'During the Live Show phase, tap any other player\u2019s name in the room and choose Challenge.' },
-      { '@type': 'HowToStep', name: 'Answer fast', text: 'Each correct answer scores 12 minus elapsed seconds. A 1-second hesitation costs a full point.' },
-      { '@type': 'HowToStep', name: 'Win on total', text: 'Highest answer total wins the duel and gets a flat +12 win bonus.' },
-      { '@type': 'HowToStep', name: 'Steal or Double', text: 'Winner picks: Steal takes points from the loser, Double adds points to themselves. Loser keeps points if Double.' },
-    ],
+    step: c.howToSteps.map((s) => ({
+      '@type': 'HowToStep',
+      name: s.name,
+      text: s.text,
+    })),
   };
 
   return (
     <>
       <SchemaHead
-        title="Eurovision Duels \u2014 Head-to-Head Trivia for the Live Show"
-        description="Challenge friends to 3-question Eurovision trivia duels during the live show. Steal their points or double your own. Full rules, scoring, and strategy."
+        title={c.meta.title}
+        description={c.meta.description}
         canonical="https://eurovision.games/duels"
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
-        ogLocale="en_US"
-        ogLocaleAlternate={['el_GR']}
+        ogLocale={locale === 'el' ? 'el_GR' : 'en_US'}
+        ogLocaleAlternate={[locale === 'el' ? 'en_US' : 'el_GR']}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
-        keywords={[
-          'eurovision duels', 'eurovision trivia game', 'head to head eurovision quiz',
-          'eurovision party game', 'steal points eurovision', 'eurovision live show game',
-        ]}
+        keywords={c.meta.keywords}
         jsonLd={[article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs)]}
       />
 
       <PageHero
         crumbs={crumbs}
-        chip="Live-show feature"
+        chip={c.hero.chip}
         chipTone="purple"
-        title="Eurovision duels — head-to-head trivia during the live show"
-        lede="A duel turns the dead air between performances into a battlefield. Challenge anyone in your room to a 3-question Eurovision trivia fight — winner steals their points or doubles their own. Two of the five end-of-night trophies (Duelist, Thief) are decided here."
+        title={c.hero.title}
+        lede={c.hero.lede}
       />
 
       <ContentLayout>
-        <Section title="What is a Eurovision duel?">
+        <Section title={c.sections.whatIs.title}>
           <p>
-            A duel is a private 3-question Eurovision trivia round between exactly two players in the same room.
-            Both players answer the same questions on a 12-second timer. The first question fires once the challenger
-            accepts; everyone else in the room sees a discreet <em>&quot;duel in progress&quot;</em> chip but the
-            questions stay private until the duel ends.
+            {c.sections.whatIs.bodyPre}
+            <em>{c.sections.whatIs.bodyEm}</em>
+            {c.sections.whatIs.bodyPost}
           </p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">3 questions.</strong> Pulled from the Eurovision trivia bank, weighted toward the room&apos;s decade preference.</li>
-            <li><strong className="text-white">12 seconds per question.</strong> Score = 12 minus elapsed seconds, rounded down. Wrong or out of time = 0.</li>
-            <li><strong className="text-white">Winner takes the bigger answer total</strong> — plus a flat +12 win bonus.</li>
-            <li><strong className="text-white">Steal or Double.</strong> Winner picks one. Loser keeps their points if Double; loses up to <em>winner_score</em> if Steal.</li>
+            {c.sections.whatIs.bullets.map((b, i) => (
+              <li key={i}>
+                <strong className="text-white">{b.strong}</strong>{b.rest}
+              </li>
+            ))}
           </ul>
         </Section>
 
-        <Section title="When duels are available">
+        <Section title={c.sections.when.title}>
           <p>
-            Duels unlock from the <strong className="text-white">Live Show</strong> phase onward. During the
-            <strong className="text-white"> Preshow</strong> phase (lobby + predictions) all duel buttons are inactive — that&apos;s
-            also when Quiz mode is open. Once the broadcast starts and the host advances to Live Show, Quiz locks and
-            duels open. Both stay open through Results and Winners reveal.
+            {c.sections.when.body1Pre}
+            <strong className="text-white">{c.sections.when.body1Strong1}</strong>
+            {c.sections.when.body1Mid}
+            <strong className="text-white">{c.sections.when.body1Strong2}</strong>
+            {c.sections.when.body1Post}
           </p>
           <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6 text-[16px]">
             <p className="text-white/85">
-              <strong className="text-white">Phase rule of thumb:</strong> Quiz is the warm-up, duels are the main event.
-              You build score with predictions before the show, defend it with quiz before kick-off, then attack rivals
-              with duels during commercial breaks.
+              <strong className="text-white">{c.sections.when.ruleOfThumbStrong}</strong>
+              {c.sections.when.ruleOfThumbBody}
             </p>
           </div>
         </Section>
 
-        <Section title="Scoring math">
-          <p>The formula rewards speed and accuracy equally — a half-second hesitation costs you a point.</p>
+        <Section title={c.sections.scoring.title}>
+          <p>{c.sections.scoring.intro}</p>
           <DataTable
-            headers={['Scenario', 'Points']}
+            headers={[c.sections.scoring.headers.scenario, c.sections.scoring.headers.points]}
             align={['left', 'right']}
             rows={[
-              ['Correct answer at 0–1 seconds', <strong key="a" className="text-white">11–12</strong>],
-              ['Correct answer at 5 seconds', <strong key="b" className="text-white">7</strong>],
-              ['Correct answer at 11 seconds', <strong key="c" className="text-white">1</strong>],
-              ['Wrong / timeout', <span key="d" className="text-white/50">0</span>],
-              ['Win bonus', <strong key="e" className="text-euro-pink-light">+12</strong>],
+              [c.sections.scoring.rows.zeroToOne, <strong key="a" className="text-white">11–12</strong>],
+              [c.sections.scoring.rows.five, <strong key="b" className="text-white">7</strong>],
+              [c.sections.scoring.rows.eleven, <strong key="c" className="text-white">1</strong>],
+              [c.sections.scoring.rows.wrong, <span key="d" className="text-white/50">0</span>],
+              [c.sections.scoring.rows.winBonus, <strong key="e" className="text-euro-pink-light">+12</strong>],
             ]}
           />
           <p>
-            The winner&apos;s total earned that duel is called <em>winner_score</em>. They then pick:
+            {c.sections.scoring.winnerScorePre}
+            <em>{c.sections.scoring.winnerScoreEm}</em>
+            {c.sections.scoring.winnerScorePost}
           </p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Steal</strong> — take <em>winner_score</em> from the loser&apos;s banked total. Capped at what the loser actually has (you cannot take them below zero).</li>
-            <li><strong className="text-white">Double</strong> — add another <em>winner_score</em> to yourself. Loser keeps their score.</li>
+            <li>
+              <strong className="text-white">{c.sections.scoring.stealLabel}</strong>
+              {c.sections.scoring.stealBodyPre}
+              <em>{c.sections.scoring.stealBodyEm}</em>
+              {c.sections.scoring.stealBodyPost}
+            </li>
+            <li>
+              <strong className="text-white">{c.sections.scoring.doubleLabel}</strong>
+              {c.sections.scoring.doubleBodyPre}
+              <em>{c.sections.scoring.doubleBodyEm}</em>
+              {c.sections.scoring.doubleBodyPost}
+            </li>
           </ul>
         </Section>
 
-        <Section title="Steal vs Double — when each one wins">
+        <Section title={c.sections.stealVsDouble.title}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.05] p-6">
-              <h3 className="text-white font-bold text-lg mb-2">⚔️ Steal</h3>
+              <h3 className="text-white font-bold text-lg mb-2">{c.sections.stealVsDouble.stealHeading}</h3>
               <p className="text-white/80 text-[15px] leading-relaxed">
-                Zero-sum swing — your gain is matched by their loss. Use it when overtaking the leader matters more
-                than the absolute gain (mid-show, leaderboard tight, you&apos;re second by 30 points).
+                {c.sections.stealVsDouble.stealBody}
               </p>
             </div>
             <div className="rounded-2xl border border-euro-purple-light/30 bg-euro-purple-light/[0.05] p-6">
-              <h3 className="text-white font-bold text-lg mb-2">✨ Double</h3>
+              <h3 className="text-white font-bold text-lg mb-2">{c.sections.stealVsDouble.doubleHeading}</h3>
               <p className="text-white/80 text-[15px] leading-relaxed">
-                Flat add — better when you&apos;re already ahead and don&apos;t want to fuel a revenge challenge. Strictly
-                better when the loser has less than <em>winner_score</em> banked (no points to steal anyway).
+                {c.sections.stealVsDouble.doubleBodyPre}
+                <em>{c.sections.stealVsDouble.doubleBodyEm}</em>
+                {c.sections.stealVsDouble.doubleBodyPost}
               </p>
             </div>
           </div>
         </Section>
 
-        <Section title="How duels feed the trophies">
-          <p>Two of the five end-of-night trophies come straight from duel data:</p>
+        <Section title={c.sections.trophies.title}>
+          <p>{c.sections.trophies.intro}</p>
           <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">Duelist</strong> — most duels won across the night.</li>
-            <li><strong className="text-white">Thief</strong> — most points taken via Steal.</li>
+            <li><strong className="text-white">{c.sections.trophies.duelistLabel}</strong>{c.sections.trophies.duelistBody}</li>
+            <li><strong className="text-white">{c.sections.trophies.thiefLabel}</strong>{c.sections.trophies.thiefBody}</li>
           </ul>
           <p>
-            See the <a href="/scoring" className="text-euro-pink-light hover:text-white underline underline-offset-2">full scoring page</a> for
-            how Duelist and Thief feed into the Champion total, and the <a href="/rules" className="text-euro-pink-light hover:text-white underline underline-offset-2">rule book</a> for
-            sudden-death tiebreaks when two players tie a trophy category.
+            {c.sections.trophies.seePre}
+            <a href="/scoring" className="text-euro-pink-light hover:text-white underline underline-offset-2">{c.sections.trophies.scoringLink}</a>
+            {c.sections.trophies.seeMid}
+            <a href="/rules" className="text-euro-pink-light hover:text-white underline underline-offset-2">{c.sections.trophies.rulesLink}</a>
+            {c.sections.trophies.seePost}
           </p>
         </Section>
 
-        <Section title="Frequently asked questions">
-          <FaqAccordion items={FAQ} />
+        <Section title={c.sections.faqTitle}>
+          <FaqAccordion items={c.faq} />
         </Section>
 
         <CtaBanner
-          title="Start a room and challenge your friends"
-          body="Duels open the moment the host advances to Live Show. Spin up a room in 60 seconds and have the link ready before the first song airs."
-          primary={{ label: 'Create room', href: '/' }}
-          secondary={{ label: 'How to play', href: '/how-to-play' }}
+          title={c.cta.title}
+          body={c.cta.body}
+          primary={{ label: c.cta.primary, href: '/' }}
+          secondary={{ label: c.cta.secondary, href: '/how-to-play' }}
         />
 
         <RelatedCards
           items={[
-            { href: '/eurovision-trivia', title: 'Eurovision trivia', blurb: '50+ sample questions plus the bank duels pull from.' },
-            { href: '/scoring', title: 'Full scoring formulas', blurb: 'Where Steal and Double feed into Champion / Thief / Duelist.' },
-            { href: '/eurovision-2026-predictions', title: '2026 predictions', blurb: 'Lock Top 5 and Worst 5 before the show — points stack with duels.' },
-            { href: '/how-to-play', title: 'How to play in 60 seconds', blurb: 'Setup walkthrough from create-room to trophy reveal.' },
-            { href: '/rules', title: 'Rule book', blurb: 'Sudden death, refused duels, and tiebreak protocol.' },
-            { href: '/faq#leave', title: 'Leaving or deleting a room', blurb: 'What happens to your duel record if you leave mid-show.' },
+            { href: '/eurovision-trivia', title: c.related.trivia.title, blurb: c.related.trivia.blurb },
+            { href: '/scoring', title: c.related.scoring.title, blurb: c.related.scoring.blurb },
+            { href: '/eurovision-2026-predictions', title: c.related.predictions.title, blurb: c.related.predictions.blurb },
+            { href: '/how-to-play', title: c.related.howToPlay.title, blurb: c.related.howToPlay.blurb },
+            { href: '/rules', title: c.related.rules.title, blurb: c.related.rules.blurb },
+            { href: '/faq#leave', title: c.related.leave.title, blurb: c.related.leave.blurb },
           ]}
         />
       </ContentLayout>
