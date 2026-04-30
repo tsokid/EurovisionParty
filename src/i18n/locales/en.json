@@ -383,27 +383,27 @@
     }
   },
   "siteFooter": {
-    "play": "Play",
-    "games": "Games",
-    "hosting": "Hosting",
     "about": "About",
+    "howToPlay": "How to Play",
+    "faq": "FAQs",
+    "legal": "Legal",
     "links": {
-      "howToPlay": "How to play",
-      "rules": "Rules",
-      "scoring": "Scoring",
-      "eurovisionGames": "Eurovision games",
+      "whatIs": "What is Eurovision Games",
+      "freeGame": "Free Online Eurovision Game",
+      "cookies": "Cookies & Consent",
+      "gameStages": "Game Stages",
       "trivia": "Trivia",
-      "online": "Online",
-      "mobile": "Mobile",
-      "eurovisionNight": "Eurovision night",
-      "party": "Party",
-      "predictions": "2026 predictions",
-      "aboutPage": "About",
-      "faq": "FAQ",
-      "privacy": "Privacy",
-      "terms": "Terms"
+      "duels": "Duels",
+      "predictions": "Predictions",
+      "dashboard": "Dashboard",
+      "create": "Create a Room",
+      "join": "Join a Room",
+      "leave": "Leave / Delete a Room",
+      "scoring": "How Points Are Calculated",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use"
     },
-    "disclaimerStart": "© Eurovision Games. Not affiliated with the European Broadcasting Union or the Eurovision Song Contest. Contact: ",
+    "disclaimer": "Eurovision Games is an unofficial fan-made party game. Not affiliated with, endorsed by, or operated by the European Broadcasting Union or the Eurovision Song Contest.",
     "contactEmail": "hello@eurovision.games"
   }
 }

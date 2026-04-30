@@ -383,27 +383,27 @@
     }
   },
   "siteFooter": {
-    "play": "Παίξε",
-    "games": "Παιχνίδια",
-    "hosting": "Διοργάνωση",
     "about": "Σχετικά",
+    "howToPlay": "Πώς Παίζεται",
+    "faq": "Συχνές Ερωτήσεις",
+    "legal": "Νομικά",
     "links": {
-      "howToPlay": "Πώς παίζεται",
-      "rules": "Κανόνες",
-      "scoring": "Βαθμολογία",
-      "eurovisionGames": "Παιχνίδια Eurovision",
+      "whatIs": "Τι είναι το Eurovision Games",
+      "freeGame": "Δωρεάν Online Παιχνίδι Eurovision",
+      "cookies": "Cookies & Συγκατάθεση",
+      "gameStages": "Φάσεις Παιχνιδιού",
       "trivia": "Trivia",
-      "online": "Online",
-      "mobile": "Mobile",
-      "eurovisionNight": "Βραδιά Eurovision",
-      "party": "Πάρτι",
-      "predictions": "Προβλέψεις 2026",
-      "aboutPage": "Σχετικά",
-      "faq": "Συχνές ερωτήσεις",
-      "privacy": "Απόρρητο",
-      "terms": "Όροι"
+      "duels": "Μονομαχίες",
+      "predictions": "Προβλέψεις",
+      "dashboard": "Πίνακας Βαθμολογίας",
+      "create": "Δημιουργία Δωματίου",
+      "join": "Είσοδος σε Δωμάτιο",
+      "leave": "Αποχώρηση / Διαγραφή Δωματίου",
+      "scoring": "Πώς Υπολογίζονται οι Βαθμοί",
+      "privacy": "Πολιτική Απορρήτου",
+      "terms": "Όροι Χρήσης"
     },
-    "disclaimerStart": "© Eurovision Games. Δεν συνδέεται με την European Broadcasting Union ή τον διαγωνισμό Eurovision. Επικοινωνία: ",
+    "disclaimer": "Το Eurovision Games είναι ανεπίσημο fan-made παιχνίδι. Δεν σχετίζεται με, δεν υποστηρίζεται από, ούτε διαχειρίζεται από την Ευρωπαϊκή Ραδιοτηλεοπτική Ένωση ή τον Διαγωνισμό Τραγουδιού Eurovision.",
     "contactEmail": "hello@eurovision.games"
   }
 }
