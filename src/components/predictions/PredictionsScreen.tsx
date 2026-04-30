@@ -28,6 +28,7 @@ import type { Country } from '../../lib/types';
 
 const TOP_N = 5;
 const WORST_N = 5;
+const N = COUNTRIES_2026.length;
 
 interface ScoredPrediction {
   top5: string[];
@@ -37,39 +38,30 @@ interface ScoredPrediction {
   scored_at: string | null;
 }
 
-// ── Heart-shaped flag ────────────────────────────────────────────────────────
-const HEART_PATH = 'M14 24S2 16 2 9A7 7 0 0 1 14 4.5 7 7 0 0 1 26 9C26 16 14 24 14 24z';
-function HeartFlag({ id, size = 28 }: { id: string; size?: number }) {
+// ── Ordinal helper ──────────────────────────────────────────────────────────
+function ord(n: number): string {
+  const s = ['th', 'st', 'nd', 'rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+// ── Rectangular flag image (replaces HeartFlag — user requested) ────────────
+function FlagImg({ id, size = 40, className }: { id: string; size?: number; className?: string }) {
   return (
-    <div
-      style={{
-        width: size, height: size, flexShrink: 0,
-        clipPath: `path("${HEART_PATH}")`,
-        overflow: 'hidden',
-      }}
-    >
-      <img
-        src={`https://flagcdn.com/w40/${id.toLowerCase()}.png`}
-        alt=""
-        loading="lazy"
-        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
-      />
-    </div>
+    <img
+      src={`https://flagcdn.com/w40/${id.toLowerCase()}.png`}
+      alt=""
+      loading="lazy"
+      width={size}
+      height={Math.round(size * 0.75)}
+      className={clsx('object-cover rounded-[3px] flex-shrink-0 shadow-[0_1px_4px_rgba(0,0,0,0.5)]', className)}
+      style={{ width: size, height: Math.round(size * 0.75) }}
+      onError={(e) => { (e.target as HTMLImageElement).style.visibility = 'hidden'; }}
+    />
   );
 }
 
-// ── Grip icon ────────────────────────────────────────────────────────────────
-function GripIcon() {
-  return (
-    <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" className="flex-shrink-0 text-white/25">
-      <circle cx="2.5" cy="2.5" r="1.5" /><circle cx="7.5" cy="2.5" r="1.5" />
-      <circle cx="2.5" cy="7"   r="1.5" /><circle cx="7.5" cy="7"   r="1.5" />
-      <circle cx="2.5" cy="11.5" r="1.5"/><circle cx="7.5" cy="11.5" r="1.5"/>
-    </svg>
-  );
-}
-
-// ── Slot row (inside zone panel) ─────────────────────────────────────────────
+// ── Slot row (inside zone panel) ────────────────────────────────────────────
 interface SlotRowProps {
   id: string;
   pos: number;
@@ -80,22 +72,26 @@ interface SlotRowProps {
 function SlotRow({ id, pos, zone, onRemove, ghost }: SlotRowProps) {
   const c = COUNTRY_MAP.get(id);
   if (!c) return null;
+  const label = ord(pos);
   return (
     <div className={clsx(
-      'flex items-center gap-2 px-2 py-1.5 rounded-lg select-none',
-      zone === 'top'   ? 'bg-yellow-400/8' : 'bg-red-400/8',
+      'flex items-center gap-2 px-2.5 py-1.5 rounded-lg border select-none',
+      zone === 'top'
+        ? 'bg-[rgba(255,209,102,0.1)] border-[rgba(255,209,102,0.4)]'
+        : 'bg-[rgba(255,77,109,0.1)] border-[rgba(255,77,109,0.4)]',
       ghost && 'opacity-0',
     )}>
-      <GripIcon />
-      <span className={clsx('w-4 text-center text-[11px] font-bold shrink-0',
-        zone === 'top' ? 'text-yellow-400' : 'text-red-400',
-      )}>{pos}</span>
-      <HeartFlag id={id} size={22} />
-      <span className="text-[12px] font-semibold text-white flex-1 truncate">{getLocalizedCountryName(c)}</span>
+      <span className={clsx(
+        'font-black text-[1.1rem] leading-none w-9 text-right shrink-0 tabular-nums',
+        zone === 'top' ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
+      )}>{label}</span>
+      <FlagImg id={id} size={26} />
+      <span className="text-[12px] font-bold text-white flex-1 truncate">{getLocalizedCountryName(c)}</span>
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); onRemove(); }}
-        className="w-4 h-4 rounded-full bg-white/10 hover:bg-red-400/40 flex items-center justify-center text-white/40 hover:text-white transition-colors text-[10px] shrink-0"
+        className="w-5 h-5 rounded-full bg-white/10 hover:bg-red-400/40 flex items-center justify-center text-white/40 hover:text-white transition-colors text-[10px] shrink-0"
+        aria-label={`Remove from ${label} place`}
       >✕</button>
     </div>
   );
@@ -117,15 +113,17 @@ function SortableSlot(props: SlotRowProps) {
   );
 }
 
-// ── Zone panel ────────────────────────────────────────────────────────────────
+// ── Zone panel (Top 5 / Worst 5) ────────────────────────────────────────────
 interface ZonePanelProps {
   zone: 'top' | 'worst';
   picks: string[];
   onReorder: (newOrder: string[]) => void;
   onRemove: (id: string) => void;
+  onPlaceSelected: (slotIndex: number) => void;
+  hasSelection: boolean;
   activeId: string | null;
 }
-function ZonePanel({ zone, picks, onReorder, onRemove, activeId }: ZonePanelProps) {
+function ZonePanel({ zone, picks, onReorder, onRemove, onPlaceSelected, hasSelection, activeId }: ZonePanelProps) {
   const isTop = zone === 'top';
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -141,33 +139,44 @@ function ZonePanel({ zone, picks, onReorder, onRemove, activeId }: ZonePanelProp
     if (from !== -1 && to !== -1) onReorder(arrayMove(picks, from, to));
   };
 
+  // Slot label calculator
+  const labelFor = (i: number) => isTop ? ord(i + 1) : ord(N - WORST_N + 1 + i);
+
   return (
     <div className={clsx(
-      'rounded-xl border overflow-hidden flex flex-col',
-      isTop ? 'bg-yellow-400/5 border-yellow-400/20' : 'bg-red-400/5 border-red-400/20',
+      'rounded-2xl border overflow-hidden flex flex-col h-full',
+      'bg-[rgba(18,8,40,0.65)] backdrop-blur-md',
+      isTop ? 'border-[rgba(255,209,102,0.25)]' : 'border-[rgba(255,77,109,0.25)]',
     )}>
       {/* Header */}
       <div className={clsx(
-        'px-3 py-2 flex items-center justify-between',
-        isTop ? 'bg-yellow-400/10 border-b border-yellow-400/15' : 'bg-red-400/10 border-b border-red-400/15',
+        'px-3.5 pt-3 pb-2.5 border-b shrink-0',
+        isTop ? 'border-[rgba(255,209,102,0.15)]' : 'border-[rgba(255,77,109,0.15)]',
       )}>
-        <span className={clsx('text-[11px] font-black uppercase tracking-widest',
-          isTop ? 'text-yellow-300' : 'text-red-300',
+        <div className="text-lg leading-none mb-0.5">{isTop ? '🏆' : '💀'}</div>
+        <h3 className={clsx(
+          'font-black text-base uppercase tracking-wider leading-none',
+          isTop ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
         )}>
-          {isTop ? '🏆 Top 5' : '💩 Worst 5'}
-        </span>
-        <span className={clsx('text-[10px] opacity-50', isTop ? 'text-yellow-300' : 'text-red-300')}>
-          {isTop ? 'best finish' : 'last place'}
-        </span>
+          {isTop ? 'Top 5' : 'Worst 5'}
+        </h3>
+        <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">
+          {isTop ? 'Best finish' : 'Last place'}
+        </p>
+        <p className="text-[11px] font-semibold text-white/55 mt-1.5 tabular-nums">
+          {picks.length} / {isTop ? TOP_N : WORST_N} placed
+        </p>
       </div>
 
       {/* Slots */}
-      <div className="flex-1 p-1.5 space-y-1">
+      <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={picks} strategy={verticalListSortingStrategy}>
             {picks.map((id, i) => (
               <SortableSlot
-                key={id} id={id} pos={i + 1} zone={zone}
+                key={id} id={id}
+                pos={isTop ? i + 1 : N - WORST_N + 1 + i}
+                zone={zone}
                 onRemove={() => onRemove(id)}
               />
             ))}
@@ -176,7 +185,8 @@ function ZonePanel({ zone, picks, onReorder, onRemove, activeId }: ZonePanelProp
             {activeId && picks.includes(activeId) && (
               <div className="shadow-xl rotate-1 scale-105 opacity-95">
                 <SlotRow
-                  id={activeId} pos={picks.indexOf(activeId) + 1}
+                  id={activeId}
+                  pos={isTop ? picks.indexOf(activeId) + 1 : N - WORST_N + 1 + picks.indexOf(activeId)}
                   zone={zone} onRemove={() => {}}
                 />
               </div>
@@ -184,55 +194,83 @@ function ZonePanel({ zone, picks, onReorder, onRemove, activeId }: ZonePanelProp
           </DragOverlay>
         </DndContext>
 
-        {/* Empty slots */}
-        {Array.from({ length: TOP_N - picks.length }).map((_, i) => (
-          <div key={`empty-${i}`} className={clsx(
-            'flex items-center gap-2 px-2 py-1.5 rounded-lg border border-dashed',
-            isTop ? 'border-yellow-400/20' : 'border-red-400/20',
-          )}>
-            <span className={clsx('w-4 text-center text-[11px] font-bold shrink-0 opacity-30',
-              isTop ? 'text-yellow-400' : 'text-red-400',
-            )}>{picks.length + i + 1}</span>
-            <span className="text-[11px] text-white/20">tap a country →</span>
-          </div>
-        ))}
+        {/* Empty placeholder slots — clickable when a tile is selected */}
+        {Array.from({ length: (isTop ? TOP_N : WORST_N) - picks.length }).map((_, i) => {
+          const slotIndex = picks.length + i;
+          const label = labelFor(slotIndex);
+          return (
+            <button
+              key={`empty-${i}`}
+              type="button"
+              onClick={() => hasSelection && onPlaceSelected(slotIndex)}
+              disabled={!hasSelection}
+              aria-label={`${label} place — empty${hasSelection ? ', click to place' : ''}`}
+              className={clsx(
+                'w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg border-[1.5px] border-dashed transition-all',
+                'min-h-[40px]',
+                isTop ? 'border-[rgba(255,209,102,0.25)]' : 'border-[rgba(255,77,109,0.25)]',
+                hasSelection && (isTop
+                  ? 'cursor-pointer hover:bg-[rgba(255,209,102,0.1)] hover:border-[#FFD166] hover:scale-[1.02]'
+                  : 'cursor-pointer hover:bg-[rgba(255,77,109,0.1)] hover:border-[#FF4D6D] hover:scale-[1.02]'),
+                !hasSelection && 'cursor-default',
+              )}
+            >
+              <span className={clsx(
+                'font-black text-[1.1rem] leading-none w-9 text-right shrink-0 tabular-nums opacity-60',
+                isTop ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
+              )}>{label}</span>
+              <span className="text-[10px] text-white/30 italic">tap a country →</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// ── Country card (pool) ──────────────────────────────────────────────────────
-function CountryCard({
-  country, inTop, inWorst, onClick,
-}: { country: Country; inTop: boolean; inWorst: boolean; onClick: () => void }) {
-  const used = inTop || inWorst;
+// ── Country tile (pool) — large vertical stack ──────────────────────────────
+interface CountryTileProps {
+  country: Country;
+  rank: { kind: 'top' | 'worst'; label: string } | null;
+  selected: boolean;
+  onClick: () => void;
+}
+function CountryTile({ country, rank, selected, onClick }: CountryTileProps) {
+  const ranked = !!rank;
   return (
     <button
+      type="button"
       onClick={onClick}
-      disabled={false}
       className={clsx(
-        'flex items-stretch rounded-lg border overflow-hidden text-left transition-all',
-        'min-h-[44px] w-full',
-        !used && 'bg-white/5 border-white/10 hover:bg-purple-500/20 hover:border-purple-400/50 hover:-translate-y-px',
-        inTop  && 'bg-yellow-400/8 border-yellow-400/40 opacity-40 cursor-default',
-        inWorst && 'bg-red-400/8 border-red-400/40 opacity-40 cursor-default',
+        'group relative flex items-center gap-3 px-3.5 py-3 pr-10 rounded-xl border text-left transition-all',
+        'min-h-[88px] w-full overflow-hidden',
+        'cursor-pointer select-none',
+        !ranked && !selected && 'bg-white/[0.048] border-white/10 hover:bg-white/[0.09] hover:border-white/25 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]',
+        selected && 'bg-purple-500/25 border-purple-400 shadow-[0_0_0_2px_rgba(155,89,244,0.3),0_8px_24px_rgba(0,0,0,0.4)]',
+        ranked && !selected && 'bg-white/[0.048] border-white/10 opacity-40 hover:opacity-75',
       )}
     >
-      {/* Country */}
-      <div className="flex items-center gap-2 px-2.5 py-2 shrink-0 border-r border-white/7" style={{ minWidth: 130 }}>
-        <HeartFlag id={country.id} size={26} />
-        <span className="text-[12px] font-bold text-white/90 truncate">{getLocalizedCountryName(country)}</span>
+      <FlagImg id={country.id} size={44} />
+      <div className="flex-1 min-w-0">
+        <div className="font-black text-[1.05rem] tracking-wide leading-tight text-white truncate">
+          {getLocalizedCountryName(country)}
+        </div>
+        <div className="text-[0.85rem] font-medium text-white/70 truncate mt-0.5">
+          {country.artist}
+        </div>
+        <div className="text-[0.78rem] font-light text-white/55 italic truncate mt-0.5">
+          {country.song}
+        </div>
       </div>
-      {/* Artist */}
-      <div className="flex items-center gap-1.5 px-2.5 flex-1 min-w-0 border-r border-white/7">
-        <span className="text-[10px] opacity-40">🎤</span>
-        <span className="text-[11px] text-white/60 truncate">{country.artist}</span>
-      </div>
-      {/* Song */}
-      <div className="flex items-center gap-1.5 px-2.5 flex-1 min-w-0">
-        <span className="text-[10px] opacity-40">🎵</span>
-        <span className="text-[11px] text-white/60 truncate italic">{country.song}</span>
-      </div>
+      {/* Position badge */}
+      {rank && (
+        <span className={clsx(
+          'absolute top-1.5 right-1.5 font-black text-[0.85rem] px-1.5 py-0.5 rounded leading-tight',
+          rank.kind === 'top'
+            ? 'bg-[rgba(255,209,102,0.15)] text-[#FFD166] border border-[rgba(255,209,102,0.4)]'
+            : 'bg-[rgba(255,77,109,0.15)] text-[#FF4D6D] border border-[rgba(255,77,109,0.4)]',
+        )}>{rank.label}</span>
+      )}
     </button>
   );
 }
@@ -252,21 +290,21 @@ function ScoredView({ pred }: { pred: ScoredPrediction }) {
       </div>
       <div className="flex-1 overflow-y-auto space-y-4">
         <div>
-          <p className="text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">🏆 Top 5 — {pred.top5_points ?? 0} pts</p>
+          <p className="text-xs font-bold text-[#FFD166] uppercase tracking-wider mb-2">🏆 Top 5 — {pred.top5_points ?? 0} pts</p>
           {t5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-yellow-400/10 rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-yellow-400 w-4">{i + 1}</span>
-              <HeartFlag id={c.id} size={20} />
+            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,209,102,0.1)] rounded-lg px-3 py-1.5 mb-1">
+              <span className="text-xs font-bold text-[#FFD166] w-9 text-right">{ord(i + 1)}</span>
+              <FlagImg id={c.id} size={22} />
               <span className="text-sm text-white truncate">{getLocalizedCountryName(c)}</span>
             </div>
           ))}
         </div>
         <div>
-          <p className="text-xs font-bold text-red-400 uppercase tracking-wider mb-2">💩 Worst 5 — {pred.worst5_points ?? 0} pts</p>
+          <p className="text-xs font-bold text-[#FF4D6D] uppercase tracking-wider mb-2">💀 Worst 5 — {pred.worst5_points ?? 0} pts</p>
           {w5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-red-400/10 rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-red-400 w-4">{22 + i}</span>
-              <HeartFlag id={c.id} size={20} />
+            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,77,109,0.1)] rounded-lg px-3 py-1.5 mb-1">
+              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(N - WORST_N + 1 + i)}</span>
+              <FlagImg id={c.id} size={22} />
               <span className="text-sm text-white truncate">{getLocalizedCountryName(c)}</span>
             </div>
           ))}
@@ -287,21 +325,21 @@ function SubmittedView({ top5, worst5 }: { top5: Country[]; worst5: Country[] })
       </div>
       <div className="flex-1 overflow-y-auto space-y-4">
         <div>
-          <p className="text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">🏆 {t('predictions.yourTop5')}</p>
+          <p className="text-xs font-bold text-[#FFD166] uppercase tracking-wider mb-2">🏆 {t('predictions.yourTop5')}</p>
           {top5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-yellow-400/10 rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-yellow-400 w-4">{i + 1}</span>
-              <HeartFlag id={c.id} size={20} />
+            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,209,102,0.1)] rounded-lg px-3 py-1.5 mb-1">
+              <span className="text-xs font-bold text-[#FFD166] w-9 text-right">{ord(i + 1)}</span>
+              <FlagImg id={c.id} size={22} />
               <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
             </div>
           ))}
         </div>
         <div>
-          <p className="text-xs font-bold text-red-400 uppercase tracking-wider mb-2">💩 {t('predictions.yourWorst5')}</p>
+          <p className="text-xs font-bold text-[#FF4D6D] uppercase tracking-wider mb-2">💀 {t('predictions.yourWorst5')}</p>
           {worst5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-red-400/10 rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-red-400 w-4">{22 + i}</span>
-              <HeartFlag id={c.id} size={20} />
+            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,77,109,0.1)] rounded-lg px-3 py-1.5 mb-1">
+              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(N - WORST_N + 1 + i)}</span>
+              <FlagImg id={c.id} size={22} />
               <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
             </div>
           ))}
@@ -316,18 +354,24 @@ export default function PredictionsScreen() {
   const { t } = useTranslation();
   const { room, player } = useGameStore();
 
-  const [top5, setTop5]   = useState<string[]>([]);
+  const [top5, setTop5] = useState<string[]>([]);
   const [worst5, setWorst5] = useState<string[]>([]);
   const [activeId] = useState<string | null>(null);
-  const [mobileZone] = useState<'top' | 'worst'>('top');
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [poolSort, setPoolSort] = useState<'az' | 'za' | 'default'>('az');
-  const [poolFilter, setPoolFilter] = useState<'all' | 'top' | 'worst'>('all');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingPrediction, setExistingPrediction] = useState<ScoredPrediction | null>(null);
   const [isLoadingExisting, setIsLoadingExisting] = useState(true);
+
+  // Escape clears selection
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedId(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   // Load existing prediction
   useEffect(() => {
@@ -356,27 +400,55 @@ export default function PredictionsScreen() {
 
   const isPredictionsOpen = room?.phase === 'predictions_open';
 
-  // Pool — sorted + filtered
+  // Pool — sorted (filters removed per redesign)
   const pool = (() => {
-    let list = [...COUNTRIES_2026];
+    const list = [...COUNTRIES_2026];
     if (poolSort === 'az') list.sort((a, b) => getLocalizedCountryName(a).localeCompare(getLocalizedCountryName(b)));
     if (poolSort === 'za') list.sort((a, b) => getLocalizedCountryName(b).localeCompare(getLocalizedCountryName(a)));
-    if (poolFilter === 'top')   list = list.filter((c) => top5.includes(c.id));
-    if (poolFilter === 'worst') list = list.filter((c) => worst5.includes(c.id));
     return list;
   })();
 
-  const handleCardClick = useCallback((id: string) => {
-    if (top5.includes(id)) { setTop5((p) => p.filter((x) => x !== id)); return; }
-    if (worst5.includes(id)) { setWorst5((p) => p.filter((x) => x !== id)); return; }
-    const isMobile = window.innerWidth < 860;
-    const zone = isMobile ? mobileZone : (top5.length < TOP_N ? 'top' : 'worst');
-    if (zone === 'top' && top5.length < TOP_N)     { setTop5((p) => [...p, id]); return; }
-    if (zone === 'worst' && worst5.length < WORST_N){ setWorst5((p) => [...p, id]); return; }
-    // Try the other zone
-    if (top5.length < TOP_N)   { setTop5((p) => [...p, id]); return; }
-    if (worst5.length < WORST_N){ setWorst5((p) => [...p, id]); }
-  }, [top5, worst5, mobileZone]);
+  const getRank = (id: string): { kind: 'top' | 'worst'; label: string } | null => {
+    const ti = top5.indexOf(id);
+    if (ti !== -1) return { kind: 'top', label: ord(ti + 1) };
+    const wi = worst5.indexOf(id);
+    if (wi !== -1) return { kind: 'worst', label: ord(N - WORST_N + 1 + wi) };
+    return null;
+  };
+
+  // Tile click — toggle selection (or unrank if already ranked)
+  const handleTileClick = useCallback((id: string) => {
+    // If already ranked, unrank (free up the slot)
+    if (top5.includes(id))   { setTop5((p) => p.filter((x) => x !== id)); setSelectedId(null); return; }
+    if (worst5.includes(id)) { setWorst5((p) => p.filter((x) => x !== id)); setSelectedId(null); return; }
+    // Otherwise toggle selection
+    setSelectedId((prev) => prev === id ? null : id);
+  }, [top5, worst5]);
+
+  // Place selected tile into a specific slot
+  const handlePlace = useCallback((zone: 'top' | 'worst', slotIndex: number) => {
+    if (!selectedId) return;
+    if (zone === 'top') {
+      setTop5((p) => {
+        const next = [...p];
+        // Remove from worst5 if present (mutual exclusion)
+        setWorst5((w) => w.filter((x) => x !== selectedId));
+        // Insert at slotIndex (if slotIndex > current length, append)
+        if (slotIndex >= next.length) next.push(selectedId);
+        else next.splice(slotIndex, 0, selectedId);
+        return next.slice(0, TOP_N);
+      });
+    } else {
+      setWorst5((p) => {
+        const next = [...p];
+        setTop5((t) => t.filter((x) => x !== selectedId));
+        if (slotIndex >= next.length) next.push(selectedId);
+        else next.splice(slotIndex, 0, selectedId);
+        return next.slice(0, WORST_N);
+      });
+    }
+    setSelectedId(null);
+  }, [selectedId]);
 
   const handleSubmit = useCallback(async () => {
     if (!room || !player || isSubmitting) return;
@@ -393,7 +465,7 @@ export default function PredictionsScreen() {
     } finally { setIsSubmitting(false); }
   }, [room, player, top5, worst5, isSubmitting, t]);
 
-  // ── Guards ───────────────────────────────────────────────────────────────
+  // ── Guards ─────────────────────────────────────────────────────────────────
   if (!room || !player || isLoadingExisting) {
     return <div className="flex items-center justify-center h-64"><div className="w-7 h-7 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" /></div>;
   }
@@ -413,108 +485,129 @@ export default function PredictionsScreen() {
 
   const filled = top5.length + worst5.length;
   const isReady = top5.length === TOP_N && worst5.length === WORST_N;
+  const selectedCountry = selectedId ? COUNTRY_MAP.get(selectedId) : null;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
 
-      {/* ── 3-col desktop / stack mobile ──────────────────────────────────── */}
-      <div className="flex-1 overflow-hidden grid gap-2 p-2"
-        style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,2fr) minmax(0,1fr)' }}
+      {/* ── 3-col desktop / stacked mobile ──────────────────────────────────── */}
+      <div
+        className="flex-1 overflow-hidden grid gap-2.5 p-2.5 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)] grid-cols-1 grid-rows-[auto_1fr_auto] lg:grid-rows-1"
       >
         {/* LEFT: Top 5 */}
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto max-h-[230px] lg:max-h-none">
           <ZonePanel
             zone="top" picks={top5}
             onReorder={setTop5}
             onRemove={(id) => setTop5((p) => p.filter((x) => x !== id))}
+            onPlaceSelected={(slotIndex) => handlePlace('top', slotIndex)}
+            hasSelection={!!selectedId}
             activeId={activeId}
           />
         </div>
 
         {/* CENTER: Pool */}
-        <div className="flex flex-col overflow-hidden bg-white/3 rounded-xl border border-white/8">
-          {/* Pool header */}
-          <div className="flex items-center justify-between px-3 py-2 border-b border-white/8 shrink-0">
-            <span className="text-[11px] font-black uppercase tracking-widest text-white/40">
-              {t('predictions.participantsHeader', { count: COUNTRIES_2026.length })}
+        <div className="flex flex-col overflow-hidden">
+          {/* Meta row */}
+          <div className="flex items-baseline justify-between mb-2 px-1">
+            <span className="text-xs font-black uppercase tracking-widest text-white/60">
+              {t('predictions.participantsHeader', { count: N, defaultValue: `Participants (${N})` })}
             </span>
-            <span className="text-[11px] text-purple-400">{filled}/10 picked</span>
+            <span className="text-[11px] font-bold text-purple-400 tabular-nums">
+              {filled} / {TOP_N + WORST_N} picked
+            </span>
           </div>
 
-          {/* Toolbar */}
-          <div className="flex gap-1 px-2 py-1.5 border-b border-white/8 shrink-0 flex-wrap">
-            {([
-              { label: 'A↓', action: () => setPoolSort('az') },
-              { label: 'Z↓', action: () => setPoolSort('za') },
-              { label: '🔀', action: () => setPoolSort('default') },
-            ] as const).map(({ label, action }) => (
-              <button key={label} onClick={action}
-                className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 text-[11px] border border-white/10 transition-colors">
-                {label}
-              </button>
-            ))}
-            <button onClick={() => setPoolFilter('top')}
-              className={clsx('px-2.5 py-1 rounded-lg text-[11px] border transition-colors',
-                poolFilter === 'top' ? 'bg-yellow-400/20 border-yellow-400/50 text-yellow-300' : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10')}>
-              🏆 Only
+          {/* Sort row */}
+          <div className="flex items-center gap-1.5 mb-2 px-1">
+            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest mr-1">Sort</span>
+            <button onClick={() => setPoolSort('az')}
+              className={clsx('px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all',
+                poolSort === 'az' ? 'bg-purple-500 border-purple-500 text-white' : 'bg-white/5 border-white/15 text-white/60 hover:border-white/30 hover:text-white')}>
+              A ↑
             </button>
-            <button onClick={() => setPoolFilter('worst')}
-              className={clsx('px-2.5 py-1 rounded-lg text-[11px] border transition-colors',
-                poolFilter === 'worst' ? 'bg-red-400/20 border-red-400/50 text-red-300' : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10')}>
-              💩 Only
+            <button onClick={() => setPoolSort('za')}
+              className={clsx('px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all',
+                poolSort === 'za' ? 'bg-purple-500 border-purple-500 text-white' : 'bg-white/5 border-white/15 text-white/60 hover:border-white/30 hover:text-white')}>
+              Z ↓
             </button>
-            <button onClick={() => setPoolFilter('all')}
-              className={clsx('px-2.5 py-1 rounded-lg text-[11px] border transition-colors',
-                poolFilter === 'all' ? 'bg-purple-500/25 border-purple-400/50 text-purple-300' : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10')}>
-              All
+            <button onClick={() => setPoolSort('default')}
+              className={clsx('px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all',
+                poolSort === 'default' ? 'bg-purple-500 border-purple-500 text-white' : 'bg-white/5 border-white/15 text-white/60 hover:border-white/30 hover:text-white')}>
+              Order
             </button>
           </div>
 
-          {/* Cards */}
-          <div className="flex-1 overflow-y-auto p-1.5 space-y-1">
-            {pool.map((c) => (
-              <CountryCard
-                key={c.id} country={c}
-                inTop={top5.includes(c.id)}
-                inWorst={worst5.includes(c.id)}
-                onClick={() => handleCardClick(c.id)}
-              />
-            ))}
+          {/* Selection banner */}
+          {selectedCountry && (
+            <div className="flex items-center gap-2 px-3 py-1.5 mb-2 mx-1 rounded-lg bg-purple-500/20 border border-purple-400/55 text-purple-200 text-[12px] font-semibold">
+              <FlagImg id={selectedCountry.id} size={22} />
+              <span>{getLocalizedCountryName(selectedCountry)} selected — now click an empty slot</span>
+              <button
+                onClick={() => setSelectedId(null)}
+                className="ml-auto text-purple-200/70 hover:text-white text-[10px] uppercase tracking-wider"
+                aria-label="Cancel selection"
+              >Esc</button>
+            </div>
+          )}
+
+          {/* Hint */}
+          {!selectedCountry && (
+            <p className="text-[10px] text-white/40 mb-2 px-1">
+              Tap a country, then tap an empty slot — or drag within a panel to reorder.
+            </p>
+          )}
+
+          {/* Tile grid */}
+          <div className="flex-1 overflow-y-auto pb-4 pr-0.5">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1">
+              {pool.map((c) => (
+                <CountryTile
+                  key={c.id}
+                  country={c}
+                  rank={getRank(c.id)}
+                  selected={selectedId === c.id}
+                  onClick={() => handleTileClick(c.id)}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
         {/* RIGHT: Worst 5 */}
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto max-h-[230px] lg:max-h-none">
           <ZonePanel
             zone="worst" picks={worst5}
             onReorder={setWorst5}
             onRemove={(id) => setWorst5((p) => p.filter((x) => x !== id))}
+            onPlaceSelected={(slotIndex) => handlePlace('worst', slotIndex)}
+            hasSelection={!!selectedId}
             activeId={activeId}
           />
         </div>
       </div>
 
-      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      {/* ── Footer (submit) ───────────────────────────────────────────────── */}
       <div className="shrink-0 px-3 pt-2 pb-3 border-t border-white/8 bg-[#0f0520]/80 backdrop-blur">
         {/* Flag previews */}
-        <div className="flex items-center gap-2 mb-2 text-xs">
-          <span className="text-yellow-400 font-semibold shrink-0">🏆</span>
+        <div className="flex items-center gap-2 mb-2 text-xs flex-wrap">
+          <span className="text-[#FFD166] font-semibold shrink-0">🏆</span>
           <div className="flex gap-1">
             {Array.from({ length: TOP_N }).map((_, i) => {
               const id = top5[i];
               return id
-                ? <HeartFlag key={id} id={id} size={22} />
-                : <div key={i} className="w-[22px] h-[22px] rounded bg-white/8 border border-dashed border-white/15" />;
+                ? <FlagImg key={id} id={id} size={26} />
+                : <div key={i} className="w-[26px] h-[20px] rounded bg-white/8 border border-dashed border-white/15" />;
             })}
           </div>
           <span className="text-white/20 mx-0.5">|</span>
-          <span className="text-red-400 font-semibold shrink-0">💩</span>
+          <span className="text-[#FF4D6D] font-semibold shrink-0">💀</span>
           <div className="flex gap-1">
             {Array.from({ length: WORST_N }).map((_, i) => {
               const id = worst5[i];
               return id
-                ? <HeartFlag key={id} id={id} size={22} />
-                : <div key={i} className="w-[22px] h-[22px] rounded bg-white/8 border border-dashed border-white/15" />;
+                ? <FlagImg key={id} id={id} size={26} />
+                : <div key={i} className="w-[26px] h-[20px] rounded bg-white/8 border border-dashed border-white/15" />;
             })}
           </div>
         </div>
@@ -532,7 +625,7 @@ export default function PredictionsScreen() {
             ? t('predictions.updateBtn', { defaultValue: '✅ Update Predictions' })
             : isReady
               ? t('predictions.submitBtn', { defaultValue: '🎯 Submit Predictions' })
-              : t('predictions.fillSlots', { defaultValue: `Fill all 10 slots to submit` })}
+              : t('predictions.fillSlots', { defaultValue: 'Fill all 10 slots to submit' })}
         </button>
         {error && <p className="text-red-400 text-xs text-center mt-1.5">{error}</p>}
       </div>
