@@ -367,7 +367,8 @@ begin
                where name = 'parser_service_key'
             )
           ),
-          body := jsonb_build_object('action','participants')
+          body := jsonb_build_object('action','participants'),
+          timeout_milliseconds := 30000
         )
         where (select status from public.parse_jobs
                 where year=2026 and kind='participants') = 'idle';
@@ -416,7 +417,8 @@ begin
                where name = 'parser_service_key'
             )
           ),
-          body := jsonb_build_object('action','results')
+          body := jsonb_build_object('action','results'),
+          timeout_milliseconds := 30000
         )
         where (select status from public.parse_jobs
                 where year=2026 and kind='results') = 'running'
