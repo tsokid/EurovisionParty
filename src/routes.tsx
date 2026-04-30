@@ -17,6 +17,9 @@ import ScoringPage from './pages/seo/ScoringPage';
 import AboutPage from './pages/seo/AboutPage';
 import PrivacyPage from './pages/seo/PrivacyPage';
 import TermsPage from './pages/seo/TermsPage';
+import EurovisionDuelsPage from './pages/seo/EurovisionDuelsPage';
+import DashboardPage from './pages/seo/DashboardPage';
+import CookiesPage from './pages/seo/CookiesPage';
 
 export const router = createBrowserRouter([
   // Game + admin own their own chrome
@@ -41,6 +44,9 @@ export const router = createBrowserRouter([
       { path: 'about', element: <AboutPage /> },
       { path: 'privacy', element: <PrivacyPage /> },
       { path: 'terms', element: <TermsPage /> },
+      { path: 'duels', element: <EurovisionDuelsPage /> },
+      { path: 'dashboard', element: <DashboardPage /> },
+      { path: 'cookies', element: <CookiesPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
@@ -61,6 +67,9 @@ export const router = createBrowserRouter([
   { path: '/about', element: <LocaleRedirect /> },
   { path: '/privacy', element: <LocaleRedirect /> },
   { path: '/terms', element: <LocaleRedirect /> },
+  { path: '/duels', element: <LocaleRedirect /> },
+  { path: '/dashboard', element: <LocaleRedirect /> },
+  { path: '/cookies', element: <LocaleRedirect /> },
 
   { path: '*', element: <NotFoundPage /> },
 ]);

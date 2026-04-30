@@ -13,8 +13,8 @@ export default function SiteFooter() {
           <h4 className="text-euro-gold font-bold mb-3">{t('siteFooter.about')}</h4>
           <ul className="space-y-2">
             <li><LocaleLink to="/about" className="text-white/70 hover:text-white transition">{t('siteFooter.links.whatIs')}</LocaleLink></li>
-            <li><LocaleLink to="/" className="text-white/70 hover:text-white transition">{t('siteFooter.links.freeGame')}</LocaleLink></li>
-            <li><button data-cc="show-preferencesModal" className="text-white/70 hover:text-white transition text-left">{t('siteFooter.links.cookies')}</button></li>
+            <li><LocaleLink to="/eurovision-games" className="text-white/70 hover:text-white transition">{t('siteFooter.links.freeGame')}</LocaleLink></li>
+            <li><LocaleLink to="/cookies" className="text-white/70 hover:text-white transition">{t('siteFooter.links.cookies')}</LocaleLink></li>
           </ul>
         </div>
 
@@ -24,9 +24,9 @@ export default function SiteFooter() {
           <ul className="space-y-2">
             <li><LocaleLink to="/how-to-play" className="text-white/70 hover:text-white transition">{t('siteFooter.links.gameStages')}</LocaleLink></li>
             <li><LocaleLink to="/eurovision-trivia" className="text-white/70 hover:text-white transition">{t('siteFooter.links.trivia')}</LocaleLink></li>
-            <li><LocaleLink to="/eurovision-trivia" className="text-white/70 hover:text-white transition">{t('siteFooter.links.duels')}</LocaleLink></li>
+            <li><LocaleLink to="/duels" className="text-white/70 hover:text-white transition">{t('siteFooter.links.duels')}</LocaleLink></li>
             <li><LocaleLink to="/eurovision-2026-predictions" className="text-white/70 hover:text-white transition">{t('siteFooter.links.predictions')}</LocaleLink></li>
-            <li><LocaleLink to="/scoring" className="text-white/70 hover:text-white transition">{t('siteFooter.links.dashboard')}</LocaleLink></li>
+            <li><LocaleLink to="/dashboard" className="text-white/70 hover:text-white transition">{t('siteFooter.links.dashboard')}</LocaleLink></li>
           </ul>
         </div>
 
@@ -34,9 +34,9 @@ export default function SiteFooter() {
         <div>
           <h4 className="text-euro-gold font-bold mb-3">{t('siteFooter.faq')}</h4>
           <ul className="space-y-2">
-            <li><LocaleLink to="/faq" className="text-white/70 hover:text-white transition">{t('siteFooter.links.create')}</LocaleLink></li>
-            <li><LocaleLink to="/faq" className="text-white/70 hover:text-white transition">{t('siteFooter.links.join')}</LocaleLink></li>
-            <li><LocaleLink to="/faq" className="text-white/70 hover:text-white transition">{t('siteFooter.links.leave')}</LocaleLink></li>
+            <li><LocaleLink to="/faq#create" className="text-white/70 hover:text-white transition">{t('siteFooter.links.create')}</LocaleLink></li>
+            <li><LocaleLink to="/faq#join" className="text-white/70 hover:text-white transition">{t('siteFooter.links.join')}</LocaleLink></li>
+            <li><LocaleLink to="/faq#leave" className="text-white/70 hover:text-white transition">{t('siteFooter.links.leave')}</LocaleLink></li>
             <li><LocaleLink to="/scoring" className="text-white/70 hover:text-white transition">{t('siteFooter.links.scoring')}</LocaleLink></li>
           </ul>
         </div>

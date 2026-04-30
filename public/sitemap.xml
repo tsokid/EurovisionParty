@@ -323,6 +323,54 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-history" />
   </url>
   <url>
+    <loc>https://eurovision.games/en/duels</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/duels" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/duels" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/duels" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/duels</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/duels" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/duels" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/duels" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/dashboard</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/dashboard" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/dashboard" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/dashboard</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/dashboard" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/dashboard" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/cookies</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/cookies" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/cookies" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/cookies" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/cookies</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/cookies" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/cookies" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/cookies" />
+  </url>
+  <url>
     <loc>https://eurovision.games/el/eurovision-ellada</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

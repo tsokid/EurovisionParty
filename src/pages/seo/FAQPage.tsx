@@ -1,7 +1,16 @@
 import SchemaHead from '../../components/seo/SchemaHead';
 import SiteFooter from '../../components/seo/SiteFooter';
 
-const FAQ = [
+interface FaqItem {
+  id?: string;
+  q: string;
+  a: string;
+}
+
+const FAQ: FaqItem[] = [
+  { id: 'create', q: 'How do I create a room?', a: 'Sign in (email-only — we send a one-tap magic link), click "Create Room", pick the round count (1-3 quiz rounds), max players (2-20), and per-pair duel cap (default 3). A 6-character room code and shareable link appear instantly. The host owns the room until they leave or delete it.' },
+  { id: 'join', q: 'How do I join a room?', a: 'Use the join link the host shared (one tap, no account), or open Eurovision Games, click "Join Room", and type the 6-character code plus your display name. Late joiners can still play duels and quiz, but predictions lock once the host advances the phase.' },
+  { id: 'leave', q: 'How do I leave or delete a room?', a: 'Tap your name in the room header → "Leave room". Your slot frees up; your scored points stay frozen on the leaderboard so the rest of the room is unaffected. Hosts have an extra "Delete room" option in the host panel that ends the session for everyone — a 5-second confirmation prevents accidents.' },
   { q: 'Is Eurovision Games free?', a: 'Yes — completely free. No subscriptions, no in-app purchases, no ads.' },
   { q: 'Do I need an account?', a: 'Only the host signs in (with email). Players join with a room code and a name — no account.' },
   { q: 'How many players can join a room?', a: '2 to 20. Couples can share a single device.' },
@@ -45,7 +54,7 @@ export default function FAQPage() {
           <a href="/rules">rule book</a>, <a href="/scoring">scoring page</a>, or <a href="/how-to-play">setup guide</a>.
         </p>
         {FAQ.map((f) => (
-          <section key={f.q}>
+          <section key={f.q} id={f.id} className={f.id ? 'scroll-mt-20' : undefined}>
             <h2>{f.q}</h2>
             <p>{f.a}</p>
           </section>

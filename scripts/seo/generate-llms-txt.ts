@@ -32,17 +32,20 @@ const DESCRIPTIONS: Record<string, string> = {
   about: 'About Eurovision Games — built for the people who watch Eurovision like a sport.',
   privacy: 'Privacy policy: data we collect, what we do with it, how to delete it.',
   terms: 'Terms of use for Eurovision Games.',
+  'eurovision-duels': 'Eurovision duels feature — 3-question head-to-head trivia during the live show. Steal points or double yours.',
+  dashboard: 'Live leaderboard for your Eurovision Games room — push-updated as predictions, quiz, and duels resolve.',
+  cookies: 'Cookies and consent: what we use, why, and how to change your preferences.',
 };
 
 const TIER_1 = ['home', 'eurovision-2026', 'eurovision-night', 'eurovision-party', 'eurovision-games', 'how-to-play'] as const;
 const TIER_2 = [
   'eurovision-2026-schedule', 'eurovision-2026-semifinals', 'eurovision-2026-songs',
-  'eurovision-2026-predictions', 'eurovision-trivia', 'eurovision-quiz',
+  'eurovision-2026-predictions', 'eurovision-trivia', 'eurovision-quiz', 'eurovision-duels', 'dashboard',
   'eurovision-history', 'winners', 'countries',
 ] as const;
 const TIER_3 = [
   'host-eurovision-party',
-  'rules', 'scoring', 'faq', 'about',
+  'rules', 'scoring', 'faq', 'about', 'cookies', 'privacy', 'terms',
 ] as const;
 
 function lineFor(id: string): string {

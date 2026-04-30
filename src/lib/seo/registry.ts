@@ -23,6 +23,10 @@ export type PageId =
   | 'eurovision-quiz'
   | 'host-eurovision-party'
   | 'eurovision-history'
+  // Footer-driven supporting pages
+  | 'eurovision-duels'
+  | 'dashboard'
+  | 'cookies'
   // Phase 3 — Greek-exclusive (no en counterpart)
   | 'eurovision-ellada'
   | 'eurovision-kypros'
@@ -67,6 +71,11 @@ export const PAGE_REGISTRY: PageEntry[] = [
   { id: 'eurovision-quiz', slugByLocale: { en: '/eurovision-quiz', el: '/eurovision-quiz' }, hub: 'eurovision-games', priority: 0.85, changefreq: 'monthly' },
   { id: 'host-eurovision-party', slugByLocale: { en: '/host-eurovision-party', el: '/host-eurovision-party' }, hub: 'eurovision-party', priority: 0.85, changefreq: 'monthly' },
   { id: 'eurovision-history', slugByLocale: { en: '/eurovision-history', el: '/eurovision-history' }, priority: 0.85, changefreq: 'monthly' },
+
+  // Footer-driven supporting pages (target user's footer structure)
+  { id: 'eurovision-duels', slugByLocale: { en: '/duels', el: '/duels' }, hub: 'eurovision-games', priority: 0.85, changefreq: 'monthly' },
+  { id: 'dashboard', slugByLocale: { en: '/dashboard', el: '/dashboard' }, hub: 'eurovision-games', priority: 0.8, changefreq: 'monthly' },
+  { id: 'cookies', slugByLocale: { en: '/cookies', el: '/cookies' }, priority: 0.4, changefreq: 'yearly' },
 
   // Phase 3 — Greek-exclusive
   { id: 'eurovision-ellada', slugByLocale: { en: '/eurovision-ellada', el: '/eurovision-ellada' }, hub: 'eurovision-history', priority: 0.85, changefreq: 'monthly', greekExclusive: true },

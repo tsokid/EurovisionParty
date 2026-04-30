@@ -23,6 +23,8 @@ Eurovision Games is an unofficial fan-made party game. It is not affiliated with
 - [eurovision-2026-predictions](https://eurovision.games/en/eurovision-2026-predictions): Top 5 / Worst 5 predictions for Eurovision 2026, weekly-refreshed odds and country breakdowns.
 - [eurovision-trivia](https://eurovision.games/en/eurovision-trivia): 50+ Eurovision trivia questions with answers, plus how to run trivia duels live.
 - [eurovision-quiz](https://eurovision.games/en/eurovision-quiz): Take a free Eurovision quiz — choose category and difficulty.
+- [eurovision-duels](https://eurovision.games/en/duels): Eurovision duels feature — 3-question head-to-head trivia during the live show. Steal points or double yours.
+- [dashboard](https://eurovision.games/en/dashboard): Live leaderboard for your Eurovision Games room — push-updated as predictions, quiz, and duels resolve.
 - [eurovision-history](https://eurovision.games/en/eurovision-history): Eurovision history: founding (1956), winners by country, scoring system evolution, key moments.
 - [winners](https://eurovision.games/en/winners): Every Eurovision winner from 1956 to today — songs, artists, points, voting breakdown.
 - [countries](https://eurovision.games/en/countries): Every country in Eurovision: full entry history, best results, best songs.
@@ -33,6 +35,9 @@ Eurovision Games is an unofficial fan-made party game. It is not affiliated with
 - [scoring](https://eurovision.games/en/scoring): How Eurovision Games scoring works: prediction points, duel theft, winner categories.
 - [faq](https://eurovision.games/en/faq): Eurovision Games FAQ: setup, gameplay, scoring, hosting, technical questions answered.
 - [about](https://eurovision.games/en/about): About Eurovision Games — built for the people who watch Eurovision like a sport.
+- [cookies](https://eurovision.games/en/cookies): Cookies and consent: what we use, why, and how to change your preferences.
+- [privacy](https://eurovision.games/en/privacy): Privacy policy: data we collect, what we do with it, how to delete it.
+- [terms](https://eurovision.games/en/terms): Terms of use for Eurovision Games.
 
 ## Optional
 - [sitemap.xml](https://eurovision.games/sitemap.xml): full URL list with hreflang
