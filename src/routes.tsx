@@ -1,17 +1,16 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { RoomPage } from './pages/RoomPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import AdminRoute from './admin/AdminRoute';
-import PublicLayout from './components/seo/PublicLayout';
+import LocaleRoot from './components/seo/LocaleRoot';
+import LocaleRedirect from './components/seo/LocaleRedirect';
 import HowToPlayPage from './pages/seo/HowToPlayPage';
 import EurovisionNightPage from './pages/seo/EurovisionNightPage';
 import EurovisionGamesPage from './pages/seo/EurovisionGamesPage';
 import EurovisionPartyPage from './pages/seo/EurovisionPartyPage';
 import EurovisionTriviaPage from './pages/seo/EurovisionTriviaPage';
 import Predictions2026Page from './pages/seo/Predictions2026Page';
-import OnlineGamesPage from './pages/seo/OnlineGamesPage';
-import MobileGamesPage from './pages/seo/MobileGamesPage';
 import FAQPage from './pages/seo/FAQPage';
 import RulesPage from './pages/seo/RulesPage';
 import ScoringPage from './pages/seo/ScoringPage';
@@ -20,31 +19,48 @@ import PrivacyPage from './pages/seo/PrivacyPage';
 import TermsPage from './pages/seo/TermsPage';
 
 export const router = createBrowserRouter([
-  // In-game and admin surfaces own their chrome — no SiteHeader.
+  // Game + admin own their own chrome
   { path: '/room/:roomCode', element: <RoomPage /> },
   { path: '/admin', element: <AdminRoute /> },
 
-  // Public surface — wrapped in PublicLayout so every page gets the same
-  // sticky header + hamburger drawer.
+  // Locale-prefixed public surface
   {
-    element: <PublicLayout />,
+    path: '/:locale',
+    element: <LocaleRoot />,
     children: [
-      { path: '/', element: <HomePage /> },
-      { path: '/how-to-play', element: <HowToPlayPage /> },
-      { path: '/eurovision-night', element: <EurovisionNightPage /> },
-      { path: '/eurovision-games', element: <EurovisionGamesPage /> },
-      { path: '/eurovision-party', element: <EurovisionPartyPage /> },
-      { path: '/eurovision-trivia', element: <EurovisionTriviaPage /> },
-      { path: '/eurovision-2026-predictions', element: <Predictions2026Page /> },
-      { path: '/online-games', element: <OnlineGamesPage /> },
-      { path: '/mobile-games', element: <MobileGamesPage /> },
-      { path: '/faq', element: <FAQPage /> },
-      { path: '/rules', element: <RulesPage /> },
-      { path: '/scoring', element: <ScoringPage /> },
-      { path: '/about', element: <AboutPage /> },
-      { path: '/privacy', element: <PrivacyPage /> },
-      { path: '/terms', element: <TermsPage /> },
+      { index: true, element: <HomePage /> },
+      { path: 'how-to-play', element: <HowToPlayPage /> },
+      { path: 'eurovision-night', element: <EurovisionNightPage /> },
+      { path: 'eurovision-games', element: <EurovisionGamesPage /> },
+      { path: 'eurovision-party', element: <EurovisionPartyPage /> },
+      { path: 'eurovision-trivia', element: <EurovisionTriviaPage /> },
+      { path: 'eurovision-2026-predictions', element: <Predictions2026Page /> },
+      { path: 'faq', element: <FAQPage /> },
+      { path: 'rules', element: <RulesPage /> },
+      { path: 'scoring', element: <ScoringPage /> },
+      { path: 'about', element: <AboutPage /> },
+      { path: 'privacy', element: <PrivacyPage /> },
+      { path: 'terms', element: <TermsPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
+
+  // Legacy unprefixed → redirect to locale
+  { path: '/', element: <LocaleRedirect /> },
+  { path: '/online-games', element: <Navigate to="/en/eurovision-games" replace /> },
+  { path: '/mobile-games', element: <Navigate to="/en/eurovision-games" replace /> },
+  { path: '/how-to-play', element: <LocaleRedirect /> },
+  { path: '/eurovision-night', element: <LocaleRedirect /> },
+  { path: '/eurovision-games', element: <LocaleRedirect /> },
+  { path: '/eurovision-party', element: <LocaleRedirect /> },
+  { path: '/eurovision-trivia', element: <LocaleRedirect /> },
+  { path: '/eurovision-2026-predictions', element: <LocaleRedirect /> },
+  { path: '/faq', element: <LocaleRedirect /> },
+  { path: '/rules', element: <LocaleRedirect /> },
+  { path: '/scoring', element: <LocaleRedirect /> },
+  { path: '/about', element: <LocaleRedirect /> },
+  { path: '/privacy', element: <LocaleRedirect /> },
+  { path: '/terms', element: <LocaleRedirect /> },
+
+  { path: '*', element: <NotFoundPage /> },
 ]);
