@@ -13,15 +13,36 @@ begin;
 -- ---------------------------------------------------------------------------
 -- 1. Rename eurovision_2026_live → eurovision_2026_participants
 -- ---------------------------------------------------------------------------
-alter table public.eurovision_2026_live
-  rename to eurovision_2026_participants;
+-- Idempotent: only rename if the old table still exists. Same for the policies
+-- (they follow the rename, but get renamed too for clarity).
+do $rename$
+begin
+  if exists (
+    select 1 from pg_tables
+     where schemaname = 'public' and tablename = 'eurovision_2026_live'
+  ) then
+    execute 'alter table public.eurovision_2026_live rename to eurovision_2026_participants';
+  end if;
 
--- The previous policies follow the table on rename, but their names still say
--- "live". Rename them so future migrations can find them by predictable names.
-alter policy live_read on public.eurovision_2026_participants
-  rename to participants_read;
-alter policy live_admin on public.eurovision_2026_participants
-  rename to participants_admin;
+  if exists (
+    select 1 from pg_policies
+     where schemaname = 'public'
+       and tablename = 'eurovision_2026_participants'
+       and policyname = 'live_read'
+  ) then
+    execute 'alter policy live_read on public.eurovision_2026_participants rename to participants_read';
+  end if;
+
+  if exists (
+    select 1 from pg_policies
+     where schemaname = 'public'
+       and tablename = 'eurovision_2026_participants'
+       and policyname = 'live_admin'
+  ) then
+    execute 'alter policy live_admin on public.eurovision_2026_participants rename to participants_admin';
+  end if;
+end
+$rename$;
 
 -- ---------------------------------------------------------------------------
 -- 2. Create eurovision_2026_results
@@ -78,9 +99,18 @@ with ranked as (
 delete from public.parse_jobs
  where id in (select id from ranked where rn > 1);
 
--- 3e. Add unique constraint on (year, kind)
-alter table public.parse_jobs
-  add constraint parse_jobs_year_kind_key unique (year, kind);
+-- 3e. Add unique constraint on (year, kind). Idempotent.
+do $uniq$
+begin
+  if not exists (
+    select 1 from pg_constraint
+     where conname = 'parse_jobs_year_kind_key'
+       and conrelid = 'public.parse_jobs'::regclass
+  ) then
+    execute 'alter table public.parse_jobs add constraint parse_jobs_year_kind_key unique (year, kind)';
+  end if;
+end
+$uniq$;
 
 -- 3f. status default → 'idle'  (was 'running' in 020)
 alter table public.parse_jobs alter column status set default 'idle';
@@ -309,6 +339,7 @@ do $outer$
 begin
   if exists (select 1 from pg_extension where extname='pg_cron')
      and exists (select 1 from pg_extension where extname='pg_net') then
+    begin perform cron.unschedule('parser-participants-2026-fallback'); exception when others then null; end;
     perform cron.schedule(
       'parser-participants-2026-fallback',
       '0 0 15 5 *',
@@ -333,6 +364,7 @@ end $outer$;
 do $outer$
 begin
   if exists (select 1 from pg_extension where extname='pg_cron') then
+    begin perform cron.unschedule('parser-results-2026-start'); exception when others then null; end;
     perform cron.schedule(
       'parser-results-2026-start',
       '30 20 16 5 *',
@@ -352,6 +384,7 @@ do $outer$
 begin
   if exists (select 1 from pg_extension where extname='pg_cron')
      and exists (select 1 from pg_extension where extname='pg_net') then
+    begin perform cron.unschedule('parser-results-2026-poll'); exception when others then null; end;
     perform cron.schedule(
       'parser-results-2026-poll',
       '*/2 * * * *',
