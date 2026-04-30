@@ -93,9 +93,9 @@ export default function SiteHeader() {
           <img
             src="/logo.png"
             alt="eurovision.games"
-            width={2061}
-            height={541}
-            className="h-7 sm:h-9 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
+            width={2172}
+            height={724}
+            className="h-8 sm:h-10 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
             draggable={false}
           />
         </LocaleLink>
