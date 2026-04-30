@@ -318,7 +318,7 @@ To enable parallel sessions safely. **A session must not edit files outside its 
 
 ### 🟠 Important
 - **I-001:** Vercel build was failing on stale TS errors that don't exist in current `main`. Empty commit `82378f0` pushed to force rebuild. **Verify next deploy is green** (commit hash on Vercel must be ≥ `42b98d1`).
-- **I-002:** "2-10 players" copy across 8 files contradicts DB default of 20. Trust-eroding for users + bad for SEO. Fix when resuming Track D.
+- ~~**I-002:** "2-10 players" copy across 8 files contradicts DB default of 20.~~ → resolved 2026-04-30 in commit `5879146`. Full content audit also fixed scoring formulas (quiz tiers 12/8/4 not 100+bonus; predictions 50/20 not 50/30/20/15/10; duel 12-pt-by-second not 100), wrong country list in Predictions2026Page (was 36 with 5 boycotting; now 35 from canonical `src/lib/countries2026.ts`), 70 finals → 69, 26 entries → 25, duel limit 2 → 3 host-configurable, quiz round size 5 → 10.
 - **I-003:** Cron for `eurovision-parse` not scheduled. Must be set up before 15 May 2026 03:00 Greece.
 - **I-004:** Bundle size warning at build (`1.21 MB`). Code-split when convenient — not urgent.
 
@@ -334,6 +334,7 @@ To enable parallel sessions safely. **A session must not edit files outside its 
 - ~~Magic-link email template not installed~~ → installed via Management API
 - ~~CORS preflight returning 503~~ → was symptom of BOOT_ERROR, resolved
 - ~~DB GUCs permission denied~~ → working around via edge-function secrets
+- ~~Stale public-content (player counts, scoring, country list, duel limit)~~ → full audit 2026-04-30, all SEO pages now match `src/lib/constants.ts` + `src/lib/countries2026.ts` (commit `5879146`).
 
 ---
 
@@ -348,6 +349,8 @@ To enable parallel sessions safely. **A session must not edit files outside its 
 2026-04-30 ~05:20 UTC — Claude — A — Committed (42b98d1) + pushed.
 2026-04-30 ~05:30 UTC — Claude — meta — User saw Vercel build failures referencing variables that don't exist in current main (dndId, setActiveId, setMobileZone, usedSet, shuffledCorrectIndex). Local tsc passes clean. Pushed empty commit (82378f0) to force fresh Vercel build.
 2026-04-30 ~05:40 UTC — Claude — handoff — Created this document.
+2026-04-30 ~07:30 UTC — Claude — D — Visual polish (radial-glow gradient, room tile cards, SVG sparkles, header-aware layout) + magic-link email template installed via Management API.
+2026-04-30 ~08:00 UTC — Claude — D — Full content audit: fixed player counts (2-10→2-20), scoring formulas (now match constants.ts), country list (canonical source), duel limit (3 host-configurable), quiz round size, grand final count, 2026 entry count. Commit `5879146` shipped. I-002 resolved.
 ```
 
 ---
