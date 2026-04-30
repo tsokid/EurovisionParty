@@ -8,6 +8,8 @@ interface State {
   error: string | null;
 }
 
+export type AdminAuth = ReturnType<typeof useAdminAuth>;
+
 export function useAdminAuth() {
   const [state, setState] = useState<State>({
     status: 'loading', email: null, isAdmin: false, error: null,

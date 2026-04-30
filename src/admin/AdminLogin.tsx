@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { useAdminAuth } from './useAdminAuth';
+import type { AdminAuth } from './useAdminAuth';
 
-export default function AdminLogin() {
-  const { status, sendOtp, verifyOtp, error } = useAdminAuth();
+interface Props {
+  auth: AdminAuth;
+}
+
+export default function AdminLogin({ auth }: Props) {
+  const { status, sendOtp, verifyOtp, error } = auth;
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
   const [cooldown, setCooldown] = useState(0);

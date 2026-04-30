@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import AdminSidebar from './AdminSidebar';
 import { MODULES } from './modules';
-import { useAdminAuth } from './useAdminAuth';
+import type { AdminAuth } from './useAdminAuth';
 
-export default function AdminShell() {
-  const { email, logout } = useAdminAuth();
+interface Props {
+  auth: AdminAuth;
+}
+
+export default function AdminShell({ auth }: Props) {
+  const { email, logout } = auth;
   const [activeId, setActiveId] = useState<string | null>(MODULES[0]?.id ?? null);
   const Active = MODULES.find((m) => m.id === activeId)?.Component;
 
