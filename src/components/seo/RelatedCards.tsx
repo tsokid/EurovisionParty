@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import LocaleLink from './LocaleLink';
 
 export interface RelatedCard {
   href: string;
@@ -17,7 +17,7 @@ export default function RelatedCards({ heading = 'Keep reading', items }: Props)
       <h2 id="related-heading" className="text-xl font-bold text-white mb-5">{heading}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((c) => (
-          <Link
+          <LocaleLink
             key={c.href}
             to={c.href}
             className="group relative rounded-xl border border-white/10 hover:border-euro-pink/50 hover:bg-white/[0.04] transition-all duration-200 p-5"
@@ -33,7 +33,7 @@ export default function RelatedCards({ heading = 'Keep reading', items }: Props)
               </svg>
             </div>
             <p className="mt-2 text-sm text-white/60 leading-relaxed">{c.blurb}</p>
-          </Link>
+          </LocaleLink>
         ))}
       </div>
     </section>

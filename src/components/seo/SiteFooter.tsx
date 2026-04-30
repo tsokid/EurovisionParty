@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import LocaleLink from './LocaleLink';
 
 const SECTIONS = [
   {
@@ -14,8 +15,8 @@ const SECTIONS = [
     links: [
       ['/eurovision-games', 'eurovisionGames'],
       ['/eurovision-trivia', 'trivia'],
-      ['/online-games', 'online'],
-      ['/mobile-games', 'mobile'],
+      ['/eurovision-games', 'online'],
+      ['/eurovision-games', 'mobile'],
     ],
   },
   {
@@ -48,10 +49,10 @@ export default function SiteFooter() {
             <h4 className="text-euro-gold font-bold mb-2">{t(`siteFooter.${s.headerKey}`)}</h4>
             <ul className="space-y-1">
               {s.links.map(([href, labelKey]) => (
-                <li key={href}>
-                  <a href={href} className="text-white/70 hover:text-white">
+                <li key={labelKey}>
+                  <LocaleLink to={href} className="text-white/70 hover:text-white">
                     {t(`siteFooter.links.${labelKey}`)}
-                  </a>
+                  </LocaleLink>
                 </li>
               ))}
             </ul>

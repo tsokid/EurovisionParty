@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useUserRooms, getBadge } from '../../hooks/useUserRooms';
 import MuteToggle from '../ui/MuteToggle';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
+import LocaleLink from './LocaleLink';
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { localizePath, stripLocaleFromPath } from '../../lib/seo/locale';
 
 const HOW_TO_PLAY_LINKS = [
   { href: '/eurovision-trivia', key: 'trivia' as const },
@@ -40,6 +43,7 @@ export default function SiteHeader() {
   const [howDropdownOpen, setHowDropdownOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const locale = useLocale();
   const { rooms } = useUserRooms();
 
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -70,32 +74,33 @@ export default function SiteHeader() {
 
   const liveRooms = rooms.filter((r) => getBadge(r) !== 'ENDED');
   const roomCount = liveRooms.length;
+  const cleanPath = stripLocaleFromPath(pathname);
 
   const handleAction = (action: 'create' | 'join') => {
     setOpen(false);
-    navigate(`/?action=${action}`);
+    navigate(`${localizePath(locale, '/')}?action=${action}`);
   };
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-euro-deep/80 border-b border-white/10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group" aria-label="Eurovision Games — home">
+        <LocaleLink to="/" className="flex items-center gap-2 group" aria-label="Eurovision Games — home">
           <span className="w-7 h-7 rounded-full bg-gradient-to-br from-euro-purple-light to-euro-pink shadow-lg shadow-euro-pink/20 flex items-center justify-center text-white text-sm" aria-hidden>✦</span>
           <span className="font-bold text-white tracking-tight group-hover:text-euro-pink-light transition">Eurovision Games</span>
-        </Link>
+        </LocaleLink>
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-1" aria-label="Primary">
-          <Link
+          <LocaleLink
             to="/eurovision-night"
             className={`px-3 py-1.5 rounded-full text-sm transition ${
-              pathname === '/eurovision-night'
+              cleanPath === '/eurovision-night'
                 ? 'text-white bg-white/10'
                 : 'text-white/70 hover:text-white hover:bg-white/5'
             }`}
           >
             {t('siteNav.eurovisionNight')}
-          </Link>
+          </LocaleLink>
 
           {/* How to play — popover */}
           <div className="relative" data-how-popover>
@@ -105,7 +110,7 @@ export default function SiteHeader() {
               aria-haspopup="menu"
               aria-expanded={howDropdownOpen}
               className={`px-3 py-1.5 rounded-full text-sm transition flex items-center gap-1 ${
-                howDropdownOpen || HOW_TO_PLAY_LINKS.some((l) => l.href === pathname) || pathname === '/how-to-play'
+                howDropdownOpen || HOW_TO_PLAY_LINKS.some((l) => l.href === cleanPath) || cleanPath === '/how-to-play'
                   ? 'text-white bg-white/10'
                   : 'text-white/70 hover:text-white hover:bg-white/5'
               }`}
@@ -116,7 +121,7 @@ export default function SiteHeader() {
             {howDropdownOpen && (
               <div className="absolute right-0 top-full mt-2 min-w-[220px] rounded-xl border border-white/10 bg-euro-deep/95 backdrop-blur-md shadow-xl shadow-black/40 py-1.5 z-50" role="menu">
                 {HOW_TO_PLAY_LINKS.map((l) => (
-                  <Link
+                  <LocaleLink
                     key={l.href}
                     to={l.href}
                     role="menuitem"
@@ -124,7 +129,7 @@ export default function SiteHeader() {
                     onClick={() => setHowDropdownOpen(false)}
                   >
                     {t(`siteNav.${l.key}`)}
-                  </Link>
+                  </LocaleLink>
                 ))}
               </div>
             )}
@@ -253,12 +258,12 @@ export default function SiteHeader() {
             <div className="h-px bg-white/8 my-2" aria-hidden />
 
             {/* ─── Eurovision Night ─── */}
-            <Link
+            <LocaleLink
               to="/eurovision-night"
               className="px-3.5 py-3 rounded-lg text-white/85 hover:bg-white/5 transition"
             >
               {t('siteNav.eurovisionNight')}
-            </Link>
+            </LocaleLink>
 
             {/* ─── How to play — collapsible ─── */}
             <div>
@@ -274,13 +279,13 @@ export default function SiteHeader() {
               {howOpen && (
                 <div className="ml-3 pl-3 border-l border-white/10 flex flex-col">
                   {HOW_TO_PLAY_LINKS.map((l) => (
-                    <Link
+                    <LocaleLink
                       key={l.href}
                       to={l.href}
                       className="px-3 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/5 hover:text-white transition"
                     >
                       {t(`siteNav.${l.key}`)}
-                    </Link>
+                    </LocaleLink>
                   ))}
                 </div>
               )}

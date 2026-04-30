@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import LocaleLink from './LocaleLink';
 
 interface Props {
   title: string;
@@ -16,19 +16,19 @@ export default function CtaBanner({ title, body, primary, secondary }: Props) {
       <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{title}</h2>
       <p className="text-white/75 max-w-xl mx-auto mb-6">{body}</p>
       <div className="flex flex-wrap gap-3 justify-center">
-        <Link
+        <LocaleLink
           to={primary.href}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-euro-purple-light to-euro-pink text-white font-bold hover:opacity-95 transition shadow-lg shadow-euro-pink/20"
         >
           ✨ {primary.label}
-        </Link>
+        </LocaleLink>
         {secondary && (
-          <Link
+          <LocaleLink
             to={secondary.href}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/[0.06] border border-white/15 text-white font-bold hover:bg-white/10 transition"
           >
             {secondary.label}
-          </Link>
+          </LocaleLink>
         )}
       </div>
     </aside>

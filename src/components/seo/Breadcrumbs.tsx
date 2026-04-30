@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import LocaleLink from './LocaleLink';
 
 export interface Crumb {
   label: string;
@@ -27,7 +27,7 @@ export default function Breadcrumbs({ items }: Props) {
               {last ? (
                 <span className="text-white/90 font-medium" aria-current="page">{c.label}</span>
               ) : (
-                <Link to={c.href} className="text-white/60 hover:text-white transition">{c.label}</Link>
+                <LocaleLink to={c.href} className="text-white/60 hover:text-white transition">{c.label}</LocaleLink>
               )}
               {!last && <span aria-hidden className="text-white/30">›</span>}
             </li>
