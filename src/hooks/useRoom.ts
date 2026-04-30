@@ -11,12 +11,15 @@ const STORAGE_KEY = 'europarty_rooms';
 interface RoomSession {
   playerId: string;
   roomId: string;
+  password?: string;
 }
 
-export function saveRoomSession(roomCode: string, playerId: string, roomId: string) {
+export function saveRoomSession(roomCode: string, playerId: string, roomId: string, password?: string) {
   try {
     const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    existing[roomCode.toUpperCase()] = { playerId, roomId };
+    const session: RoomSession = { playerId, roomId };
+    if (password) session.password = password;
+    existing[roomCode.toUpperCase()] = session;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
   } catch { /* ignore */ }
 }
@@ -201,7 +204,7 @@ export function useRoom(): UseRoomReturn {
         subscribeToRoom(typedRoom.id as string);
 
         // Save session to localStorage for rejoin support
-        saveRoomSession(code, playerData.id, typedRoom.id);
+        saveRoomSession(code, playerData.id, typedRoom.id, password || undefined);
 
         return code;
       } catch (err: unknown) {
@@ -295,7 +298,7 @@ export function useRoom(): UseRoomReturn {
         subscribeToRoom(typedRoomData.id);
 
         // Save session to localStorage for rejoin support
-        saveRoomSession(typedRoomData.code, playerData.id, typedRoomData.id);
+        saveRoomSession(typedRoomData.code, playerData.id, typedRoomData.id, password || undefined);
 
         return typedRoomData;
       } catch (err: unknown) {

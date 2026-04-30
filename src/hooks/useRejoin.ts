@@ -22,7 +22,7 @@ function twoHoursAgoISO(): string {
 export function useRejoin(roomCode: string | undefined) {
   const [status, setStatus] = useState<RejoinStatus>('loading');
   const attempted = useRef(false);
-  const { room, player, setRoom, setPlayer } = useGameStore();
+  const { room, player, setRoom, setPlayer, setRoomPassword } = useGameStore();
 
   useEffect(() => {
     if (room && player) {
@@ -173,6 +173,8 @@ export function useRejoin(roomCode: string | undefined) {
         // 5. Hydrate store
         setRoom(roomData as Room);
         setPlayer(playerData);
+        const saved = getRoomSession(roomCode!);
+        if (saved?.password) setRoomPassword(saved.password);
 
         setStatus('rejoined');
       } catch (err) {
