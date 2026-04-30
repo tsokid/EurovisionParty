@@ -367,6 +367,10 @@
     "headline": "Eurovision Games — host the perfect Eurovision night",
     "leadStrong": "Eurovision Games is a free, browser-based party game",
     "leadRest": " where 2-20 friends predict the Eurovision 2026 Top 5 and Worst 5, battle in trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No download, no account.",
+    "primaryHeading": "Plan your Eurovision night",
+    "secondaryHeading": "Get to know the game",
+    "tail": "New here?",
+    "tailLink": "Read the 60-second setup guide",
     "cards": {
       "nightTitle": "Eurovision night",
       "nightDesc": "Hosting playbook for the watch party.",

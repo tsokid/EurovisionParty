@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { RoomPage } from './pages/RoomPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+// NotFoundPage is rendered only inside LocaleRoot (locale child `*` route)
+// so its LocaleLink usage is safe. Unprefixed unknown paths redirect.
 import AdminRoute from './admin/AdminRoute';
 import LocaleRoot from './components/seo/LocaleRoot';
 import LocaleRedirect from './components/seo/LocaleRedirect';
@@ -71,5 +73,7 @@ export const router = createBrowserRouter([
   { path: '/dashboard', element: <LocaleRedirect /> },
   { path: '/cookies', element: <LocaleRedirect /> },
 
-  { path: '*', element: <NotFoundPage /> },
+  // Catch-all: redirect unknown unprefixed paths into the locale-scoped
+  // tree so NotFoundPage renders inside LocaleProvider (LocaleLink needs it).
+  { path: '*', element: <LocaleRedirect /> },
 ]);
