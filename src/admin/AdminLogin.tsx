@@ -134,7 +134,9 @@ export default function AdminLogin({ auth }: Props) {
                   We sent a 6-digit code to{' '}
                   <span className="text-white font-semibold">{email}</span>.
                 </p>
-                <p className="text-xs text-white/40 mt-1">Check your inbox (and spam). Code expires in 60 minutes.</p>
+                <p className="text-xs text-white/40 mt-1">
+                  Enter the code below, or tap the magic-link button in the email. Both expire in 60 minutes.
+                </p>
               </div>
 
               <div className="flex gap-2 justify-between" onPaste={onPaste}>

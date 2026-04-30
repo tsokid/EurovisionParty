@@ -80,7 +80,7 @@ export default function EurovisionNightPage() {
         <h2>Game options inside the room</h2>
         <ul>
           <li><strong>Predictions:</strong> Top 5, Worst 5 — locked before the show, scored automatically against jury + televote.</li>
-          <li><strong>Trivia duels:</strong> Head-to-head between any two players. Winner steals points from loser. Cap of 2 duels per pair.</li>
+          <li><strong>Trivia duels:</strong> Head-to-head between any two players. Winner steals points from loser. Host-configurable cap per pair (default 3 duels, including rematches).</li>
           <li><strong>Quiz rounds:</strong> Fast-fire rounds the host triggers between performances.</li>
           <li><strong>Sudden-death tiebreak:</strong> Optional. If two players tie a winner category, one buzzer-style trivia question decides it.</li>
         </ul>
@@ -89,7 +89,7 @@ export default function EurovisionNightPage() {
         <p>
           <strong>Do I need an account?</strong> No. Guests join with just a room code. The host signs in once.
           <br />
-          <strong>How many players?</strong> 2 to 10. Couples can share a screen.
+          <strong>How many players?</strong> 2 to 20. Couples can share a screen.
           <br />
           <strong>Does it run on TV?</strong> The phone or laptop is the dashboard; the broadcast stays on the TV.
         </p>

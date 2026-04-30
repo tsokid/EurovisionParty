@@ -84,7 +84,7 @@ export default function EurovisionTriviaPage() {
 
         <h2>What is Eurovision trivia?</h2>
         <p>
-          The Eurovision Song Contest has been running since 1956, with 50+ countries competing across 70 grand finals — that&apos;s
+          The Eurovision Song Contest has been running since 1956, with 50+ countries competing across 69 grand finals (1956-2025; 2020 cancelled) — that&apos;s
           a deep well of trivia. Categories that come up most: winners by year, voting milestones, language rules, scoring
           changes, country debuts and withdrawals, viral entries, controversies, and song titles.
         </p>
@@ -115,14 +115,14 @@ export default function EurovisionTriviaPage() {
         <p>
           Click any other player&apos;s name in the live leaderboard, hit <em>Challenge</em>, and a 3-question duel pops up on both
           your screens. Each player has 15 seconds per question. Whoever gets more correct wins; faster correct answers break a
-          tie. The winner steals points from the loser. Each pair can duel a maximum of two times per night (including rematches),
-          so you can&apos;t farm one weaker opponent.
+          tie. The winner steals points from the loser. Each pair can duel a host-configurable maximum (default 3 times) per
+          night including rematches, so you can&apos;t farm one weaker opponent.
         </p>
 
         <h2>Play live</h2>
         <p>
           Trivia happens during the show. Best windows: between underwhelming entries, during the interval act, and through the
-          jury vote. <a href="/">Create a room</a> on Eurovision Games and invite 2-9 friends to play.
+          jury vote. <a href="/">Create a room</a> on Eurovision Games and invite up to 19 friends to play.
         </p>
         <p>
           Related: <a href="/how-to-play">2-minute setup guide</a> · <a href="/scoring">scoring formulas</a> ·{' '}

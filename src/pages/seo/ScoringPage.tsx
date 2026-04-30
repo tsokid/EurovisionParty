@@ -13,76 +13,91 @@ export default function ScoringPage() {
     <>
       <SchemaHead
         title="Eurovision Games Scoring — Exact Formulas for Predictions, Quiz &amp; Duels"
-        description="The exact scoring formulas for Eurovision Games: Top-5 prediction points by rank, Worst-5 flat points, quiz speed bonuses, duel steal/double, and penalties."
+        description="The exact scoring formulas for Eurovision Games: Top-5 and Worst-5 prediction points, quiz response-time tiers, duel point math, and steal vs double."
         canonical="https://eurovision.games/scoring"
         jsonLd={article}
       />
       <article className="prose prose-invert max-w-2xl mx-auto px-4 py-12">
         <h1>Eurovision Games — exact scoring formulas</h1>
         <p className="lead">
-          <strong>Every action in Eurovision Games maps to a transparent point total.</strong> This page lists the formulas the
-          server uses to compute Top-5 and Worst-5 predictions, quiz answers, and duel outcomes. Useful if you&apos;re strategising
-          before the show — or arguing with the host afterwards.
+          <strong>Every action in Eurovision Games maps to a transparent point total.</strong> This page lists the exact
+          formulas the server uses to compute Top-5 and Worst-5 predictions, quiz answers, and duel outcomes — useful if
+          you&apos;re strategising before the show or arguing with the host afterwards.
         </p>
 
         <h2>Quiz scoring</h2>
-        <ul>
-          <li><strong>Correct answer:</strong> 100 points base.</li>
-          <li><strong>Speed bonus:</strong> up to +50, scaled linearly from 15 sec (no bonus) to 1 sec (full bonus).</li>
-          <li><strong>Wrong answer:</strong> 0 points. No penalty.</li>
-          <li><strong>Timeout:</strong> 0 points.</li>
-        </ul>
-        <p>Maximum quiz points per round (5 questions × 150) = 750.</p>
-
-        <h2>Top-5 prediction scoring</h2>
-        <p>Each Top-5 pick scores based on your ordered position vs the country&apos;s actual finish:</p>
+        <p>Each quiz round is 10 questions, 4 options per question, 15-second timer. Points are tier-based on response time:</p>
         <table>
-          <thead><tr><th>Your position</th><th>Country finished</th><th>Points</th></tr></thead>
+          <thead><tr><th>Response time</th><th>Points (correct)</th></tr></thead>
           <tbody>
-            <tr><td>#1</td><td>Won (1st)</td><td>50</td></tr>
-            <tr><td>#1</td><td>Top 3 (2-3)</td><td>30</td></tr>
-            <tr><td>#1</td><td>Top 5 (4-5)</td><td>20</td></tr>
-            <tr><td>#2 or #3</td><td>Top 5</td><td>15</td></tr>
-            <tr><td>#4 or #5</td><td>Top 5</td><td>10</td></tr>
-            <tr><td>any</td><td>Outside Top 5</td><td>0</td></tr>
+            <tr><td>0-3 seconds</td><td>12</td></tr>
+            <tr><td>3.01-7 seconds</td><td>8</td></tr>
+            <tr><td>7.01-15 seconds</td><td>4</td></tr>
+            <tr><td>Wrong / timeout</td><td>0</td></tr>
           </tbody>
         </table>
-        <p>Maximum Top-5 points: <strong>110</strong> (#1 wins + four supporting picks all in Top 5).</p>
+        <p>Maximum quiz points per round: 10 questions × 12 = <strong>120</strong>. Default night runs 3 rounds (host
+        configurable, 1-3) for a quiz cap of <strong>360</strong> points.</p>
+
+        <h2>Top-5 prediction scoring</h2>
+        <p>Each Top-5 pick is scored against the official combined jury + televote ranking:</p>
+        <table>
+          <thead><tr><th>Result</th><th>Points</th></tr></thead>
+          <tbody>
+            <tr><td>Country at the exact position you predicted</td><td>50</td></tr>
+            <tr><td>Country in the official Top 5 but at a different position</td><td>20</td></tr>
+            <tr><td>Country outside the Top 5</td><td>0</td></tr>
+          </tbody>
+        </table>
+        <p>Maximum Top-5 points: 5 exact positions × 50 = <strong>250</strong>.</p>
 
         <h2>Worst-5 prediction scoring</h2>
-        <p>Each Worst-5 pick that finishes in the actual bottom 5 of the grand final scores a flat <strong>10 points</strong>. Position within the Worst-5 list does not matter.</p>
-        <p>Maximum Worst-5 points: <strong>50</strong>.</p>
+        <p>Symmetrical to Top-5, against the official bottom 5 (last place = position 1 in your Worst-5 list):</p>
+        <table>
+          <thead><tr><th>Result</th><th>Points</th></tr></thead>
+          <tbody>
+            <tr><td>Country at the exact bottom position you predicted</td><td>50</td></tr>
+            <tr><td>Country in the official Worst 5 but at a different position</td><td>20</td></tr>
+            <tr><td>Country outside the Worst 5</td><td>0</td></tr>
+          </tbody>
+        </table>
+        <p>Maximum Worst-5 points: <strong>250</strong>. Combined predictions cap: <strong>500</strong>.</p>
 
         <h2>Duel scoring</h2>
-        <p>A duel is 3 trivia questions, head-to-head:</p>
+        <p>A duel is 3 trivia questions, head-to-head. Each correct answer scores by elapsed seconds:</p>
         <ul>
-          <li>Each correct answer scores 100 base + speed bonus (same as quiz).</li>
-          <li>Whoever has more correct answers wins the duel; ties broken by total response time.</li>
-          <li>The winner chooses <strong>Steal</strong> (take 100 pts from loser&apos;s total) or <strong>Double</strong> (gain own 100 pts from the pool).</li>
-          <li>If neither player gets any correct, the duel is void (no transfer).</li>
+          <li>0 seconds in: 12 points. 1 second: 11. 2 seconds: 10. … 11 seconds: 1. 12+ seconds or wrong: 0.</li>
+          <li>Whoever has the higher answer total wins the duel; if tied, faster total response time breaks the tie.</li>
+          <li>The winner also receives a flat <strong>+12</strong> duel-win bonus.</li>
+        </ul>
+        <p>The winner then chooses one of two effects on the points they earned that duel (their <em>v_winner_score</em>):</p>
+        <ul>
+          <li><strong>Steal:</strong> take <em>v_winner_score</em> points from the loser&apos;s total (capped at what the loser actually has — you can&apos;t take them below zero).</li>
+          <li><strong>Double:</strong> add another <em>v_winner_score</em> to your own total. The loser keeps their points.</li>
         </ul>
 
         <h2>Steal vs Double — strategy</h2>
         <p>
-          <strong>Steal</strong> hurts the leader more (it&apos;s a zero-sum point swing: +100 to you, -100 to them).{' '}
-          <strong>Double</strong> is a flat gain for you, no penalty to the loser. Steal when you&apos;re close to second place
-          and want to overtake; Double when you&apos;re comfortably leading and don&apos;t need to widen the gap.
+          <strong>Steal</strong> creates a zero-sum swing — useful when overtaking the leader matters more than the absolute
+          gain. <strong>Double</strong> is a flat add — useful when you&apos;re leading and don&apos;t want to give the loser a
+          revenge motive. Both pay the same to you when the opponent has at least <em>v_winner_score</em> banked; if they
+          don&apos;t, Double pays more.
         </p>
 
-        <h2>Penalties</h2>
+        <h2>Penalties and edge cases</h2>
         <ul>
-          <li><strong>Quitting mid-game:</strong> player is marked away; no points lost, but their predictions still score automatically.</li>
-          <li><strong>Refusing every duel challenge:</strong> no penalty, but other players will notice. The Duelist title is impossible without participating.</li>
-          <li><strong>Cheating</strong> (multiple devices, AI assist): host discretion; suggested penalty is voiding all duel points.</li>
+          <li><strong>Quitting mid-game:</strong> player marked away. Predictions still auto-score; quiz/duel opportunities are forfeited.</li>
+          <li><strong>Refused duel challenges:</strong> tracked per player. No point penalty, but the Duelist title needs participation.</li>
+          <li><strong>Cheating</strong> (multi-device, AI assist): host discretion; suggested resolution is voiding affected duels.</li>
         </ul>
 
         <h2>Worked example</h2>
-        <p>You scored:</p>
+        <p>You finished the night with:</p>
         <ul>
-          <li>Quiz: 3 correct out of 15 questions = ~360 pts</li>
-          <li>Predictions: #1 pick won (50) + #3 pick finished 4th (15) + 2 Worst-5 hits (20) = 85 pts</li>
-          <li>Duels: 2 wins, both Steal = +200 (and 2 losses = -200) → net 0 from duels</li>
-          <li><strong>Total: 445 pts</strong></li>
+          <li>Quiz: 18 correct out of 30 questions, mostly tier-2 timing → ~144 pts</li>
+          <li>Predictions: 1 exact Top-5 hit (50) + 2 in-Top-5 wrong-position (40) + 1 exact Worst-5 (50) + 1 in-Worst-5 (20) = 160 pts</li>
+          <li>Duels: won 2, both Steal — say 28 pts swung your way and another 24 stolen on the second = 52 from steals + 2 × 12 win bonus = 76 pts net</li>
+          <li><strong>Total: 380 pts</strong></li>
         </ul>
 
         <p>

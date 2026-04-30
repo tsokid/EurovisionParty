@@ -96,7 +96,7 @@ export default function EurovisionPartyPage() {
         <ul>
           <li><strong>20:00</strong> — Doors. Costume judging. Country draws.</li>
           <li><strong>20:30</strong> — Open Eurovision Games room. Lock predictions before kick-off.</li>
-          <li><strong>21:00</strong> — Grand final live (CET). 26 entries.</li>
+          <li><strong>21:00</strong> — Grand final live (CET). 25 entries (Big Four + host + 20 semi qualifiers).</li>
           <li><strong>~22:30</strong> — Interval act. Trivia duel window.</li>
           <li><strong>23:00</strong> — Jury vote. Most chaotic 25 min on TV.</li>
           <li><strong>23:30</strong> — Televote. Winner declared.</li>

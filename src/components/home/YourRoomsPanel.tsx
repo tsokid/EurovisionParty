@@ -154,17 +154,17 @@ export default function YourRoomsPanel() {
   if (!rooms.length) return null;
 
   return (
-    <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-3 mb-4">
-      <p className="text-[10px] font-bold tracking-widest uppercase text-white/40 mb-2">
-        {t('yourRooms.title')}
-      </p>
-      <div
-        className="max-h-56 overflow-y-auto flex flex-col gap-1.5"
-        style={{
-          maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
-        }}
-      >
+    <div className="w-full max-w-sm sm:max-w-md mb-5">
+      <div className="flex items-center justify-between mb-2.5 px-1">
+        <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-white/55">
+          {t('yourRooms.title')}
+        </p>
+        <span className="text-[10px] text-white/35 tabular-nums">
+          {rooms.length} {rooms.length === 1 ? 'room' : 'rooms'}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-2.5">
         {rooms.map((entry) => {
           const badge = getBadge(entry);
           const canJoin = badge !== 'ENDED';
@@ -174,56 +174,68 @@ export default function YourRoomsPanel() {
           return (
             <div
               key={entry.playerId}
-              className="flex flex-col gap-1.5 p-2 rounded-xl border bg-white/5 border-white/10"
+              className={`relative rounded-2xl border bg-white/[0.04] backdrop-blur-sm transition-all
+                ${canJoin
+                  ? 'border-white/12 hover:border-euro-pink/40 hover:bg-white/[0.06] shadow-[0_4px_20px_rgba(168,85,247,0.08)]'
+                  : 'border-white/8 opacity-70'}
+              `}
             >
-              {/* Main row — tap to join */}
-              <button
-                disabled={!canJoin}
-                onClick={() => canJoin && navigate(`/room/${entry.roomCode}`)}
-                className={`flex items-center gap-2 text-left w-full transition-colors
-                  ${canJoin ? 'cursor-pointer' : 'cursor-default opacity-50'}`}
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-bold text-white truncate">
+              <div className="flex items-stretch gap-3 p-3 sm:p-3.5">
+                {/* Left: room info */}
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${badgeClass[badge]}`}>
+                      {badge}
+                    </span>
+                    {entry.isHost && (
+                      <span className="text-[10px] font-bold text-euro-gold/90 tracking-wider uppercase">
+                        Host
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[15px] sm:text-base font-bold text-white truncate leading-tight">
                     {entry.hostName}'s Room
                   </p>
-                  <p className="text-[11px] text-white/40 mt-0.5">
-                    {entry.roomCode} · {entry.totalPoints} pts
+                  <p className="text-[11px] text-white/45 mt-0.5 tabular-nums">
+                    <span className="font-mono">{entry.roomCode}</span> · {entry.totalPoints} pts
                   </p>
                 </div>
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${badgeClass[badge]}`}>
-                  {badge}
-                </span>
-              </button>
 
-              {/* CTA row */}
-              <div className="flex gap-1.5 pt-0.5 border-t border-white/8">
-                {canJoin && (
+                {/* Right: stacked CTAs — Join (primary) on top, Leave/Delete (secondary) under it */}
+                <div className="flex flex-col gap-1.5 shrink-0 w-[110px]">
                   <button
-                    onClick={() => navigate(`/room/${entry.roomCode}`)}
-                    className="flex-1 text-[11px] font-semibold text-euro-purple-light bg-euro-purple/20 hover:bg-euro-purple/35 rounded-lg py-1 transition-colors"
+                    disabled={!canJoin}
+                    onClick={() => canJoin && navigate(`/room/${entry.roomCode}`)}
+                    className="text-[12px] font-bold text-white bg-gradient-to-r from-euro-purple-light to-euro-pink rounded-lg py-2 px-2 shadow-md shadow-euro-pink/20 hover:brightness-110 transition disabled:opacity-30 disabled:cursor-not-allowed disabled:bg-none disabled:bg-white/5"
                   >
-                    {t('yourRooms.join', { defaultValue: 'Join' })}
+                    {canJoin ? t('yourRooms.join', { defaultValue: 'Join' }) : 'Ended'}
                   </button>
-                )}
-                {canLeave && (
-                  <button
-                    disabled={isBusy}
-                    onClick={() => handleLeave(entry)}
-                    className="flex-1 text-[11px] font-semibold text-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/20 rounded-lg py-1 transition-colors disabled:opacity-50"
-                  >
-                    {isBusy ? '…' : t('yourRooms.leave', { defaultValue: 'Leave' })}
-                  </button>
-                )}
-                {entry.isHost && (
-                  <button
-                    disabled={isBusy}
-                    onClick={() => handleDelete(entry)}
-                    className="flex-1 text-[11px] font-semibold text-red-400 bg-red-400/10 hover:bg-red-400/20 rounded-lg py-1 transition-colors disabled:opacity-50"
-                  >
-                    {isBusy ? '…' : t('yourRooms.delete', { defaultValue: '🗑 Delete' })}
-                  </button>
-                )}
+
+                  <div className="flex gap-1">
+                    {canLeave && (
+                      <button
+                        disabled={isBusy}
+                        onClick={() => handleLeave(entry)}
+                        className="flex-1 text-[10.5px] font-semibold text-yellow-300/90 bg-yellow-400/10 hover:bg-yellow-400/20 border border-yellow-400/20 rounded-md py-1.5 transition disabled:opacity-50"
+                      >
+                        {isBusy ? '…' : t('yourRooms.leave', { defaultValue: 'Leave' })}
+                      </button>
+                    )}
+                    {entry.isHost && (
+                      <button
+                        disabled={isBusy}
+                        onClick={() => handleDelete(entry)}
+                        className="flex-1 text-[10.5px] font-semibold text-red-300/90 bg-red-400/10 hover:bg-red-400/20 border border-red-400/20 rounded-md py-1.5 transition disabled:opacity-50"
+                        aria-label={t('yourRooms.delete', { defaultValue: 'Delete' })}
+                      >
+                        {isBusy ? '…' : t('yourRooms.delete', { defaultValue: 'Delete' })}
+                      </button>
+                    )}
+                    {!canLeave && !entry.isHost && (
+                      <span className="flex-1 text-[10px] text-white/30 text-center py-1.5">—</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           );

@@ -43,7 +43,7 @@ export default function RulesPage() {
 
         <h2>Quiz rules</h2>
         <ul>
-          <li>The host triggers each quiz round. Default: 3 rounds, 5 questions each.</li>
+          <li>The host triggers each quiz round. Default: 3 rounds, 10 questions each (host configurable).</li>
           <li>Each question has 4 options and a 15-second timer.</li>
           <li>No question is repeated to the same player across the night.</li>
           <li>Answer ties broken by response time.</li>
@@ -54,17 +54,17 @@ export default function RulesPage() {
           <li>Any player can challenge any other player in the room.</li>
           <li>Each duel: 3 questions, 15 sec each, single device per player.</li>
           <li>Winner steals points from the loser; the &quot;steal vs double&quot; choice belongs to the winner.</li>
-          <li>Per-pair limit: 2 duels per night, including rematches.</li>
+          <li>Per-pair limit: host-configurable, default 3 duels per night including rematches.</li>
           <li>Refused or expired challenges do not count toward the limit.</li>
         </ul>
 
         <h2>Scoring rules (summary)</h2>
         <p>See the <a href="/scoring">scoring page</a> for formulas. Headlines:</p>
         <ul>
-          <li>Top-5 pick correct: 10-50 pts depending on your position vs theirs.</li>
-          <li>Worst-5 pick lands in bottom 5: flat 10 pts each.</li>
-          <li>Quiz: 100 pts per correct answer; speed bonus up to +50.</li>
-          <li>Duel won: stealer takes 100-300 pts from loser.</li>
+          <li>Top-5 pick at exact position: 50 pts. In Top-5 wrong position: 20 pts.</li>
+          <li>Worst-5 pick at exact position: 50 pts. In Worst-5 wrong position: 20 pts.</li>
+          <li>Quiz: 12 pts (≤3s), 8 pts (≤7s), 4 pts (≤15s) per correct answer; 0 for wrong/timeout.</li>
+          <li>Duel won: +12 win bonus, plus winner chooses Steal (take winner-score from loser) or Double (gain winner-score for self).</li>
         </ul>
 
         <h2>Winner categories</h2>

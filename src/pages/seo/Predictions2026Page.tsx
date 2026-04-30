@@ -1,13 +1,13 @@
 import SchemaHead from '../../components/seo/SchemaHead';
 import SiteFooter from '../../components/seo/SiteFooter';
+import { COUNTRIES_2026 as CANON, BOYCOTTING_2026 } from '../../lib/countries2026';
 
-const COUNTRIES_2026 = [
-  'Albania', 'Armenia', 'Australia', 'Austria (host)', 'Azerbaijan', 'Belgium', 'Croatia', 'Cyprus',
-  'Czechia', 'Denmark', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece', 'Iceland',
-  'Ireland', 'Israel', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
-  'Norway', 'Poland', 'Portugal', 'San Marino', 'Serbia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland',
-  'Ukraine', 'United Kingdom',
-];
+// Build the display list straight off the canonical participant table so the
+// SEO copy can never drift from the actual game line-up. Sorted alphabetically
+// and host (Austria) tagged inline for clarity.
+const COUNTRIES_2026 = [...CANON]
+  .map((c) => (c.semi === 'host' ? `${c.name} (host)` : c.name))
+  .sort((a, b) => a.localeCompare(b));
 
 export default function Predictions2026Page() {
   const article = {
@@ -35,15 +35,19 @@ export default function Predictions2026Page() {
         </p>
 
         <h2>The 2026 line-up</h2>
-        <p>35 countries are confirmed for Eurovision 2026 across two semi-finals and the grand final:</p>
+        <p>{COUNTRIES_2026.length} countries are confirmed for Eurovision 2026 across two semi-finals and the grand final:</p>
         <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4">
           {COUNTRIES_2026.map((c) => (
             <li key={c}>{c}</li>
           ))}
         </ul>
         <p className="text-sm text-white/60">
-          The full grand-final running order is fixed after the second semi-final; this page updates with the live entries once the
-          parser publishes them. (Engineers: live data from <code>eurovision_2026_live</code>.)
+          Withdrawn / boycotting in 2026: {BOYCOTTING_2026.join(', ')}. Spain&apos;s exit shrinks the &quot;Big Five&quot; to a Big
+          Four (France, Germany, Italy, United Kingdom).
+        </p>
+        <p className="text-sm text-white/60">
+          The grand-final running order is fixed after the second semi-final; this page updates with live entries once the parser
+          publishes them.
         </p>
 
         <h2>Prediction format</h2>
@@ -60,21 +64,28 @@ export default function Predictions2026Page() {
         </p>
 
         <h2>Scoring — Top 5</h2>
-        <p>For each Top-5 pick, you score points based on where the country actually finishes:</p>
+        <p>For each Top-5 pick, you score against the official combined jury + televote ranking:</p>
         <table>
-          <thead><tr><th>Your position</th><th>Country finished</th><th>Points</th></tr></thead>
+          <thead><tr><th>Result</th><th>Points</th></tr></thead>
           <tbody>
-            <tr><td>#1</td><td>Won</td><td>50</td></tr>
-            <tr><td>#1</td><td>Top 3</td><td>30</td></tr>
-            <tr><td>#1</td><td>Top 5</td><td>20</td></tr>
-            <tr><td>#2-#3</td><td>Top 5</td><td>15</td></tr>
-            <tr><td>#4-#5</td><td>Top 5</td><td>10</td></tr>
-            <tr><td>any</td><td>Outside Top 5</td><td>0</td></tr>
+            <tr><td>Country at the exact position you predicted</td><td>50</td></tr>
+            <tr><td>Country in the official Top 5 but at a different position</td><td>20</td></tr>
+            <tr><td>Country outside the Top 5</td><td>0</td></tr>
           </tbody>
         </table>
+        <p>Maximum Top-5 points: 5 exact positions × 50 = <strong>250</strong>.</p>
 
         <h2>Scoring — Worst 5</h2>
-        <p>For each Worst-5 pick that finishes in the bottom 5, you score 10 points (regardless of position).</p>
+        <p>Worst-5 is symmetrical — last place counts as position 1 in your list:</p>
+        <table>
+          <thead><tr><th>Result</th><th>Points</th></tr></thead>
+          <tbody>
+            <tr><td>Country at the exact bottom position you predicted</td><td>50</td></tr>
+            <tr><td>Country in the official Worst 5 but at a different position</td><td>20</td></tr>
+            <tr><td>Country outside the Worst 5</td><td>0</td></tr>
+          </tbody>
+        </table>
+        <p>Maximum Worst-5 points: <strong>250</strong>. Combined predictions cap: <strong>500</strong>.</p>
 
         <h2>Strategy tips</h2>
         <ul>

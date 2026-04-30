@@ -9,7 +9,7 @@ export default function HomeSeoBlock() {
           Eurovision Games — host the perfect Eurovision night
         </h1>
         <p className="text-lg text-white/80 text-center">
-          <strong>Eurovision Games is a free, browser-based party game</strong> where 2-10 friends predict the Eurovision 2026 Top
+          <strong>Eurovision Games is a free, browser-based party game</strong> where 2-20 friends predict the Eurovision 2026 Top
           5 and Worst 5, battle in trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No download,
           no account.
         </p>
@@ -20,7 +20,7 @@ export default function HomeSeoBlock() {
           </a>
           <a href="/eurovision-2026-predictions" className="rounded-xl border border-white/10 p-4 hover:border-euro-gold/60 transition">
             <h3 className="font-bold mb-1">2026 predictions</h3>
-            <p className="text-sm text-white/60">Top 5 / Worst 5 format and 36-country line-up.</p>
+            <p className="text-sm text-white/60">Top 5 / Worst 5 format and 35-country line-up.</p>
           </a>
           <a href="/eurovision-trivia" className="rounded-xl border border-white/10 p-4 hover:border-euro-gold/60 transition">
             <h3 className="font-bold mb-1">Eurovision trivia</h3>

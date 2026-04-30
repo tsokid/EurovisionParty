@@ -7,7 +7,7 @@ export default function HowToPlayPage() {
     '@type': 'HowTo',
     name: 'How to play Eurovision Games',
     step: [
-      { '@type': 'HowToStep', name: 'Create a room', text: 'Click "Create Room", set max players (2-10) and number of quiz rounds.' },
+      { '@type': 'HowToStep', name: 'Create a room', text: 'Click "Create Room", set max players (2-20) and number of quiz rounds.' },
       { '@type': 'HowToStep', name: 'Invite friends', text: 'Share the room code or link. Friends join in their browser, no app install.' },
       { '@type': 'HowToStep', name: 'Lock predictions', text: 'Each player picks their Top 5 and Worst 5 of Eurovision 2026.' },
       { '@type': 'HowToStep', name: 'Battle in duels', text: 'Challenge friends to head-to-head trivia duels for points.' },
@@ -28,12 +28,12 @@ export default function HowToPlayPage() {
         <p className="lead">
           <strong>Eurovision Games is a free, browser-based party game</strong> for the Eurovision Song Contest. Players predict the
           Top 5 and Worst 5, answer trivia in head-to-head duels, and battle for five winner titles. Setup takes 60 seconds and
-          supports 2-10 players.
+          supports 2-20 players.
         </p>
         <h2>1. Create a room (10 seconds)</h2>
         <p>
-          Click <em>Create Room</em>. Pick how many quiz rounds (default 3), how many players you expect (up to 10), and a duel
-          limit per pair (default 2). A 6-character room code appears.
+          Click <em>Create Room</em>. Pick how many quiz rounds (default 3), how many players you expect (up to 20), and a duel
+          limit per pair (default 3). A 6-character room code appears.
         </p>
         <h2>2. Invite friends (20 seconds)</h2>
         <p>
@@ -48,7 +48,7 @@ export default function HowToPlayPage() {
         <h2>4. Trivia duels (during the show)</h2>
         <p>
           Challenge any other player to a 3-question trivia duel. Winner steals points from the loser. Each pair can duel a
-          maximum of 2 times across the night including rematches, so you can&apos;t grind one opponent.
+          host-configurable maximum (default 3 times across the night, including rematches), so you can&apos;t grind one opponent.
         </p>
         <h2>5. Live scoring</h2>
         <p>
@@ -71,7 +71,7 @@ export default function HowToPlayPage() {
         <h2>What you need</h2>
         <ul>
           <li>A modern browser (Chrome, Safari, Firefox, Edge — phone or desktop)</li>
-          <li>2-10 friends</li>
+          <li>2-20 friends</li>
           <li>The Eurovision broadcast (TV or stream)</li>
         </ul>
         <p>

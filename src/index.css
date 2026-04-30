@@ -25,9 +25,26 @@
 }
 
 .bg-euro-gradient {
-  background: linear-gradient(135deg, #0f0520 0%, #1a0533 25%, #2d1050 50%, #1a0533 75%, #0f0520 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  background-color: #08031a;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(236, 72, 153, 0.32), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 85% 90%, rgba(56, 189, 248, 0.22), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 75% 15%, rgba(168, 85, 247, 0.28), transparent 65%),
+    radial-gradient(ellipse 90% 70% at 25% 85%, rgba(124, 58, 237, 0.24), transparent 65%),
+    linear-gradient(135deg, #0a0420 0%, #150836 50%, #0a0420 100%);
+  background-attachment: fixed;
+}
+
+/* Aurora — same palette but tuned for hero / immersive screens */
+.bg-euro-aurora {
+  background-color: #06021a;
+  background-image:
+    radial-gradient(ellipse 70% 55% at 18% 12%, rgba(236, 72, 153, 0.42), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 82% 88%, rgba(59, 130, 246, 0.30), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 78% 18%, rgba(168, 85, 247, 0.36), transparent 65%),
+    radial-gradient(ellipse 80% 65% at 22% 82%, rgba(124, 58, 237, 0.32), transparent 65%),
+    linear-gradient(135deg, #08031a 0%, #170937 50%, #08031a 100%);
+  background-attachment: fixed;
 }
 
 .glass {
@@ -89,8 +106,15 @@ body { margin: 0; overscroll-behavior: none; }
    Ink color #1a0533 on pastel background → WCAG AA+ for body text.
    `:not(.bg-gradient-to-r)` keeps button text white on dark purple→pink gradients.
 */
-[data-theme="light"] .bg-euro-gradient {
-  background: linear-gradient(135deg, #f5f0ff 0%, #ede4ff 25%, #e8d8ff 50%, #ede4ff 75%, #f5f0ff 100%);
+[data-theme="light"] .bg-euro-gradient,
+[data-theme="light"] .bg-euro-aurora {
+  background-color: #f7f0ff;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(236, 72, 153, 0.18), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 85% 90%, rgba(56, 189, 248, 0.14), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 75% 15%, rgba(168, 85, 247, 0.18), transparent 65%),
+    linear-gradient(135deg, #f5f0ff 0%, #ede4ff 50%, #f5f0ff 100%);
+  background-attachment: fixed;
 }
 
 [data-theme="light"] .glass {

@@ -1,6 +1,5 @@
 <!--
   Eurovision Games — Admin OTP / Magic Link
-  Paste into Supabase → Auth → Email Templates → Magic Link.
   Variables Supabase replaces: {{ .Token }}, {{ .ConfirmationURL }}, {{ .SiteURL }}, {{ .Email }}
 -->
 <!DOCTYPE html>
@@ -9,49 +8,124 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="x-apple-disable-message-reformatting" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="supported-color-schemes" content="dark" />
   <title>Your Eurovision Games admin code</title>
 </head>
-<body style="margin:0;padding:0;background:#0b0420;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#ffffff;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0b0420;">
+<body style="margin:0;padding:0;background:#08031a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#ffffff;">
+  <!-- Preheader (hidden) -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#08031a;">
+    Your 6-digit admin code for eurovision.games — expires in 10 minutes.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#08031a;">
     <tr>
-      <td align="center" style="padding:32px 16px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background:#150836;border-radius:20px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;">
-          <!-- Header -->
+      <td align="center" style="padding:40px 16px;">
+
+        <!-- Pre-card brand strip -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;margin:0 0 14px 0;">
           <tr>
-            <td style="padding:28px 32px 16px 32px;background:linear-gradient(135deg,#6b21a8 0%,#db2777 100%);">
-              <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;color:rgba(255,255,255,0.85);">Eurovision Games</div>
-              <div style="font-size:22px;font-weight:800;color:#ffffff;margin-top:6px;">Admin sign-in code</div>
-            </td>
-          </tr>
-          <!-- Body -->
-          <tr>
-            <td style="padding:32px;">
-              <p style="margin:0 0 16px 0;font-size:15px;line-height:1.55;color:rgba(255,255,255,0.85);">
-                You're signing in to <strong style="color:#ffffff;">eurovision.games/admin</strong> with the email <strong style="color:#ffffff;">{{ .Email }}</strong>.
-              </p>
-              <p style="margin:0 0 8px 0;font-size:13px;color:rgba(255,255,255,0.55);">Enter this 6-digit code:</p>
-              <div style="margin:8px 0 24px 0;padding:18px 20px;background:#0b0420;border:1px solid rgba(255,255,255,0.12);border-radius:14px;font-size:32px;font-weight:800;letter-spacing:0.32em;text-align:center;color:#ffffff;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;">
-                {{ .Token }}
+            <td align="center" style="padding:0 4px;">
+              <div style="display:inline-block;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;font-weight:700;color:#f9a8d4;">
+                ✦ &nbsp; Eurovision&nbsp;Games &nbsp; ✦
               </div>
-              <p style="margin:0 0 16px 0;font-size:13px;line-height:1.55;color:rgba(255,255,255,0.55);">
-                Or click the magic link to sign in directly:
-              </p>
-              <p style="margin:0 0 24px 0;">
-                <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 20px;background:#db2777;color:#ffffff;font-size:14px;font-weight:700;border-radius:10px;text-decoration:none;">Sign in to admin</a>
-              </p>
-              <p style="margin:0;font-size:12px;line-height:1.55;color:rgba(255,255,255,0.45);">
-                This code expires in <strong style="color:rgba(255,255,255,0.7);">10 minutes</strong>. If you didn't request it, ignore this email — your account is safe. The /admin route is allowlist-only and only sends codes to two addresses.
-              </p>
-            </td>
-          </tr>
-          <!-- Footer -->
-          <tr>
-            <td style="padding:18px 32px;background:#0b0420;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:rgba(255,255,255,0.4);">
-              Eurovision Games · A free, browser-based party game for Eurovision night.<br />
-              Not affiliated with the European Broadcasting Union (EBU) or the Eurovision Song Contest.
             </td>
           </tr>
         </table>
+
+        <!-- Card -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#150836;border-radius:24px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;box-shadow:0 24px 80px rgba(168,85,247,0.18);">
+
+          <!-- Hero ribbon -->
+          <tr>
+            <td style="padding:0;background:linear-gradient(135deg,#7c3aed 0%,#db2777 60%,#fb923c 100%);">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:34px 32px 30px 32px;">
+                    <div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;color:rgba(255,255,255,0.85);">
+                      Admin sign-in
+                    </div>
+                    <div style="font-size:30px;line-height:1.1;font-weight:800;color:#ffffff;margin-top:8px;letter-spacing:-0.01em;">
+                      Your 6-digit code is ready
+                    </div>
+                    <div style="font-size:14px;color:rgba(255,255,255,0.85);margin-top:10px;">
+                      eurovision.games · {{ .Email }}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 28px 32px;">
+
+              <!-- Code label -->
+              <div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;color:rgba(255,255,255,0.45);margin-bottom:10px;">
+                Enter this code on the admin login screen
+              </div>
+
+              <!-- Code card with glow -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 26px 0;">
+                <tr>
+                  <td align="center" style="padding:22px 12px;background:#0b0420;border:1px solid rgba(168,85,247,0.35);border-radius:16px;box-shadow:inset 0 0 24px rgba(168,85,247,0.12);">
+                    <div style="font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:38px;font-weight:800;letter-spacing:0.42em;color:#ffffff;text-shadow:0 0 12px rgba(236,72,153,0.45);padding-left:0.42em;">
+                      {{ .Token }}
+                    </div>
+                    <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;">
+                      Expires in 10 minutes
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- OR divider -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px 0;">
+                <tr>
+                  <td style="border-top:1px solid rgba(255,255,255,0.08);height:1px;line-height:1px;">&nbsp;</td>
+                  <td style="padding:0 14px;font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.18em;text-transform:uppercase;font-weight:700;white-space:nowrap;">or one-tap</td>
+                  <td style="border-top:1px solid rgba(255,255,255,0.08);height:1px;line-height:1px;">&nbsp;</td>
+                </tr>
+              </table>
+
+              <!-- Magic link button -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#a855f7 0%,#ec4899 100%);color:#ffffff;font-size:15px;font-weight:700;border-radius:12px;text-decoration:none;letter-spacing:0.02em;box-shadow:0 10px 30px rgba(236,72,153,0.35);">
+                      Sign in to admin →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Trust copy -->
+              <p style="margin:28px 0 0 0;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.45);">
+                You're seeing this because someone — hopefully you — requested admin access using <strong style="color:rgba(255,255,255,0.7);">{{ .Email }}</strong>. The <code style="background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:4px;font-size:11px;">/admin</code> route is allowlist-only and ignores requests from anyone else. If this wasn't you, no action is needed — your account is safe.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:18px 32px 22px 32px;background:#0b0420;border-top:1px solid rgba(255,255,255,0.06);">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">
+                    <strong style="color:rgba(255,255,255,0.6);">Eurovision Games</strong> — a free, browser-based party game for Eurovision night.<br />
+                    Not affiliated with the European Broadcasting Union (EBU) or the Eurovision Song Contest.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Below-card support line -->
+        <p style="max-width:560px;margin:18px auto 0 auto;font-size:11px;color:rgba(255,255,255,0.35);text-align:center;line-height:1.6;">
+          Trouble signing in? Reply to this email and we'll get back to you.
+        </p>
       </td>
     </tr>
   </table>

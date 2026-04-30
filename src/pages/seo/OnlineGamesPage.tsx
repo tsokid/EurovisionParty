@@ -13,7 +13,7 @@ export default function OnlineGamesPage() {
     <>
       <SchemaHead
         title="Eurovision Online Games — Free Browser Multiplayer for 2026"
-        description="Play Eurovision online with friends across cities or countries. Free browser-based multiplayer, no download, real-time scoring. Up to 10 players."
+        description="Play Eurovision online with friends across cities or countries. Free browser-based multiplayer, no download, real-time scoring. Up to 20 players."
         canonical="https://eurovision.games/online-games"
         jsonLd={article}
       />
@@ -22,7 +22,7 @@ export default function OnlineGamesPage() {
         <p className="lead">
           <strong>Eurovision online games are multiplayer games played in a browser during the Eurovision broadcast, designed
           for friends watching from different homes or countries.</strong> <a href="/">Eurovision Games</a> is free, runs on
-          phone or desktop, and synchronises predictions, trivia duels, and live scoring across up to 10 players in real time.
+          phone or desktop, and synchronises predictions, trivia duels, and live scoring across up to 20 players in real time.
         </p>
 
         <h2>What &quot;online&quot; means here</h2>

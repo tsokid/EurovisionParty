@@ -11,14 +11,36 @@ interface WelcomeScreenProps {
   onJoinRoom: () => void;
 }
 
+// Pinpoint stars rendered as inline SVG (4-point sparkle). Replaces the emoji
+// sparkles which rendered inconsistently across platforms and looked cheap.
 const sparkles = [
-  { emoji: '✨', top: '8%', left: '10%', delay: 0 },
-  { emoji: '⭐', top: '15%', right: '12%', delay: 0.5 },
-  { emoji: '🌟', top: '60%', left: '6%', delay: 1 },
-  { emoji: '✨', top: '72%', right: '8%', delay: 0.3 },
-  { emoji: '💫', bottom: '18%', left: '15%', delay: 0.8 },
-  { emoji: '⭐', bottom: '25%', right: '18%', delay: 1.2 },
+  { top: '8%', left: '10%', delay: 0, size: 22, tint: 'rgba(249, 168, 212, 0.9)' },
+  { top: '15%', right: '12%', delay: 0.5, size: 14, tint: 'rgba(253, 230, 138, 0.85)' },
+  { top: '60%', left: '6%', delay: 1, size: 18, tint: 'rgba(168, 85, 247, 0.8)' },
+  { top: '72%', right: '8%', delay: 0.3, size: 12, tint: 'rgba(249, 168, 212, 0.7)' },
+  { bottom: '18%', left: '15%', delay: 0.8, size: 16, tint: 'rgba(34, 211, 238, 0.75)' },
+  { bottom: '25%', right: '18%', delay: 1.2, size: 20, tint: 'rgba(253, 230, 138, 0.85)' },
 ];
+
+// 4-point sparkle path — sharper, more elegant than emoji.
+function SparkleIcon({ size, color }: { size: number; color: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+      style={{ filter: `drop-shadow(0 0 6px ${color})` }}
+    >
+      <path
+        d="M12 2 L13.6 9.4 L21 11 L13.6 12.6 L12 20 L10.4 12.6 L3 11 L10.4 9.4 Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
 
 export default function WelcomeScreen({
   onCreateRoom,
@@ -27,32 +49,34 @@ export default function WelcomeScreen({
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-svh bg-euro-gradient flex flex-col items-center px-6 pt-16 pb-8 sm:pt-0 sm:justify-center relative overflow-hidden">
-      {/* Theme toggle & language switcher & mute — top right */}
-      <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
+    <div className="min-h-[calc(100svh-3.5rem)] bg-euro-gradient flex flex-col items-center px-6 pt-10 pb-8 sm:justify-center relative overflow-hidden">
+      {/* Theme toggle & language switcher & mute — anchored below the
+          sticky SiteHeader (3.5rem tall) so they don't collide. */}
+      <div className="absolute top-3 right-5 z-10 flex items-center gap-2">
         <MuteToggle />
         <LanguageSwitcher />
         <ThemeToggle />
       </div>
 
-      {/* Scattered sparkle decorations */}
+      {/* Scattered sparkle decorations (SVG, not emoji) */}
       {sparkles.map((s, i) => (
         <motion.span
           key={i}
-          className="absolute text-2xl pointer-events-none select-none opacity-40"
+          className="absolute pointer-events-none select-none"
           style={{ top: s.top, left: s.left, right: s.right, bottom: s.bottom }}
           animate={{
-            opacity: [0.2, 0.6, 0.2],
-            scale: [0.8, 1.2, 0.8],
+            opacity: [0.35, 0.9, 0.35],
+            scale: [0.85, 1.15, 0.85],
+            rotate: [0, 12, 0],
           }}
           transition={{
-            duration: 3,
+            duration: 3.2,
             repeat: Infinity,
             delay: s.delay,
             ease: 'easeInOut',
           }}
         >
-          {s.emoji}
+          <SparkleIcon size={s.size} color={s.tint} />
         </motion.span>
       ))}
 

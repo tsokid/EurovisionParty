@@ -13,7 +13,7 @@ export default function EurovisionGamesPage() {
     <>
       <SchemaHead
         title="Eurovision Games — Free Multiplayer Party Game for Eurovision 2026"
-        description="A free browser-based Eurovision party game with predictions, trivia duels, and live scoring. 2-10 players, no download, works on phone or desktop."
+        description="A free browser-based Eurovision party game with predictions, trivia duels, and live scoring. 2-20 players, no download, works on phone or desktop."
         canonical="https://eurovision.games/eurovision-games"
         jsonLd={article}
       />
