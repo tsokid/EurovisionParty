@@ -7,6 +7,8 @@ import LanguageSwitcher from '../ui/LanguageSwitcher';
 import LocaleLink from './LocaleLink';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { localizePath, stripLocaleFromPath } from '../../lib/seo/locale';
+import { useGameStore } from '../../stores/gameStore';
+import LockedBadge from '../ui/LockedBadge';
 
 const HOW_TO_PLAY_LINKS = [
   { href: '/eurovision-trivia', key: 'trivia' as const },
@@ -45,6 +47,9 @@ export default function SiteHeader() {
   const navigate = useNavigate();
   const locale = useLocale();
   const { rooms } = useUserRooms();
+  const room = useGameStore((s) => s.room);
+  const inRoomBroadcasting = !!room && (room.phase === 'voting_live' || room.phase === 'final');
+  const triviaLocked = inRoomBroadcasting;
 
   useEffect(() => { setOpen(false); }, [pathname]);
 
@@ -120,17 +125,26 @@ export default function SiteHeader() {
             </button>
             {howDropdownOpen && (
               <div className="absolute right-0 top-full mt-2 min-w-[220px] rounded-xl border border-white/10 bg-euro-deep/95 backdrop-blur-md shadow-xl shadow-black/40 py-1.5 z-50" role="menu">
-                {HOW_TO_PLAY_LINKS.map((l) => (
-                  <LocaleLink
-                    key={l.href}
-                    to={l.href}
-                    role="menuitem"
-                    className="block px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white transition"
-                    onClick={() => setHowDropdownOpen(false)}
-                  >
-                    {t(`siteNav.${l.key}`)}
-                  </LocaleLink>
-                ))}
+                {HOW_TO_PLAY_LINKS.map((l) => {
+                  if (l.key === 'trivia' && triviaLocked) {
+                    return (
+                      <div key={l.href} className="px-4 py-2" role="menuitem">
+                        <LockedBadge label={t(`siteNav.${l.key}`)} />
+                      </div>
+                    );
+                  }
+                  return (
+                    <LocaleLink
+                      key={l.href}
+                      to={l.href}
+                      role="menuitem"
+                      className="block px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white transition"
+                      onClick={() => setHowDropdownOpen(false)}
+                    >
+                      {t(`siteNav.${l.key}`)}
+                    </LocaleLink>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -278,15 +292,24 @@ export default function SiteHeader() {
               </button>
               {howOpen && (
                 <div className="ml-3 pl-3 border-l border-white/10 flex flex-col">
-                  {HOW_TO_PLAY_LINKS.map((l) => (
-                    <LocaleLink
-                      key={l.href}
-                      to={l.href}
-                      className="px-3 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/5 hover:text-white transition"
-                    >
-                      {t(`siteNav.${l.key}`)}
-                    </LocaleLink>
-                  ))}
+                  {HOW_TO_PLAY_LINKS.map((l) => {
+                    if (l.key === 'trivia' && triviaLocked) {
+                      return (
+                        <div key={l.href} className="px-3 py-2.5">
+                          <LockedBadge label={t(`siteNav.${l.key}`)} />
+                        </div>
+                      );
+                    }
+                    return (
+                      <LocaleLink
+                        key={l.href}
+                        to={l.href}
+                        className="px-3 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/5 hover:text-white transition"
+                      >
+                        {t(`siteNav.${l.key}`)}
+                      </LocaleLink>
+                    );
+                  })}
                 </div>
               )}
             </div>
