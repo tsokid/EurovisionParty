@@ -47,7 +47,7 @@ export default function Winners() {
     (async () => {
       const { data, error } = await supabase
         .from('rooms')
-        .select('id, code, phase, created_at')
+        .select('id, code, phase, created_at, host_name')
         .order('created_at', { ascending: false })
         .limit(50);
       if (error) { setMsg({ kind: 'err', text: error.message }); return; }
@@ -129,12 +129,13 @@ export default function Winners() {
             {rooms.length === 0 && <option>No rooms yet</option>}
             {rooms.map((r) => (
               <option key={r.id} value={r.id} className="bg-euro-purple-dark">
-                {r.code} · {r.phase} · {new Date(r.created_at).toLocaleDateString()}
+                {r.code} · {r.host_name ?? '—'} · {r.phase} · {new Date(r.created_at).toLocaleDateString()}
               </option>
             ))}
           </select>
           {room && (
             <p className="text-xs text-white/40 mt-2">
+              {room.host_name && <>Host: <span className="text-white/65 font-semibold">{room.host_name}</span> · </>}
               ID: <span className="font-mono">{room.id.slice(0, 8)}…</span> · Players: {players.length}
             </p>
           )}
