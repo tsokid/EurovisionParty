@@ -92,10 +92,10 @@ export default function SiteHeader() {
         <LocaleLink to="/" className="flex items-center group shrink-0" aria-label="Eurovision Games — home">
           <img
             src="/logo.png"
-            alt="Eurovision Games"
-            width={628}
-            height={397}
-            className="h-9 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
+            alt="eurovision.games"
+            width={2061}
+            height={541}
+            className="h-7 sm:h-9 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
             draggable={false}
           />
         </LocaleLink>
