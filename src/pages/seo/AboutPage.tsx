@@ -149,7 +149,7 @@ export default function AboutPage() {
         <CtaBanner
           title={c.cta.title}
           body={c.cta.body}
-          primary={{ label: c.cta.primaryLabel, href: '/' }}
+          primary={{ label: c.cta.primaryLabel, href: '/?action=create' }}
           secondary={{ label: c.cta.secondaryLabel, href: '/how-to-play' }}
         />
 

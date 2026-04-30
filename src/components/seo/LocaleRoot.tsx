@@ -5,6 +5,7 @@ import { isLocale } from '../../lib/seo/locale';
 import { LocaleProvider } from '../../lib/seo/LocaleContext';
 import SiteHeader from './SiteHeader';
 import BetaBanner from './BetaBanner';
+import ScrollToTop from './ScrollToTop';
 import CookieConsent from '../cookie/CookieConsent';
 
 export default function LocaleRoot() {
@@ -28,6 +29,7 @@ export default function LocaleRoot() {
 
   return (
     <LocaleProvider locale={params.locale}>
+      <ScrollToTop />
       <BetaBanner />
       <SiteHeader />
       <Outlet />

@@ -104,7 +104,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       howToDescription:
         'A 60-second setup that takes you from create-room to trophy reveal across the full Eurovision broadcast.',
       steps: [
-        { name: 'Create a room', text: 'Click "Create Room", set max players (2-20), quiz rounds (1-3), and per-pair duel cap (default 3).' },
+        { name: 'Create a room', text: 'Click "Create Room", set max players (2-20) and quiz rounds (1-3).' },
         { name: 'Invite friends', text: 'Share the 6-character room code, link, and auto-generated room password. Friends join in their browser, no app install.' },
         { name: 'Lock predictions', text: 'Each player picks their Top 5 and Worst 5 of Eurovision 2026. Picks lock when the host advances the phase.' },
         { name: 'Battle in duels', text: 'During the live show, challenge friends to head-to-head 3-question trivia duels. Steal points or double your own.' },
@@ -123,7 +123,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       intro:
         'One host signs in (magic-link email \u2014 no password). Everyone else joins from a link. The whole flow from empty browser tab to locked-in predictions is a single minute.',
       items: [
-        { strong: 'Create the room (10s).', rest: 'Click <em>Create Room</em>. Pick quiz rounds (default 3), max players (up to 20), and the per-pair duel cap (default 3). A 6-character room code appears.' },
+        { strong: 'Create the room (10s).', rest: 'Click <em>Create Room</em>. Pick quiz rounds (default 3) and max players (up to 20). A 6-character room code appears.' },
         { strong: 'Invite friends (20s).', rest: 'Share the code, the join link, and the auto-generated room password (included in the share message). Phone or laptop, any modern browser.' },
         { strong: 'Lock predictions (5 min before kick-off).', rest: 'Every player builds a Top 5 and Worst 5. Picks lock when the host advances past the predictions phase.' },
         { strong: 'Trivia warm-up.', rest: 'Quiz rounds run during the predictions phase as filler \u2014 points carry into the night total.' },
@@ -151,7 +151,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       cardBody:
         'Tap any other player\u2019s name during the live show and choose <em>Challenge</em>. Both players answer the same 3 questions in private. The higher answer total wins the duel and pockets a flat <strong>+12</strong> bonus. The winner then picks <strong>Steal</strong> (take points from the loser) or <strong>Double</strong> (add the same to themselves).',
       capLine:
-        'The host sets a per-pair cap when creating the room (default 3, max 10) so you cannot grind one opponent for points all night. Refused challenges don\u2019t count against the cap.',
+        'A default cap of 3 duels per pair (max 10), with rematches counted, prevents grinding one opponent for points all night. Refused challenges don\u2019t count against the cap.',
     },
     scoring: {
       title: 'Live scoring',
@@ -230,7 +230,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       howToDescription:
         'Εγκατάσταση 60 δευτερολέπτων που σε πάει από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων μέσα από όλη τη μετάδοση της Eurovision.',
       steps: [
-        { name: 'Δημιουργία δωματίου', text: 'Πάτα "Δημιουργία Δωματίου", όρισε μέγιστους παίκτες (2-20), γύρους quiz (1-3) και όριο μονομαχιών ανά ζευγάρι (προεπιλογή 3).' },
+        { name: 'Δημιουργία δωματίου', text: 'Πάτα "Δημιουργία Δωματίου", όρισε μέγιστους παίκτες (2-20) και γύρους quiz (1-3).' },
         { name: 'Πρόσκληση φίλων', text: 'Μοιράσου τον 6ψήφιο κωδικό δωματίου, τον σύνδεσμο και τον αυτόματο κωδικό δωματίου. Οι φίλοι μπαίνουν από τον browser τους, χωρίς εφαρμογή.' },
         { name: 'Κλείδωμα προβλέψεων', text: 'Κάθε παίκτης διαλέγει το Top 5 και Worst 5 για τη Eurovision 2026. Οι επιλογές κλειδώνουν όταν ο οικοδεσπότης προχωρά τη φάση.' },
         { name: 'Μάχη στις μονομαχίες', text: 'Στη ζωντανή εκπομπή, προκάλεσε φίλους σε μονομαχίες trivia 3 ερωτήσεων ένας προς έναν. Κλέψε πόντους ή διπλασίασε τους δικούς σου.' },
@@ -249,7 +249,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       intro:
         'Ένας οικοδεσπότης συνδέεται (magic-link στο email \u2014 χωρίς κωδικό). Όλοι οι άλλοι μπαίνουν από έναν σύνδεσμο. Όλη η ροή από την κενή καρτέλα του browser μέχρι τις κλειδωμένες προβλέψεις είναι ένα λεπτό.',
       items: [
-        { strong: 'Φτιάξε το δωμάτιο (10δ).', rest: 'Πάτα <em>Δημιουργία Δωματίου</em>. Διάλεξε γύρους quiz (προεπιλογή 3), μέγιστους παίκτες (έως 20) και όριο μονομαχιών ανά ζευγάρι (προεπιλογή 3). Εμφανίζεται ένας 6ψήφιος κωδικός δωματίου.' },
+        { strong: 'Φτιάξε το δωμάτιο (10δ).', rest: 'Πάτα <em>Δημιουργία Δωματίου</em>. Διάλεξε γύρους quiz (προεπιλογή 3) και μέγιστους παίκτες (έως 20). Εμφανίζεται ένας 6ψήφιος κωδικός δωματίου.' },
         { strong: 'Κάλεσε φίλους (20δ).', rest: 'Μοιράσου τον κωδικό, τον σύνδεσμο και τον αυτόματο κωδικό δωματίου (περιέχεται στο μήνυμα). Κινητό ή laptop, οποιοσδήποτε σύγχρονος browser.' },
         { strong: 'Κλείδωσε προβλέψεις (5 λεπτά πριν την έναρξη).', rest: 'Κάθε παίκτης φτιάχνει ένα Top 5 και ένα Worst 5. Οι επιλογές κλειδώνουν όταν ο οικοδεσπότης περάσει τη φάση των προβλέψεων.' },
         { strong: 'Προθέρμανση trivia.', rest: 'Οι γύροι quiz τρέχουν στη φάση των προβλέψεων ως γέμισμα \u2014 οι πόντοι μετράνε στο σύνολο της βραδιάς.' },
@@ -277,7 +277,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       cardBody:
         'Πάτα το όνομα οποιουδήποτε άλλου παίκτη στη ζωντανή εκπομπή και διάλεξε <em>Πρόκληση</em>. Και οι δύο παίκτες απαντούν τις ίδιες 3 ερωτήσεις σε ιδιωτικό περιβάλλον. Όποιος έχει το υψηλότερο σύνολο κερδίζει τη μονομαχία και παίρνει σταθερό μπόνους <strong>+12</strong>. Ο νικητής μετά διαλέγει <strong>Κλοπή</strong> (παίρνει πόντους από τον ηττημένο) ή <strong>Διπλασιασμό</strong> (προσθέτει τους ίδιους στον εαυτό του).',
       capLine:
-        'Ο οικοδεσπότης ορίζει όριο ανά ζευγάρι όταν φτιάχνει το δωμάτιο (προεπιλογή 3, μέγιστο 10) ώστε να μην εκμεταλλεύεσαι έναν μόνο αντίπαλο όλο το βράδυ. Οι αρνημένες προκλήσεις δεν μετράνε στο όριο.',
+        'Προεπιλεγμένο όριο 3 μονομαχιών ανά ζευγάρι (μέγιστο 10), με τις ρεβάνς να μετράνε, για να μην τα «βγάζει» κανείς από έναν παίκτη όλο το βράδυ. Οι αρνημένες προκλήσεις δεν μετράνε στο όριο.',
     },
     scoring: {
       title: 'Live βαθμολογία',

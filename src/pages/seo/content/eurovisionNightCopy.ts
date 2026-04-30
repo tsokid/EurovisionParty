@@ -138,7 +138,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           {
             strong: 'Trivia duels:',
             rest:
-              ' Head-to-head between any two players. Winner steals points from loser. Host-configurable cap per pair (default 3 duels, including rematches).',
+              ' Head-to-head between any two players. Winner steals points from loser. Default per-pair cap of 3 duels (rematches counted) prevents grinding one opponent.',
           },
           {
             strong: 'Quiz rounds:',
@@ -331,7 +331,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           {
             strong: 'Μονομαχίες trivia:',
             rest:
-              ' Ένας προς έναν ανάμεσα σε δύο παίκτες. Ο νικητής κλέβει πόντους από τον ηττημένο. Όριο ανά ζευγάρι ρυθμιζόμενο από τον οικοδεσπότη (προεπιλογή 3 μονομαχίες, μαζί με τις ρεβάνς).',
+              ' Ένας προς έναν ανάμεσα σε δύο παίκτες. Ο νικητής κλέβει πόντους από τον ηττημένο. Προεπιλεγμένο όριο 3 μονομαχιών ανά ζευγάρι (οι ρεβάνς μετράνε) για να μην τα «βγάζει» κανείς από έναν παίκτη.',
           },
           {
             strong: 'Γύροι quiz:',

@@ -246,7 +246,7 @@ export const copy: Record<Locale, DuelsCopy> = {
       },
       {
         q: 'How many duels can I have with one person?',
-        a: 'The host sets a per-pair cap when creating the room (default 3, max 10). The cap counts rematches, so you cannot grind one opponent for points all night.',
+        a: 'There is a default per-pair cap (3 duels, max 10) baked into the system. The cap counts rematches, so you cannot grind one opponent for points all night.',
       },
       {
         q: 'How are duel points calculated?',
@@ -434,7 +434,7 @@ export const copy: Record<Locale, DuelsCopy> = {
       },
       {
         q: 'Πόσες μονομαχίες μπορώ να έχω με ένα άτομο;',
-        a: 'Ο οικοδεσπότης ορίζει ένα όριο ανά ζευγάρι όταν δημιουργεί το δωμάτιο (default 3, max 10). Το όριο μετράει ρεβάνς, οπότε δεν μπορείς να εκμεταλλεύεσαι έναν αντίπαλο για πόντους όλη τη βραδιά.',
+        a: 'Υπάρχει προεπιλεγμένο όριο ανά ζευγάρι (3 μονομαχίες, μέγιστο 10) ενσωματωμένο στο παιχνίδι. Το όριο μετράει τις ρεβάνς, οπότε δεν μπορείς να εκμεταλλεύεσαι έναν αντίπαλο για πόντους όλη τη βραδιά.',
       },
       {
         q: 'Πώς υπολογίζονται οι πόντοι μονομαχίας;',

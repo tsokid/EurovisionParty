@@ -133,7 +133,7 @@ export default function EurovisionNightPage() {
         <CtaBanner
           title={c.cta.title}
           body={c.cta.body}
-          primary={{ label: c.cta.primary, href: '/' }}
+          primary={{ label: c.cta.primary, href: '/?action=create' }}
           secondary={{ label: c.cta.secondary, href: '/how-to-play' }}
         />
 

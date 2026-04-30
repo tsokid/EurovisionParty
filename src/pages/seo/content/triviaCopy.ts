@@ -117,7 +117,7 @@ export const copy: Record<Locale, TriviaCopy> = {
         body1Pre: "Click any other player's name in the live leaderboard, hit ",
         body1Em: 'Challenge',
         body1Post:
-          ", and a 3-question duel pops up on both your screens. Each player has 15 seconds per question. Whoever gets more correct wins; faster correct answers break a tie. The winner steals points from the loser. Each pair can duel a host-configurable maximum (default 3 times) per night including rematches, so you can't farm one weaker opponent.",
+          ", and a 3-question duel pops up on both your screens. Each player has 15 seconds per question. Whoever gets more correct wins; faster correct answers break a tie. The winner steals points from the loser. Each pair has a default cap of 3 duels per night (max 10), rematches counted, so you can't farm one weaker opponent.",
         body2Pre:
           'For the full duel rule book — scoring math, Steal vs Double, and the Duelist/Thief trophies — see the ',
         body2LinkLabel: 'dedicated duels page',
@@ -210,7 +210,7 @@ export const copy: Record<Locale, TriviaCopy> = {
       },
       {
         q: 'Can I duel the same player repeatedly?',
-        a: 'The host sets a per-pair cap when creating the room — default 3 duels, max 10. Rematches count, so you cannot grind a single weaker opponent for points.',
+        a: 'There is a default per-pair cap baked into the system — 3 duels, max 10. Rematches count, so you cannot grind a single weaker opponent for points.',
       },
       {
         q: 'Is there a solo trivia mode?',
@@ -270,7 +270,7 @@ export const copy: Record<Locale, TriviaCopy> = {
         body1Pre: 'Κάνε κλικ στο όνομα οποιουδήποτε άλλου παίκτη στον ζωντανό πίνακα βαθμολογίας, πάτησε ',
         body1Em: 'Πρόκληση',
         body1Post:
-          ', και μια μονομαχία 3 ερωτήσεων εμφανίζεται στις οθόνες και των δύο. Κάθε παίκτης έχει 15 δευτερόλεπτα ανά ερώτηση. Όποιος βρει τις περισσότερες σωστές κερδίζει· σε ισοπαλία ξεχωρίζει η ταχύτητα της σωστής απάντησης. Ο νικητής κλέβει πόντους από τον ηττημένο. Κάθε ζευγάρι μπορεί να μονομαχήσει έως ένα όριο που ορίζει ο οικοδεσπότης (default 3 φορές) ανά βραδιά συμπεριλαμβανομένων των ρεβάνς, οπότε δεν μπορείς να εκμεταλλευτείς έναν αδύναμο αντίπαλο.',
+          ', και μια μονομαχία 3 ερωτήσεων εμφανίζεται στις οθόνες και των δύο. Κάθε παίκτης έχει 15 δευτερόλεπτα ανά ερώτηση. Όποιος βρει τις περισσότερες σωστές κερδίζει· σε ισοπαλία ξεχωρίζει η ταχύτητα της σωστής απάντησης. Ο νικητής κλέβει πόντους από τον ηττημένο. Κάθε ζευγάρι έχει προεπιλεγμένο όριο 3 μονομαχιών ανά βραδιά (μέγιστο 10), οι ρεβάνς μετράνε, οπότε δεν μπορείς να εκμεταλλευτείς έναν αδύναμο αντίπαλο.',
         body2Pre:
           'Για τον πλήρη κανονισμό μονομαχιών — μαθηματικά βαθμολογίας, Κλοπή vs Διπλασιασμός, και τα τρόπαια Μονομάχου/Κλέφτη — δες την ',
         body2LinkLabel: 'ειδική σελίδα μονομαχιών',
@@ -364,7 +364,7 @@ export const copy: Record<Locale, TriviaCopy> = {
       },
       {
         q: 'Μπορώ να μονομαχώ ξανά και ξανά τον ίδιο παίκτη;',
-        a: 'Ο οικοδεσπότης ορίζει ένα όριο ανά ζευγάρι όταν δημιουργεί το δωμάτιο — default 3 μονομαχίες, max 10. Οι ρεβάνς μετράνε, οπότε δεν μπορείς να εκμεταλλεύεσαι έναν πιο αδύναμο αντίπαλο για πόντους.',
+        a: 'Υπάρχει προεπιλεγμένο όριο ανά ζευγάρι ενσωματωμένο στο παιχνίδι — 3 μονομαχίες, μέγιστο 10. Οι ρεβάνς μετράνε, οπότε δεν μπορείς να εκμεταλλεύεσαι έναν πιο αδύναμο αντίπαλο για πόντους.',
       },
       {
         q: 'Υπάρχει solo λειτουργία trivia;',

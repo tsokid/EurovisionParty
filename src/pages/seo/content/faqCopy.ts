@@ -66,7 +66,7 @@ export const copy: Record<Locale, FaqCopy> = {
       {
         id: 'create',
         q: 'How do I create a room?',
-        a: 'Sign in (email-only \u2014 we send a one-tap magic link), click "Create Room", pick the round count (1-3 quiz rounds), max players (2-20), and per-pair duel cap (default 3). A 6-character room code and shareable link appear instantly. The host owns the room until they leave or delete it.',
+        a: 'Sign in (email-only \u2014 we send a one-tap magic link), click "Create Room", pick the round count (1-3 quiz rounds) and max players (2-20). A 6-character room code and shareable link appear instantly. The host owns the room until they leave or delete it.',
       },
       {
         id: 'join',
@@ -85,7 +85,7 @@ export const copy: Record<Locale, FaqCopy> = {
       bullets: [
         { strong: '3 quiz rounds', rest: '\u2014 enough warm-up without dragging.' },
         { strong: 'Max 20 players', rest: '\u2014 the upper limit; smaller rooms feel snappier.' },
-        { strong: 'Per-pair duel cap of 3', rest: '\u2014 prevents one-target grinding.' },
+        { strong: 'A default per-pair duel cap of 3', rest: '(rematches counted) \u2014 prevents one-target grinding.' },
       ],
     },
     joinSection: {
@@ -114,7 +114,7 @@ export const copy: Record<Locale, FaqCopy> = {
       { q: 'Can players join late?', a: 'Yes \u2014 until the host advances past the predictions phase. Late joiners can still play trivia duels.' },
       { q: 'What happens if a player disconnects?', a: 'A reconnect banner appears; one tap rejoins them with state preserved. Predictions and points are not lost.' },
       { q: 'Can the host eject a player?', a: 'Yes \u2014 host has a player-management panel from the lobby onward.' },
-      { q: 'How do duels work?', a: '3-question head-to-head trivia. Winner steals points from loser. Each pair has a host-configurable limit (default 3 duels per night, including rematches).' },
+      { q: 'How do duels work?', a: '3-question head-to-head trivia. Winner steals points from loser. Each pair has a default limit (3 duels per pair across the night, rematches counted).' },
       { q: 'How is scoring calculated?', a: 'See the Scoring page for full formulas. Top-5 picks earn variable points by rank match; Worst-5 earn flat points if the country lands in the bottom 5; trivia and duels add quiz points.' },
       { q: 'What are the five winner categories?', a: 'Champion (most total points), Thief (most points stolen in duels), Duelist (most duels won), Oracle (best predictions), Guru (most correct trivia answers).' },
       { q: 'What is sudden death?', a: 'An optional host-toggleable tiebreak: if two players tie a winner category, one trivia question decides it \u2014 fastest correct answer wins.' },
@@ -168,7 +168,7 @@ export const copy: Record<Locale, FaqCopy> = {
       {
         id: 'create',
         q: 'Πώς δημιουργώ ένα δωμάτιο;',
-        a: 'Συνδέσου (μόνο με email \u2014 στέλνουμε magic link με ένα tap), πάτα "Δημιουργία Δωματίου", διάλεξε αριθμό γύρων (1-3 γύροι quiz), μέγιστους παίκτες (2-20) και όριο μονομαχιών ανά ζευγάρι (προεπιλογή 3). Ένας 6ψήφιος κωδικός δωματίου και κοινοποιήσιμος σύνδεσμος εμφανίζονται αμέσως. Ο οικοδεσπότης έχει το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.',
+        a: 'Συνδέσου (μόνο με email \u2014 στέλνουμε magic link με ένα tap), πάτα "Δημιουργία Δωματίου", διάλεξε αριθμό γύρων (1-3 γύροι quiz) και μέγιστους παίκτες (2-20). Ένας 6ψήφιος κωδικός δωματίου και κοινοποιήσιμος σύνδεσμος εμφανίζονται αμέσως. Ο οικοδεσπότης έχει το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.',
       },
       {
         id: 'join',
@@ -187,7 +187,7 @@ export const copy: Record<Locale, FaqCopy> = {
       bullets: [
         { strong: '3 γύροι quiz', rest: '\u2014 αρκετή προθέρμανση χωρίς να κουράζει.' },
         { strong: 'Μέγιστο 20 παίκτες', rest: '\u2014 το ανώτατο όριο· τα μικρότερα δωμάτια δείχνουν πιο ζωηρά.' },
-        { strong: 'Όριο μονομαχιών ανά ζευγάρι 3', rest: '\u2014 αποτρέπει την εκμετάλλευση ενός μόνο στόχου.' },
+        { strong: 'Προεπιλεγμένο όριο μονομαχιών ανά ζευγάρι 3', rest: '(οι ρεβάνς μετράνε) \u2014 αποτρέπει την εκμετάλλευση ενός μόνο στόχου.' },
       ],
     },
     joinSection: {
@@ -216,7 +216,7 @@ export const copy: Record<Locale, FaqCopy> = {
       { q: 'Μπορούν να μπουν παίκτες αργότερα;', a: 'Ναι \u2014 μέχρι ο οικοδεσπότης να περάσει τη φάση των προβλέψεων. Όσοι μπουν αργότερα μπορούν να παίξουν μονομαχίες trivia.' },
       { q: 'Τι γίνεται αν αποσυνδεθεί ένας παίκτης;', a: 'Εμφανίζεται ένα banner επανασύνδεσης· ένα tap τους ξαναβάζει με την κατάσταση να διατηρείται. Προβλέψεις και πόντοι δεν χάνονται.' },
       { q: 'Μπορεί ο οικοδεσπότης να αποβάλει παίκτη;', a: 'Ναι \u2014 ο οικοδεσπότης έχει panel διαχείρισης παικτών από το lobby και μετά.' },
-      { q: 'Πώς δουλεύουν οι μονομαχίες;', a: 'Trivia 3 ερωτήσεων ένας προς έναν. Ο νικητής κλέβει πόντους από τον ηττημένο. Κάθε ζευγάρι έχει όριο που ορίζει ο οικοδεσπότης (προεπιλογή 3 μονομαχίες ανά βραδιά, συμπεριλαμβανομένων των rematches).' },
+      { q: 'Πώς δουλεύουν οι μονομαχίες;', a: 'Trivia 3 ερωτήσεων ένας προς έναν. Ο νικητής κλέβει πόντους από τον ηττημένο. Κάθε ζευγάρι έχει προεπιλεγμένο όριο (3 μονομαχίες ανά ζευγάρι σε όλη τη βραδιά, οι ρεβάνς μετράνε).' },
       { q: 'Πώς υπολογίζεται η βαθμολογία;', a: 'Δες τη σελίδα Βαθμολογίας για τις πλήρεις φόρμουλες. Οι επιλογές Top-5 παίρνουν μεταβλητούς πόντους ανάλογα με την αντιστοίχιση θέσης· οι Worst-5 παίρνουν σταθερούς πόντους αν η χώρα προσγειωθεί στις τελευταίες 5· trivia και μονομαχίες προσθέτουν πόντους quiz.' },
       { q: 'Ποιες είναι οι πέντε κατηγορίες νικητών;', a: 'Πρωταθλητής (περισσότεροι συνολικοί πόντοι), Κλέφτης (περισσότεροι πόντοι κλεμμένοι σε μονομαχίες), Μονομάχος (περισσότερες κερδισμένες μονομαχίες), Μάντης (καλύτερες προβλέψεις), Γκουρού (περισσότερες σωστές απαντήσεις trivia).' },
       { q: 'Τι είναι το sudden death;', a: 'Ένα προαιρετικό tiebreak που ενεργοποιεί ο οικοδεσπότης: αν δύο παίκτες ισοβαθμήσουν σε κατηγορία νικητή, μία ερώτηση trivia αποφασίζει \u2014 η πιο γρήγορη σωστή απάντηση κερδίζει.' },
