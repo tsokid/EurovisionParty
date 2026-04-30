@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../../stores/gameStore';
 import PlayerCard from './PlayerCard';
 import Button from '../ui/Button';
-import ThemeToggle from '../ui/ThemeToggle';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 import MuteToggle from '../ui/MuteToggle';
 
@@ -80,7 +79,6 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
       <div className="absolute top-3 right-3 z-20 flex items-center gap-1">
         <MuteToggle />
         <LanguageSwitcher />
-        <ThemeToggle />
       </div>
 
       {/* Centered content column between top clearance and bottom sticky bar */}

@@ -1,715 +1,881 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eurovision Party Game – Redesign Preview</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eurovision Party · Picker Redesign Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --purple: #6b21a8;
-      --purple-light: #a855f7;
-      --pink: #ec4899;
-      --pink-light: #f9a8d4;
-      --gold: #fbbf24;
-      --gold-light: #fde68a;
-      --cyan: #22d3ee;
-      --green: #34d399;
-      --deep: #08031a;
+      --bg:              #0d0820;
+      --surface:         rgba(255,255,255,0.05);
+      --surface-hover:   rgba(255,255,255,0.09);
+      --border:          rgba(255,255,255,0.09);
+      --border-strong:   rgba(255,255,255,0.22);
+
+      --top-color:       #FFD166;
+      --top-bg:          rgba(255,209,102,0.1);
+      --top-border:      rgba(255,209,102,0.3);
+
+      --worst-color:     #FF4D6D;
+      --worst-bg:        rgba(255,77,109,0.1);
+      --worst-border:    rgba(255,77,109,0.3);
+
+      --accent:          #9b59f4;
+      --accent-bg:       rgba(155,89,244,0.2);
+      --accent-border:   rgba(155,89,244,0.55);
+
+      --text-1: #ede9f5;
+      --text-2: rgba(237,233,245,0.72);
+      --text-3: rgba(237,233,245,0.58);
+
+      --panel-w: 1fr;
+      --gap:     10px;
+      --r-sm:    8px;
+      --r-md:    12px;
+      --r-lg:    18px;
+
+      --font-d: 'Barlow Condensed', sans-serif;
+      --font-b: 'Lexend', sans-serif;
     }
+
+    html, body { height: 100%; overflow: hidden; }
 
     body {
-      font-family: 'Space Grotesk', system-ui, sans-serif;
-      background-color: var(--deep);
+      font-family: var(--font-b);
+      background: var(--bg);
+      /* Match app gradient: warm magenta left, cool indigo right */
       background-image:
-        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(236,72,153,0.32), transparent 60%),
-        radial-gradient(ellipse 70% 55% at 85% 90%, rgba(56,189,248,0.22), transparent 60%),
-        radial-gradient(ellipse 60% 50% at 75% 15%, rgba(168,85,247,0.28), transparent 65%),
-        radial-gradient(ellipse 90% 70% at 25% 85%, rgba(124,58,237,0.24), transparent 65%),
-        linear-gradient(135deg, #0a0420 0%, #150836 50%, #0a0420 100%);
-      min-height: 100vh;
-      color: white;
+        radial-gradient(ellipse 75% 65% at 15% 10%,  rgba(140,20,100,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 70% at 85% 90%,  rgba(50,10,160,0.38) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 45% at 50% 50%,  rgba(80,20,140,0.2)  0%, transparent 70%);
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── Layout ─────────────────────────────────────── */
-    .page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 1.5rem;
-    }
-
-    .seo-hint {
-      max-width: 1140px;
-      margin: 4rem auto 0;
-      padding: 2rem 1.5rem;
-      border-top: 1px dashed rgba(255,255,255,0.12);
-      text-align: center;
-      color: rgba(255,255,255,0.35);
-      font-size: 0.85rem;
-      letter-spacing: 0.05em;
-    }
-
-    .stage {
-      width: 100%;
-      max-width: 1140px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* Logo sits centered above the two-column grid */
-    .logo-top {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-    .logo-top img {
-      width: 320px;
-      max-width: 100%;
-      height: auto;
-      filter: drop-shadow(0 0 32px rgba(236,72,153,0.28));
-      animation: float 4s ease-in-out infinite;
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-    .logo-top .logo-fallback {
-      font-size: 3rem;
-      font-weight: 800;
-      line-height: 1;
-      background: linear-gradient(135deg, #fff 20%, var(--purple-light) 50%, var(--pink) 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.03em;
-      filter: drop-shadow(0 0 24px rgba(236,72,153,0.3));
-    }
-
-    .hero {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4.5rem;
-      align-items: center;
-    }
-
-    /* ─── Left Column ─────────────────────────────────── */
-    .left-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 0.6rem;
-    }
-
-    .left-col .copy-block {
-      margin-top: 1.75rem;
-      padding-top: 1.75rem;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      width: 100%;
-      max-width: 460px;
-      align-items: center;
-    }
-    .left-col .copy-kicker { justify-content: center; }
-    .left-col .copy-headline { text-align: center; }
-    .left-col .copy-body { margin: 0 auto; text-align: center; }
-
-    /* Wordmark line — "♪ EuroVision 2026" as one line */
-    .wordmark-line {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 0.5rem;
-      line-height: 1;
-    }
-    .wordmark-line .name {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #fff 30%, var(--purple-light) 60%, var(--pink) 90%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .wordmark-line .year {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--gold);
-      text-shadow: 0 0 7px rgba(251,191,36,0.6), 0 0 20px rgba(251,191,36,0.4), 0 0 40px rgba(251,191,36,0.2);
-    }
-
-    .event-name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 0.18em;
-      line-height: 1.3;
-      text-transform: uppercase;
-      margin-top: 0.25rem;
-    }
-    .event-name strong {
-      color: rgba(255,255,255,0.92);
-      font-weight: 700;
-    }
-
-    .location-pill {
-      margin-top: 2rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(12px);
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.6);
-    }
-
-    .location-pill .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse 2s infinite;
-    }
-
-    /* sparkle decorations on left */
-    .sparkles {
-      position: absolute;
+    /* ── Star sparkles ─────────────────────────────────────────────────── */
+    .stars {
+      position: fixed;
       inset: 0;
       pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%,100% { opacity: 0.2; transform: scale(1); }
+      50%      { opacity: 0.9; transform: scale(1.4); }
+    }
+
+    /* ── Root layout ───────────────────────────────────────────────────── */
+    .app {
+      display: grid;
+      grid-template-columns: 1fr 4fr 1fr;
+      height: 100vh;
+      gap: var(--gap);
+      padding: var(--gap);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Side panels (sticky by design — layout prevents scroll) ───────── */
+    .panel {
+      display: flex;
+      flex-direction: column;
+      background: rgba(18,8,40,0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      height: 100%;
       overflow: hidden;
     }
 
-    /* ─── Right Column ────────────────────────────────── */
-    .right-col {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      align-items: stretch;
-      width: 100%;
-      max-width: 460px;
-      margin: 0 auto;
+    .panel-head {
+      padding: 16px 15px 13px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
 
-    /* Copy block */
-    .copy-block {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
+    .panel-icon { font-size: 1.4rem; line-height: 1; }
 
-    .copy-kicker {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--cyan);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .copy-kicker::before {
-      content: '';
-      display: inline-block;
-      width: 20px;
-      height: 2px;
-      background: var(--cyan);
-      border-radius: 2px;
-    }
-
-    .copy-headline {
-      font-size: 2.6rem;
+    .panel-name {
+      font-family: var(--font-d);
+      font-size: 1.6rem;
       font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      color: white;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-top: 4px;
+    }
+    .panel--top   .panel-name { color: var(--top-color); }
+    .panel--worst .panel-name { color: var(--worst-color); }
+
+    .panel-sub {
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 3px;
     }
 
-    .copy-headline .accent {
-      background: linear-gradient(90deg, var(--purple-light), var(--pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .panel-tally {
+      font-family: var(--font-d);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-3);
+      margin-top: 8px;
     }
 
-    .copy-body {
-      font-size: 1.05rem;
-      line-height: 1.65;
-      color: rgba(255,255,255,0.62);
-      max-width: 400px;
-    }
-
-    /* ─── Rooms Panel ─────────────────────────────────── */
-    .rooms-section {
+    .slots-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 9px;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 6px;
     }
 
-    .rooms-header {
+    /* ── Slot ──────────────────────────────────────────────────────────── */
+    .slot {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 0.25rem;
-    }
-
-    .rooms-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-    }
-
-    .rooms-count {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.3);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .room-card {
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: var(--r-sm);
+      border: 1.5px dashed var(--border);
+      min-height: 50px;
+      cursor: pointer;
+      transition: background 0.13s, border-color 0.13s, transform 0.1s;
       position: relative;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(12px);
-      padding: 1rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.875rem;
-      transition: border-color 0.2s, background 0.2s;
     }
 
-    /* Small bin icon — top right */
-    .btn-delete-icon {
-      position: absolute;
-      top: 0.65rem;
-      right: 0.65rem;
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.08);
-      color: rgba(248,113,113,0.55);
-      cursor: pointer;
+    .panel--top   .slot { border-color: var(--top-border); }
+    .panel--worst .slot { border-color: var(--worst-border); }
+
+    .slot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .slot.is-over { border-style: solid; transform: scale(1.02); }
+    .panel--top   .slot.is-over { background: var(--top-bg);   border-color: var(--top-color); }
+    .panel--worst .slot.is-over { background: var(--worst-bg); border-color: var(--worst-color); }
+
+    .slot.is-filled { border-style: solid; background: var(--surface-hover); }
+
+    /* Glow when a tile is selected (keyboard mode) */
+    .has-selection .slot { border-style: solid; }
+    .has-selection .panel--top   .slot { box-shadow: 0 0 0 1px var(--top-border); }
+    .has-selection .panel--worst .slot { box-shadow: 0 0 0 1px var(--worst-border); }
+
+    .slot-pos {
+      font-family: var(--font-d);
+      font-size: 1.55rem;
+      font-weight: 800;
+      min-width: 42px;
+      text-align: right;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .panel--top   .slot-pos { color: var(--top-color); }
+    .panel--worst .slot-pos { color: var(--worst-color); }
+
+    .slot-body { flex: 1; min-width: 0; }
+
+    .slot-hint {
+      font-size: 0.7rem;
+      color: var(--text-3);
+      font-style: italic;
+    }
+
+    .slot-country {
+      font-family: var(--font-d);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-1);
       display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .slot-remove {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 0.85rem;
+      width: 20px; height: 20px;
+      border-radius: 4px;
+      display: none;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      z-index: 2;
+      flex-shrink: 0;
+      transition: color 0.12s, opacity 0.12s;
+      opacity: 0;
     }
-    .btn-delete-icon:hover {
-      background: rgba(248,113,113,0.12);
-      border-color: rgba(248,113,113,0.3);
-      color: #f87171;
-    }
-    .btn-delete-icon svg { width: 14px; height: 14px; }
+    .slot:hover .slot-remove { opacity: 1; }
+    .slot-remove:hover { color: var(--worst-color); }
+    .slot-remove:focus-visible { outline: 2px solid var(--accent); opacity: 1; }
 
-    .room-card:hover {
-      border-color: rgba(236,72,153,0.4);
-      background: rgba(255,255,255,0.06);
-    }
-
-    .room-card-top {
+    /* ── Center column ─────────────────────────────────────────────────── */
+    .center {
       display: flex;
-      align-items: flex-start;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .center-head {
+      flex-shrink: 0;
+      padding: 0 2px 10px;
+    }
+
+    .center-meta {
+      display: flex;
       justify-content: space-between;
-      gap: 1rem;
+      align-items: baseline;
+      margin-bottom: 10px;
     }
 
-    .room-info { flex: 1; }
-
-    .room-badges {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .badge-live {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      background: rgba(52,211,153,0.18);
-      color: #34d399;
-      border: 1px solid rgba(52,211,153,0.28);
-      letter-spacing: 0.08em;
-    }
-
-    .badge-host {
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: rgba(251,191,36,0.9);
-      letter-spacing: 0.12em;
+    .meta-count {
+      font-family: var(--font-d);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.07em;
       text-transform: uppercase;
     }
 
-    .room-name {
-      font-size: 1.2rem;
+    .meta-picked {
+      font-family: var(--font-d);
+      font-size: 0.9rem;
       font-weight: 700;
-      color: white;
-      line-height: 1.2;
+      color: var(--accent);
+      letter-spacing: 0.04em;
     }
 
-    .room-meta {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.42);
-      margin-top: 0.25rem;
-      font-variant-numeric: tabular-nums;
-    }
+    /* Sort only — filter buttons removed */
+    .sort-row { display: flex; gap: 5px; align-items: center; }
 
-    .room-meta code {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.55);
-    }
-
-    /* Action row — Join (prominent) + Leave (subtle) */
-    .room-actions {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 0.6rem;
-    }
-
-    .btn-join-room {
-      padding: 0.95rem 1.25rem;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--purple-light), var(--pink));
-      color: white;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(168,85,247,0.35), 0 2px 8px rgba(236,72,153,0.25);
-      transition: filter 0.15s, transform 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      min-height: 50px;
-    }
-    .btn-join-room:hover { filter: brightness(1.12); transform: translateY(-1px); }
-    .btn-join-room:active { transform: translateY(0); }
-    .btn-join-room .arrow { font-size: 1.05rem; transition: transform 0.15s; }
-    .btn-join-room:hover .arrow { transform: translateX(3px); }
-
-    .btn-leave {
-      padding: 0.6rem 0.75rem;
-      border-radius: 12px;
-      background: rgba(251,191,36,0.08);
-      border: 1px solid rgba(251,191,36,0.22);
-      color: rgba(251,191,36,0.9);
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
-      min-height: 50px;
-    }
-    .btn-leave:hover { background: rgba(251,191,36,0.15); }
-
-    /* ─── Main CTAs ───────────────────────────────────── */
-    .cta-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 0.875rem;
-    }
-
-    .btn-create {
-      width: 100%;
-      padding: 1.2rem 2rem;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 6px 32px rgba(168,85,247,0.4), 0 2px 12px rgba(236,72,153,0.3);
-      transition: filter 0.15s, transform 0.12s, box-shadow 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      min-height: 68px;
-    }
-
-    .btn-create:hover {
-      filter: brightness(1.1);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 40px rgba(168,85,247,0.5), 0 4px 16px rgba(236,72,153,0.4);
-    }
-
-    .btn-create:active { transform: translateY(0); }
-
-    .cta-secondary-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-    }
-
-    .btn-join {
-      padding: 1rem 1.5rem;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.18);
-      backdrop-filter: blur(12px);
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, transform 0.1s;
-      min-height: 58px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-
-    .btn-join:hover {
-      background: rgba(255,255,255,0.11);
-      border-color: rgba(255,255,255,0.28);
-      transform: translateY(-1px);
-    }
-
-    /* ─── Divider ─────────────────────────────────────── */
-    .vert-divider {
-      width: 1px;
-      height: 100%;
-      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.12) 30%, rgba(255,255,255,0.12) 70%, transparent);
-      position: absolute;
-      left: 50%;
-      top: 0;
-      pointer-events: none;
-    }
-
-    /* ─── Animations ──────────────────────────────────── */
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.3; transform: scale(0.85) rotate(0deg); }
-      50% { opacity: 0.9; transform: scale(1.15) rotate(12deg); }
-    }
-
-    .sparkle {
-      position: absolute;
-      animation: twinkle 3.2s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    /* ─── Note label ──────────────────────────────────── */
-    .note {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      padding: 0.5rem 0.875rem;
-      border-radius: 999px;
-      background: rgba(168,85,247,0.15);
-      border: 1px solid rgba(168,85,247,0.3);
+    .sort-label {
+      font-family: var(--font-d);
       font-size: 0.72rem;
       font-weight: 600;
-      color: rgba(255,255,255,0.5);
-      letter-spacing: 0.05em;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 2px;
     }
 
-    /* ─── Mobile override ─────────────────────────────── */
-    @media (max-width: 768px) {
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-        padding: 1rem 0;
+    .sbtn {
+      font-family: var(--font-d);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .sbtn:hover { border-color: var(--border-strong); color: var(--text-1); }
+    .sbtn.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .sbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .kbd-hint {
+      margin-top: 8px;
+      font-size: 0.65rem;
+      color: var(--text-3);
+      letter-spacing: 0.04em;
+    }
+    kbd {
+      font-family: var(--font-d);
+      font-size: 0.72rem;
+      padding: 1px 5px;
+      border: 1px solid var(--border-strong);
+      border-radius: 3px;
+      background: var(--surface-hover);
+      color: var(--text-2);
+    }
+
+    /* Selection banner */
+    .sel-banner {
+      display: none;
+      margin-top: 8px;
+      padding: 6px 12px;
+      background: var(--accent-bg);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--r-sm);
+      font-family: var(--font-d);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .sel-banner.visible { display: block; }
+
+    /* ── Participant grid — 3 columns ──────────────────────────────────── */
+    .grid {
+      flex: 1;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 2px 2px 24px;
+      align-content: start;
+    }
+
+    /* ── Tile ──────────────────────────────────────────────────────────── */
+    .tile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 40px 14px 13px;
+      background: rgba(255,255,255,0.048);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      cursor: grab;
+      transition: background 0.12s, border-color 0.12s, transform 0.12s, box-shadow 0.12s;
+      position: relative;
+      user-select: none;
+      min-height: 92px;
+    }
+
+    .tile::before {
+      content: '⠿';
+      position: absolute;
+      left: 5px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: var(--text-3);
+      opacity: 0;
+      transition: opacity 0.12s;
+      pointer-events: none;
+    }
+    .tile:hover::before { opacity: 1; }
+
+    .tile:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+    }
+    .tile:active { cursor: grabbing; transform: scale(0.98); }
+    .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .tile.is-dragging { opacity: 0.25; }
+
+    .tile.is-selected {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(155,89,244,0.3), 0 8px 28px rgba(0,0,0,0.4);
+    }
+
+    .tile.is-ranked { opacity: 0.4; }
+    .tile.is-ranked:hover { opacity: 0.75; transform: translateY(-1px); }
+
+    .tile-flag {
+      font-size: 2.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 2.6rem;
+      text-align: center;
+    }
+
+    .tile-info { flex: 1; min-width: 0; }
+
+    .tile-country {
+      display: block;
+      font-family: var(--font-d);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tile-artist {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tile-song {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-3);
+      font-style: italic;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Position badge — top-right corner */
+    .tile-badge {
+      position: absolute;
+      top: 7px; right: 8px;
+      font-family: var(--font-d);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: 5px;
+      line-height: 1.5;
+      display: none;
+    }
+    .tile-badge.is-top {
+      display: block;
+      background: var(--top-bg);
+      color: var(--top-color);
+      border: 1px solid var(--top-border);
+    }
+    .tile-badge.is-worst {
+      display: block;
+      background: var(--worst-bg);
+      color: var(--worst-color);
+      border: 1px solid var(--worst-border);
+    }
+
+    /* ── Scrollbars ────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+    /* ── Accessibility ─────────────────────────────────────────────────── */
+    @media (prefers-contrast: high) {
+      :root {
+        --border: rgba(255,255,255,0.5);
+        --text-2: rgba(237,233,245,0.88);
+        --text-3: rgba(237,233,245,0.65);
       }
-      .left-col { align-items: center; text-align: center; }
-      .year-badge { font-size: 3.5rem; }
-      .copy-headline { font-size: 2rem; }
-      .cta-secondary-row { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+
+    /* ── Mobile ────────────────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      html, body { overflow: auto; }
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        height: auto; overflow: visible; min-height: 100svh;
+      }
+      .panel  { max-height: 230px; }
+      .center { height: 65svh; min-height: 400px; }
+      .grid   { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<div class="page" style="position:relative;">
+<!-- Scattered star sparkles (matching app aesthetic) -->
+<div class="stars" aria-hidden="true" id="stars"></div>
 
-  <!-- Sparkle decorations -->
-  <svg class="sparkle" style="top:8%;left:8%;animation-delay:0s;" width="22" height="22" viewBox="0 0 24 24">
-    <path d="M12 2 L13.6 9.4 L21 11 L13.6 12.6 L12 20 L10.4 12.6 L3 11 L10.4 9.4 Z" fill="rgba(249,168,212,0.9)" style="filter:drop-shadow(0 0 6px rgba(249,168,212,0.9))"/>
-  </svg>
-  <svg class="sparkle" style="top:14%;right:10%;animation-delay:0.5s;" width="14" height="14" viewBox="0 0 24 24">
-    <path d="M12 2 L13.6 9.4 L21 11 L13.6 12.6 L12 20 L10.4 12.6 L3 11 L10.4 9.4 Z" fill="rgba(253,230,138,0.85)" style="filter:drop-shadow(0 0 6px rgba(253,230,138,0.85))"/>
-  </svg>
-  <svg class="sparkle" style="top:60%;left:4%;animation-delay:1s;" width="18" height="18" viewBox="0 0 24 24">
-    <path d="M12 2 L13.6 9.4 L21 11 L13.6 12.6 L12 20 L10.4 12.6 L3 11 L10.4 9.4 Z" fill="rgba(168,85,247,0.8)" style="filter:drop-shadow(0 0 6px rgba(168,85,247,0.8))"/>
-  </svg>
-  <svg class="sparkle" style="bottom:20%;right:6%;animation-delay:0.3s;" width="20" height="20" viewBox="0 0 24 24">
-    <path d="M12 2 L13.6 9.4 L21 11 L13.6 12.6 L12 20 L10.4 12.6 L3 11 L10.4 9.4 Z" fill="rgba(34,211,238,0.75)" style="filter:drop-shadow(0 0 6px rgba(34,211,238,0.75))"/>
-  </svg>
-  <svg class="sparkle" style="bottom:30%;left:14%;animation-delay:1.2s;" width="12" height="12" viewBox="0 0 24 24">
-    <path d="M12 2 L13.6 9.4 L21 11 L13.6 12.6 L12 20 L10.4 12.6 L3 11 L10.4 9.4 Z" fill="rgba(249,168,212,0.7)" style="filter:drop-shadow(0 0 6px rgba(249,168,212,0.7))"/>
-  </svg>
+<div class="app" id="app">
 
-  <div class="stage" style="position:relative;">
-
-    <!-- ═══════════ LOGO — top, centered above both columns ═══════════ -->
-    <div class="logo-top">
-      <img
-        src="/logo.png"
-        alt="Eurovision Games"
-        width="628"
-        height="397"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"
-      />
-      <span class="logo-fallback" style="display:none;">♪ EuroVision Games</span>
+  <!-- ── LEFT: TOP 5 ─────────────────────────────────────────────────── -->
+  <aside class="panel panel--top" role="complementary" aria-label="Top 5 best finish predictions">
+    <div class="panel-head">
+      <div class="panel-icon" aria-hidden="true">🏆</div>
+      <h2 class="panel-name">Top 5</h2>
+      <p class="panel-sub">Best finish</p>
+      <div class="panel-tally" id="top-tally" aria-live="polite">0 / 5 placed</div>
     </div>
+    <div class="slots-list" id="top-slots" role="list" aria-label="Top 5 prediction slots"></div>
+  </aside>
 
-    <div class="hero">
-
-    <!-- ═══════════ LEFT COLUMN — Brand + Pitch ═══════════ -->
-    <div class="left-col">
-
-      <div class="wordmark-line">
-        <span class="name">♪ EuroVision</span>
-        <span class="year">2026</span>
+  <!-- ── CENTER ──────────────────────────────────────────────────────── -->
+  <main class="center" aria-label="Eurovision participants">
+    <div class="center-head">
+      <div class="center-meta">
+        <span class="meta-count" id="count-label">Participants (0)</span>
+        <span class="meta-picked" id="picked-label" aria-live="polite">0 / 10 picked</span>
       </div>
-
-      <div class="event-name">
-        <strong>Grand Final</strong> &nbsp;·&nbsp; Party Game
+      <div class="sort-row" role="group" aria-label="Sort participants">
+        <span class="sort-label">Sort</span>
+        <button class="sbtn" id="btn-az" aria-pressed="false">A ↑</button>
+        <button class="sbtn" id="btn-za" aria-pressed="false">Z ↓</button>
       </div>
-
-      <div class="location-pill">
-        <span class="dot"></span>
-        Basel, Switzerland · May 2026
-      </div>
-
-      <!-- Pitch / hype copy now lives under the brand block -->
-      <div class="copy-block">
-        <div class="copy-kicker">Live Tonight &nbsp;✦&nbsp; Join the game</div>
-        <div class="copy-headline">
-          Pick winners.<br/>
-          Score live. <span class="accent">Beat your friends.</span>
-        </div>
-        <div class="copy-body">
-          Predict who advances, score points as acts perform, and go head-to-head in real-time duels — all while watching the show.
-        </div>
-      </div>
+      <p class="kbd-hint">
+        Drag a tile to a slot &nbsp;·&nbsp; or click a tile, then click a slot
+        &nbsp;·&nbsp; <kbd>Esc</kbd> to cancel
+      </p>
+      <div class="sel-banner" id="sel-banner" aria-live="polite"></div>
     </div>
+    <div class="grid" id="grid" role="list" aria-label="Participants — drag or click to predict"></div>
+  </main>
 
-    <!-- Vertical divider (decorative) -->
-    <div style="position:absolute;left:50%;top:10%;bottom:10%;width:1px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,0.1) 30%,rgba(255,255,255,0.1) 70%,transparent);pointer-events:none;"></div>
-
-    <!-- ═══════════ RIGHT COLUMN — Action ═══════════ -->
-    <div class="right-col">
-
-      <!-- 1. MAIN CTAs FIRST -->
-      <div class="cta-stack">
-        <!-- Primary CTA -->
-        <button class="btn-create">
-          ✦ &nbsp;Create a Room
-        </button>
-
-        <!-- Secondary CTA — full width -->
-        <button class="btn-join">
-          🎤 &nbsp;Join a Room
-        </button>
-      </div>
-
-      <!-- 2. Your Rooms — under the CTAs -->
-      <div class="rooms-section">
-        <div class="rooms-header">
-          <span class="rooms-label">Your Rooms</span>
-          <span class="rooms-count">2 rooms</span>
-        </div>
-
-        <!-- Room card — LIVE example (host) -->
-        <div class="room-card">
-          <!-- Bin icon top-right (host only) -->
-          <button class="btn-delete-icon" aria-label="Delete room" title="Delete room">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-              <path d="M10 11v6"></path>
-              <path d="M14 11v6"></path>
-              <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
-            </svg>
-          </button>
-
-          <div class="room-card-top">
-            <div class="room-info">
-              <div class="room-badges">
-                <span class="badge-live">LIVE</span>
-                <span class="badge-host">Host</span>
-              </div>
-              <div class="room-name">Marco's Room</div>
-              <div class="room-meta"><code>MXKP9</code> &nbsp;·&nbsp; 480 pts</div>
-            </div>
-          </div>
-
-          <!-- Single row: Join (prominent) + Leave -->
-          <div class="room-actions">
-            <button class="btn-join-room">
-              Join Room <span class="arrow">→</span>
-            </button>
-            <button class="btn-leave">Leave</button>
-          </div>
-        </div>
-
-        <!-- Room card — AWAY example (non-host, no bin icon) -->
-        <div class="room-card" style="opacity:0.85;">
-          <div class="room-card-top">
-            <div class="room-info">
-              <div class="room-badges">
-                <span style="font-size:0.65rem;font-weight:700;padding:0.2rem 0.55rem;border-radius:999px;background:rgba(251,191,36,0.12);color:rgba(251,191,36,0.8);border:1px solid rgba(251,191,36,0.2);letter-spacing:0.08em;">AWAY</span>
-              </div>
-              <div class="room-name">Elena's Room</div>
-              <div class="room-meta"><code>GT72A</code> &nbsp;·&nbsp; 210 pts</div>
-            </div>
-          </div>
-
-          <div class="room-actions">
-            <button class="btn-join-room">
-              Rejoin Room <span class="arrow">→</span>
-            </button>
-            <button class="btn-leave">Leave</button>
-          </div>
-        </div>
-
-      </div>
-
+  <!-- ── RIGHT: WORST 5 ──────────────────────────────────────────────── -->
+  <aside class="panel panel--worst" role="complementary" aria-label="Worst 5 last-place predictions">
+    <div class="panel-head">
+      <div class="panel-icon" aria-hidden="true">💀</div>
+      <h2 class="panel-name">Worst 5</h2>
+      <p class="panel-sub">Last place</p>
+      <div class="panel-tally" id="worst-tally" aria-live="polite">0 / 5 placed</div>
     </div>
-    <!-- /right col -->
-
-    </div>
-    <!-- /hero -->
-
-  </div>
-  <!-- /stage -->
+    <div class="slots-list" id="worst-slots" role="list" aria-label="Worst 5 prediction slots"></div>
+  </aside>
 
 </div>
-<!-- /page -->
 
-<!-- Below-the-fold placeholder: SEO sections + footer go here -->
-<div class="seo-hint">
-  ↓ &nbsp; Below this hero: SEO content blocks (How it works · FAQ · Country guides · etc.) and SiteFooter
-</div>
+<script>
+'use strict';
 
-<div class="note">HTML Preview — desktop layout · not production code</div>
+// ── Data ──────────────────────────────────────────────────────────────────
+const PARTICIPANTS = [
+  { id: 'albania',     flag: '🇦🇱', country: 'Albania',     artist: 'Alis',                       song: 'Nān' },
+  { id: 'armenia',     flag: '🇦🇲', country: 'Armenia',     artist: 'Simón',                      song: 'Paloma Rumba' },
+  { id: 'australia',   flag: '🇦🇺', country: 'Australia',   artist: 'Delta Goodrem',              song: 'Eclipse' },
+  { id: 'austria',     flag: '🇦🇹', country: 'Austria',     artist: 'Cosmó',                      song: 'Tanzschein' },
+  { id: 'azerbaijan',  flag: '🇦🇿', country: 'Azerbaijan',  artist: 'Jlva',                       song: 'Just Go' },
+  { id: 'belgium',     flag: '🇧🇪', country: 'Belgium',     artist: 'Essyla',                     song: 'Dancing on the Ice' },
+  { id: 'bulgaria',    flag: '🇧🇬', country: 'Bulgaria',    artist: 'Dara',                       song: 'Bangaranga' },
+  { id: 'croatia',     flag: '🇭🇷', country: 'Croatia',     artist: 'Lelek',                      song: 'Andromeda' },
+  { id: 'cyprus',      flag: '🇨🇾', country: 'Cyprus',      artist: 'Antigoni',                   song: 'Jalla' },
+  { id: 'czechia',     flag: '🇨🇿', country: 'Czechia',     artist: 'Daniel Zizka',               song: 'Crossroads' },
+  { id: 'denmark',     flag: '🇩🇰', country: 'Denmark',     artist: 'Søren Torpegaard Lund',      song: 'Før vi går hjem' },
+  { id: 'estonia',     flag: '🇪🇪', country: 'Estonia',     artist: 'Vanilla Ninja',              song: 'Too Epic to Be True' },
+  { id: 'finland',     flag: '🇫🇮', country: 'Finland',     artist: 'Linda Lampenius & Pete P.', song: 'Liekinheitin' },
+  { id: 'france',      flag: '🇫🇷', country: 'France',      artist: 'Monroe',                     song: 'Regarde-moi' },
+  { id: 'georgia',     flag: '🇬🇪', country: 'Georgia',     artist: 'Bzikebi',                    song: 'On Replay' },
+  { id: 'germany',     flag: '🇩🇪', country: 'Germany',     artist: 'Nico Suave',                 song: 'Alles Gut' },
+  { id: 'greece',      flag: '🇬🇷', country: 'Greece',      artist: 'Elena Paparizou',            song: 'Fire & Ice' },
+  { id: 'iceland',     flag: '🇮🇸', country: 'Iceland',     artist: 'Daði Freyr',                 song: 'Think About Things II' },
+  { id: 'ireland',     flag: '🇮🇪', country: 'Ireland',     artist: 'Bambie Thug',                song: 'Doomsday Blue' },
+  { id: 'israel',      flag: '🇮🇱', country: 'Israel',      artist: 'Eden Golan',                 song: 'Hurricane II' },
+  { id: 'italy',       flag: '🇮🇹', country: 'Italy',       artist: 'Mahmood',                    song: 'Brividi Sempre' },
+  { id: 'latvia',      flag: '🇱🇻', country: 'Latvia',      artist: 'Sudden Lights',              song: 'Aijā' },
+  { id: 'lithuania',   flag: '🇱🇹', country: 'Lithuania',   artist: 'Silvester Belt',             song: 'Lamb' },
+  { id: 'luxembourg',  flag: '🇱🇺', country: 'Luxembourg',  artist: 'TALI',                       song: 'Fighter' },
+  { id: 'malta',       flag: '🇲🇹', country: 'Malta',       artist: 'Sarah Bonnici',              song: 'Loop' },
+  { id: 'moldova',     flag: '🇲🇩', country: 'Moldova',     artist: 'Zdob și Zdub',              song: 'Trenuletul II' },
+  { id: 'netherlands', flag: '🇳🇱', country: 'Netherlands', artist: 'Joost Klein',                song: 'Europapa' },
+  { id: 'norway',      flag: '🇳🇴', country: 'Norway',      artist: 'Gåte',                       song: 'Ulveham' },
+  { id: 'poland',      flag: '🇵🇱', country: 'Poland',      artist: 'Luna',                       song: 'The Tower' },
+  { id: 'portugal',    flag: '🇵🇹', country: 'Portugal',    artist: 'Iolanda',                    song: 'Grito' },
+  { id: 'serbia',      flag: '🇷🇸', country: 'Serbia',      artist: 'TEYA DORA',                  song: 'Ramonda' },
+  { id: 'spain',       flag: '🇪🇸', country: 'Spain',       artist: 'Nebulossa',                  song: 'ZORRA' },
+  { id: 'sweden',      flag: '🇸🇪', country: 'Sweden',      artist: 'Marcus & Martinus',          song: 'Unforgettable' },
+  { id: 'switzerland', flag: '🇨🇭', country: 'Switzerland', artist: 'Nemo',                       song: 'The Code' },
+  { id: 'ukraine',     flag: '🇺🇦', country: 'Ukraine',     artist: 'alyona alyona & Jerry Heil', song: 'Teresa & Maria' },
+];
 
+const N       = PARTICIPANTS.length; // dynamic each year
+const TOP_N   = 5;
+const WORST_N = 5;
+
+// ── State ─────────────────────────────────────────────────────────────────
+const picks = {
+  top:   Array(TOP_N).fill(null),
+  worst: Array(WORST_N).fill(null),
+};
+let selectedId = null;
+
+// ── Utilities ─────────────────────────────────────────────────────────────
+function ord(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+function byId(id) { return PARTICIPANTS.find(p => p.id === id); }
+
+function getRank(id) {
+  for (let i = 0; i < TOP_N;   i++) if (picks.top[i]   === id) return { kind: 'top',   label: ord(i + 1) };
+  for (let i = 0; i < WORST_N; i++) if (picks.worst[i] === id) return { kind: 'worst', label: ord(N - WORST_N + 1 + i) };
+  return null;
+}
+function evict(id) {
+  picks.top   = picks.top.map(x => x === id ? null : x);
+  picks.worst = picks.worst.map(x => x === id ? null : x);
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────
+function place(id, kind, index) {
+  evict(id);
+  picks[kind][index] = id;
+  clearSel();
+  render();
+}
+function removeSlot(kind, index) {
+  picks[kind][index] = null;
+  render();
+}
+
+// ── Selection ─────────────────────────────────────────────────────────────
+function toggleSel(id) {
+  if (selectedId === id) return clearSel();
+  clearSel();
+  selectedId = id;
+  document.querySelector(`.tile[data-id="${id}"]`)?.classList.add('is-selected');
+  document.getElementById('app').classList.add('has-selection');
+  const p = byId(id);
+  const banner = document.getElementById('sel-banner');
+  banner.textContent = `${p.flag} ${p.country} selected — now click a slot`;
+  banner.classList.add('visible');
+}
+function clearSel() {
+  selectedId = null;
+  document.querySelectorAll('.tile.is-selected').forEach(t => t.classList.remove('is-selected'));
+  document.getElementById('app').classList.remove('has-selection');
+  const banner = document.getElementById('sel-banner');
+  banner.textContent = '';
+  banner.classList.remove('visible');
+}
+
+// ── Event delegation — single listener handles all click interactions ─────
+document.getElementById('app').addEventListener('click', e => {
+  const rmBtn = e.target.closest('.slot-remove');
+  const slot  = e.target.closest('.slot');
+  const tile  = e.target.closest('.tile');
+
+  if (rmBtn) {
+    const s = rmBtn.closest('.slot');
+    removeSlot(s.dataset.kind, Number(s.dataset.index));
+    return;
+  }
+
+  if (slot) {
+    if (selectedId) place(selectedId, slot.dataset.kind, Number(slot.dataset.index));
+    return;
+  }
+
+  if (tile && !tile.classList.contains('is-selected')) {
+    toggleSel(tile.dataset.id);
+    return;
+  }
+
+  if (tile && tile.classList.contains('is-selected')) {
+    clearSel();
+    return;
+  }
+
+  clearSel();
+});
+
+// Keyboard: Escape cancels selection, Enter/Space on focused slot
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') clearSel();
+});
+
+// ── Build slots ───────────────────────────────────────────────────────────
+function buildSlot(kind, index) {
+  const pos   = kind === 'top' ? index + 1 : (N - WORST_N + 1 + index);
+  const label = ord(pos);
+
+  const el = document.createElement('div');
+  el.className = 'slot';
+  el.dataset.kind  = kind;
+  el.dataset.index = index;
+  el.setAttribute('role', 'listitem');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${label} place — empty`);
+
+  el.innerHTML = `
+    <span class="slot-pos" aria-hidden="true">${label}</span>
+    <div class="slot-body"><span class="slot-hint">tap a country →</span></div>
+    <button class="slot-remove" aria-label="Remove from ${label} place">✕</button>
+  `;
+
+  // Drag target
+  el.addEventListener('dragover',  e => { e.preventDefault(); el.classList.add('is-over'); });
+  el.addEventListener('dragleave', () => el.classList.remove('is-over'));
+  el.addEventListener('drop', e => {
+    e.preventDefault();
+    el.classList.remove('is-over');
+    const id = e.dataTransfer.getData('text/plain');
+    if (id) place(id, kind, index);
+  });
+
+  // Keyboard Enter/Space on slot
+  el.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && selectedId) {
+      e.preventDefault();
+      place(selectedId, kind, index);
+    }
+  });
+
+  return el;
+}
+
+// ── Build tiles ───────────────────────────────────────────────────────────
+function buildTile(p) {
+  const el = document.createElement('div');
+  el.className = 'tile';
+  el.dataset.id = p.id;
+  el.setAttribute('draggable', 'true');
+  el.setAttribute('role', 'listitem');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-label', `${p.country}, ${p.artist}, ${p.song}`);
+
+  el.innerHTML = `
+    <span class="tile-flag" aria-hidden="true">${p.flag}</span>
+    <div class="tile-info">
+      <span class="tile-country">${p.country}</span>
+      <span class="tile-artist">${p.artist}</span>
+      <span class="tile-song">${p.song}</span>
+    </div>
+    <span class="tile-badge" aria-hidden="true"></span>
+  `;
+
+  el.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', p.id);
+    el.classList.add('is-dragging');
+    clearSel();
+  });
+  el.addEventListener('dragend', () => el.classList.remove('is-dragging'));
+
+  // Keyboard Enter/Space on tile
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.target.click(); // delegated to app listener above
+    }
+  });
+
+  return el;
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function render() {
+  // Tiles
+  document.querySelectorAll('.tile').forEach(el => {
+    const id    = el.dataset.id;
+    const rank  = getRank(id);
+    const badge = el.querySelector('.tile-badge');
+
+    if (rank) {
+      el.classList.add('is-ranked');
+      badge.className   = `tile-badge is-${rank.kind}`;
+      badge.textContent = rank.label;
+      el.setAttribute('aria-label', `${byId(id).country} — ranked ${rank.label}`);
+    } else {
+      el.classList.remove('is-ranked');
+      badge.className   = 'tile-badge';
+      badge.textContent = '';
+      const p = byId(id);
+      el.setAttribute('aria-label', `${p.country}, ${p.artist}, ${p.song}`);
+    }
+  });
+
+  // Slots
+  document.querySelectorAll('.slot').forEach(el => {
+    const kind  = el.dataset.kind;
+    const idx   = Number(el.dataset.index);
+    const id    = picks[kind][idx];
+    const p     = id ? byId(id) : null;
+    const body  = el.querySelector('.slot-body');
+    const rmBtn = el.querySelector('.slot-remove');
+    const pos   = kind === 'top' ? idx + 1 : (N - WORST_N + 1 + idx);
+    const label = ord(pos);
+
+    if (p) {
+      el.classList.add('is-filled');
+      body.innerHTML = `<span class="slot-country"><span aria-hidden="true">${p.flag}</span> ${p.country}</span>`;
+      rmBtn.style.display = 'flex';
+      rmBtn.setAttribute('aria-label', `Remove ${p.country} from ${label} place`);
+      el.setAttribute('aria-label', `${label} place: ${p.country}`);
+    } else {
+      el.classList.remove('is-filled');
+      body.innerHTML = `<span class="slot-hint">tap a country →</span>`;
+      rmBtn.style.display = 'none';
+      el.setAttribute('aria-label', `${label} place — empty`);
+    }
+  });
+
+  // Counters
+  const topCt   = picks.top.filter(Boolean).length;
+  const worstCt = picks.worst.filter(Boolean).length;
+  document.getElementById('top-tally').textContent   = `${topCt} / ${TOP_N} placed`;
+  document.getElementById('worst-tally').textContent = `${worstCt} / ${WORST_N} placed`;
+  document.getElementById('picked-label').textContent = `${topCt + worstCt} / ${TOP_N + WORST_N} picked`;
+}
+
+// ── Sort ──────────────────────────────────────────────────────────────────
+const gridEl = document.getElementById('grid');
+
+function activateSort(activeId) {
+  ['btn-az','btn-za'].forEach(id => {
+    const wasActive = id === activeId;
+    const b = document.getElementById(id);
+    const nowActive = wasActive && !b.classList.contains('is-active');
+    b.classList.toggle('is-active', nowActive);
+    b.setAttribute('aria-pressed', String(nowActive));
+    if (wasActive) sortGrid(nowActive ? activeId.replace('btn-','') : null);
+  });
+}
+function sortGrid(dir) {
+  const tiles = [...gridEl.querySelectorAll('.tile')];
+  if (!dir) {
+    const order = PARTICIPANTS.map(p => p.id);
+    tiles.sort((a, b) => order.indexOf(a.dataset.id) - order.indexOf(b.dataset.id));
+  } else {
+    tiles.sort((a,b) => {
+      const na = a.querySelector('.tile-country').textContent;
+      const nb = b.querySelector('.tile-country').textContent;
+      return dir === 'az' ? na.localeCompare(nb) : nb.localeCompare(na);
+    });
+  }
+  tiles.forEach(t => gridEl.appendChild(t));
+}
+
+document.getElementById('btn-az').addEventListener('click', () => activateSort('btn-az'));
+document.getElementById('btn-za').addEventListener('click', () => activateSort('btn-za'));
+
+// ── Stars ─────────────────────────────────────────────────────────────────
+(function buildStars() {
+  const container = document.getElementById('stars');
+  const positions = [
+    [8,12],[15,45],[22,78],[35,23],[42,67],[55,8],[61,90],[68,34],
+    [75,55],[82,18],[88,72],[93,40],[5,85],[30,50],[50,30],[70,15],
+    [20,92],[45,5],[80,60],[10,70],[60,50],[38,82],[90,25],[25,38],
+  ];
+  positions.forEach(([top, left], i) => {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.style.cssText = `top:${top}%;left:${left}%;animation-delay:${(i * 0.42) % 3}s;animation-duration:${2.5 + (i % 3) * 0.8}s;opacity:${0.3 + (i % 4) * 0.15}`;
+    container.appendChild(s);
+  });
+})();
+
+// ── Init ──────────────────────────────────────────────────────────────────
+const topSlotsEl   = document.getElementById('top-slots');
+const worstSlotsEl = document.getElementById('worst-slots');
+
+for (let i = 0; i < TOP_N;   i++) topSlotsEl.appendChild(buildSlot('top', i));
+for (let i = 0; i < WORST_N; i++) worstSlotsEl.appendChild(buildSlot('worst', i));
+
+PARTICIPANTS.forEach(p => gridEl.appendChild(buildTile(p)));
+document.getElementById('count-label').textContent = `Participants (${N})`;
+
+render();
+</script>
 </body>
 </html>

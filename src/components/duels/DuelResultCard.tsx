@@ -88,7 +88,7 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
           {/* Center divider */}
           <div className="flex-shrink-0 px-2 text-center">
             <span className="text-xs font-extrabold text-white/20">VS</span>
-            <p className="text-[9px] text-white/15">/ 36</p>
+            <p className="text-[10px] text-white/15">/ 36</p>
           </div>
 
           {/* Challenged side */}

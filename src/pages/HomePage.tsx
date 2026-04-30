@@ -12,15 +12,19 @@ type Mode = 'welcome' | 'create' | 'join';
 export function HomePage() {
   const [searchParams] = useSearchParams();
   const prefillCode = searchParams.get('join') || '';
-  const [mode, setMode] = useState<Mode>(prefillCode ? 'join' : 'welcome');
+  const action = searchParams.get('action');
+  const initialMode: Mode = prefillCode || action === 'join' ? 'join' : action === 'create' ? 'create' : 'welcome';
+  const [mode, setMode] = useState<Mode>(initialMode);
   const { isLoading: authLoading } = useAuth();
   const { createRoom, joinRoom, isLoading, error } = useRoom();
   const navigate = useNavigate();
 
-  // If ?join=CODE is in URL, auto-switch to join mode
+  // ?join=CODE prefills join mode; ?action=create|join opens the matching screen
   useEffect(() => {
     if (prefillCode) setMode('join');
-  }, [prefillCode]);
+    else if (action === 'create') setMode('create');
+    else if (action === 'join') setMode('join');
+  }, [prefillCode, action]);
 
   if (authLoading) {
     return (

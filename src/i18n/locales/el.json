@@ -36,9 +36,16 @@
   },
   "welcome": {
     "subtitle": "Παιχνίδι Μεγάλου Τελικού Eurovision",
-    "createRoom": "🎉 Δημιουργία Παιχνιδιού",
-    "joinRoom": "🚪 Είσοδος σε Παιχνίδι",
-    "location": "Βιέννη 2026 🇦🇹"
+    "createRoom": "✦ Φτιάξε Δωμάτιο",
+    "joinRoom": "🎤 Μπες σε Δωμάτιο",
+    "location": "Βιέννη · Μάιος 2026 🇦🇹",
+    "eventName": "Μεγάλος Τελικός",
+    "eventCategory": "Παιχνίδι πάρτι",
+    "kicker": "Απόψε Ζωντανά ✦ Μπες στο παιχνίδι",
+    "headlineLine1": "Διάλεξε νικητές.",
+    "headlineLine2": "Σκόραρε ζωντανά.",
+    "headlineAccent": "Νίκα τους φίλους σου.",
+    "body": "Προέβλεψε ποιοι θα προκριθούν, μάζεψε πόντους καθώς οι σκηνές παίζουν και κονταροχτυπήσου σε real-time μάχες — ενώ παρακολουθείς το σόου."
   },
   "nameEntry": {
     "createTitle": "Φτιάξε το Παιχνίδι σου",
@@ -325,7 +332,78 @@
   "reconnect": {
     "banner": "Επανασύνδεση… η πρόοδός σου είναι ασφαλής"
   },
+  "siteNav": {
+    "openMenu": "Άνοιγμα μενού",
+    "closeMenu": "Κλείσιμο μενού",
+    "yourRooms": "Τα Δωμάτιά σου",
+    "createRoom": "Φτιάξε Δωμάτιο",
+    "joinRoom": "Μπες σε Δωμάτιο",
+    "eurovisionNight": "Eurovision Night",
+    "howToPlay": "Πώς Παίζεται",
+    "trivia": "Trivia",
+    "predictions": "Προβλέψεις 2026",
+    "rules": "Κανόνες",
+    "scoring": "Βαθμολογία",
+    "otherFaq": "Άλλες Ερωτήσεις",
+    "contactUs": "Επικοινωνία",
+    "noRooms": "Κανένα δωμάτιο ακόμα"
+  },
   "yourRooms": {
-    "title": "Τα Δωμάτιά σου"
+    "title": "Τα Δωμάτιά σου",
+    "live": "ΖΩΝΤΑΝΑ",
+    "away": "ΑΠΟΥΣΑ",
+    "ended": "ΕΛΗΞΕ",
+    "host": "Οικοδεσπότης",
+    "join": "Μπες στο Δωμάτιο",
+    "rejoin": "Επανείσοδος",
+    "leave": "Έξοδος",
+    "delete": "Διαγραφή",
+    "deleteConfirm": "Διαγραφή του δωματίου; Αυτή η ενέργεια είναι μη αναστρέψιμη.",
+    "endedLabel": "Έληξε",
+    "roomCount_one": "{{count}} δωμάτιο",
+    "roomCount_other": "{{count}} δωμάτια"
+  },
+  "homeSeo": {
+    "headline": "Eurovision Games — διοργάνωσε την τέλεια βραδιά Eurovision",
+    "leadStrong": "Το Eurovision Games είναι ένα δωρεάν παιχνίδι πάρτι μέσα στο browser",
+    "leadRest": " όπου 2-20 φίλοι προβλέπουν το Top 5 και το Worst 5 της Eurovision 2026, μονομαχούν σε trivia και στέφουν πέντε νικητές — Πρωταθλητή, Κλέφτη, Μονομάχο, Μάντη, Γκουρού. Χωρίς εγκατάσταση, χωρίς λογαριασμό.",
+    "cards": {
+      "nightTitle": "Βραδιά Eurovision",
+      "nightDesc": "Οδηγός διοργάνωσης για το watch party.",
+      "predictionsTitle": "Προβλέψεις 2026",
+      "predictionsDesc": "Φόρμα Top 5 / Worst 5 και λίστα 35 χωρών.",
+      "triviaTitle": "Trivia Eurovision",
+      "triviaDesc": "10 ενδεικτικές ερωτήσεις και πώς λειτουργούν οι μονομαχίες.",
+      "partyTitle": "Πάρτι Eurovision",
+      "partyDesc": "Πλήρης οδηγός διοργάνωσης με ροή της βραδιάς.",
+      "gamesTitle": "Παιχνίδια Eurovision",
+      "gamesDesc": "Τι κάνει το παιχνίδι και γιατί αξίζει να παίξεις.",
+      "howTitle": "Πώς παίζεται",
+      "howDesc": "Οδηγός εκκίνησης σε 2 λεπτά."
+    }
+  },
+  "siteFooter": {
+    "play": "Παίξε",
+    "games": "Παιχνίδια",
+    "hosting": "Διοργάνωση",
+    "about": "Σχετικά",
+    "links": {
+      "howToPlay": "Πώς παίζεται",
+      "rules": "Κανόνες",
+      "scoring": "Βαθμολογία",
+      "eurovisionGames": "Παιχνίδια Eurovision",
+      "trivia": "Trivia",
+      "online": "Online",
+      "mobile": "Mobile",
+      "eurovisionNight": "Βραδιά Eurovision",
+      "party": "Πάρτι",
+      "predictions": "Προβλέψεις 2026",
+      "aboutPage": "Σχετικά",
+      "faq": "Συχνές ερωτήσεις",
+      "privacy": "Απόρρητο",
+      "terms": "Όροι"
+    },
+    "disclaimerStart": "© Eurovision Games. Δεν συνδέεται με την European Broadcasting Union ή τον διαγωνισμό Eurovision. Επικοινωνία: ",
+    "contactEmail": "hello@eurovision.games"
   }
 }

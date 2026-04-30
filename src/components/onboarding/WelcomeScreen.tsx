@@ -1,9 +1,5 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import Button from '../ui/Button';
-import ThemeToggle from '../ui/ThemeToggle';
-import LanguageSwitcher from '../ui/LanguageSwitcher';
-import MuteToggle from '../ui/MuteToggle';
 import YourRoomsPanel from '../home/YourRoomsPanel';
 
 interface WelcomeScreenProps {
@@ -11,18 +7,14 @@ interface WelcomeScreenProps {
   onJoinRoom: () => void;
 }
 
-// Pinpoint stars rendered as inline SVG (4-point sparkle). Replaces the emoji
-// sparkles which rendered inconsistently across platforms and looked cheap.
 const sparkles = [
-  { top: '8%', left: '10%', delay: 0, size: 22, tint: 'rgba(249, 168, 212, 0.9)' },
-  { top: '15%', right: '12%', delay: 0.5, size: 14, tint: 'rgba(253, 230, 138, 0.85)' },
-  { top: '60%', left: '6%', delay: 1, size: 18, tint: 'rgba(168, 85, 247, 0.8)' },
-  { top: '72%', right: '8%', delay: 0.3, size: 12, tint: 'rgba(249, 168, 212, 0.7)' },
-  { bottom: '18%', left: '15%', delay: 0.8, size: 16, tint: 'rgba(34, 211, 238, 0.75)' },
-  { bottom: '25%', right: '18%', delay: 1.2, size: 20, tint: 'rgba(253, 230, 138, 0.85)' },
+  { top: '8%', left: '8%', delay: 0, size: 22, tint: 'rgba(249, 168, 212, 0.9)' },
+  { top: '14%', right: '10%', delay: 0.5, size: 14, tint: 'rgba(253, 230, 138, 0.85)' },
+  { top: '60%', left: '4%', delay: 1, size: 18, tint: 'rgba(168, 85, 247, 0.8)' },
+  { bottom: '20%', right: '6%', delay: 0.3, size: 20, tint: 'rgba(34, 211, 238, 0.75)' },
+  { bottom: '30%', left: '14%', delay: 1.2, size: 12, tint: 'rgba(249, 168, 212, 0.7)' },
 ];
 
-// 4-point sparkle path — sharper, more elegant than emoji.
 function SparkleIcon({ size, color }: { size: number; color: string }) {
   return (
     <svg
@@ -49,16 +41,8 @@ export default function WelcomeScreen({
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-[calc(100svh-3.5rem)] bg-euro-gradient flex flex-col items-center px-6 pt-10 pb-8 sm:justify-center relative overflow-hidden">
-      {/* Theme toggle & language switcher & mute — anchored below the
-          sticky SiteHeader (3.5rem tall) so they don't collide. */}
-      <div className="absolute top-3 right-5 z-10 flex items-center gap-2">
-        <MuteToggle />
-        <LanguageSwitcher />
-        <ThemeToggle />
-      </div>
-
-      {/* Scattered sparkle decorations (SVG, not emoji) */}
+    <div className="min-h-[calc(100svh-3.5rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-4 sm:py-10 lg:py-16 relative overflow-hidden">
+      {/* Scattered sparkle decorations */}
       {sparkles.map((s, i) => (
         <motion.span
           key={i}
@@ -80,84 +64,128 @@ export default function WelcomeScreen({
         </motion.span>
       ))}
 
-      {/* Logo / Title block */}
-      <motion.div
-        className="text-center mb-3"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-      >
-        {/* Eurovision Games logo (contains the wordmark) */}
-        <motion.img
-          src="/logo.png"
-          alt="Eurovision Games"
-          width={628}
-          height={397}
-          className="w-72 sm:w-80 h-auto mx-auto select-none drop-shadow-[0_0_24px_rgba(236,72,153,0.25)]"
-          draggable={false}
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        {/* Year sits just under the logo */}
-        <motion.p
-          className="text-3xl sm:text-4xl font-extrabold glow-text-gold text-euro-gold -mt-2"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+      {/* Stage container */}
+      <div className="w-full max-w-[1140px] flex flex-col items-center justify-center flex-1 relative">
+        {/* Logo — centered above both columns */}
+        <motion.div
+          className="flex justify-center mb-3 sm:mb-8 lg:mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
         >
-          2026
-        </motion.p>
-      </motion.div>
+          <motion.img
+            src="/logo.png"
+            alt="Eurovision Games"
+            width={628}
+            height={397}
+            className="w-44 sm:w-72 lg:w-80 h-auto select-none drop-shadow-[0_0_32px_rgba(236,72,153,0.28)]"
+            draggable={false}
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </motion.div>
 
-      {/* Subtitle — text-white/80 for contrast in both themes */}
-      <motion.p
-        className="text-white/80 text-base sm:text-lg text-center mb-6 max-w-xs font-medium"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        {t('welcome.subtitle')}
-      </motion.p>
+        {/* Two-column hero — flat 2x2 grid for responsive reorder */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-y-4 sm:gap-y-6 lg:gap-y-10 gap-x-10 lg:gap-x-16 items-start relative">
+          {/* Vertical divider — desktop only */}
+          <div
+            className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(to bottom, transparent, rgba(255,255,255,0.12) 20%, rgba(255,255,255,0.12) 80%, transparent)',
+            }}
+            aria-hidden
+          />
 
-      {/* Your Rooms — shown when user has prior rooms in localStorage */}
-      <YourRoomsPanel />
+          {/* ─── B — Brand block (mobile order-1, desktop col-1 row-1) ─── */}
+          <motion.div
+            className="order-1 lg:order-1 lg:col-start-1 lg:row-start-1 flex flex-col items-center text-center gap-1.5"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            {/* Wordmark line */}
+            <div className="flex items-baseline justify-center gap-2 leading-none">
+              <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight bg-gradient-to-br from-white via-euro-purple-light to-euro-pink bg-clip-text text-transparent">
+                ♪ EuroVision
+              </span>
+              <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight text-euro-gold glow-text-gold">
+                2026
+              </span>
+            </div>
 
-      {/* Action buttons */}
-      <motion.div
-        className="flex flex-col gap-3 w-full max-w-sm"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.5 }}
-      >
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={onCreateRoom}
-        >
-          {t('welcome.createRoom')}
-        </Button>
+            {/* Event name + category */}
+            <p className="text-[0.7rem] sm:text-sm lg:text-base font-semibold text-white/55 tracking-[0.18em] uppercase mt-0.5 leading-snug">
+              <strong className="text-white/90 font-bold">{t('welcome.eventName')}</strong>
+              {' · '}
+              {t('welcome.eventCategory')}
+            </p>
 
-        <Button
-          variant="secondary"
-          size="lg"
-          fullWidth
-          onClick={onJoinRoom}
-        >
-          {t('welcome.joinRoom')}
-        </Button>
-      </motion.div>
+            {/* Location pill */}
+            <div className="mt-2 sm:mt-4 inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-xs sm:text-sm font-semibold text-white/65">
+              <span className="w-1.5 h-1.5 rounded-full bg-euro-green shadow-[0_0_8px_#34d399] animate-pulse" />
+              {t('welcome.location')}
+            </div>
+          </motion.div>
 
-      {/* Bottom text — mobile: mt-auto pushes to bottom; desktop: absolute bottom so centering above isn't pulled */}
-      <motion.p
-        className="mt-auto pt-10 sm:absolute sm:bottom-8 sm:mt-0 sm:pt-0 text-sm text-white/50 font-medium"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        {t('welcome.location')}
-      </motion.p>
+          {/* ─── E — Rooms (mobile order-2, desktop col-2 row-2) ─── */}
+          <div className="order-2 lg:order-4 lg:col-start-2 lg:row-start-2 w-full max-w-md mx-auto">
+            <YourRoomsPanel />
+          </div>
+
+          {/* ─── D — CTAs (mobile order-3, desktop col-2 row-1) ─── */}
+          <motion.div
+            className="order-3 lg:order-2 lg:col-start-2 lg:row-start-1 flex flex-col gap-3 sm:gap-3.5 w-full max-w-md mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            <motion.button
+              whileHover={{ y: -2 }}
+              whileTap={{ y: 0 }}
+              onClick={onCreateRoom}
+              className="w-full px-6 py-4 sm:px-8 sm:py-5 rounded-2xl bg-gradient-to-br from-euro-purple to-euro-pink text-white text-base sm:text-lg lg:text-xl font-bold tracking-tight shadow-[0_6px_32px_rgba(168,85,247,0.4),0_2px_12px_rgba(236,72,153,0.3)] hover:brightness-110 hover:shadow-[0_10px_40px_rgba(168,85,247,0.5),0_4px_16px_rgba(236,72,153,0.4)] transition-all min-h-[58px] sm:min-h-[68px] flex items-center justify-center gap-2.5 cursor-pointer"
+            >
+              {t('welcome.createRoom')}
+            </motion.button>
+
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ y: 0 }}
+              onClick={onJoinRoom}
+              className="w-full px-5 py-3 sm:px-6 sm:py-4 rounded-2xl bg-white/[0.07] border border-white/[0.18] backdrop-blur-md text-white text-sm sm:text-base font-semibold hover:bg-white/[0.11] hover:border-white/[0.28] transition-all min-h-[50px] sm:min-h-[58px] flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {t('welcome.joinRoom')}
+            </motion.button>
+          </motion.div>
+
+          {/* ─── C — Pitch (mobile order-4, desktop col-1 row-2) ─── */}
+          <motion.div
+            className="order-4 lg:order-3 lg:col-start-1 lg:row-start-2 w-full max-w-md mx-auto pt-5 sm:pt-7 border-t border-white/10 flex flex-col gap-3 items-center text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
+            <div className="text-[0.7rem] sm:text-xs font-bold tracking-[0.2em] uppercase text-euro-cyan flex items-center gap-2">
+              <span className="inline-block w-5 h-0.5 bg-euro-cyan rounded-sm" aria-hidden />
+              {t('welcome.kicker')}
+            </div>
+
+            <h1 className="text-[1.7rem] sm:text-[2.2rem] lg:text-[2.6rem] font-extrabold leading-[1.1] tracking-tight text-white">
+              {t('welcome.headlineLine1')}
+              <br />
+              {t('welcome.headlineLine2')}{' '}
+              <span className="bg-gradient-to-r from-euro-purple-light to-euro-pink bg-clip-text text-transparent">
+                {t('welcome.headlineAccent')}
+              </span>
+            </h1>
+
+            <p className="text-sm sm:text-base lg:text-[1.05rem] leading-relaxed text-white/60">
+              {t('welcome.body')}
+            </p>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -95,7 +95,7 @@ function SlotRow({ id, pos, zone, onRemove, ghost }: SlotRowProps) {
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); onRemove(); }}
-        className="w-4 h-4 rounded-full bg-white/10 hover:bg-red-400/40 flex items-center justify-center text-white/40 hover:text-white transition-colors text-[9px] shrink-0"
+        className="w-4 h-4 rounded-full bg-white/10 hover:bg-red-400/40 flex items-center justify-center text-white/40 hover:text-white transition-colors text-[10px] shrink-0"
       >✕</button>
     </div>
   );

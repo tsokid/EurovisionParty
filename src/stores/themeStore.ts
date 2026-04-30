@@ -7,30 +7,17 @@ interface ThemeState {
   toggleTheme: () => void;
 }
 
-function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'dark';
-  const stored = localStorage.getItem('europarty-theme');
-  if (stored === 'light' || stored === 'dark') return stored;
-  return 'dark';
+// Day mode is currently disabled — theme is locked to dark.
+function applyDarkTheme() {
+  if (typeof window === 'undefined') return;
+  document.documentElement.setAttribute('data-theme', 'dark');
+  localStorage.setItem('europarty-theme', 'dark');
 }
 
-function applyTheme(theme: Theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('europarty-theme', theme);
-}
-
-export const useThemeStore = create<ThemeState>()((set) => {
-  // Apply initial theme on load
-  const initial = getInitialTheme();
-  if (typeof window !== 'undefined') applyTheme(initial);
-
+export const useThemeStore = create<ThemeState>()(() => {
+  applyDarkTheme();
   return {
-    theme: initial,
-    toggleTheme: () =>
-      set((state) => {
-        const next = state.theme === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
-        return { theme: next };
-      }),
+    theme: 'dark' as Theme,
+    toggleTheme: () => { /* disabled */ },
   };
 });

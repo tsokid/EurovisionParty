@@ -61,7 +61,7 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
               <span className="text-xl leading-none relative">
                 {tab.id === 'predictions' && isVotingOrLater ? '📋' : tab.emoji}
                 {badgeCount > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-euro-red text-white text-[9px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
+                  <span className="absolute -top-1 -right-2 bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
                     {badgeCount > 9 ? '9+' : badgeCount}
                   </span>
                 )}

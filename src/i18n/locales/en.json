@@ -36,9 +36,16 @@
   },
   "welcome": {
     "subtitle": "Eurovision Grand Final Party Game",
-    "createRoom": "🎉 Create Room",
-    "joinRoom": "🚪 Join Room",
-    "location": "Vienna 2026 🇦🇹"
+    "createRoom": "✦ Create a Room",
+    "joinRoom": "🎤 Join a Room",
+    "location": "Vienna · May 2026 🇦🇹",
+    "eventName": "Grand Final",
+    "eventCategory": "Party Game",
+    "kicker": "Live Tonight ✦ Join the game",
+    "headlineLine1": "Pick winners.",
+    "headlineLine2": "Score live.",
+    "headlineAccent": "Beat your friends.",
+    "body": "Predict who advances, score points as acts perform, and go head-to-head in real-time duels — all while watching the show."
   },
   "nameEntry": {
     "createTitle": "Create Your Room",
@@ -325,7 +332,78 @@
   "reconnect": {
     "banner": "Reconnecting… your progress is safe"
   },
+  "siteNav": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "yourRooms": "Your Rooms",
+    "createRoom": "Create a Room",
+    "joinRoom": "Join a Room",
+    "eurovisionNight": "Eurovision Night",
+    "howToPlay": "How to Play",
+    "trivia": "Trivia",
+    "predictions": "2026 Predictions",
+    "rules": "Rules",
+    "scoring": "Scoring",
+    "otherFaq": "Other FAQ",
+    "contactUs": "Contact Us",
+    "noRooms": "No rooms yet"
+  },
   "yourRooms": {
-    "title": "Your Rooms"
+    "title": "Your Rooms",
+    "live": "LIVE",
+    "away": "AWAY",
+    "ended": "ENDED",
+    "host": "Host",
+    "join": "Join Room",
+    "rejoin": "Rejoin Room",
+    "leave": "Leave",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this room? This cannot be undone.",
+    "endedLabel": "Ended",
+    "roomCount_one": "{{count}} room",
+    "roomCount_other": "{{count}} rooms"
+  },
+  "homeSeo": {
+    "headline": "Eurovision Games — host the perfect Eurovision night",
+    "leadStrong": "Eurovision Games is a free, browser-based party game",
+    "leadRest": " where 2-20 friends predict the Eurovision 2026 Top 5 and Worst 5, battle in trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No download, no account.",
+    "cards": {
+      "nightTitle": "Eurovision night",
+      "nightDesc": "Hosting playbook for the watch party.",
+      "predictionsTitle": "2026 predictions",
+      "predictionsDesc": "Top 5 / Worst 5 format and 35-country line-up.",
+      "triviaTitle": "Eurovision trivia",
+      "triviaDesc": "10 sample questions and how duels work.",
+      "partyTitle": "Eurovision party",
+      "partyDesc": "Full hosting playbook with run-of-show.",
+      "gamesTitle": "Eurovision games",
+      "gamesDesc": "What the game does and why play.",
+      "howTitle": "How to play",
+      "howDesc": "2-minute setup guide."
+    }
+  },
+  "siteFooter": {
+    "play": "Play",
+    "games": "Games",
+    "hosting": "Hosting",
+    "about": "About",
+    "links": {
+      "howToPlay": "How to play",
+      "rules": "Rules",
+      "scoring": "Scoring",
+      "eurovisionGames": "Eurovision games",
+      "trivia": "Trivia",
+      "online": "Online",
+      "mobile": "Mobile",
+      "eurovisionNight": "Eurovision night",
+      "party": "Party",
+      "predictions": "2026 predictions",
+      "aboutPage": "About",
+      "faq": "FAQ",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "disclaimerStart": "© Eurovision Games. Not affiliated with the European Broadcasting Union or the Eurovision Song Contest. Contact: ",
+    "contactEmail": "hello@eurovision.games"
   }
 }
