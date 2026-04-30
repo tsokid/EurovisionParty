@@ -346,6 +346,9 @@ end $outer$;
 
 -- 8b. Participants fallback — Fri 15 May 00:00 UTC (= 03:00 Athens EEST).
 --     One-off body: only fires when the participants job is still 'idle'.
+--     URL is hardcoded (project-specific, not secret); service-role key
+--     comes from Supabase Vault (Supabase forbids `alter database ... set`
+--     on hosted projects, so we can't use current_setting()).
 do $outer$
 begin
   if exists (select 1 from pg_extension where extname='pg_cron')
@@ -356,10 +359,13 @@ begin
       '0 0 15 5 *',
       $cron$
         select net.http_post(
-          url := current_setting('app.settings.functions_url', true) || '/eurovision-parse',
+          url := 'https://ameneqrrfdhntfzvchnn.supabase.co/functions/v1/eurovision-parse',
           headers := jsonb_build_object(
             'content-type','application/json',
-            'Authorization','Bearer ' || current_setting('app.settings.service_role_key', true)
+            'Authorization','Bearer ' || (
+              select decrypted_secret from vault.decrypted_secrets
+               where name = 'parser_service_key'
+            )
           ),
           body := jsonb_build_object('action','participants')
         )
@@ -391,6 +397,7 @@ begin
 end $outer$;
 
 -- 8d. Results poller — every 2 min while running and before Sun 17 May 00:00 UTC.
+--     Same URL/key sourcing as 8b: hardcoded URL + Vault-sourced key.
 do $outer$
 begin
   if exists (select 1 from pg_extension where extname='pg_cron')
@@ -401,10 +408,13 @@ begin
       '*/2 * * * *',
       $cron$
         select net.http_post(
-          url := current_setting('app.settings.functions_url', true) || '/eurovision-parse',
+          url := 'https://ameneqrrfdhntfzvchnn.supabase.co/functions/v1/eurovision-parse',
           headers := jsonb_build_object(
             'content-type','application/json',
-            'Authorization','Bearer ' || current_setting('app.settings.service_role_key', true)
+            'Authorization','Bearer ' || (
+              select decrypted_secret from vault.decrypted_secrets
+               where name = 'parser_service_key'
+            )
           ),
           body := jsonb_build_object('action','results')
         )
