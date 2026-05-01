@@ -52,23 +52,51 @@ export function stripTags(s: string): string {
 // Participants extractors
 // ---------------------------------------------------------------------------
 
+// Decode common HTML entities found in eurovision.com markup (apostrophes,
+// ampersands, common diacritics). The site emits e.g. `C&#x27;est La Vie`.
+function decodeHtmlEntities(s: string): string {
+  return s
+    .replace(/&#x([0-9A-Fa-f]+);/g, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d, 10)))
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+}
+
 /**
  * Extract participants from the eurovision.com grand-final page.
- * Looks for `data-iso="XX" data-name="..." data-artist="..." data-song="..."`
- * style markup. Returns [] when the page doesn't carry these attributes.
+ *
+ * Current (2025+) markup pattern per participant:
+ *   <p ... data-country-name>Country</p>
+ *   ... (some chrome) ...
+ *   <a href="/.../all-participants/<artist-slug>/">
+ *     <p class="...chip-text...">Artist Name</p>
+ *   </a>
+ *   ... (some chrome) ...
+ *   <a href="https://www.youtube.com/watch?v=...">
+ *     <p class="...chip-text...">Song Title</p>
+ *   </a>
+ *
+ * Country → ISO via COUNTRY_TO_ISO. Falls back to [] if any of the three
+ * fields can't be matched in order.
  */
 export function extractEurovision(html: string): ParsedEntry[] {
   const entries: ParsedEntry[] = [];
+  const seen = new Set<string>();
   const re =
-    /data-iso="([A-Z]{2})"[^>]*data-name="([^"]+)"[^>]*data-artist="([^"]+)"[^>]*data-song="([^"]+)"(?:[^>]*data-order="(\d+)")?/g;
+    /data-country-name[^>]*>\s*([^<]+?)\s*<\/p>[\s\S]{0,2000}?\/all-participants\/[^"]+"[\s\S]{0,800}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>[\s\S]{0,2000}?youtube\.com\/watch[\s\S]{0,800}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>/g;
+
   for (const m of html.matchAll(re)) {
-    entries.push({
-      iso: m[1],
-      name: m[2],
-      artist: m[3],
-      song: m[4],
-      runningOrder: m[5] ? parseInt(m[5], 10) : null,
-    });
+    const country = decodeHtmlEntities(m[1].trim());
+    const artist = decodeHtmlEntities(m[2].trim());
+    const song = decodeHtmlEntities(m[3].trim());
+    const iso = isoFor(country);
+    if (!iso || seen.has(iso)) continue;
+    seen.add(iso);
+    entries.push({ iso, name: country, artist, song, runningOrder: null });
   }
   return entries;
 }
