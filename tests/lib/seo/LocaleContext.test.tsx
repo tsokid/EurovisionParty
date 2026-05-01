@@ -17,7 +17,12 @@ describe('LocaleProvider', () => {
     expect(screen.getByTestId('locale').textContent).toBe('el');
   });
 
-  it('throws if useLocale outside provider', () => {
-    expect(() => render(<Probe />)).toThrow();
+  it('falls back to a valid Locale outside provider (does not throw)', () => {
+    // useLocale used to throw outside a Provider, which crashed
+    // /room/:code and /admin where there's no LocaleRoot. New behaviour:
+    // fall back to i18next current language ('en' or 'el'), never throw.
+    expect(() => render(<Probe />)).not.toThrow();
+    const value = screen.getByTestId('locale').textContent;
+    expect(value === 'en' || value === 'el').toBe(true);
   });
 });
