@@ -24,6 +24,7 @@ export interface ParseJob {
   started_at: string | null;
   stopped_at: string | null;
   triggered_by_user: boolean | null;
+  manual_override: boolean;
 }
 
 export interface ParseRun {

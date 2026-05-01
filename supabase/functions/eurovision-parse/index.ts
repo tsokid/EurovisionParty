@@ -199,10 +199,13 @@ async function handleParticipants(): Promise<Response> {
 async function handleResults(): Promise<Response> {
   const db = admin();
 
-  // 1. Gate on job state
+  // 1. Gate on job state + manual override flag
   const { data: job } = await db.from("parse_jobs")
-    .select("status").eq("year", 2026).eq("kind", "results").single();
+    .select("status, manual_override").eq("year", 2026).eq("kind", "results").single();
   if (!job) return jsonResponse({ error: "no results job" }, 500);
+  if (job.manual_override) {
+    return jsonResponse({ error: "manual override active", state: job.status }, 409);
+  }
   if (job.status !== "running") {
     return jsonResponse({ error: "job not running", state: job.status }, 409);
   }

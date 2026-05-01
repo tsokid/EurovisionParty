@@ -7,6 +7,7 @@ import { ParticipantsCard } from "./parser/ParticipantsCard";
 import { ResultsCard } from "./parser/ResultsCard";
 import { FinalizeCard } from "./parser/FinalizeCard";
 import { TestCard } from "./parser/TestCard";
+import { ManualRankingCard } from "./parser/ManualRankingCard";
 
 export default function EurovisionParser() {
   const { jobs, runs, loading, error, refresh } = useParserState(2026);
@@ -20,6 +21,7 @@ export default function EurovisionParser() {
 
   const lastParticipantsRun = runs.find((r) => r.kind === "participants");
   const resultsRuns = runs.filter((r) => r.kind === "results").slice(0, 10);
+  const overrideOn = jobs.results?.manual_override === true;
 
   return (
     <div className="p-4 space-y-4">
@@ -39,6 +41,11 @@ export default function EurovisionParser() {
           recentRun={lastParticipantsRun}
           onRefresh={refresh}
         />
+        {/* When manual override is ON, the ResultsCard auto-parsing controls
+            don't apply — ManualRankingCard takes over below as the source of
+            truth. We still render ResultsCard so the run history stays visible,
+            but it's effectively read-only (start/stop is gated by the override
+            flag in the edge function). */}
         <ResultsCard
           job={jobs.results}
           recentRuns={resultsRuns}
@@ -46,7 +53,14 @@ export default function EurovisionParser() {
         />
         <FinalizeCard job={jobs.results} onRefresh={refresh} />
         <TestCard />
+        <ManualRankingCard job={jobs.results} onRefresh={refresh} />
       </div>
+      {overrideOn && (
+        <div className="text-xs text-white/40 text-center">
+          🔧 Manual override is active. The Results parser cron + on-demand calls
+          are disabled until you toggle override OFF.
+        </div>
+      )}
     </div>
   );
 }
