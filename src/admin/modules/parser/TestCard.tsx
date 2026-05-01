@@ -52,7 +52,30 @@ export function TestCard() {
   };
 
   const rows = resp?.rows ?? [];
-  const headers = rows[0] ? Object.keys(rows[0]) : [];
+  // Order columns predictably and label them for humans
+  const COLUMN_ORDER = [
+    'iso', 'name', 'ranking', 'artist', 'song',
+    'total_points', 'jury_points', 'televote_points',
+    'runningOrder', 'source',
+  ];
+  const COLUMN_LABEL: Record<string, string> = {
+    iso: 'ISO',
+    name: 'Country',
+    ranking: 'Rank',
+    artist: 'Artist',
+    song: 'Song',
+    total_points: 'Total',
+    jury_points: 'Jury',
+    televote_points: 'Televote',
+    runningOrder: 'Running order',
+    source: 'Source',
+  };
+  const NUMERIC_COLS = new Set(['ranking', 'total_points', 'jury_points', 'televote_points', 'runningOrder']);
+  const allKeys = rows[0] ? Object.keys(rows[0]) : [];
+  const headers = [
+    ...COLUMN_ORDER.filter((k) => allKeys.includes(k)),
+    ...allKeys.filter((k) => !COLUMN_ORDER.includes(k)),
+  ];
 
   return (
     <section className="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -96,22 +119,32 @@ export function TestCard() {
       )}
       {rows.length > 0 && (
         <div className="overflow-x-auto max-h-96 border border-white/5 rounded">
-          <table className="w-full text-xs">
-            <thead className="text-white/50 sticky top-0 bg-black/40">
+          <table className="w-full text-xs tabular-nums">
+            <thead className="text-white/50 sticky top-0 bg-black/40 backdrop-blur">
               <tr>
                 {headers.map((k) => (
-                  <th key={k} className="text-left px-2 py-1">
-                    {k}
+                  <th
+                    key={k}
+                    className={`px-2 py-1.5 font-semibold uppercase tracking-wider ${
+                      NUMERIC_COLS.has(k) ? 'text-right' : 'text-left'
+                    }`}
+                  >
+                    {COLUMN_LABEL[k] ?? k}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {rows.map((r, i) => (
-                <tr key={i} className="border-t border-white/5">
+                <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02]">
                   {headers.map((k) => (
-                    <td key={k} className="px-2 py-1 text-white/80">
-                      {String(r[k] ?? "")}
+                    <td
+                      key={k}
+                      className={`px-2 py-1 text-white/85 ${
+                        NUMERIC_COLS.has(k) ? 'text-right' : 'text-left'
+                      } ${k === 'iso' ? 'font-mono text-white/60' : ''}`}
+                    >
+                      {String(r[k] ?? '')}
                     </td>
                   ))}
                 </tr>
