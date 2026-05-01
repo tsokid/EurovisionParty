@@ -50,6 +50,21 @@ function useFormatNotification() {
             ? t('notifications.duelSteal')
             : t('notifications.duelDouble'),
         };
+      case 'predictions_open':
+        return {
+          icon: '\uD83D\uDD2E',
+          text: t('notifications.predictionsOpen', {
+            defaultValue: 'Predictions are open! Pick your Top 5 and Worst 5.',
+          }),
+        };
+      case 'phase_changed':
+        return {
+          icon: '\uD83C\uDFAC',
+          text: t('notifications.phaseChanged', {
+            phase: payload.to ?? '',
+            defaultValue: 'Phase changed to {{phase}}',
+          }),
+        };
       default:
         return {
           icon: '\uD83D\uDD14',
@@ -60,9 +75,10 @@ function useFormatNotification() {
 }
 
 /** Which tab a notification type should navigate to */
-function getNotificationTab(type: string): 'duels' | 'quiz' | 'leaderboard' | null {
+function getNotificationTab(type: string): 'duels' | 'quiz' | 'leaderboard' | 'predictions' | null {
   if (type.startsWith('duel')) return 'duels';
   if (type.startsWith('quiz')) return 'quiz';
+  if (type === 'predictions_open') return 'predictions';
   return null;
 }
 
