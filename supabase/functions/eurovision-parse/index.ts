@@ -67,12 +67,25 @@ async function isCallerSuperAdmin(req: Request): Promise<boolean> {
 }
 
 // ---------------------------------------------------------------------------
+// CORS — admin UI calls from https://eurovision.games (or localhost dev)
+// ---------------------------------------------------------------------------
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Max-Age": "86400",
+};
+
+// ---------------------------------------------------------------------------
 // Production handlers
 // ---------------------------------------------------------------------------
 function jsonResponse(payload: unknown, status = 200): Response {
   return new Response(JSON.stringify(payload), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...CORS_HEADERS,
+    },
   });
 }
 
