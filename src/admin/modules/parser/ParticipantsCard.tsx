@@ -1,7 +1,8 @@
 // src/admin/modules/parser/ParticipantsCard.tsx
-// One-shot Participants parser card. Run Now starts the job and immediately
-// invokes the edge function (so the admin sees the result live). On success
-// the job transitions to `done`; Reset lifts it back to `idle`.
+// One-shot Participants parser card. Five canonical actions:
+//   Start on Schedule | Start Now | Pause | Resume | Hard Stop
+// All driven by RPCs on parse_jobs; no extra mid-flight invocation
+// state lives in the component.
 
 import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
@@ -28,77 +29,102 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
     );
   }
 
-  const canRun = job.status === "idle" || job.status === "error";
-  const canReset = job.status === "done" || job.status === "error";
-  // Hard Stop is the escape hatch for when the job is stuck mid-run
-  // (e.g. cron fired but the function never executed because of a
-  // broken vault secret). Allowed from any non-terminal state.
-  const canHardStop = job.status === "running";
+  const status = job.status;
 
-  const runNow = async () => {
+  // Per-button enablement. Aimed at being conservative — only enable
+  // when the transition is meaningful for the current state.
+  const canArm     = status === "done" || status === "error" || status === "stopped";
+  const canStartNow = status === "idle" || status === "done" || status === "error" || status === "stopped";
+  const canPause   = status === "running";
+  const canResume  = status === "stopped";
+  const canHardStop = status === "running" || status === "stopped";
+
+  const wrap = async (fn: () => Promise<unknown>) => {
     setBusy(true);
     setErr(null);
     try {
-      const { error: rpcErr } = await supabase.rpc("start_parse_job", {
+      await fn();
+      onRefresh();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Start on Schedule: hand-of-card back to the cron — keep schedule,
+  // flip status to idle so the next scheduled tick fires it. Uses the
+  // "Hard Stop" RPC which already does any-non-final → idle without
+  // touching the schedule.
+  const startOnSchedule = () =>
+    wrap(async () => {
+      const { error } = await supabase.rpc("hard_stop_parse_job", {
         p_year: job.year,
         p_kind: "participants",
       });
-      if (rpcErr) throw rpcErr;
+      if (error) throw error;
+    });
+
+  // Start Now: any state → running → invoke. We chain hard_stop (any
+  // → idle) + start_parse_job (idle → running) so this works
+  // regardless of where the job currently is.
+  const startNow = () =>
+    wrap(async () => {
+      if (status !== "idle") {
+        const { error: rstErr } = await supabase.rpc("hard_stop_parse_job", {
+          p_year: job.year,
+          p_kind: "participants",
+        });
+        if (rstErr) throw rstErr;
+      }
+      const { error: startErr } = await supabase.rpc("start_parse_job", {
+        p_year: job.year,
+        p_kind: "participants",
+      });
+      if (startErr) throw startErr;
       const { error: fnErr } = await supabase.functions.invoke(
         "eurovision-parse",
         { body: { action: "participants" } },
       );
       if (fnErr) throw fnErr;
-      onRefresh();
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
-    } finally {
-      setBusy(false);
-    }
-  };
+    });
 
-  const reset = async () => {
-    setBusy(true);
-    setErr(null);
-    try {
-      const { error: rpcErr } = await supabase.rpc("reset_parse_job", {
+  const pause = () =>
+    wrap(async () => {
+      const { error } = await supabase.rpc("pause_parse_job", {
         p_year: job.year,
         p_kind: "participants",
       });
-      if (rpcErr) throw rpcErr;
-      onRefresh();
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
-    } finally {
-      setBusy(false);
-    }
-  };
+      if (error) throw error;
+    });
 
-  const hardStop = async () => {
+  const resume = () =>
+    wrap(async () => {
+      const { error } = await supabase.rpc("resume_parse_job", {
+        p_year: job.year,
+        p_kind: "participants",
+      });
+      if (error) throw error;
+    });
+
+  const hardStop = () => {
     if (!window.confirm(
-      "Force the parser job back to 'idle'? Use this only when the job is stuck — e.g. a cron tick flipped state to 'running' but the function never returned. Doesn't delete any participants data.",
+      "Hard Stop forces the job back to 'idle' and clears in-flight state. Use when stuck. Doesn't delete any participants data.",
     )) return;
-    setBusy(true);
-    setErr(null);
-    try {
-      const { error: rpcErr } = await supabase.rpc("hard_stop_parse_job", {
+    return wrap(async () => {
+      const { error } = await supabase.rpc("hard_stop_parse_job", {
         p_year: job.year,
         p_kind: "participants",
       });
-      if (rpcErr) throw rpcErr;
-      onRefresh();
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
-    } finally {
-      setBusy(false);
-    }
+      if (error) throw error;
+    });
   };
 
   return (
     <section className="rounded-xl border border-white/10 bg-white/5 p-4">
       <header className="flex items-center justify-between mb-3">
         <h3 className="font-semibold text-white">Participants Parser</h3>
-        <StatusPill status={job.status} />
+        <StatusPill status={status} />
       </header>
       <p className="text-sm text-white/60 mb-3">
         Last fetch:{" "}
@@ -116,49 +142,71 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
         job={job}
         onSaved={onRefresh}
       />
-      {/* Contextual hint when the job has already run — explains what
-          "Re-arm" does so admins don't read it as "delete data" or
-          "Reset to defaults". */}
-      {job.status === "done" && (
+
+      {status === "done" && (
         <p className="text-[11px] text-white/55 mb-2 leading-snug">
-          ✅ Already ran. Click <span className="text-white">Re-arm for next run</span> to allow the next scheduled time to fire this parser again. Doesn&apos;t delete data.
+          ✅ Already ran. Click <span className="text-white">Start on Schedule</span> to allow the next scheduled time to fire it again, or <span className="text-white">Start Now</span> for an immediate re-run.
         </p>
       )}
-      {job.status === "running" && (
+      {status === "running" && (
         <p className="text-[11px] text-amber-300/80 mb-2 leading-snug">
-          ⚠️ Stuck in <span className="text-white">running</span>? Use <span className="text-white">Hard Stop</span> to force the job back to idle. Doesn&apos;t delete data.
+          ⚠️ Stuck in <span className="text-white">running</span>? Use <span className="text-white">Hard Stop</span> to force the job back to idle.
+        </p>
+      )}
+      {status === "stopped" && (
+        <p className="text-[11px] text-white/55 mb-2 leading-snug">
+          ⏸ Paused. <span className="text-white">Resume</span> puts it back in line for the schedule. <span className="text-white">Start Now</span> fires it immediately.
         </p>
       )}
 
       <div className="flex flex-wrap gap-2 mb-3">
         <button
           type="button"
-          onClick={runNow}
-          disabled={!canRun || busy}
-          className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
-          title="Manually trigger the parser right now (ignores schedule)"
+          onClick={startOnSchedule}
+          disabled={!canArm || busy}
+          className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40 cursor-pointer"
+          title="Flip job state back to idle so the next scheduled time can fire it. Doesn't delete any data."
         >
-          Run Now
+          Start on Schedule
         </button>
         <button
           type="button"
-          onClick={reset}
-          disabled={!canReset || busy}
-          className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40 cursor-pointer"
-          title="Flip job state back to idle so the next scheduled time can fire it. Does not delete any data."
+          onClick={startNow}
+          disabled={!canStartNow || busy}
+          className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
+          title="Run the parser right now (ignores schedule)."
         >
-          Re-arm for next run
+          Start Now
+        </button>
+        <button
+          type="button"
+          onClick={pause}
+          disabled={!canPause || busy}
+          className="px-3 py-1.5 rounded bg-amber-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
+          title="Pause an actively-running job."
+        >
+          ⏸ Pause
+        </button>
+        <button
+          type="button"
+          onClick={resume}
+          disabled={!canResume || busy}
+          className="px-3 py-1.5 rounded bg-yellow-400 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
+          title="Resume a paused job — goes back to idle so the next scheduled time fires it."
+        >
+          ▶ Resume
         </button>
         <button
           type="button"
           onClick={hardStop}
           disabled={!canHardStop || busy}
           className="px-3 py-1.5 rounded bg-red-500/90 hover:bg-red-500 text-white font-bold text-sm disabled:opacity-40 cursor-pointer"
-          title="Force the job back to idle when it's stuck in 'running' state. Does not delete any participants data."
+          title="Force the job back to idle from any state. Use when stuck."
         >
           🛑 Hard Stop
         </button>
       </div>
+
       {recentRun && (
         <div className="text-xs text-white/60">
           Last run: {new Date(recentRun.finished_at).toLocaleString()} · http{" "}
