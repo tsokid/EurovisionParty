@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Trophy } from 'lucide-react';
 import WinnerGrid from './WinnerGrid';
 import SuddenDeathPanel from './SuddenDeathPanel';
+import TieVotePanel from './TieVotePanel';
 import LeaderboardScreen from '../leaderboard/LeaderboardScreen';
 import { computeWinners, fetchWinners, groupByCategory, hasTie, CATEGORY_META } from '../../lib/winners';
 import type { WinnerRow, WinnerCategory } from '../../lib/winners';
@@ -80,11 +81,28 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
         <LeaderboardScreen />
       </div>
 
-      {/* TIE → SUDDEN DEATH — host opens, players watch. */}
+      {/* CHAMPION TIE → TIE VOTE → SUDDEN DEATH.
+          Tie vote only applies to the champion category per spec.
+          Other category co-winners go straight to the legacy
+          single-question sudden-death panel below. */}
+      {ties.includes('champion') && (
+        <TieVotePanel
+          roomId={roomId}
+          isHost={isHost}
+          category="champion"
+          tiedPlayerNames={champions.map((r) => playerNameById[r.player_id] ?? '?')}
+          onResolved={refresh}
+        />
+      )}
+
+      {/* Legacy single-question sudden death for non-champion ties
+          (Thief, Duelist, Oracle, Guru). Champion ties are handled
+          by the TieVotePanel above; the 3-question match RPC is
+          available server-side for the next iteration. */}
       <SuddenDeathPanel
         roomId={roomId}
         isHost={isHost}
-        tiedCategories={ties}
+        tiedCategories={ties.filter((c) => c !== 'champion')}
         onResolved={refresh}
       />
     </div>
