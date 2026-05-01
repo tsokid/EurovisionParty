@@ -177,13 +177,33 @@ export interface FetchedHtml {
   httpStatus: number;
 }
 
+// Comprehensive browser-mimicking headers. Some hosts (eurovision.com
+// included) serve different / stripped HTML to bots without these headers
+// — the page either omits scoreboard markup, or returns an SSR-skeleton
+// expecting client-side hydration. With a full set of Sec-Fetch + Accept
+// + Accept-Language + UA, the site treats us like a regular browser.
+//
+// This applies uniformly to ALL fetches (production and test). If the live
+// site changes its detection again, this is the one place to patch.
+const FETCH_HEADERS: Record<string, string> = {
+  'user-agent': BROWSER_UA,
+  accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'accept-language': 'en-US,en;q=0.9',
+  'accept-encoding': 'gzip, deflate, br',
+  'cache-control': 'no-cache',
+  pragma: 'no-cache',
+  'sec-ch-ua': '"Chromium";v="124", "Google Chrome";v="124", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"Windows"',
+  'sec-fetch-dest': 'document',
+  'sec-fetch-mode': 'navigate',
+  'sec-fetch-site': 'none',
+  'sec-fetch-user': '?1',
+  'upgrade-insecure-requests': '1',
+};
+
 export async function fetchHtml(url: string): Promise<FetchedHtml> {
-  const r = await fetch(url, {
-    headers: {
-      'user-agent': BROWSER_UA,
-      accept: 'text/html,application/xhtml+xml',
-    },
-  });
+  const r = await fetch(url, { headers: FETCH_HEADERS, redirect: 'follow' });
   return { html: await r.text(), httpStatus: r.status };
 }
 
