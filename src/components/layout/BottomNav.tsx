@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Brain, Swords, Target, Trophy, ListChecks, DoorOpen, type LucideIcon } from 'lucide-react';
+import { Brain, Swords, Target, Trophy, ListChecks, DoorOpen, Lock, type LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
 import type { TabId } from '../../lib/types';
 
@@ -23,6 +23,21 @@ interface BottomNavProps {
   onExitPress?: () => void;
 }
 
+/** Which tabs are interactable in each phase. The Board (leaderboard)
+ *  and Predictions-as-Results view are always available. */
+function isTabLocked(tabId: TabId, phase: string | undefined): boolean {
+  if (phase === 'voting_live' || phase === 'final') {
+    // During voting and after, only the leaderboard is meaningful.
+    // Predictions tab swaps to "Results" (still navigable to view scoring).
+    return tabId === 'quiz' || tabId === 'duels';
+  }
+  if (phase === 'lobby' || phase === 'pre_night') {
+    // Predictions don't open until participants parser publishes the GF lineup.
+    return tabId === 'predictions';
+  }
+  return false;
+}
+
 export default function BottomNav({ onExitPress }: BottomNavProps) {
   const { t } = useTranslation();
   const { activeTab, setActiveTab, room, notifications } = useGameStore();
@@ -38,23 +53,30 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
       <div className="flex items-stretch">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
-          const badgeCount = tab.id === 'duels' ? duelNotifCount : 0;
+          const locked = isTabLocked(tab.id, room?.phase);
+          const badgeCount = tab.id === 'duels' && !locked ? duelNotifCount : 0;
           const label = tab.id === 'predictions' && isVotingOrLater ? t('nav.results') : t(tab.labelKey);
 
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { if (!locked) setActiveTab(tab.id); }}
+              disabled={locked}
+              title={locked ? t('nav.lockedHint', { defaultValue: 'Locked in this phase' }) : undefined}
               className={clsx(
                 'flex-1 flex flex-col items-center justify-center gap-0.5 sm:gap-1 lg:gap-1.5',
                 'py-2 sm:py-3 lg:py-4 min-h-[56px] sm:min-h-[68px] lg:min-h-[80px]',
-                'transition-colors relative cursor-pointer',
-                isActive ? 'text-euro-gold' : 'text-white/55 hover:text-white/80',
+                'transition-colors relative',
+                locked
+                  ? 'text-white/25 cursor-not-allowed'
+                  : isActive
+                    ? 'text-euro-gold cursor-pointer'
+                    : 'text-white/55 hover:text-white/80 cursor-pointer',
               )}
               aria-label={label}
               aria-current={isActive ? 'page' : undefined}
             >
-              {isActive && (
+              {isActive && !locked && (
                 <motion.div
                   layoutId="nav-indicator"
                   className="absolute top-0 left-2 right-2 h-0.5 sm:h-[3px] bg-euro-gold rounded-full"
@@ -66,7 +88,12 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
                   const Icon = tab.id === 'predictions' && isVotingOrLater ? ListChecks : tab.Icon;
                   return <Icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" strokeWidth={2} />;
                 })()}
-                {badgeCount > 0 && (
+                {locked && (
+                  <span className="absolute -top-1 -right-2.5 bg-white/8 rounded-full p-0.5">
+                    <Lock className="w-2.5 h-2.5 text-white/55" strokeWidth={2.4} />
+                  </span>
+                )}
+                {!locked && badgeCount > 0 && (
                   <span className="absolute -top-1.5 -right-2.5 bg-euro-red text-white text-xs lg:text-sm font-bold rounded-full min-w-[18px] h-[18px] lg:min-w-[20px] lg:h-[20px] flex items-center justify-center px-1">
                     {badgeCount > 9 ? '9+' : badgeCount}
                   </span>

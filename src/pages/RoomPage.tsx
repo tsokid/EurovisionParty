@@ -187,17 +187,24 @@ export function RoomPage() {
   }
 
   // Active game phases — show tabbed content
-  const isVotingOrLater = (currentRoom.phase as string) === 'voting_live' || (currentRoom.phase as string) === 'final';
+  const phase = currentRoom.phase as string;
+  const isVotingOrLater = phase === 'voting_live' || phase === 'final';
+  // Phase-locking is enforced both in BottomNav (button disabled) and
+  // here (deep-link / stale-state defence). If the player has a tab
+  // active that just got locked by a phase change, fall back to the
+  // leaderboard instead of rendering the wrong screen.
+  const quizDuelsLocked = phase === 'voting_live' || phase === 'final';
+  const predictionsLocked = phase === 'lobby' || phase === 'pre_night';
 
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'quiz':
-        return <QuizScreen />;
-      case 'predictions':
-        // During voting_live, show results entry instead of predictions
-        return isVotingOrLater ? <ResultsEntry /> : <PredictionsScreen />;
+        return quizDuelsLocked ? <LeaderboardScreen /> : <QuizScreen />;
       case 'duels':
-        return <DuelsScreen />;
+        return quizDuelsLocked ? <LeaderboardScreen /> : <DuelsScreen />;
+      case 'predictions':
+        if (isVotingOrLater) return <ResultsEntry />;
+        return predictionsLocked ? <LeaderboardScreen /> : <PredictionsScreen />;
       case 'intel':
         return <IntelMarket />;
       case 'leaderboard':

@@ -103,7 +103,9 @@
     "predict": "Predict",
     "results": "Results",
     "duels": "Duels",
-    "board": "Board"
+    "board": "Board",
+    "exit": "Leave",
+    "lockedHint": "Locked in this phase"
   },
   "phases": {
     "lobby": { "label": "Lobby", "desc": "Players join the room and pick avatars" },

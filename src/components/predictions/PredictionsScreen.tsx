@@ -67,19 +67,31 @@ interface SlotRowProps {
   pos: number;
   zone: 'top' | 'worst';
   onRemove: () => void;
+  /** Fires when an armed country in the pool is "dropped" onto this row.
+   *  Parent replaces this slot with the armed country. */
+  onReplace?: () => void;
+  /** Highlights the slot to show it accepts a placement on click. */
+  armed?: boolean;
   ghost?: boolean;
 }
-function SlotRow({ id, country, pos, zone, onRemove, ghost }: SlotRowProps) {
+function SlotRow({ id, country, pos, zone, onRemove, onReplace, armed, ghost }: SlotRowProps) {
   if (!country) return null;
   const label = ord(pos);
   return (
     <div className={clsx(
-      'flex items-center gap-2 px-2.5 py-1.5 rounded-lg border select-none',
+      'flex items-center gap-2 px-2.5 py-1.5 rounded-lg border select-none transition-all',
       zone === 'top'
         ? 'bg-[rgba(255,209,102,0.1)] border-[rgba(255,209,102,0.4)]'
         : 'bg-[rgba(255,77,109,0.1)] border-[rgba(255,77,109,0.4)]',
+      armed && (zone === 'top'
+        ? 'ring-2 ring-[#FFD166] ring-offset-2 ring-offset-[#120828] cursor-pointer hover:bg-[rgba(255,209,102,0.2)]'
+        : 'ring-2 ring-[#FF4D6D] ring-offset-2 ring-offset-[#120828] cursor-pointer hover:bg-[rgba(255,77,109,0.2)]'),
       ghost && 'opacity-0',
-    )}>
+    )}
+    onClick={armed && onReplace ? onReplace : undefined}
+    role={armed ? 'button' : undefined}
+    aria-label={armed ? `Replace ${label} place with selected country` : undefined}
+    >
       <span className={clsx(
         'font-black text-[1.1rem] leading-none w-9 text-right shrink-0 tabular-nums',
         zone === 'top' ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
@@ -99,12 +111,13 @@ function SlotRow({ id, country, pos, zone, onRemove, ghost }: SlotRowProps) {
 function SortableSlot(props: SlotRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: props.id });
+  // When armed, suppress drag listeners — a tap on the row should
+  // place-and-replace, not start a reorder drag.
+  const dragProps = props.armed ? { ref: setNodeRef } : { ref: setNodeRef, ...attributes, ...listeners };
   return (
     <div
-      ref={setNodeRef}
+      {...dragProps}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      {...attributes}
-      {...listeners}
       className="touch-none"
     >
       <SlotRow {...props} ghost={isDragging} />
@@ -180,6 +193,8 @@ function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected,
                 pos={isTop ? i + 1 : n - WORST_N + 1 + i}
                 zone={zone}
                 onRemove={() => onRemove(id)}
+                armed={hasSelection}
+                onReplace={() => onPlaceSelected(i)}
               />
             ))}
           </SortableContext>
@@ -431,7 +446,10 @@ export default function PredictionsScreen() {
     setSelectedId((prev) => prev === id ? null : id);
   }, [top5, worst5]);
 
-  // Place selected tile into a specific slot
+  // Place selected tile into a specific slot.
+  //   • slotIndex < picks.length → REPLACE the country at that index
+  //     (the displaced one returns to the pool unranked).
+  //   • slotIndex >= picks.length → APPEND.
   const handlePlace = useCallback((zone: 'top' | 'worst', slotIndex: number) => {
     if (!selectedId) return;
     if (zone === 'top') {
@@ -439,17 +457,16 @@ export default function PredictionsScreen() {
         const next = [...p];
         // Remove from worst5 if present (mutual exclusion)
         setWorst5((w) => w.filter((x) => x !== selectedId));
-        // Insert at slotIndex (if slotIndex > current length, append)
-        if (slotIndex >= next.length) next.push(selectedId);
-        else next.splice(slotIndex, 0, selectedId);
+        if (slotIndex < next.length) next[slotIndex] = selectedId;
+        else next.push(selectedId);
         return next.slice(0, TOP_N);
       });
     } else {
       setWorst5((p) => {
         const next = [...p];
         setTop5((t) => t.filter((x) => x !== selectedId));
-        if (slotIndex >= next.length) next.push(selectedId);
-        else next.splice(slotIndex, 0, selectedId);
+        if (slotIndex < next.length) next[slotIndex] = selectedId;
+        else next.push(selectedId);
         return next.slice(0, WORST_N);
       });
     }
