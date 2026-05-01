@@ -295,10 +295,23 @@ async function handleResults(): Promise<Response> {
 
 // ---------------------------------------------------------------------------
 // Test handlers (no DB writes)
+//
+// CONTRACT: Test handlers MUST call the exact same extractor functions
+// that production handlers call. This is what guarantees a fix to
+// parse.ts / parseResults.ts (e.g. the youtube.com/watch + youtu.be fix,
+// the linear-scan anti-backtracking rewrite) automatically applies to
+// both Test buttons in /admin AND the cron-driven production runs.
+//
+// Specifically:
+//   - handleTestParticipants → fetchParticipants() ← same as handleParticipants
+//   - handleTestResults      → parseResults()      ← same as handleResults
+//
+// Do not duplicate extractor logic here.
 // ---------------------------------------------------------------------------
 async function handleTestParticipants(overrideUrl?: string): Promise<Response> {
   const url = overrideUrl?.trim() || TEST_URL_2025;
   try {
+    // Same extractor + Wikipedia fallback as production handleParticipants
     const result = await fetchParticipants(url);
     return jsonResponse({
       url,
@@ -322,6 +335,7 @@ async function handleTestResults(overrideUrl?: string): Promise<Response> {
     if (fetched.httpStatus !== 200) {
       return jsonResponse({ url, error: `http ${fetched.httpStatus}` }, 502);
     }
+    // Same extractor as production handleResults
     const rows = parseResults(fetched.html, url);
     return jsonResponse({
       url,
