@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
+import { formatError } from "../../lib/formatError";
 import { StatusPill } from "./StatusPill";
 import { SourceUrlEditor } from "./SourceUrlEditor";
 import { ScheduleEditor } from "./ScheduleEditor";
@@ -46,7 +47,7 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
       await fn();
       onRefresh();
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(formatError(e));
     } finally {
       setBusy(false);
     }

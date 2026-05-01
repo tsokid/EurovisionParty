@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
+import { formatError } from "../../lib/formatError";
 
 const TEST_DEFAULT =
   "https://www.eurovision.com/eurovision-song-contest/basel-2025/basel-2025-grand-final/";
@@ -229,7 +230,7 @@ export function TestCard() {
       setResp(next);
       setModalOpen(true); // auto-open the modal on success
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(formatError(e));
     } finally {
       setBusy(null);
     }

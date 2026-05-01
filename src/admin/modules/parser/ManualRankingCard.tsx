@@ -24,6 +24,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 import { supabase } from "../../../lib/supabase";
+import { formatError } from "../../lib/formatError";
 import type { ParseJob } from "./useParserState";
 
 interface Props {
@@ -178,7 +179,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
       if (error) throw error;
       onRefresh();
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(formatError(e));
     } finally {
       setBusy(null);
     }
@@ -218,7 +219,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
       onRefresh();
       setConfirm(null);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(formatError(e));
     } finally {
       setBusy(null);
     }
@@ -235,7 +236,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
       onRefresh();
       setConfirm(null);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(formatError(e));
     } finally {
       setBusy(null);
     }

@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { supabase } from "../../lib/supabase";
+import { formatError } from "../lib/formatError";
 
 const PHASES = [
   { id: "lobby", label: "Lobby" },
@@ -47,7 +48,7 @@ export default function RoomPhases() {
       if (error) throw error;
       setResult(typeof data === "number" ? data : 0);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(formatError(e));
     } finally {
       setBusy(false);
     }

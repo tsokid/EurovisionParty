@@ -15,6 +15,7 @@ import PredictionsScreen from '../components/predictions/PredictionsScreen';
 import DuelsScreen from '../components/duels/DuelsScreen';
 import IntelMarket from '../components/intel/IntelMarket';
 import ResultsEntry from '../components/results/ResultsEntry';
+import VotingLiveScreen from '../components/results/VotingLiveScreen';
 import LeaderboardScreen from '../components/leaderboard/LeaderboardScreen';
 import WinnerCrown from '../components/leaderboard/WinnerCrown';
 import WinnersScreen from '../components/winners/WinnersScreen';
@@ -188,7 +189,6 @@ export function RoomPage() {
 
   // Active game phases — show tabbed content
   const phase = currentRoom.phase as string;
-  const isVotingOrLater = phase === 'voting_live' || phase === 'final';
   // Phase-locking is enforced both in BottomNav (button disabled) and
   // here (deep-link / stale-state defence). If the player has a tab
   // active that just got locked by a phase change, fall back to the
@@ -196,6 +196,7 @@ export function RoomPage() {
   const quizDuelsLocked = phase === 'voting_live' || phase === 'final';
   const predictionsLocked = phase === 'lobby' || phase === 'pre_night';
 
+  const [showHostManualEntry, setShowHostManualEntry] = useState(false);
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'quiz':
@@ -203,7 +204,14 @@ export function RoomPage() {
       case 'duels':
         return quizDuelsLocked ? <LeaderboardScreen /> : <DuelsScreen />;
       case 'predictions':
-        if (isVotingOrLater) return <ResultsEntry />;
+        // voting_live: players see a wait screen; host can opt into
+        // manual results entry via a button. final: leaderboard.
+        if (phase === 'voting_live') {
+          return showHostManualEntry
+            ? <ResultsEntry />
+            : <VotingLiveScreen onHostManualEntry={() => setShowHostManualEntry(true)} />;
+        }
+        if (phase === 'final') return <LeaderboardScreen />;
         return predictionsLocked ? <LeaderboardScreen /> : <PredictionsScreen />;
       case 'intel':
         return <IntelMarket />;

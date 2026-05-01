@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../../lib/supabase";
+import { formatError } from "../../lib/formatError";
 import type { JobKind, ParseJob } from "./useParserState";
 
 interface Props {
@@ -166,7 +167,7 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
       setMsg({ kind: 'ok', text: 'Schedule saved.' });
       onSaved();
     } catch (e) {
-      setMsg({ kind: 'err', text: e instanceof Error ? e.message : String(e) });
+      setMsg({ kind: 'err', text: formatError(e) });
     } finally {
       setBusy(false);
     }
