@@ -22,6 +22,7 @@ import TermsPage from './pages/seo/TermsPage';
 import EurovisionDuelsPage from './pages/seo/EurovisionDuelsPage';
 import DashboardPage from './pages/seo/DashboardPage';
 import CookiesPage from './pages/seo/CookiesPage';
+import WinnersPage from './pages/seo/WinnersPage';
 
 export const router = createBrowserRouter([
   // Game + admin own their own chrome
@@ -49,6 +50,7 @@ export const router = createBrowserRouter([
       { path: 'duels', element: <EurovisionDuelsPage /> },
       { path: 'dashboard', element: <DashboardPage /> },
       { path: 'cookies', element: <CookiesPage /> },
+      { path: 'winners', element: <WinnersPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
@@ -72,6 +74,7 @@ export const router = createBrowserRouter([
   { path: '/duels', element: <LocaleRedirect /> },
   { path: '/dashboard', element: <LocaleRedirect /> },
   { path: '/cookies', element: <LocaleRedirect /> },
+  { path: '/winners', element: <LocaleRedirect /> },
 
   // Catch-all: redirect unknown unprefixed paths into the locale-scoped
   // tree so NotFoundPage renders inside LocaleProvider (LocaleLink needs it).

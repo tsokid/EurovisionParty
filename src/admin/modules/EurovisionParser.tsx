@@ -23,15 +23,11 @@ export default function EurovisionParser() {
   const resultsRuns = runs.filter((r) => r.kind === "results").slice(0, 10);
   const overrideOn = jobs.results?.manual_override === true;
 
-  // Pick the year to display. Prefer the participants job year, fall back to
-  // results, then a sensible default. Keeps the UI year-agnostic.
-  const displayYear = jobs.participants?.year ?? jobs.results?.year ?? 2026;
-
   return (
     <div className="p-4 space-y-4">
       <header>
         <h2 className="text-xl font-bold text-white">
-          🛰️ Eurovision Parser ({displayYear})
+          🛰️ Eurovision Parser
         </h2>
         <p className="text-sm text-white/60 mt-1">
           Manual host control with cron fallbacks. Participants auto-runs the
