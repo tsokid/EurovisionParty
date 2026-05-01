@@ -41,3 +41,7 @@ supabase/functions/**/*.bundled.ts
 
 # Editor backup files
 *.bak
+
+# Parser debug HTML (kept locally for testing extractor regexes)
+e2025.html
+wiki-debug.html
