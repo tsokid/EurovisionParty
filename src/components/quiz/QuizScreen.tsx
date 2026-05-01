@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz } from '../../hooks/useQuiz';
 import { useGameStore } from '../../stores/gameStore';
 import { selectRoundQuestions } from '../../lib/questionRandomizer';
-import { QUESTIONS, QUESTIONS_BY_ID } from '../../lib/questions';
+import { QUESTIONS } from '../../lib/questions';
 import { supabase } from '../../lib/supabase';
 import { fetchSeenQuestionIds } from '../../lib/usedQuestions';
 import {
@@ -13,7 +13,7 @@ import {
   MAX_ROUNDS,
 } from '../../lib/constants';
 import type { QuizAnswer, QuizQuestion } from '../../lib/types';
-import { Trophy, Flame, Tag, Swords, BarChart3 } from 'lucide-react';
+import { Trophy, Flame, Zap, Swords, BarChart3 } from 'lucide-react';
 
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -40,15 +40,15 @@ export default function QuizScreen() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const restoredRef = useRef(false);
 
-  // Per-round breakdown + best streak + accuracy + top category —
-  // populated when quiz completes. Fetches all of this player's
-  // quiz_answers in this room and aggregates.
+  // Per-round breakdown + best streak + accuracy + fastest correct
+  // answer — populated when quiz completes. Fetches all of this
+  // player's quiz_answers in this room and aggregates.
   const [completionSummary, setCompletionSummary] = useState<{
     rounds: { round: number; correct: number; total: number; points: number }[];
     bestStreak: number;
     totalCorrect: number;
     totalAnswered: number;
-    topCategory: string | null;
+    fastestSeconds: number | null;
   } | null>(null);
 
   // --- Restore quiz progress on mount ---
@@ -135,7 +135,7 @@ export default function QuizScreen() {
     let cancelled = false;
     supabase
       .from('quiz_answers')
-      .select('round_number, question_id, is_correct, points_awarded, answered_at')
+      .select('round_number, is_correct, points_awarded, response_seconds, answered_at')
       .eq('player_id', player.id)
       .eq('room_id', room.id)
       .order('round_number', { ascending: true })
@@ -143,51 +143,37 @@ export default function QuizScreen() {
       .then(({ data }) => {
         if (cancelled || !data) return;
         const byRound: Record<number, { round: number; correct: number; total: number; points: number }> = {};
-        const byCategory: Record<string, { correct: number; total: number }> = {};
         let bestStreak = 0;
         let currentStreak = 0;
         let totalCorrect = 0;
-        for (const a of data as Array<{ round_number: number; question_id: number; is_correct: boolean; points_awarded: number | null }>) {
+        let fastestSeconds: number | null = null;
+        for (const a of data as Array<{ round_number: number; is_correct: boolean; points_awarded: number | null; response_seconds: number | null }>) {
           const r = a.round_number;
           if (!byRound[r]) byRound[r] = { round: r, correct: 0, total: 0, points: 0 };
           byRound[r].total += 1;
-
-          const cat = QUESTIONS_BY_ID.get(a.question_id)?.category ?? null;
-          if (cat) {
-            if (!byCategory[cat]) byCategory[cat] = { correct: 0, total: 0 };
-            byCategory[cat].total += 1;
-          }
 
           if (a.is_correct) {
             byRound[r].correct += 1;
             byRound[r].points += a.points_awarded ?? 0;
             totalCorrect += 1;
-            if (cat) byCategory[cat].correct += 1;
             currentStreak += 1;
             if (currentStreak > bestStreak) bestStreak = currentStreak;
+            const secs = a.response_seconds;
+            if (secs != null && secs > 0 && (fastestSeconds === null || secs < fastestSeconds)) {
+              fastestSeconds = secs;
+            }
           } else {
             currentStreak = 0;
           }
         }
         const rounds = Object.values(byRound).sort((a, b) => a.round - b.round);
 
-        // Top category = highest correct count, then highest accuracy as
-        // tiebreak. Skips categories with 0 correct (the "best" of all
-        // wrongs isn't really a top category).
-        let topCategory: string | null = null;
-        let topScore = -1;
-        for (const [name, { correct, total }] of Object.entries(byCategory)) {
-          if (correct === 0) continue;
-          const score = correct * 100 + (correct / total);
-          if (score > topScore) { topScore = score; topCategory = name; }
-        }
-
         setCompletionSummary({
           rounds,
           bestStreak,
           totalCorrect,
           totalAnswered: data.length,
-          topCategory,
+          fastestSeconds,
         });
       });
     return () => { cancelled = true; };
@@ -535,11 +521,15 @@ export default function QuizScreen() {
                     </div>
                     <div className="rounded-xl bg-white/[0.04] border border-white/8 px-2 sm:px-3 py-3">
                       <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-white/55">
-                        <Tag className="w-3.5 h-3.5 text-euro-gold" strokeWidth={2.2} />
-                        <span className="uppercase">{t('quiz.topCategory')}</span>
+                        <Zap className="w-3.5 h-3.5 text-euro-gold" strokeWidth={2.4} />
+                        <span className="uppercase">{t('quiz.fastest')}</span>
                       </div>
-                      <p className="text-base sm:text-lg font-extrabold text-white mt-1 truncate">
-                        {completionSummary.topCategory ?? t('quiz.noCategory')}
+                      <p className="text-xl sm:text-2xl font-extrabold text-white mt-1 tabular-nums">
+                        {completionSummary.fastestSeconds != null
+                          ? t('quiz.fastestValue', {
+                              seconds: completionSummary.fastestSeconds.toFixed(1),
+                            })
+                          : t('quiz.noFastest')}
                       </p>
                     </div>
                   </div>

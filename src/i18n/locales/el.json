@@ -137,11 +137,12 @@
     "finalScoreLabel": "ΤΕΛΙΚΟ ΣΚΟΡ",
     "scoreSubline": "{{correct}} / {{total}} σωστές · Θέση #{{rank}} από {{players}}",
     "accuracy": "Ακρίβεια",
-    "topCategory": "Κατηγορία",
+    "fastest": "Πιο γρήγορη",
+    "fastestValue": "{{seconds}}\"",
     "continueDuels": "Στις Μονομαχίες",
     "viewLeaderboard": "Δες την κατάταξη",
     "scoresCarry": "Οι πόντοι μεταφέρονται στο live — μείνε κοντά!",
-    "noCategory": "—"
+    "noFastest": "—"
   },
   "questionCard": {
     "progress": "Ερώτηση {{current}} από {{total}}",

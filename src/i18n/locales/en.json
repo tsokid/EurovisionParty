@@ -137,11 +137,12 @@
     "finalScoreLabel": "YOUR FINAL SCORE",
     "scoreSubline": "{{correct}} / {{total}} correct · Rank #{{rank}} of {{players}}",
     "accuracy": "Accuracy",
-    "topCategory": "Top Category",
+    "fastest": "Fastest",
+    "fastestValue": "{{seconds}}s",
     "continueDuels": "Continue to Duels",
     "viewLeaderboard": "View leaderboard",
     "scoresCarry": "Quiz scores carry into the live show — sit tight!",
-    "noCategory": "—"
+    "noFastest": "—"
   },
   "questionCard": {
     "progress": "Question {{current}} of {{total}}",
