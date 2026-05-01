@@ -41,7 +41,7 @@ function fromDbRow(row: DbRow): Country {
     song: row.song ?? "",
     language: "",
     semi: "big5" as const,
-    runningOrder: row.running_order ?? null,
+    runningOrder: row.running_order ?? undefined,
   };
 }
 
