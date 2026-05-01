@@ -115,9 +115,18 @@ export function extractEurovision(html: string): ParsedEntry[] {
     const end = Math.min(next, start + WINDOW_MAX);
     const slice = html.slice(start, end);
 
-    // Country must map to a known ISO (filters out "Vienna 2026" page title)
+    // Country must map to a known ISO (filters out "Vienna 2026" / "Basel 2025"
+    // / "Rest of the World" page titles).
     const iso = isoFor(country);
-    if (!iso || seen.has(iso)) continue;
+    if (!iso) continue;
+    // First duplicate ISO is our terminator. The eurovision.com
+    // `<year>-grand-final/` pages list the GF lineup at the top of the
+    // page, then a second "all entrants" section further down which
+    // re-lists everything (including semi-final losers). The moment
+    // we see an ISO we've already captured, we know we've crossed out
+    // of the GF block — stop, don't pollute the result with the
+    // 11+ non-qualifiers further down.
+    if (seen.has(iso)) break;
     seen.add(iso);
 
     // Artist — first <p class="...chip-text...">X</p> after an
