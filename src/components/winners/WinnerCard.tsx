@@ -8,9 +8,12 @@ interface Props {
   playerNames: string[];
   metricValue: number;
   delayMs?: number;
+  /** When true, the card bumps the name to a bigger, gold "signed by you"
+   *  treatment — the bottom-of-card overlay gets a glow ring too. */
+  isMine?: boolean;
 }
 
-export default function WinnerCard({ category, playerNames, metricValue, delayMs = 0 }: Props) {
+export default function WinnerCard({ category, playerNames, metricValue, delayMs = 0, isMine }: Props) {
   const meta = CATEGORY_META[category];
   const ref = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -51,12 +54,15 @@ export default function WinnerCard({ category, playerNames, metricValue, delayMs
           <span className="text-7xl select-none">{meta.emojiFallback}</span>
         </div>
       )}
-      <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/85 via-black/55 to-transparent rounded-b-2xl">
-        <div className="text-euro-gold font-bold text-sm">{meta.label}</div>
-        <div className="text-white text-base font-bold leading-tight">
+      <div className={`absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 via-black/65 to-transparent rounded-b-2xl ${isMine ? 'ring-2 ring-euro-gold/70 ring-inset' : ''}`}>
+        <div className="text-euro-gold font-bold text-sm tracking-wide uppercase">{meta.label}</div>
+        {/* Username(s) — prominent: this is the player(s) who actually
+            won this card. Bumped to text-xl for visibility, with a
+            glow when it's the current viewer's card. */}
+        <div className={`font-extrabold leading-tight mt-0.5 ${isMine ? 'text-xl sm:text-2xl text-euro-gold drop-shadow-[0_0_12px_rgba(255,209,102,0.6)]' : 'text-lg sm:text-xl text-white'}`}>
           {playerNames.length > 1 ? playerNames.slice(0, 5).join(' & ') : playerNames[0] ?? '—'}
         </div>
-        <div className="text-white/70 text-xs">{meta.metricLabel} · {metricValue}</div>
+        <div className="text-white/70 text-xs mt-1">{meta.metricLabel} · {metricValue}</div>
       </div>
     </motion.div>
   );

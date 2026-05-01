@@ -57,6 +57,7 @@ export default function WinnerGrid({ winners, playerNameById, currentPlayerId }:
               playerNames={names}
               metricValue={Number(rows[0].metric_value)}
               delayMs={i * 250}
+              isMine={isMine}
             />
           </motion.div>
         );
