@@ -30,9 +30,9 @@ export default function EurovisionParser() {
           🛰️ Eurovision Parser
         </h2>
         <p className="text-sm text-white/60 mt-1">
-          Manual host control with cron fallbacks. Participants auto-runs the
-          morning of grand-final week (Athens time) if still idle. Results
-          auto-starts at kick-off and polls every 2 min.
+          Manual host control with cron fallbacks. Each parser has its own
+          schedule (start, end, poll interval) editable below — all times in
+          Athens (Europe/Athens) timezone.
         </p>
       </header>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

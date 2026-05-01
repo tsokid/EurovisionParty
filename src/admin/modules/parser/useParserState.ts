@@ -26,6 +26,9 @@ export interface ParseJob {
   triggered_by_user: boolean | null;
   manual_override: boolean;
   source_url: string | null;
+  scheduled_start_at: string | null;     // ISO timestamptz
+  scheduled_end_at: string | null;       // ISO timestamptz, null for participants
+  poll_interval_minutes: number;         // results-only meaning, but stored on both rows
 }
 
 export interface ParseRun {

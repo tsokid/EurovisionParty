@@ -7,6 +7,7 @@ import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { StatusPill } from "./StatusPill";
 import { SourceUrlEditor } from "./SourceUrlEditor";
+import { ScheduleEditor } from "./ScheduleEditor";
 import type { ParseJob, ParseRun } from "./useParserState";
 
 interface Props {
@@ -88,6 +89,12 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
         year={job.year}
         kind="results"
         currentUrl={job.source_url}
+        onSaved={onRefresh}
+      />
+      <ScheduleEditor
+        year={job.year}
+        kind="results"
+        job={job}
         onSaved={onRefresh}
       />
       <div className="flex flex-wrap gap-2 mb-3">
