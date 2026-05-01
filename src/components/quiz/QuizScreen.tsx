@@ -40,6 +40,12 @@ export default function QuizScreen() {
   const [usedQuestionIds, setUsedQuestionIds] = useState<number[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const restoredRef = useRef(false);
+  // Block rendering of the waiting/intro/playing/etc. phases until we've
+  // either restored from the store or queried the DB to figure out where
+  // this player actually is. Otherwise users who already finished all
+  // rounds see a "Start Round 1" flash on tab entry while the restoration
+  // promise resolves.
+  const [restored, setRestored] = useState(false);
 
   // Per-round breakdown + best streak + accuracy + fastest correct
   // answer — populated when quiz completes. Fetches all of this
@@ -71,6 +77,7 @@ export default function QuizScreen() {
         .map((id) => QUESTIONS.find((q) => q.id === id))
         .filter(Boolean) as QuizQuestion[];
       setRoundQuestions(questions);
+      setRestored(true);
       return;
     }
 
@@ -87,6 +94,7 @@ export default function QuizScreen() {
       if (!answers?.length) {
         // No quiz answers yet — but might have duel question IDs to exclude
         if (allSeenIds.length) setUsedQuestionIds(allSeenIds);
+        setRestored(true);
         return;
       }
 
@@ -102,11 +110,13 @@ export default function QuizScreen() {
         if ((countByRound[r] ?? 0) < QUESTIONS_PER_ROUND) {
           setRoundNumber(r);
           setPhase('waiting');
+          setRestored(true);
           return;
         }
       }
       setRoundNumber(MAX_ROUNDS);
       setPhase('complete');
+      setRestored(true);
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player?.id, room?.id]);
@@ -326,8 +336,10 @@ export default function QuizScreen() {
     }
   }, [roundNumber]);
 
-  // Loading state
-  if (!room || !player) {
+  // Loading state — also covers the restoration window so a player who
+  // already finished all 3 rounds doesn't see a "Start Round 1" flash
+  // before the DB query confirms phase = 'complete'.
+  if (!room || !player || !restored) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3">
         <div className="w-8 h-8 border-2 border-euro-purple border-t-transparent rounded-full animate-spin" />
@@ -537,9 +549,9 @@ export default function QuizScreen() {
                   </p>
                   <motion.p
                     className="text-5xl sm:text-7xl font-extrabold tabular-nums mt-2 bg-gradient-to-r from-euro-purple-light to-euro-pink bg-clip-text text-transparent"
-                    initial={{ scale: 0.6, opacity: 0 }}
+                    initial={{ scale: 0.92, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.1, type: 'spring', damping: 12 }}
+                    transition={{ delay: 0.05, duration: 0.25, ease: 'easeOut' }}
                   >
                     {player.quiz_points.toLocaleString()}
                   </motion.p>

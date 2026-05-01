@@ -655,7 +655,7 @@ export default function DuelsScreen() {
                       <p className="text-xs sm:text-sm text-white/55 mt-0.5 flex items-center gap-1.5">
                         <span className={`w-1.5 h-1.5 rounded-full ${isBusy ? 'bg-euro-gold' : 'bg-euro-green'}`} aria-hidden />
                         {isBusy ? t('duels.playerInQuiz') : t('duels.playerReady')}
-                        <span className="text-white/30">\u00B7</span>
+                        <span className="w-1 h-1 rounded-full bg-white/25 mx-0.5" aria-hidden />
                         <span className="text-white/65 tabular-nums">{p.quiz_points ?? 0} {t('duels.ptsSuffix')}</span>
                       </p>
                     </div>

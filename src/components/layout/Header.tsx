@@ -86,7 +86,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="glass h-14 flex items-center justify-between px-4 shrink-0">
+      <header className="h-14 flex items-center justify-between px-4 shrink-0 border-b border-white/10" style={{ background: 'rgb(10, 5, 25)' }}>
         {/* Left: Room code badge */}
         <button
           onClick={copyRoomCode}

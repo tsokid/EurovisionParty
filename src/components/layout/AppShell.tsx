@@ -43,8 +43,16 @@ export default function AppShell({
 
       {/* Consistent breathing room between the sticky header and screen
           content — applied here so every tabbed screen inherits it
-          instead of each one having to remember its own top padding. */}
-      <main className="flex-1 overflow-y-auto pt-4 sm:pt-6">{children}</main>
+          instead of each one having to remember its own top padding.
+          scrollbar-gutter: stable reserves space for the scrollbar even
+          when content fits, so the layout doesn't shift horizontally
+          (and visibly "jump") when content height changes. */}
+      <main
+        className="flex-1 overflow-y-auto pt-4 sm:pt-6"
+        style={{ scrollbarGutter: 'stable' }}
+      >
+        {children}
+      </main>
 
       {showNav && <BottomNav onExitPress={onExitPress} />}
     </div>
