@@ -70,32 +70,69 @@ function decodeHtmlEntities(s: string): string {
  * Extract participants from the eurovision.com grand-final page.
  *
  * Current (2025+) markup pattern per participant:
- *   <p ... data-country-name>Country</p>
- *   ... (some chrome) ...
+ *   <p ... data-country-name>Country</p>          (always present)
  *   <a href="/.../all-participants/<artist-slug>/">
- *     <p class="...chip-text...">Artist Name</p>
+ *     <p class="...chip-text...">Artist Name</p>  (present once announced)
  *   </a>
- *   ... (some chrome) ...
  *   <a href="https://www.youtube.com/watch?v=...">
- *     <p class="...chip-text...">Song Title</p>
+ *     <p class="...chip-text...">Song Title</p>   (present once song dropped)
  *   </a>
  *
- * Country → ISO via COUNTRY_TO_ISO. Falls back to [] if any of the three
- * fields can't be matched in order.
+ * Two-pass linear scan rather than one mega-regex, because pre-show pages
+ * have data-country-name without artist or YouTube links yet — and a single
+ * mega-regex with multiple lazy `[\s\S]*?` quantifiers triggers catastrophic
+ * backtracking when downstream pieces are missing (parser hangs for minutes
+ * on the 125KB Vienna 2026 page).
+ *
+ * Strategy:
+ *   1. Find every `data-country-name>X</p>` (anchor positions)
+ *   2. For each anchor, look forward in a bounded window (next anchor or
+ *      end-of-document, capped at 4KB) and pick out artist + song from
+ *      that slice using simple sub-regexes.
+ *   3. Skip non-country values (e.g. page title "Vienna 2026") — they
+ *      fail the COUNTRY_TO_ISO lookup.
+ *
+ * Returns partial entries (empty artist/song strings) for countries
+ * announced but not yet given a song — useful pre-show.
  */
 export function extractEurovision(html: string): ParsedEntry[] {
   const entries: ParsedEntry[] = [];
   const seen = new Set<string>();
-  const re =
-    /data-country-name[^>]*>\s*([^<]+?)\s*<\/p>[\s\S]{0,2000}?\/all-participants\/[^"]+"[\s\S]{0,800}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>[\s\S]{0,2000}?youtube\.com\/watch[\s\S]{0,800}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>/g;
+  const WINDOW_MAX = 4000;
 
-  for (const m of html.matchAll(re)) {
-    const country = decodeHtmlEntities(m[1].trim());
-    const artist = decodeHtmlEntities(m[2].trim());
-    const song = decodeHtmlEntities(m[3].trim());
+  // Step 1: collect anchor positions (start index of each country block)
+  const anchors: { country: string; start: number }[] = [];
+  const anchorRe = /data-country-name[^>]*>\s*([^<]+?)\s*<\/p>/g;
+  let am: RegExpExecArray | null;
+  while ((am = anchorRe.exec(html)) !== null) {
+    anchors.push({ country: decodeHtmlEntities(am[1].trim()), start: am.index });
+  }
+
+  // Step 2: for each anchor, derive a slice and scan it for artist + song
+  for (let i = 0; i < anchors.length; i++) {
+    const { country, start } = anchors[i];
+    const next = anchors[i + 1]?.start ?? html.length;
+    const end = Math.min(next, start + WINDOW_MAX);
+    const slice = html.slice(start, end);
+
+    // Country must map to a known ISO (filters out "Vienna 2026" page title)
     const iso = isoFor(country);
     if (!iso || seen.has(iso)) continue;
     seen.add(iso);
+
+    // Artist — first <p class="...chip-text...">X</p> after an
+    // /all-participants/<slug>/ link in the slice
+    let artist = '';
+    const artistMatch = slice.match(/\/all-participants\/[^"]+"[^>]*>[\s\S]{0,400}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>/);
+    if (artistMatch) artist = decodeHtmlEntities(artistMatch[1].trim());
+
+    // Song — first <p class="...chip-text...">X</p> after a YouTube link.
+    // Site uses both `youtube.com/watch?v=...` (basel-2025) and `youtu.be/...`
+    // short form (vienna-2026). Match either.
+    let song = '';
+    const songMatch = slice.match(/(?:youtube\.com\/watch|youtu\.be)[^"]*"[^>]*>[\s\S]{0,400}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>/);
+    if (songMatch) song = decodeHtmlEntities(songMatch[1].trim());
+
     entries.push({ iso, name: country, artist, song, runningOrder: null });
   }
   return entries;

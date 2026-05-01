@@ -98,34 +98,48 @@ function extractTable(html: string, source: string): ResultRow[] {
 // ---------------------------------------------------------------------------
 // Shape 3 (CURRENT 2025+): aria-label-anchored scoreboard entry blocks
 // ---------------------------------------------------------------------------
-const ARIA_RX = new RegExp(
-  // Anchor: aria-label="Scoreboard entry for <Country>"
-  'aria-label="Scoreboard entry for ([^"]+)"' +
-  // Then within ~6KB of the entry, the rank
-  '[\\s\\S]{0,6000}?scoreboard-rank">(\\d+)<' +
-  // Then total points ("<N> points")
-  '[\\s\\S]{0,6000}?>(\\d+)\\s+points<' +
-  // Then jury value
-  '[\\s\\S]{0,6000}?>Jury</span>\\s*<span>\\s*(\\d+)\\s*</span>' +
-  // Then audience (televote) value
-  '[\\s\\S]{0,6000}?>Audience</span>\\s*<span>\\s*(\\d+)\\s*</span>',
-  'g',
-);
-
+// Two-pass linear scan: anchor on aria-label, then extract rank/total/jury/
+// televote from a bounded slice. Avoids catastrophic regex backtracking when
+// pre-show pages have aria-labels but no scores yet (Vienna 2026 currently).
+// ---------------------------------------------------------------------------
 function extractAriaScoreboard(html: string, source: string): ResultRow[] {
   const rows: ResultRow[] = [];
   const seen = new Set<string>();
-  for (const m of html.matchAll(ARIA_RX)) {
-    const country = m[1].trim();
+  const WINDOW_MAX = 6000;
+
+  // Step 1: collect aria-label anchor positions
+  const anchors: { country: string; start: number }[] = [];
+  const anchorRe = /aria-label="Scoreboard entry for ([^"]+)"/g;
+  let m: RegExpExecArray | null;
+  while ((m = anchorRe.exec(html)) !== null) {
+    anchors.push({ country: m[1].trim(), start: m.index });
+  }
+
+  // Step 2: per-anchor slice + sub-regex extraction
+  for (let i = 0; i < anchors.length; i++) {
+    const { country, start } = anchors[i];
+    const next = anchors[i + 1]?.start ?? html.length;
+    const slice = html.slice(start, Math.min(next, start + WINDOW_MAX));
+
     const iso = isoFor(country);
     if (!iso || seen.has(iso)) continue;
+
+    const rankMatch = slice.match(/scoreboard-rank">(\d+)</);
+    const totalMatch = slice.match(/>(\d+)\s+points</);
+    const juryMatch = slice.match(/>Jury<\/span>\s*<span>\s*(\d+)\s*<\/span>/);
+    const audMatch = slice.match(/>Audience<\/span>\s*<span>\s*(\d+)\s*<\/span>/);
+
+    // Need at least rank + total to count as a result row. Pre-show entries
+    // (no rank/points yet) are skipped.
+    if (!rankMatch || !totalMatch) continue;
+
     seen.add(iso);
     rows.push({
       iso,
-      ranking: parseInt(m[2], 10),
-      total_points: parseInt(m[3], 10),
-      jury_points: parseInt(m[4], 10),
-      televote_points: parseInt(m[5], 10),
+      ranking: parseInt(rankMatch[1], 10),
+      total_points: parseInt(totalMatch[1], 10),
+      jury_points: juryMatch ? parseInt(juryMatch[1], 10) : 0,
+      televote_points: audMatch ? parseInt(audMatch[1], 10) : 0,
       source,
     });
   }
