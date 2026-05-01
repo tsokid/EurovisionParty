@@ -92,12 +92,22 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
         job={job}
         onSaved={onRefresh}
       />
+      {/* Contextual hint when the job has already run — explains what
+          "Re-arm" does so admins don't read it as "delete data" or
+          "Reset to defaults". */}
+      {job.status === "done" && (
+        <p className="text-[11px] text-white/55 mb-2 leading-snug">
+          ✅ Already ran. Click <span className="text-white">Re-arm for next run</span> to allow the next scheduled time to fire this parser again. Doesn&apos;t delete data.
+        </p>
+      )}
+
       <div className="flex flex-wrap gap-2 mb-3">
         <button
           type="button"
           onClick={runNow}
           disabled={!canRun || busy}
-          className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40"
+          className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
+          title="Manually trigger the parser right now (ignores schedule)"
         >
           Run Now
         </button>
@@ -105,9 +115,10 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
           type="button"
           onClick={reset}
           disabled={!canReset || busy}
-          className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40"
+          className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40 cursor-pointer"
+          title="Flip job state back to idle so the next scheduled time can fire it. Does not delete any data."
         >
-          Reset
+          Re-arm for next run
         </button>
       </div>
       {recentRun && (
