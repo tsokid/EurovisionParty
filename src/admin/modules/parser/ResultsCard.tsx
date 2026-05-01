@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { StatusPill } from "./StatusPill";
+import { SourceUrlEditor } from "./SourceUrlEditor";
 import type { ParseJob, ParseRun } from "./useParserState";
 
 interface Props {
@@ -44,7 +45,7 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
   const start = () =>
     wrap(async () => {
       const { error } = await supabase.rpc("start_parse_job", {
-        p_year: 2026,
+        p_year: job.year,
         p_kind: "results",
       });
       if (error) throw error;
@@ -52,14 +53,14 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
 
   const stop = () =>
     wrap(async () => {
-      const { error } = await supabase.rpc("stop_parse_job", { p_year: 2026 });
+      const { error } = await supabase.rpc("stop_parse_job", { p_year: job.year });
       if (error) throw error;
     });
 
   const resume = () =>
     wrap(async () => {
       const { error } = await supabase.rpc("resume_parse_job", {
-        p_year: 2026,
+        p_year: job.year,
       });
       if (error) throw error;
     });
@@ -83,6 +84,12 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
         Last poll:{" "}
         {job.last_poll_at ? new Date(job.last_poll_at).toLocaleString() : "—"}
       </p>
+      <SourceUrlEditor
+        year={job.year}
+        kind="results"
+        currentUrl={job.source_url}
+        onSaved={onRefresh}
+      />
       <div className="flex flex-wrap gap-2 mb-3">
         <button
           type="button"

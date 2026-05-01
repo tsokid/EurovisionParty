@@ -1,6 +1,7 @@
 // src/admin/modules/parser/FinalizeCard.tsx
-// Terminal action: Finalize Results 2026. Stops the Results parser permanently
-// and unlocks Final phase for hosts. Two-click confirm; cannot be undone.
+// Terminal action: Finalize Results for the given year. Stops the Results
+// parser permanently and unlocks Final phase for hosts. Two-click confirm;
+// cannot be undone.
 
 import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
@@ -19,11 +20,12 @@ export function FinalizeCard({ job, onRefresh }: Props) {
   const finalized = job?.status === "finalized";
 
   const finalize = async () => {
+    if (!job) return;
     setBusy(true);
     setErr(null);
     try {
       const { error } = await supabase.rpc("finalize_results", {
-        p_year: 2026,
+        p_year: job.year,
       });
       if (error) throw error;
       onRefresh();
@@ -38,7 +40,7 @@ export function FinalizeCard({ job, onRefresh }: Props) {
   return (
     <section className="rounded-xl border border-red-400/30 bg-red-500/5 p-4">
       <h3 className="font-semibold text-red-300 mb-2">
-        Finalize Results 2026
+        {job ? `Finalize Results (${job.year})` : "Finalize Results"}
       </h3>
       <p className="text-sm text-white/70 mb-3">
         Stops the Results parser permanently. Hosts can advance their rooms to

@@ -23,16 +23,20 @@ export default function EurovisionParser() {
   const resultsRuns = runs.filter((r) => r.kind === "results").slice(0, 10);
   const overrideOn = jobs.results?.manual_override === true;
 
+  // Pick the year to display. Prefer the participants job year, fall back to
+  // results, then a sensible default. Keeps the UI year-agnostic.
+  const displayYear = jobs.participants?.year ?? jobs.results?.year ?? 2026;
+
   return (
     <div className="p-4 space-y-4">
       <header>
         <h2 className="text-xl font-bold text-white">
-          🛰️ Eurovision Parser (2026)
+          🛰️ Eurovision Parser ({displayYear})
         </h2>
         <p className="text-sm text-white/60 mt-1">
-          Manual host control with cron fallbacks. Participants auto-runs at
-          03:00 Athens on Fri 15 May 2026 if still idle. Results auto-starts at
-          23:30 Athens on Sat 16 May 2026 and polls every 2 min.
+          Manual host control with cron fallbacks. Participants auto-runs the
+          morning of grand-final week (Athens time) if still idle. Results
+          auto-starts at kick-off and polls every 2 min.
         </p>
       </header>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

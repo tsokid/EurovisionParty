@@ -134,13 +134,14 @@ async function autoErrorIfStreak(year: number, kind: "participants" | "results")
 async function handleParticipants(): Promise<Response> {
   const db = admin();
 
-  // 1. Gate on job state
+  // 1. Gate on job state + read source_url
   const { data: job } = await db.from("parse_jobs")
-    .select("status").eq("year", 2026).eq("kind", "participants").single();
+    .select("status, source_url").eq("year", 2026).eq("kind", "participants").single();
   if (!job) return jsonResponse({ error: "no participants job" }, 500);
   if (job.status !== "running") {
     return jsonResponse({ error: "job not running", state: job.status }, 409);
   }
+  const sourceUrl = job.source_url ?? PROD_URL_2026;
 
   // 2. Fetch + extract (with Wikipedia fallback inside fetchParticipants)
   let entries: ParsedEntry[] = [];
@@ -151,7 +152,7 @@ async function handleParticipants(): Promise<Response> {
   let payloadHash: string | null = null;
 
   try {
-    const result = await fetchParticipants(PROD_URL_2026);
+    const result = await fetchParticipants(sourceUrl);
     entries = result.entries;
     httpStatus = result.httpStatus;
     source = result.source;
@@ -212,9 +213,10 @@ async function handleParticipants(): Promise<Response> {
 async function handleResults(): Promise<Response> {
   const db = admin();
 
-  // 1. Gate on job state + manual override flag
+  // 1. Gate on job state + manual override flag, read source_url
   const { data: job } = await db.from("parse_jobs")
-    .select("status, manual_override").eq("year", 2026).eq("kind", "results").single();
+    .select("status, manual_override, source_url")
+    .eq("year", 2026).eq("kind", "results").single();
   if (!job) return jsonResponse({ error: "no results job" }, 500);
   if (job.manual_override) {
     return jsonResponse({ error: "manual override active", state: job.status }, 409);
@@ -222,6 +224,7 @@ async function handleResults(): Promise<Response> {
   if (job.status !== "running") {
     return jsonResponse({ error: "job not running", state: job.status }, 409);
   }
+  const sourceUrl = job.source_url ?? PROD_URL_2026;
 
   let rows: ResultRow[] = [];
   let httpStatus = 0;
@@ -231,13 +234,13 @@ async function handleResults(): Promise<Response> {
 
   // 2. Fetch + extract
   try {
-    const fetched = await fetchHtml(PROD_URL_2026);
+    const fetched = await fetchHtml(sourceUrl);
     httpStatus = fetched.httpStatus;
     if (httpStatus !== 200) {
       runStatus = "error";
       err = `http ${httpStatus}`;
     } else {
-      rows = parseResults(fetched.html, PROD_URL_2026);
+      rows = parseResults(fetched.html, sourceUrl);
       payloadHash = await sha256(JSON.stringify(rows));
       if (rows.length === 0) {
         runStatus = "blocked";

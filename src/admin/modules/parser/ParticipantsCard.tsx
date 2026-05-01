@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { StatusPill } from "./StatusPill";
+import { SourceUrlEditor } from "./SourceUrlEditor";
 import type { ParseJob, ParseRun } from "./useParserState";
 
 interface Props {
@@ -34,7 +35,7 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
     setErr(null);
     try {
       const { error: rpcErr } = await supabase.rpc("start_parse_job", {
-        p_year: 2026,
+        p_year: job.year,
         p_kind: "participants",
       });
       if (rpcErr) throw rpcErr;
@@ -56,7 +57,7 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
     setErr(null);
     try {
       const { error: rpcErr } = await supabase.rpc("reset_parse_job", {
-        p_year: 2026,
+        p_year: job.year,
         p_kind: "participants",
       });
       if (rpcErr) throw rpcErr;
@@ -78,6 +79,12 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
         Last fetch:{" "}
         {job.last_poll_at ? new Date(job.last_poll_at).toLocaleString() : "—"}
       </p>
+      <SourceUrlEditor
+        year={job.year}
+        kind="participants"
+        currentUrl={job.source_url}
+        onSaved={onRefresh}
+      />
       <div className="flex flex-wrap gap-2 mb-3">
         <button
           type="button"
