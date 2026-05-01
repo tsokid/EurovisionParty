@@ -45,8 +45,10 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={clsx(
-                'flex-1 flex flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] transition-colors relative',
-                isActive ? 'text-euro-gold' : 'text-white/50',
+                'flex-1 flex flex-col items-center justify-center gap-0.5 sm:gap-1 lg:gap-1.5',
+                'py-2 sm:py-3 lg:py-4 min-h-[56px] sm:min-h-[68px] lg:min-h-[80px]',
+                'transition-colors relative cursor-pointer',
+                isActive ? 'text-euro-gold' : 'text-white/55 hover:text-white/80',
               )}
               aria-label={label}
               aria-current={isActive ? 'page' : undefined}
@@ -54,19 +56,19 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
               {isActive && (
                 <motion.div
                   layoutId="nav-indicator"
-                  className="absolute top-0 left-2 right-2 h-0.5 bg-euro-gold rounded-full"
+                  className="absolute top-0 left-2 right-2 h-0.5 sm:h-[3px] bg-euro-gold rounded-full"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
-              <span className="text-xl leading-none relative">
+              <span className="text-xl sm:text-2xl lg:text-3xl leading-none relative">
                 {tab.id === 'predictions' && isVotingOrLater ? '📋' : tab.emoji}
                 {badgeCount > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">
+                  <span className="absolute -top-1 -right-2 bg-euro-red text-white text-[10px] sm:text-[11px] lg:text-xs font-bold rounded-full min-w-[16px] sm:min-w-[18px] h-[16px] sm:h-[18px] flex items-center justify-center px-0.5">
                     {badgeCount > 9 ? '9+' : badgeCount}
                   </span>
                 )}
               </span>
-              <span className="text-[10px] font-medium">{label}</span>
+              <span className="text-[10px] sm:text-xs lg:text-sm font-semibold tracking-wide">{label}</span>
             </button>
           );
         })}
@@ -75,11 +77,17 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
         {onExitPress && (
           <button
             onClick={onExitPress}
-            className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] transition-colors relative text-red-400/60 hover:text-red-400 border-l border-white/8"
+            className={clsx(
+              'flex-1 flex flex-col items-center justify-center gap-0.5 sm:gap-1 lg:gap-1.5',
+              'py-2 sm:py-3 lg:py-4 min-h-[56px] sm:min-h-[68px] lg:min-h-[80px]',
+              'transition-colors relative cursor-pointer text-red-400/60 hover:text-red-400 border-l border-white/8',
+            )}
             aria-label={t('nav.exit', { defaultValue: 'Leave' })}
           >
-            <span className="text-xl leading-none">🚪</span>
-            <span className="text-[10px] font-medium">{t('nav.exit', { defaultValue: 'Leave' })}</span>
+            <span className="text-xl sm:text-2xl lg:text-3xl leading-none">🚪</span>
+            <span className="text-[10px] sm:text-xs lg:text-sm font-semibold tracking-wide">
+              {t('nav.exit', { defaultValue: 'Leave' })}
+            </span>
           </button>
         )}
       </div>
