@@ -132,7 +132,16 @@
     "roundBreakdown": "Ανάλυση γύρων",
     "roundLabel": "Γύρος {{num}}",
     "correctOf": "{{correct}}/{{total}} σωστές",
-    "rankOf": "#{{rank}} από {{total}}"
+    "rankOf": "#{{rank}} από {{total}}",
+    "completePill": "ΤΕΛΟΣ ΚΟΥΙΖ",
+    "finalScoreLabel": "ΤΕΛΙΚΟ ΣΚΟΡ",
+    "scoreSubline": "{{correct}} / {{total}} σωστές · Θέση #{{rank}} από {{players}}",
+    "accuracy": "Ακρίβεια",
+    "topCategory": "Κατηγορία",
+    "continueDuels": "Στις Μονομαχίες",
+    "viewLeaderboard": "Δες την κατάταξη",
+    "scoresCarry": "Οι πόντοι μεταφέρονται στο live — μείνε κοντά!",
+    "noCategory": "—"
   },
   "questionCard": {
     "progress": "Ερώτηση {{current}} από {{total}}",

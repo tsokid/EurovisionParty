@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz } from '../../hooks/useQuiz';
 import { useGameStore } from '../../stores/gameStore';
 import { selectRoundQuestions } from '../../lib/questionRandomizer';
-import { QUESTIONS } from '../../lib/questions';
+import { QUESTIONS, QUESTIONS_BY_ID } from '../../lib/questions';
 import { supabase } from '../../lib/supabase';
 import { fetchSeenQuestionIds } from '../../lib/usedQuestions';
 import {
@@ -13,6 +13,7 @@ import {
   MAX_ROUNDS,
 } from '../../lib/constants';
 import type { QuizAnswer, QuizQuestion } from '../../lib/types';
+import { Trophy, Flame, Tag, Swords, BarChart3 } from 'lucide-react';
 
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -39,12 +40,15 @@ export default function QuizScreen() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const restoredRef = useRef(false);
 
-  // Per-round breakdown + best streak — populated when quiz completes.
-  // Keyed by round_number → { correct, total, points }. Fetches all of
-  // this player's quiz_answers in this room and groups them.
+  // Per-round breakdown + best streak + accuracy + top category —
+  // populated when quiz completes. Fetches all of this player's
+  // quiz_answers in this room and aggregates.
   const [completionSummary, setCompletionSummary] = useState<{
     rounds: { round: number; correct: number; total: number; points: number }[];
     bestStreak: number;
+    totalCorrect: number;
+    totalAnswered: number;
+    topCategory: string | null;
   } | null>(null);
 
   // --- Restore quiz progress on mount ---
@@ -131,7 +135,7 @@ export default function QuizScreen() {
     let cancelled = false;
     supabase
       .from('quiz_answers')
-      .select('round_number, is_correct, points_awarded, answered_at')
+      .select('round_number, question_id, is_correct, points_awarded, answered_at')
       .eq('player_id', player.id)
       .eq('room_id', room.id)
       .order('round_number', { ascending: true })
@@ -139,15 +143,26 @@ export default function QuizScreen() {
       .then(({ data }) => {
         if (cancelled || !data) return;
         const byRound: Record<number, { round: number; correct: number; total: number; points: number }> = {};
+        const byCategory: Record<string, { correct: number; total: number }> = {};
         let bestStreak = 0;
         let currentStreak = 0;
-        for (const a of data as Array<{ round_number: number; is_correct: boolean; points_awarded: number | null }>) {
+        let totalCorrect = 0;
+        for (const a of data as Array<{ round_number: number; question_id: number; is_correct: boolean; points_awarded: number | null }>) {
           const r = a.round_number;
           if (!byRound[r]) byRound[r] = { round: r, correct: 0, total: 0, points: 0 };
           byRound[r].total += 1;
+
+          const cat = QUESTIONS_BY_ID.get(a.question_id)?.category ?? null;
+          if (cat) {
+            if (!byCategory[cat]) byCategory[cat] = { correct: 0, total: 0 };
+            byCategory[cat].total += 1;
+          }
+
           if (a.is_correct) {
             byRound[r].correct += 1;
             byRound[r].points += a.points_awarded ?? 0;
+            totalCorrect += 1;
+            if (cat) byCategory[cat].correct += 1;
             currentStreak += 1;
             if (currentStreak > bestStreak) bestStreak = currentStreak;
           } else {
@@ -155,7 +170,25 @@ export default function QuizScreen() {
           }
         }
         const rounds = Object.values(byRound).sort((a, b) => a.round - b.round);
-        setCompletionSummary({ rounds, bestStreak });
+
+        // Top category = highest correct count, then highest accuracy as
+        // tiebreak. Skips categories with 0 correct (the "best" of all
+        // wrongs isn't really a top category).
+        let topCategory: string | null = null;
+        let topScore = -1;
+        for (const [name, { correct, total }] of Object.entries(byCategory)) {
+          if (correct === 0) continue;
+          const score = correct * 100 + (correct / total);
+          if (score > topScore) { topScore = score; topCategory = name; }
+        }
+
+        setCompletionSummary({
+          rounds,
+          bestStreak,
+          totalCorrect,
+          totalAnswered: data.length,
+          topCategory,
+        });
       });
     return () => { cancelled = true; };
   }, [phase, player, room, completionSummary]);
@@ -398,164 +431,161 @@ export default function QuizScreen() {
             .filter((p) => p.is_active)
             .sort((a, b) => (b.quiz_points ?? 0) - (a.quiz_points ?? 0));
           const myRank = Math.max(1, ranked.findIndex((p) => p.id === player.id) + 1);
-          const top3 = ranked.slice(0, 3);
+          const totalCorrect = completionSummary?.totalCorrect ?? 0;
+          const totalAnswered = completionSummary?.totalAnswered ?? 0;
+          const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
 
           return (
             <motion.div
               key="complete"
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col flex-1 gap-5 sm:gap-6 max-w-3xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6"
+              className="flex flex-col flex-1 gap-5 sm:gap-6 max-w-2xl w-full mx-auto px-2 sm:px-4 py-2 sm:py-4"
             >
-              {/* Header: trophy + title */}
-              <div className="flex flex-col items-center gap-2">
-                <motion.div
-                  className="text-6xl sm:text-7xl"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                >
-                  🏆
-                </motion.div>
-                <h2 className="glow-text text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center">
-                  {t('quiz.completeTitle')}
-                </h2>
-                <p className="text-white/60 text-center text-sm sm:text-base">
-                  {t('quiz.completeDesc', { max: MAX_ROUNDS })}
-                </p>
+              {/* QUIZ COMPLETE pill */}
+              <div className="flex justify-center">
+                <span className="inline-flex items-center gap-2 rounded-full bg-euro-gold/15 border border-euro-gold/40 px-4 py-1.5 text-xs sm:text-sm font-bold tracking-[0.18em] text-euro-gold">
+                  <Trophy className="w-4 h-4" strokeWidth={2.4} />
+                  {t('quiz.completePill')}
+                </span>
               </div>
 
-              {/* Top stat trio: total points · best streak · rank */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                <Card className="text-center py-4 sm:py-5">
-                  <p className="text-xs sm:text-sm text-white/55 font-medium">{t('quiz.totalPoints')}</p>
+              {/* Main score card */}
+              <Card className="py-6 sm:py-8 px-4 sm:px-6">
+                {/* Final score */}
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-xs sm:text-sm font-bold tracking-[0.16em] text-white/60">
+                    {t('quiz.finalScoreLabel')}
+                  </p>
                   <motion.p
-                    className="text-3xl sm:text-4xl lg:text-5xl font-extrabold glow-text-gold mt-1 tabular-nums"
+                    className="text-5xl sm:text-7xl font-extrabold tabular-nums mt-2 bg-gradient-to-r from-euro-purple-light to-euro-pink bg-clip-text text-transparent"
                     initial={{ scale: 0.6, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.1, type: 'spring', damping: 12 }}
                   >
-                    {player.quiz_points}
+                    {player.quiz_points.toLocaleString()}
                   </motion.p>
-                </Card>
-                <Card className="text-center py-4 sm:py-5">
-                  <p className="text-xs sm:text-sm text-white/55 font-medium">{t('quiz.bestStreak')}</p>
-                  <motion.p
-                    className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-euro-cyan mt-1 tabular-nums"
-                    initial={{ scale: 0.6, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.2, type: 'spring', damping: 12 }}
-                  >
-                    {completionSummary?.bestStreak ?? '—'}
-                  </motion.p>
-                </Card>
-                <Card className="text-center py-4 sm:py-5">
-                  <p className="text-xs sm:text-sm text-white/55 font-medium">{t('quiz.yourRank')}</p>
-                  <motion.p
-                    className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-euro-purple-light mt-1 tabular-nums"
-                    initial={{ scale: 0.6, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.3, type: 'spring', damping: 12 }}
-                  >
-                    #{myRank}
-                  </motion.p>
-                  <p className="text-xs text-white/40 font-medium mt-0.5">
-                    of {ranked.length}
+                  <p className="text-sm sm:text-base text-white/65 mt-2">
+                    {completionSummary
+                      ? t('quiz.scoreSubline', {
+                          correct: totalCorrect,
+                          total: totalAnswered,
+                          rank: myRank,
+                          players: ranked.length,
+                        })
+                      : t('quiz.completeDesc', { max: MAX_ROUNDS })}
                   </p>
-                </Card>
-              </div>
-
-              {/* Per-round breakdown */}
-              {completionSummary && completionSummary.rounds.length > 0 && (
-                <div>
-                  <p className="text-sm sm:text-base text-white/55 font-semibold mb-2 px-1">
-                    {t('quiz.roundBreakdown')}
-                  </p>
-                  <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                    {completionSummary.rounds.map((r, i) => (
-                      <motion.div
-                        key={r.round}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.35 + i * 0.06 }}
-                      >
-                        <Card className="text-center py-3 sm:py-4">
-                          <p className="text-xs sm:text-sm text-white/55 font-medium">
-                            {t('quiz.roundLabel', { num: r.round })}
-                          </p>
-                          <p className="text-2xl sm:text-3xl font-extrabold text-white mt-1 tabular-nums">
-                            {r.correct}<span className="text-white/35">/{r.total}</span>
-                          </p>
-                          <p className="text-xs sm:text-sm text-euro-gold font-bold mt-0.5">
-                            +{r.points} {t('quiz.ptsSuffix')}
-                          </p>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </div>
                 </div>
-              )}
 
-              {/* Top 3 in room */}
-              {top3.length > 0 && (
-                <Card className="py-4">
-                  <p className="text-sm sm:text-base text-white/55 font-semibold mb-2 px-1">
-                    {t('quiz.topInRoom')}
-                  </p>
-                  <ul className="flex flex-col gap-1">
-                    {top3.map((p, i) => {
-                      const isMe = p.id === player.id;
-                      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+                {/* Per-round bars */}
+                {completionSummary && completionSummary.rounds.length > 0 && (
+                  <div className="mt-6 sm:mt-7 flex flex-col gap-3">
+                    {completionSummary.rounds.map((r, i) => {
+                      const accPct = r.total > 0 ? (r.correct / r.total) * 100 : 0;
                       return (
-                        <li
-                          key={p.id}
-                          className={`flex items-center gap-3 px-2 py-2 rounded-lg ${
-                            isMe ? 'bg-euro-purple/20 border border-euro-purple/40' : ''
-                          }`}
+                        <motion.div
+                          key={r.round}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.2 + i * 0.07 }}
+                          className="rounded-xl bg-white/[0.04] border border-white/8 px-3 sm:px-4 py-3"
                         >
-                          <span className="text-lg w-7 text-center" aria-hidden>{medal}</span>
-                          <span className="text-xl sm:text-2xl leading-none" aria-hidden>{p.avatar_emoji ?? '🎤'}</span>
-                          <span className={`flex-1 text-sm sm:text-base font-semibold truncate ${isMe ? 'text-white' : 'text-white/85'}`}>
-                            {p.name}
-                            {isMe && (
-                              <span className="ml-1.5 text-xs sm:text-sm text-euro-purple-light font-medium">
-                                ({t('quiz.youLabel')})
-                              </span>
-                            )}
-                          </span>
-                          <span className="text-sm sm:text-base font-bold text-euro-gold tabular-nums">
-                            {p.quiz_points ?? 0}
-                            <span className="text-xs sm:text-sm text-white/45 font-medium ml-1">
-                              {t('quiz.ptsSuffix')}
+                          <div className="flex items-center justify-between text-sm sm:text-base font-semibold">
+                            <span className="text-white">{t('quiz.roundLabel', { num: r.round })}</span>
+                            <span className="text-white/65 tabular-nums">
+                              {r.correct}/{r.total}
+                              <span className="text-white/35 mx-2">·</span>
+                              <span className="text-euro-gold">{r.points} {t('quiz.ptsSuffix')}</span>
                             </span>
-                          </span>
-                        </li>
+                          </div>
+                          <div className="mt-2 h-1.5 rounded-full bg-white/8 overflow-hidden">
+                            <motion.div
+                              className="h-full rounded-full bg-gradient-to-r from-euro-purple to-euro-pink"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${accPct}%` }}
+                              transition={{ delay: 0.3 + i * 0.07, duration: 0.6 }}
+                            />
+                          </div>
+                        </motion.div>
                       );
                     })}
-                  </ul>
-                </Card>
-              )}
+                  </div>
+                )}
 
-              {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-1">
-                <Button
-                  size="md"
-                  fullWidth
-                  onClick={() => setActiveTab('leaderboard')}
-                >
-                  {t('quiz.viewBoard')}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="md"
-                  fullWidth
-                  onClick={() => setActiveTab('duels')}
-                >
-                  {t('quiz.challengeFriend')}
-                </Button>
+                {/* Stat trio: best streak · accuracy · top category */}
+                {completionSummary && (
+                  <div className="mt-5 sm:mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+                    <div className="rounded-xl bg-white/[0.04] border border-white/8 px-2 sm:px-3 py-3">
+                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-white/55">
+                        <Flame className="w-3.5 h-3.5 text-orange-400" strokeWidth={2.2} />
+                        <span className="uppercase">{t('quiz.bestStreak')}</span>
+                      </div>
+                      <p className="text-xl sm:text-2xl font-extrabold text-white mt-1 tabular-nums">
+                        {completionSummary.bestStreak}×
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-white/[0.04] border border-white/8 px-2 sm:px-3 py-3">
+                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-white/55">
+                        <BarChart3 className="w-3.5 h-3.5 text-euro-cyan" strokeWidth={2.2} />
+                        <span className="uppercase">{t('quiz.accuracy')}</span>
+                      </div>
+                      <p className="text-xl sm:text-2xl font-extrabold text-white mt-1 tabular-nums">
+                        {accuracy}%
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-white/[0.04] border border-white/8 px-2 sm:px-3 py-3">
+                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-white/55">
+                        <Tag className="w-3.5 h-3.5 text-euro-gold" strokeWidth={2.2} />
+                        <span className="uppercase">{t('quiz.topCategory')}</span>
+                      </div>
+                      <p className="text-base sm:text-lg font-extrabold text-white mt-1 truncate">
+                        {completionSummary.topCategory ?? t('quiz.noCategory')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* CTAs */}
+                <div className="mt-6 sm:mt-7 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                  <Button
+                    size="md"
+                    fullWidth
+                    onClick={() => setActiveTab('duels')}
+                  >
+                    <Swords className="w-4 h-4" strokeWidth={2.2} />
+                    {t('quiz.continueDuels')}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    fullWidth
+                    onClick={() => setActiveTab('leaderboard')}
+                  >
+                    <Trophy className="w-4 h-4" strokeWidth={2.2} />
+                    {t('quiz.viewLeaderboard')}
+                  </Button>
+                </div>
+
+                {/* Tagline */}
+                <p className="mt-4 text-center text-xs sm:text-sm text-white/45">
+                  {t('quiz.scoresCarry')}
+                </p>
+              </Card>
+
+              {/* Round indicator dots — visual echo of the reference */}
+              <div className="flex justify-center gap-2 mt-1">
+                {Array.from({ length: MAX_ROUNDS }).map((_, i) => (
+                  <span
+                    key={i}
+                    className="w-2 h-2 rounded-full bg-euro-green/80"
+                    aria-hidden
+                  />
+                ))}
               </div>
             </motion.div>
           );
         })()}
+
       </AnimatePresence>
 
       {/* Error display — auto-dismisses after 3s */}

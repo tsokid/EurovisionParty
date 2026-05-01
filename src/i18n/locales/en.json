@@ -132,7 +132,16 @@
     "roundBreakdown": "Round breakdown",
     "roundLabel": "Round {{num}}",
     "correctOf": "{{correct}}/{{total}} correct",
-    "rankOf": "#{{rank}} of {{total}}"
+    "rankOf": "#{{rank}} of {{total}}",
+    "completePill": "QUIZ COMPLETE",
+    "finalScoreLabel": "YOUR FINAL SCORE",
+    "scoreSubline": "{{correct}} / {{total}} correct · Rank #{{rank}} of {{players}}",
+    "accuracy": "Accuracy",
+    "topCategory": "Top Category",
+    "continueDuels": "Continue to Duels",
+    "viewLeaderboard": "View leaderboard",
+    "scoresCarry": "Quiz scores carry into the live show — sit tight!",
+    "noCategory": "—"
   },
   "questionCard": {
     "progress": "Question {{current}} of {{total}}",
