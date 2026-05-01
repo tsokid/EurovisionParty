@@ -17,6 +17,7 @@ export type DuelStatus =
   | 'accepted'
   | 'answering'
   | 'completed'
+  | 'tie'
   | 'expired'
   | 'declined';
 

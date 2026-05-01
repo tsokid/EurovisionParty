@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDuels } from '../../hooks/useDuels';
@@ -59,9 +59,23 @@ export default function DuelsScreen() {
 
   const myPendingDecisions = pendingDecisions.filter((d) => d.winner_id === player?.id);
 
+  const isMine = (d: Duel) => d.challenger_id === player?.id || d.challenged_id === player?.id;
+
   const completedDuels = duels.filter((d) =>
-    (d.status === 'completed' && d.winner_decision !== null) || d.status === 'declined'
+    isMine(d)
+    && (
+      (d.status === 'completed' && d.winner_decision !== null)
+      || d.status === 'tie'
+      || d.status === 'declined'
+    )
   ).slice(0, 8);
+
+  // Room-wide history — all terminal duels, including ones I'm not part of.
+  const roomHistory = duels.filter((d) =>
+    (d.status === 'completed' && d.winner_decision !== null)
+    || d.status === 'tie'
+    || d.status === 'declined'
+  ).slice(0, 20);
 
   // Check if a rematch already exists for a duel
   const hasRematch = (duelId: string) => duels.some((d) => d.parent_duel_id === duelId);
@@ -338,16 +352,190 @@ export default function DuelsScreen() {
           </section>
         )}
 
-        {/* Empty state */}
-        {duels.length === 0 && !isLoading && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-16 gap-4">
-            <div className="text-5xl">{'\u2694\uFE0F'}</div>
-            <p className="text-white/50 text-center text-sm max-w-xs">
-              {t('duels.emptyState')}
-            </p>
-            <Button onClick={() => setShowChallengeModal(true)}>{t('duels.challengeSomeone')}</Button>
-          </motion.div>
+        {/* Room History — all duels in this room, even ones I'm not part of */}
+        {roomHistory.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold text-white/50 mb-2 flex items-center gap-2">
+              {t('duels.roomHistory')}
+              <span className="glass rounded-full px-2 py-0.5 text-xs">{roomHistory.length}</span>
+            </h3>
+            <Card className="py-2">
+              <ul className="divide-y divide-white/5">
+                {roomHistory.map((duel) => {
+                  const challenger = players.find((p) => p.id === duel.challenger_id);
+                  const challenged = players.find((p) => p.id === duel.challenged_id);
+                  const cName = challenger?.name ?? '—';
+                  const dName = challenged?.name ?? '—';
+                  const cEmoji = challenger?.avatar_emoji ?? '🎤';
+                  const dEmoji = challenged?.avatar_emoji ?? '🎤';
+                  const cWon = duel.winner_id === duel.challenger_id;
+                  const dWon = duel.winner_id === duel.challenged_id;
+
+                  let outcomeNode: ReactNode;
+                  if (duel.status === 'declined') {
+                    outcomeNode = (
+                      <span className="text-xs font-semibold text-white/55">
+                        {t('duels.declinedRow')}
+                      </span>
+                    );
+                  } else if (duel.status === 'tie') {
+                    outcomeNode = (
+                      <span className="text-xs font-semibold text-white/70">
+                        {t('duels.tieRow')}
+                      </span>
+                    );
+                  } else if (duel.winner_decision === 'steal') {
+                    outcomeNode = (
+                      <span className="text-xs font-bold text-euro-gold">
+                        {t('duels.stoleAmount', { amount: duel.points_transferred ?? 0 })}
+                      </span>
+                    );
+                  } else if (duel.winner_decision === 'double') {
+                    outcomeNode = (
+                      <span className="text-xs font-bold text-euro-gold">
+                        {t('duels.doubledAmount', { amount: duel.points_transferred ?? 0 })}
+                      </span>
+                    );
+                  } else if (duel.status === 'completed') {
+                    outcomeNode = (
+                      <span className="text-xs font-semibold text-white/50">
+                        {t('duels.wonNoDecision')}
+                      </span>
+                    );
+                  } else {
+                    outcomeNode = null;
+                  }
+
+                  const showScore = duel.status === 'completed' || duel.status === 'tie';
+
+                  return (
+                    <li key={duel.id} className="flex items-center gap-2 py-2 px-1 text-sm">
+                      {/* Challenger */}
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1 justify-end">
+                        <span className={`truncate font-medium ${cWon ? 'text-euro-green' : 'text-white/85'}`}>
+                          {cName}
+                        </span>
+                        <span className="text-base leading-none shrink-0" aria-hidden>{cEmoji}</span>
+                      </div>
+
+                      {/* Score / vs */}
+                      <div className="shrink-0 text-center min-w-[68px]">
+                        {showScore ? (
+                          <span className="text-sm font-bold tabular-nums text-white">
+                            <span className={cWon ? 'text-euro-green' : ''}>{duel.challenger_score ?? 0}</span>
+                            <span className="text-white/30 mx-1">–</span>
+                            <span className={dWon ? 'text-euro-green' : ''}>{duel.challenged_score ?? 0}</span>
+                          </span>
+                        ) : (
+                          <span className="text-xs text-white/40 italic">{t('duels.vsLabel')}</span>
+                        )}
+                      </div>
+
+                      {/* Challenged */}
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                        <span className="text-base leading-none shrink-0" aria-hidden>{dEmoji}</span>
+                        <span className={`truncate font-medium ${dWon ? 'text-euro-green' : 'text-white/85'}`}>
+                          {dName}
+                        </span>
+                      </div>
+
+                      {/* Outcome */}
+                      <div className="shrink-0 text-right min-w-[120px]">
+                        {outcomeNode}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </Card>
+          </section>
         )}
+
+        {/* Empty state */}
+        {duels.length === 0 && !isLoading && (() => {
+          const opponents = players
+            .filter((p) => p.is_active && p.id !== player.id)
+            .sort((a, b) => (b.quiz_points ?? 0) - (a.quiz_points ?? 0))
+            .slice(0, 5);
+          return (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col gap-4 max-w-md w-full mx-auto pt-2"
+            >
+              {/* Header */}
+              <div className="flex flex-col items-center text-center gap-2">
+                <motion.div
+                  className="text-5xl"
+                  animate={{ rotate: [0, -8, 8, 0] }}
+                  transition={{ repeat: Infinity, duration: 2.5 }}
+                >
+                  {'\u2694\uFE0F'}
+                </motion.div>
+                <h3 className="glow-text text-xl font-extrabold">
+                  {t('duels.emptyHeadline')}
+                </h3>
+                <p className="text-white/55 text-sm max-w-xs">
+                  {t('duels.emptySubline')}
+                </p>
+              </div>
+
+              {/* Top opponents list */}
+              {opponents.length > 0 && (
+                <Card className="py-3">
+                  <p className="text-sm text-white/55 font-semibold mb-2 px-1">
+                    {t('duels.topOpponents')}
+                  </p>
+                  <ul className="flex flex-col gap-1">
+                    {opponents.map((p) => (
+                      <li
+                        key={p.id}
+                        className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 transition-colors"
+                      >
+                        <span className="text-xl leading-none" aria-hidden>{p.avatar_emoji ?? '\uD83C\uDFA4'}</span>
+                        <span className="flex-1 text-sm font-semibold text-white/85 truncate">
+                          {p.name}
+                        </span>
+                        <span className="text-sm font-bold text-euro-gold tabular-nums">
+                          {p.quiz_points ?? 0}
+                          <span className="text-xs text-white/45 font-medium ml-1">
+                            {t('duels.ptsSuffix')}
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              )}
+
+              {/* Your record */}
+              <Card className="py-3">
+                <p className="text-sm text-white/55 font-semibold mb-2 px-1">
+                  {t('duels.yourRecord')}
+                </p>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="rounded-lg bg-white/5 py-2">
+                    <p className="text-xl font-extrabold text-euro-green tabular-nums">0</p>
+                    <p className="text-xs text-white/55 font-medium">{t('duels.winsLabel')}</p>
+                  </div>
+                  <div className="rounded-lg bg-white/5 py-2">
+                    <p className="text-xl font-extrabold text-euro-red tabular-nums">0</p>
+                    <p className="text-xs text-white/55 font-medium">{t('duels.lossesLabel')}</p>
+                  </div>
+                  <div className="rounded-lg bg-white/5 py-2">
+                    <p className="text-xl font-extrabold text-euro-gold tabular-nums">{player.duel_points ?? 0}</p>
+                    <p className="text-xs text-white/55 font-medium">{t('duels.ptsLabel')}</p>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Big CTA */}
+              <Button size="md" fullWidth onClick={() => setShowChallengeModal(true)}>
+                {t('duels.challengeSomeone')}
+              </Button>
+            </motion.div>
+          );
+        })()}
 
         {isLoading && duels.length === 0 && (
           <div className="flex items-center justify-center py-16">

@@ -75,14 +75,20 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
     if (data) setDuels(data as Duel[]);
   }, [roomId]);
 
-  const fetchPlayerDuels = useCallback(async (playerId: string): Promise<void> => {
+  // Fetch ALL duels in the current room — needed so the Room History
+  // section can show activity from other players too. The realtime
+  // subscription is already room-scoped, so any subsequent INSERT/UPDATE
+  // streams in. Personal sections (incoming/sent challenges, my turn,
+  // pending decisions) re-filter by player.id in the consumer.
+  const fetchPlayerDuels = useCallback(async (_playerId: string): Promise<void> => {
+    if (!roomId) return;
     setIsLoading(true);
     setError(null);
     try {
       const { data, error: fetchErr } = await supabase
         .from('duels')
         .select('*')
-        .or('challenger_id.eq.' + playerId + ',challenged_id.eq.' + playerId)
+        .eq('room_id', roomId)
         .order('created_at', { ascending: false });
       if (fetchErr) throw fetchErr;
       setDuels((data ?? []) as Duel[]);
@@ -91,7 +97,7 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [roomId]);
 
   // Create duel with 3 random questions — exclude any question either player has seen
   const createDuel = useCallback(async (

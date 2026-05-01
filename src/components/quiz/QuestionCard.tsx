@@ -25,6 +25,9 @@ interface QuestionCardProps {
   questionIndex: number;
   totalQuestions: number;
   onAnswer: (answerIndex: number, isCorrect: boolean) => void;
+  /** Fires the moment the user picks an option — before reveal/advance delay.
+   *  Parent uses this to stop the countdown so the clock doesn't keep ticking. */
+  onSelect?: (answerIndex: number) => void;
   timeRemaining: number;
 }
 
@@ -36,6 +39,7 @@ export default function QuestionCard({
   questionIndex,
   totalQuestions,
   onAnswer,
+  onSelect,
   timeRemaining,
 }: QuestionCardProps) {
   const { t } = useTranslation();
@@ -72,6 +76,9 @@ export default function QuestionCard({
 
       setSelectedIndex(index);
       setHasAnswered(true);
+      // Tell parent immediately so it can stop the timer at the moment of click,
+      // not 2.5s later after the reveal+advance delay.
+      onSelect?.(index);
 
       // Short delay before revealing correct answer
       setTimeout(() => {
@@ -84,7 +91,7 @@ export default function QuestionCard({
         }, ADVANCE_DELAY_MS);
       }, FEEDBACK_DELAY_MS);
     },
-    [hasAnswered, revealed, question, onAnswer],
+    [hasAnswered, revealed, question, onAnswer, onSelect, shuffledCorrectIndex],
   );
 
   // Nothing to render if the parent hasn't provided a question (transient state,

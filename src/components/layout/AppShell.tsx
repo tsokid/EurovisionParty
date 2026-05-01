@@ -41,7 +41,10 @@ export default function AppShell({
         {showHeader && <Header />}
       </div>
 
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      {/* Consistent breathing room between the sticky header and screen
+          content — applied here so every tabbed screen inherits it
+          instead of each one having to remember its own top padding. */}
+      <main className="flex-1 overflow-y-auto pt-4 sm:pt-6">{children}</main>
 
       {showNav && <BottomNav onExitPress={onExitPress} />}
     </div>

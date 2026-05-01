@@ -42,6 +42,14 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const autoSubmittedRef = useRef(false);
 
+  const stopCountdown = useCallback(() => {
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = null;
+    }
+    autoSubmittedRef.current = true;
+  }, []);
+
   // Reset timer for each question
   useEffect(() => {
     if (finished) return;
@@ -50,17 +58,23 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
     setCountdown(DUEL_TIMER);
     setQuestionStartTime(Date.now());
 
-    countdownRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          if (countdownRef.current) clearInterval(countdownRef.current);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // Defer the interval until the question card has finished its entrance
+    // animation so the clock isn't already counting down before the user
+    // can read or click an answer.
+    const startDelay = setTimeout(() => {
+      countdownRef.current = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            if (countdownRef.current) clearInterval(countdownRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }, 500);
 
     return () => {
+      clearTimeout(startDelay);
       if (countdownRef.current) clearInterval(countdownRef.current);
     };
   }, [questionIndex, finished]);
@@ -154,6 +168,7 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
           questionIndex={questionIndex}
           totalQuestions={localizedQuestions.length}
           onAnswer={handleAnswer}
+          onSelect={stopCountdown}
           timeRemaining={countdown}
         />
       </div>

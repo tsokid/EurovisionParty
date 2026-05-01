@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
 import { useNotifications } from '../../hooks/useNotifications';
-import Card from '../ui/Card';
 
 interface NotificationPanelProps {
   open: boolean;
@@ -114,15 +113,17 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
             onClick={onClose}
           />
 
-          {/* Panel */}
+          {/* Panel — solid background so notifications don't bleed into
+              underlying content (the previous glass-strong was too
+              translucent and overlapped buttons/text below). */}
           <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed top-14 right-2 left-2 sm:left-auto sm:w-80 z-50 max-h-[70vh] flex flex-col"
+            className="fixed top-14 right-2 left-2 sm:left-auto sm:w-80 z-50 max-h-[70vh] flex flex-col rounded-2xl overflow-hidden border border-white/12 shadow-2xl bg-[#1a0a2e]"
           >
-            <Card variant="strong" className="flex flex-col overflow-hidden">
+            <div className="flex flex-col overflow-hidden">
               {/* Header */}
               <div className="flex items-center justify-between p-3 border-b border-white/10">
                 <h3 className="text-sm font-bold text-white">
@@ -145,7 +146,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                 {notifications.length === 0 ? (
                   <div className="p-6 text-center">
                     <p className="text-3xl mb-2">{'\uD83D\uDD14'}</p>
-                    <p className="text-white/40 text-sm">{t('notifications.empty', { defaultValue: 'No notifications yet' })}</p>
+                    <p className="text-white/55 text-sm">{t('notifications.empty', { defaultValue: 'No notifications yet' })}</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-white/5">
@@ -158,7 +159,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                           onClick={() => handleNotificationClick(notif)}
                           className={`w-full text-left px-3 py-3 flex items-start gap-3 transition-colors hover:bg-white/5 ${
                             notif.is_read
-                              ? 'opacity-50'
+                              ? 'opacity-60'
                               : 'bg-euro-purple/10'
                           }`}
                         >
@@ -166,11 +167,11 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                           <div className="flex-1 min-w-0">
                             <p className="text-sm text-white leading-snug">{text}</p>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <p className="text-[10px] text-white/30">
+                              <p className="text-xs text-white/45">
                                 {timeAgo(notif.created_at)}
                               </p>
                               {tab && !notif.is_read && (
-                                <span className="text-[10px] text-euro-purple-light">
+                                <span className="text-xs text-euro-purple-light">
                                   {t('notifications.tapToView', { defaultValue: 'Tap to view →' })}
                                 </span>
                               )}
@@ -185,7 +186,7 @@ export default function NotificationPanel({ open, onClose }: NotificationPanelPr
                   </div>
                 )}
               </div>
-            </Card>
+            </div>
           </motion.div>
         </>
       )}

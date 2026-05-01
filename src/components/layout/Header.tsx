@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
 import { PHASES } from '../../lib/constants';
-import { useThemeStore } from '../../stores/themeStore';
 import { useRoom } from '../../hooks/useRoom';
 import { PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
@@ -14,7 +13,6 @@ export default function Header() {
   const { t } = useTranslation();
   const { room, player, notifications, roomPassword } = useGameStore();
   const isHost = player?.is_host === true;
-  const { theme, toggleTheme } = useThemeStore();
   const { advancePhase } = useRoom();
   const [copied, setCopied] = useState(false);
   const [inviteCopied, setInviteCopied] = useState(false);
@@ -145,7 +143,7 @@ export default function Header() {
             exit={{ opacity: 0, y: -10 }}
             className="fixed inset-x-0 z-50 px-4 pt-2" style={{ top: 'var(--top-bar-height, 56px)' }}
           >
-            <div className="bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl max-w-xs ml-auto overflow-hidden">
+            <div className="bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl max-w-xs ml-auto">
               {/* Profile name row */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
                 <span className="text-3xl">{player?.avatar_emoji ?? '🎤'}</span>
@@ -186,19 +184,6 @@ export default function Header() {
                   </span>
                   <MuteToggle />
                 </div>
-
-                {/* Dark/Light mode */}
-                <button
-                  onClick={toggleTheme}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:bg-white/5 transition-colors"
-                >
-                  <span className="text-xl w-7 text-center">{theme === 'dark' ? '☀️' : '🌙'}</span>
-                  <span className="flex-1 text-left">
-                    {theme === 'dark'
-                      ? t('header.lightMode', { defaultValue: 'Light Mode' })
-                      : t('header.darkMode', { defaultValue: 'Dark Mode' })}
-                  </span>
-                </button>
 
                 {/* Language */}
                 <div className="flex items-center gap-3 px-4 py-2">

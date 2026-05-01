@@ -24,8 +24,9 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
   const { player, players } = useGameStore();
   const [deciding, setDeciding] = useState(false);
 
-  const isWinner = duel.winner_id === player?.id;
-  const isLoser = duel.loser_id === player?.id;
+  const isTie = duel.status === 'tie';
+  const isWinner = !isTie && duel.winner_id === player?.id;
+  const isLoser = !isTie && duel.loser_id === player?.id;
   const isDraw = duel.status === 'completed' && !duel.winner_id;
   const needsDecision = isWinner && !duel.winner_decision;
 
@@ -57,6 +58,7 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
   return (
     <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <Card className={
+        isTie ? 'border border-white/15' :
         isWinner ? 'border border-euro-green/30' :
         isLoser ? 'border border-euro-red/30' :
         ''
@@ -66,8 +68,12 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
           <span className="text-xs text-white/40 font-medium">
             {duel.is_rematch ? t('duelResult.rematchLabel') : t('duelResult.duelLabel')}
           </span>
-          <Badge variant={isWinner ? 'green' : isLoser ? 'red' : 'gold'}>
-            {isWinner ? t('duelResult.won') : isLoser ? t('duelResult.lost') : isDraw ? t('duelResult.draw') : t('duelResult.completed')}
+          <Badge variant={isTie ? 'gold' : isWinner ? 'green' : isLoser ? 'red' : 'gold'}>
+            {isTie ? t('duelResult.tie')
+              : isWinner ? t('duelResult.won')
+              : isLoser ? t('duelResult.lost')
+              : isDraw ? t('duelResult.draw')
+              : t('duelResult.completed')}
           </Badge>
         </div>
 
@@ -104,8 +110,16 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
           </div>
         </div>
 
+        {/* Tie — no winner, no reward */}
+        {isTie && (
+          <div className="text-center py-2 rounded-lg bg-white/5">
+            <p className="text-sm font-semibold text-white/70">{t('duelResult.tie')}</p>
+            <p className="text-xs text-white/45 mt-0.5">{t('duelResult.tieDesc')}</p>
+          </div>
+        )}
+
         {/* Decision already made */}
-        {duel.winner_decision && (
+        {!isTie && duel.winner_decision && (
           <div className="text-center py-2 rounded-lg bg-white/5 mb-2">
             <p className="text-xs text-white/40">{t('duelResult.decisionMade')}</p>
             <p className="text-sm font-bold text-euro-gold">
