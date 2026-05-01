@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
 import { useQuiz } from '../../hooks/useQuiz';
 import { useGameStore } from '../../stores/gameStore';
 import { selectRoundQuestions } from '../../lib/questionRandomizer';
@@ -13,7 +14,7 @@ import {
   MAX_ROUNDS,
 } from '../../lib/constants';
 import type { QuizAnswer, QuizQuestion } from '../../lib/types';
-import { Trophy, Flame, Zap, Swords, BarChart3 } from 'lucide-react';
+import { Trophy, Flame, Zap, Swords, BarChart3, Music, Sparkles, ListChecks, Clock, Activity } from 'lucide-react';
 
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -345,21 +346,112 @@ export default function QuizScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center flex-1 gap-6"
+            className="flex flex-col flex-1 max-w-2xl w-full mx-auto px-2 sm:px-4 py-2 sm:py-4 gap-5"
           >
-            <div className="text-5xl mb-2">🎵</div>
-            <h2 className="glow-text text-2xl font-bold text-center">
-              {t('quiz.title')}
-            </h2>
-            <p className="text-white/60 text-center">
-              {t('quiz.roundOf', { current: roundNumber, max: MAX_ROUNDS })}
-            </p>
-            <Button size="lg" onClick={handleStartRound}>
-              {t('quiz.startRound', { num: roundNumber })}
-            </Button>
-            <p className="text-xs text-white/30 text-center max-w-xs">
-              {t('quiz.hint', { count: QUESTIONS_PER_ROUND, timer: TIMER_SECONDS })}
-            </p>
+            {/* Round indicator pill */}
+            <div className="flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full bg-euro-purple/15 border border-euro-purple/40 px-4 py-1.5 text-xs sm:text-sm font-bold tracking-[0.16em] text-euro-purple-light">
+                <span className="w-1.5 h-1.5 rounded-full bg-euro-pink animate-pulse" aria-hidden />
+                {t('quiz.roundIndicator', { current: roundNumber, max: MAX_ROUNDS })}
+              </span>
+            </div>
+
+            {/* Main waiting card */}
+            <Card className="py-7 sm:py-9 px-4 sm:px-6">
+              {/* Glowing music note icon with sparkle */}
+              <div className="flex justify-center">
+                <div className="relative">
+                  <motion.div
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: 'spring', damping: 12, delay: 0.05 }}
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-euro-pink to-euro-purple flex items-center justify-center shadow-[0_0_40px_rgba(236,72,153,0.55)]"
+                  >
+                    <Music className="w-9 h-9 sm:w-11 sm:h-11 text-white" strokeWidth={2.4} />
+                  </motion.div>
+                  <Sparkles
+                    className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 text-white/90"
+                    strokeWidth={2.2}
+                    aria-hidden
+                  />
+                </div>
+              </div>
+
+              {/* Title + subtitle */}
+              <div className="mt-5 text-center">
+                <h2 className="glow-text text-3xl sm:text-4xl font-extrabold">
+                  {t('quiz.title')}
+                </h2>
+                <p className="text-white/65 text-sm sm:text-base mt-2 max-w-md mx-auto">
+                  {t('quiz.warmup')}
+                </p>
+              </div>
+
+              {/* 3 stat tiles: questions / per question / pace */}
+              <div className="mt-5 sm:mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="rounded-xl bg-white/[0.04] border border-white/8 px-2 sm:px-3 py-3">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-white/55">
+                    <ListChecks className="w-3.5 h-3.5 text-euro-purple-light" strokeWidth={2.4} />
+                    <span className="uppercase">{t('quiz.statQuestionsLabel')}</span>
+                  </div>
+                  <p className="text-xl sm:text-2xl font-extrabold text-white mt-1 tabular-nums">
+                    {QUESTIONS_PER_ROUND}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-white/[0.04] border border-white/8 px-2 sm:px-3 py-3">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-white/55">
+                    <Clock className="w-3.5 h-3.5 text-euro-cyan" strokeWidth={2.4} />
+                    <span className="uppercase">{t('quiz.statPerQuestionLabel')}</span>
+                  </div>
+                  <p className="text-xl sm:text-2xl font-extrabold text-white mt-1 tabular-nums">
+                    {TIMER_SECONDS}s
+                  </p>
+                </div>
+                <div className="rounded-xl bg-white/[0.04] border border-white/8 px-2 sm:px-3 py-3">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-white/55">
+                    <Activity className="w-3.5 h-3.5 text-euro-gold" strokeWidth={2.4} />
+                    <span className="uppercase">{t('quiz.statPaceLabel')}</span>
+                  </div>
+                  <p className="text-base sm:text-lg font-extrabold text-white mt-1 truncate">
+                    {t('quiz.paceYours')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Primary CTA */}
+              <div className="mt-6 sm:mt-7">
+                <Button size="lg" fullWidth onClick={handleStartRound}>
+                  <Sparkles className="w-4 h-4" strokeWidth={2.2} />
+                  {t('quiz.startRound', { num: roundNumber })}
+                </Button>
+              </div>
+
+              {/* Tip footer */}
+              <p className="mt-3 text-center text-xs sm:text-sm text-white/45">
+                {t('quiz.tipFooter')}
+              </p>
+            </Card>
+
+            {/* Round dots indicator */}
+            <div className="flex justify-center gap-2 mt-1">
+              {Array.from({ length: MAX_ROUNDS }).map((_, i) => {
+                const dotRound = i + 1;
+                const isActive = dotRound === roundNumber;
+                const isComplete = dotRound < roundNumber;
+                return (
+                  <span
+                    key={i}
+                    className={clsx(
+                      'rounded-full transition-all',
+                      isActive ? 'w-3 h-3 bg-euro-pink shadow-[0_0_8px_rgba(236,72,153,0.6)]'
+                        : isComplete ? 'w-2 h-2 bg-euro-green/80'
+                        : 'w-2 h-2 bg-white/15',
+                    )}
+                    aria-hidden
+                  />
+                );
+              })}
+            </div>
           </motion.div>
         )}
 

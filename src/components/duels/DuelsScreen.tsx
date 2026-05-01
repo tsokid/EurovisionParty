@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect, type ReactNode } from 'react';
+import { useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Swords, Shuffle, Trophy, Flame, Crown, Sparkles, ArrowRight, ShieldOff, ListChecks } from 'lucide-react';
 import { useDuels } from '../../hooks/useDuels';
 import { useGameStore } from '../../stores/gameStore';
 import { supabase } from '../../lib/supabase';
@@ -11,7 +12,7 @@ import DuelCard from './DuelCard';
 import DuelPlayScreen from './DuelPlayScreen';
 import DuelResultCard from './DuelResultCard';
 import ChallengeModal from './ChallengeModal';
-import type { Duel, DuelAnswer, DuelDecision } from '../../lib/types';
+import type { Duel, DuelAnswer, DuelDecision, Player } from '../../lib/types';
 
 /** Client-side mirror of the DB get_max_declines() function */
 function getMaxDeclines(playerCount: number): number {
@@ -83,6 +84,75 @@ export default function DuelsScreen() {
   // Decline limit info for current player
   const maxDeclines = getMaxDeclines(players.length);
   const declineInfo = { used: player?.decline_count ?? 0, max: maxDeclines };
+
+  // Personal duel stats: wins · current streak · total points won.
+  // Streak walks duels newest → oldest and counts consecutive wins.
+  const myStats = useMemo(() => {
+    if (!player) return { wins: 0, streak: 0, pointsWon: 0 };
+    let wins = 0;
+    let pointsWon = 0;
+    let streak = 0;
+    let streakStillCounting = true;
+    const finished = duels
+      .filter((d) => isMine(d) && (d.status === 'completed' || d.status === 'tie'))
+      .sort((a, b) => (b.completed_at ?? '').localeCompare(a.completed_at ?? ''));
+    for (const d of finished) {
+      const won = d.winner_id === player.id;
+      if (won) {
+        wins += 1;
+        if (d.winner_decision) pointsWon += d.points_transferred ?? 0;
+        if (streakStillCounting) streak += 1;
+      } else {
+        // Tie or loss breaks the streak (but keep counting wins).
+        streakStillCounting = false;
+      }
+    }
+    return { wins, streak, pointsWon };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duels, player?.id]);
+
+  // Players I can challenge — active, not me, no live duel in progress
+  // with me, no pending challenge sent by me to them.
+  const busyPlayerIds = useMemo(() => {
+    if (!player) return new Set<string>();
+    const ids = new Set<string>();
+    for (const d of duels) {
+      if (d.status === 'pending' || d.status === 'accepted' || d.status === 'answering') {
+        if (d.challenger_id === player.id) ids.add(d.challenged_id);
+        if (d.challenged_id === player.id) ids.add(d.challenger_id);
+      }
+    }
+    return ids;
+  }, [duels, player]);
+
+  const eligibleOpponents = useMemo(
+    () => players.filter((p) => p.is_active && p.id !== player?.id),
+    [players, player?.id],
+  );
+
+  // Pick a random eligible opponent and challenge them. Falls through
+  // to opening the modal if everyone is currently in another duel.
+  const handleRandomOpponent = useCallback(async () => {
+    if (!player || !room) return;
+    const available = eligibleOpponents.filter((p) => !busyPlayerIds.has(p.id));
+    if (available.length === 0) {
+      setShowChallengeModal(true);
+      return;
+    }
+    const pick = available[Math.floor(Math.random() * available.length)];
+    setIsCreating(true);
+    try {
+      await createDuel(player.id, pick.id, room.id);
+      await supabase.from('notifications').insert({
+        room_id: room.id, player_id: pick.id, type: 'duel_challenge',
+        payload: { challengerName: player.name, challengerId: player.id },
+      });
+    } catch (err) {
+      console.error('[DuelsScreen] Random duel failed:', err);
+    } finally {
+      setIsCreating(false);
+    }
+  }, [player, room, eligibleOpponents, busyPlayerIds, createDuel]);
 
   // Create challenge
   const handleChallenge = useCallback(async (opponentId: string) => {
@@ -197,18 +267,80 @@ export default function DuelsScreen() {
   }
 
   return (
-    <div className="flex flex-col h-full px-4 py-2">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="glow-text text-xl font-bold">{t('duels.title')}</h2>
-          <p className="text-[11px] text-white/30 mt-0.5">
-            {t('duels.declinesUsed', { used: declineInfo.used, max: declineInfo.max })}
-          </p>
-        </div>
-        <Button size="sm" onClick={() => setShowChallengeModal(true)}>{t('duels.challengeBtn')}</Button>
-      </div>
+    <div className="flex flex-col h-full">
+      <div className="flex flex-col flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-2 sm:py-4 gap-5 sm:gap-6">
 
-      <div className="flex-1 overflow-y-auto space-y-6">
+        {/* HERO HEADER */}
+        <section>
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-euro-purple/15 border border-euro-purple/40 px-3 py-1 text-xs sm:text-sm font-bold tracking-[0.16em] text-euro-purple-light">
+              <Swords className="w-3.5 h-3.5" strokeWidth={2.4} />
+              {t('duels.arenaPill')}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.05] border border-white/10 px-3 py-1 text-xs sm:text-sm font-semibold tracking-wide text-white/60">
+              <ShieldOff className="w-3.5 h-3.5" strokeWidth={2.4} />
+              {t('duels.declinesShort', { used: declineInfo.used, max: declineInfo.max })}
+            </span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-white">
+            {t('duels.heroTitleStart')}{' '}
+            <span className="bg-gradient-to-r from-euro-purple-light via-euro-pink to-euro-cyan bg-clip-text text-transparent">
+              {t('duels.heroTitleAccent')}
+            </span>
+            .
+            <br />
+            {t('duels.heroTitleEnd')}
+          </h2>
+          <p className="text-white/65 text-sm sm:text-base mt-2 max-w-xl leading-relaxed">
+            {t('duels.heroSubtitle')}
+          </p>
+          <div className="flex flex-wrap gap-3 mt-4">
+            <Button onClick={() => setShowChallengeModal(true)}>
+              <Sparkles className="w-4 h-4" strokeWidth={2.4} />
+              {t('duels.newChallengeBtn')}
+              <ArrowRight className="w-4 h-4" strokeWidth={2.4} />
+            </Button>
+            <Button variant="secondary" onClick={handleRandomOpponent} disabled={isCreating}>
+              <Shuffle className="w-4 h-4" strokeWidth={2.4} />
+              {t('duels.randomOpponentBtn')}
+            </Button>
+          </div>
+        </section>
+
+        {/* PERSONAL STATS ROW */}
+        <Card className="py-3 sm:py-4">
+          <div className="grid grid-cols-3 divide-x divide-white/8">
+            <div className="px-3 sm:px-4 flex items-center gap-3">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-euro-purple/20 flex items-center justify-center shrink-0">
+                <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-euro-purple-light" strokeWidth={2.4} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm font-bold tracking-wide text-white/55 uppercase">{t('duels.statWins')}</p>
+                <p className="text-xl sm:text-2xl font-extrabold text-white tabular-nums leading-tight">{myStats.wins}</p>
+              </div>
+            </div>
+            <div className="px-3 sm:px-4 flex items-center gap-3">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-orange-500/15 flex items-center justify-center shrink-0">
+                <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" strokeWidth={2.4} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm font-bold tracking-wide text-white/55 uppercase">{t('duels.statStreak')}</p>
+                <p className="text-xl sm:text-2xl font-extrabold text-white tabular-nums leading-tight">{myStats.streak}</p>
+              </div>
+            </div>
+            <div className="px-3 sm:px-4 flex items-center gap-3">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-euro-gold/15 flex items-center justify-center shrink-0">
+                <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-euro-gold" strokeWidth={2.4} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm font-bold tracking-wide text-white/55 uppercase">{t('duels.statPointsWon')}</p>
+                <p className="text-xl sm:text-2xl font-extrabold text-white tabular-nums leading-tight">{myStats.pointsWon}</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <div className="flex-1 space-y-5 sm:space-y-6">
         {/* Pending Decisions (steal/double) */}
         {myPendingDecisions.length > 0 && (
           <section>
@@ -451,91 +583,134 @@ export default function DuelsScreen() {
           </section>
         )}
 
-        {/* Empty state */}
-        {duels.length === 0 && !isLoading && (() => {
-          const opponents = players
-            .filter((p) => p.is_active && p.id !== player.id)
-            .sort((a, b) => (b.quiz_points ?? 0) - (a.quiz_points ?? 0))
-            .slice(0, 5);
-          return (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col gap-4 max-w-md w-full mx-auto pt-2"
-            >
-              {/* Header */}
-              <div className="flex flex-col items-center text-center gap-2">
+        {/* Empty state \u2014 "Be the first to strike" big card */}
+        {duels.length === 0 && !isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="py-7 sm:py-9 px-4 sm:px-6 text-center">
+              {/* Glowing icon */}
+              <div className="flex justify-center">
                 <motion.div
-                  className="text-5xl"
-                  animate={{ rotate: [0, -8, 8, 0] }}
-                  transition={{ repeat: Infinity, duration: 2.5 }}
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', damping: 12, delay: 0.05 }}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-euro-purple to-euro-cyan flex items-center justify-center shadow-[0_0_36px_rgba(139,92,246,0.55)]"
                 >
-                  {'\u2694\uFE0F'}
+                  <Swords className="w-8 h-8 sm:w-10 sm:h-10 text-white" strokeWidth={2.4} />
                 </motion.div>
-                <h3 className="glow-text text-xl font-extrabold">
-                  {t('duels.emptyHeadline')}
-                </h3>
-                <p className="text-white/55 text-sm max-w-xs">
-                  {t('duels.emptySubline')}
-                </p>
               </div>
+              <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/[0.06] border border-white/12 px-3 py-1 text-xs sm:text-sm font-bold tracking-[0.16em] text-euro-pink">
+                <span className="w-1.5 h-1.5 rounded-full bg-euro-pink animate-pulse" aria-hidden />
+                {t('duels.arenaAwaitsPill')}
+              </span>
+              <h3 className="mt-3 text-2xl sm:text-3xl font-extrabold text-white">
+                {t('duels.beFirstStart')}{' '}
+                <span className="bg-gradient-to-r from-euro-purple-light via-euro-pink to-euro-cyan bg-clip-text text-transparent">
+                  {t('duels.beFirstAccent')}
+                </span>
+                .
+              </h3>
+              <p className="text-white/65 text-sm sm:text-base mt-2 max-w-md mx-auto">
+                {t('duels.beFirstSub', { code: room.code ?? '\u2014' })}
+              </p>
+              <div className="flex flex-wrap justify-center gap-3 mt-5">
+                <Button onClick={() => setShowChallengeModal(true)}>
+                  <Sparkles className="w-4 h-4" strokeWidth={2.4} />
+                  {t('duels.challengePlayer')}
+                  <ArrowRight className="w-4 h-4" strokeWidth={2.4} />
+                </Button>
+                <Button variant="secondary" onClick={handleRandomOpponent} disabled={isCreating}>
+                  <Shuffle className="w-4 h-4" strokeWidth={2.4} />
+                  {t('duels.randomRival')}
+                </Button>
+              </div>
+            </Card>
+          </motion.div>
+        )}
 
-              {/* Top opponents list */}
-              {opponents.length > 0 && (
-                <Card className="py-3">
-                  <p className="text-sm text-white/55 font-semibold mb-2 px-1">
-                    {t('duels.topOpponents')}
-                  </p>
-                  <ul className="flex flex-col gap-1">
-                    {opponents.map((p) => (
-                      <li
-                        key={p.id}
-                        className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 transition-colors"
-                      >
-                        <span className="text-xl leading-none" aria-hidden>{p.avatar_emoji ?? '\uD83C\uDFA4'}</span>
-                        <span className="flex-1 text-sm font-semibold text-white/85 truncate">
-                          {p.name}
-                        </span>
-                        <span className="text-sm font-bold text-euro-gold tabular-nums">
-                          {p.quiz_points ?? 0}
-                          <span className="text-xs text-white/45 font-medium ml-1">
-                            {t('duels.ptsSuffix')}
-                          </span>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-              )}
+        {/* PLAYERS IN THE ROOM \u2014 inline grid with per-player Challenge button */}
+        {eligibleOpponents.length > 0 && (
+          <section>
+            <h3 className="text-sm font-bold tracking-[0.14em] text-white/55 mb-2 flex items-center gap-2 uppercase">
+              <Crown className="w-4 h-4 text-euro-gold" strokeWidth={2.4} />
+              {t('duels.playersInRoom')}
+              <span className="glass rounded-full px-2 py-0.5 text-xs">{eligibleOpponents.length}</span>
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+              {eligibleOpponents.map((p: Player) => {
+                const isBusy = busyPlayerIds.has(p.id);
+                const initial = p.name?.charAt(0)?.toUpperCase() ?? '?';
+                return (
+                  <div
+                    key={p.id}
+                    className="flex items-center gap-3 rounded-xl bg-white/[0.04] border border-white/8 px-3 py-2.5"
+                  >
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-euro-purple/40 to-euro-pink/30 flex items-center justify-center shrink-0 text-base sm:text-lg font-bold text-white">
+                      {p.avatar_emoji ?? initial}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm sm:text-base font-bold text-white truncate">{p.name}</p>
+                      <p className="text-xs sm:text-sm text-white/55 mt-0.5 flex items-center gap-1.5">
+                        <span className={`w-1.5 h-1.5 rounded-full ${isBusy ? 'bg-euro-gold' : 'bg-euro-green'}`} aria-hidden />
+                        {isBusy ? t('duels.playerInQuiz') : t('duels.playerReady')}
+                        <span className="text-white/30">\u00B7</span>
+                        <span className="text-white/65 tabular-nums">{p.quiz_points ?? 0} {t('duels.ptsSuffix')}</span>
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={isBusy ? 'secondary' : 'primary'}
+                      onClick={() => handleChallenge(p.id)}
+                      disabled={isBusy || isCreating}
+                    >
+                      <Swords className="w-3.5 h-3.5" strokeWidth={2.4} />
+                      {t('duels.playerActionChallenge')}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-              {/* Your record */}
-              <Card className="py-3">
-                <p className="text-sm text-white/55 font-semibold mb-2 px-1">
-                  {t('duels.yourRecord')}
-                </p>
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="rounded-lg bg-white/5 py-2">
-                    <p className="text-xl font-extrabold text-euro-green tabular-nums">0</p>
-                    <p className="text-xs text-white/55 font-medium">{t('duels.winsLabel')}</p>
-                  </div>
-                  <div className="rounded-lg bg-white/5 py-2">
-                    <p className="text-xl font-extrabold text-euro-red tabular-nums">0</p>
-                    <p className="text-xs text-white/55 font-medium">{t('duels.lossesLabel')}</p>
-                  </div>
-                  <div className="rounded-lg bg-white/5 py-2">
-                    <p className="text-xl font-extrabold text-euro-gold tabular-nums">{player.duel_points ?? 0}</p>
-                    <p className="text-xs text-white/55 font-medium">{t('duels.ptsLabel')}</p>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Big CTA */}
-              <Button size="md" fullWidth onClick={() => setShowChallengeModal(true)}>
-                {t('duels.challengeSomeone')}
-              </Button>
-            </motion.div>
-          );
-        })()}
+        {/* HOW DUELS WORK */}
+        <section>
+          <h3 className="text-sm font-bold tracking-[0.14em] text-white/55 mb-2 flex items-center gap-2 uppercase">
+            <Sparkles className="w-4 h-4 text-euro-purple-light" strokeWidth={2.4} />
+            {t('duels.howDuelsWorkTitle')}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+            <div className="rounded-xl bg-white/[0.04] border border-white/8 px-4 py-3">
+              <div className="w-8 h-8 rounded-full bg-euro-purple/20 flex items-center justify-center mb-2">
+                <Swords className="w-4 h-4 text-euro-purple-light" strokeWidth={2.4} />
+              </div>
+              <p className="text-sm sm:text-base font-bold text-white">{t('duels.howDuelsPickTitle')}</p>
+              <p className="text-xs sm:text-sm text-white/55 mt-1 leading-snug">
+                {t('duels.howDuelsPickCopy')}
+              </p>
+            </div>
+            <div className="rounded-xl bg-white/[0.04] border border-white/8 px-4 py-3">
+              <div className="w-8 h-8 rounded-full bg-euro-cyan/20 flex items-center justify-center mb-2">
+                <ListChecks className="w-4 h-4 text-euro-cyan" strokeWidth={2.4} />
+              </div>
+              <p className="text-sm sm:text-base font-bold text-white">{t('duels.howDuelsQuestionsTitle')}</p>
+              <p className="text-xs sm:text-sm text-white/55 mt-1 leading-snug">
+                {t('duels.howDuelsQuestionsCopy')}
+              </p>
+            </div>
+            <div className="rounded-xl bg-white/[0.04] border border-white/8 px-4 py-3">
+              <div className="w-8 h-8 rounded-full bg-euro-gold/15 flex items-center justify-center mb-2">
+                <Trophy className="w-4 h-4 text-euro-gold" strokeWidth={2.4} />
+              </div>
+              <p className="text-sm sm:text-base font-bold text-white">{t('duels.howDuelsRewardTitle')}</p>
+              <p className="text-xs sm:text-sm text-white/55 mt-1 leading-snug">
+                {t('duels.howDuelsRewardCopy')}
+              </p>
+            </div>
+          </div>
+        </section>
 
         {isLoading && duels.length === 0 && (
           <div className="flex items-center justify-center py-16">
@@ -543,6 +718,7 @@ export default function DuelsScreen() {
               className="w-8 h-8 border-3 border-white/20 border-t-euro-purple-light rounded-full" />
           </div>
         )}
+        </div>
       </div>
 
       <ChallengeModal
