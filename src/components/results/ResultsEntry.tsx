@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
-import { COUNTRIES_2026, COUNTRY_MAP } from '../../lib/countries2026';
+import { useParticipants } from '../../hooks/useParticipants';
 import { getLocalizedCountryName } from '../../lib/countryLocale';
 import { supabase } from '../../lib/supabase';
 import Button from '../ui/Button';
@@ -16,6 +16,8 @@ type ResultsPhase = 'entry' | 'confirm' | 'scoring' | 'done';
 export default function ResultsEntry() {
   const { t } = useTranslation();
   const { room, player } = useGameStore();
+  const { participants, byId, loading: loadingParticipants } = useParticipants();
+  const TOTAL = participants.length;
   const [ranking, setRanking] = useState<Country[]>([]);
   const [phase, setPhase] = useState<ResultsPhase>('entry');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,22 +25,23 @@ export default function ResultsEntry() {
   const [error, setError] = useState<string | null>(null);
   const [existingResults, setExistingResults] = useState<string[] | null>(null);
 
-  // Check if results already exist
+  // Check if results already exist. Only resolve once participants are loaded
+  // since we map ISO codes → Country shape via byId.
   useEffect(() => {
-    if (!room) return;
+    if (!room || loadingParticipants) return;
     supabase.from('results').select('final_ranking').eq('room_id', room.id).maybeSingle()
       .then(({ data }) => {
         if (data?.final_ranking) {
           const codes = data.final_ranking as string[];
           setExistingResults(codes);
-          setRanking(codes.map(c => COUNTRY_MAP.get(c)).filter(Boolean) as Country[]);
+          setRanking(codes.map(c => byId.get(c)).filter(Boolean) as Country[]);
           setPhase('done');
         }
       });
-  }, [room]);
+  }, [room, loadingParticipants, byId]);
 
   const selectedIds = new Set(ranking.map(c => c.id));
-  const remaining = COUNTRIES_2026.filter(c => !selectedIds.has(c.id));
+  const remaining = participants.filter(c => !selectedIds.has(c.id));
 
   const handleAddCountry = useCallback((country: Country) => {
     setRanking(prev => [...prev, country]);
@@ -194,7 +197,7 @@ export default function ResultsEntry() {
       <div className="text-center mb-3">
         <h2 className="glow-text text-xl font-bold mb-1">{t('resultsEntry.title')}</h2>
         <p className="text-white/50 text-sm">
-          {t('resultsEntry.subtitle', { current: ranking.length, total: COUNTRIES_2026.length })}
+          {t('resultsEntry.subtitle', { current: ranking.length, total: TOTAL })}
         </p>
       </div>
 
@@ -258,11 +261,11 @@ export default function ResultsEntry() {
       <div className="pt-3 pb-2">
         <Button
           fullWidth
-          disabled={ranking.length < COUNTRIES_2026.length}
+          disabled={ranking.length < TOTAL}
           onClick={handleConfirm}
         >
-          {ranking.length < COUNTRIES_2026.length
-            ? `Add ${COUNTRIES_2026.length - ranking.length} more countries`
+          {ranking.length < TOTAL
+            ? `Add ${TOTAL - ranking.length} more countries`
             : t('resultsEntry.reviewBtn')}
         </Button>
       </div>

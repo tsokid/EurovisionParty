@@ -21,14 +21,13 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
-import { COUNTRIES_2026, COUNTRY_MAP } from '../../lib/countries2026';
+import { useParticipants } from '../../hooks/useParticipants';
 import { getLocalizedCountryName } from '../../lib/countryLocale';
 import { supabase } from '../../lib/supabase';
 import type { Country } from '../../lib/types';
 
 const TOP_N = 5;
 const WORST_N = 5;
-const N = COUNTRIES_2026.length;
 
 interface ScoredPrediction {
   top5: string[];
@@ -64,14 +63,14 @@ function FlagImg({ id, size = 40, className }: { id: string; size?: number; clas
 // ── Slot row (inside zone panel) ────────────────────────────────────────────
 interface SlotRowProps {
   id: string;
+  country: Country | undefined;
   pos: number;
   zone: 'top' | 'worst';
   onRemove: () => void;
   ghost?: boolean;
 }
-function SlotRow({ id, pos, zone, onRemove, ghost }: SlotRowProps) {
-  const c = COUNTRY_MAP.get(id);
-  if (!c) return null;
+function SlotRow({ id, country, pos, zone, onRemove, ghost }: SlotRowProps) {
+  if (!country) return null;
   const label = ord(pos);
   return (
     <div className={clsx(
@@ -86,7 +85,7 @@ function SlotRow({ id, pos, zone, onRemove, ghost }: SlotRowProps) {
         zone === 'top' ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
       )}>{label}</span>
       <FlagImg id={id} size={26} />
-      <span className="text-[12px] font-bold text-white flex-1 truncate">{getLocalizedCountryName(c)}</span>
+      <span className="text-[12px] font-bold text-white flex-1 truncate">{getLocalizedCountryName(country)}</span>
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); onRemove(); }}
@@ -117,13 +116,15 @@ function SortableSlot(props: SlotRowProps) {
 interface ZonePanelProps {
   zone: 'top' | 'worst';
   picks: string[];
+  byId: Map<string, Country>;
+  n: number;
   onReorder: (newOrder: string[]) => void;
   onRemove: (id: string) => void;
   onPlaceSelected: (slotIndex: number) => void;
   hasSelection: boolean;
   activeId: string | null;
 }
-function ZonePanel({ zone, picks, onReorder, onRemove, onPlaceSelected, hasSelection, activeId }: ZonePanelProps) {
+function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected, hasSelection, activeId }: ZonePanelProps) {
   const isTop = zone === 'top';
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -140,7 +141,7 @@ function ZonePanel({ zone, picks, onReorder, onRemove, onPlaceSelected, hasSelec
   };
 
   // Slot label calculator
-  const labelFor = (i: number) => isTop ? ord(i + 1) : ord(N - WORST_N + 1 + i);
+  const labelFor = (i: number) => isTop ? ord(i + 1) : ord(n - WORST_N + 1 + i);
 
   return (
     <div className={clsx(
@@ -175,7 +176,8 @@ function ZonePanel({ zone, picks, onReorder, onRemove, onPlaceSelected, hasSelec
             {picks.map((id, i) => (
               <SortableSlot
                 key={id} id={id}
-                pos={isTop ? i + 1 : N - WORST_N + 1 + i}
+                country={byId.get(id)}
+                pos={isTop ? i + 1 : n - WORST_N + 1 + i}
                 zone={zone}
                 onRemove={() => onRemove(id)}
               />
@@ -186,7 +188,8 @@ function ZonePanel({ zone, picks, onReorder, onRemove, onPlaceSelected, hasSelec
               <div className="shadow-xl rotate-1 scale-105 opacity-95">
                 <SlotRow
                   id={activeId}
-                  pos={isTop ? picks.indexOf(activeId) + 1 : N - WORST_N + 1 + picks.indexOf(activeId)}
+                  country={byId.get(activeId)}
+                  pos={isTop ? picks.indexOf(activeId) + 1 : n - WORST_N + 1 + picks.indexOf(activeId)}
                   zone={zone} onRemove={() => {}}
                 />
               </div>
@@ -276,11 +279,11 @@ function CountryTile({ country, rank, selected, onClick }: CountryTileProps) {
 }
 
 // ── Scored / submitted views ─────────────────────────────────────────────────
-function ScoredView({ pred }: { pred: ScoredPrediction }) {
+function ScoredView({ pred, byId, n }: { pred: ScoredPrediction; byId: Map<string, Country>; n: number }) {
   const { t } = useTranslation();
   const totalPts = (pred.top5_points ?? 0) + (pred.worst5_points ?? 0);
-  const t5 = pred.top5.map((id) => COUNTRY_MAP.get(id)).filter(Boolean) as Country[];
-  const w5 = pred.worst5.map((id) => COUNTRY_MAP.get(id)).filter(Boolean) as Country[];
+  const t5 = pred.top5.map((id) => byId.get(id)).filter(Boolean) as Country[];
+  const w5 = pred.worst5.map((id) => byId.get(id)).filter(Boolean) as Country[];
   return (
     <div className="flex flex-col h-full px-4 py-3 gap-4">
       <div className="text-center">
@@ -303,7 +306,7 @@ function ScoredView({ pred }: { pred: ScoredPrediction }) {
           <p className="text-xs font-bold text-[#FF4D6D] uppercase tracking-wider mb-2">💀 Worst 5 — {pred.worst5_points ?? 0} pts</p>
           {w5.map((c, i) => (
             <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,77,109,0.1)] rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(N - WORST_N + 1 + i)}</span>
+              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(n - WORST_N + 1 + i)}</span>
               <FlagImg id={c.id} size={22} />
               <span className="text-sm text-white truncate">{getLocalizedCountryName(c)}</span>
             </div>
@@ -314,7 +317,7 @@ function ScoredView({ pred }: { pred: ScoredPrediction }) {
   );
 }
 
-function SubmittedView({ top5, worst5 }: { top5: Country[]; worst5: Country[] }) {
+function SubmittedView({ top5, worst5, n }: { top5: Country[]; worst5: Country[]; n: number }) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col h-full px-4 py-3 gap-4">
@@ -338,7 +341,7 @@ function SubmittedView({ top5, worst5 }: { top5: Country[]; worst5: Country[] })
           <p className="text-xs font-bold text-[#FF4D6D] uppercase tracking-wider mb-2">💀 {t('predictions.yourWorst5')}</p>
           {worst5.map((c, i) => (
             <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,77,109,0.1)] rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(N - WORST_N + 1 + i)}</span>
+              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(n - WORST_N + 1 + i)}</span>
               <FlagImg id={c.id} size={22} />
               <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
             </div>
@@ -353,6 +356,8 @@ function SubmittedView({ top5, worst5 }: { top5: Country[]; worst5: Country[] })
 export default function PredictionsScreen() {
   const { t } = useTranslation();
   const { room, player } = useGameStore();
+  const { participants, byId, loading: loadingParticipants } = useParticipants();
+  const N = participants.length;
 
   const [top5, setTop5] = useState<string[]>([]);
   const [worst5, setWorst5] = useState<string[]>([]);
@@ -400,9 +405,10 @@ export default function PredictionsScreen() {
 
   const isPredictionsOpen = room?.phase === 'predictions_open';
 
-  // Pool — sorted (filters removed per redesign)
+  // Pool — sorted (filters removed per redesign). Source is parser-driven
+  // via useParticipants; falls back to hardcoded 2026 lineup if DB empty.
   const pool = (() => {
-    const list = [...COUNTRIES_2026];
+    const list = [...participants];
     if (poolSort === 'az') list.sort((a, b) => getLocalizedCountryName(a).localeCompare(getLocalizedCountryName(b)));
     if (poolSort === 'za') list.sort((a, b) => getLocalizedCountryName(b).localeCompare(getLocalizedCountryName(a)));
     return list;
@@ -466,12 +472,16 @@ export default function PredictionsScreen() {
   }, [room, player, top5, worst5, isSubmitting, t]);
 
   // ── Guards ─────────────────────────────────────────────────────────────────
-  if (!room || !player || isLoadingExisting) {
+  if (!room || !player || isLoadingExisting || loadingParticipants) {
     return <div className="flex items-center justify-center h-64"><div className="w-7 h-7 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" /></div>;
   }
-  if (existingPrediction?.scored_at) return <ScoredView pred={existingPrediction} />;
+  if (existingPrediction?.scored_at) return <ScoredView pred={existingPrediction} byId={byId} n={N} />;
   if (submitted && !isPredictionsOpen) {
-    return <SubmittedView top5={top5.map((id) => COUNTRY_MAP.get(id)!).filter(Boolean)} worst5={worst5.map((id) => COUNTRY_MAP.get(id)!).filter(Boolean)} />;
+    return <SubmittedView
+      top5={top5.map((id) => byId.get(id)!).filter(Boolean)}
+      worst5={worst5.map((id) => byId.get(id)!).filter(Boolean)}
+      n={N}
+    />;
   }
   if (!isPredictionsOpen && !submitted) {
     return (
@@ -485,7 +495,7 @@ export default function PredictionsScreen() {
 
   const filled = top5.length + worst5.length;
   const isReady = top5.length === TOP_N && worst5.length === WORST_N;
-  const selectedCountry = selectedId ? COUNTRY_MAP.get(selectedId) : null;
+  const selectedCountry = selectedId ? byId.get(selectedId) : null;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -498,6 +508,7 @@ export default function PredictionsScreen() {
         <div className="overflow-y-auto max-h-[230px] lg:max-h-none">
           <ZonePanel
             zone="top" picks={top5}
+            byId={byId} n={N}
             onReorder={setTop5}
             onRemove={(id) => setTop5((p) => p.filter((x) => x !== id))}
             onPlaceSelected={(slotIndex) => handlePlace('top', slotIndex)}
@@ -578,6 +589,7 @@ export default function PredictionsScreen() {
         <div className="overflow-y-auto max-h-[230px] lg:max-h-none">
           <ZonePanel
             zone="worst" picks={worst5}
+            byId={byId} n={N}
             onReorder={setWorst5}
             onRemove={(id) => setWorst5((p) => p.filter((x) => x !== id))}
             onPlaceSelected={(slotIndex) => handlePlace('worst', slotIndex)}
