@@ -214,25 +214,27 @@ export interface ParticipantsParseResult {
 }
 
 /**
- * Fetch + extract participants. Tries the official URL first; if the page
- * doesn't carry data-iso markup yet (true before semi-2 each year), falls back
- * to Wikipedia.
+ * Fetch + extract participants from eurovision.com only.
+ *
+ * NO Wikipedia fallback. Wikipedia lists every announced contestant
+ * (e.g. all 37 for 2026), but we only want the *Grand Final* lineup —
+ * which on eurovision.com is whatever currently appears on the
+ * `<year>-grand-final/` page:
+ *   • Pre semi-final 1: only the 6 auto-qualifiers (Big 5 + host).
+ *   • Mid-semi window: auto-qualifiers + qualified countries.
+ *   • Post semi-final 2: the final 26.
+ *   • For past years (e.g. basel-2025): the actual 26 who competed.
+ *
+ * If extraction returns 0 entries we surface that as a blocked run
+ * rather than silently importing the wrong dataset (the previous
+ * Wikipedia fallback was responsible for "why do we have 37 rows when
+ * I parsed 2025?" — Wikipedia 2026 leaked through when the .com
+ * extractor missed the markup).
  */
 export async function fetchParticipants(
   url: string,
-  wikiUrl = 'https://en.wikipedia.org/wiki/Eurovision_Song_Contest_2026',
 ): Promise<ParticipantsParseResult> {
   const primary = await fetchHtml(url);
-  if (primary.httpStatus === 200) {
-    const entries = extractEurovision(primary.html);
-    if (entries.length > 0) {
-      return { entries, httpStatus: 200, source: 'eurovision' };
-    }
-  }
-  const wiki = await fetchHtml(wikiUrl);
-  return {
-    entries: extractWikipedia(wiki.html),
-    httpStatus: primary.httpStatus,
-    source: 'wikipedia',
-  };
+  const entries = primary.httpStatus === 200 ? extractEurovision(primary.html) : [];
+  return { entries, httpStatus: primary.httpStatus, source: 'eurovision' };
 }

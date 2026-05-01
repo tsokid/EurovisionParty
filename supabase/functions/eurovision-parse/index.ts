@@ -143,10 +143,12 @@ async function handleParticipants(): Promise<Response> {
   }
   const sourceUrl = job.source_url ?? PROD_URL_2026;
 
-  // 2. Fetch + extract (with Wikipedia fallback inside fetchParticipants)
+  // 2. Fetch + extract from eurovision.com only — no Wikipedia fallback.
+  // We want the Grand Final lineup as it stands on the official page,
+  // not the full announced-contestant list Wikipedia keeps.
   let entries: ParsedEntry[] = [];
   let httpStatus = 0;
-  let source: "eurovision" | "wikipedia" = "eurovision";
+  let source: "eurovision" = "eurovision";
   let runStatus: "ok" | "error" | "blocked" = "ok";
   let err: string | null = null;
   let payloadHash: string | null = null;
@@ -159,14 +161,17 @@ async function handleParticipants(): Promise<Response> {
     payloadHash = await sha256(JSON.stringify(entries));
     if (entries.length === 0) {
       runStatus = "blocked";
-      err = "no participants extracted from primary or wikipedia";
+      err = `no participants extracted from ${sourceUrl} (http ${httpStatus})`;
     }
   } catch (e) {
     runStatus = "error";
     err = e instanceof Error ? e.message : String(e);
   }
 
-  // 3. Upsert (only on ok)
+  // 3. Replace the set (only on ok). Upsert + delete-missing so a
+  // shrunk lineup (e.g. switching from a polluted Wikipedia run with
+  // 37 rows to a real eurovision.com run with 26) doesn't leave stale
+  // rows behind.
   let rowsUpserted = 0;
   if (runStatus === "ok") {
     const nowIso = new Date().toISOString();
@@ -182,6 +187,15 @@ async function handleParticipants(): Promise<Response> {
       err = upErr.message;
     } else {
       rowsUpserted = count ?? rows.length;
+      // Drop any country that was in the table but is no longer in the
+      // current parsed lineup. Keeps the table in sync with whatever
+      // eurovision.com currently shows for the Grand Final.
+      const keepIsos = rows.map((r) => r.iso);
+      if (keepIsos.length > 0) {
+        await db.from("eurovision_2026_participants")
+          .delete()
+          .not("iso", "in", `(${keepIsos.map((i) => `"${i}"`).join(",")})`);
+      }
     }
   }
 
@@ -311,7 +325,7 @@ async function handleResults(): Promise<Response> {
 async function handleTestParticipants(overrideUrl?: string): Promise<Response> {
   const url = overrideUrl?.trim() || TEST_URL_2025;
   try {
-    // Same extractor + Wikipedia fallback as production handleParticipants
+    // Same extractor as production handleParticipants — eurovision.com only.
     const result = await fetchParticipants(url);
     return jsonResponse({
       url,
