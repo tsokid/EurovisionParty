@@ -79,7 +79,7 @@ export default function LeaderboardScreen() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5 gap-5 sm:gap-6">
+      <div className="flex flex-col flex-1 max-w-3xl w-full mx-auto px-3 sm:px-5 lg:px-6 pb-6 gap-5 sm:gap-6">
         {/* Header */}
         <div className="flex flex-col items-center gap-1">
           <h2 className="glow-text text-2xl sm:text-3xl font-extrabold text-center">

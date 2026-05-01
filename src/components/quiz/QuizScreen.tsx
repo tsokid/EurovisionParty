@@ -358,7 +358,7 @@ export default function QuizScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col flex-1 max-w-2xl w-full mx-auto px-2 sm:px-4 py-2 sm:py-4 gap-5"
+            className="flex flex-col flex-1 max-w-3xl w-full mx-auto px-3 sm:px-5 lg:px-6 pb-6 gap-5"
           >
             {/* Round indicator pill */}
             <div className="flex justify-center">
@@ -530,7 +530,7 @@ export default function QuizScreen() {
               key="complete"
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col flex-1 gap-5 sm:gap-6 max-w-2xl w-full mx-auto px-2 sm:px-4 py-2 sm:py-4"
+              className="flex flex-col flex-1 gap-5 sm:gap-6 max-w-3xl w-full mx-auto px-3 sm:px-5 lg:px-6 pb-6"
             >
               {/* QUIZ COMPLETE pill */}
               <div className="flex justify-center">
