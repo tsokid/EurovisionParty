@@ -30,6 +30,10 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
 
   const canRun = job.status === "idle" || job.status === "error";
   const canReset = job.status === "done" || job.status === "error";
+  // Hard Stop is the escape hatch for when the job is stuck mid-run
+  // (e.g. cron fired but the function never executed because of a
+  // broken vault secret). Allowed from any non-terminal state.
+  const canHardStop = job.status === "running";
 
   const runNow = async () => {
     setBusy(true);
@@ -58,6 +62,26 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
     setErr(null);
     try {
       const { error: rpcErr } = await supabase.rpc("reset_parse_job", {
+        p_year: job.year,
+        p_kind: "participants",
+      });
+      if (rpcErr) throw rpcErr;
+      onRefresh();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const hardStop = async () => {
+    if (!window.confirm(
+      "Force the parser job back to 'idle'? Use this only when the job is stuck — e.g. a cron tick flipped state to 'running' but the function never returned. Doesn't delete any participants data.",
+    )) return;
+    setBusy(true);
+    setErr(null);
+    try {
+      const { error: rpcErr } = await supabase.rpc("hard_stop_parse_job", {
         p_year: job.year,
         p_kind: "participants",
       });
@@ -100,6 +124,11 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
           ✅ Already ran. Click <span className="text-white">Re-arm for next run</span> to allow the next scheduled time to fire this parser again. Doesn&apos;t delete data.
         </p>
       )}
+      {job.status === "running" && (
+        <p className="text-[11px] text-amber-300/80 mb-2 leading-snug">
+          ⚠️ Stuck in <span className="text-white">running</span>? Use <span className="text-white">Hard Stop</span> to force the job back to idle. Doesn&apos;t delete data.
+        </p>
+      )}
 
       <div className="flex flex-wrap gap-2 mb-3">
         <button
@@ -119,6 +148,15 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
           title="Flip job state back to idle so the next scheduled time can fire it. Does not delete any data."
         >
           Re-arm for next run
+        </button>
+        <button
+          type="button"
+          onClick={hardStop}
+          disabled={!canHardStop || busy}
+          className="px-3 py-1.5 rounded bg-red-500/90 hover:bg-red-500 text-white font-bold text-sm disabled:opacity-40 cursor-pointer"
+          title="Force the job back to idle when it's stuck in 'running' state. Does not delete any participants data."
+        >
+          🛑 Hard Stop
         </button>
       </div>
       {recentRun && (
