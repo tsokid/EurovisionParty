@@ -41,7 +41,7 @@ export default function WelcomeScreen({
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-[calc(100svh-3.5rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-3 sm:py-5 lg:py-8 relative overflow-hidden">
+    <div className="min-h-[calc(100svh-5rem)] sm:min-h-[calc(100svh-6rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-3 sm:py-5 lg:py-8 relative overflow-hidden">
       {/* Scattered sparkle decorations */}
       {sparkles.map((s, i) => (
         <motion.span

@@ -88,14 +88,14 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-euro-deep/80 border-b border-white/10">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between">
         <LocaleLink to="/" className="flex items-center group shrink-0" aria-label="Eurovision Games — home">
           <img
             src="/logo.png"
             alt="eurovision.games"
             width={866}
             height={288}
-            className="h-8 sm:h-10 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
+            className="h-16 sm:h-20 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
             draggable={false}
           />
         </LocaleLink>
