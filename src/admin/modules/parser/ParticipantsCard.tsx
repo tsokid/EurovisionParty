@@ -34,7 +34,7 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
 
   // Per-button enablement. Aimed at being conservative — only enable
   // when the transition is meaningful for the current state.
-  const canArm     = status === "done" || status === "error" || status === "stopped";
+  const canArm     = status === "idle" || status === "done" || status === "error" || status === "stopped";
   const canStartNow = status === "idle" || status === "done" || status === "error" || status === "stopped";
   const canPause   = status === "running";
   const canResume  = status === "stopped";
