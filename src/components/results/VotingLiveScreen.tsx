@@ -51,7 +51,7 @@ export default function VotingLiveScreen() {
           <Sparkles className="w-5 h-5 mx-auto text-euro-gold mb-2" strokeWidth={2.4} />
           <p className="text-sm sm:text-base text-white/75">
             {t('voting.footer', {
-              defaultValue: "Watch the show. We'll show you who won, who got it right, and your final score.",
+              defaultValue: "Watch the show. We will show you who won, who got it right, and your final score.",
             })}
           </p>
         </Card>
