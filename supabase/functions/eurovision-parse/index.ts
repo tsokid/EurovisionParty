@@ -184,7 +184,7 @@ async function handleParticipants(): Promise<Response> {
       running_order: e.runningOrder, source, updated_at: nowIso,
     }));
     const { error: upErr, count } = await db
-      .from("eurovision_2026_participants")
+      .from(`eurovision_${year}_participants`)
       .upsert(rows, { onConflict: "iso", count: "exact" });
     if (upErr) {
       runStatus = "error";
@@ -196,7 +196,7 @@ async function handleParticipants(): Promise<Response> {
       // eurovision.com currently shows for the Grand Final.
       const keepIsos = rows.map((r) => r.iso);
       if (keepIsos.length > 0) {
-        await db.from("eurovision_2026_participants")
+        await db.from(`eurovision_${year}_participants`)
           .delete()
           .not("iso", "in", `(${keepIsos.map((i) => `"${i}"`).join(",")})`);
       }
@@ -284,7 +284,7 @@ async function handleResults(): Promise<Response> {
   if (runStatus === "ok") {
     const nowIso = new Date().toISOString();
     const { data: pData } = await db
-      .from("eurovision_2026_participants").select("iso");
+      .from(`eurovision_${year}_participants`).select("iso");
     const validIsos = new Set<string>((pData ?? []).map((p: { iso: string }) => p.iso));
     const records = rows
       .filter((r) => validIsos.has(r.iso))
@@ -298,7 +298,7 @@ async function handleResults(): Promise<Response> {
         updated_at: nowIso,
       }));
     const { error: upErr, count } = await db
-      .from("eurovision_2026_results")
+      .from(`eurovision_${year}_results`)
       .upsert(records, { onConflict: "iso", count: "exact" });
     if (upErr) {
       runStatus = "error";
