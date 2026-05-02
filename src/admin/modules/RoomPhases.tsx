@@ -73,10 +73,10 @@ export default function RoomPhases() {
             <select
               value={from}
               onChange={(e) => setFrom(e.target.value as Phase)}
-              className="bg-white/10 border border-white/15 text-white rounded px-2 py-1.5"
+              className="bg-[#1a0a2e] border border-white/15 text-white rounded px-2 py-1.5"
             >
               {PHASES.map((p) => (
-                <option key={p.id} value={p.id}>{p.label}</option>
+                <option key={p.id} value={p.id} className="bg-[#1a0a2e] text-white">{p.label}</option>
               ))}
             </select>
           </label>
@@ -85,10 +85,10 @@ export default function RoomPhases() {
             <select
               value={to}
               onChange={(e) => setTo(e.target.value as Phase)}
-              className="bg-white/10 border border-white/15 text-white rounded px-2 py-1.5"
+              className="bg-[#1a0a2e] border border-white/15 text-white rounded px-2 py-1.5"
             >
               {PHASES.map((p) => (
-                <option key={p.id} value={p.id}>{p.label}</option>
+                <option key={p.id} value={p.id} className="bg-[#1a0a2e] text-white">{p.label}</option>
               ))}
             </select>
           </label>
