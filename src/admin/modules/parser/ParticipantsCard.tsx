@@ -21,6 +21,7 @@ interface Props {
 export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [armed, setArmed] = useState(false);
 
   if (!job) {
     return (
@@ -64,6 +65,8 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
         p_kind: "participants",
       });
       if (error) throw error;
+      setArmed(true);
+      setTimeout(() => setArmed(false), 3000);
     });
 
   // Start Now: any state → running → invoke. We chain hard_stop (any
@@ -165,10 +168,10 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
           type="button"
           onClick={startOnSchedule}
           disabled={!canArm || busy}
-          className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40 cursor-pointer"
-          title="Flip job state back to idle so the next scheduled time can fire it. Doesn't delete any data."
+          className={`px-3 py-1.5 rounded text-sm disabled:opacity-40 cursor-pointer transition-colors ${armed ? "bg-emerald-600 text-white" : "bg-white/10 text-white"}`}
+          title="Arm the job so the next scheduled time fires it. Clears any Hard Stop block."
         >
-          Start on Schedule
+          {armed ? "✓ Armed" : "Start on Schedule"}
         </button>
         <button
           type="button"
@@ -208,6 +211,9 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
         </button>
       </div>
 
+      {err && (
+        <p className="text-sm text-red-300 mb-2 rounded bg-red-500/10 px-2 py-1">{err}</p>
+      )}
       {recentRun && (
         <div className="text-xs text-white/60">
           Last run: {new Date(recentRun.finished_at).toLocaleString()} · http{" "}
@@ -217,7 +223,6 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
             : recentRun.error ?? recentRun.status}
         </div>
       )}
-      {err && <p className="text-sm text-red-300 mt-2">{err}</p>}
     </section>
   );
 }
