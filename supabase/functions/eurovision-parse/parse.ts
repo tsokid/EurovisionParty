@@ -132,7 +132,7 @@ export function extractEurovision(html: string): ParsedEntry[] {
     // Artist — first <p class="...chip-text...">X</p> after an
     // /all-participants/<slug>/ link in the slice
     let artist = '';
-    const artistMatch = slice.match(/\/all-participants\/[^"]+"[^>]*>[\s\S]{0,400}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>/);
+    const artistMatch = slice.match(/(?:\/all-participants\/[^"]*"|icon-microphone)[^>]*>[\s\S]{0,400}?<p[^>]*class="[^"]*chip-text[^"]*"[^>]*>\s*([^<]+?)\s*<\/p>/);
     if (artistMatch) artist = decodeHtmlEntities(artistMatch[1].trim());
 
     // Song — first <p class="...chip-text...">X</p> after a YouTube link.
