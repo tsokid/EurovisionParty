@@ -12,11 +12,8 @@ import { ManualRankingCard } from "./parser/ManualRankingCard";
 export default function EurovisionParser() {
   const { jobs, runs, loading, error, refresh } = useParserState(2026);
 
-  if (loading) {
+  if (loading && Object.keys(jobs).length === 0) {
     return <div className="p-4 text-white/60">Loading parser state…</div>;
-  }
-  if (error) {
-    return <div className="p-4 text-red-300">Error: {error}</div>;
   }
 
   const lastParticipantsRun = runs.find((r) => r.kind === "participants");
