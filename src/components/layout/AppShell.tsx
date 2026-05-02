@@ -10,6 +10,8 @@ interface AppShellProps {
   showNav?: boolean;
   /** When provided, renders a 5th exit tab in BottomNav */
   onExitPress?: () => void;
+  /** Current room phase — passed to BottomNav so lock state is authoritative */
+  phase?: string;
 }
 
 export default function AppShell({
@@ -17,6 +19,7 @@ export default function AppShell({
   showHeader = true,
   showNav = true,
   onExitPress,
+  phase,
 }: AppShellProps) {
   const { t } = useTranslation();
   const isReconnecting = useGameStore((s) => s.isReconnecting);
@@ -54,7 +57,7 @@ export default function AppShell({
         {children}
       </main>
 
-      {showNav && <BottomNav onExitPress={onExitPress} />}
+      {showNav && <BottomNav onExitPress={onExitPress} phase={phase} />}
     </div>
   );
 }

@@ -227,6 +227,7 @@ export function RoomPage() {
       <AppShell
         showHeader
         showNav
+        phase={currentRoom.phase}
         onExitPress={() => setShowChoiceModal(true)}
       >
         {renderActiveTab()}

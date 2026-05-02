@@ -21,6 +21,8 @@ const TABS: NavTab[] = [
 interface BottomNavProps {
   /** When provided, renders a 5th exit tab that calls this on tap */
   onExitPress?: () => void;
+  /** Authoritative room phase — overrides the store when provided */
+  phase?: string;
 }
 
 /** Which tabs are interactable in each phase. The Board (leaderboard)
@@ -38,10 +40,11 @@ function isTabLocked(tabId: TabId, phase: string | undefined): boolean {
   return false;
 }
 
-export default function BottomNav({ onExitPress }: BottomNavProps) {
+export default function BottomNav({ onExitPress, phase: phaseProp }: BottomNavProps) {
   const { t } = useTranslation();
   const { activeTab, setActiveTab, room, notifications } = useGameStore();
-  const isVotingOrLater = room?.phase === 'voting_live' || room?.phase === 'final';
+  const phase = phaseProp ?? room?.phase;
+  const isVotingOrLater = phase === 'voting_live' || phase === 'final';
 
   // Count unread duel notifications for badge
   const duelNotifCount = notifications.filter(
@@ -53,7 +56,7 @@ export default function BottomNav({ onExitPress }: BottomNavProps) {
       <div className="flex items-stretch">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
-          const locked = isTabLocked(tab.id, room?.phase);
+          const locked = isTabLocked(tab.id, phase);
           const badgeCount = tab.id === 'duels' && !locked ? duelNotifCount : 0;
           const label = tab.id === 'predictions' && isVotingOrLater ? t('nav.results') : t(tab.labelKey);
 
