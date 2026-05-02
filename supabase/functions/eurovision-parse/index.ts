@@ -276,19 +276,27 @@ async function handleResults(): Promise<Response> {
     err = e instanceof Error ? e.message : String(e);
   }
 
-  // 3. Upsert
+  // 3. Upsert — guard against FK violations by filtering to ISOs that
+  //    actually exist in the participants table. Prevents errors when the
+  //    source URL is a prior-year page whose country list differs from the
+  //    current GF lineup.
   let rowsUpserted = 0;
   if (runStatus === "ok") {
     const nowIso = new Date().toISOString();
-    const records = rows.map((r) => ({
-      iso: r.iso,
-      ranking: r.ranking,
-      total_points: r.total_points,
-      jury_points: r.jury_points,
-      televote_points: r.televote_points,
-      source: r.source,
-      updated_at: nowIso,
-    }));
+    const { data: pData } = await db
+      .from("eurovision_2026_participants").select("iso");
+    const validIsos = new Set<string>((pData ?? []).map((p: { iso: string }) => p.iso));
+    const records = rows
+      .filter((r) => validIsos.has(r.iso))
+      .map((r) => ({
+        iso: r.iso,
+        ranking: r.ranking,
+        total_points: r.total_points,
+        jury_points: r.jury_points,
+        televote_points: r.televote_points,
+        source: r.source,
+        updated_at: nowIso,
+      }));
     const { error: upErr, count } = await db
       .from("eurovision_2026_results")
       .upsert(records, { onConflict: "iso", count: "exact" });

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
@@ -69,14 +70,13 @@ export default function Header() {
 
   return (
     <>
-      <header className="h-14 flex items-center justify-between px-4 shrink-0 border-b border-white/10" style={{ background: 'rgb(10, 5, 25)' }}>
+      <header className="h-14 relative flex items-center justify-between px-4 shrink-0 border-b border-white/10" style={{ background: 'rgb(10, 5, 25)' }}>
         {/* Left: Room code badge */}
         <button
           onClick={copyRoomCode}
-          className="flex items-center gap-1.5 rounded-full bg-euro-purple/30 px-3 py-1 text-sm font-semibold text-euro-purple-light active:scale-95 transition-transform min-h-[36px]"
+          className="flex items-center gap-1.5 rounded-full bg-euro-purple/30 px-3 py-1 text-xs sm:text-sm font-semibold text-euro-purple-light active:scale-95 transition-transform min-h-[36px]"
           aria-label={t('header.shareAria')}
         >
-          <span className="text-xs opacity-60">📤</span>
           <span className="tracking-widest">{room?.code ?? '----'}</span>
           <AnimatePresence mode="wait">
             {copied && (
@@ -88,7 +88,7 @@ export default function Header() {
         {/* Center: Phase indicator */}
         <button
           onClick={() => { setShowPhaseMenu(!showPhaseMenu); setShowInvite(false); setShowProfile(false); setShowNotifications(false); }}
-          className="text-sm font-medium text-white/70 truncate max-w-[160px] flex items-center gap-1 active:scale-95 transition-transform"
+          className="absolute left-1/2 -translate-x-1/2 text-sm font-medium text-white/70 truncate max-w-[130px] sm:max-w-[160px] flex items-center gap-1 active:scale-95 transition-transform"
         >
           {phaseLabel}
           <span className="text-[10px] text-white/30">▼</span>
@@ -100,6 +100,7 @@ export default function Header() {
           className="relative flex items-center gap-1.5 rounded-full bg-white/8 px-2.5 py-1 min-h-[36px] active:scale-95 transition-transform"
           aria-label="Profile & Settings"
         >
+          <User className="w-4 h-4 text-white/60 shrink-0" strokeWidth={2} />
           <span className="text-xs font-semibold text-white/80 max-w-[72px] truncate hidden sm:block">
             {player?.name ?? ''}
           </span>
