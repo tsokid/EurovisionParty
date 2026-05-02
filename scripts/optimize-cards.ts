@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 
 const NAMES = ['champion', 'thief', 'duelist', 'oracle', 'guru'] as const;
-const SRC = 'public/cards/_source';
+const SRC = 'public/cards/Source';
 const OUT = 'public/cards';
 
 if (!existsSync(OUT)) mkdirSync(OUT, { recursive: true });
