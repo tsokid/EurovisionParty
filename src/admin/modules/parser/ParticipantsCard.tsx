@@ -147,6 +147,14 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
         onSaved={onRefresh}
       />
 
+      {status === "idle" && job.scheduled_start_at && (
+        <p className="text-[11px] text-emerald-400/80 mb-2 leading-snug">
+          ✅ Armed — cron will fire at{" "}
+          <span className="text-white font-medium">
+            {new Date(job.scheduled_start_at).toLocaleString()}
+          </span>. Nothing else to do.
+        </p>
+      )}
       {status === "done" && (
         <p className="text-[11px] text-white/55 mb-2 leading-snug">
           ✅ Already ran. Click <span className="text-white">Start on Schedule</span> to allow the next scheduled time to fire it again, or <span className="text-white">Start Now</span> for an immediate re-run.
