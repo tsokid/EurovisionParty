@@ -33,6 +33,7 @@ export function RoomPage() {
   const [showWinner, setShowWinner] = useState(true);
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
+  const [showHostManualEntry, setShowHostManualEntry] = useState(false);
 
   // Defense-in-depth: emit noindex,nofollow so even if a room URL leaks
   // into a backlink or sitemap, search engines won't index the live game
@@ -196,7 +197,6 @@ export function RoomPage() {
   const quizDuelsLocked = phase === 'voting_live' || phase === 'final';
   const predictionsLocked = phase === 'lobby' || phase === 'pre_night';
 
-  const [showHostManualEntry, setShowHostManualEntry] = useState(false);
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'quiz':

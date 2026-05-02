@@ -10,7 +10,7 @@ import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
 
 export default function EurovisionParser() {
-  const { jobs, runs, loading, error, refresh } = useParserState(2026);
+  const { jobs, runs, loading, refresh } = useParserState(2026);
 
   if (loading && Object.keys(jobs).length === 0) {
     return <div className="p-4 text-white/60">Loading parser state…</div>;
