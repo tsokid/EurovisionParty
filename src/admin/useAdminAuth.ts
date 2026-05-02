@@ -59,9 +59,11 @@ export function useAdminAuth() {
       setState((s) => ({ ...s, error: error.message }));
       return false;
     }
-    await refresh();
+    // onAuthStateChange already calls refresh() when the session is established.
+    // Don't await a second refresh here — it races with the listener and any
+    // thrown error would leave the UI stuck on "Verifying…".
     return true;
-  }, [refresh]);
+  }, []);
 
   const logout = useCallback(async () => {
     await supabase.auth.signOut();

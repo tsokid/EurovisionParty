@@ -40,8 +40,13 @@ export default function AdminLogin({ auth }: Props) {
   async function verify() {
     if (token.length !== 6 || verifying) return;
     setVerifying(true);
-    await verifyOtp(email, token);
-    setVerifying(false);
+    try {
+      await verifyOtp(email, token);
+    } catch {
+      // verifyOtp updates error state internally; just unblock the button
+    } finally {
+      setVerifying(false);
+    }
   }
 
   function setDigit(i: number, v: string) {
