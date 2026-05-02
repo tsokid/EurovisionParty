@@ -18,7 +18,6 @@ const HOW_TO_PLAY_LINKS = [
   { href: '/faq', key: 'otherFaq' as const },
 ];
 
-const CONTACT_EMAIL = 'hello@eurovision.games';
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
