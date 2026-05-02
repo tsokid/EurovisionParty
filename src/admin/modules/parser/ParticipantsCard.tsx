@@ -53,13 +53,13 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
     }
   };
 
-  // Start on Schedule: hand-of-card back to the cron — keep schedule,
-  // flip status to idle so the next scheduled tick fires it. Uses the
-  // "Hard Stop" RPC which already does any-non-final → idle without
-  // touching the schedule.
+  // Start on Schedule: arm the job for the next cron tick — sets
+  // status=idle with stopped_at=NULL so the 033 cron guard passes.
+  // Must NOT call hard_stop_parse_job (which sets stopped_at=now()),
+  // as that would permanently block the cron guard from re-triggering.
   const startOnSchedule = () =>
     wrap(async () => {
-      const { error } = await supabase.rpc("hard_stop_parse_job", {
+      const { error } = await supabase.rpc("arm_parse_job", {
         p_year: job.year,
         p_kind: "participants",
       });
