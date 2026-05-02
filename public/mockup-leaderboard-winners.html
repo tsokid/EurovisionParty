@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prototype — Leaderboard & Winners · 7 Screens</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'euro-gold': '#fbbf24',
+        'euro-pink': '#ec4899',
+        'euro-purple': '#6b21a8',
+        'euro-purple-light': '#a855f7',
+        'euro-cyan': '#22d3ee',
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { background: #08031a; font-family: 'Inter', system-ui, sans-serif; }
+  .bg-app {
+    background-color: #08031a;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 10%, rgba(236,72,153,0.28), transparent 60%),
+      radial-gradient(ellipse 70% 55% at 85% 90%, rgba(56,189,248,0.18), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 75% 15%, rgba(168,85,247,0.24), transparent 65%);
+    min-height: 100vh;
+  }
+  .gradient-bar { background: linear-gradient(to right, #ec4899, #22d3ee); }
+@keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.08);opacity:.8} }
+  .pulse { animation: pulse-ring 1.8s ease-in-out infinite; }
+  @keyframes countdown { from{stroke-dashoffset:0} to{stroke-dashoffset:100.5} }
+  .countdown-ring { animation: countdown 20s linear forwards; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .nav-btn { transition: all .2s; }
+  .nav-btn.active { background: rgba(168,85,247,0.3); border-color: rgba(168,85,247,0.6); color: white; }
+</style>
+</head>
+<body class="bg-app text-white min-h-screen">
+
+<!-- ── NAV ──────────────────────────────────────────────────────────────── -->
+<div class="sticky top-0 z-50 bg-black/60 backdrop-blur border-b border-white/10 px-3 py-2 overflow-x-auto">
+  <div class="flex gap-2 min-w-max mx-auto max-w-5xl">
+    <span class="text-[10px] text-white/30 uppercase tracking-widest self-center pr-2 flex-shrink-0">Prototype</span>
+    <button onclick="show(1)" id="btn1" class="nav-btn active px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">① Board · Pre-game</button>
+    <button onclick="show(2)" id="btn2" class="nav-btn px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">② Board · First pts</button>
+    <button onclick="show(3)" id="btn3" class="nav-btn px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">③ Board · Full house</button>
+    <button onclick="show(4)" id="btn4" class="nav-btn px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">④ Final · Clear winner</button>
+    <button onclick="show(5)" id="btn5" class="nav-btn px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">⑤ Final · Tie vote</button>
+    <button onclick="show(6)" id="btn6" class="nav-btn px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">⑥ Final · Sudden death</button>
+    <button onclick="show(7)" id="btn7" class="nav-btn px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">⑦ Final · Tie accepted</button>
+    <button onclick="show(8)" id="btn8" class="nav-btn px-3 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/60 flex-shrink-0">⑧ Final · No Crown</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 1 — BOARD · PRE-GAME
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s1" class="screen active max-w-xl mx-auto px-4 py-6 space-y-5">
+  <h2 class="text-2xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">stage</span> rankings.</h2>
+
+  <!-- Empty podium -->
+  <div class="rounded-2xl border-2 border-dashed border-white/15 bg-white/[0.03] p-8 flex flex-col items-center gap-3">
+    <svg class="w-10 h-10 text-white/15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2l2.09 6.26L20 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l5.91-.91L12 2z"/></svg>
+    <p class="text-sm font-semibold text-white/25">Nobody on the podium yet</p>
+    <p class="text-xs text-white/15">Scores will appear as the game unfolds</p>
+  </div>
+
+  <!-- YOU card -->
+  <div class="rounded-2xl border border-purple-500/30 bg-purple-900/20 p-4">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center text-sm font-bold">E</div>
+      <div>
+        <p class="text-xs text-purple-300 font-bold uppercase tracking-widest">You</p>
+        <p class="font-semibold text-white">Explorer — <span class="text-white/50">rank –</span></p>
+      </div>
+      <div class="ml-auto text-right">
+        <p class="text-2xl font-extrabold text-white tabular-nums">0</p>
+        <p class="text-[10px] text-white/30 uppercase">Points</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-2">
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">0</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Quiz pts</p></div>
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">0</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Duel pts</p></div>
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">0</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Pred pts</p></div>
+    </div>
+  </div>
+
+  <!-- Standings -->
+  <div class="rounded-2xl bg-white/[0.04] p-3">
+    <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest px-1 mb-3">Standings</p>
+    <div class="space-y-1.5">
+      <p class="text-center text-xs text-white/25 py-4">No scores yet. Get playing!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 2 — BOARD · FIRST POINTS
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s2" class="screen max-w-xl mx-auto px-4 py-6 space-y-5">
+  <h2 class="text-2xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">stage</span> rankings.</h2>
+
+  <!-- Podium (3 players) -->
+  <div class="flex items-end justify-center gap-3 pt-4 pb-0">
+    <!-- #2 -->
+    <div class="flex flex-col items-center">
+      <div class="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-sm font-bold relative mb-2">
+        O
+        <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-[10px] font-bold text-white">2</span>
+      </div>
+      <p class="text-xs font-semibold text-white/80 mb-1">Opera4</p>
+      <p class="text-sm font-extrabold text-white mb-2">40 <span class="text-[10px] text-white/40 font-normal">pts</span></p>
+      <div class="w-20 h-16 rounded-t-xl bg-white/10 ring-1 ring-white/15 flex items-end justify-center pb-2">
+        <span class="text-xl opacity-40">🥈</span>
+      </div>
+    </div>
+    <!-- #1 -->
+    <div class="flex flex-col items-center">
+      <svg class="w-5 h-5 text-yellow-400 mb-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M2 6l4 4 6-8 6 8 4-4-2 12H4L2 6z"/></svg>
+      <div class="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-lg font-bold relative ring-2 ring-yellow-400/50 mb-2">
+        T
+        <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-yellow-400 flex items-center justify-center text-[10px] font-bold text-black">1</span>
+      </div>
+      <p class="text-sm font-bold text-yellow-400 mb-0.5">Test Chrome</p>
+      <p class="text-base font-extrabold text-white mb-2">244 <span class="text-[10px] text-white/40 font-normal">pts</span></p>
+      <div class="w-20 h-24 rounded-t-xl bg-yellow-400/15 ring-1 ring-yellow-400/30 flex items-end justify-center pb-2">
+        <span class="text-2xl opacity-50">👑</span>
+      </div>
+    </div>
+    <!-- #3 -->
+    <div class="flex flex-col items-center">
+      <div class="w-11 h-11 rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center text-sm font-bold relative mb-2">
+        O
+        <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-orange-500/80 flex items-center justify-center text-[10px] font-bold text-white">3</span>
+      </div>
+      <p class="text-xs font-semibold text-white/80 mb-1">Oper1a</p>
+      <p class="text-sm font-extrabold text-white mb-2">16 <span class="text-[10px] text-white/40 font-normal">pts</span></p>
+      <div class="w-20 h-12 rounded-t-xl bg-white/10 ring-1 ring-white/10 flex items-end justify-center pb-2">
+        <span class="text-xl opacity-40">🥉</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- YOU card -->
+  <div class="rounded-2xl border border-purple-500/30 bg-purple-900/20 p-4">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center text-sm font-bold">E</div>
+      <div>
+        <p class="text-xs text-purple-300 font-bold uppercase tracking-widest">You</p>
+        <p class="font-semibold text-white">Explorer — <span class="text-white/50">rank 4 of 4</span></p>
+      </div>
+      <div class="ml-auto text-right">
+        <p class="text-2xl font-extrabold text-white tabular-nums">8</p>
+        <p class="text-[10px] text-white/30 uppercase">Points</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-2">
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">8</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Quiz pts</p></div>
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">0</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Duel pts</p></div>
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">0</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Pred pts</p></div>
+    </div>
+  </div>
+
+  <!-- Standings (non-podium players) -->
+  <div class="rounded-2xl bg-white/[0.04] p-3">
+    <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest px-1 mb-3">Standings</p>
+    <div class="space-y-1.5">
+      <div class="flex items-center gap-3 rounded-xl bg-purple-500/15 border border-purple-500/30 px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">4</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center text-white font-bold text-sm">E</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5"><p class="font-semibold text-sm text-purple-300">Explorer</p><span class="text-[10px] font-bold text-purple-300 bg-purple-500/25 rounded-full px-1.5 py-0.5">you</span></div>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:3%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums">8</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 3 — BOARD · FULL HOUSE (20 players)
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s3" class="screen max-w-xl mx-auto px-4 py-6 space-y-5">
+  <h2 class="text-2xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">stage</span> rankings.</h2>
+
+  <!-- Podium -->
+  <div class="flex items-end justify-center gap-3 pt-4 pb-0">
+    <div class="flex flex-col items-center">
+      <div class="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-sm font-bold relative mb-2">M<span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-[10px] font-bold">2</span></div>
+      <p class="text-xs font-semibold text-white/80 mb-1">Maria K.</p>
+      <p class="text-sm font-extrabold text-white mb-2">1,180 <span class="text-[9px] text-white/40">pts</span></p>
+      <div class="w-20 h-16 rounded-t-xl bg-white/10 ring-1 ring-white/15 flex items-end justify-center pb-2"><span class="text-xl opacity-40">🥈</span></div>
+    </div>
+    <div class="flex flex-col items-center">
+      <svg class="w-5 h-5 text-yellow-400 mb-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M2 6l4 4 6-8 6 8 4-4-2 12H4L2 6z"/></svg>
+      <div class="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-lg font-bold relative ring-2 ring-yellow-400/50 mb-2">A<span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-yellow-400 flex items-center justify-center text-[10px] font-bold text-black">1</span></div>
+      <p class="text-sm font-bold text-yellow-400 mb-0.5">Alex T.</p>
+      <p class="text-base font-extrabold text-white mb-2">1,420 <span class="text-[9px] text-white/40">pts</span></p>
+      <div class="w-20 h-24 rounded-t-xl bg-yellow-400/15 ring-1 ring-yellow-400/30 flex items-end justify-center pb-2"><span class="text-2xl opacity-50">👑</span></div>
+    </div>
+    <div class="flex flex-col items-center">
+      <div class="w-11 h-11 rounded-full bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-sm font-bold relative mb-2">S<span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-orange-500/80 flex items-center justify-center text-[10px] font-bold">3</span></div>
+      <p class="text-xs font-semibold text-white/80 mb-1">Sofia P.</p>
+      <p class="text-sm font-extrabold text-white mb-2">950 <span class="text-[9px] text-white/40">pts</span></p>
+      <div class="w-20 h-12 rounded-t-xl bg-white/10 ring-1 ring-white/10 flex items-end justify-center pb-2"><span class="text-xl opacity-40">🥉</span></div>
+    </div>
+  </div>
+
+  <!-- YOU card -->
+  <div class="rounded-2xl border border-purple-500/30 bg-purple-900/20 p-4">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-sm font-bold">E</div>
+      <div>
+        <p class="text-xs text-purple-300 font-bold uppercase tracking-widest">You</p>
+        <p class="font-semibold text-white">Explorer — <span class="text-white/50">rank 7 of 20</span></p>
+      </div>
+      <div class="ml-auto text-right">
+        <p class="text-2xl font-extrabold text-white tabular-nums">640</p>
+        <p class="text-[10px] text-white/30 uppercase">Points</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-2">
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">280</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Quiz pts</p></div>
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">160</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Duel pts</p></div>
+      <div class="rounded-xl bg-white/[0.06] p-2 text-center"><p class="text-lg font-extrabold">200</p><p class="text-[9px] text-white/40 uppercase tracking-wide">Pred pts</p></div>
+    </div>
+  </div>
+
+  <!-- Standings with search -->
+  <div class="rounded-2xl bg-white/[0.04] p-3">
+    <div class="flex items-center justify-between mb-3 px-1">
+      <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Standings</p>
+      <div class="relative">
+        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="Search player" class="pl-7 pr-3 py-1.5 text-xs rounded-full bg-white/[0.08] border border-white/15 text-white placeholder:text-white/30 focus:outline-none w-28"/>
+      </div>
+    </div>
+    <div class="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+      <!-- rows 1-3 are podium, show 4-20 here, abbreviated -->
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">4</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-sm">J</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5"><p class="font-semibold text-sm text-white truncate">Jana M.</p><span class="text-[10px] text-emerald-400 font-bold">↗+2</span></div>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:52%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums text-white">740</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">5</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white font-bold text-sm">K</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm text-white truncate">Kristos V.</p>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:50%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums text-white">710</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">6</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">N</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5"><p class="font-semibold text-sm text-white truncate">Nikos A.</p><span class="text-[10px] text-red-400 font-bold">↘-1</span></div>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:47%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums text-white">670</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl bg-purple-500/15 border border-purple-500/30 px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">7</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">E</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5"><p class="font-semibold text-sm text-purple-300">Explorer</p><span class="text-[10px] font-bold text-purple-300 bg-purple-500/25 rounded-full px-1.5 py-0.5">you</span></div>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:45%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums text-white">640</p>
+      </div>
+      <!-- abbreviated remaining players -->
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5 opacity-60">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">8–20</div>
+        <div class="flex-1 text-xs text-white/30">· · · 13 more players · · ·</div>
+      </div>
+    </div>
+    <p class="text-center text-[11px] text-white/20 mt-3">Updated live as quizzes finish and duels resolve.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 4 — FINAL · CLEAR WINNER
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s4" class="screen max-w-3xl mx-auto px-3 sm:px-5 py-6 space-y-5">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">winners'</span> circle.</h2>
+
+  <!-- Champion hero -->
+  <div class="grid grid-cols-2 gap-3">
+    <!-- Left: champion card -->
+    <div class="rounded-2xl border border-white/10 bg-white/[0.05] overflow-hidden flex">
+      <img src="./Cards/champion.jpg" class="w-[42%] flex-shrink-0 object-cover self-stretch" alt="Champion" />
+      <div class="p-3 flex flex-col min-w-0">
+        <div class="inline-flex items-center gap-1.5 rounded-full bg-yellow-400/15 border border-yellow-400/40 px-2 py-0.5 text-[10px] font-bold text-yellow-400 tracking-widest uppercase self-start mb-2">
+          👑 Champion
+        </div>
+        <p class="text-lg font-extrabold text-yellow-400 leading-tight truncate">Alex T.</p>
+        <p class="text-[10px] text-white/45 uppercase tracking-widest mt-0.5">Most Points</p>
+        <div class="mt-auto">
+          <p class="text-3xl font-extrabold text-white tabular-nums leading-none">1,420</p>
+          <p class="text-[10px] text-white/40 uppercase tracking-widest mt-0.5">Total Points</p>
+          <button class="mt-2 flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">
+            ↗ Share
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: YOUR CROWN — same layout as Champion, ribbon at bottom -->
+    <div class="rounded-2xl border border-pink-500/30 bg-white/[0.05] overflow-hidden flex flex-col">
+      <div class="flex flex-1">
+        <img src="./Cards/duelist.jpg" class="w-[42%] flex-shrink-0 object-cover self-stretch" alt="Duelist" />
+        <div class="p-3 flex flex-col min-w-0 flex-1">
+          <div class="inline-flex items-center gap-1.5 rounded-full bg-red-500/15 border border-red-400/40 px-2 py-0.5 text-[10px] font-bold text-red-400 tracking-widest uppercase self-start mb-2">⚔ Duelist</div>
+          <p class="text-lg font-extrabold text-red-400 leading-tight truncate">Explorer</p>
+          <p class="text-[10px] text-white/45 uppercase tracking-widest mt-0.5">Most Duels Won</p>
+          <div class="mt-auto">
+            <div class="flex items-center justify-between rounded-xl bg-white/[0.07] px-2 py-2 mt-2">
+              <span class="text-xs text-white/50">Duels won</span>
+              <span class="text-sm font-bold text-white tabular-nums">12</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-center gap-2 py-2.5 text-white text-[11px] font-extrabold tracking-[0.18em] uppercase" style="background:linear-gradient(90deg,#be185d,#a21caf,#7c3aed)">
+        <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l5.91-.91L12 2z"/></svg>
+        Your Crown
+        <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l5.91-.91L12 2z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other crowns -->
+  <div>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold text-white/35 tracking-widest uppercase">✦ Other Crowns</span>
+      <span class="text-xs bg-white/10 text-white/50 rounded-full px-2 py-0.5 font-semibold">3 categories</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <!-- Thief -->
+      <div class="rounded-xl overflow-hidden relative border border-white/10">
+        <img src="./Cards/thief.jpg" class="w-full aspect-[3/4] object-cover" alt="Thief" />
+        <div class="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p class="text-xs font-bold text-emerald-400">Thief</p>
+          <p class="text-[9px] text-white/45 uppercase mt-0.5">Pts Stolen</p>
+          <div class="flex items-center gap-1 mt-1.5">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center text-[9px] font-bold">L</div>
+            <span class="text-[10px] text-white font-semibold truncate">Lena R.</span>
+            <span class="text-[9px] text-white/40">340</span>
+          </div>
+        </div>
+      </div>
+      <!-- Guru -->
+      <div class="rounded-xl overflow-hidden relative border border-white/10">
+        <img src="./Cards/guru.jpg" class="w-full aspect-[3/4] object-cover" alt="Guru" />
+        <div class="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p class="text-xs font-bold text-purple-400">Guru</p>
+          <p class="text-[9px] text-white/45 uppercase mt-0.5">Quiz Answers</p>
+          <div class="flex items-center gap-1 mt-1.5">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-[9px] font-bold">M</div>
+            <span class="text-[10px] text-white font-semibold truncate">Max P.</span>
+            <span class="text-[9px] text-white/40">18</span>
+          </div>
+        </div>
+      </div>
+      <!-- Oracle -->
+      <div class="rounded-xl overflow-hidden relative border border-white/10">
+        <img src="./Cards/oracle.jpg" class="w-full aspect-[3/4] object-cover" alt="Oracle" />
+        <div class="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p class="text-xs font-bold text-cyan-400">The Oracle</p>
+          <p class="text-[9px] text-white/45 uppercase mt-0.5">Predictions</p>
+          <div class="flex items-center gap-1 mt-1.5">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-[9px] font-bold">S</div>
+            <span class="text-[10px] text-white font-semibold truncate">Sofia P.</span>
+            <span class="text-[9px] text-white/40">4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final standings -->
+  <div class="rounded-2xl bg-white/[0.04] p-3">
+    <div class="flex items-center justify-between mb-3 px-1">
+      <p class="text-[10px] font-bold text-white/35 uppercase tracking-widest">Final Standings</p>
+      <div class="relative">
+        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="Search player" class="pl-7 pr-3 py-1.5 text-xs rounded-full bg-white/[0.08] border border-white/15 text-white placeholder:text-white/30 focus:outline-none w-28"/>
+      </div>
+    </div>
+    <div class="space-y-1.5">
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">1</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">A</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm text-white truncate">Alex T.</p>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:100%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums text-white">1,420</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">2</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">M</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm text-white truncate">Maria K.</p>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:83%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums text-white">1,180</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl bg-purple-500/15 border border-purple-500/30 px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">3</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">E</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5"><p class="font-semibold text-sm text-purple-300">Explorer</p><span class="text-[10px] font-bold text-purple-300 bg-purple-500/25 rounded-full px-1.5 py-0.5">you</span></div>
+          <div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:45%"></div></div>
+        </div>
+        <p class="text-lg font-extrabold tabular-nums text-white">640</p>
+      </div>
+    </div>
+    <p class="text-center text-[11px] text-white/25 mt-4">The show's over. Screenshot your card, share the bragging rights.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 5 — FINAL · TIE VOTE
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s5" class="screen max-w-3xl mx-auto px-3 sm:px-5 py-6 space-y-5">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">winners'</span> circle.</h2>
+
+  <!-- Champion hero — TIED -->
+  <div class="grid grid-cols-2 gap-3">
+    <div class="rounded-2xl border border-white/10 bg-white/[0.05] overflow-hidden flex">
+      <img src="./Cards/champion.jpg" class="w-[42%] flex-shrink-0 object-cover self-stretch" alt="Champion" />
+      <div class="p-3 flex flex-col min-w-0">
+        <div class="inline-flex items-center gap-1.5 rounded-full bg-yellow-400/15 border border-yellow-400/40 px-2 py-0.5 text-[10px] font-bold text-yellow-400 tracking-widest uppercase self-start mb-2">👑 Champion</div>
+        <p class="text-lg font-extrabold text-yellow-400 leading-tight">Alex T.</p>
+        <p class="text-[10px] text-white/45 uppercase tracking-widest mt-0.5">Most Points</p>
+        <span class="mt-2 self-start inline-flex items-center gap-1 rounded-full bg-amber-400/15 border border-amber-400/40 px-2 py-0.5 text-[10px] font-bold text-amber-400 uppercase">⚠ Tied for first</span>
+        <div class="mt-auto">
+          <p class="text-3xl font-extrabold text-white tabular-nums leading-none">1,420</p>
+          <p class="text-[10px] text-white/40 uppercase tracking-widest mt-0.5">Total Points</p>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] flex flex-col items-center justify-center gap-2 p-6 text-center">
+      <svg class="w-8 h-8 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2l2.09 6.26L20 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l5.91-.91L12 2z"/></svg>
+      <p class="text-sm text-white/30">No crown this time</p>
+    </div>
+  </div>
+
+  <!-- Tie vote panel — ACTIVE -->
+  <div class="rounded-2xl border border-amber-400/25 bg-[#1a0a2e]/80 p-4 sm:p-5">
+    <div class="flex items-start justify-between gap-4 mb-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 rounded-full bg-amber-400/15 border border-amber-400/30 px-2.5 py-0.5 text-[11px] font-bold text-amber-400 tracking-widest uppercase mb-2">⚠ Tie at the top</div>
+        <p class="text-base font-bold text-white">How do we crown the Champion?</p>
+        <p class="text-sm text-white/55 mt-0.5">Alex T. & Maria K. are tied. Vote in the next <span id="timerDisp">14</span>s.</p>
+      </div>
+      <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#0d0620] border border-white/15 flex items-center justify-center font-extrabold text-xl text-white tabular-nums" id="timerCircle">14</div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div class="rounded-xl border border-purple-500/60 bg-purple-500/20 p-3">
+        <div class="flex items-center justify-between mb-1.5">
+          <p class="text-sm font-bold text-white">⚔ Sudden Death</p>
+          <span class="text-xs font-semibold text-white/60 tabular-nums">3 · 60%</span>
+        </div>
+        <p class="text-xs text-white/45 mb-2">3 quick questions decide the winner.</p>
+        <div class="h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500" style="width:60%"></div></div>
+      </div>
+      <div class="rounded-xl border border-white/15 bg-white/[0.04] p-3">
+        <div class="flex items-center justify-between mb-1.5">
+          <p class="text-sm font-bold text-white">💛 Accept the Tie</p>
+          <span class="text-xs font-semibold text-white/60 tabular-nums">2 · 40%</span>
+        </div>
+        <p class="text-xs text-white/45 mb-2">Both players share the Champion crown.</p>
+        <div class="h-1 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400" style="width:40%"></div></div>
+      </div>
+    </div>
+    <p class="text-center text-[11px] text-white/30 mt-3">Pick one — option with most votes wins when the timer ends.</p>
+  </div>
+
+  <!-- Other crowns (same as s4) -->
+  <div>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold text-white/35 tracking-widest uppercase">✦ Other Crowns</span>
+      <span class="text-xs bg-white/10 text-white/50 rounded-full px-2 py-0.5 font-semibold">3 categories</span>
+    </div>
+    <div class="grid grid-cols-4 gap-2">
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/duelist.jpg" class="w-full aspect-[3/4] object-cover" alt="Duelist" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-red-400">The Duelist</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-[9px] font-bold">E</div><span class="text-[10px] text-white font-semibold truncate">Explorer</span></div></div></div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/thief.jpg" class="w-full aspect-[3/4] object-cover" alt="Thief" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-emerald-400">Thief</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center text-[9px] font-bold">L</div><span class="text-[10px] text-white font-semibold truncate">Lena R.</span></div></div></div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/guru.jpg" class="w-full aspect-[3/4] object-cover" alt="Guru" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-purple-400">Guru</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-[9px] font-bold">M</div><span class="text-[10px] text-white font-semibold truncate">Max P.</span></div></div></div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/oracle.jpg" class="w-full aspect-[3/4] object-cover" alt="Oracle" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-cyan-400">The Oracle</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-[9px] font-bold">S</div><span class="text-[10px] text-white font-semibold truncate">Sofia P.</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 6 — FINAL · SUDDEN DEATH
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s6" class="screen max-w-3xl mx-auto px-3 sm:px-5 py-6 space-y-5">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">winners'</span> circle.</h2>
+
+  <!-- Champion (still tied) -->
+  <div class="grid grid-cols-2 gap-3">
+    <div class="rounded-2xl border border-white/10 bg-white/[0.05] overflow-hidden flex">
+      <img src="./Cards/champion.jpg" class="w-[42%] flex-shrink-0 object-cover self-stretch" alt="Champion" />
+      <div class="p-3 flex flex-col min-w-0">
+        <div class="inline-flex items-center gap-1.5 rounded-full bg-yellow-400/15 border border-yellow-400/40 px-2 py-0.5 text-[10px] font-bold text-yellow-400 tracking-widest uppercase self-start mb-2">👑 Champion</div>
+        <p class="text-lg font-extrabold text-yellow-400 leading-tight">Alex T.</p>
+        <p class="text-[10px] text-white/45 uppercase tracking-widest mt-0.5">Most Points</p>
+        <span class="mt-2 self-start inline-flex items-center gap-1 rounded-full bg-amber-400/15 border border-amber-400/40 px-2 py-0.5 text-[10px] font-bold text-amber-400 uppercase">⚠ Tied for first</span>
+        <div class="mt-auto"><p class="text-3xl font-extrabold text-white tabular-nums leading-none">1,420</p></div>
+      </div>
+    </div>
+    <div class="rounded-2xl border border-euro-pink/30 bg-pink-500/8 p-4 text-center flex flex-col items-center justify-center gap-2">
+      <div class="inline-flex items-center gap-1.5 rounded-full bg-pink-500/20 border border-pink-500/40 px-3 py-1 text-xs font-bold text-pink-400 tracking-widest uppercase">⚔ Sudden Death</div>
+      <p class="text-sm font-bold text-white">The room voted to settle it.</p>
+      <p class="text-xs text-white/55">Sudden-death match incoming…</p>
+    </div>
+  </div>
+
+  <!-- Sudden death question panel -->
+  <div class="rounded-2xl border border-pink-500/30 bg-[#1a0a2e]/80 p-4 sm:p-5">
+    <div class="flex items-center justify-between mb-4">
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-pink-500/20 border border-pink-500/40 px-2.5 py-1 text-[11px] font-bold text-pink-400 tracking-widest uppercase">⚔ Sudden Death · Q2/3</span>
+      <span class="font-semibold text-white/70 tabular-nums">12s</span>
+    </div>
+    <p class="text-base sm:text-lg font-bold text-white mb-4">In which year did ABBA win Eurovision with "Waterloo"?</p>
+    <div class="grid grid-cols-2 gap-2">
+      <button class="rounded-xl border border-purple-500/60 bg-purple-500/25 text-white px-4 py-3 text-sm font-medium text-left">1974</button>
+      <button class="rounded-xl border border-white/15 bg-white/[0.04] text-white/80 px-4 py-3 text-sm font-medium text-left hover:bg-white/[0.08]">1976</button>
+      <button class="rounded-xl border border-white/15 bg-white/[0.04] text-white/80 px-4 py-3 text-sm font-medium text-left hover:bg-white/[0.08]">1972</button>
+      <button class="rounded-xl border border-white/15 bg-white/[0.04] text-white/80 px-4 py-3 text-sm font-medium text-left hover:bg-white/[0.08]">1978</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 7 — FINAL · TIE ACCEPTED
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s7" class="screen max-w-3xl mx-auto px-3 sm:px-5 py-6 space-y-5">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">winners'</span> circle.</h2>
+
+  <!-- Two-champions card -->
+  <div class="rounded-2xl border border-amber-400/25 bg-amber-400/8 p-6 text-center">
+    <div class="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 border border-amber-400/40 px-3 py-1 text-xs font-bold text-amber-400 tracking-widest uppercase mb-4">💛 Tie Accepted</div>
+    <p class="text-xl font-extrabold text-white">Two Champions</p>
+    <p class="text-sm text-white/55 mt-1 max-w-xs mx-auto">The room voted to share the crown. Both players take the Champion card.</p>
+    <div class="flex items-center justify-center gap-4 mt-5">
+      <div class="flex items-center gap-2 bg-white/[0.06] rounded-full pl-1 pr-3 py-1">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">A</div>
+        <span class="text-sm font-semibold text-white">Alex T.</span>
+        <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M2 6l4 4 6-8 6 8 4-4-2 12H4L2 6z"/></svg>
+      </div>
+      <div class="flex items-center gap-2 bg-white/[0.06] rounded-full pl-1 pr-3 py-1">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">M</div>
+        <span class="text-sm font-semibold text-white">Maria K.</span>
+        <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M2 6l4 4 6-8 6 8 4-4-2 12H4L2 6z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other crowns -->
+  <div>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold text-white/35 tracking-widest uppercase">✦ Other Crowns</span>
+      <span class="text-xs bg-white/10 text-white/50 rounded-full px-2 py-0.5 font-semibold">4 categories</span>
+    </div>
+    <div class="grid grid-cols-4 gap-2">
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/duelist.jpg" class="w-full aspect-[3/4] object-cover" alt="Duelist" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-red-400">The Duelist</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-[9px] font-bold">E</div><span class="text-[10px] text-white font-semibold truncate">Explorer</span></div></div></div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/thief.jpg" class="w-full aspect-[3/4] object-cover" alt="Thief" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-emerald-400">Thief</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center text-[9px] font-bold">L</div><span class="text-[10px] text-white font-semibold truncate">Lena R.</span></div></div></div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/guru.jpg" class="w-full aspect-[3/4] object-cover" alt="Guru" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-purple-400">Guru</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-[9px] font-bold">M</div><span class="text-[10px] text-white font-semibold truncate">Max P.</span></div></div></div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10"><img src="./Cards/oracle.jpg" class="w-full aspect-[3/4] object-cover" alt="Oracle" /><div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent"><p class="text-xs font-bold text-cyan-400">The Oracle</p><div class="flex items-center gap-1 mt-1.5"><div class="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-[9px] font-bold">S</div><span class="text-[10px] text-white font-semibold truncate">Sofia P.</span></div></div></div>
+    </div>
+  </div>
+
+  <!-- Final standings -->
+  <div class="rounded-2xl bg-white/[0.04] p-3">
+    <p class="text-[10px] font-bold text-white/35 uppercase tracking-widest px-1 mb-3">Final Standings</p>
+    <div class="space-y-1.5">
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">1</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">A</div>
+        <div class="flex-1 min-w-0"><p class="font-semibold text-sm text-white">Alex T.</p><div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:100%"></div></div></div>
+        <p class="text-lg font-extrabold tabular-nums text-white">1,420</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">1</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">M</div>
+        <div class="flex-1 min-w-0"><p class="font-semibold text-sm text-white">Maria K.</p><div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:100%"></div></div></div>
+        <p class="text-lg font-extrabold tabular-nums text-white">1,420</p>
+      </div>
+    </div>
+    <p class="text-center text-[11px] text-white/25 mt-4">The show's over. Screenshot your card, share the bragging rights.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+  SCREEN 8 — FINAL · NO CROWN (user didn't win a special category)
+════════════════════════════════════════════════════════════════════════ -->
+<div id="s8" class="screen max-w-3xl mx-auto px-3 sm:px-5 py-6 space-y-5">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">winners'</span> circle.</h2>
+
+  <!-- Champion — full width, card image gets generous space -->
+  <div class="rounded-2xl border border-white/10 bg-white/[0.05] overflow-hidden flex" style="min-height:200px">
+    <img src="./Cards/champion.jpg" class="w-[50%] sm:w-[55%] flex-shrink-0 object-cover" alt="Champion" />
+    <div class="p-4 sm:p-6 flex flex-col min-w-0">
+      <div class="inline-flex items-center gap-1.5 rounded-full bg-yellow-400/15 border border-yellow-400/40 px-2 py-0.5 text-[10px] font-bold text-yellow-400 tracking-widest uppercase self-start mb-3">👑 Champion</div>
+      <p class="text-xl sm:text-2xl font-extrabold text-yellow-400 leading-tight truncate">Alex T.</p>
+      <p class="text-[10px] text-white/45 uppercase tracking-widest mt-1">Most Points</p>
+      <div class="mt-auto">
+        <p class="text-4xl font-extrabold text-white tabular-nums leading-none">1,420</p>
+        <p class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Total Points</p>
+        <button class="mt-3 flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">↗ Share</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 category crowns equally split -->
+  <div>
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-xs font-bold text-white/35 tracking-widest uppercase">✦ Other Crowns</span>
+      <span class="text-xs bg-white/10 text-white/50 rounded-full px-2 py-0.5 font-semibold">4 categories</span>
+    </div>
+    <div class="grid grid-cols-4 gap-2 sm:gap-3">
+      <div class="rounded-xl overflow-hidden relative border border-white/10">
+        <img src="./Cards/duelist.jpg" class="w-full aspect-[3/4] object-cover" alt="Duelist" />
+        <div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p class="text-xs font-bold text-red-400">Duelist</p>
+          <p class="text-[9px] text-white/45 uppercase mt-0.5">Duels Won</p>
+          <div class="flex items-center gap-1 mt-1.5">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-[9px] font-bold">J</div>
+            <span class="text-[10px] text-white font-semibold truncate">Jana M.</span>
+            <span class="text-[9px] text-white/40">9</span>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10">
+        <img src="./Cards/thief.jpg" class="w-full aspect-[3/4] object-cover" alt="Thief" />
+        <div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p class="text-xs font-bold text-emerald-400">Thief</p>
+          <p class="text-[9px] text-white/45 uppercase mt-0.5">Pts Stolen</p>
+          <div class="flex items-center gap-1 mt-1.5">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center text-[9px] font-bold">L</div>
+            <span class="text-[10px] text-white font-semibold truncate">Lena R.</span>
+            <span class="text-[9px] text-white/40">340</span>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10">
+        <img src="./Cards/guru.jpg" class="w-full aspect-[3/4] object-cover" alt="Guru" />
+        <div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p class="text-xs font-bold text-purple-400">Guru</p>
+          <p class="text-[9px] text-white/45 uppercase mt-0.5">Quiz Answers</p>
+          <div class="flex items-center gap-1 mt-1.5">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-[9px] font-bold">M</div>
+            <span class="text-[10px] text-white font-semibold truncate">Max P.</span>
+            <span class="text-[9px] text-white/40">18</span>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-xl overflow-hidden relative border border-white/10">
+        <img src="./Cards/oracle.jpg" class="w-full aspect-[3/4] object-cover" alt="Oracle" />
+        <div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+          <p class="text-xs font-bold text-cyan-400">Oracle</p>
+          <p class="text-[9px] text-white/45 uppercase mt-0.5">Predictions</p>
+          <div class="flex items-center gap-1 mt-1.5">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-[9px] font-bold">S</div>
+            <span class="text-[10px] text-white font-semibold truncate">Sofia P.</span>
+            <span class="text-[9px] text-white/40">4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No crown message -->
+  <div class="rounded-2xl border border-white/8 bg-white/[0.03] px-5 py-4 text-center">
+    <p class="text-sm text-white/35">You finished <span class="text-white/55 font-semibold">3rd</span> overall — no special crown this time. Screenshot the board and bring it back next year.</p>
+  </div>
+
+  <!-- Final standings -->
+  <div class="rounded-2xl bg-white/[0.04] p-3">
+    <p class="text-[10px] font-bold text-white/35 uppercase tracking-widest px-1 mb-3">Final Standings</p>
+    <div class="space-y-1.5">
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">1</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">A</div>
+        <div class="flex-1 min-w-0"><p class="font-semibold text-sm text-white">Alex T.</p><div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:100%"></div></div></div>
+        <p class="text-lg font-extrabold tabular-nums text-white">1,420</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">2</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">M</div>
+        <div class="flex-1 min-w-0"><p class="font-semibold text-sm text-white">Maria K.</p><div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:83%"></div></div></div>
+        <p class="text-lg font-extrabold tabular-nums text-white">1,180</p>
+      </div>
+      <div class="flex items-center gap-3 rounded-xl bg-purple-500/15 border border-purple-500/30 px-3 py-2.5">
+        <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-white/40">3</div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">E</div>
+        <div class="flex-1 min-w-0"><div class="flex items-center gap-1.5"><p class="font-semibold text-sm text-purple-300">Explorer</p><span class="text-[10px] font-bold text-purple-300 bg-purple-500/25 rounded-full px-1.5 py-0.5">you</span></div><div class="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden"><div class="gradient-bar h-full rounded-full" style="width:45%"></div></div></div>
+        <p class="text-lg font-extrabold tabular-nums text-white">640</p>
+      </div>
+    </div>
+    <p class="text-center text-[11px] text-white/25 mt-4">The show's over. Screenshot your card, share the bragging rights.</p>
+  </div>
+</div>
+
+<script>
+function show(n) {
+  for (let i = 1; i <= 8; i++) {
+    document.getElementById('s'+i).classList.remove('active');
+    document.getElementById('btn'+i).classList.remove('active');
+  }
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('btn'+n).classList.add('active');
+}
+
+// Countdown timer for screen 5
+let timerVal = 20;
+setInterval(() => {
+  if (document.getElementById('s5').classList.contains('active')) {
+    timerVal = Math.max(0, timerVal - 1);
+    const el1 = document.getElementById('timerDisp');
+    const el2 = document.getElementById('timerCircle');
+    if (el1) el1.textContent = timerVal;
+    if (el2) el2.textContent = timerVal;
+    if (timerVal === 0) timerVal = 20; // loop for prototype
+  }
+}, 1000);
+</script>
+</body>
+</html>
