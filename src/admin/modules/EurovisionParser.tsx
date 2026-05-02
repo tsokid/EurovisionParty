@@ -6,6 +6,7 @@ import { useParserState } from "./parser/useParserState";
 import { ParticipantsCard } from "./parser/ParticipantsCard";
 import { ResultsCard } from "./parser/ResultsCard";
 import { FinalizeCard } from "./parser/FinalizeCard";
+import { ResetContestCard } from "./parser/ResetContestCard";
 import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
 
@@ -49,6 +50,7 @@ export default function EurovisionParser() {
           onRefresh={refresh}
         />
         <FinalizeCard job={jobs.results} onRefresh={refresh} />
+        <ResetContestCard year={2026} onRefresh={refresh} />
         <TestCard />
         <ManualRankingCard job={jobs.results} onRefresh={refresh} />
       </div>
