@@ -67,19 +67,20 @@ interface SlotRowProps {
   pos: number;
   zone: 'top' | 'worst';
   onRemove: () => void;
-  /** Fires when an armed country in the pool is "dropped" onto this row.
-   *  Parent replaces this slot with the armed country. */
   onReplace?: () => void;
-  /** Highlights the slot to show it accepts a placement on click. */
   armed?: boolean;
   ghost?: boolean;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
 }
-function SlotRow({ id, country, pos, zone, onRemove, onReplace, armed, ghost }: SlotRowProps) {
+function SlotRow({ id, country, pos, zone, onRemove, onReplace, armed, ghost, canMoveUp, canMoveDown, onMoveUp, onMoveDown }: SlotRowProps) {
   if (!country) return null;
   const label = ord(pos);
   return (
     <div className={clsx(
-      'flex items-center gap-2 px-2.5 py-1.5 rounded-lg border select-none transition-all',
+      'flex items-center gap-1.5 px-2 py-1.5 rounded-lg border select-none transition-all',
       zone === 'top'
         ? 'bg-[rgba(255,209,102,0.1)] border-[rgba(255,209,102,0.4)]'
         : 'bg-[rgba(255,77,109,0.1)] border-[rgba(255,77,109,0.4)]',
@@ -92,12 +93,41 @@ function SlotRow({ id, country, pos, zone, onRemove, onReplace, armed, ghost }: 
     role={armed ? 'button' : undefined}
     aria-label={armed ? `Replace ${label} place with selected country` : undefined}
     >
+      {/* Up/Down arrows */}
+      {!armed && (
+        <div className="flex flex-col gap-0.5 shrink-0">
+          <button
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); onMoveUp?.(); }}
+            disabled={!canMoveUp}
+            className={clsx(
+              'w-4 h-4 rounded flex items-center justify-center text-[9px] leading-none transition-colors',
+              canMoveUp
+                ? (zone === 'top' ? 'text-[#FFD166] hover:bg-[rgba(255,209,102,0.3)]' : 'text-[#FF4D6D] hover:bg-[rgba(255,77,109,0.3)]')
+                : 'text-white/15 cursor-not-allowed',
+            )}
+            aria-label="Move up"
+          >▲</button>
+          <button
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); onMoveDown?.(); }}
+            disabled={!canMoveDown}
+            className={clsx(
+              'w-4 h-4 rounded flex items-center justify-center text-[9px] leading-none transition-colors',
+              canMoveDown
+                ? (zone === 'top' ? 'text-[#FFD166] hover:bg-[rgba(255,209,102,0.3)]' : 'text-[#FF4D6D] hover:bg-[rgba(255,77,109,0.3)]')
+                : 'text-white/15 cursor-not-allowed',
+            )}
+            aria-label="Move down"
+          >▼</button>
+        </div>
+      )}
       <span className={clsx(
-        'font-black text-[1.1rem] leading-none w-9 text-right shrink-0 tabular-nums',
+        'font-black text-[1rem] leading-none w-7 text-right shrink-0 tabular-nums',
         zone === 'top' ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
       )}>{label}</span>
-      <FlagImg id={id} size={26} />
-      <span className="text-[12px] font-bold text-white flex-1 truncate">{getLocalizedCountryName(country)}</span>
+      <FlagImg id={id} size={24} />
+      <span className="text-[11px] font-bold text-white flex-1 truncate">{getLocalizedCountryName(country)}</span>
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); onRemove(); }}
@@ -111,8 +141,6 @@ function SlotRow({ id, country, pos, zone, onRemove, onReplace, armed, ghost }: 
 function SortableSlot(props: SlotRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: props.id });
-  // When armed, suppress drag listeners — a tap on the row should
-  // place-and-replace, not start a reorder drag.
   const dragProps = props.armed ? { ref: setNodeRef } : { ref: setNodeRef, ...attributes, ...listeners };
   return (
     <div
@@ -153,37 +181,34 @@ function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected,
     if (from !== -1 && to !== -1) onReorder(arrayMove(picks, from, to));
   };
 
-  // Slot label calculator
   const labelFor = (i: number) => isTop ? ord(i + 1) : ord(n - WORST_N + 1 + i);
 
   return (
     <div className={clsx(
-      'rounded-2xl border overflow-hidden flex flex-col h-full',
+      'rounded-2xl border flex flex-col',
       'bg-[rgba(18,8,40,0.65)] backdrop-blur-md',
       isTop ? 'border-[rgba(255,209,102,0.25)]' : 'border-[rgba(255,77,109,0.25)]',
     )}>
       {/* Header */}
       <div className={clsx(
-        'px-3.5 pt-3 pb-2.5 border-b shrink-0',
+        'px-3 pt-2.5 pb-2 border-b shrink-0',
         isTop ? 'border-[rgba(255,209,102,0.15)]' : 'border-[rgba(255,77,109,0.15)]',
       )}>
-        <div className="text-lg leading-none mb-0.5">{isTop ? '🏆' : '💀'}</div>
-        <h3 className={clsx(
-          'font-black text-base uppercase tracking-wider leading-none',
-          isTop ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
-        )}>
-          {isTop ? 'Top 5' : 'Worst 5'}
-        </h3>
-        <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">
-          {isTop ? 'Best finish' : 'Last place'}
-        </p>
-        <p className="text-[11px] font-semibold text-white/55 mt-1.5 tabular-nums">
-          {picks.length} / {isTop ? TOP_N : WORST_N} placed
-        </p>
+        <div className="flex items-center justify-between">
+          <h3 className={clsx(
+            'font-black text-sm uppercase tracking-wider leading-none flex items-center gap-1.5',
+            isTop ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
+          )}>
+            {isTop ? '🏆' : '💀'} {isTop ? 'Top 5' : 'Worst 5'}
+          </h3>
+          <span className="text-[10px] font-semibold text-white/40 tabular-nums">
+            {picks.length}/{isTop ? TOP_N : WORST_N}
+          </span>
+        </div>
       </div>
 
-      {/* Slots */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
+      {/* Slots — fixed height, no scroll */}
+      <div className="p-1.5 space-y-1">
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={picks} strategy={verticalListSortingStrategy}>
             {picks.map((id, i) => (
@@ -195,6 +220,10 @@ function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected,
                 onRemove={() => onRemove(id)}
                 armed={hasSelection}
                 onReplace={() => onPlaceSelected(i)}
+                canMoveUp={!hasSelection && i > 0}
+                canMoveDown={!hasSelection && i < picks.length - 1}
+                onMoveUp={() => onReorder(arrayMove(picks, i, i - 1))}
+                onMoveDown={() => onReorder(arrayMove(picks, i, i + 1))}
               />
             ))}
           </SortableContext>
@@ -212,7 +241,7 @@ function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected,
           </DragOverlay>
         </DndContext>
 
-        {/* Empty placeholder slots — clickable when a tile is selected */}
+        {/* Empty placeholder slots */}
         {Array.from({ length: (isTop ? TOP_N : WORST_N) - picks.length }).map((_, i) => {
           const slotIndex = picks.length + i;
           const label = labelFor(slotIndex);
@@ -224,8 +253,7 @@ function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected,
               disabled={!hasSelection}
               aria-label={`${label} place — empty${hasSelection ? ', click to place' : ''}`}
               className={clsx(
-                'w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg border-[1.5px] border-dashed transition-all',
-                'min-h-[40px]',
+                'w-full flex items-center gap-2 px-2 py-1.5 rounded-lg border-[1.5px] border-dashed transition-all min-h-[38px]',
                 isTop ? 'border-[rgba(255,209,102,0.25)]' : 'border-[rgba(255,77,109,0.25)]',
                 hasSelection && (isTop
                   ? 'cursor-pointer hover:bg-[rgba(255,209,102,0.1)] hover:border-[#FFD166] hover:scale-[1.02]'
@@ -234,7 +262,7 @@ function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected,
               )}
             >
               <span className={clsx(
-                'font-black text-[1.1rem] leading-none w-9 text-right shrink-0 tabular-nums opacity-60',
+                'font-black text-[1rem] leading-none w-7 text-right shrink-0 tabular-nums opacity-60',
                 isTop ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
               )}>{label}</span>
               <span className="text-[10px] text-white/30 italic">tap a country →</span>
@@ -522,7 +550,7 @@ export default function PredictionsScreen() {
         className="flex-1 overflow-hidden grid gap-2.5 p-2.5 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)] grid-cols-1 grid-rows-[auto_1fr_auto] lg:grid-rows-1"
       >
         {/* LEFT: Top 5 */}
-        <div className="overflow-y-auto max-h-[230px] lg:max-h-none">
+        <div>
           <ZonePanel
             zone="top" picks={top5}
             byId={byId} n={N}
@@ -603,7 +631,7 @@ export default function PredictionsScreen() {
         </div>
 
         {/* RIGHT: Worst 5 */}
-        <div className="overflow-y-auto max-h-[230px] lg:max-h-none">
+        <div>
           <ZonePanel
             zone="worst" picks={worst5}
             byId={byId} n={N}

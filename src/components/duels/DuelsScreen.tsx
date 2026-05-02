@@ -34,6 +34,7 @@ export default function DuelsScreen() {
   const [showChallengeModal, setShowChallengeModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [playingDuel, setPlayingDuel] = useState<Duel | null>(null);
+  const [expandedHistoryRows, setExpandedHistoryRows] = useState(new Set<string>());
 
   useEffect(() => {
     if (player?.id) fetchPlayerDuels(player.id);
@@ -443,7 +444,7 @@ export default function DuelsScreen() {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex flex-col items-center gap-1 flex-1">
-                          <span className="text-2xl">{me?.avatar_emoji ?? '🎤'}</span>
+                          <span className="text-2xl">{me?.avatar_emoji ?? '👤'}</span>
                           <span className="text-sm text-white font-medium">{me?.name ?? 'You'}</span>
                           <span className="text-lg font-bold text-euro-green">{myScore}</span>
                           <span className="text-[10px] text-white/30">{t('duels.doneCheck')}</span>
@@ -453,7 +454,7 @@ export default function DuelsScreen() {
                           <p className="text-[10px] text-white/15">/ 36</p>
                         </div>
                         <div className="flex flex-col items-center gap-1 flex-1">
-                          <span className="text-2xl">{opponent?.avatar_emoji ?? '🎤'}</span>
+                          <span className="text-2xl">{opponent?.avatar_emoji ?? '👤'}</span>
                           <span className="text-sm text-white font-medium">{opponent?.name ?? 'Player'}</span>
                           <span className="text-lg font-bold text-white/30">?</span>
                           <span className="text-[10px] text-white/30 animate-pulse">{t('duels.answering')}</span>
@@ -498,10 +499,10 @@ export default function DuelsScreen() {
                   const challenged = players.find((p) => p.id === duel.challenged_id);
                   const cName = challenger?.name ?? '—';
                   const dName = challenged?.name ?? '—';
-                  const cEmoji = challenger?.avatar_emoji ?? '🎤';
-                  const dEmoji = challenged?.avatar_emoji ?? '🎤';
                   const cWon = duel.winner_id === duel.challenger_id;
                   const dWon = duel.winner_id === duel.challenged_id;
+                  const isExpanded = expandedHistoryRows.has(duel.id);
+                  const canExpand = duel.status === 'completed' || duel.status === 'tie';
 
                   let outcomeNode: ReactNode;
                   if (duel.status === 'declined') {
@@ -538,42 +539,51 @@ export default function DuelsScreen() {
                     outcomeNode = null;
                   }
 
-                  const showScore = duel.status === 'completed' || duel.status === 'tie';
-
                   return (
-                    <li key={duel.id} className="flex items-center gap-2 py-2 px-1 text-sm">
+                    <li
+                      key={duel.id}
+                      className={`flex items-center gap-2 py-2.5 px-2 text-sm rounded-lg transition-colors ${canExpand ? 'cursor-pointer hover:bg-white/[0.04]' : ''}`}
+                      onClick={canExpand ? () => setExpandedHistoryRows((prev) => {
+                        const next = new Set(prev);
+                        next.has(duel.id) ? next.delete(duel.id) : next.add(duel.id);
+                        return next;
+                      }) : undefined}
+                    >
                       {/* Challenger */}
-                      <div className="flex items-center gap-1.5 min-w-0 flex-1 justify-end">
-                        <span className={`truncate font-medium ${cWon ? 'text-euro-green' : 'text-white/85'}`}>
+                      <div className="min-w-0 flex-1 text-right">
+                        <span className={`font-medium truncate block ${cWon ? 'text-euro-green' : 'text-white/85'}`}>
                           {cName}
                         </span>
-                        <span className="text-base leading-none shrink-0" aria-hidden>{cEmoji}</span>
                       </div>
 
                       {/* Score / vs */}
-                      <div className="shrink-0 text-center min-w-[68px]">
-                        {showScore ? (
+                      <div className="shrink-0 text-center min-w-[64px]">
+                        {isExpanded && canExpand ? (
                           <span className="text-sm font-bold tabular-nums text-white">
                             <span className={cWon ? 'text-euro-green' : ''}>{duel.challenger_score ?? 0}</span>
                             <span className="text-white/30 mx-1">–</span>
                             <span className={dWon ? 'text-euro-green' : ''}>{duel.challenged_score ?? 0}</span>
                           </span>
                         ) : (
-                          <span className="text-xs text-white/40 italic">{t('duels.vsLabel')}</span>
+                          <span className="text-xs text-white/35 italic">{t('duels.vsLabel')}</span>
                         )}
                       </div>
 
                       {/* Challenged */}
-                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                        <span className="text-base leading-none shrink-0" aria-hidden>{dEmoji}</span>
-                        <span className={`truncate font-medium ${dWon ? 'text-euro-green' : 'text-white/85'}`}>
+                      <div className="min-w-0 flex-1">
+                        <span className={`font-medium truncate block ${dWon ? 'text-euro-green' : 'text-white/85'}`}>
                           {dName}
                         </span>
                       </div>
 
                       {/* Outcome */}
-                      <div className="shrink-0 text-right min-w-[120px]">
+                      <div className="shrink-0 text-right min-w-[100px]">
                         {outcomeNode}
+                        {canExpand && (
+                          <span className="text-[10px] text-white/25 block mt-0.5">
+                            {isExpanded ? '▲ hide' : '▼ scores'}
+                          </span>
+                        )}
                       </div>
                     </li>
                   );

@@ -155,13 +155,6 @@ export default function SiteHeader() {
             )}
           </div>
 
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="px-3 py-1.5 rounded-full text-sm text-white/70 hover:text-white hover:bg-white/5 transition"
-          >
-            {t('siteNav.contactUs')}
-          </a>
-
           <span className="ml-1 mr-1 h-5 w-px bg-white/10" aria-hidden />
 
           <MuteToggle />
@@ -320,13 +313,6 @@ export default function SiteHeader() {
               )}
             </div>
 
-            {/* ─── Contact ─── */}
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="px-3.5 py-3 rounded-lg text-white/85 hover:bg-white/5 transition"
-            >
-              {t('siteNav.contactUs')}
-            </a>
           </nav>
         </div>
       )}

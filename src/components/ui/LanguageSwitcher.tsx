@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { localizePath, stripLocaleFromPath, type Locale } from '../../lib/seo/locale';
+import i18n from '../../i18n';
 
 interface Lang {
   code: Locale;
@@ -44,13 +45,20 @@ export default function LanguageSwitcher() {
   const select = (code: Locale) => {
     setOpen(false);
     if (code === locale) return;
-    const stripped = stripLocaleFromPath(pathname);
-    const next = localizePath(code, stripped) + search + hash;
     try {
       localStorage.setItem(STORAGE_KEY, code);
     } catch {
       // ignore storage failures (private mode, etc.)
     }
+    // Routes outside the locale tree (/room/*, /admin) have no
+    // locale-prefixed counterpart. Just change the i18n language
+    // in-place — the useLocale() fallback reads i18n.language.
+    if (pathname.startsWith('/room/') || pathname.startsWith('/admin')) {
+      i18n.changeLanguage(code);
+      return;
+    }
+    const stripped = stripLocaleFromPath(pathname);
+    const next = localizePath(code, stripped) + search + hash;
     navigate(next);
   };
 

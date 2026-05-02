@@ -22,7 +22,7 @@ function getPlayerInfo(
   const p = players.find((pl) => pl.id === playerId);
   return {
     name: p?.name ?? 'Player',
-    emoji: p?.avatar_emoji ?? '🎤',
+    emoji: p?.avatar_emoji ?? '👤',
   };
 }
 

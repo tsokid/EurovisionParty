@@ -165,7 +165,6 @@ export default function Header() {
                   onClick={() => { setShowProfile(false); setShowNotifications(true); }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:bg-white/5 transition-colors"
                 >
-                  <span className="text-xl w-7 text-center">🔔</span>
                   <span className="flex-1 text-left">
                     {t('header.notifications', { defaultValue: 'Notifications' })}
                   </span>
@@ -178,7 +177,6 @@ export default function Header() {
 
                 {/* Sound toggle */}
                 <div className="flex items-center gap-3 px-4 py-2">
-                  <span className="text-xl w-7 text-center">🔊</span>
                   <span className="flex-1 text-sm text-white/80">
                     {t('header.sound', { defaultValue: 'Sound' })}
                   </span>
@@ -187,7 +185,6 @@ export default function Header() {
 
                 {/* Language */}
                 <div className="flex items-center gap-3 px-4 py-2">
-                  <span className="text-xl w-7 text-center">🌐</span>
                   <span className="flex-1 text-sm text-white/80">
                     {t('header.language', { defaultValue: 'Language' })}
                   </span>
