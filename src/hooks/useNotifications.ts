@@ -70,6 +70,19 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
     };
   }, [playerId, addNotification]);
 
+  const refetchNotifications = useCallback(async () => {
+    if (!playerId) return;
+    const { data } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('player_id', playerId)
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (data) {
+      for (const n of data) addNotification(n as Notification);
+    }
+  }, [playerId, addNotification]);
+
   // Polling fallback: refetch every 30s + on tab focus so the badge updates
   // even when Realtime drops or the tab was in the background.
   useEffect(() => {
@@ -86,19 +99,6 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [playerId, refetchNotifications]);
-
-  const refetchNotifications = useCallback(async () => {
-    if (!playerId) return;
-    const { data } = await supabase
-      .from('notifications')
-      .select('*')
-      .eq('player_id', playerId)
-      .order('created_at', { ascending: false })
-      .limit(50);
-    if (data) {
-      for (const n of data) addNotification(n as Notification);
-    }
-  }, [playerId, addNotification]);
 
   const markAsRead = useCallback(
     async (id: string) => {
