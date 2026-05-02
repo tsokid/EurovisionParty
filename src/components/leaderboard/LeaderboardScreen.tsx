@@ -40,7 +40,6 @@ function PodiumCard({ player: p, rank, isCurrentPlayer, youLabel, ptsLabel }: Po
         )}
       >
         <span className="text-2xl sm:text-3xl mb-1" aria-hidden>{style.emoji}</span>
-        <span className="text-3xl sm:text-4xl mb-1" aria-hidden>{p.avatar_emoji}</span>
         <p className={clsx('text-sm sm:text-base font-bold truncate max-w-full', style.tone)}>
           {p.name}
         </p>
@@ -190,9 +189,6 @@ export default function LeaderboardScreen() {
                           </span>
                         )}
                       </div>
-
-                      {/* Avatar */}
-                      <span className="text-2xl sm:text-3xl flex-shrink-0" aria-hidden>{p.avatar_emoji}</span>
 
                       {/* Name & breakdown chips */}
                       <div className="flex-1 min-w-0">
