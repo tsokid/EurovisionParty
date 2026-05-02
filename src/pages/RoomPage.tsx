@@ -179,17 +179,26 @@ export function RoomPage() {
     );
   }
 
-  // Final phase — always show full WinnersScreen; WinnerCrown is a brief overlay on top
+  // Final phase — always show full WinnersScreen; WinnerCrown is a brief overlay on top.
+  // When the top score is shared, render the tie variant of the crown so we
+  // never falsely announce a winner before the tiebreak resolves.
   if (currentRoom.phase === 'final') {
     const playerNameById = Object.fromEntries(players.map((p) => [p.id, p.name]));
     const isHost = !!player?.is_host;
+    const sortedPlayers = [...players].sort((a, b) => b.total_points - a.total_points);
+    const topScore   = sortedPlayers[0]?.total_points ?? 0;
+    const tiedAtTop  = sortedPlayers.filter((p) => p.total_points === topScore && topScore > 0);
+    const isTopTied  = tiedAtTop.length >= 2;
     return (
       <AppShell showHeader showNav={false}>
         <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />
         <WinnerCrown
-          winner={players.length > 0 ? [...players].sort((a, b) => b.total_points - a.total_points)[0] : null}
+          winner={isTopTied ? null : sortedPlayers[0] ?? null}
           visible={showWinner}
           onDismiss={() => setShowWinner(false)}
+          isTied={isTopTied}
+          tiedNames={isTopTied ? tiedAtTop.map((p) => p.name) : []}
+          tiedScore={isTopTied ? topScore : 0}
         />
       </AppShell>
     );

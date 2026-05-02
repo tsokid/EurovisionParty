@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prototype — Header Redesign · Mobile + Desktop</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'euro-gold':  '#fbbf24',
+        'euro-pink':  '#ec4899',
+        'euro-purple': '#6b21a8',
+        'euro-purple-light': '#c084fc',
+        'euro-green': '#10b981',
+        'euro-red':   '#ef4444',
+      },
+    },
+  },
+};
+</script>
+<style>
+  body { background:#0a0519; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* --- Phone frame --- */
+  .phone {
+    width: 375px;
+    height: 760px;
+    border-radius: 38px;
+    border: 8px solid #1c1430;
+    box-shadow: 0 30px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+    overflow: hidden;
+    background: #0a0519;
+    position: relative;
+  }
+  /* --- Desktop frame --- */
+  .desktop {
+    width: 1100px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 30px 60px rgba(0,0,0,.6);
+    overflow: hidden;
+    background: #0a0519;
+  }
+  .desktop-titlebar {
+    height: 28px;
+    background: #1c1430;
+    display:flex; align-items:center; gap:6px; padding: 0 12px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .dot { width:10px; height:10px; border-radius:50%; }
+
+  /* --- Phase progress bar --- */
+  .phase-line {
+    height: 2px;
+    background: rgba(255,255,255,.08);
+    flex: 1;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .phase-line .fill {
+    position:absolute; inset: 0 auto 0 0;
+    background: linear-gradient(90deg,#7c3aed,#ec4899);
+    border-radius: 999px;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg,#c084fc,#ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Section nav */
+  .nav-pill {
+    background: rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .nav-pill.active { background: rgba(192,132,252,.18); border-color: rgba(192,132,252,.5); color:#c084fc; }
+</style>
+</head>
+<body class="text-white antialiased font-sans">
+
+<!-- ============================================================
+     PAGE HEADER + NAV
+============================================================ -->
+<header class="px-6 py-5 border-b border-white/8 flex items-center justify-between">
+  <div>
+    <p class="text-[11px] tracking-[0.2em] text-white/40 uppercase font-semibold">Prototype</p>
+    <h1 class="text-2xl font-extrabold mt-1">Header Redesign — <span class="gradient-text">Mobile + Desktop</span></h1>
+    <p class="text-sm text-white/55 mt-1">Logo top-left • Profile holds room functions • Desktop = linear phase bar • Mobile = vertical list</p>
+  </div>
+  <div class="flex items-center gap-2">
+    <button onclick="showSection('all')"  class="nav-pill active px-3 py-1.5 rounded-full text-xs font-semibold" id="nav-all">All</button>
+    <button onclick="showSection('mob')"  class="nav-pill px-3 py-1.5 rounded-full text-xs font-semibold" id="nav-mob">Mobile</button>
+    <button onclick="showSection('desk')" class="nav-pill px-3 py-1.5 rounded-full text-xs font-semibold" id="nav-desk">Desktop</button>
+  </div>
+</header>
+
+<main class="px-6 py-10 flex flex-col items-center gap-16">
+
+<!-- ============================================================
+     SECTION A — MOBILE VIEWS
+============================================================ -->
+<section id="sec-mob" class="w-full flex flex-col items-center gap-10">
+  <div class="text-center">
+    <p class="text-xs tracking-[0.18em] text-white/40 uppercase font-bold">Section A</p>
+    <h2 class="text-3xl font-extrabold mt-1">Mobile</h2>
+    <p class="text-sm text-white/55 mt-1 max-w-md">375 × 760. Header has logo (left), phase pill (centered), profile (right). Tap profile to open the panel — room code + share/copy/invite are inside.</p>
+  </div>
+
+  <!-- Three phones side by side: Default, Profile open, Phase open -->
+  <div class="flex flex-wrap items-start justify-center gap-10">
+
+    <!-- ============== M1: Header default ============== -->
+    <div class="flex flex-col items-center gap-3">
+      <p class="text-[11px] tracking-[0.18em] text-white/40 uppercase font-bold">M1 · Default</p>
+      <div class="phone">
+        <!-- Header -->
+        <div class="h-14 flex items-center justify-between px-4 border-b border-white/8 relative" style="background:rgb(10,5,25);">
+          <!-- Logo (left) -->
+          <a class="flex items-center active:scale-95 transition-transform" aria-label="Eurovision Games — home">
+            <img src="./logo.png" alt="Eurovision Games" class="w-9 h-9 rounded-lg object-cover" />
+          </a>
+          <!-- Phase pill (truly centered) -->
+          <button class="absolute left-1/2 -translate-x-1/2 text-sm font-medium text-white/70 truncate max-w-[130px] flex items-center gap-1">
+            Pre-Night Show
+            <span class="text-[10px] text-white/30">▼</span>
+          </button>
+          <!-- Profile (right) -->
+          <button class="relative flex items-center gap-1.5 rounded-full bg-white/8 px-2.5 py-1 min-h-[36px]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+            <span class="absolute -top-1 -right-1 bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">3</span>
+          </button>
+        </div>
+
+        <!-- Body filler -->
+        <div class="p-4 text-center text-white/30 text-sm h-[calc(100%-3.5rem-72px)] flex items-center justify-center">
+          [ Game content ]
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="absolute bottom-0 inset-x-0 h-[72px] border-t border-white/8 flex items-stretch" style="background:rgb(10,5,25);">
+          <div class="flex-1 flex flex-col items-center justify-center gap-0.5 text-white/55"><span class="text-lg">🧠</span><span class="text-[11px]">Quiz</span></div>
+          <div class="flex-1 flex flex-col items-center justify-center gap-0.5 text-white/55"><span class="text-lg">⚔️</span><span class="text-[11px]">Duels</span></div>
+          <div class="flex-1 flex flex-col items-center justify-center gap-0.5 text-white/55"><span class="text-lg">🎯</span><span class="text-[11px]">Predict</span></div>
+          <div class="flex-1 flex flex-col items-center justify-center gap-0.5 text-euro-gold relative">
+            <div class="absolute top-0 left-3 right-3 h-0.5 bg-euro-gold rounded-full"></div>
+            <span class="text-lg">🏆</span><span class="text-[11px] font-semibold">Board</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-white/45 max-w-[280px] text-center leading-relaxed">Logo + tagline replace the room code badge. Phase pill stays absolutely centered. Profile button shows just an avatar icon and the unread badge.</p>
+    </div>
+
+    <!-- ============== M2: Profile dropdown open (room inside) ============== -->
+    <div class="flex flex-col items-center gap-3">
+      <p class="text-[11px] tracking-[0.18em] text-white/40 uppercase font-bold">M2 · Profile open</p>
+      <div class="phone">
+        <!-- Header (same) -->
+        <div class="h-14 flex items-center justify-between px-4 border-b border-white/8 relative" style="background:rgb(10,5,25);">
+          <a class="flex items-center" aria-label="Eurovision Games — home">
+            <img src="./logo.png" alt="Eurovision Games" class="w-9 h-9 rounded-lg object-cover" />
+          </a>
+          <button class="absolute left-1/2 -translate-x-1/2 text-sm font-medium text-white/70 truncate max-w-[130px] flex items-center gap-1">
+            Pre-Night Show <span class="text-[10px] text-white/30">▼</span>
+          </button>
+          <button class="relative flex items-center gap-1.5 rounded-full bg-euro-purple/30 border border-euro-purple/50 px-2.5 py-1 min-h-[36px]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-euro-purple-light"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+          </button>
+        </div>
+
+        <!-- Profile dropdown (overlay) -->
+        <div class="px-4 pt-2 absolute inset-x-0 top-14 z-50">
+          <div class="rounded-2xl border border-white/12 shadow-2xl ml-auto max-w-[300px]" style="background:#1a0a2e;">
+            <!-- Profile name row -->
+            <div class="flex items-center gap-3 px-4 py-3 border-b border-white/8">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center font-bold text-white">D</div>
+              <div class="min-w-0 flex-1">
+                <p class="font-bold text-white text-sm truncate">Dimi</p>
+                <p class="text-[11px] text-white/40 mt-0.5">3,420 pts</p>
+              </div>
+            </div>
+
+            <!-- ROOM block (NEW — moved here) -->
+            <div class="px-4 py-3 border-b border-white/8">
+              <p class="text-[10px] tracking-widest text-white/40 font-bold uppercase mb-2">Room</p>
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <p class="text-2xl font-extrabold tracking-[0.25em] text-euro-gold leading-none">EURO99</p>
+                  <p class="text-[11px] text-white/45 mt-1">Pwd: <span class="text-white/70 font-mono">songs</span></p>
+                </div>
+                <button class="rounded-full bg-white/10 hover:bg-white/15 p-2.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/70"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                </button>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="flex items-center justify-center gap-1.5 rounded-xl bg-euro-purple/30 border border-euro-purple/50 py-2.5 text-xs font-bold text-euro-purple-light">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                  Share
+                </button>
+                <button class="flex items-center justify-center gap-1.5 rounded-xl bg-white/8 border border-white/15 py-2.5 text-xs font-bold text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copy invite
+                </button>
+              </div>
+            </div>
+
+            <!-- Settings rows -->
+            <div class="py-1">
+              <button class="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:bg-white/5">
+                <span class="flex-1 text-left">Notifications</span>
+                <span class="bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-0.5">3</span>
+              </button>
+              <div class="flex items-center gap-3 px-4 py-2.5">
+                <span class="flex-1 text-sm text-white/80">Sound</span>
+                <div class="w-10 h-6 rounded-full bg-euro-purple flex items-center justify-end px-0.5">
+                  <div class="w-5 h-5 rounded-full bg-white"></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 px-4 py-2.5">
+                <span class="flex-1 text-sm text-white/80">Language</span>
+                <span class="text-sm text-white/55">EN ▾</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dim background -->
+        <div class="absolute inset-0 bg-black/40 -z-10"></div>
+      </div>
+      <p class="text-xs text-white/45 max-w-[280px] text-center leading-relaxed">All room functionality lives inside this panel. Big readable code, dedicated Share + Copy buttons, password reveal, then settings.</p>
+    </div>
+
+    <!-- ============== M3: Phase dropdown open ============== -->
+    <div class="flex flex-col items-center gap-3">
+      <p class="text-[11px] tracking-[0.18em] text-white/40 uppercase font-bold">M3 · Phase open</p>
+      <div class="phone">
+        <!-- Header -->
+        <div class="h-14 flex items-center justify-between px-4 border-b border-white/8 relative" style="background:rgb(10,5,25);">
+          <a class="flex items-center" aria-label="Eurovision Games — home">
+            <img src="./logo.png" alt="Eurovision Games" class="w-9 h-9 rounded-lg object-cover" />
+          </a>
+          <button class="absolute left-1/2 -translate-x-1/2 text-sm font-medium text-white truncate max-w-[130px] flex items-center gap-1 bg-white/8 rounded-full px-3 py-1">
+            Pre-Night Show <span class="text-[10px] text-white/50">▲</span>
+          </button>
+          <button class="relative flex items-center gap-1.5 rounded-full bg-white/8 px-2.5 py-1 min-h-[36px]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+          </button>
+        </div>
+
+        <!-- Phase dropdown -->
+        <div class="px-4 pt-2 absolute inset-x-0 top-14 z-50">
+          <div class="rounded-2xl border border-white/12 shadow-2xl mx-auto max-w-md p-4" style="background:#1a0a2e;">
+            <p class="text-[10px] tracking-widest text-white/40 font-bold uppercase mb-3">Game Phases</p>
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/30">
+                <span class="w-5 text-center text-xs">✓</span>
+                <span class="flex-1">Lobby</span>
+              </div>
+              <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-euro-purple/30 text-white font-semibold">
+                <span class="w-5 text-center text-xs">●</span>
+                <span class="flex-1">Pre-Night Show</span>
+              </div>
+              <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/50">
+                <span class="w-5 text-center text-xs">→</span>
+                <span class="flex-1">Predictions Open</span>
+              </div>
+              <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/50">
+                <span class="w-5 text-center text-xs">○</span>
+                <span class="flex-1">Voting Live</span>
+              </div>
+              <div class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/50">
+                <span class="w-5 text-center text-xs">○</span>
+                <span class="flex-1">Final Results</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute inset-0 bg-black/40 -z-10"></div>
+      </div>
+      <p class="text-xs text-white/45 max-w-[280px] text-center leading-relaxed">Same vertical phase list as today — kept because phase names get long and the column reads better than a horizontal cram on phones.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION B — DESKTOP VIEWS
+============================================================ -->
+<section id="sec-desk" class="w-full flex flex-col items-center gap-10">
+  <div class="text-center">
+    <p class="text-xs tracking-[0.18em] text-white/40 uppercase font-bold">Section B</p>
+    <h2 class="text-3xl font-extrabold mt-1">Desktop</h2>
+    <p class="text-sm text-white/55 mt-1 max-w-md">1100px window. Phase becomes a linear progress bar with all 5 phases visible. Profile shows full name + room functions in the panel.</p>
+  </div>
+
+  <!-- D1: Default desktop -->
+  <div class="flex flex-col items-center gap-3">
+    <p class="text-[11px] tracking-[0.18em] text-white/40 uppercase font-bold">D1 · Default</p>
+    <div class="desktop">
+      <div class="desktop-titlebar">
+        <span class="dot bg-red-500"></span><span class="dot bg-amber-400"></span><span class="dot bg-emerald-500"></span>
+        <span class="text-[11px] text-white/40 ml-3">eurovision.games / room/EURO99</span>
+      </div>
+
+      <!-- Header -->
+      <div class="h-16 flex items-center justify-between px-6 border-b border-white/8" style="background:rgb(10,5,25);">
+        <!-- Logo -->
+        <a class="flex items-center" aria-label="Eurovision Games — home">
+          <img src="./logo.png" alt="Eurovision Games" class="w-10 h-10 rounded-lg object-cover" />
+        </a>
+
+        <!-- Linear phase progress (center, takes most width) -->
+        <div class="flex-1 max-w-[640px] mx-8 flex items-center">
+          <!-- Phase 1: Lobby (done) -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full bg-euro-purple flex items-center justify-center text-[10px] font-bold text-white">✓</div>
+            <span class="text-[11px] font-semibold text-white/40 tracking-wide">Lobby</span>
+          </div>
+          <div class="phase-line mx-3"><div class="fill" style="width:100%"></div></div>
+
+          <!-- Phase 2: Pre-Night (active) -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-euro-purple to-euro-pink flex items-center justify-center text-[11px] font-bold text-white shadow-[0_0_18px_rgba(236,72,153,0.5)]">2</div>
+            <span class="text-[12px] font-bold text-white tracking-wide">Pre-Night Show</span>
+          </div>
+          <div class="phase-line mx-3"><div class="fill" style="width:25%"></div></div>
+
+          <!-- Phase 3: Predictions (next) -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full border border-white/25 bg-white/[0.04] flex items-center justify-center text-[10px] font-bold text-white/45">3</div>
+            <span class="text-[11px] font-semibold text-white/45 tracking-wide">Predictions</span>
+          </div>
+          <div class="phase-line mx-3"></div>
+
+          <!-- Phase 4: Voting (locked) -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-[10px] font-bold text-white/30">4</div>
+            <span class="text-[11px] font-semibold text-white/30 tracking-wide">Voting Live</span>
+          </div>
+          <div class="phase-line mx-3"></div>
+
+          <!-- Phase 5: Final (locked) -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-[10px] font-bold text-white/30">5</div>
+            <span class="text-[11px] font-semibold text-white/30 tracking-wide">Final</span>
+          </div>
+        </div>
+
+        <!-- Profile (avatar + name) -->
+        <button class="relative flex items-center gap-2 rounded-full bg-white/8 hover:bg-white/12 pl-1 pr-3 py-1 min-h-[40px]">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white">D</div>
+          <span class="text-sm font-semibold text-white">Dimi</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="text-white/45"><polyline points="6 9 12 15 18 9"/></svg>
+          <span class="absolute -top-1 -right-1 bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-0.5">3</span>
+        </button>
+      </div>
+
+      <!-- Body filler -->
+      <div class="p-12 text-center text-white/30 text-sm h-[300px] flex items-center justify-center">
+        [ Game content ]
+      </div>
+    </div>
+    <p class="text-sm text-white/55 max-w-2xl text-center leading-relaxed">All five phases visible at once. The active node is larger and glows; completed segments fill purple→pink. The next segment partially fills to hint progress within the current phase.</p>
+  </div>
+
+  <!-- D2: Desktop profile open -->
+  <div class="flex flex-col items-center gap-3">
+    <p class="text-[11px] tracking-[0.18em] text-white/40 uppercase font-bold">D2 · Profile open</p>
+    <div class="desktop relative">
+      <div class="desktop-titlebar">
+        <span class="dot bg-red-500"></span><span class="dot bg-amber-400"></span><span class="dot bg-emerald-500"></span>
+        <span class="text-[11px] text-white/40 ml-3">eurovision.games / room/EURO99</span>
+      </div>
+
+      <!-- Header (same) -->
+      <div class="h-16 flex items-center justify-between px-6 border-b border-white/8 relative" style="background:rgb(10,5,25);">
+        <a class="flex items-center" aria-label="Eurovision Games — home">
+          <img src="./logo.png" alt="Eurovision Games" class="w-10 h-10 rounded-lg object-cover" />
+        </a>
+        <div class="flex-1 max-w-[640px] mx-8 flex items-center">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full bg-euro-purple flex items-center justify-center text-[10px] font-bold text-white">✓</div>
+            <span class="text-[11px] font-semibold text-white/40 tracking-wide">Lobby</span>
+          </div>
+          <div class="phase-line mx-3"><div class="fill" style="width:100%"></div></div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-euro-purple to-euro-pink flex items-center justify-center text-[11px] font-bold text-white shadow-[0_0_18px_rgba(236,72,153,0.5)]">2</div>
+            <span class="text-[12px] font-bold text-white tracking-wide">Pre-Night Show</span>
+          </div>
+          <div class="phase-line mx-3"><div class="fill" style="width:25%"></div></div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full border border-white/25 bg-white/[0.04] flex items-center justify-center text-[10px] font-bold text-white/45">3</div>
+            <span class="text-[11px] font-semibold text-white/45 tracking-wide">Predictions</span>
+          </div>
+          <div class="phase-line mx-3"></div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-[10px] font-bold text-white/30">4</div>
+            <span class="text-[11px] font-semibold text-white/30 tracking-wide">Voting Live</span>
+          </div>
+          <div class="phase-line mx-3"></div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-[10px] font-bold text-white/30">5</div>
+            <span class="text-[11px] font-semibold text-white/30 tracking-wide">Final</span>
+          </div>
+        </div>
+        <button class="relative flex items-center gap-2 rounded-full bg-euro-purple/30 border border-euro-purple/50 pl-1 pr-3 py-1 min-h-[40px]">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white">D</div>
+          <span class="text-sm font-semibold text-white">Dimi</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="text-euro-purple-light rotate-180"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+
+        <!-- Profile dropdown anchored to the right -->
+        <div class="absolute right-6 top-[64px] z-50">
+          <div class="w-[340px] rounded-2xl border border-white/12 shadow-2xl" style="background:#1a0a2e;">
+            <div class="flex items-center gap-3 px-4 py-3 border-b border-white/8">
+              <div class="w-11 h-11 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center font-bold text-white text-base">D</div>
+              <div class="min-w-0 flex-1">
+                <p class="font-bold text-white text-sm truncate">Dimi</p>
+                <p class="text-[11px] text-white/40 mt-0.5">3,420 pts</p>
+              </div>
+            </div>
+
+            <!-- ROOM block -->
+            <div class="px-4 py-3 border-b border-white/8">
+              <p class="text-[10px] tracking-widest text-white/40 font-bold uppercase mb-2">Room</p>
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <p class="text-[1.6rem] font-extrabold tracking-[0.25em] text-euro-gold leading-none">EURO99</p>
+                  <p class="text-[11px] text-white/45 mt-1.5">Pwd: <span class="text-white/70 font-mono">songs</span></p>
+                </div>
+                <button class="rounded-full bg-white/10 hover:bg-white/15 p-2.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/70"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                </button>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="flex items-center justify-center gap-1.5 rounded-xl bg-euro-purple/30 border border-euro-purple/50 py-2.5 text-xs font-bold text-euro-purple-light">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                  Share
+                </button>
+                <button class="flex items-center justify-center gap-1.5 rounded-xl bg-white/8 border border-white/15 py-2.5 text-xs font-bold text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  Copy invite
+                </button>
+              </div>
+            </div>
+
+            <div class="py-1">
+              <button class="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:bg-white/5">
+                <span class="flex-1 text-left">Notifications</span>
+                <span class="bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-0.5">3</span>
+              </button>
+              <div class="flex items-center gap-3 px-4 py-2.5">
+                <span class="flex-1 text-sm text-white/80">Sound</span>
+                <div class="w-10 h-6 rounded-full bg-euro-purple flex items-center justify-end px-0.5">
+                  <div class="w-5 h-5 rounded-full bg-white"></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 px-4 py-2.5">
+                <span class="flex-1 text-sm text-white/80">Language</span>
+                <span class="text-sm text-white/55">EN ▾</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-12 text-center text-white/30 text-sm h-[300px] flex items-center justify-center">
+        [ Game content ]
+      </div>
+    </div>
+    <p class="text-sm text-white/55 max-w-2xl text-center leading-relaxed">Profile panel anchors to the right under the profile button. Same room block + settings as mobile, just at desktop scale.</p>
+  </div>
+
+</section>
+
+<!-- ============================================================
+     NOTES
+============================================================ -->
+<section class="w-full max-w-3xl">
+  <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+    <p class="text-[10px] tracking-widest text-white/40 font-bold uppercase mb-3">What changed</p>
+    <ul class="space-y-2 text-sm text-white/70">
+      <li><span class="text-white">●</span> <span class="text-white/55">Top-left now holds the brand:</span> the logo replaces the old room code badge — no wordmark.</li>
+      <li><span class="text-white">●</span> <span class="text-white/55">Room moved into Profile:</span> tap profile to see big room code, password, Share, Copy invite — all in one panel.</li>
+      <li><span class="text-white">●</span> <span class="text-white/55">Notifications icon is gone</span> from the header — its unread badge sits on the profile button instead.</li>
+      <li><span class="text-white">●</span> <span class="text-white/55">Desktop phase indicator is now linear:</span> all 5 phases visible at once with progress fills between nodes.</li>
+      <li><span class="text-white">●</span> <span class="text-white/55">Mobile phase stays vertical:</span> tap the centered phase pill → vertical list (same as today).</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<script>
+  function showSection(which){
+    const mob = document.getElementById('sec-mob');
+    const desk = document.getElementById('sec-desk');
+    document.querySelectorAll('[id^="nav-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('nav-' + which).classList.add('active');
+    if (which === 'all'){ mob.style.display = ''; desk.style.display = ''; }
+    if (which === 'mob'){ mob.style.display = ''; desk.style.display = 'none'; }
+    if (which === 'desk'){ mob.style.display = 'none'; desk.style.display = ''; }
+  }
+</script>
+</body>
+</html>

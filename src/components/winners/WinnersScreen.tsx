@@ -132,6 +132,43 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
   return (
     <div className="flex flex-col gap-4 pt-4 pb-[calc(2rem+env(safe-area-inset-bottom))]">
 
+      {/* ── PROMINENT TIE BANNER (champion only) — hoisted above everything
+              so the host can act and players can vote without scrolling. ── */}
+      {isTied && (
+        <div className="px-4">
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: 'spring', damping: 22 }}
+            className="rounded-3xl border-2 border-amber-400/50 p-1 shadow-[0_0_60px_rgba(251,191,36,0.25)]"
+            style={{ background: 'linear-gradient(135deg,rgba(251,191,36,0.12),rgba(236,72,153,0.10))' }}
+          >
+            {/* Headline strip */}
+            <div className="px-4 sm:px-5 pt-4 pb-3 text-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 border border-amber-400/50 px-3 py-1 text-[10px] sm:text-[11px] font-bold text-amber-300 tracking-[0.18em] uppercase mb-3">
+                ⚔ Tiebreak required
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+                The match is still on.
+              </h2>
+              <p className="text-sm text-white/65 mt-1.5 max-w-md mx-auto">
+                {champNames.join(' & ')} are tied at the top — the room decides what happens next.
+              </p>
+            </div>
+            {/* Vote panel — full-bleed inside the banner */}
+            <div className="bg-[#0d061d]/60 rounded-[22px] m-1">
+              <TieVotePanel
+                roomId={roomId}
+                isHost={isHost}
+                category="champion"
+                tiedPlayerNames={champNames}
+                onResolved={refresh}
+              />
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       {/* ── Title ── */}
       <div className="px-4">
         <h2 className="text-[1.75rem] sm:text-3xl font-extrabold text-white leading-[1.1]">
@@ -211,39 +248,69 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                   {display.subtitle}
                 </p>
 
-                {/* Player name(s) */}
-                <div className="space-y-2 mb-4">
-                  {names.slice(0, 3).map((name, ni) => (
-                    <div key={name + ni} className="flex items-center gap-2.5">
-                      <div className={clsx(
-                        'w-9 h-9 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-sm flex-shrink-0',
-                        avatarGradient(ni),
-                      )}>
-                        {avatarInitial(name)}
-                      </div>
-                      <span className="text-[1.3rem] font-extrabold text-white leading-tight truncate">
-                        {name}
-                      </span>
+                {/* Player name(s)
+                    Champion + tied → identity is concealed until the tiebreak
+                    resolves. We don't reveal who the champion is yet. */}
+                {isChamp && catTied ? (
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-white/60 font-bold text-base flex-shrink-0">
+                      ?
                     </div>
-                  ))}
-                </div>
+                    <span
+                      className="text-[1.3rem] font-extrabold text-white/85 leading-tight truncate"
+                      style={{ filter: 'blur(6px)', userSelect: 'none' }}
+                      aria-label="Champion identity hidden until tiebreak resolves"
+                    >
+                      {names.join(' & ') || 'Hidden Player'}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="space-y-2 mb-4">
+                    {names.slice(0, 3).map((name, ni) => (
+                      <div key={name + ni} className="flex items-center gap-2.5">
+                        <div className={clsx(
+                          'w-9 h-9 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-sm flex-shrink-0',
+                          avatarGradient(ni),
+                        )}>
+                          {avatarInitial(name)}
+                        </div>
+                        <span className="text-[1.3rem] font-extrabold text-white leading-tight truncate">
+                          {name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Score row */}
                 <div className="flex items-end justify-between gap-3">
                   <div>
-                    <p className="text-5xl font-extrabold text-white tabular-nums leading-none">
-                      {score.toLocaleString()}
-                    </p>
-                    <p className="text-[10px] text-white/40 mt-1.5 uppercase tracking-widest">
-                      {isChamp ? 'Total pts' : 'stat'}
-                    </p>
+                    {isChamp && catTied ? (
+                      <>
+                        <p className="text-3xl font-extrabold text-amber-300 tabular-nums leading-none">
+                          {score.toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-amber-200/70 mt-1.5 uppercase tracking-widest">
+                          Tied at top
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-5xl font-extrabold text-white tabular-nums leading-none">
+                          {score.toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-white/40 mt-1.5 uppercase tracking-widest">
+                          {isChamp ? 'Total pts' : 'stat'}
+                        </p>
+                      </>
+                    )}
                   </div>
 
                   {/* Status badge / crown icon */}
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
                     {catTied ? (
-                      <span className="rounded-full bg-amber-400/20 border border-amber-400/40 px-2.5 py-1 text-[11px] font-bold text-amber-400 uppercase tracking-wider">
-                        ⚠ Tied
+                      <span className="rounded-full bg-amber-400/20 border border-amber-400/50 px-2.5 py-1 text-[11px] font-bold text-amber-300 uppercase tracking-wider">
+                        ⚔ Tiebreak
                       </span>
                     ) : isChamp ? (
                       <div className="w-11 h-11 rounded-full bg-euro-gold/20 border border-euro-gold/40 flex items-center justify-center">
@@ -376,17 +443,8 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
         </div>
       )}
 
-      {/* ── Tie / Sudden Death panels ── */}
+      {/* ── Sudden Death panel (non-champion ties) ── */}
       <div className="px-4 flex flex-col gap-4">
-        {isTied && (
-          <TieVotePanel
-            roomId={roomId}
-            isHost={isHost}
-            category="champion"
-            tiedPlayerNames={champNames}
-            onResolved={refresh}
-          />
-        )}
         <SuddenDeathPanel
           roomId={roomId}
           isHost={isHost}
