@@ -29,11 +29,12 @@ export function RoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
   const { room, advancePhase, refetchRoom, leaveRoom } = useRoom();
-  const { room: storeRoom, player, players, activeTab, setRoom, isReconnecting } = useGameStore();
+  const { room: storeRoom, player, players, activeTab, setActiveTab, setRoom, isReconnecting } = useGameStore();
   const [showWinner, setShowWinner] = useState(true);
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
   const [showHostManualEntry, setShowHostManualEntry] = useState(false);
+  const [showPredictionsOpenBanner, setShowPredictionsOpenBanner] = useState(false);
 
   // Defense-in-depth: emit noindex,nofollow so even if a room URL leaks
   // into a backlink or sitemap, search engines won't index the live game
@@ -99,23 +100,37 @@ export function RoomPage() {
     }
   }, [storeRoom?.phase]);
 
-  // Polling fallback: check room phase every 3 s while in lobby
-  // Covers the case where Realtime lags or drops (all users, not just host)
+  // Polling fallback: check room phase every 3 s while in lobby or pre_night.
+  // Covers Realtime lag/drop for all users — critical for the participants-parser
+  // → predictions_open transition which not all clients receive via Realtime.
   const currentPhase = storeRoom?.phase;
   useEffect(() => {
-    if (!storeRoom || currentPhase !== 'lobby') return;
+    if (!storeRoom || (currentPhase !== 'lobby' && currentPhase !== 'pre_night')) return;
     const id = setInterval(async () => {
       const { data } = await supabase
         .from('rooms')
         .select('*')
         .eq('id', storeRoom.id)
         .single();
-      if (data && (data as Room).phase !== 'lobby') {
+      if (data && (data as Room).phase !== currentPhase) {
         setRoom(data as Room);
       }
     }, 3000);
     return () => clearInterval(id);
   }, [storeRoom?.id, currentPhase, setRoom]);
+
+  // When the phase transitions from pre_night → predictions_open, auto-switch
+  // the active tab and show a prominent banner so no user misses it.
+  const prevPhaseRef = useRef<string | null>(null);
+  useEffect(() => {
+    const phase = storeRoom?.phase;
+    if (!phase) return;
+    if (prevPhaseRef.current === 'pre_night' && phase === 'predictions_open') {
+      setActiveTab('predictions');
+      setShowPredictionsOpenBanner(true);
+    }
+    prevPhaseRef.current = phase;
+  }, [storeRoom?.phase, setActiveTab]);
 
   // Catch-up fetch: when isReconnecting transitions true→false, refetch all state
   const prevReconnectingRef = useRef(false);
@@ -232,6 +247,34 @@ export function RoomPage() {
       >
         {renderActiveTab()}
       </AppShell>
+
+      {/* Predictions-open announcement — fires once when parser unlocks predictions */}
+      {showPredictionsOpenBanner && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+          style={{ background: 'rgba(10,5,25,0.85)', backdropFilter: 'blur(8px)' }}
+          onClick={() => setShowPredictionsOpenBanner(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl border border-euro-pink/30 p-8 text-center shadow-[0_0_80px_rgba(236,72,153,0.35)]"
+            style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.4),rgba(236,72,153,0.3))' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-5xl mb-4">🎯</div>
+            <h2 className="text-2xl font-extrabold text-white mb-2">Predictions are open!</h2>
+            <p className="text-white/70 text-sm leading-relaxed mb-6">
+              The Grand Final lineup is set. Pick your favourites and least favourites before voting starts!
+            </p>
+            <button
+              onClick={() => setShowPredictionsOpenBanner(false)}
+              className="w-full py-3 rounded-xl font-bold text-white"
+              style={{ background: 'linear-gradient(90deg,#7c3aed,#ec4899)' }}
+            >
+              Make my predictions →
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Exit choice: Visit Other Rooms OR Exit Game */}
       {showChoiceModal && (

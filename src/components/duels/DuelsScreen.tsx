@@ -389,7 +389,6 @@ export default function DuelsScreen() {
                     <Card>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <span className="text-2xl">{opponent?.avatar_emoji ?? '?'}</span>
                           <div>
                             <p className="text-sm font-medium text-white">{opponent?.name ?? 'Player'}</p>
                             <p className="text-xs text-white/40">{t('duels.waitingResponse')}</p>
@@ -444,7 +443,6 @@ export default function DuelsScreen() {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex flex-col items-center gap-1 flex-1">
-                          <span className="text-2xl">{me?.avatar_emoji ?? '👤'}</span>
                           <span className="text-sm text-white font-medium">{me?.name ?? 'You'}</span>
                           <span className="text-lg font-bold text-euro-green">{myScore}</span>
                           <span className="text-[10px] text-white/30">{t('duels.doneCheck')}</span>
@@ -454,7 +452,6 @@ export default function DuelsScreen() {
                           <p className="text-[10px] text-white/15">/ 36</p>
                         </div>
                         <div className="flex flex-col items-center gap-1 flex-1">
-                          <span className="text-2xl">{opponent?.avatar_emoji ?? '👤'}</span>
                           <span className="text-sm text-white font-medium">{opponent?.name ?? 'Player'}</span>
                           <span className="text-lg font-bold text-white/30">?</span>
                           <span className="text-[10px] text-white/30 animate-pulse">{t('duels.answering')}</span>
@@ -658,7 +655,7 @@ export default function DuelsScreen() {
                     className="flex items-center gap-3 rounded-xl bg-white/[0.04] border border-white/8 px-3 py-2.5"
                   >
                     <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-euro-purple/40 to-euro-pink/30 flex items-center justify-center shrink-0 text-base sm:text-lg font-bold text-white">
-                      {p.avatar_emoji ?? initial}
+                      {initial}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm sm:text-base font-bold text-white truncate">{p.name}</p>

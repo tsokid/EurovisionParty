@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
-import { PHASES } from '../../lib/constants';
-import { useRoom } from '../../hooks/useRoom';
-import { PHASE_ORDER } from '../../lib/constants';
+import { PHASES, PHASE_ORDER } from '../../lib/constants';
 import NotificationPanel from './NotificationPanel';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 import MuteToggle from '../ui/MuteToggle';
@@ -12,21 +10,17 @@ import MuteToggle from '../ui/MuteToggle';
 export default function Header() {
   const { t } = useTranslation();
   const { room, player, notifications, roomPassword } = useGameStore();
-  const isHost = player?.is_host === true;
-  const { advancePhase } = useRoom();
   const [copied, setCopied] = useState(false);
   const [inviteCopied, setInviteCopied] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showPhaseMenu, setShowPhaseMenu] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [advancing, setAdvancing] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
   const currentPhaseIdx = PHASE_ORDER.indexOf(room?.phase ?? 'lobby');
   const currentPhaseKey = room?.phase ?? 'lobby';
   const phaseLabel = t(`phases.${currentPhaseKey}.label`);
-  const nextPhase = currentPhaseIdx < PHASE_ORDER.length - 1 ? PHASES[currentPhaseIdx + 1] : null;
 
   const getInviteText = () => {
     const link = `${window.location.origin}/room/${room?.code}`;
@@ -65,17 +59,6 @@ export default function Header() {
     } catch { /* noop */ }
   };
 
-  const handleAdvancePhase = async () => {
-    if (!room || !nextPhase || advancing) return;
-    if (!window.confirm(t('header.advanceConfirm', { phase: t(`phases.${nextPhase.key}.label`) }))) return;
-    setAdvancing(true);
-    try {
-      await advancePhase(room.id);
-      setShowPhaseMenu(false);
-    } finally {
-      setAdvancing(false);
-    }
-  };
 
   const toggleProfile = () => {
     setShowProfile((v) => !v);
@@ -108,7 +91,7 @@ export default function Header() {
           className="text-sm font-medium text-white/70 truncate max-w-[160px] flex items-center gap-1 active:scale-95 transition-transform"
         >
           {phaseLabel}
-          {nextPhase && <span className="text-[10px] text-white/30">▼</span>}
+          <span className="text-[10px] text-white/30">▼</span>
         </button>
 
         {/* Right: Profile button (contains all settings + notifications) */}
@@ -117,7 +100,6 @@ export default function Header() {
           className="relative flex items-center gap-1.5 rounded-full bg-white/8 px-2.5 py-1 min-h-[36px] active:scale-95 transition-transform"
           aria-label="Profile & Settings"
         >
-          <span className="text-xl leading-none">{player?.avatar_emoji ?? '🎤'}</span>
           <span className="text-xs font-semibold text-white/80 max-w-[72px] truncate hidden sm:block">
             {player?.name ?? ''}
           </span>
@@ -146,7 +128,6 @@ export default function Header() {
             <div className="bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl max-w-xs ml-auto">
               {/* Profile name row */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
-                <span className="text-3xl">{player?.avatar_emoji ?? '🎤'}</span>
                 <div className="min-w-0">
                   <p className="font-semibold text-white text-sm leading-tight truncate">{player?.name ?? ''}</p>
                   <p className="text-[11px] text-white/40 mt-0.5">{room?.code} · {player?.total_points ?? 0} pts</p>
@@ -223,15 +204,6 @@ export default function Header() {
                         {isPast ? '✓' : isCurrent ? '●' : isNext ? '→' : '○'}
                       </span>
                       <span className="flex-1">{t(`phases.${p.key}.label`)}</span>
-                      {isNext && isHost && (
-                        <button
-                          onClick={handleAdvancePhase}
-                          disabled={advancing}
-                          className="text-[10px] bg-euro-purple/50 hover:bg-euro-purple/70 text-white px-2 py-1 rounded-md font-medium transition-colors"
-                        >
-                          {advancing ? '...' : t('header.advance')}
-                        </button>
-                      )}
                     </div>
                   );
                 })}

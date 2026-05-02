@@ -82,7 +82,6 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
           {/* Challenger side */}
           <div className={`flex flex-col items-center gap-1 flex-1 rounded-xl py-2 ${challengerWon ? 'bg-euro-green/10 ring-1 ring-euro-green/30' : ''}`}>
             {challengerWon && <span className="text-lg">🏆</span>}
-            <span className="text-2xl">{challenger.emoji}</span>
             <span className={`text-sm font-medium truncate max-w-[80px] ${challengerWon ? 'text-euro-green' : 'text-white'}`}>
               {challenger.name}
             </span>
@@ -100,7 +99,6 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
           {/* Challenged side */}
           <div className={`flex flex-col items-center gap-1 flex-1 rounded-xl py-2 ${challengedWon ? 'bg-euro-green/10 ring-1 ring-euro-green/30' : ''}`}>
             {challengedWon && <span className="text-lg">🏆</span>}
-            <span className="text-2xl">{challenged.emoji}</span>
             <span className={`text-sm font-medium truncate max-w-[80px] ${challengedWon ? 'text-euro-green' : 'text-white'}`}>
               {challenged.name}
             </span>

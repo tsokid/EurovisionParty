@@ -25,11 +25,6 @@ export default function PlayerCard({
           'border-euro-gold/50 shadow-[0_0_16px_rgba(251,191,36,0.15)]',
       )}
     >
-      {/* Emoji avatar */}
-      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-2xl shrink-0">
-        {player.avatar_emoji}
-      </div>
-
       {/* Name */}
       <div className="flex-1 min-w-0">
         <span

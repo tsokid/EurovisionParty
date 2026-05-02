@@ -80,7 +80,6 @@ export default function DuelCard({
         <div className="flex items-center justify-between">
           {/* Challenger */}
           <div className="flex flex-col items-center gap-1 flex-1">
-            <span className="text-2xl">{challenger.emoji}</span>
             <span className="text-sm text-white font-medium truncate max-w-[80px]">
               {challenger.name}
             </span>
@@ -96,7 +95,6 @@ export default function DuelCard({
 
           {/* Challenged */}
           <div className="flex flex-col items-center gap-1 flex-1">
-            <span className="text-2xl">{challenged.emoji}</span>
             <span className="text-sm text-white font-medium truncate max-w-[80px]">
               {challenged.name}
             </span>

@@ -107,9 +107,6 @@ export default function ChallengeModal({
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-center gap-3 glass rounded-xl px-3 py-2"
               >
-                <span className="text-2xl flex-shrink-0">
-                  {opponent.avatar_emoji}
-                </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-white font-medium text-sm truncate">
                     {opponent.name}

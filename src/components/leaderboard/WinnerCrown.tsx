@@ -72,15 +72,6 @@ export default function WinnerCrown({
           </motion.h1>
 
           {/* Winner avatar */}
-          <motion.div
-            className="text-6xl mb-2"
-            initial={{ scale: 0 }}
-            animate={{ scale: [0, 1.3, 1] }}
-            transition={{ delay: 0.9, duration: 0.5 }}
-          >
-            {winner.avatar_emoji}
-          </motion.div>
-
           {/* Winner name */}
           <motion.h2
             className="glow-text text-3xl sm:text-4xl font-extrabold mb-6"
