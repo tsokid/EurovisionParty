@@ -132,11 +132,6 @@ export default function Header() {
                   <p className="font-semibold text-white text-sm leading-tight truncate">{player?.name ?? ''}</p>
                   <p className="text-[11px] text-white/40 mt-0.5">{room?.code} · {player?.total_points ?? 0} pts</p>
                 </div>
-                {unreadCount > 0 && (
-                  <span className="ml-auto bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1 shrink-0">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
               </div>
 
               {/* Settings rows */}

@@ -203,14 +203,17 @@ async function handleParticipants(): Promise<Response> {
     }
   }
 
-  // 4. Transition job to done on success, leave running on blocked, leave for streak on error
+  // 4. Transition job status. done on ok, error on blocked/error (participants
+  //    is one-shot — leaving it "running" after the edge fn exits is a
+  //    stuck state the cron can't recover from).
+  const nowIso = new Date().toISOString();
   if (runStatus === "ok") {
     await db.from("parse_jobs")
-      .update({
-        status: "done",
-        last_poll_at: new Date().toISOString(),
-        poll_count: 1,
-      })
+      .update({ status: "done", last_poll_at: nowIso, poll_count: 1 })
+      .eq("year", year).eq("kind", "participants");
+  } else {
+    await db.from("parse_jobs")
+      .update({ status: "error", last_poll_at: nowIso })
       .eq("year", year).eq("kind", "participants");
   }
 
@@ -220,7 +223,7 @@ async function handleParticipants(): Promise<Response> {
     payloadHash, error: err,
   });
 
-  if (runStatus === "error") await autoErrorIfStreak(year, "participants");
+  await autoErrorIfStreak(year, "participants");
 
   return jsonResponse(
     { ok: runStatus === "ok", rows: rowsUpserted, source, error: err },

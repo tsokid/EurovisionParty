@@ -2,27 +2,15 @@
 // Player-facing screen during the voting_live phase.
 // Eurovision is broadcasting points right now; predictions are
 // already locked. Players just wait for finalization.
-//
-// Hosts get a small "Enter manually" affordance (links to ResultsEntry)
-// for the rare scenarios where the parser can't reach the show. Admins
-// have global override via the Phase Monitor / Room Phases modules.
 
 import { motion } from 'framer-motion';
-import { Radio, Trophy, Sparkles } from 'lucide-react';
+import { Radio, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useGameStore } from '../../stores/gameStore';
 import ScreenContainer from '../layout/ScreenContainer';
 import Card from '../ui/Card';
-import Button from '../ui/Button';
 
-interface Props {
-  onHostManualEntry?: () => void;
-}
-
-export default function VotingLiveScreen({ onHostManualEntry }: Props) {
+export default function VotingLiveScreen() {
   const { t } = useTranslation();
-  const { player } = useGameStore();
-  const isHost = player?.is_host === true;
 
   return (
     <ScreenContainer>
@@ -57,27 +45,13 @@ export default function VotingLiveScreen({ onHostManualEntry }: Props) {
                 'Predictions are locked. Sit tight while the jury and televote points come in. Final results land here as soon as scoring wraps.',
             })}
           </p>
-
-          {isHost && onHostManualEntry && (
-            <div className="mt-6">
-              <Button variant="secondary" size="md" onClick={onHostManualEntry}>
-                <Trophy className="w-4 h-4" strokeWidth={2.4} />
-                {t('voting.manualEntry', { defaultValue: 'Enter results manually (host)' })}
-              </Button>
-              <p className="text-xs text-white/45 mt-2">
-                {t('voting.manualHint', {
-                  defaultValue: 'Only use this if the parser is unreachable. Admin can also force-finalize globally.',
-                })}
-              </p>
-            </div>
-          )}
         </Card>
 
         <Card className="py-4 px-4 text-center">
           <Sparkles className="w-5 h-5 mx-auto text-euro-gold mb-2" strokeWidth={2.4} />
           <p className="text-sm sm:text-base text-white/75">
             {t('voting.footer', {
-              defaultValue: 'Watch the show. We’ll show you who won, who got it right, and your final score.',
+              defaultValue: "Watch the show. We'll show you who won, who got it right, and your final score.",
             })}
           </p>
         </Card>

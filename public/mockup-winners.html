@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winner Reveal — Prototype</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold:        #FFD166;
+    --pink:        #FF6B9D;
+    --purple:      #7C3AED;
+    --purple-light:#A78BFA;
+    --green:       #10B981;
+    --deep:        #0A0519;
+    --surface:     #12083A;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--deep);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Scenario nav ──────────────────────────────────────────────── */
+  .scenario-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(10,5,25,0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+  }
+  .scenario-nav button {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .scenario-nav button.active {
+    background: var(--purple);
+    border-color: var(--purple);
+    color: #fff;
+  }
+  .scenario-nav span {
+    margin-left: auto;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    align-self: center;
+  }
+
+  /* ── Screens ────────────────────────────────────────────────────── */
+  .screen {
+    display: none;
+    padding-top: 52px;
+  }
+  .screen.active { display: block; }
+
+  /* ── Step 1: Cinematic reveal ────────────────────────────────────── */
+  .reveal {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    overflow: hidden;
+  }
+  .reveal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(124,58,237,0.35) 0%, transparent 70%),
+                radial-gradient(ellipse at 50% 80%, rgba(255,107,157,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,209,102,0.45);
+    background: rgba(255,209,102,0.12);
+    color: var(--gold);
+  }
+  .pill.co { border-color: rgba(255,107,157,0.5); background: rgba(255,107,157,0.12); color: var(--pink); }
+
+  .winner-name {
+    font-size: clamp(36px, 8vw, 72px);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--pink) 50%, var(--purple-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .winner-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 15px;
+    max-width: 380px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+  }
+
+  /* sparkles */
+  .sparks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: drift 3s ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes drift {
+    0%   { opacity: 0; transform: translateY(0) scale(0); }
+    20%  { opacity: 1; }
+    80%  { opacity: 0.8; }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+  }
+
+  /* continue button */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .cta:hover  { transform: translateY(-2px); }
+  .cta:active { transform: scale(0.97); }
+  .cta.gold { background: var(--gold); color: #000; box-shadow: 0 4px 28px rgba(255,209,102,0.4); }
+  .cta.pink { background: var(--pink); color: #fff; box-shadow: 0 4px 28px rgba(255,107,157,0.4); }
+
+  /* ── Step 2: Cards ───────────────────────────────────────────────── */
+  .cards-section {
+    padding: 24px 16px 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 16px;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .cards-grid .card:first-child { grid-column: span 2; max-width: 220px; justify-self: center; }
+  }
+  .card-wrap {
+    position: relative;
+  }
+  .your-tag {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: var(--gold);
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 0 18px rgba(255,209,102,0.55);
+  }
+  .card {
+    position: relative;
+    border-radius: 16px;
+    border: 2px solid rgba(255,209,102,0.55);
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    background: #1a0a2e;
+    cursor: default;
+    transition: transform .2s;
+  }
+  .card:hover { transform: translateY(-4px) scale(1.015); }
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card-emoji-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 56px;
+  }
+  .card-overlay {
+    position: absolute;
+    inset-x: 0; bottom: 0;
+    padding: 10px 10px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 60%, transparent 100%);
+  }
+  .card-category {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .card-player {
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    margin-top: 2px;
+    line-height: 1.2;
+  }
+  .card-player.mine { color: var(--gold); font-size: 16px; text-shadow: 0 0 12px rgba(255,209,102,0.6); }
+  .card-metric {
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 2px;
+  }
+  .card.mine-glow { box-shadow: 0 0 0 2px var(--gold), 0 0 28px rgba(255,209,102,0.35); }
+
+  /* ── Step 3: Leaderboard ─────────────────────────────────────────── */
+  .leaderboard {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 16px 32px;
+  }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+    background: rgba(255,255,255,0.04);
+  }
+  .lb-row.me { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4); }
+  .lb-row.first { background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.3); }
+  .lb-rank { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); width: 24px; text-align: right; }
+  .lb-rank.gold { color: var(--gold); }
+  .lb-name { flex: 1; font-size: 14px; font-weight: 600; }
+  .lb-pts { font-size: 14px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
+
+  /* ── Tie scenario ────────────────────────────────────────────────── */
+  .tie-panel {
+    max-width: 560px;
+    margin: 0 auto 32px;
+    padding: 0 16px;
+  }
+  .tie-box {
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,209,102,0.4);
+    background: rgba(255,209,102,0.08);
+  }
+  .tie-header {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .tie-emoji { font-size: 28px; flex-shrink: 0; }
+  .tie-title { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
+  .tie-names { font-size: 18px; font-weight: 800; color: #fff; margin-top: 2px; }
+  .tie-desc  { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; line-height: 1.4; }
+  .tie-cta   { width: 100%; padding: 11px; border-radius: 999px; background: var(--gold); color: #000; font-size: 14px; font-weight: 700; border: none; cursor: pointer; margin-top: 4px; }
+
+  /* active vote */
+  .vote-panel {
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(124,58,237,0.5);
+    background: rgba(124,58,237,0.1);
+    max-width: 560px;
+    margin: 0 auto 32px;
+    padding: 20px 16px;
+  }
+  .vote-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .vote-timer {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vote-count { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .vote-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 16px; line-height: 1.4; }
+  .vote-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .choice-btn {
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: left;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: all .15s;
+    color: #fff;
+  }
+  .choice-btn:hover { background: rgba(255,255,255,0.07); }
+  .choice-btn.picked-accept { border-color: var(--green); background: rgba(16,185,129,0.15); }
+  .choice-btn.picked-death  { border-color: var(--pink);  background: rgba(255,107,157,0.15); }
+  .choice-icon { font-size: 20px; margin-bottom: 6px; }
+  .choice-label { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .choice-hint  { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+  .choice-votes { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); font-variant-numeric: tabular-nums; }
+
+  /* resolved states */
+  .resolved {
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto 32px;
+  }
+  .resolved.accept { border: 1px solid rgba(16,185,129,0.4); background: rgba(16,185,129,0.1); }
+  .resolved.death  { border: 1px solid rgba(255,107,157,0.4); background: rgba(255,107,157,0.1); }
+  .resolved-icon { font-size: 40px; margin-bottom: 10px; }
+  .resolved-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .resolved-sub   { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+  /* sudden death match */
+  .sd-panel {
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,107,157,0.4);
+    background: rgba(255,107,157,0.06);
+    max-width: 560px;
+    margin: 0 auto 32px;
+  }
+  .sd-label { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
+  .sd-question { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .sd-context  { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+  .sd-answers  { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .sd-answer {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .12s;
+  }
+  .sd-answer:hover { background: rgba(255,255,255,0.08); }
+  .sd-answer.correct { border-color: var(--green); background: rgba(16,185,129,0.15); color: var(--green); font-weight: 700; }
+  .sd-host-note { font-size: 12px; color: rgba(255,255,255,0.4); font-style: italic; }
+
+  /* progress bar */
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(to right, var(--purple), var(--pink));
+    transition: width 1s linear;
+  }
+
+  /* step indicator */
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px;
+  }
+  .step-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+  }
+  .step-dot.active { background: var(--gold); width: 18px; border-radius: 3px; }
+
+  /* divider */
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 0 16px 24px;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* flow nav buttons */
+  .flow-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 16px 32px;
+    flex-wrap: wrap;
+  }
+  .flow-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    transition: all .12s;
+  }
+  .flow-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .flow-btn.primary { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+  /* step sections */
+  .step-section { display: none; }
+  .step-section.visible { display: block; }
+</style>
+</head>
+<body>
+
+<!-- Scenario switcher -->
+<nav class="scenario-nav">
+  <button class="active" onclick="setScenario('solo')">Scenario A: Solo winner</button>
+  <button onclick="setScenario('tie')">Scenario B: Tied (2 players)</button>
+  <span>Prototype — click through to approve</span>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENARIO A: SOLO WINNER                                     -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div id="solo" class="screen active">
+
+  <!-- Step indicator -->
+  <div class="step-indicator" id="solo-steps">
+    <div class="step-dot active" id="solo-step-0"></div>
+    <div class="step-dot" id="solo-step-1"></div>
+    <div class="step-dot" id="solo-step-2"></div>
+  </div>
+
+  <!-- STEP 0: Champion reveal -->
+  <div id="solo-s0" class="step-section visible">
+    <div class="reveal">
+      <div class="sparks" id="sparks-solo"></div>
+      <div class="pill">🏆 Champion</div>
+      <div class="winner-name">Maria K.</div>
+      <p class="winner-sub">Top score on the night · 1,240 total points. Take a bow.</p>
+      <button class="cta gold" onclick="soloStep(1)">See all awards →</button>
+    </div>
+  </div>
+
+  <!-- STEP 1: All 5 category cards -->
+  <div id="solo-s1" class="step-section">
+    <div class="cards-section">
+      <p class="section-label">🏅 Tonight's winners</p>
+      <div class="cards-grid">
+
+        <div class="card-wrap">
+          <div class="your-tag">Your card</div>
+          <div class="card mine-glow">
+            <img src="Cards/champion.jpg" alt="Champion" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🏆</div>
+            <div class="card-overlay">
+              <div class="card-category">Champion</div>
+              <div class="card-player mine">Maria K.</div>
+              <div class="card-metric">Most Points · 1,240</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/oracle.jpg" alt="Oracle" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🔮</div>
+            <div class="card-overlay">
+              <div class="card-category">Oracle</div>
+              <div class="card-player">Nikos P.</div>
+              <div class="card-metric">Predictions Correct · 18</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/guru.jpg" alt="Guru" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🧠</div>
+            <div class="card-overlay">
+              <div class="card-category">Guru</div>
+              <div class="card-player">Eleni T.</div>
+              <div class="card-metric">Quiz Correct · 24</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/thief.jpg" alt="Thief" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🥷</div>
+            <div class="card-overlay">
+              <div class="card-category">Thief</div>
+              <div class="card-player">Kostas D.</div>
+              <div class="card-metric">Points Stolen · 320</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/duelist.jpg" alt="Duelist" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">⚔️</div>
+            <div class="card-overlay">
+              <div class="card-category">Duelist</div>
+              <div class="card-player">Sofia M.</div>
+              <div class="card-metric">Duels Won · 7</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="flow-nav">
+      <button class="flow-btn" onclick="soloStep(0)">← Back</button>
+      <button class="flow-btn primary" onclick="soloStep(2)">Full standings →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Leaderboard -->
+  <div id="solo-s2" class="step-section">
+    <div class="leaderboard">
+      <p class="section-label" style="text-align:center;margin-bottom:16px">📊 Final standings</p>
+
+      <div class="lb-row first">
+        <div class="lb-rank gold">1</div>
+        <div class="lb-name">🏆 Maria K.</div>
+        <div class="lb-pts">1,240 pts</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank">2</div>
+        <div class="lb-name">Nikos P.</div>
+        <div class="lb-pts">1,120 pts</div>
+      </div>
+      <div class="lb-row me">
+        <div class="lb-rank">3</div>
+        <div class="lb-name">Eleni T. <span style="font-size:10px;opacity:.5">(you)</span></div>
+        <div class="lb-pts">980 pts</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank">4</div>
+        <div class="lb-name">Kostas D.</div>
+        <div class="lb-pts">870 pts</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank">5</div>
+        <div class="lb-name">Sofia M.</div>
+        <div class="lb-pts">760 pts</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank">6</div>
+        <div class="lb-name">Dmitri V.</div>
+        <div class="lb-pts">610 pts</div>
+      </div>
+    </div>
+
+    <div class="flow-nav">
+      <button class="flow-btn" onclick="soloStep(1)">← Back</button>
+    </div>
+  </div>
+
+</div><!-- /solo -->
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SCENARIO B: TIE (2 equal champions)                        -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div id="tie" class="screen">
+
+  <div class="step-indicator" id="tie-steps">
+    <div class="step-dot active"  id="tie-step-0"></div>
+    <div class="step-dot" id="tie-step-1"></div>
+    <div class="step-dot" id="tie-step-2"></div>
+    <div class="step-dot" id="tie-step-3"></div>
+    <div class="step-dot" id="tie-step-4"></div>
+  </div>
+
+  <!-- STEP 0: Co-champion reveal -->
+  <div id="tie-s0" class="step-section visible">
+    <div class="reveal">
+      <div class="sparks" id="sparks-tie"></div>
+      <div class="pill co">⚡ Co-Champions</div>
+      <div class="winner-name">Maria K. &amp; Nikos P.</div>
+      <p class="winner-sub">Share the throne — equal points at the top. The room decides what happens next.</p>
+      <button class="cta pink" onclick="tieStep(1)">See all awards →</button>
+    </div>
+  </div>
+
+  <!-- STEP 1: Cards (champion shared) -->
+  <div id="tie-s1" class="step-section">
+    <div class="cards-section">
+      <p class="section-label">🏅 Tonight's winners</p>
+      <div class="cards-grid">
+
+        <div class="card-wrap">
+          <div class="card" style="border-color:rgba(255,107,157,0.7)">
+            <img src="Cards/champion.jpg" alt="Champion" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🏆</div>
+            <div class="card-overlay">
+              <div class="card-category" style="color:var(--pink)">Co-Champion ⚡</div>
+              <div class="card-player" style="font-size:13px">Maria K. &amp; Nikos P.</div>
+              <div class="card-metric">Most Points · 1,200 each</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/oracle.jpg" alt="Oracle" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🔮</div>
+            <div class="card-overlay">
+              <div class="card-category">Oracle</div>
+              <div class="card-player">Eleni T.</div>
+              <div class="card-metric">Predictions Correct · 18</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/guru.jpg" alt="Guru" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🧠</div>
+            <div class="card-overlay">
+              <div class="card-category">Guru</div>
+              <div class="card-player">Kostas D.</div>
+              <div class="card-metric">Quiz Correct · 24</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/thief.jpg" alt="Thief" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">🥷</div>
+            <div class="card-overlay">
+              <div class="card-category">Thief</div>
+              <div class="card-player">Sofia M.</div>
+              <div class="card-metric">Points Stolen · 310</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-wrap">
+          <div class="card">
+            <img src="Cards/duelist.jpg" alt="Duelist" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-emoji-fallback" style="display:none">⚔️</div>
+            <div class="card-overlay">
+              <div class="card-category">Duelist</div>
+              <div class="card-player">Sofia M.</div>
+              <div class="card-metric">Duels Won · 7</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="flow-nav">
+      <button class="flow-btn" onclick="tieStep(0)">← Back</button>
+      <button class="flow-btn primary" onclick="tieStep(2)">Resolve tie →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Tie vote — host opens it -->
+  <div id="tie-s2" class="step-section">
+    <div style="height:16px"></div>
+    <div class="tie-panel">
+      <div class="tie-box">
+        <div class="tie-header">
+          <div class="tie-emoji">🏆</div>
+          <div>
+            <div class="tie-title">Champion · Co-winners</div>
+            <div class="tie-names">Maria K. &amp; Nikos P.</div>
+            <div class="tie-desc">Equal points at the top. The room can vote to share the win or settle it with a 3-question sudden death.</div>
+          </div>
+        </div>
+        <button class="tie-cta" onclick="tieStep(3)">🗳️ Open Tie Vote (20s)</button>
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-top:12px">Host-only button · Other players see "Waiting for host…"</p>
+    </div>
+
+    <div class="flow-nav">
+      <button class="flow-btn" onclick="tieStep(1)">← Back</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Active vote (20s window) -->
+  <div id="tie-s3" class="step-section">
+    <div style="height:16px"></div>
+    <div class="tie-panel">
+      <div class="vote-panel" style="max-width:100%;margin:0">
+        <div class="vote-header">
+          <div class="vote-timer">⏱ Tie vote · <span id="countdown">17</span>s left</div>
+          <div class="vote-count" id="vote-count-label">2 votes</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="vote-progress" style="width:15%"></div>
+        </div>
+        <p class="vote-sub">Maria K. &amp; Nikos P. are tied for Champion. Pick what happens next.</p>
+        <div class="vote-choices">
+          <button class="choice-btn" id="btn-accept" onclick="pickVote('accept')">
+            <div class="choice-icon">🤝</div>
+            <div class="choice-label">Accept tie</div>
+            <div class="choice-hint">Both share the card</div>
+            <div class="choice-votes" id="accept-count">3 votes</div>
+          </button>
+          <button class="choice-btn" id="btn-death" onclick="pickVote('death')">
+            <div class="choice-icon">⚔️</div>
+            <div class="choice-label">Sudden death</div>
+            <div class="choice-hint">3 questions decide it</div>
+            <div class="choice-votes" id="death-count">1 vote</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-nav" style="margin-top:12px">
+      <button class="flow-btn" onclick="tieStep(2)">← Back</button>
+      <button class="flow-btn" onclick="tieStep(4); document.getElementById('tie-resolve-type').value='accept'">→ Resolve: Tie accepted</button>
+      <button class="flow-btn primary" onclick="tieStep(4); document.getElementById('tie-resolve-type').value='death'">→ Resolve: Sudden death</button>
+    </div>
+    <input type="hidden" id="tie-resolve-type" value="accept">
+  </div>
+
+  <!-- STEP 4: Resolution (toggle between accept / sudden death) -->
+  <div id="tie-s4" class="step-section">
+    <div style="height:16px"></div>
+
+    <!-- Accept outcome -->
+    <div id="resolve-accept" class="tie-panel" style="display:none">
+      <div class="resolved accept">
+        <div class="resolved-icon">🤝</div>
+        <div class="resolved-title">Tie accepted</div>
+        <div class="resolved-sub">Maria K. &amp; Nikos P. share the Champion card.<br>Both are crowned co-champions tonight.</div>
+      </div>
+
+      <div class="leaderboard" style="padding:0;margin-top:16px">
+        <p class="section-label" style="text-align:center;margin-bottom:12px">📊 Final standings</p>
+        <div class="lb-row first">
+          <div class="lb-rank gold">1</div>
+          <div class="lb-name">🏆 Maria K.</div>
+          <div class="lb-pts">1,200 pts</div>
+        </div>
+        <div class="lb-row first">
+          <div class="lb-rank gold">1</div>
+          <div class="lb-name">🏆 Nikos P.</div>
+          <div class="lb-pts">1,200 pts</div>
+        </div>
+        <div class="lb-row">
+          <div class="lb-rank">3</div>
+          <div class="lb-name">Eleni T.</div>
+          <div class="lb-pts">980 pts</div>
+        </div>
+        <div class="lb-row">
+          <div class="lb-rank">4</div>
+          <div class="lb-name">Kostas D.</div>
+          <div class="lb-pts">870 pts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sudden death outcome -->
+    <div id="resolve-death" class="tie-panel" style="display:none">
+      <div class="resolved death">
+        <div class="resolved-icon">⚔️</div>
+        <div class="resolved-title">Sudden death incoming</div>
+        <div class="resolved-sub">The room voted to settle it. Host opens a 3-question match.</div>
+      </div>
+
+      <div class="sd-panel" style="margin-top:16px;max-width:100%">
+        <div class="sd-label">⚡ Sudden Death · Question 1 of 3</div>
+        <div class="sd-question">Which country scored the most jury points in Eurovision 2025?</div>
+        <div class="sd-context">Maria K. answers first — fastest correct answer wins the round.</div>
+        <div class="sd-answers">
+          <div class="sd-answer" onclick="this.className='sd-answer correct'">🇨🇭 Switzerland</div>
+          <div class="sd-answer" onclick="this.className='sd-answer'">🇸🇪 Sweden</div>
+          <div class="sd-answer" onclick="this.className='sd-answer'">🇮🇹 Italy</div>
+          <div class="sd-answer" onclick="this.className='sd-answer'">🇫🇷 France</div>
+        </div>
+        <p class="sd-host-note">Host selects the correct answer. Player who answered correctly first wins the round.</p>
+      </div>
+    </div>
+
+    <div class="flow-nav">
+      <button class="flow-btn" onclick="tieStep(3)">← Back to vote</button>
+    </div>
+  </div>
+
+</div><!-- /tie -->
+
+
+<script>
+  // ── Scenario switcher ────────────────────────────────────────
+  function setScenario(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.scenario-nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    spawnSparks(id === 'solo' ? 'sparks-solo' : 'sparks-tie');
+  }
+
+  // ── Step nav helpers ─────────────────────────────────────────
+  let soloStepN = 0, tieStepN = 0;
+
+  function soloStep(n) {
+    soloStepN = n;
+    [0,1,2].forEach(i => {
+      document.getElementById('solo-s'+i).classList.toggle('visible', i === n);
+      document.getElementById('solo-step-'+i).classList.toggle('active', i === n);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function tieStep(n) {
+    tieStepN = n;
+    [0,1,2,3,4].forEach(i => {
+      document.getElementById('tie-s'+i)?.classList.toggle('visible', i === n);
+      document.getElementById('tie-step-'+i)?.classList.toggle('active', i === n);
+    });
+    if (n === 4) {
+      const type = document.getElementById('tie-resolve-type').value;
+      document.getElementById('resolve-accept').style.display = type === 'accept' ? 'block' : 'none';
+      document.getElementById('resolve-death').style.display  = type === 'death'  ? 'block' : 'none';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Vote interactivity ───────────────────────────────────────
+  let myVote = null;
+  function pickVote(choice) {
+    myVote = choice;
+    document.getElementById('btn-accept').className = 'choice-btn' + (choice === 'accept' ? ' picked-accept' : '');
+    document.getElementById('btn-death').className  = 'choice-btn' + (choice === 'death'  ? ' picked-death'  : '');
+  }
+
+  // ── Countdown sim ────────────────────────────────────────────
+  let countdown = 17;
+  setInterval(() => {
+    if (tieStepN !== 3) { countdown = 17; return; }
+    if (countdown > 0) countdown--;
+    const el = document.getElementById('countdown');
+    if (el) el.textContent = countdown;
+    const pct = ((17 - countdown) / 17 * 100).toFixed(0);
+    const bar = document.getElementById('vote-progress');
+    if (bar) bar.style.width = pct + '%';
+  }, 1000);
+
+  // ── Sparkle particles ────────────────────────────────────────
+  function spawnSparks(containerId) {
+    const c = document.getElementById(containerId);
+    if (!c) return;
+    c.innerHTML = '';
+    const colors = ['#FFD166','#FF6B9D','#A78BFA','#fff'];
+    for (let i = 0; i < 28; i++) {
+      const s = document.createElement('div');
+      s.className = 'spark';
+      s.style.left = (10 + Math.random() * 80) + '%';
+      s.style.top  = (20 + Math.random() * 60) + '%';
+      s.style.background = colors[Math.floor(Math.random() * colors.length)];
+      s.style.animationDelay = (Math.random() * 2.5) + 's';
+      s.style.animationDuration = (2 + Math.random() * 2) + 's';
+      c.appendChild(s);
+    }
+  }
+
+  // init
+  spawnSparks('sparks-solo');
+</script>
+</body>
+</html>

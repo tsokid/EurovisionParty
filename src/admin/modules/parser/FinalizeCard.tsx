@@ -15,6 +15,7 @@ interface Props {
 
 export function FinalizeCard({ job, onRefresh }: Props) {
   const [confirm, setConfirm] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   // Confirmation banner after success: total rooms with predictions vs
@@ -22,6 +23,25 @@ export function FinalizeCard({ job, onRefresh }: Props) {
   const [report, setReport] = useState<{ scored: number; totalRooms: number; totalWithPredictions: number } | null>(null);
 
   const finalized = job?.status === "finalized";
+
+  const resetFinalized = async () => {
+    if (!job) return;
+    setBusy(true);
+    setErr(null);
+    setReport(null);
+    try {
+      const { error } = await supabase.rpc("reset_manual_results", {
+        p_year: job.year,
+      });
+      if (error) throw error;
+      onRefresh();
+      setConfirmReset(false);
+    } catch (e) {
+      setErr(formatError(e));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const finalize = async () => {
     if (!job) return;
@@ -34,18 +54,18 @@ export function FinalizeCard({ job, onRefresh }: Props) {
       });
       if (error) throw error;
 
-      // Sanity report: how many rooms had predictions vs how many got
-      // scored. Uses the existing realtime queryable tables — no new
-      // RPC needed.
-      const [{ count: roomsWithPreds }, { count: scoredRooms }, { count: allRooms }] = await Promise.all([
-        supabase.from("predictions").select("room_id", { count: "exact", head: true }),
-        supabase.from("results").select("room_id", { count: "exact", head: true }),
+      // Sanity report: rooms with predictions (distinct) vs rooms scored.
+      const [predsRes, { count: allRooms }] = await Promise.all([
+        supabase.from("predictions").select("room_id"),
         supabase.from("rooms").select("id", { count: "exact", head: true }),
       ]);
+      const distinctRoomsWithPreds = new Set(
+        (predsRes.data ?? []).map((r) => r.room_id)
+      ).size;
       setReport({
         scored: typeof data === "number" ? data : 0,
         totalRooms: allRooms ?? 0,
-        totalWithPredictions: roomsWithPreds ?? scoredRooms ?? 0,
+        totalWithPredictions: distinctRoomsWithPreds,
       });
 
       onRefresh();
@@ -65,14 +85,48 @@ export function FinalizeCard({ job, onRefresh }: Props) {
         every room with predictions. This cannot be undone.
       </p>
       {!confirm ? (
-        <button
-          type="button"
-          onClick={() => setConfirm(true)}
-          disabled={finalized || busy}
-          className="px-3 py-1.5 rounded bg-red-500 text-white font-bold text-sm disabled:opacity-40"
-        >
-          {finalized ? "Already finalized" : "Finalize"}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setConfirm(true)}
+            disabled={finalized || busy}
+            className="px-3 py-1.5 rounded bg-red-500 text-white font-bold text-sm disabled:opacity-40"
+          >
+            {finalized ? "Already finalized" : "Finalize"}
+          </button>
+          {finalized && !confirmReset && (
+            <button
+              type="button"
+              onClick={() => setConfirmReset(true)}
+              disabled={busy}
+              className="px-3 py-1.5 rounded bg-white/10 text-amber-300 font-bold text-sm disabled:opacity-40"
+              title="Clears all results, resets scoring, and returns parser to idle so you can re-run."
+            >
+              ↺ Reset Finalized
+            </button>
+          )}
+          {finalized && confirmReset && (
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-amber-300/80">Clears scores + results for all rooms. Sure?</span>
+              <button
+                type="button"
+                onClick={resetFinalized}
+                disabled={busy}
+                className="px-3 py-1.5 rounded bg-amber-500 text-black font-bold text-sm disabled:opacity-40"
+              >
+                {busy ? "Resetting…" : "Yes, reset"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmReset(false)}
+                disabled={busy}
+                className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       ) : (
         <div className="flex gap-2">
           <button

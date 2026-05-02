@@ -70,6 +70,23 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
     };
   }, [playerId, addNotification]);
 
+  // Polling fallback: refetch every 30s + on tab focus so the badge updates
+  // even when Realtime drops or the tab was in the background.
+  useEffect(() => {
+    if (!playerId) return;
+
+    const poll = () => refetchNotifications();
+    const id = setInterval(poll, 30_000);
+
+    const onVisible = () => { if (document.visibilityState === 'visible') refetchNotifications(); };
+    document.addEventListener('visibilitychange', onVisible);
+
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [playerId, refetchNotifications]);
+
   const refetchNotifications = useCallback(async () => {
     if (!playerId) return;
     const { data } = await supabase

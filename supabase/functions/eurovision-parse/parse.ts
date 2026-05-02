@@ -212,7 +212,11 @@ const FETCH_HEADERS: Record<string, string> = {
 };
 
 export async function fetchHtml(url: string): Promise<FetchedHtml> {
-  const r = await fetch(url, { headers: FETCH_HEADERS, redirect: 'follow' });
+  const r = await fetch(url, {
+    headers: FETCH_HEADERS,
+    redirect: 'follow',
+    signal: AbortSignal.timeout(20000),
+  });
   return { html: await r.text(), httpStatus: r.status };
 }
 

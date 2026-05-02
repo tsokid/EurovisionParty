@@ -14,7 +14,6 @@ import QuizScreen from '../components/quiz/QuizScreen';
 import PredictionsScreen from '../components/predictions/PredictionsScreen';
 import DuelsScreen from '../components/duels/DuelsScreen';
 import IntelMarket from '../components/intel/IntelMarket';
-import ResultsEntry from '../components/results/ResultsEntry';
 import VotingLiveScreen from '../components/results/VotingLiveScreen';
 import LeaderboardScreen from '../components/leaderboard/LeaderboardScreen';
 import WinnerCrown from '../components/leaderboard/WinnerCrown';
@@ -33,7 +32,6 @@ export function RoomPage() {
   const [showWinner, setShowWinner] = useState(true);
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
-  const [showHostManualEntry, setShowHostManualEntry] = useState(false);
   const [showPredictionsOpenBanner, setShowPredictionsOpenBanner] = useState(false);
 
   // Defense-in-depth: emit noindex,nofollow so even if a room URL leaks
@@ -219,12 +217,8 @@ export function RoomPage() {
       case 'duels':
         return quizDuelsLocked ? <LeaderboardScreen /> : <DuelsScreen />;
       case 'predictions':
-        // voting_live: players see a wait screen; host can opt into
-        // manual results entry via a button. final: leaderboard.
         if (phase === 'voting_live') {
-          return showHostManualEntry
-            ? <ResultsEntry />
-            : <VotingLiveScreen onHostManualEntry={() => setShowHostManualEntry(true)} />;
+          return <VotingLiveScreen />;
         }
         if (phase === 'final') return <LeaderboardScreen />;
         return predictionsLocked ? <LeaderboardScreen /> : <PredictionsScreen />;

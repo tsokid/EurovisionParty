@@ -91,7 +91,17 @@ export function useParserState(year: number, pollMs = 5000): UseParserState {
   useEffect(() => {
     refresh();
     const id = setInterval(refresh, pollMs);
-    return () => clearInterval(id);
+
+    // Browsers throttle background-tab timers. Re-fetch immediately when
+    // the admin switches back so status changes (e.g. cron → running) are
+    // visible without a manual page refresh.
+    const onVisible = () => { if (document.visibilityState === "visible") refresh(); };
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [refresh, pollMs]);
 
   return { jobs, runs, loading, error, refresh };

@@ -5,11 +5,11 @@ export type WinnerCategory = 'champion' | 'thief' | 'duelist' | 'oracle' | 'guru
 export const CATEGORY_META: Record<WinnerCategory, {
   label: string; emojiFallback: string; metricLabel: string; image: string;
 }> = {
-  champion: { label: 'Champion', emojiFallback: '🏆', metricLabel: 'Most Points',                 image: '/cards/champion.jpg' },
-  thief:    { label: 'Thief',    emojiFallback: '🥷', metricLabel: 'Most Points Stolen in Duels', image: '/cards/thief.jpg'    },
-  duelist:  { label: 'Duelist',  emojiFallback: '⚔️', metricLabel: 'Most Duels Won',              image: '/cards/duelist.jpg'  },
-  oracle:   { label: 'Oracle',   emojiFallback: '🔮', metricLabel: 'Most Predictions Correct',    image: '/cards/oracle.jpg'   },
-  guru:     { label: 'Guru',     emojiFallback: '🧠', metricLabel: 'Most Correct Quiz Answers',   image: '/cards/guru.jpg'     },
+  champion: { label: 'Champion', emojiFallback: '🏆', metricLabel: 'Most Points',                 image: '/Cards/champion.jpg' },
+  thief:    { label: 'Thief',    emojiFallback: '🥷', metricLabel: 'Most Points Stolen in Duels', image: '/Cards/thief.jpg'    },
+  duelist:  { label: 'Duelist',  emojiFallback: '⚔️', metricLabel: 'Most Duels Won',              image: '/Cards/duelist.jpg'  },
+  oracle:   { label: 'Oracle',   emojiFallback: '🔮', metricLabel: 'Most Predictions Correct',    image: '/Cards/oracle.jpg'   },
+  guru:     { label: 'Guru',     emojiFallback: '🧠', metricLabel: 'Most Correct Quiz Answers',   image: '/Cards/guru.jpg'     },
 };
 
 export interface WinnerRow {
