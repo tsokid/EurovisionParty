@@ -134,13 +134,17 @@ async function autoErrorIfStreak(year: number, kind: "participants" | "results")
 async function handleParticipants(): Promise<Response> {
   const db = admin();
 
-  // 1. Gate on job state + read source_url
+  // 1. Gate on job state + read source_url. No hardcoded year — find whichever
+  //    participants job is currently running (there should only ever be one).
   const { data: job } = await db.from("parse_jobs")
-    .select("status, source_url").eq("year", 2026).eq("kind", "participants").single();
-  if (!job) return jsonResponse({ error: "no participants job" }, 500);
-  if (job.status !== "running") {
-    return jsonResponse({ error: "job not running", state: job.status }, 409);
-  }
+    .select("year, status, source_url")
+    .eq("kind", "participants")
+    .eq("status", "running")
+    .limit(1)
+    .maybeSingle();
+  if (!job) return jsonResponse({ error: "no running participants job" }, 409);
+
+  const year = job.year as number;
   const sourceUrl = job.source_url ?? PROD_URL_2026;
 
   // 2. Fetch + extract from eurovision.com only — no Wikipedia fallback.
@@ -207,16 +211,16 @@ async function handleParticipants(): Promise<Response> {
         last_poll_at: new Date().toISOString(),
         poll_count: 1,
       })
-      .eq("year", 2026).eq("kind", "participants");
+      .eq("year", year).eq("kind", "participants");
   }
 
   await logRun({
-    year: 2026, kind: "participants",
+    year, kind: "participants",
     httpStatus, status: runStatus, rowsUpserted,
     payloadHash, error: err,
   });
 
-  if (runStatus === "error") await autoErrorIfStreak(2026, "participants");
+  if (runStatus === "error") await autoErrorIfStreak(year, "participants");
 
   return jsonResponse(
     { ok: runStatus === "ok", rows: rowsUpserted, source, error: err },
@@ -227,17 +231,20 @@ async function handleParticipants(): Promise<Response> {
 async function handleResults(): Promise<Response> {
   const db = admin();
 
-  // 1. Gate on job state + manual override flag, read source_url
+  // 1. Gate on job state + manual override flag, read source_url.
+  //    No hardcoded year — find whichever results job is currently running.
   const { data: job } = await db.from("parse_jobs")
-    .select("status, manual_override, source_url")
-    .eq("year", 2026).eq("kind", "results").single();
-  if (!job) return jsonResponse({ error: "no results job" }, 500);
+    .select("year, status, manual_override, source_url")
+    .eq("kind", "results")
+    .eq("status", "running")
+    .limit(1)
+    .maybeSingle();
+  if (!job) return jsonResponse({ error: "no running results job" }, 409);
   if (job.manual_override) {
     return jsonResponse({ error: "manual override active", state: job.status }, 409);
   }
-  if (job.status !== "running") {
-    return jsonResponse({ error: "job not running", state: job.status }, 409);
-  }
+
+  const year = job.year as number;
   const sourceUrl = job.source_url ?? PROD_URL_2026;
 
   let rows: ResultRow[] = [];
@@ -291,15 +298,15 @@ async function handleResults(): Promise<Response> {
   }
 
   // 4. Increment poll count regardless of ok|blocked|error (a poll happened)
-  await db.rpc("increment_poll_count", { p_year: 2026, p_kind: "results" });
+  await db.rpc("increment_poll_count", { p_year: year, p_kind: "results" });
 
   await logRun({
-    year: 2026, kind: "results",
+    year, kind: "results",
     httpStatus, status: runStatus, rowsUpserted,
     payloadHash, error: err,
   });
 
-  if (runStatus === "error") await autoErrorIfStreak(2026, "results");
+  if (runStatus === "error") await autoErrorIfStreak(year, "results");
 
   return jsonResponse(
     { ok: runStatus === "ok", rows: rowsUpserted, error: err },
