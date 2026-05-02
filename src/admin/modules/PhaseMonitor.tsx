@@ -22,6 +22,7 @@ interface RoomRow {
   phase: string;
   phase_updated_at: string | null;
   player_count: number;
+  host_name: string | null;
 }
 
 interface ParserStatus {
@@ -35,23 +36,37 @@ export default function PhaseMonitor() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [refreshedAt, setRefreshedAt] = useState<Date | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
 
   const refresh = useCallback(async () => {
     setLoading(true);
     setErr(null);
     try {
-      const [{ data: r, error: rErr }, { data: j, error: jErr }] = await Promise.all([
-        supabase
-          .from("rooms")
-          .select("id, code, phase, phase_updated_at, players:players(count)")
-          .order("phase_updated_at", { ascending: false }),
-        supabase
-          .from("parse_jobs")
-          .select("kind, status")
-          .eq("year", 2026),
-      ]);
+      const [{ data: r, error: rErr }, { data: j, error: jErr }, { data: hosts, error: hErr }] =
+        await Promise.all([
+          supabase
+            .from("rooms")
+            .select("id, code, phase, phase_updated_at, players:players(count)")
+            .order("phase_updated_at", { ascending: false }),
+          supabase
+            .from("parse_jobs")
+            .select("kind, status")
+            .eq("year", 2026),
+          supabase
+            .from("players")
+            .select("room_id, name")
+            .eq("is_host", true),
+        ]);
       if (rErr) throw rErr;
       if (jErr) throw jErr;
+      if (hErr) throw hErr;
+
+      const hostByRoom = new Map<string, string>();
+      for (const h of hosts ?? []) {
+        const row = h as { room_id: string; name: string };
+        hostByRoom.set(row.room_id, row.name);
+      }
 
       type RawRoom = { id: string; code: string; phase: string; phase_updated_at: string | null; players: { count: number }[] };
       const mapped: RoomRow[] = (r ?? []).map((row) => {
@@ -62,6 +77,7 @@ export default function PhaseMonitor() {
           phase: raw.phase,
           phase_updated_at: raw.phase_updated_at,
           player_count: raw.players?.[0]?.count ?? 0,
+          host_name: hostByRoom.get(raw.id) ?? null,
         };
       });
       setRooms(mapped);
@@ -90,6 +106,47 @@ export default function PhaseMonitor() {
     return () => clearInterval(id);
   }, [refresh]);
 
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selected.size === rooms.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(rooms.map((r) => r.id)));
+    }
+  };
+
+  const deleteSelected = async () => {
+    if (selected.size === 0) return;
+    const codes = rooms
+      .filter((r) => selected.has(r.id))
+      .map((r) => r.code)
+      .join(", ");
+    if (!window.confirm(`Delete ${selected.size} room(s): ${codes}?\n\nThis cannot be undone.`)) return;
+
+    setDeleting(true);
+    setErr(null);
+    try {
+      const { error } = await supabase
+        .from("rooms")
+        .delete()
+        .in("id", [...selected]);
+      if (error) throw error;
+      setSelected(new Set());
+      await refresh();
+    } catch (e) {
+      setErr(formatError(e));
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   // Counts per phase (always 5 buckets, missing = 0).
   const counts = PHASES.map((p) => ({
     ...p,
@@ -108,6 +165,35 @@ export default function PhaseMonitor() {
       : "pre_night";
 
   const stragglers = rooms.filter((r) => r.phase !== expectedPhase && r.phase !== "lobby");
+
+  const allChecked = rooms.length > 0 && selected.size === rooms.length;
+  const someChecked = selected.size > 0 && selected.size < rooms.length;
+
+  const RoomListItem = ({ r, showCheckbox = true }: { r: RoomRow; showCheckbox?: boolean }) => (
+    <li
+      key={r.id}
+      className={`flex items-center gap-2 px-2 py-1.5 rounded transition-colors ${
+        selected.has(r.id) ? "bg-red-500/10" : "hover:bg-white/5"
+      }`}
+    >
+      {showCheckbox && (
+        <input
+          type="checkbox"
+          checked={selected.has(r.id)}
+          onChange={() => toggleSelect(r.id)}
+          className="accent-red-400 cursor-pointer shrink-0"
+        />
+      )}
+      <span className="font-mono tracking-wide w-20 shrink-0">{r.code}</span>
+      <span className="text-white/55 truncate flex-1 min-w-0 text-xs">
+        {r.host_name ?? <span className="text-white/25 italic">no host</span>}
+      </span>
+      <span className="text-white/55 tabular-nums text-xs shrink-0">{r.player_count}p</span>
+      <span className="text-white/85 capitalize text-xs shrink-0 w-28 text-right">
+        {r.phase.replace(/_/g, " ")}
+      </span>
+    </li>
+  );
 
   return (
     <div className="p-4 space-y-4">
@@ -173,37 +259,55 @@ export default function PhaseMonitor() {
           <p className="text-sm font-bold text-amber-300 mb-2">
             ⚠️ {stragglers.length} room{stragglers.length === 1 ? "" : "s"} not in expected phase
             <span className="text-white/55 font-normal ml-1">
-              (use the Room Phases module to bulk-advance)
+              (use Room Phases to bulk-advance)
             </span>
           </p>
-          <ul className="text-xs sm:text-sm text-white/80 space-y-1 max-h-48 overflow-y-auto">
+          <ul className="text-xs sm:text-sm text-white/80 space-y-0.5 max-h-48 overflow-y-auto">
             {stragglers.slice(0, 25).map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 px-2 py-1 rounded hover:bg-white/5">
-                <span className="font-mono tracking-wide">{r.code}</span>
-                <span className="text-white/55 tabular-nums">{r.player_count} player{r.player_count === 1 ? "" : "s"}</span>
-                <span className="text-white/85 capitalize">{r.phase.replace(/_/g, " ")}</span>
-              </li>
+              <RoomListItem key={r.id} r={r} showCheckbox={false} />
             ))}
           </ul>
         </section>
       )}
 
-      {/* Recently-flipped rooms */}
+      {/* All rooms with select / delete */}
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-        <p className="text-sm font-bold text-white/80 mb-2">All rooms · most recent first</p>
+        <div className="flex items-center gap-3 mb-2">
+          <input
+            type="checkbox"
+            checked={allChecked}
+            ref={(el) => { if (el) el.indeterminate = someChecked; }}
+            onChange={toggleSelectAll}
+            className="accent-red-400 cursor-pointer"
+            aria-label="Select all rooms"
+          />
+          <p className="text-sm font-bold text-white/80 flex-1">
+            All rooms · most recent first
+          </p>
+          {selected.size > 0 && (
+            <button
+              onClick={deleteSelected}
+              disabled={deleting}
+              className="px-3 py-1 rounded bg-red-500/80 hover:bg-red-500 text-white text-xs font-bold transition-colors disabled:opacity-50"
+            >
+              {deleting ? "Deleting…" : `Delete ${selected.size} room${selected.size === 1 ? "" : "s"}`}
+            </button>
+          )}
+          <button
+            onClick={() => { refresh(); setSelected(new Set()); }}
+            disabled={loading}
+            className="text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-40"
+          >
+            ↻ refresh
+          </button>
+        </div>
+
         {loading && rooms.length === 0 ? (
           <p className="text-sm text-white/50">Loading…</p>
         ) : (
-          <ul className="text-xs sm:text-sm text-white/80 space-y-1 max-h-72 overflow-y-auto">
-            {rooms.slice(0, 50).map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 px-2 py-1">
-                <span className="font-mono tracking-wide">{r.code}</span>
-                <span className="text-white/85 capitalize w-32 sm:w-40 text-right">{r.phase.replace(/_/g, " ")}</span>
-                <span className="text-white/45 tabular-nums w-16 text-right">{r.player_count}p</span>
-                <span className="text-white/40 tabular-nums text-xs hidden sm:inline">
-                  {r.phase_updated_at ? new Date(r.phase_updated_at).toLocaleTimeString() : "—"}
-                </span>
-              </li>
+          <ul className="text-xs sm:text-sm text-white/80 space-y-0.5 max-h-96 overflow-y-auto">
+            {rooms.slice(0, 100).map((r) => (
+              <RoomListItem key={r.id} r={r} />
             ))}
           </ul>
         )}
