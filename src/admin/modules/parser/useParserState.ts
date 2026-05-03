@@ -1,10 +1,36 @@
 // src/admin/modules/parser/useParserState.ts
-// Loads both parse_jobs rows for a year (participants + results) and the most
-// recent parse_runs. Polls every `pollMs` so the admin UI stays in sync with
-// cron-driven state changes during the show.
+// Loads both parse_jobs rows for the active contest year (participants +
+// results) and the most recent parse_runs. Polls every `pollMs` so the
+// admin UI stays in sync with cron-driven state changes during the show.
 
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../../../lib/supabase";
+
+// ── Module-level cache ────────────────────────────────────────────────
+// Persists the last good fetch across component remounts (e.g. when the
+// admin switches between the Parser / Phase Monitor / Super admins tabs
+// and back). Without this, every remount starts with an empty `jobs`
+// map → the gate in EurovisionParser shows "Loading parser state…"
+// while the first fetch is in flight, which can hang for seconds if the
+// Supabase JWT silently needs refreshing after idle.
+let cachedJobs: JobsByKind = {};
+let cachedRuns: ParseRun[] = [];
+let cachedYear: number | null = null;
+
+// Fail fetches that hang past this so the UI surfaces an error + retry
+// path instead of staying stuck on "Loading…" forever. The underlying
+// Supabase request keeps running in the background; we just don't await
+// it past the timeout.
+const FETCH_TIMEOUT_MS = 10_000;
+
+function withTimeout<T>(p: PromiseLike<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    Promise.resolve(p),
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms),
+    ),
+  ]);
+}
 
 export type JobKind = "participants" | "results";
 export type JobStatus =
@@ -69,57 +95,81 @@ interface UseParserState {
  * today, Berlin 2027 tomorrow, etc., with no code changes).
  */
 export function useParserState(pollMs = 5000): UseParserState {
-  const [jobs, setJobs] = useState<JobsByKind>({});
-  const [runs, setRuns] = useState<ParseRun[]>([]);
-  const [year, setYear] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Hydrate from the module-level cache so a tab switch back into the
+  // Parser dashboard renders the last-known state instantly instead of
+  // flashing the "Loading parser state…" placeholder.
+  const [jobs, setJobs] = useState<JobsByKind>(cachedJobs);
+  const [runs, setRuns] = useState<ParseRun[]>(cachedRuns);
+  const [year, setYear] = useState<number | null>(cachedYear);
+  // Loading is false the moment we have ANY cached data — show stale
+  // first, refresh in the background. Only the very first ever fetch
+  // (cold cache) shows the loading placeholder.
+  const [loading, setLoading] = useState<boolean>(Object.keys(cachedJobs).length === 0);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    // 1. Pull every parse_jobs row, pick the latest year as "active".
-    const jobsRes = await supabase
-      .from("parse_jobs")
-      .select("*")
-      .order("year", { ascending: false });
+    try {
+      // 1. Pull every parse_jobs row, pick the latest year as "active".
+      const jobsRes = await withTimeout(
+        supabase.from("parse_jobs").select("*").order("year", { ascending: false }),
+        FETCH_TIMEOUT_MS,
+        "parse_jobs fetch",
+      );
 
-    if (jobsRes.error) {
-      setError(jobsRes.error.message);
-      setLoading(false);
-      return;
-    }
+      if (jobsRes.error) {
+        setError(jobsRes.error.message);
+        setLoading(false);
+        return;
+      }
 
-    const allJobs    = (jobsRes.data ?? []) as ParseJob[];
-    const activeYear = allJobs[0]?.year ?? null;
-    setYear(activeYear);
+      const allJobs    = (jobsRes.data ?? []) as ParseJob[];
+      const activeYear = allJobs[0]?.year ?? null;
 
-    const next: JobsByKind = {};
-    for (const j of allJobs) {
-      if (j.year === activeYear) next[j.kind] = j;
-    }
-    setJobs(next);
+      const next: JobsByKind = {};
+      for (const j of allJobs) {
+        if (j.year === activeYear) next[j.kind] = j;
+      }
+      setJobs(next);
+      setYear(activeYear);
+      cachedJobs = next;
+      cachedYear = activeYear;
 
-    // 2. Recent runs scoped to the active year.
-    if (activeYear == null) {
-      setRuns([]);
+      // 2. Recent runs scoped to the active year.
+      if (activeYear == null) {
+        setRuns([]);
+        cachedRuns = [];
+        setError(null);
+        setLoading(false);
+        return;
+      }
+      const runsRes = await withTimeout(
+        supabase
+          .from("parse_runs")
+          .select("*")
+          .eq("year", activeYear)
+          .order("finished_at", { ascending: false })
+          .limit(20),
+        FETCH_TIMEOUT_MS,
+        "parse_runs fetch",
+      );
+
+      if (runsRes.error) {
+        setError(runsRes.error.message);
+        setLoading(false);
+        return;
+      }
+      const runsData = (runsRes.data ?? []) as ParseRun[];
+      setRuns(runsData);
+      cachedRuns = runsData;
       setError(null);
       setLoading(false);
-      return;
-    }
-    const runsRes = await supabase
-      .from("parse_runs")
-      .select("*")
-      .eq("year", activeYear)
-      .order("finished_at", { ascending: false })
-      .limit(20);
-
-    if (runsRes.error) {
-      setError(runsRes.error.message);
+    } catch (e) {
+      // Reached only when withTimeout fires. Surface the error + clear
+      // loading so the UI can show a retry hint instead of hanging on
+      // "Loading parser state…" forever.
+      setError(e instanceof Error ? e.message : String(e));
       setLoading(false);
-      return;
     }
-    setRuns((runsRes.data ?? []) as ParseRun[]);
-    setError(null);
-    setLoading(false);
   }, []);
 
   useEffect(() => {

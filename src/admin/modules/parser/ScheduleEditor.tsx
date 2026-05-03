@@ -124,10 +124,39 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
 
-  // Re-sync local fields if job updates externally (cron tick, manual save in another tab)
-  useEffect(() => { setStartDate(initialStart.date); setStartTime(initialStart.time); }, [initialStart.date, initialStart.time]);
-  useEffect(() => { setEndDate(initialEnd.date); setEndTime(initialEnd.time); }, [initialEnd.date, initialEnd.time]);
-  useEffect(() => { setInterval(job.poll_interval_minutes ?? 2); }, [job.poll_interval_minutes]);
+  // Track whether the user has actively edited the form. While true, we
+  // STOP the polled `job` prop from clobbering their typing every 5 s
+  // (root cause of "I save new times and no change is made" — the form
+  // was getting reset to the DB value mid-edit, leaving `dirty=false`
+  // and the Save button disabled). Reset to false on save / external
+  // discard, so a real cron-side schedule change still surfaces in the
+  // form once the user stops touching it.
+  const [userTouched, setUserTouched] = useState(false);
+
+  // Re-sync local fields if job updates externally (cron tick, manual
+  // save in another tab) — but ONLY when the user isn't mid-edit.
+  useEffect(() => {
+    if (userTouched) return;
+    setStartDate(initialStart.date);
+    setStartTime(initialStart.time);
+  }, [initialStart.date, initialStart.time, userTouched]);
+  useEffect(() => {
+    if (userTouched) return;
+    setEndDate(initialEnd.date);
+    setEndTime(initialEnd.time);
+  }, [initialEnd.date, initialEnd.time, userTouched]);
+  useEffect(() => {
+    if (userTouched) return;
+    setInterval(job.poll_interval_minutes ?? 2);
+  }, [job.poll_interval_minutes, userTouched]);
+
+  // Wrappers that flip userTouched on the way through. Passed to the
+  // input change handlers below.
+  const onStartDateChange = (v: string) => { setStartDate(v); setUserTouched(true); };
+  const onStartTimeChange = (v: string) => { setStartTime(v); setUserTouched(true); };
+  const onEndDateChange   = (v: string) => { setEndDate(v);   setUserTouched(true); };
+  const onEndTimeChange   = (v: string) => { setEndTime(v);   setUserTouched(true); };
+  const onIntervalChange  = (v: number) => { setInterval(v);  setUserTouched(true); };
 
   const dirty =
     startDate !== initialStart.date ||
@@ -165,6 +194,9 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
       });
       if (error) throw error;
       setMsg({ kind: 'ok', text: 'Schedule saved.' });
+      // Allow the form to re-sync from server again now that the user's
+      // edits have been persisted.
+      setUserTouched(false);
       onSaved();
     } catch (e) {
       setMsg({ kind: 'err', text: formatError(e) });
@@ -225,8 +257,8 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
           label="Start"
           date={startDate}
           time={startTime}
-          onDateChange={setStartDate}
-          onTimeChange={setStartTime}
+          onDateChange={onStartDateChange}
+          onTimeChange={onStartTimeChange}
         />
 
         {isResults && (
@@ -235,8 +267,8 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
               label="End (poller stops after this)"
               date={endDate}
               time={endTime}
-              onDateChange={setEndDate}
-              onTimeChange={setEndTime}
+              onDateChange={onEndDateChange}
+              onTimeChange={onEndTimeChange}
             />
             <div>
               <label className="block text-[10px] text-white/50 mb-0.5">Poll interval (minutes)</label>
@@ -245,7 +277,7 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
                 min={1}
                 max={60}
                 value={interval}
-                onChange={(e) => setInterval(Math.max(1, Math.min(60, parseInt(e.target.value, 10) || 1)))}
+                onChange={(e) => onIntervalChange(Math.max(1, Math.min(60, parseInt(e.target.value, 10) || 1)))}
                 className="w-24 bg-black/30 border border-white/10 rounded px-2.5 py-1.5 text-xs text-white font-mono"
               />
             </div>

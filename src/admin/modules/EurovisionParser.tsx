@@ -11,10 +11,26 @@ import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
 
 export default function EurovisionParser() {
-  const { jobs, runs, loading, refresh, year } = useParserState();
+  const { jobs, runs, loading, refresh, year, error } = useParserState();
 
   if (loading && Object.keys(jobs).length === 0) {
-    return <div className="p-4 text-white/60">Loading parser state…</div>;
+    return (
+      <div className="p-4 text-white/60">
+        Loading parser state…
+        {error && (
+          <div className="mt-3 text-xs">
+            <p className="text-red-300">⚠️ {error}</p>
+            <button
+              type="button"
+              onClick={() => refresh()}
+              className="mt-2 px-3 py-1 rounded bg-white/10 text-white text-xs cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+      </div>
+    );
   }
 
   if (year == null) {
@@ -42,6 +58,22 @@ export default function EurovisionParser() {
           Athens (Europe/Athens) timezone.
         </p>
       </header>
+
+      {/* Background-refresh error banner. Cached data still renders below
+          so the dashboard isn't blocked, but the user sees that the most
+          recent poll failed and can retry on demand. */}
+      {error && Object.keys(jobs).length > 0 && (
+        <div className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300 flex items-center justify-between">
+          <span>⚠️ Showing cached data — latest refresh failed: {error}</span>
+          <button
+            type="button"
+            onClick={() => refresh()}
+            className="px-2 py-1 rounded bg-white/10 text-white text-xs cursor-pointer"
+          >
+            Retry
+          </button>
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ParticipantsCard
           job={jobs.participants}
