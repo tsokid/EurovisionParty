@@ -10,6 +10,7 @@ import { Search, Crown } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
 import clsx from 'clsx';
 import TieVotePanel from './TieVotePanel';
+import SuddenDeathPanel from './SuddenDeathPanel';
 import {
   computeWinners, fetchWinners, groupByCategory, hasTie, CATEGORY_META,
 } from '../../lib/winners';
@@ -17,6 +18,9 @@ import type { WinnerRow, WinnerCategory } from '../../lib/winners';
 import { useGameStore } from '../../stores/gameStore';
 import { useLeaderboard } from '../../hooks/useLeaderboard';
 import { avatarGradient, avatarInitial } from '../../lib/avatarUtils';
+import { supabase } from '../../lib/supabase';
+
+type ChampionVoteStatus = 'active' | 'accept' | 'sudden_death' | null;
 
 const CARD_ORDER: WinnerCategory[] = ['champion', 'duelist', 'thief', 'guru', 'oracle'];
 
@@ -58,6 +62,36 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
   }, [roomId, isHost]);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  // ── Champion tie-vote status (drives SD panel visibility + card blur) ───
+  const [championVoteStatus, setChampionVoteStatus] = useState<ChampionVoteStatus>(null);
+  useEffect(() => {
+    let mounted = true;
+    const loadStatus = async () => {
+      const { data } = await supabase
+        .from('tie_votes')
+        .select('status')
+        .eq('room_id', roomId)
+        .eq('category', 'champion')
+        .order('opened_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (mounted) setChampionVoteStatus((data?.status as ChampionVoteStatus) ?? null);
+    };
+    loadStatus();
+    const ch = supabase
+      .channel(`tie_votes_status:${roomId}:champion`)
+      .on('postgres_changes',
+          { event: '*', schema: 'public', table: 'tie_votes', filter: `room_id=eq.${roomId}` },
+          (payload) => {
+            if (payload.eventType === 'DELETE') { setChampionVoteStatus(null); return; }
+            const row = payload.new as { category?: string; status?: string };
+            if (row.category === 'champion' && row.status) {
+              setChampionVoteStatus(row.status as ChampionVoteStatus);
+            }
+          }).subscribe();
+    return () => { mounted = false; supabase.removeChannel(ch); };
+  }, [roomId]);
 
   // ── Scroll tracking ──────────────────────────────────────────────────────
   const handleScroll = useCallback(() => {
@@ -152,6 +186,22 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                 onResolved={refresh}
               />
             </div>
+            {/* Sudden Death match panel — only shown after the room
+                voted SD (championVoteStatus === 'sudden_death').
+                Self-renders the 3-question flow / waiting state. */}
+            {championVoteStatus === 'sudden_death' && (
+              <div className="m-1 mt-2">
+                <SuddenDeathPanel
+                  roomId={roomId}
+                  isHost={isHost}
+                  tiedPlayerIds={champions.map((r) => r.player_id)}
+                  tiedPlayerNames={Object.fromEntries(
+                    champions.map((r) => [r.player_id, playerNameById[r.player_id] ?? '?']),
+                  )}
+                  onResolved={refresh}
+                />
+              </div>
+            )}
           </motion.div>
         </div>
       )}
@@ -229,70 +279,86 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                 </p>
 
                 {/* Player name(s)
-                    Champion + tied → identity is concealed until the tiebreak
-                    resolves. We don't reveal who the champion is yet. */}
-                {isChamp && catTied ? (
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-white/60 font-bold text-base flex-shrink-0">
-                      ?
-                    </div>
-                    <span
-                      className="text-[1.3rem] font-extrabold text-white/85 leading-tight truncate"
-                      style={{ filter: 'blur(6px)', userSelect: 'none' }}
-                      aria-label="Champion identity hidden until tiebreak resolves"
-                    >
-                      {names.join(' & ') || 'Hidden Player'}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="space-y-2 mb-4">
-                    {names.slice(0, 3).map((name, ni) => (
-                      <div key={name + ni} className="flex items-center gap-2.5">
-                        <div className={clsx(
-                          'w-9 h-9 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-sm flex-shrink-0',
-                          avatarGradient(ni),
-                        )}>
-                          {avatarInitial(name)}
+                    Champion + tied + vote unresolved → identity hidden.
+                    Champion + tied + vote 'accept' → CO-CHAMPIONS, names shown.
+                    Champion + single → normal champion display.
+                    Other categories: stacked co-winners as before. */}
+                {(() => {
+                  const championIdentityHidden =
+                    isChamp && catTied && championVoteStatus !== 'accept';
+                  if (championIdentityHidden) {
+                    return (
+                      <div className="flex items-center gap-2.5 mb-4">
+                        <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-white/60 font-bold text-base flex-shrink-0">
+                          ?
                         </div>
-                        <span className="text-[1.3rem] font-extrabold text-white leading-tight truncate">
-                          {name}
+                        <span
+                          className="text-[1.3rem] font-extrabold text-white/85 leading-tight truncate"
+                          style={{ filter: 'blur(6px)', userSelect: 'none' }}
+                          aria-label="Champion identity hidden until tiebreak resolves"
+                        >
+                          {names.join(' & ') || 'Hidden Player'}
                         </span>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    );
+                  }
+                  return (
+                    <div className="space-y-2 mb-4">
+                      {names.slice(0, 3).map((name, ni) => (
+                        <div key={name + ni} className="flex items-center gap-2.5">
+                          <div className={clsx(
+                            'w-9 h-9 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-sm flex-shrink-0',
+                            avatarGradient(ni),
+                          )}>
+                            {avatarInitial(name)}
+                          </div>
+                          <span className="text-[1.3rem] font-extrabold text-white leading-tight truncate">
+                            {name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
 
                 {/* Score row */}
                 <div className="flex items-end justify-between gap-3">
                   <div>
-                    {isChamp && catTied ? (
-                      <>
-                        <p className="text-3xl font-extrabold text-amber-300 tabular-nums leading-none">
-                          {score.toLocaleString()}
-                        </p>
-                        <p className="text-[10px] text-amber-200/70 mt-1.5 uppercase tracking-widest">
-                          {t('winners.tiedAtTop')}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-5xl font-extrabold text-white tabular-nums leading-none">
-                          {score.toLocaleString()}
-                        </p>
-                        <p className="text-[10px] text-white/40 mt-1.5 uppercase tracking-widest">
-                          {isChamp ? t('winners.totalPts') : t('winners.stat')}
-                        </p>
-                      </>
-                    )}
+                    {(() => {
+                      const tieUnresolved = isChamp && catTied && championVoteStatus !== 'accept';
+                      const acceptedCo    = isChamp && catTied && championVoteStatus === 'accept';
+                      if (tieUnresolved) {
+                        return (
+                          <>
+                            <p className="text-3xl font-extrabold text-amber-300 tabular-nums leading-none">
+                              {score.toLocaleString()}
+                            </p>
+                            <p className="text-[10px] text-amber-200/70 mt-1.5 uppercase tracking-widest">
+                              {t('winners.tiedAtTop')}
+                            </p>
+                          </>
+                        );
+                      }
+                      return (
+                        <>
+                          <p className="text-5xl font-extrabold text-white tabular-nums leading-none">
+                            {score.toLocaleString()}
+                          </p>
+                          <p className="text-[10px] text-white/40 mt-1.5 uppercase tracking-widest">
+                            {acceptedCo
+                              ? t('winners.coChampions', { defaultValue: 'Co-champions' })
+                              : isChamp
+                                ? t('winners.totalPts')
+                                : t('winners.stat')}
+                          </p>
+                        </>
+                      );
+                    })()}
                   </div>
 
-                  {/* Status badge / crown icon
-                      Only Champion uses the tiebreak/vote flow. Other
-                      categories that end with multiple top-scorers just
-                      become co-winners — no extra badge needed since the
-                      stacked names already communicate it. */}
+                  {/* Status badge / crown icon */}
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    {isChamp && catTied ? (
+                    {isChamp && catTied && championVoteStatus !== 'accept' ? (
                       <span className="rounded-full bg-amber-400/20 border border-amber-400/50 px-2.5 py-1 text-[11px] font-bold text-amber-300 uppercase tracking-wider">
                         {t('winners.tiebreakBadge')}
                       </span>

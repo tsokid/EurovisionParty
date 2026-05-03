@@ -428,6 +428,7 @@
     "totalPts": "Total pts",
     "stat": "stat",
     "tiedAtTop": "Tied at top",
+    "coChampions": "Co-champions",
     "tiebreakBadge": "⚔ Tiebreak",
     "tiebreakRequired": "⚔ Tiebreak required",
     "matchStillOn": "The match is still on.",
@@ -452,6 +453,20 @@
       "guru":     { "name": "Guru",        "subtitle": "Most Quiz Answers" },
       "oracle":   { "name": "The Oracle",  "subtitle": "Most Predictions" }
     }
+  },
+  "sd": {
+    "headerLabel": "⚔ Sudden Death",
+    "suddenDeathChosen": "The room voted to settle it.",
+    "intro": "3 quick questions decide the Champion. Only the tied players answer; everyone else watches.",
+    "startMatch": "⚔ Start Sudden Death",
+    "starting": "Starting…",
+    "waitingForHost": "Waiting for the host to start…",
+    "round": "Round",
+    "answered": "answered",
+    "loadingQuestion": "Loading question…",
+    "spectator": "You are watching — only the tied players answer.",
+    "resolved": "Sudden Death Decided",
+    "resolving": "Crowning the Champion…"
   },
   "winnerCrown": {
     "winner": "WINNER!",
