@@ -31,7 +31,13 @@ export default function AppShell({
           --top-bar-height is read by Header dropdowns to position themselves. */}
       <div
         className="sticky top-0 z-40 flex flex-col shrink-0"
-        style={{ '--top-bar-height': isReconnecting ? '92px' : '56px' } as CSSProperties}
+        style={{
+          // Mobile/tablet: header h-14 (56px) + optional 36px reconnect banner
+          '--top-bar-height':    isReconnecting ? '92px'  : '56px',
+          // Desktop:        header h-20 (80px) + optional 36px reconnect banner
+          // Used by Header's dropdown to anchor itself below the bar at lg+
+          '--top-bar-height-lg': isReconnecting ? '116px' : '80px',
+        } as CSSProperties}
       >
         {isReconnecting && (
           <div className="flex items-center gap-2 bg-yellow-400/15 border-b border-yellow-400/30 px-4 py-2.5">

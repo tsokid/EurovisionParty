@@ -111,7 +111,7 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
   return (
     <>
       <header
-        className="h-14 relative flex items-center justify-between px-4 lg:px-6 shrink-0 border-b border-white/10"
+        className="h-14 lg:h-20 relative flex items-center justify-between px-4 lg:px-8 shrink-0 border-b border-white/10"
         style={{ background: 'rgb(10, 5, 25)' }}
       >
         {/* ── Logo (left) — object-contain so the full image shows ── */}
@@ -123,7 +123,7 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
           <img
             src="/logo.png"
             alt="Eurovision Games"
-            className="h-9 lg:h-12 w-auto object-contain max-w-[120px] lg:max-w-[180px]"
+            className="h-9 lg:h-16 w-auto object-contain max-w-[120px] lg:max-w-[240px]"
             draggable={false}
           />
         </div>
@@ -142,7 +142,7 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
         </button>
 
         {/* ── Desktop: linear phase progress bar ── */}
-        <div className="hidden lg:flex flex-1 max-w-[640px] mx-8 items-center">
+        <div className="hidden lg:flex flex-1 max-w-[820px] mx-10 items-center">
           {PHASES.map((p, i) => {
             const isCurrent = i === currentPhaseIdx;
             const isPast    = i < currentPhaseIdx;
@@ -150,31 +150,31 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
             return (
               <Fragment key={p.key}>
                 {/* Node */}
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center gap-2.5 flex-shrink-0">
                   <div className={clsx(
                     'flex items-center justify-center font-bold rounded-full',
                     isCurrent
-                      ? 'w-7 h-7 text-[11px] text-white bg-gradient-to-br from-euro-purple to-euro-pink shadow-[0_0_18px_rgba(236,72,153,0.5)]'
+                      ? 'w-9 h-9 text-sm text-white bg-gradient-to-br from-euro-purple to-euro-pink shadow-[0_0_24px_rgba(236,72,153,0.55)]'
                       : isPast
-                        ? 'w-6 h-6 text-[10px] text-white bg-euro-purple'
-                        : 'w-6 h-6 text-[10px] text-white/30 border border-white/15',
+                        ? 'w-8 h-8 text-xs text-white bg-euro-purple'
+                        : 'w-8 h-8 text-xs text-white/30 border border-white/15',
                   )}>
                     {isPast ? '✓' : i + 1}
                   </div>
                   <span className={clsx(
                     'tracking-wide whitespace-nowrap',
                     isCurrent
-                      ? 'text-[12px] font-bold text-white'
+                      ? 'text-sm font-bold text-white'
                       : isPast
-                        ? 'text-[11px] font-semibold text-white/40'
-                        : 'text-[11px] font-semibold text-white/30',
+                        ? 'text-sm font-semibold text-white/45'
+                        : 'text-sm font-semibold text-white/30',
                   )}>
                     {SHORT_PHASE_LABEL[p.key] ?? p.label}
                   </span>
                 </div>
                 {/* Connector */}
                 {!isLast && (
-                  <div className="flex-1 h-[2px] bg-white/8 rounded-full overflow-hidden mx-3 relative">
+                  <div className="flex-1 h-[3px] bg-white/8 rounded-full overflow-hidden mx-3 relative">
                     <div
                       className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-euro-purple to-euro-pink"
                       style={{ width: `${segmentFill(i)}%` }}
@@ -192,11 +192,11 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
             content is identical across both triggers. */}
         <button
           onClick={toggleProfile}
-          className="hidden lg:flex relative items-center gap-2 rounded-full bg-white/8 hover:bg-white/12 pl-2.5 pr-3 py-1 min-h-[36px] active:scale-95 transition-transform"
+          className="hidden lg:flex relative items-center gap-3 rounded-full bg-white/8 hover:bg-white/12 pl-4 pr-5 py-2.5 min-h-[48px] active:scale-95 transition-transform"
           aria-label={t('header.openMenu', { defaultValue: 'Open menu' })}
         >
-          <Menu className="w-5 h-5 text-white" strokeWidth={2.2} />
-          <span className="text-sm font-semibold text-white max-w-[110px] truncate">
+          <Menu className="w-6 h-6 text-white" strokeWidth={2.2} />
+          <span className="text-base font-semibold text-white max-w-[140px] truncate">
             {player?.name ?? ''}
           </span>
           {unreadCount > 0 && (
@@ -204,7 +204,7 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
               key={unreadCount}
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="absolute -top-1 -right-1 bg-euro-red text-white text-[10px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5"
+              className="absolute -top-1.5 -right-1.5 bg-euro-red text-white text-xs font-bold rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-0.5"
             >
               {unreadCount > 9 ? '9+' : unreadCount}
             </motion.span>
@@ -241,8 +241,11 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
                 // Cap height so even the longest panel stays in view; the
                 // body becomes scrollable on tiny screens.
                 'max-h-[calc(100svh-120px)] overflow-y-auto',
-                // Desktop: dropdown from below the header, anchored top-right
-                'lg:top-[calc(var(--top-bar-height,56px)+8px)] lg:right-4 lg:w-[340px]',
+                // Desktop: dropdown from below the header, anchored top-right.
+                // Uses --top-bar-height-lg (set by AppShell) so the offset
+                // tracks the taller h-20 header (and the optional 36px
+                // reconnect banner) without hardcoding pixels.
+                'lg:top-[calc(var(--top-bar-height-lg,80px)+8px)] lg:right-4 lg:w-[360px]',
                 // Mobile: bottom sheet (above the BottomNav + safe area),
                 // edge-to-edge with 16 px of side padding from the screen
                 'max-lg:bottom-[calc(72px+env(safe-area-inset-bottom))] max-lg:left-4 max-lg:right-4',
