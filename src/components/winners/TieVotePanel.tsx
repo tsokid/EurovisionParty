@@ -1,6 +1,6 @@
 // src/components/winners/TieVotePanel.tsx
 // Champion tiebreak gate — visual matches the reference design.
-// Logic: host opens 20s vote, players pick Sudden Death or Accept.
+// Logic: host opens 60s vote, players pick Sudden Death or Accept.
 // Majority wins; ties default to accept.
 
 import { useEffect, useRef, useState } from 'react';
@@ -98,14 +98,28 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
     void supabase.rpc('tally_tie_vote', { p_vote_id: vote.id });
   }, [remaining, vote]);
 
+  // Robust error → string. Supabase RPC errors are PostgrestError objects
+  // (plain objects, NOT Error instances) so the previous
+  // `e instanceof Error ? e.message : String(e)` produced "[object Object]".
+  function errMsg(e: unknown): string {
+    if (e instanceof Error) return e.message;
+    if (e && typeof e === 'object' && 'message' in e) {
+      return String((e as { message: unknown }).message);
+    }
+    return String(e);
+  }
+
   async function openVote() {
     setBusy(true); setErr(null);
     try {
       const { data, error } = await supabase.rpc('open_tie_vote', { p_room_id: roomId, p_category: category });
       if (error) throw error;
       tallyFiredRef.current = false;
-      setVote({ id: data as string, closes_at: new Date(Date.now() + 20_000).toISOString(), status: 'active' });
-    } catch (e) { setErr(e instanceof Error ? e.message : String(e)); }
+      // 60 s window — matches the server-side `now() + interval '60 seconds'`
+      // in migration 048. Keeps host UI in sync with the actual closes_at
+      // before the realtime subscription confirms it.
+      setVote({ id: data as string, closes_at: new Date(Date.now() + 60_000).toISOString(), status: 'active' });
+    } catch (e) { setErr(errMsg(e)); }
     finally { setBusy(false); }
   }
 
@@ -115,7 +129,7 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
     try {
       const { error } = await supabase.rpc('cast_tie_vote', { p_vote_id: vote.id, p_choice: choice });
       if (error) throw error;
-    } catch (e) { setErr(e instanceof Error ? e.message : String(e)); }
+    } catch (e) { setErr(errMsg(e)); }
     finally { setBusy(false); }
   }
 
@@ -136,7 +150,7 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
             type="button" onClick={openVote} disabled={busy}
             className="mt-4 px-5 py-2.5 rounded-full bg-euro-gold text-black font-bold text-sm disabled:opacity-50"
           >
-            🗳️ Open Tie Vote (20s)
+            🗳️ Open Tie Vote (60s)
           </button>
         ) : (
           <p className="mt-3 text-xs text-white/40">Waiting for the host to open the vote…</p>
@@ -259,7 +273,7 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
         </div>
 
         <p className="text-center text-[11px] text-white/30 mt-3">
-          Pick one — option with most votes wins when the timer ends.
+          Pick one — option with most votes wins when the timer ends. If no votes are cast (or it's a tie), the room defaults to <span className="text-amber-300/80 font-semibold">Accept the Tie</span>.
         </p>
         {err && <p className="text-sm text-red-300 mt-2">{err}</p>}
       </motion.div>
