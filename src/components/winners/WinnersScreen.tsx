@@ -111,7 +111,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
 
   // Only show categories that have at least one winner
   const activeCats = CARD_ORDER.filter((c) => groups[c].length > 0);
-  const totalSlides = activeCats.length + 1; // +1 for Dashboard
+  const totalSlides = activeCats.length;
 
   const maxPts = players[0]?.total_points || 1;
   const filteredPlayers = search
@@ -312,102 +312,6 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
           );
         })}
 
-        {/* ── Dashboard card — Final Standings ── */}
-        <div
-          data-card
-          className="rounded-3xl border border-white/10 overflow-hidden flex flex-col"
-          style={{
-            ...CARD_STYLE,
-            background: 'linear-gradient(160deg,#130826 0%,#0d051a 100%)',
-          }}
-        >
-          <div className="p-5 flex flex-col h-full">
-            {/* Header */}
-            <div className="mb-4">
-              <p className="text-lg font-extrabold text-white">Final Standings</p>
-              <p className="text-xs text-white/35 mt-0.5">The show is over — here&apos;s where everyone landed.</p>
-            </div>
-
-            {/* Search */}
-            <div className="relative mb-3">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search player…"
-                className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl bg-white/[0.08] border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-white/25"
-              />
-            </div>
-
-            {/* Player list */}
-            <div
-              className="flex-1 overflow-y-auto space-y-1.5 pr-0.5"
-              style={{ scrollbarWidth: 'none' } as CSSProperties}
-            >
-              {filteredPlayers.map((p, i) => {
-                const isMe = p.id === currentPlayer?.id;
-                const pct  = Math.round((p.total_points / maxPts) * 100);
-                return (
-                  <motion.div
-                    key={p.id}
-                    initial={{ opacity: 0, x: -6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.02 }}
-                    className={clsx(
-                      'rounded-xl px-3 py-2.5',
-                      isMe
-                        ? 'bg-euro-purple/15 border border-euro-purple/30'
-                        : 'bg-white/[0.04]',
-                    )}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-5 text-center text-[11px] font-bold text-white/35 tabular-nums flex-shrink-0">
-                        {i + 1}
-                      </span>
-                      <div className={clsx(
-                        'w-8 h-8 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-sm flex-shrink-0',
-                        avatarGradient(i),
-                      )}>
-                        {avatarInitial(p.name)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className={clsx(
-                            'text-sm font-semibold truncate',
-                            isMe ? 'text-euro-purple-light' : 'text-white',
-                          )}>
-                            {p.name}
-                          </span>
-                          {isMe && (
-                            <span className="text-[9px] font-bold text-euro-purple-light bg-euro-purple/25 rounded-full px-1.5 py-0.5 flex-shrink-0 leading-none">
-                              you
-                            </span>
-                          )}
-                        </div>
-                        <div className="mt-1.5 h-[2px] rounded-full bg-white/10 overflow-hidden">
-                          <motion.div
-                            className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${pct}%` }}
-                            transition={{ duration: 0.5, delay: i * 0.02, ease: 'easeOut' }}
-                          />
-                        </div>
-                      </div>
-                      <span className="text-base font-extrabold text-white tabular-nums flex-shrink-0">
-                        {p.total_points.toLocaleString()}
-                      </span>
-                    </div>
-                  </motion.div>
-                );
-              })}
-              {filteredPlayers.length === 0 && (
-                <p className="text-center text-white/30 text-sm py-6">No player found</p>
-              )}
-            </div>
-          </div>
-        </div>
-
         {/* Right spacer — gives the last card right padding on snap */}
         <div style={{ width: '16px', flexShrink: 0 }} />
       </div>
@@ -430,6 +334,144 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
           ))}
         </div>
       )}
+
+      {/* ── Final Standings — full analysis table ── */}
+      <div className="px-4 mt-2">
+        <div className="rounded-2xl border border-white/10 overflow-hidden"
+          style={{ background: 'linear-gradient(160deg,#130826 0%,#0d051a 100%)' }}
+        >
+          {/* Header */}
+          <div className="p-4 sm:p-5 border-b border-white/8">
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-white/40 tracking-[0.2em] uppercase">Full analysis</p>
+                <h3 className="text-lg sm:text-xl font-extrabold text-white mt-0.5">Final Standings</h3>
+              </div>
+              <div className="text-right text-[11px] text-white/35 flex-shrink-0">
+                <p>{players.length} players</p>
+                <p className="mt-0.5">Top: <span className="text-white/70 font-bold tabular-nums">{maxPts.toLocaleString()} pts</span></p>
+              </div>
+            </div>
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search player…"
+                className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl bg-white/[0.08] border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-white/25"
+              />
+            </div>
+          </div>
+
+          {/* Table — horizontal scroll on narrow screens so all 6 columns
+              stay visible without crushing into unreadable widths. */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" style={{ minWidth: '560px', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr className="text-[10px] font-bold text-white/40 tracking-widest uppercase">
+                  <th className="text-left  py-2.5 pl-4 sm:pl-5 pr-2 w-12">#</th>
+                  <th className="text-left  py-2.5 px-2">Player</th>
+                  <th className="text-right py-2.5 px-2 w-20">Total</th>
+                  <th className="text-right py-2.5 px-2 w-16">Quiz</th>
+                  <th className="text-right py-2.5 px-2 w-16">Duel</th>
+                  <th className="text-right py-2.5 px-2 pr-4 sm:pr-5 w-16">Pred.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredPlayers.map((p, i) => {
+                  const isMe   = p.id === currentPlayer?.id;
+                  const isTop3 = !search && i < 3 && p.total_points > 0;
+                  const medal  = ['🥇', '🥈', '🥉'][i];
+                  const duelSign = p.duel_points > 0 ? '+' : '';
+                  return (
+                    <motion.tr
+                      key={p.id}
+                      initial={{ opacity: 0, x: -4 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.02 }}
+                      className={clsx(
+                        'border-t border-white/[0.04]',
+                        isMe ? 'bg-euro-purple/12' : 'hover:bg-white/[0.02]',
+                      )}
+                    >
+                      {/* Rank */}
+                      <td className="py-3 pl-4 sm:pl-5 pr-2 align-middle">
+                        {isTop3 ? (
+                          <span className="text-base">{medal}</span>
+                        ) : (
+                          <span className="text-xs font-bold text-white/40 tabular-nums">{i + 1}</span>
+                        )}
+                      </td>
+                      {/* Player */}
+                      <td className="py-3 px-2 align-middle">
+                        <div className="flex items-center gap-2.5">
+                          <div className={clsx(
+                            'w-8 h-8 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-xs flex-shrink-0',
+                            avatarGradient(i),
+                          )}>
+                            {avatarInitial(p.name)}
+                          </div>
+                          <span className={clsx(
+                            'font-semibold truncate',
+                            isMe ? 'text-euro-purple-light' : 'text-white',
+                          )}>
+                            {p.name}
+                          </span>
+                          {isMe && (
+                            <span className="text-[9px] font-bold text-euro-purple-light bg-euro-purple/25 rounded-full px-1.5 py-0.5 leading-none flex-shrink-0">
+                              you
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      {/* Total */}
+                      <td className="py-3 px-2 text-right align-middle">
+                        <span className="text-base font-extrabold text-white tabular-nums">
+                          {p.total_points.toLocaleString()}
+                        </span>
+                      </td>
+                      {/* Quiz */}
+                      <td className="py-3 px-2 text-right align-middle">
+                        <span className="text-sm font-semibold text-white/75 tabular-nums">
+                          {p.quiz_points.toLocaleString()}
+                        </span>
+                      </td>
+                      {/* Duel (signed balance) */}
+                      <td className="py-3 px-2 text-right align-middle">
+                        <span className={clsx(
+                          'text-sm font-semibold tabular-nums',
+                          p.duel_points > 0 ? 'text-emerald-400'
+                            : p.duel_points < 0 ? 'text-red-400'
+                            : 'text-white/50',
+                        )}>
+                          {duelSign}{p.duel_points.toLocaleString()}
+                        </span>
+                      </td>
+                      {/* Predictions */}
+                      <td className="py-3 px-2 pr-4 sm:pr-5 text-right align-middle">
+                        <span className="text-sm font-semibold text-white/75 tabular-nums">
+                          {p.pred_points.toLocaleString()}
+                        </span>
+                      </td>
+                    </motion.tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            {filteredPlayers.length === 0 && (
+              <p className="text-center text-white/30 text-sm py-8">No player found</p>
+            )}
+          </div>
+
+          {/* Legend */}
+          <div className="px-4 sm:px-5 py-3 border-t border-white/8 text-[10px] text-white/35 flex flex-wrap gap-x-4 gap-y-1">
+            <span><span className="text-white/55 font-semibold">Total</span> = Quiz + Duel + Pred − Spent</span>
+            <span><span className="text-white/55 font-semibold">Duel</span> shows net balance (won − lost)</span>
+          </div>
+        </div>
+      </div>
 
     </div>
   );
