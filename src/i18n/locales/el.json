@@ -386,6 +386,33 @@
     "scoringDesc": "Σύγκριση των επιλογών όλων με τα επίσημα αποτελέσματα",
     "playersScored": "✅ Βαθμολογήθηκαν {{count}} παίκτες"
   },
+  "predResults": {
+    "label": "Προβλέψεις",
+    "title": "Πώς πήγαν οι προβλέψεις σου",
+    "yourPredScore": "Σκορ προβλέψεων",
+    "pts": "πόντοι",
+    "top5": "Top 5",
+    "worst5": "Worst 5",
+    "scoreFormulaHint": "Σωστή θέση: <b>+50</b>· σωστή λίστα αλλά λάθος θέση: <b>+20</b>.",
+    "tagTopExact": "T{{slot}} ακριβής",
+    "tagTopIn": "T{{slot}} στο top 5",
+    "tagWorstExact": "W{{slot}} ακριβής",
+    "tagWorstIn": "W{{slot}} στο worst 5",
+    "notReadyTitle": "Τα αποτελέσματα δεν είναι έτοιμα",
+    "notReadyBody": "Η επίσημη κατάταξη της Eurovision θα εμφανιστεί εδώ μόλις τελειώσει το σόου και ο parser αποτελεσμάτων τα δημοσιεύσει.",
+    "col": {
+      "country": "Χώρα",
+      "total":   "Σύνολο",
+      "jury":    "Κριτές",
+      "tele":    "Κοινό"
+    },
+    "legend": {
+      "topExact":   "Top-5 ακριβής +50",
+      "topIn":      "Στο top 5 +20",
+      "worstExact": "Worst-5 ακριβής +50",
+      "worstIn":    "Στο worst 5 +20"
+    }
+  },
   "winners": {
     "circleTitle1": "Ο κύκλος των",
     "circleTitle2": "νικητών",

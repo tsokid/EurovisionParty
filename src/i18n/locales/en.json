@@ -386,6 +386,33 @@
     "scoringDesc": "Comparing everyone's picks against the official results",
     "playersScored": "✅ {{count}} players scored"
   },
+  "predResults": {
+    "label": "Predictions",
+    "title": "How your picks did",
+    "yourPredScore": "Your prediction score",
+    "pts": "pts",
+    "top5": "Top 5",
+    "worst5": "Worst 5",
+    "scoreFormulaHint": "Exact rank picks score <b>+50</b>; right list, wrong rank scores <b>+20</b>.",
+    "tagTopExact": "T{{slot}} exact",
+    "tagTopIn": "T{{slot}} in top 5",
+    "tagWorstExact": "W{{slot}} exact",
+    "tagWorstIn": "W{{slot}} in worst 5",
+    "notReadyTitle": "Results aren’t in yet",
+    "notReadyBody": "The official Eurovision ranking will appear here as soon as the show finishes and the results parser publishes them.",
+    "col": {
+      "country": "Country",
+      "total":   "Total",
+      "jury":    "Jury",
+      "tele":    "Tele"
+    },
+    "legend": {
+      "topExact":   "Top-5 exact +50",
+      "topIn":      "In top 5 +20",
+      "worstExact": "Worst-5 exact +50",
+      "worstIn":    "In worst 5 +20"
+    }
+  },
   "winners": {
     "circleTitle1": "The",
     "circleTitle2": "winners’",

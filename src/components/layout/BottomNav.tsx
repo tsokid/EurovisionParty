@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Brain, Swords, Target, Trophy, ListChecks, Menu, Lock, type LucideIcon } from 'lucide-react';
+import { Brain, Swords, Target, Trophy, Menu, Lock, type LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
 import type { TabId } from '../../lib/types';
 
@@ -44,8 +44,6 @@ export default function BottomNav({ phase: phaseProp }: BottomNavProps) {
   const { t } = useTranslation();
   const { activeTab, setActiveTab, room, notifications } = useGameStore();
   const phase = phaseProp ?? room?.phase;
-  const isVotingOrLater = phase === 'voting_live' || phase === 'final';
-
   // Count unread duel notifications for badge
   const duelNotifCount = notifications.filter(
     (n) => !n.is_read && (n.type === 'duel_challenge' || n.type === 'duel_accepted')
@@ -67,7 +65,11 @@ export default function BottomNav({ phase: phaseProp }: BottomNavProps) {
           const isActive = activeTab === tab.id;
           const locked = isTabLocked(tab.id, phase);
           const badgeCount = tab.id === 'duels' && !locked ? duelNotifCount : 0;
-          const label = tab.id === 'predictions' && isVotingOrLater ? t('nav.results') : t(tab.labelKey);
+          // Always "Predictions" — keep the label stable across phases. The
+          // tab now routes to a dedicated breakdown screen in `final` (and
+          // to VotingLiveScreen during voting_live), but the label doesn't
+          // change. Keeps muscle memory + the tab identity consistent.
+          const label = t(tab.labelKey);
 
           return (
             <button
@@ -96,10 +98,7 @@ export default function BottomNav({ phase: phaseProp }: BottomNavProps) {
                 />
               )}
               <span className="relative inline-flex items-center justify-center">
-                {(() => {
-                  const Icon = tab.id === 'predictions' && isVotingOrLater ? ListChecks : tab.Icon;
-                  return <Icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" strokeWidth={2} />;
-                })()}
+                <tab.Icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" strokeWidth={2} />
                 {locked && (
                   <span className="absolute -top-1 -right-2.5 bg-white/8 rounded-full p-0.5">
                     <Lock className="w-2.5 h-2.5 text-white/55" strokeWidth={2.4} />

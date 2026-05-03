@@ -15,6 +15,7 @@ import PredictionsScreen from '../components/predictions/PredictionsScreen';
 import DuelsScreen from '../components/duels/DuelsScreen';
 import IntelMarket from '../components/intel/IntelMarket';
 import VotingLiveScreen from '../components/results/VotingLiveScreen';
+import PredictionsResultsScreen from '../components/results/PredictionsResultsScreen';
 import LeaderboardScreen from '../components/leaderboard/LeaderboardScreen';
 import WinnerCrown from '../components/leaderboard/WinnerCrown';
 import WinnersScreen from '../components/winners/WinnersScreen';
@@ -198,12 +199,20 @@ export function RoomPage() {
   const isTopTied      = tiedAtTop.length >= 2;
 
   const renderActiveTab = () => {
-    // In final, every tab routes to WinnersScreen — that's the only
-    // meaningful view. Quiz/Duels are locked in BottomNav and fall through
-    // here too; Predictions/Leaderboard are unlocked but the experience
-    // is "see who won", so we always show the same thing.
+    // In final, the Predictions tab gets its own dedicated breakdown
+    // screen (countries ranked, with the user's pick hits highlighted),
+    // and the Board tab shows the WinnersScreen. Quiz/Duels are locked
+    // in BottomNav and fall through to the WinnersScreen so the player
+    // always sees something meaningful if their tab gets stranded.
     if (isFinal) {
-      return <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />;
+      switch (activeTab) {
+        case 'predictions':
+          return <PredictionsResultsScreen />;
+        case 'leaderboard':
+          return <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />;
+        default:
+          return <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />;
+      }
     }
     switch (activeTab) {
       case 'quiz':
