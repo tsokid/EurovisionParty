@@ -179,41 +179,32 @@ export function RoomPage() {
     );
   }
 
-  // Final phase — always show full WinnersScreen; WinnerCrown is a brief overlay on top.
-  // When the top score is shared, render the tie variant of the crown so we
-  // never falsely announce a winner before the tiebreak resolves.
-  if (currentRoom.phase === 'final') {
-    const playerNameById = Object.fromEntries(players.map((p) => [p.id, p.name]));
-    const isHost = !!player?.is_host;
-    const sortedPlayers = [...players].sort((a, b) => b.total_points - a.total_points);
-    const topScore   = sortedPlayers[0]?.total_points ?? 0;
-    const tiedAtTop  = sortedPlayers.filter((p) => p.total_points === topScore && topScore > 0);
-    const isTopTied  = tiedAtTop.length >= 2;
-    return (
-      <AppShell showHeader showNav={false} onExitPress={() => setShowChoiceModal(true)}>
-        <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />
-        <WinnerCrown
-          winner={isTopTied ? null : sortedPlayers[0] ?? null}
-          visible={showWinner}
-          onDismiss={() => setShowWinner(false)}
-          isTied={isTopTied}
-          tiedNames={isTopTied ? tiedAtTop.map((p) => p.name) : []}
-          tiedScore={isTopTied ? topScore : 0}
-        />
-      </AppShell>
-    );
-  }
-
-  // Active game phases — show tabbed content
-  const phase = currentRoom.phase as string;
+  // Active or final phase — show tabbed content.
   // Phase-locking is enforced both in BottomNav (button disabled) and
   // here (deep-link / stale-state defence). If the player has a tab
   // active that just got locked by a phase change, fall back to the
   // leaderboard instead of rendering the wrong screen.
-  const quizDuelsLocked = phase === 'voting_live' || phase === 'final';
+  const phase = currentRoom.phase as string;
+  const isFinal = phase === 'final';
+  const quizDuelsLocked   = phase === 'voting_live' || isFinal;
   const predictionsLocked = phase === 'lobby' || phase === 'pre_night';
 
+  // Final-phase computations — winners view + crown overlay
+  const playerNameById = Object.fromEntries(players.map((p) => [p.id, p.name]));
+  const isHost = !!player?.is_host;
+  const sortedPlayers  = [...players].sort((a, b) => b.total_points - a.total_points);
+  const topScore       = sortedPlayers[0]?.total_points ?? 0;
+  const tiedAtTop      = sortedPlayers.filter((p) => p.total_points === topScore && topScore > 0);
+  const isTopTied      = tiedAtTop.length >= 2;
+
   const renderActiveTab = () => {
+    // In final, every tab routes to WinnersScreen — that's the only
+    // meaningful view. Quiz/Duels are locked in BottomNav and fall through
+    // here too; Predictions/Leaderboard are unlocked but the experience
+    // is "see who won", so we always show the same thing.
+    if (isFinal) {
+      return <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />;
+    }
     switch (activeTab) {
       case 'quiz':
         return quizDuelsLocked ? <LeaderboardScreen /> : <QuizScreen />;
@@ -223,7 +214,6 @@ export function RoomPage() {
         if (phase === 'voting_live') {
           return <VotingLiveScreen />;
         }
-        if (phase === 'final') return <LeaderboardScreen />;
         return predictionsLocked ? <LeaderboardScreen /> : <PredictionsScreen />;
       case 'intel':
         return <IntelMarket />;
@@ -244,6 +234,18 @@ export function RoomPage() {
       >
         {renderActiveTab()}
       </AppShell>
+
+      {/* Winner / Tiebreak overlay — only in final phase */}
+      {isFinal && (
+        <WinnerCrown
+          winner={isTopTied ? null : sortedPlayers[0] ?? null}
+          visible={showWinner}
+          onDismiss={() => setShowWinner(false)}
+          isTied={isTopTied}
+          tiedNames={isTopTied ? tiedAtTop.map((p) => p.name) : []}
+          tiedScore={isTopTied ? topScore : 0}
+        />
+      )}
 
       {/* Predictions-open announcement — fires once when parser unlocks predictions */}
       {showPredictionsOpenBanner && (
