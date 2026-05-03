@@ -40,6 +40,12 @@ interface RequestBody {
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+// Custom shared secret used by the parser-tick cron. Set via Supabase
+// Dashboard → Edge Functions → eurovision-parse → Secrets, mirrored in
+// Postgres vault under name 'parser_cron_secret'. We added this because
+// SUPABASE_SERVICE_ROLE_KEY auto-injection drifted from the dashboard
+// value in this project, leaving cron calls permanently 403.
+const CRON_SECRET = Deno.env.get("PARSER_CRON_SECRET") ?? "";
 
 function admin() {
   return createClient(SUPABASE_URL, SERVICE_KEY, {
@@ -52,7 +58,12 @@ function admin() {
 // ---------------------------------------------------------------------------
 async function isCallerSuperAdmin(req: Request): Promise<boolean> {
   const auth = req.headers.get("Authorization") ?? "";
-  if (auth === `Bearer ${SERVICE_KEY}`) return true; // cron path
+  // Cron path 1: legacy — service role key (only works while
+  // SUPABASE_SERVICE_ROLE_KEY env matches what the cron sends)
+  if (auth === `Bearer ${SERVICE_KEY}`) return true;
+  // Cron path 2: custom shared secret (PARSER_CRON_SECRET). This is the
+  // path actually used by parser-tick from migration 046 onward.
+  if (CRON_SECRET && auth === `Bearer ${CRON_SECRET}`) return true;
   if (!auth.startsWith("Bearer ")) return false;
 
   const userClient = createClient(SUPABASE_URL, ANON_KEY, {
