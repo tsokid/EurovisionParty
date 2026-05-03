@@ -54,43 +54,73 @@ interface JobsByKind {
 interface UseParserState {
   jobs: JobsByKind;
   runs: ParseRun[];
+  /** The contest year currently displayed — discovered from parse_jobs.
+   *  null only when the table is completely empty (first-time setup). */
+  year: number | null;
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
 }
 
-export function useParserState(year: number, pollMs = 5000): UseParserState {
+/**
+ * No year argument by design — the active contest year is whichever max(year)
+ * exists in parse_jobs. parse_jobs holds 1–2 rows per contest cycle so a full
+ * scan is trivial; this keeps the admin UI year-agnostic forever (Vienna 2026
+ * today, Berlin 2027 tomorrow, etc., with no code changes).
+ */
+export function useParserState(pollMs = 5000): UseParserState {
   const [jobs, setJobs] = useState<JobsByKind>({});
   const [runs, setRuns] = useState<ParseRun[]>([]);
+  const [year, setYear] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const [jobsRes, runsRes] = await Promise.all([
-      supabase.from("parse_jobs").select("*").eq("year", year),
-      supabase
-        .from("parse_runs")
-        .select("*")
-        .eq("year", year)
-        .order("finished_at", { ascending: false })
-        .limit(20),
-    ]);
+    // 1. Pull every parse_jobs row, pick the latest year as "active".
+    const jobsRes = await supabase
+      .from("parse_jobs")
+      .select("*")
+      .order("year", { ascending: false });
 
-    if (jobsRes.error || runsRes.error) {
-      setError((jobsRes.error ?? runsRes.error)!.message);
+    if (jobsRes.error) {
+      setError(jobsRes.error.message);
       setLoading(false);
       return;
     }
 
+    const allJobs    = (jobsRes.data ?? []) as ParseJob[];
+    const activeYear = allJobs[0]?.year ?? null;
+    setYear(activeYear);
+
     const next: JobsByKind = {};
-    for (const j of (jobsRes.data ?? []) as ParseJob[]) {
-      next[j.kind] = j;
+    for (const j of allJobs) {
+      if (j.year === activeYear) next[j.kind] = j;
     }
     setJobs(next);
+
+    // 2. Recent runs scoped to the active year.
+    if (activeYear == null) {
+      setRuns([]);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+    const runsRes = await supabase
+      .from("parse_runs")
+      .select("*")
+      .eq("year", activeYear)
+      .order("finished_at", { ascending: false })
+      .limit(20);
+
+    if (runsRes.error) {
+      setError(runsRes.error.message);
+      setLoading(false);
+      return;
+    }
     setRuns((runsRes.data ?? []) as ParseRun[]);
     setError(null);
     setLoading(false);
-  }, [year]);
+  }, []);
 
   useEffect(() => {
     refresh();
@@ -108,5 +138,5 @@ export function useParserState(year: number, pollMs = 5000): UseParserState {
     };
   }, [refresh, pollMs]);
 
-  return { jobs, runs, loading, error, refresh };
+  return { jobs, runs, year, loading, error, refresh };
 }

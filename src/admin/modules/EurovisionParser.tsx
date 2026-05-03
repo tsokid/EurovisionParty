@@ -11,10 +11,19 @@ import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
 
 export default function EurovisionParser() {
-  const { jobs, runs, loading, refresh } = useParserState(2026);
+  const { jobs, runs, loading, refresh, year } = useParserState();
 
   if (loading && Object.keys(jobs).length === 0) {
     return <div className="p-4 text-white/60">Loading parser state…</div>;
+  }
+
+  if (year == null) {
+    return (
+      <div className="p-4 text-white/60">
+        No <code>parse_jobs</code> rows found. Seed the contest year before
+        using the parser dashboard.
+      </div>
+    );
   }
 
   const lastParticipantsRun = runs.find((r) => r.kind === "participants");
@@ -25,7 +34,7 @@ export default function EurovisionParser() {
     <div className="p-4 space-y-4">
       <header>
         <h2 className="text-xl font-bold text-white">
-          🛰️ Eurovision Parser
+          🛰️ Eurovision Parser <span className="text-white/40 font-normal text-base">· {year}</span>
         </h2>
         <p className="text-sm text-white/60 mt-1">
           Manual host control with cron fallbacks. Each parser has its own
@@ -50,7 +59,7 @@ export default function EurovisionParser() {
           onRefresh={refresh}
         />
         <FinalizeCard job={jobs.results} onRefresh={refresh} />
-        <ResetContestCard year={2026} onRefresh={refresh} />
+        <ResetContestCard year={year} onRefresh={refresh} />
         <TestCard />
         <ManualRankingCard job={jobs.results} onRefresh={refresh} />
       </div>
