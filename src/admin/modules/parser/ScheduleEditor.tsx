@@ -173,8 +173,50 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
     }
   };
 
+  // ── Respect-schedule toggle (migration 045) ──────────────────────────────
+  // Killswitch: cron-tick only auto-fires when this is TRUE for the row.
+  // Stored on parse_jobs.respect_schedule.
+  const [respect, setRespect] = useState<boolean>(!!job.respect_schedule);
+  const [respectBusy, setRespectBusy] = useState(false);
+  useEffect(() => { setRespect(!!job.respect_schedule); }, [job.respect_schedule]);
+
+  const toggleRespect = async (next: boolean) => {
+    setRespect(next); // optimistic
+    setRespectBusy(true);
+    try {
+      const { error } = await supabase.rpc('set_respect_schedule', {
+        p_year: year, p_kind: kind, p_on: next,
+      });
+      if (error) throw error;
+      onSaved();
+    } catch (e) {
+      setRespect(!next); // revert
+      setMsg({ kind: 'err', text: formatError(e) });
+    } finally {
+      setRespectBusy(false);
+    }
+  };
+
   return (
     <div className="mb-3 pb-3 border-b border-white/5">
+      {/* Respect-schedule checkbox — gates the cron auto-fire and arming */}
+      <label className="flex items-start gap-2 mb-3 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={respect}
+          disabled={respectBusy}
+          onChange={(e) => toggleRespect(e.target.checked)}
+          className="mt-0.5 w-4 h-4 accent-emerald-500 cursor-pointer"
+        />
+        <div>
+          <span className="text-xs font-bold text-white">Respect schedule</span>
+          <p className="text-[11px] text-white/50 leading-snug">
+            When ON, the cron may auto-fire {isResults ? 'and poll within the window' : 'once at the scheduled time'}.
+            When OFF, the parser only runs from a manual click. Required to use Start on Schedule.
+          </p>
+        </div>
+      </label>
+
       <label className="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">
         Schedule · Athens (Europe/Athens) time
       </label>

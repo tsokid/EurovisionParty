@@ -29,6 +29,10 @@ export interface ParseJob {
   scheduled_start_at: string | null;     // ISO timestamptz
   scheduled_end_at: string | null;       // ISO timestamptz, null for participants
   poll_interval_minutes: number;         // results-only meaning, but stored on both rows
+  /** Opt-in: only when TRUE will the parser-tick cron auto-fire on schedule.
+   *  Killswitch added in migration 045 to stop stale past schedules from
+   *  re-firing every minute. */
+  respect_schedule: boolean;
 }
 
 export interface ParseRun {

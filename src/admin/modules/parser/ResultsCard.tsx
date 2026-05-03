@@ -30,7 +30,22 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
 
   const status = job.status;
 
-  const canArm     = status === "done" || status === "error" || status === "stopped";
+  // Schedule-arm gating (migration 045): mirror arm_parse_job's checks
+  // in the UI so the button reflects whether arming will actually work.
+  const startMs    = job.scheduled_start_at ? Date.parse(job.scheduled_start_at) : NaN;
+  const endMs      = job.scheduled_end_at   ? Date.parse(job.scheduled_end_at)   : NaN;
+  const startInPast = Number.isFinite(startMs) && startMs <= Date.now();
+  const endInPast   = Number.isFinite(endMs)   && endMs   <= Date.now();
+  const respectOff  = !job.respect_schedule;
+  const armBlockReason =
+    respectOff             ? 'Enable "Respect schedule" first.' :
+    !job.scheduled_start_at ? 'No scheduled start — set one above.' :
+    startInPast            ? 'Scheduled start is in the past — pick a future time or use Start Now.' :
+    endInPast              ? 'Scheduled end is in the past — pick a future end time.' :
+    null;
+
+  const canArm     = (status === "idle" || status === "done" || status === "error" || status === "stopped")
+                     && armBlockReason === null;
   const canStartNow = status === "idle" || status === "done" || status === "error" || status === "stopped";
   const canPause   = status === "running";
   const canResume  = status === "stopped";
@@ -49,9 +64,11 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
     }
   };
 
+  // Use arm_parse_job (not hard_stop) so the future-time validation in
+  // migration 045 fires and the cron-tick guard (stopped_at = null) passes.
   const startOnSchedule = () =>
     wrap(async () => {
-      const { error } = await supabase.rpc("hard_stop_parse_job", {
+      const { error } = await supabase.rpc("arm_parse_job", {
         p_year: job.year,
         p_kind: "results",
       });
@@ -151,7 +168,7 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
           onClick={startOnSchedule}
           disabled={!canArm || busy}
           className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40 cursor-pointer"
-          title="Flip job state back to idle so the next scheduled time can fire it."
+          title={armBlockReason ?? "Arm the job so the next scheduled time fires it. Clears any Hard Stop block."}
         >
           Start on Schedule
         </button>
@@ -192,6 +209,16 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
           🛑 Hard Stop
         </button>
       </div>
+
+      {armBlockReason && (
+        <p className="text-[11px] text-amber-300/80 mb-2 leading-snug">
+          ⚠️ <span className="text-white font-semibold">Start on Schedule</span> blocked: {armBlockReason}
+        </p>
+      )}
+
+      {err && (
+        <p className="text-sm text-red-300 mb-2 rounded bg-red-500/10 px-2 py-1">{err}</p>
+      )}
 
       <details className="mt-2">
         <summary className="text-sm text-white/70 cursor-pointer">

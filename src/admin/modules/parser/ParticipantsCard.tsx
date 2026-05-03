@@ -33,9 +33,22 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
 
   const status = job.status;
 
+  // Schedule-arm gating (migration 045): the cron will only auto-fire
+  // when respect_schedule is on, and arm_parse_job rejects past times.
+  // Mirror those rules in the UI so the button reads honestly.
+  const startMs    = job.scheduled_start_at ? Date.parse(job.scheduled_start_at) : NaN;
+  const startInPast = Number.isFinite(startMs) && startMs <= Date.now();
+  const respectOff  = !job.respect_schedule;
+  const armBlockReason =
+    respectOff      ? 'Enable "Respect schedule" first.' :
+    !job.scheduled_start_at ? 'No scheduled start — set one above.' :
+    startInPast     ? 'Scheduled start is in the past — pick a future time or use Start Now.' :
+    null;
+
   // Per-button enablement. Aimed at being conservative — only enable
   // when the transition is meaningful for the current state.
-  const canArm     = status === "idle" || status === "done" || status === "error" || status === "stopped";
+  const canArm     = (status === "idle" || status === "done" || status === "error" || status === "stopped")
+                     && armBlockReason === null;
   const canStartNow = status === "idle" || status === "done" || status === "error" || status === "stopped";
   const canPause   = status === "running";
   const canResume  = status === "stopped";
@@ -177,7 +190,7 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
           onClick={startOnSchedule}
           disabled={!canArm || busy}
           className={`px-3 py-1.5 rounded text-sm disabled:opacity-40 cursor-pointer transition-colors ${armed ? "bg-emerald-600 text-white" : "bg-white/10 text-white"}`}
-          title="Arm the job so the next scheduled time fires it. Clears any Hard Stop block."
+          title={armBlockReason ?? "Arm the job so the next scheduled time fires it. Clears any Hard Stop block."}
         >
           {armed ? "✓ Armed" : "Start on Schedule"}
         </button>
@@ -218,6 +231,12 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
           🛑 Hard Stop
         </button>
       </div>
+
+      {armBlockReason && (
+        <p className="text-[11px] text-amber-300/80 mb-2 leading-snug">
+          ⚠️ <span className="text-white font-semibold">Start on Schedule</span> blocked: {armBlockReason}
+        </p>
+      )}
 
       {err && (
         <p className="text-sm text-red-300 mb-2 rounded bg-red-500/10 px-2 py-1">{err}</p>
