@@ -101,7 +101,7 @@ export default function Header() {
           <img
             src="/logo.png"
             alt="Eurovision Games"
-            className="h-8 lg:h-9 w-auto object-contain max-w-[110px] lg:max-w-[140px]"
+            className="h-9 lg:h-12 w-auto object-contain max-w-[120px] lg:max-w-[180px]"
             draggable={false}
           />
         </div>

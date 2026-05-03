@@ -9,7 +9,6 @@ import { motion } from 'framer-motion';
 import { Search, Crown } from 'lucide-react';
 import clsx from 'clsx';
 import TieVotePanel from './TieVotePanel';
-import SuddenDeathPanel from './SuddenDeathPanel';
 import {
   computeWinners, fetchWinners, groupByCategory, hasTie, CATEGORY_META,
 } from '../../lib/winners';
@@ -291,9 +290,13 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                     )}
                   </div>
 
-                  {/* Status badge / crown icon */}
+                  {/* Status badge / crown icon
+                      Only Champion uses the tiebreak/vote flow. Other
+                      categories that end with multiple top-scorers just
+                      become co-winners — no extra badge needed since the
+                      stacked names already communicate it. */}
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    {catTied ? (
+                    {isChamp && catTied ? (
                       <span className="rounded-full bg-amber-400/20 border border-amber-400/50 px-2.5 py-1 text-[11px] font-bold text-amber-300 uppercase tracking-wider">
                         ⚔ Tiebreak
                       </span>
@@ -428,17 +431,6 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
         </div>
       )}
 
-      {/* ── Sudden Death panel (non-champion ties) ── */}
-      <div className="px-4 flex flex-col gap-4">
-        <SuddenDeathPanel
-          roomId={roomId}
-          isHost={isHost}
-          tiedCategories={(Object.keys(groups) as WinnerCategory[]).filter(
-            (c) => c !== 'champion' && hasTie(groups[c])
-          )}
-          onResolved={refresh}
-        />
-      </div>
     </div>
   );
 }
