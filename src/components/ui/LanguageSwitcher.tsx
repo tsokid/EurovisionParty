@@ -19,7 +19,14 @@ const LANGS: Lang[] = [
 
 const STORAGE_KEY = 'europarty-lang';
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  /** Where the listbox opens relative to the trigger. Defaults to 'bottom'.
+   *  Use 'top' inside containers anchored to the bottom of the screen
+   *  (e.g. the mobile burger menu) so the popover stays on-screen. */
+  placement?: 'top' | 'bottom';
+}
+
+export default function LanguageSwitcher({ placement = 'bottom' }: LanguageSwitcherProps = {}) {
   const locale = useLocale();
   const { pathname, search, hash } = useLocation();
   const navigate = useNavigate();
@@ -91,7 +98,10 @@ export default function LanguageSwitcher() {
         <div
           role="listbox"
           aria-label="Language"
-          className="absolute right-0 top-full mt-2 min-w-[180px] rounded-xl border border-white/10 bg-euro-deep/95 backdrop-blur-md shadow-xl shadow-black/40 py-1.5 z-50"
+          className={
+            'absolute right-0 min-w-[180px] rounded-xl border border-white/10 bg-euro-deep/95 backdrop-blur-md shadow-xl shadow-black/40 py-1.5 z-50 ' +
+            (placement === 'top' ? 'bottom-full mb-2' : 'top-full mt-2')
+          }
         >
           {LANGS.map((l) => {
             const active = l.code === current.code;

@@ -218,22 +218,36 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
          ────────────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {showProfile && (
+          // Full-screen click-catcher. Clicking anywhere outside the
+          // panel closes the menu; the inner panel stops propagation so
+          // its own clicks don't dismiss it. Backdrop dim is mobile-only.
           <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.97 }}
+            key="menu-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className={clsx(
-              'fixed inset-x-0 z-50 px-4 pointer-events-none',
-              // Desktop: dropdown from below the header
-              'lg:top-[var(--top-bar-height,56px)] lg:bottom-auto lg:pt-2',
-              // Mobile: bottom sheet — appears above the BottomNav (≈72px) +
-              //         safe-area inset, so the trigger and the panel sit
-              //         in the same thumb zone
-              'max-lg:bottom-[calc(72px+env(safe-area-inset-bottom))] max-lg:top-auto max-lg:pb-2',
-            )}
+            className="fixed inset-0 z-50 max-lg:bg-black/45"
+            onClick={() => setShowProfile(false)}
           >
-            <div className="bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl ml-auto max-w-xs lg:max-w-[340px] pointer-events-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97, y: 8 }}
+              animate={{ opacity: 1, scale: 1,    y: 0 }}
+              exit={{    opacity: 0, scale: 0.97, y: 8 }}
+              transition={{ duration: 0.18 }}
+              onClick={(e) => e.stopPropagation()}
+              className={clsx(
+                'absolute bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl',
+                // Cap height so even the longest panel stays in view; the
+                // body becomes scrollable on tiny screens.
+                'max-h-[calc(100svh-120px)] overflow-y-auto',
+                // Desktop: dropdown from below the header, anchored top-right
+                'lg:top-[calc(var(--top-bar-height,56px)+8px)] lg:right-4 lg:w-[340px]',
+                // Mobile: bottom sheet (above the BottomNav + safe area),
+                // edge-to-edge with 16 px of side padding from the screen
+                'max-lg:bottom-[calc(72px+env(safe-area-inset-bottom))] max-lg:left-4 max-lg:right-4',
+              )}
+            >
               {/* Player row */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
                 <div className={clsx(
@@ -323,7 +337,10 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
                   <span className="flex-1 text-sm text-white/80">
                     {t('header.language', { defaultValue: 'Language' })}
                   </span>
-                  <LanguageSwitcher />
+                  {/* placement="top" so the listbox opens UPWARD inside
+                      the menu — on mobile the menu is bottom-anchored
+                      and the listbox would otherwise fall off-screen. */}
+                  <LanguageSwitcher placement="top" />
                 </div>
 
                 {/* Exit game — only when AppShell wires up an onExitPress.
@@ -341,16 +358,7 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
                   </button>
                 )}
               </div>
-            </div>
-            {/* Click-outside catcher — pointer-events-auto so it still
-                receives clicks even though the parent wrapper is set to
-                pointer-events-none for the surrounding empty space. The
-                semi-transparent black is mobile-only; desktop keeps a
-                clean dropdown without a backdrop dim. */}
-            <div
-              className="fixed inset-0 -z-10 pointer-events-auto bg-black/45 lg:bg-transparent"
-              onClick={() => setShowProfile(false)}
-            />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
