@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Brain, Swords, Target, Trophy, ListChecks, DoorOpen, Lock, type LucideIcon } from 'lucide-react';
+import { Brain, Swords, Target, Trophy, ListChecks, Menu, Lock, type LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
 import type { TabId } from '../../lib/types';
 
@@ -19,7 +19,7 @@ const TABS: NavTab[] = [
 ];
 
 interface BottomNavProps {
-  /** When provided, renders a 5th exit tab that calls this on tap */
+  /** Kept for compat — exit lives inside the burger menu now. */
   onExitPress?: () => void;
   /** Authoritative room phase — overrides the store when provided */
   phase?: string;
@@ -40,7 +40,7 @@ function isTabLocked(tabId: TabId, phase: string | undefined): boolean {
   return false;
 }
 
-export default function BottomNav({ onExitPress, phase: phaseProp }: BottomNavProps) {
+export default function BottomNav({ phase: phaseProp }: BottomNavProps) {
   const { t } = useTranslation();
   const { activeTab, setActiveTab, room, notifications } = useGameStore();
   const phase = phaseProp ?? room?.phase;
@@ -50,6 +50,15 @@ export default function BottomNav({ onExitPress, phase: phaseProp }: BottomNavPr
   const duelNotifCount = notifications.filter(
     (n) => !n.is_read && (n.type === 'duel_challenge' || n.type === 'duel_accepted')
   ).length;
+
+  // Total unread for the burger badge (mobile)
+  const unreadAll = notifications.filter((n) => !n.is_read).length;
+
+  const openMenu = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('menu:open'));
+    }
+  };
 
   return (
     <nav className="safe-bottom sticky bottom-0 z-40 shrink-0 border-t border-white/10" style={{ background: 'rgb(10, 5, 25)' }}>
@@ -107,23 +116,30 @@ export default function BottomNav({ onExitPress, phase: phaseProp }: BottomNavPr
           );
         })}
 
-        {/* 5th exit tab — only rendered in-game */}
-        {onExitPress && (
-          <button
-            onClick={onExitPress}
-            className={clsx(
-              'flex-1 flex flex-col items-center justify-center gap-0.5 sm:gap-1 lg:gap-1.5',
-              'py-2 sm:py-3 lg:py-4 min-h-[56px] sm:min-h-[68px] lg:min-h-[80px]',
-              'transition-colors relative cursor-pointer text-red-400/70 hover:text-red-400 border-l border-white/8',
+        {/* 5th tab — Burger MENU (mobile only).
+            On desktop the burger lives in Header.tsx (top-right); hiding
+            it here on lg+ keeps the bottom bar at 4 tabs on wide screens. */}
+        <button
+          onClick={openMenu}
+          className={clsx(
+            'lg:hidden flex-1 flex flex-col items-center justify-center gap-0.5 sm:gap-1',
+            'py-2 sm:py-3 min-h-[56px] sm:min-h-[68px]',
+            'transition-colors relative cursor-pointer text-white/55 hover:text-white/80 border-l border-white/8',
+          )}
+          aria-label={t('nav.menu', { defaultValue: 'Menu' })}
+        >
+          <span className="relative inline-flex items-center justify-center">
+            <Menu className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+            {unreadAll > 0 && (
+              <span className="absolute -top-1.5 -right-2.5 bg-euro-red text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                {unreadAll > 9 ? '9+' : unreadAll}
+              </span>
             )}
-            aria-label={t('nav.exit', { defaultValue: 'Leave' })}
-          >
-            <DoorOpen className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" strokeWidth={2} />
-            <span className="text-xs sm:text-sm lg:text-base font-semibold tracking-wide">
-              {t('nav.exit', { defaultValue: 'Leave' })}
-            </span>
-          </button>
-        )}
+          </span>
+          <span className="text-xs sm:text-sm font-semibold tracking-wide">
+            {t('nav.menu', { defaultValue: 'Menu' })}
+          </span>
+        </button>
       </div>
     </nav>
   );

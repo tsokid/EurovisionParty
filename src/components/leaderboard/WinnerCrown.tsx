@@ -90,11 +90,15 @@ export default function WinnerCrown({
 }: WinnerCrownProps) {
   const { t } = useTranslation();
 
-  // Render nothing when there's no winner AND no tie
-  if (!winner && !isTied) return null;
-
+  // ALL hooks must run unconditionally — never put a `return null` before
+  // them. Early-returning when there's no winner WHILE useCountUp lives
+  // below was the cause of React #310 in production. Compute everything
+  // first, gate the actual render at the end.
   const score = isTied ? tiedScore : (winner?.total_points ?? 0);
   const liveScore = useCountUp(score, { play: visible, delay: 1100, duration: 1600 });
+
+  // Render nothing when there's no winner AND no tie
+  if (!winner && !isTied) return null;
 
   const accent = isTied ? 'amber' : 'gold';
 

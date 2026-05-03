@@ -1,5 +1,5 @@
-import { Fragment, useState } from 'react';
-import { User, Share2, Copy, Check, DoorOpen } from 'lucide-react';
+import { Fragment, useEffect, useState } from 'react';
+import { Menu, Share2, Copy, Check, DoorOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
@@ -37,6 +37,23 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
   const currentPhaseIdx  = PHASE_ORDER.indexOf(room?.phase ?? 'lobby');
   const currentPhaseKey  = room?.phase ?? 'lobby';
   const phaseLabel       = t(`phases.${currentPhaseKey}.label`);
+
+  // Bridge: BottomNav (mobile burger) opens this menu via a window event.
+  // Desktop continues to drive showProfile from the in-header burger.
+  useEffect(() => {
+    const open = () => {
+      setShowProfile(true);
+      setShowPhaseMenu(false);
+      setShowNotifications(false);
+    };
+    const close = () => setShowProfile(false);
+    window.addEventListener('menu:open', open);
+    window.addEventListener('menu:close', close);
+    return () => {
+      window.removeEventListener('menu:open', open);
+      window.removeEventListener('menu:close', close);
+    };
+  }, []);
 
   // ── Invite text helpers (unchanged from previous behaviour) ─────────────
   const getInviteText = () => {
@@ -169,25 +186,17 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
           })}
         </div>
 
-        {/* ── Profile button (right) ── */}
+        {/* ── Burger menu button (right) ──
+            Desktop only — on mobile the burger lives in BottomNav so the
+            menu trigger is closer to the player's thumb. The dropdown
+            content is identical across both triggers. */}
         <button
           onClick={toggleProfile}
-          className="relative flex items-center gap-2 rounded-full bg-white/8 hover:bg-white/12 pl-1 pr-2.5 lg:pr-3 py-1 min-h-[36px] active:scale-95 transition-transform"
-          aria-label="Profile & Settings"
+          className="hidden lg:flex relative items-center gap-2 rounded-full bg-white/8 hover:bg-white/12 pl-2.5 pr-3 py-1 min-h-[36px] active:scale-95 transition-transform"
+          aria-label={t('header.openMenu', { defaultValue: 'Open menu' })}
         >
-          <div className={clsx(
-            'w-7 h-7 rounded-full flex items-center justify-center',
-            player?.name
-              ? `bg-gradient-to-br ${avatarGradient(0)}`
-              : 'bg-euro-purple/30',
-          )}>
-            {player?.name ? (
-              <span className="text-xs font-bold text-white">{avatarInitial(player.name)}</span>
-            ) : (
-              <User className="w-4 h-4 text-white/70" strokeWidth={2} />
-            )}
-          </div>
-          <span className="hidden lg:inline text-sm font-semibold text-white max-w-[110px] truncate">
+          <Menu className="w-5 h-5 text-white" strokeWidth={2.2} />
+          <span className="text-sm font-semibold text-white max-w-[110px] truncate">
             {player?.name ?? ''}
           </span>
           {unreadCount > 0 && (
@@ -210,13 +219,21 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
       <AnimatePresence>
         {showProfile && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-x-0 z-50 px-4 pt-2"
-            style={{ top: 'var(--top-bar-height, 56px)' }}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            className={clsx(
+              'fixed inset-x-0 z-50 px-4 pointer-events-none',
+              // Desktop: dropdown from below the header
+              'lg:top-[var(--top-bar-height,56px)] lg:bottom-auto lg:pt-2',
+              // Mobile: bottom sheet — appears above the BottomNav (≈72px) +
+              //         safe-area inset, so the trigger and the panel sit
+              //         in the same thumb zone
+              'max-lg:bottom-[calc(72px+env(safe-area-inset-bottom))] max-lg:top-auto max-lg:pb-2',
+            )}
           >
-            <div className="bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl ml-auto max-w-xs lg:max-w-[340px]">
+            <div className="bg-[#1a0a2e] rounded-2xl border border-white/12 shadow-2xl ml-auto max-w-xs lg:max-w-[340px] pointer-events-auto">
               {/* Player row */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
                 <div className={clsx(
@@ -325,7 +342,15 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
                 )}
               </div>
             </div>
-            <div className="fixed inset-0 -z-10" onClick={() => setShowProfile(false)} />
+            {/* Click-outside catcher — pointer-events-auto so it still
+                receives clicks even though the parent wrapper is set to
+                pointer-events-none for the surrounding empty space. The
+                semi-transparent black is mobile-only; desktop keeps a
+                clean dropdown without a backdrop dim. */}
+            <div
+              className="fixed inset-0 -z-10 pointer-events-auto bg-black/45 lg:bg-transparent"
+              onClick={() => setShowProfile(false)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
