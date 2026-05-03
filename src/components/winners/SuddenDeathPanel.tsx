@@ -24,20 +24,13 @@ import clsx from 'clsx';
 import { supabase } from '../../lib/supabase';
 import { useGameStore } from '../../stores/gameStore';
 import { avatarGradient, avatarInitial } from '../../lib/avatarUtils';
+// Question bank is shipped as static JSON, not a Postgres table — same
+// source the regular Quiz tab uses, so SD inherits the same 500-Q pool.
+import { QUESTIONS, QUESTIONS_BY_ID } from '../../lib/questions';
 
 const REVEAL_MS = 2000;     // how long to show the correct answer
 // Per-round duration is owned by migration 031 (15 s baked into closes_at).
 // We just read closes_at and run a local clock against it.
-
-interface QuizRow {
-  id: number;
-  question: string;
-  answer_a: string | null;
-  answer_b: string | null;
-  answer_c: string | null;
-  answer_d: string | null;
-  correct_index: number;
-}
 
 interface RoundRow {
   id: string;
@@ -84,8 +77,10 @@ export default function SuddenDeathPanel({
   const amTied = !!myId && tiedPlayerIds.includes(myId);
 
   const [rounds, setRounds] = useState<RoundRow[]>([]);
-  const [questions, setQuestions] = useState<Map<number, QuizRow>>(new Map());
   const [answers, setAnswers]   = useState<AnswerRow[]>([]);
+  // Question lookup is derived from the static bank — the only DB call
+  // we do for questions is via question_id stored on each round row.
+  const questions = QUESTIONS_BY_ID;
   const [busy, setBusy]         = useState(false);
   const [err, setErr]           = useState<string | null>(null);
   const [now, setNow]           = useState(Date.now());
@@ -150,24 +145,6 @@ export default function SuddenDeathPanel({
     return () => { mounted = false; supabase.removeChannel(ch); };
   }, [roomId]);
 
-  // ── Load question text once we know the round IDs ─────────────────────
-  useEffect(() => {
-    const ids = rounds.map(r => r.question_id).filter(Boolean);
-    if (ids.length === 0) return;
-    let mounted = true;
-    supabase
-      .from('quiz_questions')
-      .select('id, question, answer_a, answer_b, answer_c, answer_d, correct_index')
-      .in('id', ids)
-      .then(({ data }) => {
-        if (!mounted) return;
-        const m = new Map<number, QuizRow>();
-        for (const q of (data ?? []) as QuizRow[]) m.set(q.id, q);
-        setQuestions(m);
-      });
-    return () => { mounted = false; };
-  }, [rounds]);
-
   // ── Subscribe to answers for this match ────────────────────────────────
   useEffect(() => {
     if (!matchId) return;
@@ -226,13 +203,14 @@ export default function SuddenDeathPanel({
   }, [isAfterAllRounds, matchId, onResolved]);
 
   // ── Host: open the match ───────────────────────────────────────────────
+  // Pick 3 random IDs from the static question bank (no DB table for
+  // questions in this project — they live in src/lib/questions.ts).
   const startMatch = async () => {
     setBusy(true); setErr(null);
     try {
-      const { data: qIds, error: qErr } = await supabase.rpc('pick_sd_questions', { p_count: 3 });
-      if (qErr) throw qErr;
-      const ids = (qIds as number[] | null) ?? [];
-      if (ids.length !== 3) throw new Error('Not enough quiz questions in pool');
+      if (QUESTIONS.length < 3) throw new Error('Not enough questions in pool');
+      const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5);
+      const ids = shuffled.slice(0, 3).map((q) => q.id);
       const { error: openErr } = await supabase.rpc('open_sudden_death_match', {
         p_room_id: roomId, p_category: 'champion', p_question_ids: ids,
       });
@@ -304,7 +282,7 @@ export default function SuddenDeathPanel({
     const myPick = localPicks[activeRound.id] ?? null;
     const submittedCount = answers.filter(a => a.round_id === activeRound.id).length;
     const tiedCount = tiedPlayerIds.length || 1;
-    const options = q ? [q.answer_a, q.answer_b, q.answer_c, q.answer_d].filter(Boolean) as string[] : [];
+    const options: string[] = q?.options ?? [];
 
     return (
       <AnimatePresence mode="wait">

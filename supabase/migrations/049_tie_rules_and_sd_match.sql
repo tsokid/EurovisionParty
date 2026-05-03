@@ -104,20 +104,11 @@ begin
 end;
 $$;
 
--- ── 3. pick_sd_questions helper ────────────────────────────────────────
--- Returns N random quiz_questions ids. Host-side convenience — the UI
--- can pass the result straight into open_sudden_death_match.
-create or replace function public.pick_sd_questions(p_count int default 3)
-returns int[] language sql security definer set search_path = public as $$
-  select coalesce(array_agg(id), '{}'::int[])
-    from (
-      select id from public.quiz_questions
-      order by random()
-      limit p_count
-    ) sub;
-$$;
-
-grant execute on function public.pick_sd_questions(int) to authenticated;
+-- ── 3. (skipped) ──────────────────────────────────────────────────────
+-- Originally a `pick_sd_questions` SQL helper, but the question bank
+-- isn't in Postgres — it lives in src/lib/questions.ts (loaded from
+-- quiz-questions-500.json at build time). The host UI picks 3 random
+-- IDs client-side and passes them to open_sudden_death_match directly.
 
 -- ── 4. Add sudden_death_rounds + sudden_death_answers to realtime ──────
 -- Players watching the SD match need live updates as rounds advance and
