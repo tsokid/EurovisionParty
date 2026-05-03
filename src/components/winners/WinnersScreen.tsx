@@ -26,15 +26,6 @@ const CAT_DISPLAY: Record<WinnerCategory, { name: string; subtitle: string }> = 
   oracle:   { name: 'The Oracle',  subtitle: 'Most Predictions' },
 };
 
-// Pill badge colours per category
-const CAT_BADGE: Record<WinnerCategory, string> = {
-  champion: 'bg-euro-gold/20 border-euro-gold/50 text-euro-gold',
-  duelist:  'bg-red-500/20 border-red-400/50 text-red-400',
-  thief:    'bg-emerald-500/20 border-emerald-400/50 text-emerald-400',
-  guru:     'bg-purple-500/20 border-purple-400/50 text-purple-400',
-  oracle:   'bg-cyan-500/20 border-cyan-400/50 text-cyan-400',
-};
-
 const CARD_ORDER: WinnerCategory[] = ['champion', 'duelist', 'thief', 'guru', 'oracle'];
 
 // Carousel card geometry (shared by category cards and dashboard card)
@@ -223,23 +214,17 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
               {/* Gradient overlay — light at top, heavy at bottom */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/10" />
 
-              {/* ── Top badges ── */}
-              <div className="absolute top-4 inset-x-4 flex items-start justify-between gap-2 z-10">
-                <span className={clsx(
-                  'rounded-full border px-3 py-1 text-[11px] font-bold tracking-[0.14em] uppercase backdrop-blur-sm',
-                  CAT_BADGE[cat],
-                )}>
-                  {display.name}
-                </span>
-                {isMyCat && (
+              {/* ── Top badges ── (category name omitted — already on the card art) */}
+              {isMyCat && (
+                <div className="absolute top-4 right-4 z-10">
                   <span
                     className="rounded-full px-3 py-1 text-[11px] font-bold text-white tracking-[0.14em] uppercase backdrop-blur-sm"
                     style={{ background: 'linear-gradient(90deg,#be185d,#7c3aed)' }}
                   >
                     ★ Your Crown
                   </span>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* ── Bottom content ── */}
               <div className="absolute inset-x-0 bottom-0 p-5 z-10">
