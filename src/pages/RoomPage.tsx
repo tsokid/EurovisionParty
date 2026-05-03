@@ -190,7 +190,7 @@ export function RoomPage() {
     const tiedAtTop  = sortedPlayers.filter((p) => p.total_points === topScore && topScore > 0);
     const isTopTied  = tiedAtTop.length >= 2;
     return (
-      <AppShell showHeader showNav={false}>
+      <AppShell showHeader showNav={false} onExitPress={() => setShowChoiceModal(true)}>
         <WinnersScreen roomId={currentRoom.id} isHost={isHost} playerNameById={playerNameById} />
         <WinnerCrown
           winner={isTopTied ? null : sortedPlayers[0] ?? null}

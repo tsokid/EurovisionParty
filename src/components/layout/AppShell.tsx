@@ -41,7 +41,7 @@ export default function AppShell({
             </span>
           </div>
         )}
-        {showHeader && <Header />}
+        {showHeader && <Header onExitPress={onExitPress} />}
       </div>
 
       {/* Consistent breathing room between the sticky header and screen

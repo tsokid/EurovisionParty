@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { User, Share2, Copy, Check } from 'lucide-react';
+import { User, Share2, Copy, Check, DoorOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
@@ -19,7 +19,12 @@ const SHORT_PHASE_LABEL: Record<string, string> = {
   final:            'Final',
 };
 
-export default function Header() {
+interface HeaderProps {
+  /** When provided, renders an Exit Game row inside the profile dropdown. */
+  onExitPress?: () => void;
+}
+
+export default function Header({ onExitPress }: HeaderProps = {}) {
   const { t } = useTranslation();
   const { room, player, notifications, roomPassword } = useGameStore();
   const [codeCopied, setCodeCopied]       = useState(false);
@@ -303,6 +308,21 @@ export default function Header() {
                   </span>
                   <LanguageSwitcher />
                 </div>
+
+                {/* Exit game — only when AppShell wires up an onExitPress.
+                    Surfaced here so the player can leave even in phases
+                    where the bottom nav is hidden (e.g. final). */}
+                {onExitPress && (
+                  <button
+                    onClick={() => { setShowProfile(false); onExitPress(); }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors border-t border-white/8 mt-1"
+                  >
+                    <DoorOpen className="w-4 h-4 flex-shrink-0" strokeWidth={2.2} />
+                    <span className="flex-1 text-left font-semibold">
+                      {t('header.exit', { defaultValue: 'Exit game' })}
+                    </span>
+                  </button>
+                )}
               </div>
             </div>
             <div className="fixed inset-0 -z-10" onClick={() => setShowProfile(false)} />

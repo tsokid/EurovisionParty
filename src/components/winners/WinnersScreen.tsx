@@ -7,6 +7,7 @@
 import { useEffect, useState, useCallback, useRef, type CSSProperties } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Crown } from 'lucide-react';
+import { useTranslation, Trans } from 'react-i18next';
 import clsx from 'clsx';
 import TieVotePanel from './TieVotePanel';
 import {
@@ -16,14 +17,6 @@ import type { WinnerRow, WinnerCategory } from '../../lib/winners';
 import { useGameStore } from '../../stores/gameStore';
 import { useLeaderboard } from '../../hooks/useLeaderboard';
 import { avatarGradient, avatarInitial } from '../../lib/avatarUtils';
-
-const CAT_DISPLAY: Record<WinnerCategory, { name: string; subtitle: string }> = {
-  champion: { name: 'Champion',    subtitle: 'Most Points' },
-  duelist:  { name: 'The Duelist', subtitle: 'Most Duels Won' },
-  thief:    { name: 'Thief',       subtitle: 'Most Points Stolen' },
-  guru:     { name: 'Guru',        subtitle: 'Most Quiz Answers' },
-  oracle:   { name: 'The Oracle',  subtitle: 'Most Predictions' },
-};
 
 const CARD_ORDER: WinnerCategory[] = ['champion', 'duelist', 'thief', 'guru', 'oracle'];
 
@@ -44,6 +37,7 @@ interface Props {
 }
 
 export default function WinnersScreen({ roomId, isHost, playerNameById }: Props) {
+  const { t } = useTranslation();
   const [winners, setWinners]   = useState<WinnerRow[]>([]);
   const [loading, setLoading]   = useState(true);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -52,6 +46,9 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
 
   const { player: currentPlayer, room } = useGameStore();
   const { players } = useLeaderboard(room?.id);
+
+  const catName     = (cat: WinnerCategory) => t(`winners.cat.${cat}.name`);
+  const catSubtitle = (cat: WinnerCategory) => t(`winners.cat.${cat}.subtitle`);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -136,13 +133,13 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
             {/* Headline strip */}
             <div className="px-4 sm:px-5 pt-4 pb-3 text-center">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 border border-amber-400/50 px-3 py-1 text-[10px] sm:text-[11px] font-bold text-amber-300 tracking-[0.18em] uppercase mb-3">
-                ⚔ Tiebreak required
+                {t('winners.tiebreakRequired')}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-                The match is still on.
+                {t('winners.matchStillOn')}
               </h2>
               <p className="text-sm text-white/65 mt-1.5 max-w-md mx-auto">
-                {champNames.join(' & ')} are tied at the top — the room decides what happens next.
+                {t('winners.tiebreakSubtitle', { names: champNames.join(' & ') })}
               </p>
             </div>
             {/* Vote panel — full-bleed inside the banner */}
@@ -162,11 +159,11 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
       {/* ── Title ── */}
       <div className="px-4">
         <h2 className="text-[1.75rem] sm:text-3xl font-extrabold text-white leading-[1.1]">
-          The{' '}
+          {t('winners.circleTitle1')}{' '}
           <span className="bg-gradient-to-r from-euro-purple-light to-euro-pink bg-clip-text text-transparent">
-            winners&apos;
+            {t('winners.circleTitle2')}
           </span>{' '}
-          circle.
+          {t('winners.circleTitle3')}
         </h2>
       </div>
 
@@ -185,7 +182,6 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
         {activeCats.map((cat, slideIdx) => {
           const rows    = groups[cat];
           const meta    = CATEGORY_META[cat];
-          const display = CAT_DISPLAY[cat];
           const names   = rows.map((r) => playerNameById[r.player_id] ?? '?');
           const score   = rows[0] ? Number(rows[0].metric_value) : 0;
           const catTied = hasTie(rows);
@@ -205,7 +201,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
               {/* Background image */}
               <img
                 src={meta.image}
-                alt={display.name}
+                alt={catName(cat)}
                 className="absolute inset-0 w-full h-full object-cover select-none"
                 draggable={false}
               />
@@ -220,7 +216,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                     className="rounded-full px-3 py-1 text-[11px] font-bold text-white tracking-[0.14em] uppercase backdrop-blur-sm"
                     style={{ background: 'linear-gradient(90deg,#be185d,#7c3aed)' }}
                   >
-                    ★ Your Crown
+                    {t('winners.yourCrown')}
                   </span>
                 </div>
               )}
@@ -229,7 +225,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
               <div className="absolute inset-x-0 bottom-0 p-5 z-10">
                 {/* Subtitle */}
                 <p className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.2em] mb-3">
-                  {display.subtitle}
+                  {catSubtitle(cat)}
                 </p>
 
                 {/* Player name(s)
@@ -275,7 +271,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                           {score.toLocaleString()}
                         </p>
                         <p className="text-[10px] text-amber-200/70 mt-1.5 uppercase tracking-widest">
-                          Tied at top
+                          {t('winners.tiedAtTop')}
                         </p>
                       </>
                     ) : (
@@ -284,7 +280,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                           {score.toLocaleString()}
                         </p>
                         <p className="text-[10px] text-white/40 mt-1.5 uppercase tracking-widest">
-                          {isChamp ? 'Total pts' : 'stat'}
+                          {isChamp ? t('winners.totalPts') : t('winners.stat')}
                         </p>
                       </>
                     )}
@@ -298,7 +294,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
                     {isChamp && catTied ? (
                       <span className="rounded-full bg-amber-400/20 border border-amber-400/50 px-2.5 py-1 text-[11px] font-bold text-amber-300 uppercase tracking-wider">
-                        ⚔ Tiebreak
+                        {t('winners.tiebreakBadge')}
                       </span>
                     ) : isChamp ? (
                       <div className="w-11 h-11 rounded-full bg-euro-gold/20 border border-euro-gold/40 flex items-center justify-center">
@@ -344,12 +340,12 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
           <div className="p-4 sm:p-5 border-b border-white/8">
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="min-w-0">
-                <p className="text-xs font-bold text-white/40 tracking-[0.2em] uppercase">Full analysis</p>
-                <h3 className="text-lg sm:text-xl font-extrabold text-white mt-0.5">Final Standings</h3>
+                <p className="text-xs font-bold text-white/40 tracking-[0.2em] uppercase">{t('winners.fullAnalysis')}</p>
+                <h3 className="text-lg sm:text-xl font-extrabold text-white mt-0.5">{t('winners.finalStandings')}</h3>
               </div>
               <div className="text-right text-[11px] text-white/35 flex-shrink-0">
-                <p>{players.length} players</p>
-                <p className="mt-0.5">Top: <span className="text-white/70 font-bold tabular-nums">{maxPts.toLocaleString()} pts</span></p>
+                <p>{t('winners.playersCount', { count: players.length })}</p>
+                <p className="mt-0.5">{t('winners.topAt')} <span className="text-white/70 font-bold tabular-nums">{maxPts.toLocaleString()}</span></p>
               </div>
             </div>
             {/* Search */}
@@ -359,7 +355,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search player…"
+                placeholder={t('winners.searchPlayer')}
                 className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl bg-white/[0.08] border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-white/25"
               />
             </div>
@@ -371,12 +367,12 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
             <table className="w-full text-sm" style={{ minWidth: '560px', borderCollapse: 'collapse' }}>
               <thead>
                 <tr className="text-[10px] font-bold text-white/40 tracking-widest uppercase">
-                  <th className="text-left  py-2.5 pl-4 sm:pl-5 pr-2 w-12">#</th>
-                  <th className="text-left  py-2.5 px-2">Player</th>
-                  <th className="text-right py-2.5 px-2 w-20">Total</th>
-                  <th className="text-right py-2.5 px-2 w-16">Quiz</th>
-                  <th className="text-right py-2.5 px-2 w-16">Duel</th>
-                  <th className="text-right py-2.5 px-2 pr-4 sm:pr-5 w-16">Pred.</th>
+                  <th className="text-left  py-2.5 pl-4 sm:pl-5 pr-2 w-12">{t('winners.col.rank')}</th>
+                  <th className="text-left  py-2.5 px-2">{t('winners.col.player')}</th>
+                  <th className="text-right py-2.5 px-2 w-20">{t('winners.col.total')}</th>
+                  <th className="text-right py-2.5 px-2 w-16">{t('winners.col.quiz')}</th>
+                  <th className="text-right py-2.5 px-2 w-16">{t('winners.col.duel')}</th>
+                  <th className="text-right py-2.5 px-2 pr-4 sm:pr-5 w-16">{t('winners.col.pred')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -421,7 +417,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                           </span>
                           {isMe && (
                             <span className="text-[9px] font-bold text-euro-purple-light bg-euro-purple/25 rounded-full px-1.5 py-0.5 leading-none flex-shrink-0">
-                              you
+                              {t('winners.you')}
                             </span>
                           )}
                         </div>
@@ -461,14 +457,24 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
               </tbody>
             </table>
             {filteredPlayers.length === 0 && (
-              <p className="text-center text-white/30 text-sm py-8">No player found</p>
+              <p className="text-center text-white/30 text-sm py-8">{t('winners.noPlayer')}</p>
             )}
           </div>
 
           {/* Legend */}
           <div className="px-4 sm:px-5 py-3 border-t border-white/8 text-[10px] text-white/35 flex flex-wrap gap-x-4 gap-y-1">
-            <span><span className="text-white/55 font-semibold">Total</span> = Quiz + Duel + Pred − Spent</span>
-            <span><span className="text-white/55 font-semibold">Duel</span> shows net balance (won − lost)</span>
+            <span>
+              <Trans
+                i18nKey="winners.legend.total"
+                components={{ b: <span className="text-white/55 font-semibold" /> }}
+              />
+            </span>
+            <span>
+              <Trans
+                i18nKey="winners.legend.duel"
+                components={{ b: <span className="text-white/55 font-semibold" /> }}
+              />
+            </span>
           </div>
         </div>
       </div>

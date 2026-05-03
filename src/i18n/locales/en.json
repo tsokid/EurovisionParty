@@ -88,15 +88,21 @@
     "shareAria": "Share invite",
     "gamePhases": "Game Phases",
     "advance": "Advance →",
-    "leaveRoom": "🚪 Leave Room",
+    "leaveRoom": "Leave Room",
     "leaveConfirm": "Leave this room? Your progress will be saved if you rejoin.",
     "close": "Close",
     "advanceConfirm": "Advance to \"{{phase}}\"? This affects all players.",
     "inviteFriends": "Invite Friends",
     "password": "Password: {{password}}",
-    "share": "📤 Share",
-    "copy": "📋 Copy",
-    "copiedInvite": "✅ Copied!"
+    "share": "Share",
+    "copy": "Copy",
+    "copiedInvite": "Copied!",
+    "room": "Room",
+    "copyCode": "Copy code",
+    "notifications": "Notifications",
+    "sound": "Sound",
+    "language": "Language",
+    "exit": "Exit game"
   },
   "nav": {
     "quiz": "Quiz",
@@ -378,10 +384,60 @@
     "scoringDesc": "Comparing everyone's picks against the official results",
     "playersScored": "✅ {{count}} players scored"
   },
+  "winners": {
+    "circleTitle1": "The",
+    "circleTitle2": "winners’",
+    "circleTitle3": "circle.",
+    "fullAnalysis": "Full analysis",
+    "finalStandings": "Final Standings",
+    "searchPlayer": "Search player…",
+    "noPlayer": "No player found",
+    "you": "you",
+    "playersCount_one": "{{count}} player",
+    "playersCount_other": "{{count}} players",
+    "topAt": "Top:",
+    "totalPts": "Total pts",
+    "stat": "stat",
+    "tiedAtTop": "Tied at top",
+    "tiebreakBadge": "⚔ Tiebreak",
+    "tiebreakRequired": "⚔ Tiebreak required",
+    "matchStillOn": "The match is still on.",
+    "tiebreakSubtitle": "{{names}} are tied at the top — the room decides what happens next.",
+    "yourCrown": "★ Your Crown",
+    "col": {
+      "rank": "#",
+      "player": "Player",
+      "total": "Total",
+      "quiz": "Quiz",
+      "duel": "Duel",
+      "pred": "Pred."
+    },
+    "legend": {
+      "total": "<b>Total</b> = Quiz + Duel + Pred − Spent",
+      "duel": "<b>Duel</b> shows net balance (won − lost)"
+    },
+    "cat": {
+      "champion": { "name": "Champion",    "subtitle": "Most Points" },
+      "duelist":  { "name": "The Duelist", "subtitle": "Most Duels Won" },
+      "thief":    { "name": "Thief",       "subtitle": "Most Points Stolen" },
+      "guru":     { "name": "Guru",        "subtitle": "Most Quiz Answers" },
+      "oracle":   { "name": "The Oracle",  "subtitle": "Most Predictions" }
+    }
+  },
   "winnerCrown": {
     "winner": "WINNER!",
+    "champion": "CHAMPION",
     "finalScore": "Final Score",
-    "tapClose": "Tap anywhere to close"
+    "tapClose": "Tap anywhere to close",
+    "tiebreak": "TIEBREAK!",
+    "tieMatchOn": "The match is still on.",
+    "tiePlayers": "{{names}} are tied at the top.",
+    "tieGeneric": "Two players are tied at the top.",
+    "tiedAt": "Tied at",
+    "tieAction": "Vote below to decide",
+    "quizLabel": "Quiz",
+    "predLabel": "Pred.",
+    "duelLabel": "Duel"
   },
   "notifications": {
     "duelChallenge": "{{name}} challenged you to a duel!",
