@@ -176,21 +176,12 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                 {t('winners.tiebreakSubtitle', { names: champNames.join(' & ') })}
               </p>
             </div>
-            {/* Vote panel — full-bleed inside the banner */}
+            {/* Either the TieVotePanel (no-vote / active vote / accepted)
+                OR the SuddenDeathPanel (after the room voted SD). Never
+                both — TieVotePanel's "sudden death chosen" reminder is
+                redundant once the SD panel takes over the same column. */}
             <div className="bg-[#0d061d]/60 rounded-[22px] m-1">
-              <TieVotePanel
-                roomId={roomId}
-                isHost={isHost}
-                category="champion"
-                tiedPlayerNames={champNames}
-                onResolved={refresh}
-              />
-            </div>
-            {/* Sudden Death match panel — only shown after the room
-                voted SD (championVoteStatus === 'sudden_death').
-                Self-renders the 3-question flow / waiting state. */}
-            {championVoteStatus === 'sudden_death' && (
-              <div className="m-1 mt-2">
+              {championVoteStatus === 'sudden_death' ? (
                 <SuddenDeathPanel
                   roomId={roomId}
                   isHost={isHost}
@@ -200,8 +191,16 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
                   )}
                   onResolved={refresh}
                 />
-              </div>
-            )}
+              ) : (
+                <TieVotePanel
+                  roomId={roomId}
+                  isHost={isHost}
+                  category="champion"
+                  tiedPlayerNames={champNames}
+                  onResolved={refresh}
+                />
+              )}
+            </div>
           </motion.div>
         </div>
       )}
