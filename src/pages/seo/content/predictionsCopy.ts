@@ -101,7 +101,7 @@ export const copy: Record<Locale, PredictionsCopy> = {
         withdrawnPost:
           '. Spain\u2019s exit shrinks the "Big Five" to a Big Four (France, Germany, Italy, United Kingdom).',
         runningOrder:
-          'The grand-final running order is fixed after the second semi-final; this page updates with live entries once the parser publishes them.',
+          'The grand-final running order is fixed after the second semi-final; this page updates with live entries as they are confirmed.',
       },
       format: {
         title: 'Prediction format',
@@ -189,7 +189,7 @@ export const copy: Record<Locale, PredictionsCopy> = {
       },
       {
         q: 'How does the app know the results?',
-        a: 'The host enters jury and televote results live during the show; or the auto-parser pulls them from the official source.',
+        a: 'The host enters jury and televote results live during the show; or they update automatically from the official source.',
       },
     ],
   },
@@ -226,7 +226,7 @@ export const copy: Record<Locale, PredictionsCopy> = {
         withdrawnPost:
           '. Η αποχώρηση της Ισπανίας μειώνει τους «Big Five» σε Big Four (Γαλλία, Γερμανία, Ιταλία, Ηνωμένο Βασίλειο).',
         runningOrder:
-          'Η σειρά εμφάνισης του μεγάλου τελικού οριστικοποιείται μετά τον δεύτερο ημιτελικό· η σελίδα ενημερώνεται με ζωντανές συμμετοχές μόλις τις δημοσιεύσει ο parser.',
+          'Η σειρά εμφάνισης του μεγάλου τελικού οριστικοποιείται μετά τον δεύτερο ημιτελικό· η σελίδα ενημερώνεται με ζωντανές συμμετοχές μόλις επιβεβαιωθούν.',
       },
       format: {
         title: 'Φόρμα προβλέψεων',
@@ -322,7 +322,7 @@ export const copy: Record<Locale, PredictionsCopy> = {
       },
       {
         q: 'Πώς ξέρει η εφαρμογή τα αποτελέσματα;',
-        a: 'Ο οικοδεσπότης εισάγει τα αποτελέσματα κριτικής επιτροπής και televote ζωντανά κατά τη διάρκεια της εκπομπής· ή ο auto-parser τα αντλεί από την επίσημη πηγή.',
+        a: 'Ο οικοδεσπότης εισάγει τα αποτελέσματα κριτικής επιτροπής και televote ζωντανά κατά τη διάρκεια της εκπομπής· ή ενημερώνονται αυτόματα από την επίσημη πηγή.',
       },
     ],
   },

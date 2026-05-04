@@ -146,7 +146,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           },
           {
             strong: 'Sudden-death tiebreak:',
-            rest: ' Optional. If two players tie a winner category, one buzzer-style trivia question decides it.',
+            rest: ' Optional. If players tie a winner category, the room votes — Accept (share the trophy) or Sudden Death. If Sudden Death wins, the tied players fight through a 3-question trivia match.',
           },
         ],
       },
@@ -340,7 +340,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           {
             strong: 'Tiebreak με sudden-death:',
             rest:
-              ' Προαιρετικό. Αν δύο παίκτες ισοβαθμούν σε μια κατηγορία νικητή, μία ερώτηση trivia τύπου buzzer το αποφασίζει.',
+              ' Προαιρετικό. Αν παίκτες ισοβαθμούν σε κατηγορία νικητή, το δωμάτιο ψηφίζει: Αποδοχή (μοιράζονται το τρόπαιο) ή Sudden Death. Αν νικήσει το Sudden Death, οι ισόπαλοι μάχονται σε 3 ερωτήσεις trivia.',
           },
         ],
       },

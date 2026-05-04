@@ -161,7 +161,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
         { strong: 'Top 5 / Worst 5', rest: 'score against the final combined ranking the moment results land.' },
         { strong: 'Quiz points', rest: 'are banked from the predictions phase and never change.' },
         { strong: 'Duel points', rest: 'swing in real time as duels resolve through the broadcast.' },
-        { strong: 'Either', rest: 'the host enters jury and televote results live, or the auto-parser pulls them on grand-final night.' },
+        { strong: 'Either', rest: 'the host enters jury and televote results live, or they update automatically on grand-final night.' },
       ],
     },
     trophies: {
@@ -180,7 +180,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
     suddenDeath: {
       title: 'Sudden-death tiebreak',
       body:
-        'For any tied trophy category, the host can open a 20-second sudden-death round. One trivia question, all tied players answer in parallel \u2014 fastest correct answer wins the title outright. If nobody is correct, the co-winner status persists.',
+        'For any tied trophy category, the host triggers a tiebreak vote \u2014 the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins \u2014 speed breaks ties. If the vote stays with Accept, all tied players share the trophy.',
     },
     whatYouNeed: {
       title: 'What you need',
@@ -287,7 +287,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
         { strong: 'Top 5 / Worst 5', rest: 'βαθμολογούνται με βάση την τελική συνδυαστική κατάταξη τη στιγμή που έρχονται τα αποτελέσματα.' },
         { strong: 'Πόντοι quiz', rest: 'κατοχυρώνονται από τη φάση των προβλέψεων και δεν αλλάζουν.' },
         { strong: 'Πόντοι μονομαχιών', rest: 'παίζουν σε πραγματικό χρόνο καθώς οι μονομαχίες κλείνουν στη μετάδοση.' },
-        { strong: 'Είτε', rest: 'ο οικοδεσπότης καταχωρεί ζωντανά τα αποτελέσματα κριτικής επιτροπής και televote, είτε ο auto-parser τα τραβάει τη βραδιά του τελικού.' },
+        { strong: 'Είτε', rest: 'ο οικοδεσπότης καταχωρεί ζωντανά τα αποτελέσματα κριτικής επιτροπής και televote, είτε ενημερώνονται αυτόματα τη βραδιά του τελικού.' },
       ],
     },
     trophies: {
@@ -306,7 +306,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
     suddenDeath: {
       title: 'Sudden death για ισοπαλίες',
       body:
-        'Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης μπορεί να ανοίξει έναν γύρο sudden death 20 δευτερολέπτων. Μία ερώτηση trivia, όλοι οι ισόπαλοι παίκτες απαντούν παράλληλα \u2014 η πιο γρήγορη σωστή απάντηση κερδίζει τον τίτλο. Αν κανείς δεν είναι σωστός, η συν-νίκη παραμένει.',
+        'Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης ξεκινά ψηφοφορία \u2014 το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia \u2014 κερδίζει όποιος απαντά περισσότερες σωστά, σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.',
     },
     whatYouNeed: {
       title: 'Τι χρειάζεσαι',

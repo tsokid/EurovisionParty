@@ -140,7 +140,7 @@ export const copy: Record<Locale, RulesCopy> = {
     suddenDeath: {
       title: 'Sudden-death tiebreak',
       body:
-        'For any tied trophy category, the host can open a 20-second sudden-death round. One trivia question, all tied players answer in parallel. Fastest correct answer wins the title outright \u2014 the previous co-winners forfeit. If nobody is correct, the co-winner status persists.',
+        'For any tied trophy category, the host triggers a tiebreak vote \u2014 the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins \u2014 speed breaks ties. If the vote stays with Accept, all tied players share the trophy.',
       cardTitle: 'Host toggle',
       cardBody:
         'Sudden death is opt-in per category from the host panel during the Final phase. If the host doesn\u2019t open it, tied players share the trophy by default.',
@@ -277,7 +277,7 @@ export const copy: Record<Locale, RulesCopy> = {
     suddenDeath: {
       title: 'Sudden death για ισοπαλίες',
       body:
-        'Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης μπορεί να ανοίξει έναν γύρο sudden death 20 δευτερολέπτων. Μία ερώτηση trivia, όλοι οι ισόπαλοι παίκτες απαντούν παράλληλα. Η πιο γρήγορη σωστή απάντηση κερδίζει τον τίτλο \u2014 οι προηγούμενοι συν-νικητές χάνουν. Αν κανείς δεν είναι σωστός, η συν-νίκη παραμένει.',
+        'Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης μπορεί να ανοίξει έναν ψηφοφορία \u2014 το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia \u2014 κερδίζει όποιος απαντά περισσότερες σωστά, σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.',
       cardTitle: 'Διακόπτης οικοδεσπότη',
       cardBody:
         'Το sudden death ενεργοποιείται προαιρετικά ανά κατηγορία από το host panel στη φάση Final. Αν ο οικοδεσπότης δεν το ανοίξει, οι ισόπαλοι παίκτες μοιράζονται το τρόπαιο εξ ορισμού.',

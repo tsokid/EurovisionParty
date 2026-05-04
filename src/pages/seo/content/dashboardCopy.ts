@@ -98,7 +98,7 @@ export const copy: Record<Locale, DashboardCopy> = {
         rows: [
           {
             source: 'Predictions (Top 5 + Worst 5)',
-            when: 'Host enters Eurovision results, or the parser pulls them',
+            when: 'Host enters Eurovision results, or they update automatically',
             capLabel: '500',
             capIsOpen: false,
           },
@@ -168,7 +168,7 @@ export const copy: Record<Locale, DashboardCopy> = {
       },
       {
         q: 'When does the Dashboard update?',
-        a: 'Live, push-driven. Quiz answers update on submission; duels update on finish; predictions update as the host enters Eurovision results (or as the auto-parser pulls them). No refresh needed.',
+        a: 'Live, push-driven. Quiz answers update on submission; duels update on finish; predictions update as the host enters Eurovision results (or as they update automatically). No refresh needed.',
       },
       {
         q: 'Can I see the breakdown per player?',
@@ -255,7 +255,7 @@ export const copy: Record<Locale, DashboardCopy> = {
         rows: [
           {
             source: 'Προβλέψεις (Top 5 + Worst 5)',
-            when: 'Ο οικοδεσπότης καταχωρεί τα αποτελέσματα της Eurovision ή τα τραβάει ο parser',
+            when: 'Ο οικοδεσπότης καταχωρεί τα αποτελέσματα της Eurovision ή ενημερώνονται αυτόματα',
             capLabel: '500',
             capIsOpen: false,
           },
@@ -326,7 +326,7 @@ export const copy: Record<Locale, DashboardCopy> = {
       },
       {
         q: 'Πότε ενημερώνεται το Dashboard;',
-        a: 'Ζωντανά, με push. Οι απαντήσεις στο quiz ενημερώνουν με την υποβολή· οι μονομαχίες με την ολοκλήρωση· οι προβλέψεις καθώς ο οικοδεσπότης καταχωρεί τα αποτελέσματα της Eurovision (ή καθώς τα τραβάει αυτόματα ο parser). Δεν χρειάζεται refresh.',
+        a: 'Ζωντανά, με push. Οι απαντήσεις στο quiz ενημερώνουν με την υποβολή· οι μονομαχίες με την ολοκλήρωση· οι προβλέψεις καθώς ο οικοδεσπότης καταχωρεί τα αποτελέσματα της Eurovision (ή καθώς ενημερώνονται αυτόματα). Δεν χρειάζεται refresh.',
       },
       {
         q: 'Μπορώ να δω την ανάλυση ανά παίκτη;',
