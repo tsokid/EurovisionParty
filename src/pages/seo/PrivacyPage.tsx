@@ -120,30 +120,13 @@ export default function PrivacyPage() {
               </li>
             ))}
           </ul>
-          <p>
-            {c.rights.contactLead}
-            <a
-              href="mailto:privacy@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              privacy@eurovision.games
-            </a>
-            {c.rights.contactTail}
-          </p>
         </Section>
 
         <Section title={c.deletion.title}>
           <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
             <h3 className="text-white font-bold text-lg mb-2">{c.deletion.cardTitle}</h3>
             <p className="text-white/80 text-[15px] leading-relaxed">
-              {c.deletion.cardLead}
-              <a
-                href="mailto:privacy@eurovision.games"
-                className="text-euro-pink-light hover:text-white underline underline-offset-2"
-              >
-                privacy@eurovision.games
-              </a>
-              {c.deletion.cardTail}
+              {c.deletion.cardBody}
             </p>
           </div>
           <p>{c.deletion.note}</p>
@@ -165,26 +148,6 @@ export default function PrivacyPage() {
 
         <Section title={c.changes.title}>
           <p>{c.changes.body}</p>
-        </Section>
-
-        <Section title={c.contact.title}>
-          <p>
-            {c.contact.lead}
-            <a
-              href="mailto:privacy@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              {c.contact.privacyEmail}
-            </a>
-            {c.contact.mid}
-            <a
-              href="mailto:hello@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              {c.contact.generalEmail}
-            </a>
-            {c.contact.tail}
-          </p>
         </Section>
 
         <RelatedCards items={c.related} />

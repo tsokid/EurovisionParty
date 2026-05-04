@@ -126,7 +126,7 @@ const en: TermsCopy = {
   whoWeAre: {
     title: 'Who we are',
     lead:
-      'Eurovision Games ("the Service", "we", "us") is an independent fan-built browser party game for the Eurovision Song Contest. The Service is operated by the Eurovision Games maintainers and is not a registered company, broadcaster, or commercial product. Contact: ',
+      'Eurovision Games ("the Service", "we", "us") is an independent fan-built browser party game for the Eurovision Song Contest. The Service is operated by the Eurovision Games maintainers and is not a registered company, broadcaster, or commercial product.',
     contactTail: '.',
   },
   free: {
@@ -189,7 +189,7 @@ const en: TermsCopy = {
     ],
     deletionItem: {
       bold: 'Account deletion.',
-      lead: ' Hosts can delete their account at any time by emailing ',
+      lead: ' Hosts can delete their account at any time. See the ',
       mid: ' — see the ',
       linkLabel: 'Privacy Policy',
       tail: ' for retention details.',
@@ -288,7 +288,7 @@ const el: TermsCopy = {
   whoWeAre: {
     title: 'Ποιοι είμαστε',
     lead:
-      'Το Eurovision Games («η Υπηρεσία», «εμείς», «μας») είναι ένα ανεξάρτητο fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Η Υπηρεσία λειτουργεί από τους maintainers του Eurovision Games και δεν αποτελεί εγγεγραμμένη εταιρεία, ραδιοτηλεοπτικό φορέα ή εμπορικό προϊόν. Επικοινωνία: ',
+      'Το Eurovision Games («η Υπηρεσία», «εμείς», «μας») είναι ένα ανεξάρτητο fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Η Υπηρεσία λειτουργεί από τους maintainers του Eurovision Games και δεν αποτελεί εγγεγραμμένη εταιρεία, ραδιοτηλεοπτικό φορέα ή εμπορικό προϊόν.',
     contactTail: '.',
   },
   free: {
@@ -352,7 +352,7 @@ const el: TermsCopy = {
     ],
     deletionItem: {
       bold: 'Διαγραφή λογαριασμού.',
-      lead: ' Οι οικοδεσπότες μπορούν να διαγράψουν τον λογαριασμό τους ανά πάσα στιγμή στέλνοντας email στο ',
+      lead: ' Οι οικοδεσπότες μπορούν να διαγράψουν τον λογαριασμό τους ανά πάσα στιγμή. Δες την ',
       mid: ' — δες την ',
       linkLabel: 'Πολιτική Απορρήτου',
       tail: ' για λεπτομέρειες διατήρησης.',

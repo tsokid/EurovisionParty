@@ -117,6 +117,9 @@ export default function EurovisionTriviaPage() {
               </li>
             ))}
           </ol>
+          {c.sections.disclaimer && (
+            <p className="text-xs text-white/40 italic mt-4">{c.sections.disclaimer}</p>
+          )}
         </Section>
 
         <Section title={c.sections.categories.title}>

@@ -121,7 +121,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
       food: {
         title: 'Food and drink ideas',
         body:
-          "The classic move: one snack per favourite country. Sweden = meatballs and Daim. Italy = arancini. Greece = spanakopita. UK = sausage rolls. Don't over-cater — the focus is the screen. A flexible buffet that survives the 4-hour run-time beats a hot served dinner. Mocktails travel well; an alcohol-free option keeps drivers and non-drinkers happy through to the televote.",
+          "The classic move: one snack per favourite country. Sweden = meatballs and Daim. Italy = arancini. Greece = souvlaki. UK = sausage rolls. Don't over-cater — the focus is the screen. A flexible buffet that survives the 4-hour run-time beats a hot served dinner. Mocktails travel well; an alcohol-free option keeps drivers and non-drinkers happy through to the televote.",
       },
       timezones: {
         title: 'Time-zone tips',
@@ -313,7 +313,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
       food: {
         title: 'Ιδέες για φαγητό και ποτό',
         body:
-          'Η κλασική κίνηση: ένα snack ανά αγαπημένη χώρα. Σουηδία = σουηδικά κεφτέδες και Daim. Ιταλία = arancini. Ελλάδα = σπανακόπιτα. Ηνωμένο Βασίλειο = sausage rolls. Μην παρασέρνεσαι με την προετοιμασία — το επίκεντρο είναι η οθόνη. Ένας ευέλικτος μπουφές που αντέχει στις 4 ώρες βραδιάς νικάει το ζεστό σερβιριστό δείπνο. Τα mocktails ταξιδεύουν εύκολα· μια επιλογή χωρίς αλκοόλ κρατάει χαρούμενους τους οδηγούς και όσους δεν πίνουν μέχρι το televote.',
+          'Η κλασική κίνηση: ένα snack ανά αγαπημένη χώρα. Σουηδία = σουηδικά κεφτέδες και Daim. Ιταλία = arancini. Ελλάδα = σουβλάκι. Ηνωμένο Βασίλειο = sausage rolls. Μην παρασέρνεσαι με την προετοιμασία — το επίκεντρο είναι η οθόνη. Ένας ευέλικτος μπουφές που αντέχει στις 4 ώρες βραδιάς νικάει το ζεστό σερβιριστό δείπνο. Τα mocktails ταξιδεύουν εύκολα· μια επιλογή χωρίς αλκοόλ κρατάει χαρούμενους τους οδηγούς και όσους δεν πίνουν μέχρι το televote.',
       },
       timezones: {
         title: 'Συμβουλές για ζώνες ώρας',

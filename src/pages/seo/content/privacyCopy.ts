@@ -60,6 +60,7 @@ export interface PrivacyCopy {
     cardTitle: string;
     cardLead: string;
     cardTail: string;
+    cardBody: string;
     note: string;
   };
   cookies: {
@@ -193,8 +194,8 @@ const en: PrivacyCopy = {
     cardLead: 'Email ',
     cardTail:
       ' from the address you signed up with. We delete the host email and detach any historical room data within 7 days. Guest player names are stripped automatically 30 days after the room ends — you do not need to ask for that.',
-    note:
-      'If you joined a room as a guest and want your display name removed sooner, ask the room host to delete the room (they can do that from the host dashboard) or email us with the room code.',
+    cardBody: 'To delete your account, send a request from the address you signed up with. We delete the host email and detach any historical room data within 7 days. Guest player names are stripped automatically 30 days after the room ends.',
+    note: 'If you joined a room as a guest and want your display name removed sooner, ask the room host to delete the room from the host dashboard.',
   },
   cookies: {
     title: 'Cookies',
@@ -356,8 +357,8 @@ const el: PrivacyCopy = {
     cardLead: 'Στείλε email στο ',
     cardTail:
       ' από τη διεύθυνση με την οποία εγγράφηκες. Διαγράφουμε το email του οικοδεσπότη και αποσυνδέουμε τυχόν ιστορικά δεδομένα δωματίων εντός 7 ημερών. Τα ονόματα των guest παικτών διαγράφονται αυτόματα 30 ημέρες μετά τη λήξη του δωματίου — δεν χρειάζεται να το ζητήσεις.',
-    note:
-      'Αν μπήκες σε δωμάτιο ως guest και θέλεις να αφαιρεθεί νωρίτερα το όνομά σου, ζήτησε από τον οικοδεσπότη του δωματίου να το διαγράψει (μπορεί να το κάνει από το host dashboard) ή στείλε μας email με τον κωδικό εισόδου.',
+    cardBody: 'Για να διαγράψεις τον λογαριασμό σου, στείλε αίτημα από τη διεύθυνση με την οποία εγγράφηκες. Διαγράφουμε το email του οικοδεσπότη και αποσυνδέουμε τυχόν ιστορικά δεδομένα δωματίων εντός 7 ημερών. Τα ονόματα των guest παικτών διαγράφονται αυτόματα 30 ημέρες μετά τη λήξη του δωματίου.',
+    note: 'Αν μπήκες σε δωμάτιο ως guest και θέλεις να αφαιρεθεί νωρίτερα το όνομά σου, ζήτησε από τον οικοδεσπότη του δωματίου να το διαγράψει από το host dashboard.',
   },
   cookies: {
     title: 'Cookies',

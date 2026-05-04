@@ -77,16 +77,7 @@ export default function TermsPage() {
 
       <ContentLayout>
         <Section title={c.whoWeAre.title}>
-          <p>
-            {c.whoWeAre.lead}
-            <a
-              href="mailto:hello@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              hello@eurovision.games
-            </a>
-            {c.whoWeAre.contactTail}
-          </p>
+          <p>{c.whoWeAre.lead}</p>
         </Section>
 
         <Section title={c.free.title}>
@@ -123,13 +114,6 @@ export default function TermsPage() {
             <li>
               <strong className="text-white">{c.account.deletionItem.bold}</strong>
               {c.account.deletionItem.lead}
-              <a
-                href="mailto:privacy@eurovision.games"
-                className="text-euro-pink-light hover:text-white underline underline-offset-2"
-              >
-                privacy@eurovision.games
-              </a>
-              {c.account.deletionItem.mid}
               <a href="/privacy" className="text-euro-pink-light hover:text-white underline underline-offset-2">
                 {c.account.deletionItem.linkLabel}
               </a>
@@ -175,33 +159,6 @@ export default function TermsPage() {
 
         <Section title={c.changes.title}>
           <p>{c.changes.body}</p>
-        </Section>
-
-        <Section title={c.contact.title}>
-          <p>
-            {c.contact.lead}
-            <a
-              href="mailto:hello@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              {c.contact.helloEmail}
-            </a>
-            {c.contact.mid1}
-            <a
-              href="mailto:privacy@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              {c.contact.privacyEmail}
-            </a>
-            {c.contact.mid2}
-            <a
-              href="mailto:legal@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              {c.contact.legalEmail}
-            </a>
-            {c.contact.tail}
-          </p>
         </Section>
 
         <RelatedCards items={c.related} />

@@ -183,8 +183,7 @@ const en: AboutCopy = {
   },
   builtBy: {
     title: 'Built by',
-    lead:
-      'Built by a small team of Eurovision fans who got tired of doing prediction maths by hand. Bug reports, feature requests, hosting questions: ',
+    lead: 'Built by a small team of Eurovision fans who got tired of doing prediction maths by hand.',
     helloEmail: 'hello@eurovision.games',
     mid: '. Press and partnership enquiries: ',
     pressEmail: 'press@eurovision.games',
@@ -335,8 +334,7 @@ const el: AboutCopy = {
   },
   builtBy: {
     title: 'Φτιαγμένο από',
-    lead:
-      'Φτιαγμένο από μια μικρή ομάδα fans της Eurovision που κουράστηκαν να κάνουν τα μαθηματικά των προβλέψεων με το χέρι. Αναφορές bugs, αιτήματα features, ερωτήσεις φιλοξενίας: ',
+    lead: 'Φτιαγμένο από μια μικρή ομάδα fans της Eurovision που κουράστηκαν να κάνουν τα μαθηματικά των προβλέψεων με το χέρι.',
     helloEmail: 'hello@eurovision.games',
     mid: '. Ερωτήματα Τύπου και συνεργασιών: ',
     pressEmail: 'press@eurovision.games',

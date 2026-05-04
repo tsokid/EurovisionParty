@@ -26,11 +26,6 @@ export default function AboutPage() {
     logo: 'https://eurovision.games/logo.png',
     description: c.meta.organizationDescription,
     sameAs: [],
-    contactPoint: {
-      '@type': 'ContactPoint',
-      email: 'hello@eurovision.games',
-      contactType: 'customer support',
-    },
   };
 
   const aboutPage = {
@@ -127,23 +122,7 @@ export default function AboutPage() {
         </Section>
 
         <Section title={c.builtBy.title}>
-          <p>
-            {c.builtBy.lead}
-            <a
-              href="mailto:hello@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              {c.builtBy.helloEmail}
-            </a>
-            {c.builtBy.mid}
-            <a
-              href="mailto:press@eurovision.games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
-            >
-              {c.builtBy.pressEmail}
-            </a>
-            {c.builtBy.tail}
-          </p>
+          <p>{c.builtBy.lead}</p>
         </Section>
 
         <CtaBanner

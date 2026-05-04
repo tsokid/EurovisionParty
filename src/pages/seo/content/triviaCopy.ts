@@ -51,6 +51,7 @@ interface TriviaCopy {
       post: string;
     };
     faqTitle: string;
+    disclaimer: string;
   };
   cta: { title: string; body: string; primary: string; secondary: string };
   related: {
@@ -131,6 +132,7 @@ export const copy: Record<Locale, TriviaCopy> = {
         post: ' on Eurovision Games and invite up to 19 friends to play.',
       },
       faqTitle: 'Frequently asked questions',
+      disclaimer: 'Questions are drawn from a curated bank and have not been individually fact-checked. This is a party game for fun — treat answers as entertainment.',
     },
     cta: {
       title: 'Quiz your friends tonight',
@@ -284,6 +286,7 @@ export const copy: Record<Locale, TriviaCopy> = {
         post: ' στο Eurovision Games και κάλεσε έως 19 φίλους να παίξουν.',
       },
       faqTitle: 'Συχνές ερωτήσεις',
+      disclaimer: 'Οι ερωτήσεις αντλούνται από επιμελημένη τράπεζα και δεν έχουν επαληθευτεί μεμονωμένα. Πρόκειται για party game για διασκέδαση.',
     },
     cta: {
       title: 'Κάνε quiz στους φίλους σου απόψε',

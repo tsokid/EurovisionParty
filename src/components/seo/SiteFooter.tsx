@@ -56,11 +56,6 @@ export default function SiteFooter() {
       <p className="max-w-5xl mx-auto text-white/35 text-xs mt-8 text-center leading-relaxed">
         {t('siteFooter.disclaimer')}
       </p>
-      <p className="max-w-5xl mx-auto text-white/30 text-xs mt-2 text-center">
-        <a href={`mailto:${t('siteFooter.contactEmail')}`} className="hover:text-white/60 transition">
-          {t('siteFooter.contactEmail')}
-        </a>
-      </p>
     </footer>
   );
 }
