@@ -7,7 +7,7 @@
 // upstream module-host outages (esm.sh boot errors).
 
 const CORS = {
-  'access-control-allow-origin': '*',
+  'access-control-allow-origin': 'https://eurovision.games',
   'access-control-allow-headers': 'authorization, x-client-info, apikey, content-type',
   'access-control-allow-methods': 'POST, OPTIONS',
 };
