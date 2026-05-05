@@ -53,7 +53,7 @@ export default function SiteFooter() {
       </div>
 
       {/* EBU disclaimer */}
-      <p className="max-w-5xl mx-auto text-white/35 text-xs mt-8 text-center leading-relaxed">
+      <p className="max-w-5xl mx-auto text-white/60 text-xs mt-8 text-center leading-relaxed">
         {t('siteFooter.disclaimer')}
       </p>
     </footer>
