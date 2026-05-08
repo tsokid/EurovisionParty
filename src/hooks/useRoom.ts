@@ -208,7 +208,7 @@ export function useRoom(): UseRoomReturn {
 
         return code;
       } catch (err: unknown) {
-        let message = err instanceof Error ? err.message : 'Failed to create room';
+        let message = err instanceof Error ? err.message : ((err as any)?.message ?? 'Failed to create room');
         // Map server errors to friendly messages
         if (message.includes('Rate limit')) message = 'Too many rooms created. Please wait an hour.';
         if (message.includes('already taken')) message = 'That name is taken in this room. Choose another.';
@@ -252,17 +252,8 @@ export function useRoom(): UseRoomReturn {
         if (!roomData) throw new Error('Room not found');
         const typedRoomData = roomData as unknown as Room;
 
-        // Check max players
-        const { count } = await supabase
-          .from('players')
-          .select('id', { count: 'exact', head: true })
-          .eq('room_id', typedRoomData.id)
-          .eq('is_active', true);
-        if (count !== null && count >= (typedRoomData.max_players ?? 20)) {
-          throw new Error('Room is full');
-        }
-
         // Check if user already has an active player in this room (prevents double-join)
+        // Capacity check is handled server-side in verify_room_password (SECURITY DEFINER)
         const { data: existingPlayer } = await supabase
           .from('players')
           .select('*')
@@ -302,7 +293,7 @@ export function useRoom(): UseRoomReturn {
 
         return typedRoomData;
       } catch (err: unknown) {
-        let message = err instanceof Error ? err.message : 'Failed to join room';
+        let message = err instanceof Error ? err.message : ((err as any)?.message ?? 'Failed to join room');
         // Map server errors to friendly messages
         if (message.includes('already taken')) message = 'That name is taken in this room. Choose another.';
         if (message.includes('Room is full') || message.includes('max')) message = 'Room is full. No more players can join.';
