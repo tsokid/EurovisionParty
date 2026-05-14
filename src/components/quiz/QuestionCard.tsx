@@ -8,7 +8,10 @@ import { TIMER_SECONDS } from '../../lib/constants';
 import { getLocalizedQuestion } from '../../lib/questionLocale';
 import type { QuizQuestion } from '../../lib/types';
 
-function shuffleOptions(options: string[], correctIndex: number): { options: string[]; correctIndex: number } {
+function shuffleOptions(
+  options: string[],
+  correctIndex: number,
+): { options: string[]; correctIndex: number; originalIndexAt: number[] } {
   const indexed = options.map((o, i) => ({ o, i }));
   for (let n = indexed.length - 1; n > 0; n--) {
     const k = Math.floor(Math.random() * (n + 1));
@@ -17,6 +20,9 @@ function shuffleOptions(options: string[], correctIndex: number): { options: str
   return {
     options: indexed.map((x) => x.o),
     correctIndex: indexed.findIndex((x) => x.i === correctIndex),
+    // maps shuffled position → original position, so the server receives the
+    // unshuffled index and can compare against quiz_questions.correct_index
+    originalIndexAt: indexed.map((x) => x.i),
   };
 }
 
@@ -46,8 +52,8 @@ export default function QuestionCard({
   // Hooks must run in the same order every render — declare them BEFORE any early return
   const { question: localQ, options: rawOptions } = getLocalizedQuestion(question);
   // Shuffle once per question (stable across re-renders for same question.id)
-  const { options, correctIndex: shuffledCorrectIndex } = useMemo<{ options: string[]; correctIndex: number }>(
-    () => question ? shuffleOptions(rawOptions, question.correct_index) : { options: rawOptions, correctIndex: 0 },
+  const { options, correctIndex: shuffledCorrectIndex, originalIndexAt } = useMemo<{ options: string[]; correctIndex: number; originalIndexAt: number[] }>(
+    () => question ? shuffleOptions(rawOptions, question.correct_index) : { options: rawOptions, correctIndex: 0, originalIndexAt: rawOptions.map((_, i) => i) },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [question?.id],
   );
@@ -84,10 +90,13 @@ export default function QuestionCard({
       setTimeout(() => {
         setRevealed(true);
         const isCorrect = index === shuffledCorrectIndex;
+        // Send original (unshuffled) index so server can compare against
+        // quiz_questions.correct_index, which stores the original position.
+        const originalIndex = originalIndexAt[index] ?? index;
 
         // Auto-advance after feedback
         setTimeout(() => {
-          onAnswer(index, isCorrect);
+          onAnswer(originalIndex, isCorrect);
         }, ADVANCE_DELAY_MS);
       }, FEEDBACK_DELAY_MS);
     },
