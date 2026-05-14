@@ -185,7 +185,7 @@ export default function QuizScreen() {
         // fall back to local roundAnswers which always has the most-recently-played round.
         if (!byRound[MAX_ROUNDS] && capturedRoundAnswers.length > 0 && capturedRoundAnswers[0]?.round_number === MAX_ROUNDS) {
           for (const a of capturedRoundAnswers) {
-            processAnswer(a.round_number, a.is_correct, a.points_awarded, a.response_seconds);
+            processAnswer(a.round_number, a.is_correct ?? false, a.points_awarded, a.response_seconds);
           }
         }
 
