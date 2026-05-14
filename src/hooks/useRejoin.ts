@@ -13,12 +13,6 @@ export type RejoinStatus =
   | 'not-member'  // user has no player record in this room
   | 'expired';    // player exited and 2h grace period has passed
 
-const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
-
-function twoHoursAgoISO(): string {
-  return new Date(Date.now() - TWO_HOURS_MS).toISOString();
-}
-
 export function useRejoin(roomCode: string | undefined) {
   const [status, setStatus] = useState<RejoinStatus>('loading');
   const attempted = useRef(false);
@@ -52,8 +46,6 @@ export function useRejoin(roomCode: string | undefined) {
           return;
         }
 
-        const cutoff = twoHoursAgoISO();
-
         // 2. Try auth-based lookup first
         const { data: { user } } = await supabase.auth.getUser();
         let playerData: Player | null = null;
@@ -65,7 +57,7 @@ export function useRejoin(roomCode: string | undefined) {
             .select('*')
             .eq('room_id', roomData.id)
             .eq('user_id', user.id)
-            .or(`status.in.(active,away),and(status.eq.exited,left_at.gt.${cutoff})`)
+            .or('status.in.(active,away,exited)')
             .maybeSingle();
 
           if (error?.message?.includes('status')) {
@@ -96,7 +88,7 @@ export function useRejoin(roomCode: string | undefined) {
                 .select('*')
                 .eq('id', saved.playerId)
                 .eq('room_id', roomData.id)
-                .or(`status.in.(active,away),and(status.eq.exited,left_at.gt.${cutoff})`)
+                .or('status.in.(active,away,exited)')
                 .maybeSingle();
 
               if (error?.message?.includes('status')) {
