@@ -137,12 +137,13 @@ export default function QuizScreen() {
   }, [phase, roundNumber, questionIndex, roundQuestions, usedQuestionIds, roundAnswers, player, room, setQuizProgress]);
 
   // Build the per-round / best-streak summary when the quiz completes.
-  // We fetch from quiz_answers rather than relying on roundAnswers state
-  // because that resets between rounds — by 'complete' it only has the
-  // final round's data. Order by (round_number, answered_at) so the
-  // streak walk is deterministic.
+  // Primary source: quiz_answers table (authoritative, persisted).
+  // Fallback: roundAnswers local state covers the last round when its DB
+  // inserts failed the timing constraint (e.g., slow network + auto-submit
+  // right at the 15s mark) — so the Round 3 bar never disappears.
   useEffect(() => {
     if (phase !== 'complete' || !player || !room || completionSummary) return;
+    const capturedRoundAnswers = roundAnswers;
     let cancelled = false;
     supabase
       .from('quiz_answers')
@@ -158,36 +159,48 @@ export default function QuizScreen() {
         let currentStreak = 0;
         let totalCorrect = 0;
         let fastestSeconds: number | null = null;
-        for (const a of data as Array<{ round_number: number; is_correct: boolean; points_awarded: number | null; response_seconds: number | null }>) {
-          const r = a.round_number;
+
+        const processAnswer = (r: number, isCorrect: boolean, pointsAwarded: number | null, responseSecs: number | null) => {
           if (!byRound[r]) byRound[r] = { round: r, correct: 0, total: 0, points: 0 };
           byRound[r].total += 1;
-
-          if (a.is_correct) {
+          if (isCorrect) {
             byRound[r].correct += 1;
-            byRound[r].points += a.points_awarded ?? 0;
+            byRound[r].points += pointsAwarded ?? 0;
             totalCorrect += 1;
             currentStreak += 1;
             if (currentStreak > bestStreak) bestStreak = currentStreak;
-            const secs = a.response_seconds;
-            if (secs != null && secs > 0 && (fastestSeconds === null || secs < fastestSeconds)) {
-              fastestSeconds = secs;
+            if (responseSecs != null && responseSecs > 0 && (fastestSeconds === null || responseSecs < fastestSeconds)) {
+              fastestSeconds = responseSecs;
             }
           } else {
             currentStreak = 0;
           }
+        };
+
+        for (const a of data as Array<{ round_number: number; is_correct: boolean; points_awarded: number | null; response_seconds: number | null }>) {
+          processAnswer(a.round_number, a.is_correct, a.points_awarded, a.response_seconds);
         }
+
+        // If the last round is absent from DB (timing constraint failure on slow network),
+        // fall back to local roundAnswers which always has the most-recently-played round.
+        if (!byRound[MAX_ROUNDS] && capturedRoundAnswers.length > 0 && capturedRoundAnswers[0]?.round_number === MAX_ROUNDS) {
+          for (const a of capturedRoundAnswers) {
+            processAnswer(a.round_number, a.is_correct, a.points_awarded, a.response_seconds);
+          }
+        }
+
         const rounds = Object.values(byRound).sort((a, b) => a.round - b.round);
 
         setCompletionSummary({
           rounds,
           bestStreak,
           totalCorrect,
-          totalAnswered: data.length,
+          totalAnswered: data.length + (byRound[MAX_ROUNDS] && !data.some((a: { round_number: number }) => a.round_number === MAX_ROUNDS) ? (byRound[MAX_ROUNDS]?.total ?? 0) : 0),
           fastestSeconds,
         });
       });
     return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, player, room, completionSummary]);
 
   // Track active countdown per question
