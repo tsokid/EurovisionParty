@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 
 const STORAGE_KEY = 'europarty_rooms';
-const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
 
 export type RoomBadge = 'LIVE' | 'AWAY' | 'ENDED';
 
@@ -21,9 +20,7 @@ export interface RoomEntry {
 export function getBadge(entry: RoomEntry): RoomBadge {
   if (entry.phase === 'finished') return 'ENDED';
   if (entry.status === 'active') return 'LIVE';
-  if (entry.status === 'away') return 'AWAY';
-  if (entry.leftAt && Date.now() - new Date(entry.leftAt).getTime() < TWO_HOURS_MS) return 'AWAY';
-  return 'ENDED';
+  return 'AWAY';
 }
 
 export function removeFromStorage(roomCode: string) {
