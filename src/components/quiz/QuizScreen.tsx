@@ -566,7 +566,10 @@ export default function QuizScreen() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.05, duration: 0.25, ease: 'easeOut' }}
                   >
-                    {player.quiz_points.toLocaleString()}
+                    {(completionSummary
+                      ? completionSummary.rounds.reduce((sum, r) => sum + r.points, 0)
+                      : player.quiz_points
+                    ).toLocaleString()}
                   </motion.p>
                   <p className="text-sm sm:text-base text-white/65 mt-2">
                     {completionSummary
