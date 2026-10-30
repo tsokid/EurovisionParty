@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, cleanup } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import SchemaHead from '@/components/seo/SchemaHead';
+import { HeadProvider, createHeadCollector } from '@/lib/seo/HeadContext';
 
 describe('SchemaHead with hreflang', () => {
   beforeEach(() => {
@@ -24,5 +26,17 @@ describe('SchemaHead with hreflang', () => {
     const links = document.querySelectorAll('link[rel="alternate"]');
     expect(links).toHaveLength(3);
     expect(links[0].getAttribute('hreflang')).toBe('en');
+  });
+});
+
+describe('SchemaHead server render', () => {
+  it('collects head during server render', () => {
+    const c = createHeadCollector();
+    renderToString(
+      <HeadProvider collector={c}>
+        <SchemaHead title="T" description="D" canonical="https://eurovision.games/en/faq" />
+      </HeadProvider>
+    );
+    expect(c.head?.title).toBe('T');
   });
 });

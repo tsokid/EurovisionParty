@@ -1,32 +1,20 @@
 import { useEffect } from 'react';
-import type { HreflangLink } from '../../lib/seo/hreflang';
+import type { HeadInput } from '../../lib/seo/headTags';
+import { useHeadCollector } from '../../lib/seo/HeadContext';
 
-interface Props {
-  title: string;
-  description: string;
-  canonical: string;
-  jsonLd?: object | object[];
-  hreflang?: HreflangLink[];
-  ogLocale?: 'en_US' | 'el_GR';
-  ogLocaleAlternate?: ('en_US' | 'el_GR')[];
-  // Per-page Open Graph + Twitter overrides. Static defaults live in index.html.
-  ogType?: 'website' | 'article';
-  ogImage?: string; // absolute URL
-  twitterTitle?: string;
-  twitterDescription?: string;
-  // Article-only (sets article:published_time / article:modified_time)
-  articlePublishedTime?: string; // ISO 8601
-  articleModifiedTime?: string;  // ISO 8601
-  // Page-level keywords (low SEO weight but harmless and useful for some
-  // social previews and internal tooling).
-  keywords?: string[];
-}
+type Props = HeadInput;
+
 
 export default function SchemaHead({
   title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
   ogType, ogImage, twitterTitle, twitterDescription,
   articlePublishedTime, articleModifiedTime, keywords,
 }: Props) {
+  useHeadCollector()?.setHead({
+    title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+    ogType, ogImage, twitterTitle, twitterDescription,
+    articlePublishedTime, articleModifiedTime, keywords,
+  });
   useEffect(() => {
     const prevTitle = document.title;
     const prevDesc = readMeta('description');
