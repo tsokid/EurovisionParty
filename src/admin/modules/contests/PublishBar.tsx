@@ -4,7 +4,7 @@
 // button and the outcome of the latest publish. State lives in
 // usePublisher (publish.ts) so the module's auto-publish shares it.
 
-import { COMMIT_URL, outcomeText, yearRanges, type Publisher } from './publish';
+import { COMMIT_URL, formatRunTime, outcomeText, yearRanges, type Publisher } from './publish';
 
 function unpublishedText(p: Publisher): string | null {
   if (!p.summary) return null;
@@ -58,7 +58,7 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
               </a>
             </>
           )}
-          {run.finished_at && ` · ${new Date(run.finished_at).toLocaleString()}`}
+          {run.finished_at && ` · ${formatRunTime(run.finished_at)}`}
         </p>
       )}
       {run?.status === 'error' && run.error && <p className="text-xs text-red-300 break-all">{run.error}</p>}

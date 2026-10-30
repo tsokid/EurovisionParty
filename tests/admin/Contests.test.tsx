@@ -285,6 +285,36 @@ describe('Contests module', () => {
     expect((screen.getByRole('button', { name: 'Publish' }) as HTMLButtonElement).disabled).toBe(false);
   });
 
+  it('a busy auto-publish keeps the lifecycle change and asks to try again', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    h.invoke.mockResolvedValue({
+      data: null,
+      error: {
+        message: 'Edge Function returned a non-2xx status code',
+        context: { json: async () => ({ status: 'busy', run_id: null, sha: null, files_changed: 0, error: 'publish already running' }) },
+      },
+    });
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Archive' }));
+    expect(await screen.findByText('Archive 2026 done.')).toBeTruthy();
+    expect(await screen.findByText('Another publish is running — try again in a minute')).toBeTruthy();
+    expect((screen.getByRole('button', { name: 'Publish' }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('Publish followed by an auto-publish from Archive invokes publish-content once', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    let resolve!: (v: unknown) => void;
+    h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
+    render(<Contests />);
+    const r26 = await rowFor(2026);
+    fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    fireEvent.click(r26.getByRole('button', { name: 'Archive' }));
+    expect(await screen.findByText('Archive 2026 done.')).toBeTruthy();
+    resolve({ data: { status: 'ok', run_id: 2, sha: 'abc1234ffff', files_changed: 3 }, error: null });
+    expect(await screen.findByText(/Published: 3 files changed/)).toBeTruthy();
+    expect(h.invoke).toHaveBeenCalledTimes(1);
+  });
+
   it('a refused lifecycle action does not publish', async () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     h.rpcError = { archive_contest: { message: 'contest 2027 has no entries; archive refused', code: 'P0001' } };

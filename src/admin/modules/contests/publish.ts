@@ -3,13 +3,16 @@
 //
 // invokePublish never throws: every outcome, including a 409 busy, a 500
 // error with the function's own message, or a request that never reached
-// the function, comes back as a PublishOutcome.
+// the function, comes back as a PublishOutcome. While one call is in
+// flight, further calls (a double click, the PublishBar and an
+// auto-publish, FinalizeCard in the parser module) share it: the edge
+// function is invoked once per page at a time.
 //
 // usePublisher holds that state for the Contests module, so its PublishBar
 // and the auto-publish after Finalize / Archive / Un-archive share one
 // "publishing" flag and one last outcome.
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
 
@@ -46,8 +49,20 @@ function asOutcome(body: unknown): PublishOutcome | null {
   return null;
 }
 
-/** Calls publish-content once. Never throws. */
-export async function invokePublish(): Promise<PublishOutcome> {
+// Module-level, so every caller in this page shares one in-flight publish.
+let inFlight: Promise<PublishOutcome> | null = null;
+
+/** Calls publish-content, or joins the call already in flight. Never throws. */
+export function invokePublish(): Promise<PublishOutcome> {
+  if (!inFlight) {
+    inFlight = callPublish().finally(() => {
+      inFlight = null;
+    });
+  }
+  return inFlight;
+}
+
+async function callPublish(): Promise<PublishOutcome> {
   try {
     const { data, error } = await supabase.functions.invoke('publish-content', { body: {} });
     if (error) {
@@ -67,6 +82,14 @@ export async function invokePublish(): Promise<PublishOutcome> {
   } catch (e) {
     return { status: 'error', error: formatError(e) };
   }
+}
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+/** "YYYY-MM-DD HH:MM" in the browser's time zone, independent of its locale. */
+export function formatRunTime(iso: string): string {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 /** Years as "1956-1958, 1999". */
@@ -106,7 +129,7 @@ export type Publisher = {
   publishing: boolean;
   outcome: PublishOutcome | null;
   refresh: () => Promise<void>;
-  publish: () => Promise<PublishOutcome | null>;
+  publish: () => Promise<PublishOutcome>;
 };
 
 export function usePublisher(): Publisher {
@@ -115,8 +138,6 @@ export function usePublisher(): Publisher {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
   const [outcome, setOutcome] = useState<PublishOutcome | null>(null);
-  // A ref, so two quick calls (button + auto-publish) cannot both start.
-  const running = useRef(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -133,9 +154,8 @@ export function usePublisher(): Publisher {
 
   useEffect(() => { refresh(); }, [refresh]);
 
+  // A second call while one is in flight joins it (invokePublish).
   const publish = useCallback(async () => {
-    if (running.current) return null;
-    running.current = true;
     setPublishing(true);
     setOutcome(null);
     try {
@@ -143,7 +163,6 @@ export function usePublisher(): Publisher {
       setOutcome(o);
       return o;
     } finally {
-      running.current = false;
       setPublishing(false);
       await refresh();
     }

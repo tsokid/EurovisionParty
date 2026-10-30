@@ -26,7 +26,7 @@ vi.mock('../../src/lib/supabase', () => ({
 }));
 
 import { PublishBar } from '../../src/admin/modules/contests/PublishBar';
-import { usePublisher } from '../../src/admin/modules/contests/publish';
+import { formatRunTime, usePublisher } from '../../src/admin/modules/contests/publish';
 
 function Harness() {
   return <PublishBar publisher={usePublisher()} />;
@@ -52,7 +52,7 @@ describe('PublishBar', () => {
     expect(await screen.findByText('3 unpublished changes (years 2024-2025, 2027)')).toBeTruthy();
     const link = screen.getByRole('link', { name: 'abc1234' }) as HTMLAnchorElement;
     expect(link.href).toBe('https://github.com/tsokid/EurovisionParty/commit/abc1234def5678');
-    expect(screen.getByText(new Date(FINISHED).toLocaleString(), { exact: false })).toBeTruthy();
+    expect(screen.getByText(/· \d{4}-\d{2}-\d{2} \d{2}:\d{2}$/)).toBeTruthy();
     expect(screen.getByText(/Last publish: ok/)).toBeTruthy();
     expect(screen.getByText('The site updates about 2 minutes after a successful publish.')).toBeTruthy();
   });
@@ -98,6 +98,36 @@ describe('PublishBar', () => {
     expect(await screen.findByText('No unpublished changes')).toBeTruthy();
     expect(h.rpc.mock.calls.filter(([n]) => n === 'unpublished_summary').length).toBeGreaterThan(summariesBefore);
     expect(((await screen.findByRole('button', { name: 'Publish' })) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('formatRunTime is a fixed YYYY-MM-DD HH:MM in local time, whatever the locale', () => {
+    // Built from local components, so the expectation holds in any time zone.
+    expect(formatRunTime(new Date(2026, 9, 3, 8, 4).toISOString())).toBe('2026-10-03 08:04');
+    expect(formatRunTime(new Date(2026, 11, 31, 23, 59).toISOString())).toBe('2026-12-31 23:59');
+  });
+
+  it('a double click on Publish invokes publish-content once', async () => {
+    let resolve!: (v: unknown) => void;
+    h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
+    render(<Harness />);
+    const button = await screen.findByRole('button', { name: 'Publish' });
+    fireEvent.click(button);
+    fireEvent.click(button);
+    resolve({ data: { status: 'noop', run_id: 9, sha: null, files_changed: 0 }, error: null });
+    expect(await screen.findByText('Nothing to publish: the site is already up to date.')).toBeTruthy();
+    expect(h.invoke).toHaveBeenCalledTimes(1);
+  });
+
+  it('two publishers in one page share the in-flight publish', async () => {
+    let resolve!: (v: unknown) => void;
+    h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
+    render(<><Harness /><Harness /></>);
+    const [a, b] = await screen.findAllByRole('button', { name: 'Publish' });
+    fireEvent.click(a);
+    fireEvent.click(b);
+    resolve({ data: { status: 'ok', run_id: 9, sha: 'fff0000aaa', files_changed: 1 }, error: null });
+    expect(await screen.findAllByText(/Published: 1 file changed/)).toHaveLength(2);
+    expect(h.invoke).toHaveBeenCalledTimes(1);
   });
 
   it('noop says the site is up to date', async () => {

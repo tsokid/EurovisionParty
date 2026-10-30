@@ -3,8 +3,10 @@
 // finalize_contest lifecycle RPC (current -> finalized). It locks the
 // results, stops the Results parser, scores every room of that year and
 // computes winners. Two-click confirm; cannot be undone. A successful
-// finalize publishes automatically (spec §7); a failed publish is shown
-// and the finalize stands (Publish again from the Contests module).
+// finalize publishes automatically (spec §7) through the shared
+// invokePublish, which joins any publish already in flight; a failed or
+// busy publish is shown and the finalize stands (Publish again from the
+// Contests module).
 //
 // "Reset Finalized" (reset_manual_results) is refused by the database
 // once the contest is finalized or archived, so it is offered only while
@@ -196,7 +198,11 @@ export function FinalizeCard({ job, onRefresh }: Props) {
       {published && (
         <p
           className={`text-sm mt-2 break-all ${
-            published.status === "ok" || published.status === "noop" ? "text-emerald-300" : "text-red-300"
+            published.status === "ok" || published.status === "noop"
+              ? "text-emerald-300"
+              : published.status === "busy"
+                ? "text-amber-300"
+                : "text-red-300"
           }`}
         >
           {outcomeText(published)}

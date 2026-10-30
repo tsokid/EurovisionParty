@@ -30,6 +30,7 @@ vi.mock('../../src/lib/supabase', () => ({
 }));
 
 import { FinalizeCard } from '../../src/admin/modules/parser/FinalizeCard';
+import { invokePublish } from '../../src/admin/modules/contests/publish';
 
 const job = (status: ParseJob['status']): ParseJob =>
   ({ kind: 'results', year: 2027, status, manual_override: false }) as ParseJob;
@@ -75,6 +76,35 @@ describe('FinalizeCard', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
     expect(await screen.findByText('Publish failed: Failed to send a request to the Edge Function')).toBeTruthy();
     expect(screen.getByText(/2027 finalized\./)).toBeTruthy();
+  });
+
+  it('a busy publish after finalize shows the busy message', async () => {
+    h.invoke.mockResolvedValue({
+      data: null,
+      error: {
+        message: 'Edge Function returned a non-2xx status code',
+        context: { json: async () => ({ status: 'busy', run_id: null, sha: null, files_changed: 0, error: 'publish already running' }) },
+      },
+    });
+    render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
+    expect(await screen.findByText('Another publish is running — try again in a minute')).toBeTruthy();
+    expect(screen.getByText(/2027 finalized\./)).toBeTruthy();
+  });
+
+  it('joins a publish already in flight in the page instead of starting a second one', async () => {
+    let resolve!: (v: unknown) => void;
+    h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
+    const pending = invokePublish(); // e.g. the Contests module publishing
+    render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
+    expect(await screen.findByText('Publishing…')).toBeTruthy();
+    resolve({ data: { status: 'ok', run_id: 1, sha: 'abc1234ffff', files_changed: 2 }, error: null });
+    expect(await screen.findByText(/Published: 2 files changed/)).toBeTruthy();
+    await pending;
+    expect(h.invoke).toHaveBeenCalledTimes(1);
   });
 
   it.each(['finalized', 'archived'])('hides Reset Finalized once the contest is %s, and points to Edit + Republish', async (stage) => {

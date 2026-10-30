@@ -417,6 +417,8 @@ describe('071 lifecycle and entry RPCs', () => {
     ['update_contest', `select public.update_contest(2026, '{"city":"x"}'::jsonb)`],
     ['upsert_contest_entry', `select public.upsert_contest_entry(2026, 'GR', '{"artist":"x"}'::jsonb)`],
     ['delete_contest_entry', `select public.delete_contest_entry(2026, 'GR')`],
+    ['upsert_contest_entry on an archived year', `select public.upsert_contest_entry(2025, 'AT', '{"total_points":1}'::jsonb)`],
+    ['delete_contest_entry on an archived year', `select public.delete_contest_entry(2025, 'AT')`],
     ['start_contest', `select public.start_contest(2026)`],
     ['finalize_contest', `select public.finalize_contest(2026)`],
     ['archive_contest', `select public.archive_contest(2026)`],
