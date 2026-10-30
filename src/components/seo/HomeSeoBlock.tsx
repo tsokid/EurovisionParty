@@ -66,7 +66,7 @@ export default function HomeSeoBlock() {
           </h1>
           <p className="mt-5 text-lg text-white/75 max-w-2xl mx-auto leading-relaxed">
             <strong className="text-white">{t('homeSeo.leadStrong')}</strong>
-            {t('homeSeo.leadRest', { year: year ?? '' })}
+            {t('homeSeo.leadRest', { year })}
           </p>
         </header>
 

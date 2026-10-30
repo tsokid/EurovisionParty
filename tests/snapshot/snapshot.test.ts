@@ -118,9 +118,8 @@ describe('buildSnapshotFiles', () => {
     // Sorted keys, 2-space indent, trailing newline.
     const site = a['content/site.json'];
     expect(site.endsWith('}\n')).toBe(true);
-    expect(site).toBe(
-      '{\n  "current_year": 2026,\n  "generated_at": "2026-11-01T12:00:00Z",\n  "live_stage": "finalized"\n}\n',
-    );
+    expect(site.startsWith('{\n  "current": {\n    "city": "Vienna",\n')).toBe(true);
+    expect(site).toContain('\n  "current_year": 2026,\n  "generated_at": "2026-11-01T12:00:00Z",\n  "live_stage": "finalized"\n}\n');
     const keys = Object.keys(JSON.parse(a['content/contests/2025.json']));
     expect(keys).toEqual([...keys].sort());
   });
@@ -153,14 +152,32 @@ describe('buildSnapshotFiles', () => {
   it('site.json current_year is the live contest', () => {
     const files = buildSnapshotFiles(input());
     const site = JSON.parse(files['content/site.json']) as SiteSnapshot;
-    expect(site).toEqual({ current_year: 2026, live_stage: 'finalized', generated_at: GENERATED_AT });
+    expect(site).toEqual({
+      current_year: 2026,
+      live_stage: 'finalized',
+      generated_at: GENERATED_AT,
+      current: {
+        year: 2026,
+        city: 'Vienna',
+        city_slug: 'vienna',
+        dates: { semi1: '2026-05-10', semi2: '2026-05-12', final: '2026-05-14' },
+        stage: 'finalized',
+        host: { iso: 'AT', name_en: 'Austria', name_el: 'Αυστρία' },
+        entry_count: 2,
+        finalist_count: 1,
+      },
+    });
 
     // 'current' counts as live too, even when it is not the latest year.
     const current = buildSnapshotFiles({
       ...input(),
       contests: [contest(2025, 'Basel', 'AT', 'current'), contest(2026, 'Vienna', 'AT', 'upcoming'), ...contests.filter((c) => c.year < 2025)],
     });
-    expect(JSON.parse(current['content/site.json'])).toMatchObject({ current_year: 2025, live_stage: 'current' });
+    expect(JSON.parse(current['content/site.json'])).toMatchObject({
+      current_year: 2025,
+      live_stage: 'current',
+      current: { year: 2025, city: 'Basel', stage: 'current', entry_count: 3, finalist_count: 3 },
+    });
 
     // Two live contests break the one_live_contest invariant.
     expect(() =>
@@ -314,10 +331,18 @@ describe('build-local', () => {
     expect(paths.filter((p) => /^content\/countries\/[A-Z]{2}\.json$/.test(p))).toHaveLength(52);
     expect(paths).toContain('content/contests/index.json');
     expect(paths).toContain('content/countries/index.json');
-    expect(JSON.parse(files['content/site.json'])).toEqual({
+    expect(JSON.parse(files['content/site.json'])).toMatchObject({
       current_year: 2026,
       live_stage: 'finalized',
       generated_at: '1970-01-01T00:00:00Z',
+      current: {
+        year: 2026,
+        city: 'Vienna',
+        dates: { semi1: '2026-05-12', semi2: '2026-05-14', final: '2026-05-16' },
+        host: { iso: 'AT', name_en: 'Austria', name_el: 'Αυστρία' },
+        entry_count: 35,
+        finalist_count: 25,
+      },
     });
   });
 

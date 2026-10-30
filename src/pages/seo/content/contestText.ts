@@ -27,6 +27,8 @@ export interface ContestText {
   flag: string;
   /** Competing countries. */
   lineup: number;
+  /** The final has been decided (stage finalized or archived): copy uses the past tense. */
+  decided: boolean;
 }
 
 export type ContestTexts = Record<Locale, ContestText>;
@@ -70,6 +72,7 @@ function text(cc: CurrentContest, locale: Locale): ContestText {
     finalMonth: final ? MONTHS_STANDALONE[locale][Number(final.slice(5, 7)) - 1] : '',
     flag: flagEmoji(cc.hostIso),
     lineup: cc.lineupSize,
+    decided: cc.stage === 'finalized' || cc.stage === 'archived',
   };
 }
 

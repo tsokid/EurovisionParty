@@ -51,8 +51,16 @@ export const COUNTRY_INDEXABLE_MIN = 3;
 
 const byIso = (a: { iso: string }, b: { iso: string }) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0);
 
-/** The site's current year: the live contest (current or finalized), else the latest non-archived, else the latest. */
-function siteSnapshot(contests: ContestRow[], generated_at: string): SiteSnapshot {
+/**
+ * The site's current year: the live contest (current or finalized), else the
+ * latest non-archived, else the latest; plus that contest's facts (`current`).
+ */
+function siteSnapshot(
+  contests: ContestRow[],
+  countries: Map<string, CountryRow>,
+  entriesByYear: Map<number, EntryRow[]>,
+  generated_at: string,
+): SiteSnapshot {
   if (contests.length === 0) throw new Error('buildSnapshotFiles: no contests');
   const live = contests.filter((c) => c.stage === 'current' || c.stage === 'finalized');
   if (live.length > 1) {
@@ -61,7 +69,23 @@ function siteSnapshot(contests: ContestRow[], generated_at: string): SiteSnapsho
   const latest = (xs: ContestRow[]) => xs.reduce((a, b) => (b.year > a.year ? b : a));
   const notArchived = contests.filter((c) => c.stage !== 'archived');
   const pick = live[0] ?? (notArchived.length ? latest(notArchived) : latest(contests));
-  return { current_year: pick.year, live_stage: pick.stage, generated_at };
+  const entries = entriesByYear.get(pick.year) ?? [];
+  const host = pick.host_iso ? countries.get(pick.host_iso) : undefined;
+  return {
+    current_year: pick.year,
+    live_stage: pick.stage,
+    current: {
+      year: pick.year,
+      city: pick.city,
+      city_slug: pick.city_slug,
+      dates: { semi1: pick.semi1_date, semi2: pick.semi2_date, final: pick.final_date },
+      stage: pick.stage,
+      host: host ? { iso: host.iso, name_en: host.name_en, name_el: host.name_el } : null,
+      entry_count: entries.length,
+      finalist_count: entries.filter((e) => e.in_final).length,
+    },
+    generated_at,
+  };
 }
 
 export function buildSnapshotFiles(input: SnapshotInput): Record<string, string> {
@@ -181,6 +205,6 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
   }
   files['content/countries/index.json'] = stableJson(countryIndex);
 
-  files['content/site.json'] = stableJson(siteSnapshot(input.contests, input.generated_at));
+  files['content/site.json'] = stableJson(siteSnapshot(input.contests, countries, entriesByYear, input.generated_at));
   return files;
 }

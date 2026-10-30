@@ -103,7 +103,7 @@ export function formatDate(iso: string, locale: Locale): string {
   return `${d} ${MONTHS[locale][m - 1]} ${y}`;
 }
 
-/** Day and month, no year: "16 May". */
+/** Day and month, no year: "17 May". */
 export function formatDay(iso: string, locale: Locale): string {
   const { m, d } = parts(iso);
   return `${d} ${MONTHS[locale][m - 1]}`;

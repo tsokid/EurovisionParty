@@ -13,11 +13,11 @@ import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/eurovisionGamesCopy';
 import { contestTexts } from './content/contestText';
-import CurrentContestGate from '../../components/seo/CurrentContestGate';
-import type { CurrentContest } from '../../lib/currentContest';
+import { useCurrentContest } from '../../lib/currentContest';
 
-function EurovisionGamesBody({ cc }: { cc: CurrentContest }) {
+export default function EurovisionGamesPage() {
   const locale = useLocale();
+  const cc = useCurrentContest();
   const c = copyAll(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
@@ -25,8 +25,8 @@ function EurovisionGamesBody({ cc }: { cc: CurrentContest }) {
     { label: c.crumbs.current, href: '/eurovision-games' },
   ];
 
-  const PUBLISHED = '2026-04-30T00:00:00Z';
-  const MODIFIED = '2026-04-30T00:00:00Z';
+  const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
+  const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
 
   const article = {
     '@context': 'https://schema.org',
@@ -187,8 +187,4 @@ function EurovisionGamesBody({ cc }: { cc: CurrentContest }) {
       <SiteFooter />
     </>
   );
-}
-
-export default function EurovisionGamesPage() {
-  return <CurrentContestGate page={(cc) => <EurovisionGamesBody cc={cc} />} />;
 }

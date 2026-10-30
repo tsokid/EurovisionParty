@@ -177,7 +177,7 @@ export const copy: Record<Locale, TriviaCopy> = {
       {
         q: "What was Conchita Wurst\u2019s winning song in 2014?",
         options: ['Heroes', 'Rise Like a Phoenix', 'Euphoria', 'Toy'],
-        answer: 'Rise Like a Phoenix (Austria, 2014).',
+        answer: 'Rise Like a Phoenix (Austria, 2014).', // fact: Austria's 2014 winning song
       },
       {
         q: 'Which country withdrew from Eurovision after winning multiple early contests, then returned in 2011?',
@@ -332,7 +332,7 @@ export const copy: Record<Locale, TriviaCopy> = {
       {
         q: 'Ποιο ήταν το νικητήριο τραγούδι της Conchita Wurst το 2014;',
         options: ['Heroes', 'Rise Like a Phoenix', 'Euphoria', 'Toy'],
-        answer: 'Rise Like a Phoenix (Αυστρία, 2014).',
+        answer: 'Rise Like a Phoenix (Αυστρία, 2014).', // fact: Austria's 2014 winning song
       },
       {
         q: 'Ποια χώρα αποχώρησε από την Eurovision αφού κέρδισε αρκετές φορές στις πρώτες δεκαετίες, και επέστρεψε το 2011;',

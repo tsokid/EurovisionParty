@@ -74,6 +74,10 @@ export function checkPrerender(
     }
     const canonical = canonicalOf(html);
     if (canonical !== url) errors.push(`canonical mismatch: ${url} has canonical ${canonical ?? '(none)'}`);
+    // ContentPending marks a page rendered without its content file (loading,
+    // missing or error): never acceptable in a prerendered page.
+    const state = /\bdata-content-state="([a-z]+)"/.exec(html);
+    if (state) errors.push(`page rendered in content state "${state[1]}" (a content file is missing): ${url}`);
   }
   return errors;
 }

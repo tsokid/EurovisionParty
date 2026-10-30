@@ -20,8 +20,8 @@ export default function FAQPage() {
     { label: c.crumbs.current, href: '/faq' },
   ];
 
-  const PUBLISHED = '2026-04-30T00:00:00Z';
-  const MODIFIED = '2026-04-30T00:00:00Z';
+  const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
+  const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
 
   // FAQPage schema must include every Q&A — anchored + accordion combined.
   const allFaq = [...c.anchored.map((a) => ({ q: a.q, a: a.a })), ...c.more];

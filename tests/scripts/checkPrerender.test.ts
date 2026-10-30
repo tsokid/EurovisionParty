@@ -74,3 +74,18 @@ describe('checkPrerender: non-indexable pages', () => {
     expect(checkPrerender([...good(), p], locs, true, [MA])).toEqual([]);
   });
 });
+
+describe('checkPrerender: pages built without their content', () => {
+  it('flags a page rendered in the ContentPending state (missing contest file)', async () => {
+    const { renderToString } = await import('react-dom/server');
+    const { createElement } = await import('react');
+    const { ContentPending } = await import('../../src/pages/contest/ContentPending');
+    for (const retry of [undefined, () => {}]) {
+      const body = renderToString(createElement(ContentPending, { locale: 'en', retry, inline: true }));
+      const pages = good().map((p) => (p.url.endsWith('/faq') ? { ...p, html: p.html.replace('<body></body>', `<body>${body}</body>`) } : p));
+      const errors = checkPrerender(pages, locs, true);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toMatch(/content state "(pending|error)".*\/en\/faq$/);
+    }
+  });
+});

@@ -43,9 +43,8 @@ export default function WelcomeScreen({
 }: WelcomeScreenProps) {
   const { t } = useTranslation();
   const locale = useLocale();
-  // The live contest (client-rendered: null until site.json + contests/{year}.json are cached).
-  const cc = useCurrentContest();
-  const live = cc ? contestTexts(cc)[locale] : null;
+  // The live contest's facts from site.json (bundled on the client: always ready).
+  const live = contestTexts(useCurrentContest())[locale];
 
   return (
     <div className="min-h-[calc(100svh-5rem)] sm:min-h-[calc(100svh-6rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-3 sm:py-5 lg:py-8 relative overflow-hidden">
@@ -98,11 +97,9 @@ export default function WelcomeScreen({
               <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight bg-gradient-to-br from-white via-euro-purple-light to-euro-pink bg-clip-text text-transparent">
                 ♪ EuroVision
               </span>
-              {live && (
-                <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight text-euro-gold glow-text-gold">
-                  {live.year}
-                </span>
-              )}
+              <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight text-euro-gold glow-text-gold">
+                {live.year}
+              </span>
             </div>
 
             {/* Event name + category */}
@@ -113,12 +110,10 @@ export default function WelcomeScreen({
             </p>
 
             {/* Location pill */}
-            {live && (
-              <div className="mt-2 sm:mt-4 inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-xs sm:text-sm font-semibold text-white/65">
-                <span className="w-1.5 h-1.5 rounded-full bg-euro-green shadow-[0_0_8px_#34d399] animate-pulse" />
-                {t('welcome.location', { city: live.city, month: live.finalMonth, year: live.year, flag: live.flag })}
-              </div>
-            )}
+            <div className="mt-2 sm:mt-4 inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-xs sm:text-sm font-semibold text-white/65">
+              <span className="w-1.5 h-1.5 rounded-full bg-euro-green shadow-[0_0_8px_#34d399] animate-pulse" />
+              {t('welcome.location', { city: live.city, month: live.finalMonth, year: live.year, flag: live.flag })}
+            </div>
           </motion.div>
 
           {/* ─── E — Rooms (mobile order-2, desktop col-2 row-2) ─── */}

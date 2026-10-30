@@ -127,11 +127,20 @@ describe('entry-server render', () => {
     expect((await render('/en/eurovision-2026-predictions')).status).toBe(404);
   });
 
-  it('every static page inlines site.json for the nav, and the nav links the renamed pages', async () => {
+  it('guide pages inline only site.json (predictions adds the contest file; winners its index)', async () => {
     for (const { path } of allPageUrls()) {
       const r = await render(path);
-      expect(r.content['site.json'], path).toBeDefined();
-      expect(r.html, path).not.toContain('eurovision-2026-predictions');
+      const files = Object.keys(r.content).sort();
+      if (path.endsWith('/eurovision-predictions')) expect(files, path).toEqual(['contests/2026.json', 'site.json']);
+      else if (path.endsWith('/winners')) expect(files, path).toEqual(['contests/index.json', 'site.json']);
+      else expect(files, path).toEqual(['site.json']);
+      expect(r.html, path).not.toContain('data-content-state');
+    }
+  }, 60_000);
+
+  it('the nav links the renamed pages', async () => {
+    for (const { path } of allPageUrls()) {
+      expect((await render(path)).html, path).not.toContain('eurovision-2026-predictions');
     }
     const en = await render('/en/faq');
     expect(en.html).toContain('href="/en/eurovision-predictions"');

@@ -1,6 +1,7 @@
 // @vitest-environment node
-// Guide copy, locale strings and the site chrome must not hardcode the live
-// contest (year, city): those facts come from useCurrentContest(). A line may
+// Guide copy and pages, locale strings and the site chrome must not hardcode
+// the live contest (year, city, host, final date, venue, broadcaster): those
+// facts come from useCurrentContest(). A line may
 // keep a dated past fact only when it, or the line above it, carries a
 // `// fact:` marker saying which fact it is.
 import { describe, it, expect } from 'vitest';
@@ -8,7 +9,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(__dirname, '../..');
-const PATTERN = /2026|Vienna|Βιέννη/;
+const PATTERN = /2026|Vienna|Βιέννη|Austria|Αυστρία|16 May|16 Μαΐου|Stadthalle|\bORF\b/;
 const MARKER = /\/\/ fact:/;
 
 function walk(dir: string): string[] {
@@ -19,7 +20,7 @@ function walk(dir: string): string[] {
 }
 
 const FILES = [
-  ...walk(path.join(root, 'src/pages')).filter((f) => /Copy\.ts$/.test(f)),
+  ...walk(path.join(root, 'src/pages')).filter((f) => /(Copy\.ts|Page\.tsx)$/.test(f)),
   ...walk(path.join(root, 'src/i18n/locales')).filter((f) => f.endsWith('.json')),
   path.join(root, 'src/components/seo/SiteHeader.tsx'),
   path.join(root, 'src/components/seo/SiteFooter.tsx'),
@@ -29,12 +30,12 @@ const FILES = [
 describe('no hardcoded live-contest year or city', () => {
   it('covers the guide copy files', () => {
     const names = FILES.map((f) => path.basename(f));
-    for (const n of ['eurovisionNightCopy.ts', 'predictionsCopy.ts', 'homeCopy.ts', 'en.json', 'el.json']) {
+    for (const n of ['eurovisionNightCopy.ts', 'predictionsCopy.ts', 'homeCopy.ts', 'PredictionsPage.tsx', 'HomePage.tsx', 'en.json', 'el.json']) {
       expect(names).toContain(n);
     }
   });
 
-  it('every 2026 / Vienna / Βιέννη line carries a // fact: marker', () => {
+  it('every line naming the live year, city, host, date, venue or broadcaster carries a // fact: marker', () => {
     const hits: string[] = [];
     for (const f of FILES) {
       const lines = readFileSync(f, 'utf8').split('\n');

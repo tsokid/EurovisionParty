@@ -101,12 +101,32 @@ export type CountrySnapshot = {
   participations: CountryParticipation[];
 };
 
+/**
+ * The live contest's yearly facts, inlined in site.json so the guide pages,
+ * nav and game UI never need the 20 KB contest file.
+ */
+export type SiteCurrentContest = {
+  year: number;
+  city: string;
+  city_slug: string;
+  dates: { semi1: string | null; semi2: string | null; final: string | null };
+  stage: ContestStage;
+  /** Host country (its names come from the countries table); null when unknown. */
+  host: { iso: string; name_en: string; name_el: string } | null;
+  /** Competing countries. */
+  entry_count: number;
+  /** Countries in the grand final (0 until known). */
+  finalist_count: number;
+};
+
 /** content/site.json. */
 export type SiteSnapshot = {
   /** The contest in stage current or finalized (else the latest non-archived, else the latest). */
   current_year: number;
   /** That contest's stage. */
   live_stage: ContestStage;
+  /** That contest's facts (same contest as current_year). */
+  current: SiteCurrentContest;
   generated_at: string;
 };
 

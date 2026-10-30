@@ -7,9 +7,11 @@ import DataTable from '../../components/seo/DataTable';
 import FaqAccordion from '../../components/seo/FaqAccordion';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
-import CurrentContestGate from '../../components/seo/CurrentContestGate';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
-import type { CurrentContest } from '../../lib/currentContest';
+import { contestPath, useCurrentContest, type CurrentContest } from '../../lib/currentContest';
+import type { ContestSnapshot } from '../../content/contests/types';
+import { useContent } from '../../lib/seo/useContent';
+import { ContentPending } from '../contest/ContentPending';
 import type { Locale } from '../../lib/seo/locale';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
@@ -20,19 +22,35 @@ import { visibleTable } from '../contest/table';
 import { copy as copyFor } from './content/predictionsCopy';
 import { contestTexts } from './content/contestText';
 
-const PUBLISHED = '2026-04-30T00:00:00Z';
-/** The build day: the line-up block changes with every content publish. */
+// fact: date the page was first published
+const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
+/** The build day (shared by both builds, see vite.config.ts): the line-up block changes with every content publish. */
 const MODIFIED = `${import.meta.env.VITE_BUILD_DATE ?? new Date().toISOString().slice(0, 10)}T00:00:00Z`;
 
-/** The final is decided: the line-up block shows the ranking with places. */
-const hasResults = (cc: CurrentContest): boolean =>
-  (cc.stage === 'finalized' || cc.stage === 'archived') && cc.entries.some((e) => e.final_place != null);
+const reload = () => window.location.reload();
 
+/**
+ * The live contest's entries: the only part of a guide page that needs
+ * contests/{year}.json (inlined on the prerendered page, fetched on client
+ * navigation). Loading shows a placeholder; a missing file shows the
+ * error/retry state, which the prerender check rejects.
+ */
 function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
   const c = copyFor(contestTexts(cc))[locale].sections.lineup;
   const h = hubCopy[locale].headers;
+  const file = useContent<ContestSnapshot>(contestPath(cc.year));
 
-  if (cc.entries.length === 0) {
+  if (file.status !== 'ready') {
+    const retry = file.status === 'error' ? file.retry : file.status === 'missing' ? reload : undefined;
+    return (
+      <Section id="lineup" title={c.title}>
+        <ContentPending locale={locale} retry={retry} inline />
+      </Section>
+    );
+  }
+  const entries = file.data.entries;
+
+  if (entries.length === 0) {
     return (
       <Section id="lineup" title={c.title}>
         <p>{c.empty}</p>
@@ -40,10 +58,11 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
     );
   }
 
-  if (hasResults(cc)) {
+  // The final is decided: the ranking with places.
+  if ((cc.stage === 'finalized' || cc.stage === 'archived') && entries.some((e) => e.final_place != null)) {
     // Finalists by place, then the semi-final non-qualifiers by country name.
-    const finalists = cc.entries.filter((e) => e.final_place != null).sort((a, b) => a.final_place! - b.final_place!);
-    const others = byCountry(cc.entries.filter((e) => e.final_place == null), locale);
+    const finalists = entries.filter((e) => e.final_place != null).sort((a, b) => a.final_place! - b.final_place!);
+    const others = byCountry(entries.filter((e) => e.final_place == null), locale);
     const table = visibleTable([...finalists, ...others], [
       { header: h.place, value: (e) => (e.final_place != null ? numCell(e.final_place) : c.notInFinal), align: 'right' },
       { header: h.country, value: (e) => countryCell(e, locale) },
@@ -59,7 +78,7 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
     );
   }
 
-  const names = cc.entries
+  const names = entries
     .map((e) => (e.iso === cc.hostIso ? `${countryName(e, locale)}${c.hostSuffix}` : countryName(e, locale)))
     .sort(compareText);
   return (
@@ -75,8 +94,9 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
   );
 }
 
-function PredictionsBody({ cc }: { cc: CurrentContest }) {
+export default function PredictionsPage() {
   const locale = useLocale();
+  const cc = useCurrentContest();
   const c = copyFor(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
@@ -218,8 +238,4 @@ function PredictionsBody({ cc }: { cc: CurrentContest }) {
       <SiteFooter />
     </>
   );
-}
-
-export default function PredictionsPage() {
-  return <CurrentContestGate page={(cc) => <PredictionsBody cc={cc} />} />;
 }

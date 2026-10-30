@@ -71,8 +71,8 @@ export default function WinnersPage() {
     { label: c.crumbs.winners, href: '/winners' },
   ];
 
-  const PUBLISHED = '2026-04-30T00:00:00Z';
-  const MODIFIED = '2026-04-30T00:00:00Z';
+  const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
+  const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
 
   const article = {
     '@context': 'https://schema.org',

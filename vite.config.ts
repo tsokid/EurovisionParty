@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { execSync } from 'node:child_process'
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url))
 const CONTENT_DIR = path.join(ROOT, 'content')
@@ -58,8 +59,21 @@ function contentPlugin(isSsrBuild: boolean): Plugin {
   }
 }
 
-/** Build day (UTC), shared by the client and SSR builds: e.g. a guide page's dateModified. */
-const BUILD_DATE = new Date().toISOString().slice(0, 10)
+/**
+ * Build date for e.g. a guide page's dateModified: the HEAD commit's date
+ * (YYYY-MM-DD), so the client and SSR builds (separate processes) and any
+ * rebuild of the same commit agree. Today (UTC) only outside a git checkout.
+ */
+function buildDate(): string {
+  try {
+    const d = execSync('git log -1 --format=%cs', { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d
+  } catch {
+    // not a git checkout
+  }
+  return new Date().toISOString().slice(0, 10)
+}
+const BUILD_DATE = buildDate()
 
 export default defineConfig(({ isSsrBuild }) => ({
   define: {

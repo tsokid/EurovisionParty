@@ -1,4 +1,22 @@
 {
+  "current": {
+    "city": "Vienna",
+    "city_slug": "vienna",
+    "dates": {
+      "final": "2026-05-16",
+      "semi1": "2026-05-12",
+      "semi2": "2026-05-14"
+    },
+    "entry_count": 35,
+    "finalist_count": 25,
+    "host": {
+      "iso": "AT",
+      "name_el": "Αυστρία",
+      "name_en": "Austria"
+    },
+    "stage": "finalized",
+    "year": 2026
+  },
   "current_year": 2026,
   "generated_at": "1970-01-01T00:00:00Z",
   "live_stage": "finalized"

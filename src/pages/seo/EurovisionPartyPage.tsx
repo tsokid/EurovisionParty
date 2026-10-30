@@ -12,8 +12,7 @@ import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/eurovisionPartyCopy';
 import { contestTexts } from './content/contestText';
-import CurrentContestGate from '../../components/seo/CurrentContestGate';
-import type { CurrentContest } from '../../lib/currentContest';
+import { useCurrentContest } from '../../lib/currentContest';
 
 /** `YYYY-MM-DD` + 1 day (UTC). */
 function nextDay(iso: string): string {
@@ -21,8 +20,9 @@ function nextDay(iso: string): string {
   return new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10);
 }
 
-function EurovisionPartyBody({ cc }: { cc: CurrentContest }) {
+export default function EurovisionPartyPage() {
   const locale = useLocale();
+  const cc = useCurrentContest();
   const c = copyAll(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
@@ -30,8 +30,8 @@ function EurovisionPartyBody({ cc }: { cc: CurrentContest }) {
     { label: c.crumbs.current, href: '/eurovision-party' },
   ];
 
-  const PUBLISHED = '2026-04-30T00:00:00Z';
-  const MODIFIED = '2026-04-30T00:00:00Z';
+  const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
+  const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
 
   const article = {
     '@context': 'https://schema.org',
@@ -216,8 +216,4 @@ function EurovisionPartyBody({ cc }: { cc: CurrentContest }) {
       <SiteFooter />
     </>
   );
-}
-
-export default function EurovisionPartyPage() {
-  return <CurrentContestGate page={(cc) => <EurovisionPartyBody cc={cc} />} />;
 }

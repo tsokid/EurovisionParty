@@ -97,7 +97,7 @@ export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, Predictions
       chip: 'Predictions game',
       title: 'Eurovision predictions game — Top 5 and Worst 5 format',
       lede:
-        `Eurovision ${t.year} takes place ${t.cityIn}${t.host ? `, ${t.host}` : ''}, with the grand final on ${t.finalDay}. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before the show starts, then watches them auto-score against the official jury and televote results in real time.`,
+        `Eurovision ${t.year} ${t.decided ? 'took place' : 'takes place'} ${t.cityIn}${t.host ? `, ${t.host}` : ''}, with the grand final on ${t.finalDay}. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before the show starts, then watches them auto-score against the official jury and televote results in real time.`,
     },
     sections: {
       lineup: {
@@ -107,7 +107,7 @@ export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, Predictions
         runningOrder:
           'The grand-final running order is fixed after the second semi-final; this page updates with live entries as they are confirmed.',
         resultsTitle: `Eurovision ${t.year} final ranking`,
-        resultsIntro: `Eurovision ${t.year} is decided. Here is the final ranking of all ${t.lineup} countries, so you can check your Top 5 and Worst 5:`,
+        resultsIntro: `Eurovision ${t.year} is decided. Here is the final ranking, plus the countries out in the semi-finals, so you can check your Top 5 and Worst 5:`,
         notInFinal: 'Semi-final',
         empty: `The Eurovision ${t.year} line-up is not confirmed yet; this page lists the entries as soon as it is.`,
       },
@@ -221,7 +221,7 @@ export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, Predictions
       chip: 'Παιχνίδι προβλέψεων',
       title: 'Παιχνίδι προβλέψεων Eurovision — Φόρμα Top 5 και Worst 5',
       lede:
-        `Η Eurovision ${g.year} διεξάγεται ${g.cityIn}${g.host ? ` (${g.host})` : ''}, με τον μεγάλο τελικό το ${g.finalDay}. Στο Eurovision Games κάθε παίκτης φτιάχνει δύο λίστες προβλέψεων — Top 5 και Worst 5 — πριν ξεκινήσει η εκπομπή, και τις βλέπει να βαθμολογούνται αυτόματα σε πραγματικό χρόνο με βάση τα επίσημα αποτελέσματα κριτικής επιτροπής και televote.`,
+        `Η Eurovision ${g.year} ${g.decided ? 'διεξήχθη' : 'διεξάγεται'} ${g.cityIn}${g.host ? ` (${g.host})` : ''}, με τον μεγάλο τελικό το ${g.finalDay}. Στο Eurovision Games κάθε παίκτης φτιάχνει δύο λίστες προβλέψεων — Top 5 και Worst 5 — πριν ξεκινήσει η εκπομπή, και τις βλέπει να βαθμολογούνται αυτόματα σε πραγματικό χρόνο με βάση τα επίσημα αποτελέσματα κριτικής επιτροπής και televote.`,
     },
     sections: {
       lineup: {
@@ -229,7 +229,7 @@ export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, Predictions
         intro: `${g.lineup} χώρες έχουν επιβεβαιωθεί για την Eurovision ${g.year} σε δύο ημιτελικούς και τον μεγάλο τελικό:`,
         hostSuffix: ' (οικοδεσπότης)',
         resultsTitle: `Η τελική κατάταξη της Eurovision ${g.year}`,
-        resultsIntro: `Η Eurovision ${g.year} κρίθηκε. Αυτή είναι η τελική κατάταξη και των ${g.lineup} χωρών, για να ελέγξεις το Top 5 και το Worst 5 σου:`,
+        resultsIntro: `Η Eurovision ${g.year} κρίθηκε. Αυτή είναι η τελική κατάταξη, μαζί με τις χώρες που αποκλείστηκαν στους ημιτελικούς, για να ελέγξεις το Top 5 και το Worst 5 σου:`,
         notInFinal: 'Ημιτελικός',
         empty: `Οι συμμετοχές της Eurovision ${g.year} δεν έχουν επιβεβαιωθεί ακόμη· η σελίδα τις δείχνει μόλις ανακοινωθούν.`,
         runningOrder:

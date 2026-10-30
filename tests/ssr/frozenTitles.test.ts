@@ -22,18 +22,20 @@ const RENAMED: Record<string, string> = {
  * Allowed differences, by new URL and field, with the new value:
  * - predictions: the page is renamed; its title drops "2026" (Task 7). The
  *   description keeps its wording, templated on the live contest.
- * - /winners description: templated on the latest winner year in Task 6, so it
- *   is not compared; EL also fixes the typo "αιώνιο πίνακας" → "αιώνιος πίνακας".
+ * - /el/winners description: fixes the typo "αιώνιο πίνακας" → "αιώνιος πίνακας".
+ *   (/en/winners is compared like every other page.)
  */
-const EXCEPTIONS: Record<string, Partial<Record<'title' | 'description', string | 'not-compared'>>> = {
+const EXCEPTIONS: Record<string, Partial<Record<'title' | 'description', string>>> = {
   '/en/eurovision-predictions': {
     title: 'Eurovision Predictions Game: Top 5 / Worst 5 Format & Strategy',
   },
   '/el/eurovision-predictions': {
     title: 'Παιχνίδι Προβλέψεων Eurovision: Φόρμα Top 5 / Worst 5 και Στρατηγική',
   },
-  '/en/winners': { description: 'not-compared' },
-  '/el/winners': { description: 'not-compared' },
+  '/el/winners': {
+    description:
+      'Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το 2026. Πρόσφατοι πρωταθλητές, αιώνιος πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές.',
+  },
 };
 
 describe('frozen static page titles and descriptions', () => {
@@ -51,7 +53,6 @@ describe('frozen static page titles and descriptions', () => {
       for (const field of ['title', 'description'] as const) {
         const got = r.head?.[field];
         const ex = EXCEPTIONS[url]?.[field];
-        if (ex === 'not-compared') continue;
         const expected = ex ?? want[field];
         if (got !== expected) diffs.push(`${url} ${field}:\n  want ${expected}\n  got  ${got}`);
       }
