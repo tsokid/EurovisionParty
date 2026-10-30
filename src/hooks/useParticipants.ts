@@ -51,14 +51,17 @@ export interface UseParticipants {
 const COLUMNS = "iso, name_en, name_el, artist, song, final_running_order";
 
 export function useParticipants(year?: number): UseParticipants {
-  const [participants, setParticipants] = useState<Country[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState<UseParticipants["source"]>("loading");
+  // The loaded lineup, tagged with the year it was loaded for, so a year
+  // change reads as loading until the new lineup arrives.
+  const key = year ?? "live";
+  const [loaded, setLoaded] = useState<{
+    key: number | "live";
+    participants: Country[];
+    source: "db" | "hardcoded";
+  } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setSource("loading");
     const query =
       year === undefined
         ? supabase.from("current_participants").select(COLUMNS).order("name_en")
@@ -70,28 +73,27 @@ export function useParticipants(year?: number): UseParticipants {
             .order("name_en");
     query.then(({ data, error }) => {
       if (cancelled) return;
+      const k = year ?? "live";
       if (!error && Array.isArray(data) && data.length > 0) {
-        setParticipants((data as DbRow[]).map(fromDbRow));
-        setSource("db");
+        setLoaded({ key: k, participants: (data as DbRow[]).map(fromDbRow), source: "db" });
       } else if (year === undefined || year === 2026) {
         // Empty or query error — fall back so 2026 flows still work
         // while the parser hasn't published yet.
-        setParticipants(COUNTRIES_2026);
-        setSource("hardcoded");
+        setLoaded({ key: k, participants: COUNTRIES_2026, source: "hardcoded" });
       } else {
         // Any other year has no hardcoded lineup.
-        setParticipants([]);
-        setSource("db");
+        setLoaded({ key: k, participants: [], source: "db" });
       }
-      setLoading(false);
     });
     return () => { cancelled = true; };
   }, [year]);
 
+  const ready = loaded !== null && loaded.key === key;
+  const participants = useMemo(() => (ready ? loaded.participants : []), [ready, loaded]);
   const byId = useMemo(
     () => new Map(participants.map((c) => [c.id, c])),
     [participants],
   );
 
-  return { participants, byId, loading, source };
+  return { participants, byId, loading: !ready, source: ready ? loaded.source : "loading" };
 }
