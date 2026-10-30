@@ -135,7 +135,9 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
 
-  // Year: the parse job's year, else the live contest year (RPC).
+  // Year: always the live contest year (RPC). The ranking list comes from
+  // current_participants (live year), so the RPCs must target that year
+  // too, whatever year the parse job belongs to.
   const [liveYear, setLiveYear] = useState<number | null>(null);
   useEffect(() => {
     let cancelled = false;
@@ -144,7 +146,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
       .catch((e) => { if (!cancelled) setErr(formatError(e)); });
     return () => { cancelled = true; };
   }, []);
-  const year = job?.year ?? liveYear;
+  const year = liveYear;
   const requireYear = useCallback((): number => {
     if (year == null) throw new Error("Contest year not loaded yet");
     return year;
