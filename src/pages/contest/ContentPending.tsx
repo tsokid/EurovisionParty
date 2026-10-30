@@ -4,13 +4,16 @@ import { hubCopy } from './content/hubCopy';
 /**
  * Placeholder while a content file loads on client-side navigation, or the
  * error state (with retry) when it could not be fetched. Prerendered pages
- * never show it: their content is inlined.
+ * never show it: their content is inlined. `inline` renders it inside a page
+ * section instead of as the page body.
  */
-export function ContentPending({ locale, retry }: { locale: Locale; retry?: () => void }) {
+export function ContentPending({ locale, retry, inline = false }: { locale: Locale; retry?: () => void; inline?: boolean }) {
   const c = hubCopy[locale];
   const error = retry !== undefined;
+  const Tag = inline ? 'div' : 'main';
+  const layout = inline ? 'py-6 flex flex-col items-start gap-3' : 'min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4';
   return (
-    <main className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4" aria-busy={!error}>
+    <Tag className={layout} aria-busy={!error}>
       <p className="text-white/70 text-lg" role={error ? 'alert' : 'status'}>{error ? c.error : c.loading}</p>
       {error && (
         <button
@@ -21,6 +24,6 @@ export function ContentPending({ locale, retry }: { locale: Locale; retry?: () =
           {c.retry}
         </button>
       )}
-    </main>
+    </Tag>
   );
 }

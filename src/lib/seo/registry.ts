@@ -77,11 +77,11 @@ export function allPageUrls(registry: PageEntry[] = PAGE_REGISTRY): { locale: Lo
 }
 
 /**
- * Gate for the data-driven pages (hub, archive, countries). Off until their
- * page components exist (Task 6 flips it); while off, every consumer of
- * allPublicUrls sees exactly the static registry.
+ * Gate for the data-driven pages (hub, archive, countries). On: the prerender,
+ * sitemap, llms.txt and check-prerender all include them. Turning it off makes
+ * every consumer of allPublicUrls see exactly the static registry.
  */
-export const INCLUDE_DYNAMIC = false;
+export const INCLUDE_DYNAMIC = true;
 
 export interface PublicUrl {
   locale: Locale;

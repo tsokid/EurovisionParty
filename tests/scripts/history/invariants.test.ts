@@ -9,7 +9,6 @@ import { fileURLToPath } from 'node:url';
 import type { ContestRecord } from '../../../scripts/history/parseContest';
 import { toIso } from '../../../scripts/history/countryNames';
 import { buildMigration, loadRecords, slugify } from '../../../scripts/history/import';
-import { recentWinners } from '../../../src/pages/seo/content/winnersCopy';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, '../../..');
@@ -207,8 +206,28 @@ describe('history data: per-year invariants', () => {
   });
 });
 
-describe('history data: winners 2010–2025 match winnersCopy', () => {
-  it.each(recentWinners.en.map((row) => [Number(row[0]), row] as const))('%i', (year, row) => {
+// Hand-checked reference list (formerly hardcoded in winnersCopy.ts, which now
+// renders from the snapshot): an independent cross-check of the import.
+const KNOWN_WINNERS = [
+  ['2025', 'Austria', 'JJ', 'Wasted Love', '436'],
+  ['2024', 'Switzerland', 'Nemo', 'The Code', '591'],
+  ['2023', 'Sweden', 'Loreen', 'Tattoo', '583'],
+  ['2022', 'Ukraine', 'Kalush Orchestra', 'Stefania', '631'],
+  ['2021', 'Italy', 'Måneskin', 'Zitti e buoni', '524'],
+  ['2019', 'Netherlands', 'Duncan Laurence', 'Arcade', '498'],
+  ['2018', 'Israel', 'Netta', 'Toy', '529'],
+  ['2017', 'Portugal', 'Salvador Sobral', 'Amar pelos dois', '758'],
+  ['2016', 'Ukraine', 'Jamala', '1944', '534'],
+  ['2015', 'Sweden', 'Måns Zelmerlöw', 'Heroes', '365'],
+  ['2014', 'Austria', 'Conchita Wurst', 'Rise Like a Phoenix', '290'],
+  ['2013', 'Denmark', 'Emmelie de Forest', 'Only Teardrops', '281'],
+  ['2012', 'Sweden', 'Loreen', 'Euphoria', '372'],
+  ['2011', 'Azerbaijan', 'Ell & Nikki', 'Running Scared', '221'],
+  ['2010', 'Germany', 'Lena', 'Satellite', '246'],
+] as const;
+
+describe('history data: winners 2010–2025 match the reference list', () => {
+  it.each(KNOWN_WINNERS.map((row) => [Number(row[0]), row] as const))('%i', (year, row) => {
     const [, country, , song, points] = row;
     const winners = byYear.get(year)!.entries.filter((e) => e.final_place === 1);
     expect(winners).toHaveLength(1);
@@ -216,7 +235,7 @@ describe('history data: winners 2010–2025 match winnersCopy', () => {
   });
 
   it('covers every year 2010–2025 except 2020', () => {
-    expect(recentWinners.en.map((r) => Number(r[0])).sort()).toEqual(
+    expect(KNOWN_WINNERS.map((r) => Number(r[0])).sort()).toEqual(
       Array.from({ length: 16 }, (_, i) => 2010 + i).filter((y) => y !== 2020),
     );
   });

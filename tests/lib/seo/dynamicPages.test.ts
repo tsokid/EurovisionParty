@@ -137,12 +137,13 @@ describe('hubYearFromSlug', () => {
 });
 
 describe('allPublicUrls', () => {
-  it('the gate is off until Task 6', () => {
-    expect(INCLUDE_DYNAMIC).toBe(false);
+  it('the gate is on: the data-driven pages are public', () => {
+    expect(INCLUDE_DYNAMIC).toBe(true);
+    expect(allPublicUrls(contentData())).toEqual(allPublicUrls(contentData(), true));
   });
 
   it('with the gate off equals the static registry URLs, all indexable', () => {
-    expect(allPublicUrls(contentData())).toEqual(allPageUrls().map((u) => ({ ...u, indexable: true })));
+    expect(allPublicUrls(contentData(), false)).toEqual(allPageUrls().map((u) => ({ ...u, indexable: true })));
   });
 
   it('with dynamic pages included = static ∪ dynamic', () => {

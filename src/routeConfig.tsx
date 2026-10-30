@@ -28,6 +28,10 @@ import HubPage from './pages/contest/HubPage';
 import HubSchedulePage from './pages/contest/HubSchedulePage';
 import HubSemifinalsPage from './pages/contest/HubSemifinalsPage';
 import HubSongsPage from './pages/contest/HubSongsPage';
+import PastContestsPage from './pages/contest/PastContestsPage';
+import ArchiveYearPage from './pages/contest/ArchiveYearPage';
+import CountriesPage from './pages/contest/CountriesPage';
+import CountryPage from './pages/contest/CountryPage';
 
 /** Locale child route paths fed by content data, not PAGE_REGISTRY (excluded from route parity). */
 export const DYNAMIC_ROUTE_PATHS = [':slug', 'past-contests', 'past-contests/:slug', 'countries', 'countries/:slug'];
@@ -60,9 +64,8 @@ export const routes: RouteObject[] = [
       { path: 'cookies', element: <CookiesPage /> },
       { path: 'winners', element: <WinnersPage /> },
 
-      // Data-driven pages (src/lib/seo/dynamicPages.ts). The archive and
-      // country placeholders render NotFoundPage (404) until Task 6 replaces
-      // them; the pages render NotFoundPage for unknown params too.
+      // Data-driven pages (src/lib/seo/dynamicPages.ts). Each renders
+      // NotFoundPage (404) for a slug the content index does not know.
       // Static siblings above rank higher, so e.g. `eurovision-2026-predictions`
       // never reaches `:slug`. React Router v7 has no partial segments
       // (`eurovision-:year`), so the hub is `:slug`, parsed with hubYearFromSlug.
@@ -75,10 +78,10 @@ export const routes: RouteObject[] = [
           { path: 'songs', element: <HubSongsPage /> },
         ],
       },
-      { path: 'past-contests', element: <NotFoundPage /> },
-      { path: 'past-contests/:slug', element: <NotFoundPage /> },
-      { path: 'countries', element: <NotFoundPage /> },
-      { path: 'countries/:slug', element: <NotFoundPage /> },
+      { path: 'past-contests', element: <PastContestsPage /> },
+      { path: 'past-contests/:slug', element: <ArchiveYearPage /> },
+      { path: 'countries', element: <CountriesPage /> },
+      { path: 'countries/:slug', element: <CountryPage /> },
 
       { path: '*', element: <NotFoundPage /> },
     ],

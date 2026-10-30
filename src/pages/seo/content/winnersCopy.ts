@@ -11,89 +11,20 @@ interface WinnersCopy {
     schemaTitle: string;
     schemaDescription: string;
   };
+  /** `history` links to /past-contests. */
   crumbs: { home: string; history: string; winners: string };
   hero: { chip: string; title: string; lede: string };
   sections: {
-    recent: { title: string; intro: string; headers: { year: string; country: string; artist: string; song: string; points: string } };
+    /** `from`/`to`: the oldest and newest year in the table (from data). */
+    recent: { title: (from: number, to: number) => string; intro: (from: number) => string; headers: { year: string; country: string; artist: string; song: string; points: string } };
     leaderboard: { title: string; intro: string; headers: { country: string; wins: string; mostRecent: string } };
+    all: { title: (from: number) => string; intro: string; cancelled: string; shared: string };
     notable: { title: string; intro: string; bullets: { strong: string; rest: string }[] };
   };
   faq: FaqItem[];
   cta: { title: string; body: string; primary: string; secondary: string };
   related: { heading: string; items: RelatedCard[] };
 }
-
-// ─── Recent winners (2010-2025) — single source for both locales ──────────
-// Country names come out of getLocalizedCountryName for EL where available;
-// for the table we hardcode names per locale to keep the row table simple.
-const RECENT_EN = [
-  ['2025', 'Austria', 'JJ', 'Wasted Love', '436'],
-  ['2024', 'Switzerland', 'Nemo', 'The Code', '591'],
-  ['2023', 'Sweden', 'Loreen', 'Tattoo', '583'],
-  ['2022', 'Ukraine', 'Kalush Orchestra', 'Stefania', '631'],
-  ['2021', 'Italy', 'Måneskin', 'Zitti e buoni', '524'],
-  ['2019', 'Netherlands', 'Duncan Laurence', 'Arcade', '498'],
-  ['2018', 'Israel', 'Netta', 'Toy', '529'],
-  ['2017', 'Portugal', 'Salvador Sobral', 'Amar pelos dois', '758'],
-  ['2016', 'Ukraine', 'Jamala', '1944', '534'],
-  ['2015', 'Sweden', 'Måns Zelmerlöw', 'Heroes', '365'],
-  ['2014', 'Austria', 'Conchita Wurst', 'Rise Like a Phoenix', '290'],
-  ['2013', 'Denmark', 'Emmelie de Forest', 'Only Teardrops', '281'],
-  ['2012', 'Sweden', 'Loreen', 'Euphoria', '372'],
-  ['2011', 'Azerbaijan', 'Ell & Nikki', 'Running Scared', '221'],
-  ['2010', 'Germany', 'Lena', 'Satellite', '246'],
-];
-
-const RECENT_EL = [
-  ['2025', 'Αυστρία', 'JJ', 'Wasted Love', '436'],
-  ['2024', 'Ελβετία', 'Nemo', 'The Code', '591'],
-  ['2023', 'Σουηδία', 'Loreen', 'Tattoo', '583'],
-  ['2022', 'Ουκρανία', 'Kalush Orchestra', 'Stefania', '631'],
-  ['2021', 'Ιταλία', 'Måneskin', 'Zitti e buoni', '524'],
-  ['2019', 'Ολλανδία', 'Duncan Laurence', 'Arcade', '498'],
-  ['2018', 'Ισραήλ', 'Netta', 'Toy', '529'],
-  ['2017', 'Πορτογαλία', 'Salvador Sobral', 'Amar pelos dois', '758'],
-  ['2016', 'Ουκρανία', 'Jamala', '1944', '534'],
-  ['2015', 'Σουηδία', 'Måns Zelmerlöw', 'Heroes', '365'],
-  ['2014', 'Αυστρία', 'Conchita Wurst', 'Rise Like a Phoenix', '290'],
-  ['2013', 'Δανία', 'Emmelie de Forest', 'Only Teardrops', '281'],
-  ['2012', 'Σουηδία', 'Loreen', 'Euphoria', '372'],
-  ['2011', 'Αζερμπαϊτζάν', 'Ell & Nikki', 'Running Scared', '221'],
-  ['2010', 'Γερμανία', 'Lena', 'Satellite', '246'],
-];
-
-const LEADERBOARD_EN = [
-  ['Ireland', '7', '1996'],
-  ['Sweden', '7', '2023'],
-  ['Luxembourg', '5', '1983'],
-  ['France', '5', '1977'],
-  ['Netherlands', '5', '2019'],
-  ['United Kingdom', '5', '1997'],
-  ['Israel', '4', '2018'],
-  ['Norway', '3', '2009'],
-  ['Denmark', '3', '2013'],
-  ['Ukraine', '3', '2022'],
-  ['Italy', '3', '2021'],
-  ['Switzerland', '3', '2024'],
-];
-
-const LEADERBOARD_EL = [
-  ['Ιρλανδία', '7', '1996'],
-  ['Σουηδία', '7', '2023'],
-  ['Λουξεμβούργο', '5', '1983'],
-  ['Γαλλία', '5', '1977'],
-  ['Ολλανδία', '5', '2019'],
-  ['Ηνωμένο Βασίλειο', '5', '1997'],
-  ['Ισραήλ', '4', '2018'],
-  ['Νορβηγία', '3', '2009'],
-  ['Δανία', '3', '2013'],
-  ['Ουκρανία', '3', '2022'],
-  ['Ιταλία', '3', '2021'],
-  ['Ελβετία', '3', '2024'],
-];
-
-export const recentWinners = { en: RECENT_EN, el: RECENT_EL };
-export const leaderboard = { en: LEADERBOARD_EN, el: LEADERBOARD_EL };
 
 export const copy: Record<Locale, WinnersCopy> = {
   en: {
@@ -116,14 +47,20 @@ export const copy: Record<Locale, WinnersCopy> = {
     },
     sections: {
       recent: {
-        title: 'Recent winners (2010–2025)',
-        intro: 'Winners since 2010, with the song, performing artist, and the combined jury + televote points from the grand final. (No 2020 — the contest was cancelled due to COVID.)',
+        title: (from, to) => `Recent winners (${from}–${to})`,
+        intro: (from) => `Winners since ${from}, with the song, performing artist, and the combined jury + televote points from the grand final. (No 2020 — the contest was cancelled due to COVID.)`,
         headers: { year: 'Year', country: 'Country', artist: 'Artist', song: 'Song', points: 'Points' },
       },
       leaderboard: {
         title: 'All-time wins leaderboard',
         intro: 'Countries that have won Eurovision more than twice. Ireland and Sweden share the all-time record at 7 wins each — Sweden caught up in 2023.',
         headers: { country: 'Country', wins: 'Wins', mostRecent: 'Most recent' },
+      },
+      all: {
+        title: (from) => `Every winner since ${from}`,
+        intro: 'The full roll of honour, newest first. Pick a year for its complete results.',
+        cancelled: 'Contest cancelled',
+        shared: 'shared',
       },
       notable: {
         title: 'Notable records',
@@ -198,14 +135,20 @@ export const copy: Record<Locale, WinnersCopy> = {
     },
     sections: {
       recent: {
-        title: 'Πρόσφατοι νικητές (2010–2025)',
-        intro: 'Νικητές από το 2010, με το τραγούδι, τον καλλιτέχνη, και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό. (Δεν υπάρχει 2020 — ο διαγωνισμός ακυρώθηκε λόγω COVID.)',
+        title: (from, to) => `Πρόσφατοι νικητές (${from}–${to})`,
+        intro: (from) => `Νικητές από το ${from}, με το τραγούδι, τον καλλιτέχνη, και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό. (Δεν υπάρχει 2020 — ο διαγωνισμός ακυρώθηκε λόγω COVID.)`,
         headers: { year: 'Έτος', country: 'Χώρα', artist: 'Καλλιτέχνης', song: 'Τραγούδι', points: 'Πόντοι' },
       },
       leaderboard: {
         title: 'Αιώνιος πίνακας νικών',
         intro: 'Χώρες που έχουν κερδίσει την Eurovision περισσότερες από δύο φορές. Ιρλανδία και Σουηδία μοιράζονται το αιώνιο ρεκόρ με 7 νίκες — η Σουηδία ισοφάρισε το 2023.',
         headers: { country: 'Χώρα', wins: 'Νίκες', mostRecent: 'Πιο πρόσφατη' },
+      },
+      all: {
+        title: (from) => `Όλοι οι νικητές από το ${from}`,
+        intro: 'Ο πλήρης κατάλογος, από τον πιο πρόσφατο. Διαλέξτε χρονιά για τα πλήρη αποτελέσματά της.',
+        cancelled: 'Ο διαγωνισμός ακυρώθηκε',
+        shared: 'ισοβαθμία',
       },
       notable: {
         title: 'Αξιοσημείωτα ρεκόρ',

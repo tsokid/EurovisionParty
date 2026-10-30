@@ -14,6 +14,8 @@ vi.mock('@/lib/supabase', () => ({
 }));
 
 import { render } from '@/entry-server';
+import { allPublicUrls } from '@/lib/seo/registry';
+import { contentData } from '@/lib/seo/contentData';
 import contest2026 from '../../content/contests/2026.json';
 
 const ORIGIN = 'https://eurovision.games';
@@ -130,4 +132,243 @@ describe('contest hub pages (SSR)', () => {
     const r = await render(url);
     expect(r.status).toBe(404);
   });
+});
+
+const robots = (r: Awaited<ReturnType<typeof render>>) => r.head?.robots;
+const hrefs = (html: string) => [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+const h2s = (html: string) => [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/g)].map((m) => m[1]);
+/** The first table row containing `needle` (searching from `from`). */
+function rowWith(html: string, needle: string, from = 0): string {
+  const at = html.indexOf(needle, from);
+  if (at < 0) return '';
+  const start = html.lastIndexOf('<tr', at);
+  const end = html.indexOf('</tr>', at);
+  return start < 0 || end < 0 ? '' : html.slice(start, end);
+}
+
+describe('archive year pages (SSR)', () => {
+  it('/en/past-contests/eurovision-2019-tel-aviv: winner, final, both semis, nav', async () => {
+    const r = await render('/en/past-contests/eurovision-2019-tel-aviv');
+    expect(r.status).toBe(200);
+    expect(r.head?.title).toBe('Eurovision 2019 in Tel Aviv: final results, semi-finals & winner');
+    expect(r.head?.canonical).toBe(`${ORIGIN}/en/past-contests/eurovision-2019-tel-aviv`);
+    expect(h1(r.html)).toBe('Eurovision 2019 in Tel Aviv');
+    expect(r.html).toContain('Netherlands won Eurovision 2019 with 498 points');
+    expect(r.html).toContain('Arcade');
+    expect(r.html).toContain('Duncan Laurence');
+    expect(r.html).toContain('id="final"');
+    expect(r.html).toContain('id="semi-1"');
+    expect(r.html).toContain('id="semi-2"');
+    // Winner callout, then the final ranking, then the semis.
+    expect(r.html.indexOf('id="winner"')).toBeLessThan(r.html.indexOf('id="final"'));
+    expect(r.html.indexOf('id="final"')).toBeLessThan(r.html.indexOf('id="semi-1"'));
+    // 2019 is not indexable in the snapshot.
+    expect(robots(r)).toBe('noindex');
+    const links = hrefs(r.html);
+    expect(links).toContain('/en/past-contests/eurovision-2018-lisbon');
+    expect(links).toContain('/en/past-contests/eurovision-2020-rotterdam');
+    expect(links).toContain('/en/countries/netherlands');
+    const types = jsonLd(r).map((b) => b['@type']);
+    expect(types).toEqual(expect.arrayContaining(['Event', 'ItemList', 'BreadcrumbList']));
+    const event = jsonLd(r).find((b) => b['@type'] === 'Event')!;
+    expect(event.startDate).toBe('2019-05-18');
+    expect(Object.keys(r.content).sort()).toEqual(['contests/2019.json', 'contests/index.json']);
+  });
+
+  it('/el/past-contests/eurovision-2019-tel-aviv has the Greek title', async () => {
+    const r = await render('/el/past-contests/eurovision-2019-tel-aviv');
+    expect(r.head?.title).toBe('Eurovision 2019 στο Τελ Αβίβ: αποτελέσματα, ημιτελικοί και νικητής');
+    expect(r.html).toContain('Η Ολλανδία κέρδισε τη Eurovision 2019 με 498 βαθμούς');
+  });
+
+  it('/el/past-contests/eurovision-1975-stockholm: Greek, noindex, no semi-finals', async () => {
+    const r = await render('/el/past-contests/eurovision-1975-stockholm');
+    expect(r.status).toBe(200);
+    expect(h1(r.html)).toMatch(GREEK);
+    expect(h1(r.html)).toContain('Στοκχόλμη');
+    expect(robots(r)).toBe('noindex');
+    expect(r.html).not.toContain('id="semi-1"');
+    expect(r.html).toContain('Ολλανδία');
+    expect(r.html).toContain('href="/el/countries/netherlands"');
+  });
+
+  it('2020 is a cancelled note with the entries and no results', async () => {
+    const r = await render('/en/past-contests/eurovision-2020-rotterdam');
+    expect(r.status).toBe(200);
+    expect(r.html).toContain('id="cancelled"');
+    expect(r.html).not.toContain('id="final"');
+    expect(headerCells(r.html)).not.toContain('Points');
+    expect(headerCells(r.html)).not.toContain('Place');
+    const event = jsonLd(r).find((b) => b['@type'] === 'Event')!;
+    expect(event.eventStatus).toBe('https://schema.org/EventCancelled');
+  });
+
+  it('1969 shows all four winners', async () => {
+    const r = await render('/en/past-contests/eurovision-1969-madrid');
+    expect(r.status).toBe(200);
+    const callout = r.html.slice(r.html.indexOf('id="winner"'), r.html.indexOf('id="final"'));
+    for (const name of ['Spain', 'France', 'United Kingdom', 'Netherlands']) expect(callout).toContain(name);
+  });
+
+  it('1956: the winner without published points', async () => {
+    const r = await render('/en/past-contests/eurovision-1956-lugano');
+    expect(r.html).toContain('Switzerland won Eurovision 1956');
+    expect(r.head?.description).not.toMatch(/null|undefined|NaN/);
+    expect(hrefs(r.html)).toContain('/en/past-contests/eurovision-1957-frankfurt');
+  });
+
+  it.each([
+    '/en/past-contests/eurovision-1999-nowhere',
+    '/en/past-contests/eurovision-2019-lisbon',
+    '/en/past-contests/eurovision-2026-vienna',
+    '/en/past-contests/eurovision-1066-hastings',
+    '/el/past-contests/not-a-contest',
+    '/en/countries/atlantis',
+    '/el/countries/GR',
+  ])('%s is a 404', async (url) => {
+    const r = await render(url);
+    expect(r.status).toBe(404);
+  });
+});
+
+describe('past contests index (SSR)', () => {
+  it('/en/past-contests lists every year newest first, indexable', async () => {
+    const r = await render('/en/past-contests');
+    expect(r.status).toBe(200);
+    expect(robots(r)).toBeUndefined();
+    expect(rowWith(r.html, 'Wasted Love')).toContain('436');
+    expect(r.html.indexOf('/en/past-contests/eurovision-2025-basel')).toBeLessThan(
+      r.html.indexOf('/en/past-contests/eurovision-1956-lugano'));
+    expect(r.html).not.toContain('eurovision-2026-vienna');
+    expect(Object.keys(r.content)).toEqual(['contests/index.json']);
+  });
+
+  it('/el/past-contests is Greek', async () => {
+    const r = await render('/el/past-contests');
+    expect(h1(r.html)).toMatch(GREEK);
+    expect(r.html).toContain('Αυστρία');
+  });
+});
+
+describe('country pages (SSR)', () => {
+  it('/en/countries/greece: summary, the 2005 win, links to each year', async () => {
+    const r = await render('/en/countries/greece');
+    expect(r.status).toBe(200);
+    expect(robots(r)).toBeUndefined();
+    expect(h1(r.html)).toContain('Greece');
+    expect(r.html).toContain('id="wins"');
+    expect(rowWith(r.html, 'My Number One')).toContain('Helena Paparizou');
+    expect(r.html).toContain('id="last-10"');
+    expect(r.html).toContain('id="history"');
+    const links = hrefs(r.html);
+    expect(links).toContain('/en/past-contests/eurovision-2005-kyiv');
+    expect(links).toContain('/en/past-contests/eurovision-1974-brighton');
+    expect(links).toContain('/en/eurovision-2026');
+    expect(Object.keys(r.content).sort()).toEqual(['contests/index.json', 'countries/GR.json', 'countries/index.json']);
+  });
+
+  it('/el/countries/greece: Greek H1', async () => {
+    const r = await render('/el/countries/greece');
+    expect(h1(r.html)).toContain('Ελλάδα');
+  });
+
+  it('/en/countries/morocco is noindex (one participation)', async () => {
+    const r = await render('/en/countries/morocco');
+    expect(r.status).toBe(200);
+    expect(robots(r)).toBe('noindex');
+  });
+
+  it('see also lists the related countries', async () => {
+    const r = await render('/en/countries/serbia-and-montenegro');
+    expect(r.html).toContain('id="see-also"');
+    const links = hrefs(r.html);
+    expect(links).toContain('/en/countries/yugoslavia');
+    expect(links).toContain('/en/countries/serbia');
+    expect(links).toContain('/en/countries/montenegro');
+  });
+});
+
+describe('countries index (SSR)', () => {
+  it('/el/countries groups countries by their Greek initial', async () => {
+    const r = await render('/el/countries');
+    expect(r.status).toBe(200);
+    expect(robots(r)).toBeUndefined();
+    expect(h2s(r.html)).toEqual(expect.arrayContaining(['Α', 'Ε']));
+    expect(r.html).toContain('href="/el/countries/greece"');
+    expect(r.html.indexOf('Αλβανία')).toBeLessThan(r.html.indexOf('Ελλάδα'));
+    expect(Object.keys(r.content)).toEqual(['countries/index.json']);
+  });
+
+  it('/en/countries groups by the English initial', async () => {
+    const r = await render('/en/countries');
+    expect(h2s(r.html).slice(0, 3)).toEqual(['A', 'B', 'C']);
+  });
+});
+
+describe('/winners from data (SSR)', () => {
+  it('lists the latest winner, the first contest and the leaderboard', async () => {
+    const r = await render('/en/winners');
+    expect(r.status).toBe(200);
+    expect(r.head?.title).toBe('Eurovision Winners — Every Champion 1956 to Today · Eurovision Games');
+    const row2025 = rowWith(r.html, 'Wasted Love');
+    for (const s of ['2025', 'Austria', 'JJ', '436']) expect(row2025).toContain(s);
+    const row1956 = rowWith(r.html, 'Refrain');
+    expect(row1956).toContain('1956');
+    expect(row1956).toContain('Switzerland');
+    expect(r.html).toContain('Recent winners (2010–2025)');
+    const crumbs = jsonLd(r).find((b) => b['@type'] === 'BreadcrumbList') as { itemListElement: { item: string }[] };
+    expect(crumbs.itemListElement.map((i) => i.item)).toContain(`${ORIGIN}/en/past-contests`);
+    expect(Object.keys(r.content)).toEqual(['contests/index.json']);
+  });
+
+  it('the recent table has the last 15 champions', async () => {
+    const r = await render('/en/winners');
+    const start = r.html.indexOf('id="recent"');
+    const recent = r.html.slice(start, r.html.indexOf('</table>', start));
+    expect((recent.match(/<tr /g) ?? []).length - 1).toBe(15);
+  });
+
+  it('the leaderboard counts shared wins (1969) and sorts by wins', async () => {
+    const r = await render('/en/winners');
+    const from = r.html.indexOf('<table', r.html.indexOf('id="leaderboard"'));
+    expect(rowWith(r.html, 'Ireland', from)).toContain('>7<');
+    expect(rowWith(r.html, 'Sweden', from)).toContain('>7<');
+    expect(rowWith(r.html, 'France', from)).toContain('>5<');
+    expect(rowWith(r.html, 'United Kingdom', from)).toContain('>5<');
+    expect(r.html.indexOf('Ireland', from)).toBeLessThan(r.html.indexOf('France', from));
+  });
+
+  it('/el/winners keeps its Greek copy', async () => {
+    const r = await render('/el/winners');
+    expect(r.head?.title).toBe('Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα · Eurovision Games');
+    expect(r.html).toContain('Αυστρία');
+  });
+});
+
+describe('hub copy polish', () => {
+  it('Greek finalized chip and songs title', async () => {
+    const hub = await render('/el/eurovision-2026');
+    expect(hub.html).toContain('Βγήκαν τα αποτελέσματα');
+    const songs = await render('/el/eurovision-2026/songs');
+    expect(songs.head?.title).toBe('Τραγούδια Eurovision 2026: όλες οι 35 συμμετοχές');
+  });
+});
+
+describe('every public page', () => {
+  it('renders 200 with a unique title and description per locale', async () => {
+    const urls = allPublicUrls(contentData(), true);
+    expect(urls.length).toBeGreaterThan(250);
+    const seen = new Map<string, string>();
+    for (const { path, indexable } of urls) {
+      const r = await render(path);
+      expect(r.status, path).toBe(200);
+      expect(r.head?.canonical, path).toBe(ORIGIN + path);
+      if (!indexable) expect(r.head?.robots, path).toBe('noindex');
+      const locale = path.split('/')[1];
+      for (const key of [`t ${locale} ${r.head?.title}`, `d ${locale} ${r.head?.description}`]) {
+        expect(seen.get(key), `${path} duplicates ${seen.get(key)}`).toBeUndefined();
+        seen.set(key, path);
+      }
+    }
+  }, 120_000);
 });

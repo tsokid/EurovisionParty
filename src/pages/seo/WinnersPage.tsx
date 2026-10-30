@@ -10,17 +10,60 @@ import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
-import { copy as copyAll, recentWinners, leaderboard } from './content/winnersCopy';
+import { useContent } from '../../lib/seo/useContent';
+import { ARCHIVE_INDEX_PATH, archivePath } from '../../lib/seo/dynamicPages';
+import type { ContestIndex, IndexWinner } from '../../content/contests/types';
+import { CONTEST_INDEX, yearCell } from '../contest/archive';
+import { winnersData, type WinnerYear } from '../contest/winners';
+import { ContentPending } from '../contest/ContentPending';
+import { copy as copyAll } from './content/winnersCopy';
+
+/** How many champions the "recent winners" table shows (the copy says "the last 15 champions"). */
+const RECENT = 15;
 
 export default function WinnersPage() {
   const locale = useLocale();
   const c = copyAll[locale];
-  const winners = recentWinners[locale];
-  const lb = leaderboard[locale];
+  const index = useContent<ContestIndex>(CONTEST_INDEX);
+  const data = index.status === 'ready' ? winnersData(index.data, locale) : null;
+  const recent = data ? data.years.slice(0, RECENT) : [];
+  const recentFrom = recent.length ? recent[recent.length - 1].year : null;
+  const recentTo = recent.length ? recent[0].year : null;
+  const first = data?.all.length ? data.all[data.all.length - 1].year : null;
+  const pending = data ? null : (
+    <ContentPending inline locale={locale} retry={index.status === 'error' ? index.retry : undefined} />
+  );
+
+  const name = (w: IndexWinner) => (locale === 'el' ? w.name_el : w.name_en);
+  const countryCell = (y: WinnerYear) =>
+    y.cancelled ? <span className="text-white/55">{c.sections.all.cancelled}</span> : (
+      <strong className="text-white">
+        {y.winners.map(name).join(', ')}{y.winners.length > 1 ? ` (${c.sections.all.shared})` : ''}
+      </strong>
+    );
+  const winnerRow = (y: WinnerYear) => {
+    const solo = y.winners.length === 1 ? y.winners[0] : null;
+    const points = y.winners[0]?.points ?? null;
+    return [
+      yearCell(y.year, archivePath(y.year, y.city_slug)),
+      countryCell(y),
+      solo?.artist ?? '—',
+      solo?.song ? <em className="text-white/75">{solo.song}</em> : '—',
+      points !== null ? <strong className="text-euro-pink-light tabular-nums">{points}</strong> : '—',
+    ];
+  };
+  const winnerHeaders = [
+    c.sections.recent.headers.year,
+    c.sections.recent.headers.country,
+    c.sections.recent.headers.artist,
+    c.sections.recent.headers.song,
+    c.sections.recent.headers.points,
+  ];
+  const winnerAlign: ('left' | 'right')[] = ['left', 'left', 'left', 'left', 'right'];
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
-    { label: c.crumbs.history, href: '/eurovision-history' },
+    { label: c.crumbs.history, href: ARCHIVE_INDEX_PATH },
     { label: c.crumbs.winners, href: '/winners' },
   ];
 
@@ -77,43 +120,36 @@ export default function WinnersPage() {
       />
 
       <ContentLayout>
-        <Section title={c.sections.recent.title}>
-          <p>{c.sections.recent.intro}</p>
-          <DataTable
-            headers={[
-              c.sections.recent.headers.year,
-              c.sections.recent.headers.country,
-              c.sections.recent.headers.artist,
-              c.sections.recent.headers.song,
-              c.sections.recent.headers.points,
-            ]}
-            align={['left', 'left', 'left', 'left', 'right']}
-            rows={winners.map((row) => [
-              <span key="y" className="font-mono text-white/70 text-xs">{row[0]}</span>,
-              <strong key="c" className="text-white">{row[1]}</strong>,
-              row[2],
-              <em key="s" className="text-white/75">{row[3]}</em>,
-              <strong key="p" className="text-euro-pink-light tabular-nums">{row[4]}</strong>,
-            ])}
-          />
+        <Section id="recent" title={recentFrom !== null && recentTo !== null ? c.sections.recent.title(recentFrom, recentTo) : c.hero.chip}>
+          {recentFrom !== null && <p>{c.sections.recent.intro(recentFrom)}</p>}
+          {pending ?? <DataTable headers={winnerHeaders} align={winnerAlign} rows={recent.map(winnerRow)} />}
         </Section>
 
-        <Section title={c.sections.leaderboard.title}>
+        <Section id="leaderboard" title={c.sections.leaderboard.title}>
           <p>{c.sections.leaderboard.intro}</p>
-          <DataTable
-            headers={[
-              c.sections.leaderboard.headers.country,
-              c.sections.leaderboard.headers.wins,
-              c.sections.leaderboard.headers.mostRecent,
-            ]}
-            align={['left', 'right', 'right']}
-            rows={lb.map((row) => [
-              <strong key="c" className="text-white">{row[0]}</strong>,
-              <strong key="w" className="text-euro-gold tabular-nums">{row[1]}</strong>,
-              <span key="r" className="font-mono text-white/65 text-xs">{row[2]}</span>,
-            ])}
-          />
+          {data ? (
+            <DataTable
+              headers={[
+                c.sections.leaderboard.headers.country,
+                c.sections.leaderboard.headers.wins,
+                c.sections.leaderboard.headers.mostRecent,
+              ]}
+              align={['left', 'right', 'right']}
+              rows={data.leaderboard.map((row) => [
+                <strong key="c" className="text-white">{row.name}</strong>,
+                <strong key="w" className="text-euro-gold tabular-nums">{row.wins}</strong>,
+                <span key="r" className="font-mono text-white/65 text-xs">{row.last}</span>,
+              ])}
+            />
+          ) : pending}
         </Section>
+
+        {data && first !== null && (
+          <Section id="all" title={c.sections.all.title(first)}>
+            <p>{c.sections.all.intro}</p>
+            <DataTable headers={winnerHeaders} align={winnerAlign} rows={data.all.map(winnerRow)} />
+          </Section>
+        )}
 
         <Section title={c.sections.notable.title}>
           <p>{c.sections.notable.intro}</p>

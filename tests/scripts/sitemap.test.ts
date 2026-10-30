@@ -14,7 +14,12 @@ describe('sitemap.xml', () => {
     expect(xml).toContain('hreflang="x-default"');
     expect(xml).toContain('https://eurovision.games/en/eurovision-night');
     expect(xml).toContain('https://eurovision.games/el/eurovision-night');
-    expect(xml).not.toContain('/eurovision-2026<');
-    expect(xml).not.toContain('/countries<');
+    // Data-driven pages: indexable ones are listed, noindex ones are not.
+    expect(xml).toContain('https://eurovision.games/en/eurovision-2026</loc>');
+    expect(xml).toContain('https://eurovision.games/el/countries</loc>');
+    expect(xml).toContain('https://eurovision.games/en/past-contests</loc>');
+    expect(xml).toContain('https://eurovision.games/en/countries/greece</loc>');
+    expect(xml).not.toContain('https://eurovision.games/en/countries/morocco</loc>');
+    expect(xml).not.toContain('https://eurovision.games/en/past-contests/eurovision-2019-tel-aviv</loc>');
   }, 30_000);
 });
