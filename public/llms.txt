@@ -16,7 +16,7 @@ Eurovision Games is an unofficial fan-made party game. It is not affiliated with
 - [how-to-play](https://eurovision.games/en/how-to-play): How to play Eurovision Games — 60-second setup, 6 steps from create-room to trophy reveal.
 
 ## Eurovision 2026
-- [eurovision-2026-predictions](https://eurovision.games/en/eurovision-2026-predictions): Top 5 / Worst 5 predictions for Eurovision 2026, weekly-refreshed odds and country breakdowns.
+- [eurovision-predictions](https://eurovision.games/en/eurovision-predictions): The Eurovision predictions game: Top 5 / Worst 5 format, scoring, strategy and the current line-up.
 - [eurovision-trivia](https://eurovision.games/en/eurovision-trivia): 50+ Eurovision trivia questions with answers, plus how to run trivia duels live.
 - [eurovision-duels](https://eurovision.games/en/duels): Eurovision duels feature — 3-question head-to-head trivia during the live show. Steal points or double yours.
 - [dashboard](https://eurovision.games/en/dashboard): Live leaderboard for your Eurovision Games room — push-updated as predictions, quiz, and duels resolve.
