@@ -907,4 +907,71 @@ $fn$;
 revoke execute on function public.parser_upsert_entries(int, jsonb, text) from public, anon, authenticated;
 grant execute on function public.parser_upsert_entries(int, jsonb, text) to service_role;
 
+-- ════════════════════════════════════════════════════════════
+-- Section D (Task 8): read RPCs for the admin Contests module
+-- ------------------------------------------------------------
+-- Super-admin reads that back the lifecycle buttons in
+-- src/admin/modules/contests. They change nothing.
+-- ════════════════════════════════════════════════════════════
+
+-- ── D1. contest_summaries ───────────────────────────────────
+-- One row per contest, newest first, with its entry count and its
+-- grand-finalist count (in_final).
+create or replace function public.contest_summaries()
+returns table (
+  year           int,
+  city           text,
+  city_slug      text,
+  host_iso       text,
+  stage          public.contest_stage,
+  final_date     date,
+  indexable      boolean,
+  entry_count    int,
+  finalist_count int
+)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $fn$
+begin
+  if not public.is_super_admin() then
+    raise exception 'forbidden';
+  end if;
+
+  return query
+    select c.year::int, c.city::text, c.city_slug::text, c.host_iso::text, c.stage,
+           c.final_date, c.indexable,
+           (select count(*) from public.contest_entries e where e.year = c.year)::int,
+           (select count(*) from public.contest_entries e where e.year = c.year and e.in_final)::int
+      from public.contests c
+     order by c.year desc;
+end;
+$fn$;
+
+revoke execute on function public.contest_summaries() from public, anon;
+grant execute on function public.contest_summaries() to authenticated;
+
+-- ── D2. contest_has_rooms ───────────────────────────────────
+-- True when at least one room of p_year exists. The UI uses it for
+-- Y+1 to hide Un-archive (unarchive_contest refuses in that case).
+create or replace function public.contest_has_rooms(p_year int)
+returns boolean
+language plpgsql
+stable
+security definer
+set search_path = public
+as $fn$
+begin
+  if not public.is_super_admin() then
+    raise exception 'forbidden';
+  end if;
+
+  return exists (select 1 from public.rooms r where r.year = p_year);
+end;
+$fn$;
+
+revoke execute on function public.contest_has_rooms(int) from public, anon;
+grant execute on function public.contest_has_rooms(int) to authenticated;
+
 commit;
