@@ -59,6 +59,12 @@ describe('injectPage', () => {
     expect(injectPage(TEMPLATE, page)).toContain('data-prerendered="true"');
   });
 
+  it('leaves #root unflagged with prerenderedFlag: false (404.html must not hydrate)', () => {
+    const out = injectPage(TEMPLATE, page, { prerenderedFlag: false });
+    expect(out).not.toContain('data-prerendered');
+    expect(out).toContain('<div id="root"><main><h1>Hello</h1></main></div>');
+  });
+
   it('does not interpret $ patterns in rendered content', () => {
     const out = injectPage(TEMPLATE, { ...page, html: "<p>$& $1 $' cost</p>" });
     expect(out).toContain("<p>$& $1 $' cost</p>");

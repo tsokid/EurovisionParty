@@ -33,8 +33,18 @@ function replaceBlock(template: string, start: string, end: string, content: str
   return template.slice(0, from) + content + template.slice(to);
 }
 
+export interface InjectOptions {
+  /**
+   * Mark #root with data-prerendered so the client hydrates (default true).
+   * false for 404.html: it is served for arbitrary URLs, so its markup will not
+   * match what the client renders there — the client must createRoot instead.
+   */
+  prerenderedFlag?: boolean;
+}
+
 /** Fill the built SPA shell with one page's server-rendered head and body. */
-export function injectPage(template: string, page: PrerenderedPage): string {
+export function injectPage(template: string, page: PrerenderedPage, opts: InjectOptions = {}): string {
+  const { prerenderedFlag = true } = opts;
   let out = replaceBlock(template, SEO_START, SEO_END, page.headHtml, false);
   out = replaceBlock(out, APP_START, APP_END, page.html, true);
 
@@ -42,6 +52,7 @@ export function injectPage(template: string, page: PrerenderedPage): string {
   out = out.replace(/<html lang="[^"]*">/, () => `<html lang="${page.lang}">`);
 
   if (!out.includes('<div id="root">')) throw new Error('injectPage: missing marker <div id="root">');
+  if (!prerenderedFlag) return out;
   out = out.replace('<div id="root">', () => '<div id="root" data-prerendered="true">');
   return out;
 }

@@ -36,8 +36,8 @@ async function main(): Promise<void> {
 
   // Sequential on purpose: render() switches i18n's global language.
   const jobs = [
-    ...allPageUrls().map(({ path }) => ({ url: path, file: outputPath(path), expect: 200 })),
-    { url: NOT_FOUND_URL, file: '404.html', expect: 404 },
+    ...allPageUrls().map(({ path }) => ({ url: path, file: outputPath(path), expect: 200, hydrate: true })),
+    { url: NOT_FOUND_URL, file: '404.html', expect: 404, hydrate: false },
   ];
 
   for (const job of jobs) {
@@ -58,7 +58,7 @@ async function main(): Promise<void> {
       html: result.html,
       headHtml: headTagsHtml(result.head),
       lang: result.lang,
-    });
+    }, { prerenderedFlag: job.hydrate });
     writePage(job.file, html);
     written++;
     console.log(`  ${job.expect === 404 ? '404' : 'ok '} ${job.url} -> dist/${job.file}`);
