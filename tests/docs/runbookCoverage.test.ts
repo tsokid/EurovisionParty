@@ -79,6 +79,19 @@ const BRIEF_TOKENS = [
   'Burgas',
   'Archive',
   'Instant Rollback',
+  // Fix round 1: rollback after Publish, backups keep grants, pinned CLI, shell hygiene.
+  'Promote to Production',
+  '<OLD_MAIN_SHA>',
+  'git checkout <OLD_MAIN_SHA> -- .',
+  '--no-owner',
+  'read -r -s -p',
+  'PostgreSQL/17/bin',
+  'URL-encode',
+  'supabase@2.122.0',
+  'config.toml',
+  'deptype',
+  'importBoundary.test.ts',
+  '_shared/contestTypes.ts',
 ];
 
 const runbook = readFileSync(RUNBOOK, 'utf8');
@@ -108,9 +121,25 @@ describe('cutover runbook coverage', () => {
     expect([...at].sort((a, b) => a - b)).toEqual(at);
   });
 
-  it('072 comes after the merge and the first Publish', () => {
-    expect(runbook.indexOf('## 10. Apply 072')).toBeGreaterThan(runbook.indexOf('### 8.3 First Publish'));
-    expect(runbook.indexOf('### 8.3 First Publish')).toBeGreaterThan(runbook.indexOf('### 7.1 Merge'));
+  it('game reads come before the first Publish, and 072 after both', () => {
+    const merge = runbook.indexOf('### 7.1 Merge');
+    const game = runbook.indexOf('### 8.3 Game reads');
+    const publish = runbook.indexOf('## 9. First Publish');
+    const drop = runbook.indexOf('## 10. Apply 072');
+    expect(Math.min(merge, game, publish, drop)).toBeGreaterThanOrEqual(0);
+    expect(merge).toBeLessThan(game);
+    expect(game).toBeLessThan(publish);
+    expect(publish).toBeLessThan(drop);
+  });
+
+  it('backup and restore commands keep privileges (no --no-privileges in any code block)', () => {
+    const code = [...runbook.matchAll(/```[a-z]*\r?\n([\s\S]*?)```/g)].map((m) => m[1]).join('\n');
+    expect(code).toContain('pg_dump');
+    expect(code).not.toContain('--no-privileges');
+  });
+
+  it('pins the Supabase CLI version', () => {
+    expect(runbook).not.toMatch(/supabase@latest/);
   });
 
   it('contains no real secrets', () => {
