@@ -48,8 +48,13 @@ describe('vercel.json', () => {
     for (const p of ['/room/ABCD', '/admin', '/how-to-play', '/online-games', '/']) {
       expect(re.test(p), p).toBe(true)
     }
-    for (const p of ['/en', '/el', '/en/no-such-page', '/el/faq']) {
+    for (const p of ['/en/no-such-page', '/el/faq']) {
       expect(re.test(p), p).toBe(false)
+    }
+    // Exact /en and /el match the rewrite, which is fine: Vercel checks the
+    // filesystem before rewrites, so the prerendered en.html / el.html wins.
+    for (const p of ['/en', '/el']) {
+      expect(re.test(p), p).toBe(true)
     }
   })
 })

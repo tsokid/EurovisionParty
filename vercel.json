@@ -9,7 +9,7 @@
     { "source": "/host-eurovision-party", "destination": "/en/eurovision-party", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/((?!en(?:/|$)|el(?:/|$)).*)", "destination": "/index.html" }
+    { "source": "/((?!en/|el/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
