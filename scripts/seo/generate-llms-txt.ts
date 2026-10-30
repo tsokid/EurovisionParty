@@ -17,15 +17,7 @@ const DESCRIPTIONS: Record<string, string> = {
   'eurovision-party': 'Hosting playbook for a Eurovision party: guests, theme, decor, food, run-of-show.',
   'eurovision-trivia': '50+ Eurovision trivia questions with answers, plus how to run trivia duels live.',
   'eurovision-2026-predictions': 'Top 5 / Worst 5 predictions for Eurovision 2026, weekly-refreshed odds and country breakdowns.',
-  'eurovision-2026': 'Eurovision 2026 hub: schedule, semifinals, songs, predictions. Vienna, 16 May 2026.',
-  'eurovision-2026-schedule': 'Eurovision 2026 schedule: semifinal 1 (12 May), semifinal 2 (14 May), grand final (16 May), local broadcast times.',
-  'eurovision-2026-semifinals': 'Eurovision 2026 semifinals: running order, qualifiers, dates, predictions.',
-  'eurovision-2026-songs': 'All Eurovision 2026 entries by country: songs, artists, lyrics, betting odds.',
-  'eurovision-quiz': 'Take a free Eurovision quiz — choose category and difficulty.',
-  'host-eurovision-party': 'Step-by-step guide to hosting a Eurovision party — invitations, theme, decor, food, games.',
-  'eurovision-history': 'Eurovision history: founding (1956), winners by country, scoring system evolution, key moments.',
   winners: 'Every Eurovision winner from 1956 to today — songs, artists, points, voting breakdown.',
-  countries: 'Every country in Eurovision: full entry history, best results, best songs.',
   faq: 'Eurovision Games FAQ: setup, gameplay, scoring, hosting, technical questions answered.',
   rules: 'Eurovision Games rules: predictions, duels, scoring, winner categories.',
   scoring: 'How Eurovision Games scoring works: prediction points, duel theft, winner categories.',
@@ -37,14 +29,12 @@ const DESCRIPTIONS: Record<string, string> = {
   cookies: 'Cookies and consent: what we use, why, and how to change your preferences.',
 };
 
-const TIER_1 = ['home', 'eurovision-2026', 'eurovision-night', 'eurovision-party', 'eurovision-games', 'how-to-play'] as const;
+const TIER_1 = ['home', 'eurovision-night', 'eurovision-party', 'eurovision-games', 'how-to-play'] as const;
 const TIER_2 = [
-  'eurovision-2026-schedule', 'eurovision-2026-semifinals', 'eurovision-2026-songs',
-  'eurovision-2026-predictions', 'eurovision-trivia', 'eurovision-quiz', 'eurovision-duels', 'dashboard',
-  'eurovision-history', 'winners', 'countries',
+  'eurovision-2026-predictions', 'eurovision-trivia', 'eurovision-duels', 'dashboard',
+  'winners',
 ] as const;
 const TIER_3 = [
-  'host-eurovision-party',
   'rules', 'scoring', 'faq', 'about', 'cookies', 'privacy', 'terms',
 ] as const;
 

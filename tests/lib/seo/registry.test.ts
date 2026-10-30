@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { PAGE_REGISTRY, getPage, allPageUrls } from '@/lib/seo/registry';
+import { PAGE_REGISTRY, getPage, allPageUrls, type PageEntry } from '@/lib/seo/registry';
+import { localizePath } from '@/lib/seo/locale';
 
 describe('page registry', () => {
   it('contains the homepage', () => {
@@ -28,5 +29,29 @@ describe('page registry', () => {
     const elSlugs = PAGE_REGISTRY.map((p) => p.slugByLocale.el);
     expect(new Set(enSlugs).size).toBe(enSlugs.length);
     expect(new Set(elSlugs).size).toBe(elSlugs.length);
+  });
+  const REMOVED = ['eurovision-2026', 'eurovision-2026-schedule', 'eurovision-2026-semifinals', 'eurovision-2026-songs',
+    'eurovision-quiz', 'host-eurovision-party', 'eurovision-history', 'eurovision-ellada', 'eurovision-kypros',
+    'eurovision-2026-elliniko-tragoudi', 'eurovision-2026-programma', 'countries'];
+
+  it('contains no unbuilt pages', () => {
+    for (const id of REMOVED) expect(PAGE_REGISTRY.find((p) => p.id === id)).toBeUndefined();
+  });
+
+  it('no entry points at a removed hub', () => {
+    for (const p of PAGE_REGISTRY) if (p.hub) expect(getPage(p.hub)).toBeDefined();
+  });
+
+  it('allPageUrls skips excluded locales', () => {
+    const registry = [
+      { id: 'home', slugByLocale: { en: '/', el: '/' }, priority: 1, changefreq: 'weekly' },
+      { id: 'faq', slugByLocale: { en: '/gr-only', el: '/gr-only' }, priority: 0.5, changefreq: 'weekly', greekExclusive: true },
+      { id: 'rules', slugByLocale: { en: '/en-only', el: '/en-only' }, priority: 0.5, changefreq: 'weekly', englishExclusive: true },
+    ] as PageEntry[];
+    const urls = allPageUrls(registry);
+    expect(urls).not.toContainEqual({ locale: 'en', path: localizePath('en', '/gr-only') });
+    expect(urls).toContainEqual({ locale: 'el', path: localizePath('el', '/gr-only') });
+    expect(urls).not.toContainEqual({ locale: 'el', path: localizePath('el', '/en-only') });
+    expect(urls).toContainEqual({ locale: 'en', path: localizePath('en', '/en-only') });
   });
 });

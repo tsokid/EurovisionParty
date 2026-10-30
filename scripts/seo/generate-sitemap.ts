@@ -39,19 +39,7 @@ const PAGE_FILES: Record<PageId, string[]> = {
   'cookies': ['src/pages/seo/CookiesPage.tsx', 'src/pages/seo/content/cookiesCopy.ts'],
   // Pages from the registry that don't ship as standalone TSX yet — fall back
   // to BUILD_DATE. These will get real `lastmod` once their TSX/copy ships.
-  'eurovision-2026': [],
-  'eurovision-2026-schedule': [],
-  'eurovision-2026-semifinals': [],
-  'eurovision-2026-songs': [],
-  'eurovision-quiz': [],
-  'host-eurovision-party': [],
-  'eurovision-history': [],
-  'eurovision-ellada': [],
-  'eurovision-kypros': [],
-  'eurovision-2026-elliniko-tragoudi': [],
-  'eurovision-2026-programma': [],
   'winners': [],
-  'countries': [],
 };
 
 function lastModFromGit(paths: string[]): string {

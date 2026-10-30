@@ -14,5 +14,7 @@ describe('sitemap.xml', () => {
     expect(xml).toContain('hreflang="x-default"');
     expect(xml).toContain('https://eurovision.games/en/eurovision-night');
     expect(xml).toContain('https://eurovision.games/el/eurovision-night');
-  });
+    expect(xml).not.toContain('/eurovision-2026<');
+    expect(xml).not.toContain('/countries<');
+  }, 30_000);
 });
