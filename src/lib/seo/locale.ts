@@ -32,3 +32,8 @@ export function stripLocaleFromPath(path: string): string {
   if (!m) return path;
   return m[2] || '/';
 }
+
+export function localeFromPath(path: string): Locale | null {
+  const m = path.match(/^\/(en|el)(?:\/|$)/);
+  return m ? (m[1] as Locale) : null;
+}

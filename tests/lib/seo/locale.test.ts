@@ -6,6 +6,7 @@ import {
   oppositeLocale,
   localizePath,
   stripLocaleFromPath,
+  localeFromPath,
 } from '@/lib/seo/locale';
 
 describe('locale helpers', () => {
@@ -42,5 +43,18 @@ describe('locale helpers', () => {
     expect(stripLocaleFromPath('/en/eurovision-night')).toBe('/eurovision-night');
     expect(stripLocaleFromPath('/el')).toBe('/');
     expect(stripLocaleFromPath('/foo')).toBe('/foo'); // no locale
+  });
+});
+
+describe('localeFromPath', () => {
+  it('extracts the locale prefix', () => {
+    expect(localeFromPath('/el/faq')).toBe('el');
+    expect(localeFromPath('/en')).toBe('en');
+    expect(localeFromPath('/en/')).toBe('en');
+  });
+  it('returns null for non-locale paths', () => {
+    expect(localeFromPath('/room/ABCD')).toBeNull();
+    expect(localeFromPath('/elephant')).toBeNull();
+    expect(localeFromPath('/')).toBeNull();
   });
 });
