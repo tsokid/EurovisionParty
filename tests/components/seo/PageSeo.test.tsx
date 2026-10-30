@@ -56,4 +56,18 @@ describe('PageSeo', () => {
       jsonLd: { '@type': 'Thing' },
     });
   });
+
+  it('builds canonical and hreflang from a dynamic path', () => {
+    const head = collect(
+      <PageSeo path="/eurovision-2026/songs" locale="el" title="T" description="D" robots="noindex" />,
+    );
+    expect(head?.canonical).toBe('https://eurovision.games/el/eurovision-2026/songs');
+    expect(head?.robots).toBe('noindex');
+    expect(head?.ogLocale).toBe('el_GR');
+    expect(head?.hreflang).toEqual([
+      { hreflang: 'en', href: 'https://eurovision.games/en/eurovision-2026/songs' },
+      { hreflang: 'el', href: 'https://eurovision.games/el/eurovision-2026/songs' },
+      { hreflang: 'x-default', href: 'https://eurovision.games/en/eurovision-2026/songs' },
+    ]);
+  });
 });
