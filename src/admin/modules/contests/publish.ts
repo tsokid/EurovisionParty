@@ -3,21 +3,28 @@
 //
 // invokePublish never throws: every outcome, including a 409 busy, a 500
 // error with the function's own message, or a request that never reached
-// the function, comes back as a PublishOutcome. While one call is in
-// flight, further calls (a double click, the PublishBar and an
-// auto-publish, FinalizeCard in the parser module) share it: the edge
-// function is invoked once per page at a time.
+// the function, comes back as a PublishOutcome, and it never rejects.
+//
+// One publish at a time per page. A call made while a run is in flight
+// must not join that run: its snapshot may predate the caller's change
+// (Publish clicked, then Archive commits and auto-publishes). Such calls
+// share ONE trailing run that starts when the current run settles, so
+// every caller gets an outcome that covers its own change, and any number
+// of callers during a run cost exactly one more invoke. A run that does
+// not settle within PUBLISH_TIMEOUT_MS frees the slot with a timeout error.
 //
 // usePublisher holds that state for the Contests module, so its PublishBar
 // and the auto-publish after Finalize / Archive / Un-archive share one
 // "publishing" flag and one last outcome.
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
 
 export const COMMIT_URL = 'https://github.com/tsokid/EurovisionParty/commit/';
 export const BUSY_TEXT = 'Another publish is running — try again in a minute';
+export const PUBLISH_TIMEOUT_MS = 90_000;
+export const TIMEOUT_TEXT = 'Publish timed out — check the last run below and try again';
 
 export type PublishOutcome = {
   status: 'ok' | 'noop' | 'error' | 'busy';
@@ -49,17 +56,68 @@ function asOutcome(body: unknown): PublishOutcome | null {
   return null;
 }
 
-// Module-level, so every caller in this page shares one in-flight publish.
-let inFlight: Promise<PublishOutcome> | null = null;
+// Module-level, so every caller in this page shares the guard.
+let current: Promise<PublishOutcome> | null = null;
+let trailing: { promise: Promise<PublishOutcome>; resolve: (p: Promise<PublishOutcome>) => void } | null = null;
 
-/** Calls publish-content, or joins the call already in flight. Never throws. */
+/** True while a publish of this page is running (a new call would queue the trailing run). */
+export function isPublishInFlight(): boolean {
+  return current !== null;
+}
+
+/** callPublish, settled as a timeout error after PUBLISH_TIMEOUT_MS. Never rejects. */
+function timed(): Promise<PublishOutcome> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<PublishOutcome>((resolve) => {
+    timer = setTimeout(() => resolve({ status: 'error', error: TIMEOUT_TEXT }), PUBLISH_TIMEOUT_MS);
+  });
+  return Promise.race([callPublish(), timeout]).finally(() => clearTimeout(timer));
+}
+
+function start(): Promise<PublishOutcome> {
+  const run = timed();
+  current = run;
+  void run.then(() => {
+    if (current !== run) return; // reset by __resetPublishGuardForTests
+    if (trailing) {
+      // Hand the slot straight to the trailing run: no gap for a third run.
+      const t = trailing;
+      trailing = null;
+      t.resolve(start());
+    } else {
+      current = null;
+    }
+  });
+  return run;
+}
+
+/**
+ * Publishes. With nothing in flight, starts a run. Otherwise returns the
+ * single trailing run that starts after the current one. Never rejects.
+ */
 export function invokePublish(): Promise<PublishOutcome> {
-  if (!inFlight) {
-    inFlight = callPublish().finally(() => {
-      inFlight = null;
-    });
+  if (!current) return start();
+  if (!trailing) {
+    let resolve!: (p: Promise<PublishOutcome>) => void;
+    const promise = new Promise<PublishOutcome>((r) => { resolve = r; });
+    trailing = { promise, resolve };
   }
-  return inFlight;
+  return trailing.promise;
+}
+
+/** Test-only: forget any in-flight or trailing run. */
+export function __resetPublishGuardForTests(): void {
+  current = null;
+  trailing = null;
+}
+
+/** formatError that cannot throw. */
+function safeError(e: unknown): string {
+  try {
+    return formatError(e);
+  } catch {
+    return 'publish failed (unreadable error)';
+  }
 }
 
 async function callPublish(): Promise<PublishOutcome> {
@@ -76,11 +134,11 @@ async function callPublish(): Promise<PublishOutcome> {
           /* not json: fall through to the invoke error */
         }
       }
-      return { status: 'error', error: formatError(error) };
+      return { status: 'error', error: safeError(error) };
     }
     return asOutcome(data) ?? { status: 'error', error: 'publish-content returned no result' };
   } catch (e) {
-    return { status: 'error', error: formatError(e) };
+    return { status: 'error', error: safeError(e) };
   }
 }
 
@@ -138,6 +196,8 @@ export function usePublisher(): Publisher {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
   const [outcome, setOutcome] = useState<PublishOutcome | null>(null);
+  // Calls of this hook still waiting for their outcome.
+  const pending = useRef(0);
 
   const refresh = useCallback(async () => {
     try {
@@ -154,16 +214,20 @@ export function usePublisher(): Publisher {
 
   useEffect(() => { refresh(); }, [refresh]);
 
-  // A second call while one is in flight joins it (invokePublish).
+  // A call during a run waits for the trailing run (invokePublish). Only a
+  // call that starts a run clears the outcome line; a queued one leaves the
+  // current caller's line alone until its own outcome arrives.
   const publish = useCallback(async () => {
+    if (!isPublishInFlight()) setOutcome(null);
+    pending.current += 1;
     setPublishing(true);
-    setOutcome(null);
     try {
       const o = await invokePublish();
       setOutcome(o);
       return o;
     } finally {
-      setPublishing(false);
+      pending.current -= 1;
+      if (pending.current === 0) setPublishing(false);
       await refresh();
     }
   }, [refresh]);

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 
 type Row = Record<string, unknown>;
@@ -26,7 +26,14 @@ vi.mock('../../src/lib/supabase', () => ({
 }));
 
 import { PublishBar } from '../../src/admin/modules/contests/PublishBar';
-import { formatRunTime, usePublisher } from '../../src/admin/modules/contests/publish';
+import {
+  TIMEOUT_TEXT,
+  PUBLISH_TIMEOUT_MS,
+  __resetPublishGuardForTests,
+  formatRunTime,
+  invokePublish,
+  usePublisher,
+} from '../../src/admin/modules/contests/publish';
 
 function Harness() {
   return <PublishBar publisher={usePublisher()} />;
@@ -45,6 +52,10 @@ describe('PublishBar', () => {
     h.summary = { changed_years: [2024, 2025, 2027], since: '2026-10-29T10:00:00Z' };
     h.lastRun = { id: 7, status: 'ok', commit_sha: 'abc1234def5678', finished_at: FINISHED, error: null };
     h.summaryError = null;
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    __resetPublishGuardForTests();
   });
 
   it('shows the unpublished changes, the last run with its commit link, and the deploy note', async () => {
@@ -106,7 +117,7 @@ describe('PublishBar', () => {
     expect(formatRunTime(new Date(2026, 11, 31, 23, 59).toISOString())).toBe('2026-12-31 23:59');
   });
 
-  it('a double click on Publish invokes publish-content once', async () => {
+  it('Publish button disables after first click', async () => {
     let resolve!: (v: unknown) => void;
     h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
     render(<Harness />);
@@ -118,16 +129,22 @@ describe('PublishBar', () => {
     expect(h.invoke).toHaveBeenCalledTimes(1);
   });
 
-  it('two publishers in one page share the in-flight publish', async () => {
-    let resolve!: (v: unknown) => void;
-    h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
+  it('a second publisher during a run gets a trailing run, not the stale one', async () => {
+    const resolvers: Array<(v: unknown) => void> = [];
+    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
     render(<><Harness /><Harness /></>);
     const [a, b] = await screen.findAllByRole('button', { name: 'Publish' });
     fireEvent.click(a);
     fireEvent.click(b);
-    resolve({ data: { status: 'ok', run_id: 9, sha: 'fff0000aaa', files_changed: 1 }, error: null });
-    expect(await screen.findAllByText(/Published: 1 file changed/)).toHaveLength(2);
     expect(h.invoke).toHaveBeenCalledTimes(1);
+    resolvers[0]({ data: { status: 'ok', run_id: 9, sha: 'aaa0000', files_changed: 1 }, error: null });
+    expect(await screen.findByText(/Published: 1 file changed/)).toBeTruthy();
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    // Only the first bar shows the first run; the queued caller did not clear it.
+    expect(screen.getAllByText(/Published: 1 file changed/)).toHaveLength(1);
+    resolvers[1]({ data: { status: 'ok', run_id: 10, sha: 'bbb0000', files_changed: 4 }, error: null });
+    expect(await screen.findByText(/Published: 4 files changed/)).toBeTruthy();
+    expect(h.invoke).toHaveBeenCalledTimes(2);
   });
 
   it('noop says the site is up to date', async () => {
@@ -182,5 +199,59 @@ describe('PublishBar', () => {
     expect(await screen.findByText('forbidden')).toBeTruthy();
     await waitFor(() => expect(h.rpc).toHaveBeenCalledWith('unpublished_summary', undefined));
     expect(((screen.getByRole('button', { name: 'Publish' })) as HTMLButtonElement).disabled).toBe(false);
+  });
+});
+
+describe('invokePublish guard', () => {
+  beforeEach(() => {
+    h.invoke.mockReset();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    __resetPublishGuardForTests();
+  });
+
+  const ok = (files: number) => ({ data: { status: 'ok', run_id: files, sha: `sha${files}`, files_changed: files }, error: null });
+
+  it('three rapid callers cost exactly 2 invokes; the late callers get the trailing run', async () => {
+    const resolvers: Array<(v: unknown) => void> = [];
+    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
+    const first = invokePublish();
+    const second = invokePublish();
+    const third = invokePublish();
+    expect(second).toBe(third);
+    expect(h.invoke).toHaveBeenCalledTimes(1);
+    resolvers[0](ok(1));
+    expect(await first).toMatchObject({ status: 'ok', files_changed: 1 });
+    await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    resolvers[1](ok(2));
+    expect(await second).toMatchObject({ status: 'ok', files_changed: 2 });
+    expect(await third).toMatchObject({ status: 'ok', files_changed: 2 });
+    expect(h.invoke).toHaveBeenCalledTimes(2);
+    // The slot is free again.
+    h.invoke.mockResolvedValue(ok(3));
+    expect(await invokePublish()).toMatchObject({ files_changed: 3 });
+    expect(h.invoke).toHaveBeenCalledTimes(3);
+  });
+
+  it('a hung invoke times out after 90 s and frees the slot', async () => {
+    vi.useFakeTimers();
+    h.invoke.mockImplementation(() => new Promise(() => {}));
+    let settled = false;
+    const run = invokePublish();
+    run.then(() => { settled = true; });
+    await vi.advanceTimersByTimeAsync(PUBLISH_TIMEOUT_MS - 1);
+    expect(settled).toBe(false);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(await run).toEqual({ status: 'error', error: TIMEOUT_TEXT });
+    expect(TIMEOUT_TEXT).toBe('Publish timed out — check the last run below and try again');
+    h.invoke.mockResolvedValue(ok(1));
+    expect(await invokePublish()).toMatchObject({ status: 'ok' });
+    expect(h.invoke).toHaveBeenCalledTimes(2);
+  });
+
+  it('never rejects, even when invoke throws synchronously', async () => {
+    h.invoke.mockImplementation(() => { throw new Error('boom'); });
+    await expect(invokePublish()).resolves.toEqual({ status: 'error', error: 'boom' });
   });
 });

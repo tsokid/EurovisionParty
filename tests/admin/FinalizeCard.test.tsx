@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import type { ParseJob } from '../../src/admin/modules/parser/useParserState';
 
@@ -30,7 +30,7 @@ vi.mock('../../src/lib/supabase', () => ({
 }));
 
 import { FinalizeCard } from '../../src/admin/modules/parser/FinalizeCard';
-import { invokePublish } from '../../src/admin/modules/contests/publish';
+import { __resetPublishGuardForTests, invokePublish } from '../../src/admin/modules/contests/publish';
 
 const job = (status: ParseJob['status']): ParseJob =>
   ({ kind: 'results', year: 2027, status, manual_override: false }) as ParseJob;
@@ -42,6 +42,7 @@ describe('FinalizeCard', () => {
     h.stage = 'current';
     h.invoke.mockResolvedValue({ data: { status: 'ok', run_id: 1, sha: 'abc1234ffff', files_changed: 2 }, error: null });
   });
+  afterEach(() => __resetPublishGuardForTests());
 
   it('explains the contest finalize for the job year', () => {
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
@@ -93,18 +94,21 @@ describe('FinalizeCard', () => {
     expect(screen.getByText(/2027 finalized\./)).toBeTruthy();
   });
 
-  it('joins a publish already in flight in the page instead of starting a second one', async () => {
-    let resolve!: (v: unknown) => void;
-    h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
-    const pending = invokePublish(); // e.g. the Contests module publishing
+  it('finalize during a publish in flight queues one trailing run instead of a parallel one', async () => {
+    const resolvers: Array<(v: unknown) => void> = [];
+    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
+    const earlier = invokePublish(); // e.g. the Contests module publishing
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
     fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
     expect(await screen.findByText('Publishing…')).toBeTruthy();
-    resolve({ data: { status: 'ok', run_id: 1, sha: 'abc1234ffff', files_changed: 2 }, error: null });
-    expect(await screen.findByText(/Published: 2 files changed/)).toBeTruthy();
-    await pending;
     expect(h.invoke).toHaveBeenCalledTimes(1);
+    resolvers[0]({ data: { status: 'noop', run_id: 1, sha: null, files_changed: 0 }, error: null });
+    await earlier;
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    resolvers[1]({ data: { status: 'ok', run_id: 2, sha: 'abc1234ffff', files_changed: 2 }, error: null });
+    expect(await screen.findByText(/Published: 2 files changed/)).toBeTruthy();
+    expect(h.invoke).toHaveBeenCalledTimes(2);
   });
 
   it.each(['finalized', 'archived'])('hides Reset Finalized once the contest is %s, and points to Edit + Republish', async (stage) => {

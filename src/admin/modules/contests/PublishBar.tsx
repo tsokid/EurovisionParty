@@ -31,7 +31,7 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          onClick={() => { p.publish(); }}
+          onClick={() => { p.publish().catch(() => {}); }}
           disabled={p.publishing}
           className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
         >

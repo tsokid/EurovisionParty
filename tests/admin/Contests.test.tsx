@@ -49,6 +49,7 @@ vi.mock('../../src/lib/supabase', () => {
 });
 
 import Contests from '../../src/admin/modules/Contests';
+import { __resetPublishGuardForTests } from '../../src/admin/modules/contests/publish';
 
 const summary = (year: number, stage: string, entry_count: number): Row => ({
   year,
@@ -78,7 +79,10 @@ describe('Contests module', () => {
       { iso: 'GR', name_en: 'Greece' },
     ];
   });
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    __resetPublishGuardForTests();
+  });
 
   it('lists contests newest first with stage badges and only legal buttons', async () => {
     render(<Contests />);
@@ -301,18 +305,24 @@ describe('Contests module', () => {
     expect((screen.getByRole('button', { name: 'Publish' }) as HTMLButtonElement).disabled).toBe(false);
   });
 
-  it('Publish followed by an auto-publish from Archive invokes publish-content once', async () => {
+  it('Publish followed by Archive: the auto-publish runs after the earlier publish, so it covers the archive', async () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
-    let resolve!: (v: unknown) => void;
-    h.invoke.mockReturnValue(new Promise((r) => { resolve = r; }));
+    const resolvers: Array<(v: unknown) => void> = [];
+    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
     render(<Contests />);
     const r26 = await rowFor(2026);
     fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
     fireEvent.click(r26.getByRole('button', { name: 'Archive' }));
     expect(await screen.findByText('Archive 2026 done.')).toBeTruthy();
-    resolve({ data: { status: 'ok', run_id: 2, sha: 'abc1234ffff', files_changed: 3 }, error: null });
+    expect(h.invoke).toHaveBeenCalledTimes(1); // no parallel run
+    resolvers[0]({ data: { status: 'noop', run_id: 1, sha: null, files_changed: 0 }, error: null });
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    const archiveOrder = h.rpc.mock.invocationCallOrder[h.rpc.mock.calls.findIndex(([n]) => n === 'archive_contest')];
+    expect(h.invoke.mock.invocationCallOrder[1]).toBeGreaterThan(archiveOrder);
+    resolvers[1]({ data: { status: 'ok', run_id: 2, sha: 'abc1234ffff', files_changed: 3 }, error: null });
     expect(await screen.findByText(/Published: 3 files changed/)).toBeTruthy();
-    expect(h.invoke).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText('Nothing to publish: the site is already up to date.')).toBeNull();
+    expect(h.invoke).toHaveBeenCalledTimes(2);
   });
 
   it('a refused lifecycle action does not publish', async () => {
