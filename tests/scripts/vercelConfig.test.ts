@@ -43,7 +43,7 @@ describe('vercel.json', () => {
   it('SPA rewrite falls back outside locale prefixes only', () => {
     expect(cfg.rewrites).toHaveLength(1)
     const rw = cfg.rewrites[0]
-    expect(rw.destination).toBe('/index.html')
+    expect(rw.destination).toBe('/')
     const re = new RegExp('^' + rw.source + '$')
     for (const p of ['/room/ABCD', '/admin', '/how-to-play', '/online-games', '/']) {
       expect(re.test(p), p).toBe(true)
