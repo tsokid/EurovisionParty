@@ -50,3 +50,6 @@ e2023.html
 e2024.html
 
 .superpowers/
+
+# Wikipedia API responses cached by scripts/history/fetchWikitext.ts
+.cache/

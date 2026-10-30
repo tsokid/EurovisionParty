@@ -1,0 +1,688 @@
+{{Short description|International song competition}}
+{{Infobox song contest
+| name         = Eurovision Song Contest
+| year         = 1969
+| logo         = ESC 1969 logo.png
+| final        = 29 March 1969
+| presenter    = [[Laurita Valenzuela]]
+| musdirector  = [[Augusto Algueró]]
+| director     = Ramón Díez
+| scrutineer   = [[Clifford Brown (director)|Clifford Brown]]
+| winner       = {{unbulleted list|{{esc|Spain|1945|y=1969}}|"{{lang|es|[[Vivo cantando]]|i=no}}"|{{esc|United Kingdom|y=1969}}|"[[Boom Bang-a-Bang]]"|{{esc|Netherlands|y=1969}}|"{{lang|nl|[[De troubadour]]|i=no}}"|{{esc|France|y=1969}}|"{{lang|fr|[[Un jour, un enfant]]|i=no}}"}}
+| vote         = Ten-member juries in each country; each member gave one vote to their favourite song
+| organiser    = [[European Broadcasting Union]] (EBU)
+| host         = {{lang|es|[[Televisión Española]]|i=unset}} (TVE)
+| venue        = {{lang|es|[[Teatro Real]]|i=unset}}<br />Madrid, Spain
+| entries      = 16
+| debut        =
+| return       =
+| nonreturn    = {{Esc|Austria}}
+<!-- Map Legend Colours -->
+| Map NoSemis = Y
+}}
+
+The '''Eurovision Song Contest 1969''' was the 14th edition of the [[Eurovision Song Contest]], held on 29 March 1969 at the {{lang|es|[[Teatro Real]]|i=no}} in [[Madrid]], Spain, and presented by [[Laurita Valenzuela]]. It was organised by the [[European Broadcasting Union]] (EBU) and host broadcaster {{lang|es|[[Televisión Española]]|i=no}} (TVE), who staged the event after winning the {{escyr|1968||1968 contest}} for {{esccnty|Spain|y=1968}} with the song "[[La La La (Massiel song)|La La La]]" by [[Massiel]].
+
+Broadcasters from a total of sixteen countries took part in the contest, with {{Esccnty|Austria}} being the only absence from the seventeen that participated the previous year.
+
+At the close of voting, four entries had received the same number of votes, and were therefore declared joint-winners: {{Esccnty|Spain|y=1969}} with "{{Lang|es|[[Vivo cantando]]|i=no}}" performed by [[Salomé (singer)|Salomé]], the {{Esccnty|United Kingdom|y=1969}} with "[[Boom Bang-a-Bang]]" by [[Lulu (singer)|Lulu]], the {{Esccnty|Netherlands|y=1969}} with "{{lang|nl|[[De troubadour]]|i=no}}" by [[Lenny Kuhr]], and {{Esccnty|France|y=1969}} with "{{Lang|fr|[[Un jour, un enfant]]|i=no}}" by [[Frida Boccara]]. It was the first time in the history of the contest that a tie for first place had occurred, and since the rules in place at the time allowed more than one winner, all four were declared joint winners. France's win was its fourth, thus making it the first country to win the contest four times. The Netherlands' win was its third. Spain and the United Kingdom each won for the second time, with Spain becoming the first country to win the contest twice in a row.
+
+== Location ==
+[[File:Teatro Real de Madrid 2025.jpg|thumb|left|{{lang|es|Teatro Real|i=no}}, Madrid – host venue of the 1969 contest.]]
+{{lang|es|[[Televisión Española]]|i=no}} (TVE) staged the 1969 contest in [[Madrid]], after winning the {{escyr|1968||1968 contest}} for {{esccnty|Spain|y=1968}} with the song "[[La La La (Massiel song)|La La La]]" by [[Massiel]]. This is the only time that the contest has been held in Spain. The venue selected was the {{lang|es|[[Teatro Real]]|i=no}}, an opera house opened in 1850. After having to close in 1924 due to damage to the building, the venue reopened in 1966 as a concert hall and the main concert venue of the [[Spanish National Orchestra]] and the [[RTVE Symphony Orchestra]].<ref name="Cultural Institutions: Teatro Real">{{cite web | publisher=esMADRID.com | url=http://www.esmadrid.com/en/portal.do?IDM=440&NM=3&TR=C&IDR=653 | title=Cultural Institutions: Teatro Real | access-date=3 September 2009 | archive-url=https://web.archive.org/web/20090907103422/http://www.esmadrid.com/en/portal.do?IDM=440&NM=3&TR=C&IDR=653 | archive-date=7 September 2009 | url-status=dead }}</ref> At that time, it also housed the [[Madrid Royal Conservatory]] and the [[RESAD|Royal Higher College of Performing Arts]].<ref>{{cite web |title=Teatro Real |url=https://www.spain.info/en/places-of-interest/teatro-real-madrid/ |website=Spain.info |publisher=[[Turespaña]] |access-date=28 December 2023}}</ref>
+
+The press room set up for the event, equipped with a colour [[Eidophor]] projector and a giant screen, twelve television monitors, [[telex]], [[teletype]], and [[telefax]] machines, telephones, one hundred typewriters with different keyboards, translation services, and a radio studio, was located within the building and had capacity for six hundred journalists.<ref name=rdp/><ref>{{cite news |title=Todo a punto |trans-title=Everything ready |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000875423 |newspaper=[[Pueblo (newspaper)|Pueblo]] |date=26 March 1969 |location=[[Madrid]], Spain |page=14 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref><ref name=yale>{{cite news |title=Cinco millones y medio de pesetas costará el Festival de Eurovisión |trans-title=The Eurovision Song Contest will cost five and a half million pesetas |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000875372 |newspaper=[[Pueblo (newspaper)|Pueblo]] |date=25 January 1969 |location=[[Madrid]], Spain |page=24 |author=Yale |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>
+
+On 27 March 1969, the {{lang|es|Club Internacional de Prensa|i=no}} hosted a cocktail reception at its Madrid facilities, presided over by [[Manuel Fraga]], the [[Ministry of Information and Tourism|Minister of Information and Tourism]] on whom TVE depended at the time, and attended by all the participating artists, executives from the participating broadcasters, numerous accredited journalists, and local authorities.<ref>{{cite news |title=Todo preparado para el Eurofestival-69 |trans-title=Everithing ready for Eurofestival-69 |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=10005076598 |newspaper={{ill|El Periódico Mediterráneo|es|lt=Mediterráneo}} |date=28 March 1969 |location=[[Castellón de la Plana]], Spain |page=6 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>
+
+== Participants ==
+{{further|List of countries in the Eurovision Song Contest}}
+{{ESC 1969 participants}}
+Broadcasters from sixteen countries participated in the 1969 contest. Of the seventeen countries that participated in 1968 only {{Esccnty|Austria}} was absent,<ref name=ESC1969>{{cite web|title=Eurovision Song Contest 1969|url=https://www.eurovision.com/eurovision-song-contest/madrid-1969/|publisher=[[European Broadcasting Union]]|access-date=19 May 2026}}</ref> officially because {{lang|de|[[ORF (broadcaster)|Österreichischer Rundfunk]]|i=no}} (ORF) could not find a suitable representative,<ref>{{cite news|author=<!--Staff writer(s); no by-line.-->|title=Eurovisionsfest ohne Österreich|url=https://www.arbeiterzeitung.at/ausgabe/19690115a/9|work=Arbeiter-Zeitung|location=Vienna, Austria|date=15 January 1969 | archive-url=https://web.archive.org/web/20201115123919/http://www.arbeiter-zeitung.at/cgi-bin/archiv/flash.pl?year=1969&month=1&day=15&page=09&html=1 | archive-date=15 November 2020 | url-status=live |access-date=7 May 2023}}</ref> but it was rumoured that the broadcaster refused to participate in a contest staged in [[Francoist Spain|Franco-ruled Spain]].<ref name=History>{{cite book|last=O'Connor|first=John Kennedy|year=2005|title=The Eurovision Song Contest: The Official History}}</ref>
+
+Several of the performing artists had previously represented the same country in past editions: [[Simone de Oliveira]] had represented {{Esccnty|Portugal|y=1965|t=Portugal in 1965}}; [[Kirsti Sparboe]] had represented {{Esccnty|Norway|y=1965|t=Norway in 1965}} and {{Esccnty|Norway|y=1967|t=in 1967}}; and [[Louis Neefs]] had represented {{Esccnty|Belgium|y=1967|t=Belgium in 1967}}. In addition, [[Siw Malmkvist]] representing {{Esccnty|Germany|y=1969}} had represented {{Esccnty|Sweden|y=1960|t=Sweden in 1960}}; and [[Romuald Figuier|Romuald]] representing {{Esccnty|Luxembourg|y=1969}} had represented {{Esccnty|Monaco|y=1964|t=Monaco in 1964}}.
+
+{{sticky header}}
+{| class="wikitable plainrowheaders sticky-header"
+|-
+|+ Eurovision Song Contest 1969 participants<ref>{{cite web |title=Madrid 1969 – Participants |url=https://www.eurovision.com/eurovision-song-contest/madrid-1969/all-participants/ |access-date=19 May 2026 |publisher=[[European Broadcasting Union]]}}</ref><ref name="Roxburgh" />
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Artist
+! scope="col" | Song
+! scope="col" | Language
+! scope="col" | Songwriter(s)
+! scope="col" | Conductor
+|-
+! scope="row" | {{Esc|Belgium}}
+| [[Belgische Radio- en Televisieomroep|BRT]]
+| [[Louis Neefs]]
+| "Jennifer Jennings"
+| Dutch
+| {{hlist|Paul Quintens|Phil Van Cauwenbergh}}
+| [[Francis Bay]]
+|-
+! scope="row" | {{Esc|Finland}}
+| [[Yle|YLE]]
+| [[Jarkko and Laura]]
+| "{{lang|fi|Kuin silloin ennen|i=unset}}"
+| Finnish
+| {{hlist|[[Toivo Kärki]]|[[Juha Vainio]]}}
+| [[Ossi Runne]]
+|-
+! scope="row" | {{Esc|France}}
+| [[Office de Radiodiffusion Télévision Française|ORTF]]
+| [[Frida Boccara]]
+| "{{lang|fr|[[Un jour, un enfant]]|i=unset}}"
+| French
+| {{hlist|[[Eddy Marnay]]|[[Emil Stern|Émile Stern]]}}
+| [[Franck Pourcel]]
+|-
+! scope="row" | {{Esc|Germany}}
+| [[Hessischer Rundfunk|HR]]{{efn|On behalf of the German public broadcasting consortium [[ARD (broadcaster)|ARD]]<ref>{{cite web |title=Alle deutschen ESC-Acts und ihre Titel |trans-title=All German ESC acts and their songs |url=https://www.eurovision.de/teilnehmer/vorentscheid386_glossaryPage-25.html |website=www.eurovision.de |publisher=ARD |access-date=12 June 2023 |archive-url=https://web.archive.org/web/20230612084259/https://www.eurovision.de/teilnehmer/vorentscheid386_glossaryPage-25.html |archive-date=12 June 2023 |language=de |url-status=live}}</ref>}}
+| [[Siw Malmkvist]]
+| "{{lang|it|[[Primaballerina]]|i=unset}}"
+| German
+| [[Hans Blum (musician)|Hans Blum]]
+| [[Hans Blum (musician)|Hans Blum]]
+|-
+! scope="row" | {{Esc|Ireland}}
+| [[RTÉ]]
+| [[Muriel Day]]
+| "The Wages of Love"
+| English
+| Michael Reade
+| [[Noel Kelehan]]
+|-
+! scope="row" | {{Esc|Italy}}
+| [[RAI]]
+| [[Iva Zanicchi]]
+| "{{lang|it|Due grosse lacrime bianche|i=unset}}"
+| Italian
+| {{hlist|{{ill|Claudio Daiano|it}}|[[Piero Soffici]]}}
+| [[Ezio Leoni]]
+|-
+! scope="row" | {{Esc|Luxembourg}}
+| [[Compagnie Luxembourgeoise de Télédiffusion|CLT]]
+| [[Romuald Figuier|Romuald]]
+| "Catherine"
+| French
+| {{hlist|André Borly|[[Paul Mauriat]]|[[André Pascal]]}}
+| [[Augusto Algueró]]
+|-
+! scope="row" | {{Esc|Monaco}}
+| [[TMC (TV channel)|TMC]]
+| {{ill|Jean-Jacques (singer)|fr|Jean-Jacques (chanteur)|lt=Jean-Jacques}}
+| "{{lang|fr|Maman, Maman|i=unset}}"
+| French
+| Jo Perrier
+| [[Hervé Roy]]
+|-
+! scope="row" | {{Esc|Netherlands}}
+| [[Nederlandse Televisie Stichting|NTS]]
+| [[Lenny Kuhr]]
+| "{{lang|nl|[[De troubadour]]|i=unset}}"
+| Dutch
+| {{hlist|{{ill|David Hartsema|nl}}|[[Lenny Kuhr]]}}
+| [[Frans de Kok]]
+|-
+! scope="row" | {{Esc|Norway}}
+| [[NRK]]
+| [[Kirsti Sparboe]]
+| "{{lang|no|Oj, oj, oj, så glad jeg skal bli|i=unset}}"
+| Norwegian
+| [[Arne Bendiksen]]
+| [[Øivind Bergh]]
+|-
+! scope="row" | {{Esc|Portugal}}
+| [[Radiotelevisão Portuguesa|RTP]]
+| [[Simone de Oliveira]]
+| "{{lang|pt|[[Desfolhada portuguesa]]|i=unset}}"
+| Portuguese
+| {{hlist|{{ill|Nuno Nazareth Fernandes|pt}}|[[José Carlos Ary dos Santos]]}}
+| Ferrer Trindade
+|-
+! scope="row" | {{Esc|Spain|1945}}
+| [[Televisión Española|TVE]]
+| [[Salomé (singer)|Salomé]]
+| "{{lang|es|[[Vivo cantando]]|i=unset}}"
+| Spanish
+| {{hlist|Aniano Alcalde|María José de Cerato}}
+| Augusto Algueró
+|-
+! scope="row" | {{Esc|Sweden}}
+| [[Sveriges Radio|SR]]
+| [[Tommy Körberg]]
+| "{{lang|sv|Judy, min vän|i=unset}}"
+| Swedish
+| {{hlist|[[Britt Lindeborg]]|[[Roger Wallis]]}}
+| [[Lars Samuelson (musician)|Lars Samuelson]]
+|-
+! scope="row" | {{Esc|Switzerland}}
+| [[Swiss Broadcasting Corporation|SRG SSR]]
+| [[Paola del Medico|Paola]]
+| "{{lang|fr|Bonjour, Bonjour|i=unset}}"
+| German
+| {{hlist|[[Heinz Meier (composer)|Henry Mayer]]|Jack Stark}}
+| [[Heinz Meier (composer)|Henry Mayer]]
+|-
+! scope="row" | {{Esc|United Kingdom}}
+| [[BBC]]
+| [[Lulu (singer)|Lulu]]
+| "[[Boom Bang-a-Bang]]"
+| English
+| {{hlist|Alan Moorhouse|[[Michael Julien|Peter Warne]]}}
+| [[Johnny Harris (musician)|Johnny Harris]]
+|-
+! scope="row" | {{Esc|Yugoslavia}}
+| [[Yugoslav Radio Television|JRT]]
+| {{ill|Ivica Krajač|hr|lt=Ivan}}
+| "{{lang|sh-latn|Pozdrav svijetu|i=unset}}" <small>({{lang|sh-cyrl|Поздрав свијету}})</small>
+| [[Serbo-Croatian]]
+| Milan Lentić
+| [[Miljenko Prohaska]]
+|}
+
+== Production and format ==
+[[File:Medaille Euro Songfestival 1969, Bestanddeelnr 922-2167.jpg|thumb|Eurovision Song Contest 1969 winner's medallion.{{efn|The medallions the winners received were made of silver by a jeweler in Barcelona, measured {{convert|10|cm}} in diameter and weighed {{convert|370|g}}.<ref>{{cite news|title=Las medallas del Eurofestival|magazine=Tele Radio|number=589|date=7 April 1969|page=21|language=es}}</ref>}}]]
+The event was presented by [[Laurita Valenzuela]], who was dressed for the occasion by {{ill|Carmen Mir|es}}.<ref>{{Cite magazine|url=https://www.revistavanityfair.es/lujo/moda/articulos/carmen-mir-disenadora-espanola-historia-moda-desfile-nasa-anos-sesenta/36072|title=Carmen Mir, the designer forgotten by history who had 200 employees|date=February 2, 2019|author=Parga, Mónica|magazine=[[Vanity Fair (magazine)|Vanity Fair]]|language=es}}</ref> The [[surrealist]] artist [[Salvador Dalí]] designed the poster for the contest. The musical director was [[Augusto Algueró]], who made the arrangements and conducted the 52-piece orchestra during the opening and ending acts.<ref name=jerez>{{cite news|url=https://www.diariodejerez.es/television/Medio-siglo-rara-victoria-Salome-Eurovision-video_0_1353764943.html|title=Medio siglo de la rara victoria de Salomé|newspaper={{ill|Diario de Jerez|es}}|author=Sempere, Antonio|date=12 May 2019|language=es}}</ref> Each competing delegation was allowed to appoint its own conductor to lead the orchestra in the performance of its entry, with the host musical director also conducting for those which did not bring their own conductor. The event was overseen on behalf of the [[European Broadcasting Union]] (EBU) by [[Clifford Brown (director)|Clifford Brown]] as [[Executive supervisors of the Eurovision Song Contest|scrutineer]].<ref name=ESC1969/> The draw to determine the running order took place in late 1968 in [[London]].<ref name=yale/>
+
+The event had a budget of around 5 million [[Spanish peseta|pesetas]] (€30,050).<ref name=rdp>{{cite news |title=Rueda de prensa sobre el Eurofestival 69 |trans-title=Press conference on Eurofestival 69 |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000875378 |newspaper=[[Pueblo (newspaper)|Pueblo]] |date=1 February 1969 |location=[[Madrid]], Spain |page=12 |language=es |author=Álvarez, Jesús | author-link=Jesús Álvarez (journalist) |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> For the set built on the {{lang|es|Teatro Real|i=no}} stage, the TVE scenography divisions in Madrid and Barcelona, headed by Bernardo Ballester, designed ten different proposals and built a scale model for each of them. These were shortlisted into three designs for further consideration, from which one was selected. The final design included the 5,000-pipe fixed organ already present at the back of the stage, a central steel sculpture created by surrealist artist {{ill|Amadeo Gabino|es}},{{efn|TVE moved the sculpture, which is about {{convert|5|m}} tall and weighs {{convert|350|kg|abbr=on}}, to the garden at its premises in {{lang|es|[[Prado del Rey (studios)|Prado del Rey]]|i=no}} after the contest, where it has remained ever since.}} a scoreboard on the side, and fifteen thousand red and pink carnations. Since they were not allowed to make any modifications to the stage, not even hammering a nail into it, the set was prefabricated in more than three hundred modules that, brought from {{lang|es|[[Prado del Rey (studios)|Prado del Rey]]|i=no}}, were assembled on-site. For better visibility, the floor of the set was raised {{convert|1|m}} above the stage.<ref>{{cite news |title=Dificultades para el decorado del Teatro Real como escenario del Festival de Eurovisión |trans-title=Difficulties in the decoration of the Teatro Real as the stage for the Eurovision Song Contest |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=10005076595 |newspaper={{ill|El Periódico Mediterráneo|es|lt=Mediterráneo}} |date=25 March 1969 |location=[[Castellón de la Plana]], Spain |page=6 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> For technical tests of colour broadcasting and lighting, a full-size replica of the {{lang|es|Teatro Real|i=no}} stage with the set was built at Studio 1 in {{lang|es|Prado del Rey|i=no}}.<ref>{{cite news|title=El escenario del Real, reproducido|magazine=Tele Radio|number=586|date=17 March 1969|page=16|language=es}}</ref>
+
+TVE had full access to the concert hall starting from the evening of 16 March 1969, immediately after the audience and staff of that day's regular season concert had left the venue, which allowed its stage crew to begin assembling the set right away, its technical crew to begin setting up the equipment afterwards, and the orchestra to start rehearsals on 22 March.<ref>{{cite AV media|url=https://www.rtve.es/play/videos/programas-y-concursos-en-el-archivo-de-rtve/toda-plana-preparativos-del-xiv-festival-eurovision-1969/5094479/|date=27 March 1969|title=A toda plana - Preparativos del XIV Festival de Eurovisión 1969|type=Television programme|location=[[Madrid]], Spain|publisher={{lang|es|[[Televisión Española]]|i=no}} (TVE)|language=es}}</ref> The rehearsals of the competing delegations on stage with the orchestra took place on 26 and 27 March, eight each day following the established running order for the competition. A full dress rehearsal was held on the evening of 28 March which included the voting process with simulated votes and a tie for first place.{{efn|name=dress}} Technical rehearsals were held on the morning of 29 March, followed by a dress rehearsal in the afternoon ahead of the live broadcast that evening.<ref>{{Cite news|title=Los últimos preparativos para el festival de Eurovisión|trans-title=The final preparations for the Eurovision Song Contest| url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11001092972 |newspaper=[[Diario Palentino]] |date=13 March 1969 |location=[[Palencia]], Spain |page=10 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>
+
+This was the second contest to be filmed and transmitted in colour, even though TVE did not have the required colour equipment for such a big event at the time. It had to rent such equipment from the German [[ARD (broadcaster)|ARD]], which was provided by [[Fernseh]] and brought to Madrid from Cologne.<ref>{{cite news |title=Aus der Wirtschaft |access-date=11 June 2024 |url=https://archive.org/details/funkschau-1969-heft-10/page/870/mode/2up |work={{ill|Funkschau|de}} |date=15 May 1969 |location=[[Haar, Bavaria|Haar]], [[West Germany]] |page=870 |via=Internet Archive}}</ref> Five colour television cameras inside the concert hall, three of them mounted on cranes, were used to broadcast the event.<ref name=com>{{cite news |title=Ha finalizado la instalación del sistema de comunicaciones del Eurofestival |trans-title=The installation of the Eurofestival communications system has been completed |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000757977 |newspaper=[[Libertad (newspaper)|Libertad]] |date=25 March 1969 |location=[[Valladolid]], Spain |page=7 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> To avoid interruptions in the broadcast, the television signal was transmitted to the other broadcasters feeding the [[Eurovision (network)|Eurovision network]] by two simultaneous ways:{{efn|Except for the connection with [[Lisbon]] for {{lang|pt|[[Radiotelevisão Portuguesa]]|i=no}} (RTP), which used a direct link since it is located in the opposite direction.<ref name=com/>}} via the main terrestrial microwave relay link network through France, and via the [[Intelsat III F-2]] satellite through Italy as a backup.{{efn|To send the backup signal from {{lang|es|[[Prado del Rey (studios)|Prado del Rey]]|i=no}} to the {{lang|it|[[Radiotelevisione italiana]]|i=no}} (RAI) studios in [[Rome]], the satellite ground stations in [[Buitrago del Lozoya]] and [[Fucino Space Centre|Fucino]] were used.<ref>{{cite news|title=El Eurofestival, por dos caminos, transmitido a todo el continente|trans-title=The Eurofestival, by two paths, transmitted to the whole continent|magazine=Tele Radio|number=588|page=26|date=31 March 1969|language=es}}</ref>}}<ref name=rdp/> In addition, 137 dedicated telephone lines were used for transmission, internal communication, and communication with the participating broadcasters.<ref name=com/> In Spain itself the broadcast was seen in black and white because the local transmitters did not support colour transmissions. The colour recording equipment did not arrive in Madrid on time, so TVE only had a black and white copy of the contest, until a colour copy was discovered in the archives of [[NRK]].<ref>{{Cite web|date=2019-03-29|title=50 años de Eurovisión 1969 {{!}} La final de Eurovisión 1969: por primera vez a todo color y con los comentarios de Uribarri|trans-title=50 Years of Eurovision 1969 {{!}} The 1969 Eurovision final: in full color for the first time and with Uribarri's commentary|url=https://www.rtve.es/television/20190329/final-eurovision-1969-primera-vez-todo-color-comentarios-uribarri/1912900.shtml|access-date=2021-05-23|website=[[RTVE]]|language=es}}</ref>
+
+== Contest overview<span class="anchor" id="Results"></span><span class="anchor" id="Participants and results"></span> ==
+<!-- Anchors in the header are the old section names -->
+[[File:Lenny Kuhr 1969 Eurovision dress.jpg|thumb|upright|[[Lenny Kuhr]]'s dress]]
+The contest was held on 29 March 1969 at 22:00 [[Central European Time|CET]]. The show opened with a rendition of the [[Te Deum (Charpentier)|Eurovision tune]] by the {{lang|es|Teatro Real|i=no}} organ, followed by the orchestra performing the previous year's winning song, "La, la, la". The interval act consisted of a surrealist documentary titled {{lang|es|La España diferente}}, directed by [[Javier Aguirre (director)|Javier Aguirre]], with music by [[Luis de Pablo]]. The show ended with the orchestra performing a medley of previous Eurovision winning songs during the credits.<ref name=jerez/>
+
+The winners were: {{Esccnty|Spain|y=1969}} with "{{Lang|es|[[Vivo cantando]]|i=no}}", written by Aniano Alcalde and María José de Cerato, and performed by [[Salomé (singer)|Salomé]]; the {{Esccnty|United Kingdom|y=1969}} with "[[Boom Bang-a-Bang]]", written by Alan Moorhouse and [[Michael Julien|Peter Warne]], and performed by [[Lulu (singer)|Lulu]]; the {{Esccnty|Netherlands|y=1969}} with "{{lang|nl|[[De troubadour]]|i=no}}", written by {{ill|David Hartsema|nl}} and [[Lenny Kuhr]], and performed by Kuhr herself; and {{Esccnty|France|y=1969}} with "{{Lang|fr|[[Un jour, un enfant]]|i=no}}", written by [[Eddy Marnay]] and [[Emil Stern|Émile Stern]], and performed by [[Frida Boccara]].<ref name=scb/>
+
+It was the first time that the contest resulted in a tie for first place, with the four entries each gaining 18 votes. Since the rules in place at the time allowed more than one winner,{{efn|name=dress|In the dress rehearsal held on 28 March, in which voting was also rehearsed with simulated votes, there had already been a tie for first place between Monaco and Luxembourg, both with 18 votes. EBU scrutineer [[Clifford Brown (director)|Clifford Brown]] declared them joint winners after consulting the rules and verifying that there could be more than one winner. Laurita Valenzuela concluded the rehearsal by bidding farewell until next year in Monaco and Luxembourg "at the same time".<ref>{{Cite news|title=Ayer, ensayo general|trans-title=Yesterday, dress rehearsal| url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000875426 |newspaper=[[Pueblo (newspaper)|Pueblo]] |date=29 March 1969 |location=[[Madrid]], Spain |page=30 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>}} all four were declared joint winners ''ex aequo''.{{efn|name=tie|Following protests from participating broadcasters after the four-way tie, a tiebreaker rule to determine a single winner was adopted for the first time in the {{escyr|1970||1970 contest}}.<ref>{{cite web|title=Eurovision Song Contest 1970|url=https://eurovision.tv/event/amsterdam-1970|publisher=[[European Broadcasting Union]]|access-date=19 August 2025}}</ref>}} This caused a problem concerning the medals that were to be distributed to them, as there were not enough to go round, so only the singers received their medals on stage;<ref name=ESC1969 /> the songwriters were not awarded theirs until later.<ref>{{Cite news |date=4 April 1969 |title=Por qué hubo medallas para todos los ganadores del Festival de Eurovisión |trans-title=Why were there medals for all the Eurovision Song Contest winners |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000488756 |newspaper=[[Diario de Burgos]] |location=[[Burgos]], Spain |page=12 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> The medals were presented by previous year's winner Massiel, after which all four winning songs were reprised.
+
+{| class="sortable wikitable plainrowheaders sticky-header"
+|+ Results of the Eurovision Song Contest 1969<ref name=scb>{{cite web |title=Madrid 1969 – Scoreboard |url=https://www.eurovision.com/eurovision-song-contest/madrid-1969/madrid-1969-final/ |publisher=[[European Broadcasting Union]] |access-date=19 May 2026 }}</ref>
+|-
+! scope="col" | {{abbr|R/O|Running order}}
+! scope="col" | Country
+! scope="col" | Artist
+! scope="col" | Song
+! scope="col" class="unsortable" | Votes
+! scope="col" | Place
+|-
+! scope="row" style="text-align:center;" | 1
+| {{Esc|Yugoslavia|y=1969}}
+| Ivan
+| "{{lang|sh-latn|Pozdrav svijetu|i=unset}}"
+| 5
+| 13
+|-
+! scope="row" style="text-align:center;" | 2
+| {{Esc|Luxembourg|y=1969}}
+| [[Romuald Figuier|Romuald]]
+| "Catherine"
+| 7
+| 11
+|- style="font-weight:bold; background:gold;"
+! scope="row" style="text-align:center;" | 3
+| {{Esc|Spain|1945|y=1969}}
+| [[Salomé (singer)|Salomé]]
+| "{{lang|es|[[Vivo cantando]]|i=unset}}"
+| 18
+| 1
+|-
+! scope="row" style="text-align:center;" | 4
+| {{Esc|Monaco|y=1969}}
+| Jean-Jacques
+| "{{lang|fr|Maman, Maman|i=unset}}"
+| 11
+| 6
+|-
+! scope="row" style="text-align:center;" | 5
+| {{Esc|Ireland|y=1969}}
+| {{sortname|Muriel|Day}}
+| "The Wages of Love"
+| 10
+| 7
+|-
+! scope="row" style="text-align:center;" | 6
+| {{Esc|Italy|y=1969}}
+| {{sortname|Iva|Zanicchi}}
+| "{{lang|it|Due grosse lacrime bianche|i=unset}}"
+| 5
+| 13
+|- style="font-weight:bold; background:gold;"
+! scope="row" style="text-align:center;" | 7
+| {{Esc|United Kingdom|y=1969}}
+| [[Lulu (singer)|Lulu]]
+| "[[Boom Bang-a-Bang]]"
+| 18
+| 1
+|- style="font-weight:bold; background:gold;"
+! scope="row" style="text-align:center;" | 8
+| {{Esc|Netherlands|y=1969}}
+| {{sortname|Lenny|Kuhr}}
+| "{{lang|nl|[[De troubadour]]|i=unset}}"
+| 18
+| 1
+|-
+! scope="row" style="text-align:center;" | 9
+| {{Esc|Sweden|y=1969}}
+| {{sortname|Tommy|Körberg}}
+| "{{lang|sv|Judy, min vän|i=unset}}"
+| 8
+| 9
+|-
+! scope="row" style="text-align:center;" | 10
+| {{Esc|Belgium|y=1969}}
+| {{sortname|Louis|Neefs}}
+| "Jennifer Jennings"
+| 10
+| 7
+|-
+! scope="row" style="text-align:center;" | 11
+| {{Esc|Switzerland|y=1969}}
+| [[Paola del Medico|Paola]]
+| "{{lang|fr|Bonjour, Bonjour|i=unset}}"
+| 13
+| 5
+|-
+! scope="row" style="text-align:center;" | 12
+| {{Esc|Norway|y=1969}}
+| {{sortname|Kirsti|Sparboe}}
+| "{{lang|no|Oj, oj, oj, så glad jeg skal bli|i=unset}}"
+| 1
+| 16
+|-
+! scope="row" style="text-align:center;" | 13
+| {{Esc|Germany|y=1969}}
+| {{sortname|Siw|Malmkvist}}
+| "{{lang|it|[[Primaballerina]]|i=unset}}"
+| 8
+| 9
+|- style="font-weight:bold; background:gold;"
+! scope="row" style="text-align:center;" | 14
+| {{Esc|France|y=1969}}
+| {{sortname|Frida|Boccara}}
+| "{{lang|fr|[[Un jour, un enfant]]|i=unset}}"
+| 18
+| 1
+|-
+! scope="row" style="text-align:center;" | 15
+| {{Esc|Portugal|y=1969}}
+| {{sortname|Simone de|Oliveira}}
+| "{{lang|pt|[[Desfolhada portuguesa]]|i=unset}}"
+| 4
+| 15
+|-
+! scope="row" style="text-align:center;" | 16
+| {{Esc|Finland|y=1969}}
+| [[Jarkko and Laura]]
+| "{{lang|fi|Kuin silloin ennen|i=unset}}"
+| 6
+| 12
+|}
+
+=== Spokespersons ===
+Each participating broadcaster appointed a spokesperson who was responsible for announcing the votes for their respective jury via telephone. Known spokespersons at the 1969 contest are listed below.
+
+* {{flagu|Belgium}}{{snd}}Eugène Senelle<ref>{{cite news |last=Janssens |first=Emiel  |title=Drieluik Madrid, met een viertal kanshebbers naar het uur |trans-title=Triptych Madrid, with four contenders for the hour |work=[[Gazet van Antwerpen]] |location=[[Antwerp]], Belgium |date=29 March 1969 |language=nl}}</ref>
+* {{flagu|Ireland}}{{snd}}[[Brendan O'Reilly]]<ref name=":1">{{cite news |title=Family forecast |url=https://www.newspapers.com/article/evening-herald-family-forecast/176967741/ |access-date=18 July 2025 |work=[[The Herald (Ireland)|Evening Herald]] |date=29 March 1969 |location=Dublin, Ireland |pages=6, [https://www.newspapers.com/article/evening-herald/176966975/ 9] |via=Newspapers.com}}</ref>
+* {{flagu|Finland}}{{snd}}{{ill|Poppe Berg|fi}}<ref name="HS2" />
+* {{flagu|Norway}}{{snd}}{{ill|Janka Polanyi|no}}<ref>{{cite news |title=Over til Madrid: Kveldens begivenhet Melodi Grand Prix |trans-title=Over to Madrid: Tonight's event Melodi Grand Prix |url=https://www.nb.no/items/1df6f59d0c69b23c4c22f2bdb0016cb5?page=5 |access-date=3 January 2023 |work=[[Sandefjords Blad]] |date=29 March 1969 |page=7 |location=[[Sandefjord]], Norway |language=no |via=[[National Library of Norway]]}}</ref>
+* {{flagu|Sweden}}{{snd}}{{ill|Edvard Matz|sv}}<ref name="Melfest">{{cite book |last1=Thorsson |first1=Leif |last2=Verhage |first2=Martin |title=Melodifestivalen genom tiderna : de svenska uttagningarna och internationella finalerna |date=2006 |publisher=Premium Publishing |location=Stockholm |isbn=91-89136-29-2 |language=sv |pages=80–81}}</ref>
+* {{flagu|United Kingdom}}{{snd}}Colin Ward-Lewis<ref name="Roxburgh">{{cite book |last1=Roxburgh |first1=Gordon |title=Songs for Europe: The United Kingdom at the Eurovision Song Contest |date=2012 |publisher=[[Telos Publishing]] |location=Prestatyn |isbn=978-1-84583-065-6 |pages=482–493 |series=Volume One: The 1950s and 1960s}}</ref>
+* {{flagu|Yugoslavia}}{{snd}}Višnja Trputec<ref>{{cite news |author=Z. Kršlak |title=Девети покушај ЈРТ |trans-title=JRT's ninth attempt |url=https://adt.arcanum.com/en/view/PolitikaBeograd_OSA_1969_03-2/?pg=321&layout=s |access-date=5 August 2025 |work=[[Politika]] |date=28 March 1969 |location=Belgrade, Yugoslavia |page=12 |language=sh-cyrl |url-access=subscription |via=[[Arcanum Newspapers]]}}</ref>
+
+== Detailed voting results<span class="anchor" id="Scoreboard"></span> ==
+<!-- Anchor in the header is the old section name -->
+Every participating broadcaster assembled a jury panel of ten people. Every jury member could give one vote to his or her favourite song, except that representing their own country. This means that any song could receive a maximum of 10 votes from a national jury, but none achieved this. The highest number of votes a song received from a jury was six, which went to the song from the Netherlands.
+
+Although neither spokesperson made any errors in their announcements, EBU scrutineer Clifford Brown asked both the Spanish and the Monegasque spokespersons to repeat their votes. No adjustments were made to the scoring as a result of the repetition.
+
+{| class="wikitable plainrowheaders" style="text-align:center;"
+|-
+|+ Detailed voting results<ref>{{cite web |title=Madrid 1969 – Detailed voting results |url=https://eurovision.tv/event/madrid-1969/final/results |publisher=European Broadcasting Union |access-date=8 April 2021 |archive-url=https://web.archive.org/web/20210408105629/https://eurovision.tv/event/madrid-1969/final/results |archive-date=8 April 2021 |url-status=live}}</ref><ref>{{cite web |title=Eurovision Song Contest 1969 – Scoreboard |url=https://eurovision.tv/page/history/by-year/contest?event=286#Scoreboard |publisher=European Broadcasting Union |access-date=14 June 2021 |archive-url=https://web.archive.org/web/20150701174348/http://www.eurovision.tv/page/history/by-year/contest?event=286#Scoreboard |archive-date=1 July 2015 |url-status=dead}}</ref>
+|-
+! colspan="2" |
+! scope="col" {{vert header|nb=1|Total score}}
+! scope="col" {{vert header|nb=1|Yugoslavia}}
+! scope="col" {{vert header|nb=1|Luxembourg}}
+! scope="col" {{vert header|nb=1|Spain}}
+! scope="col" {{vert header|nb=1|Monaco}}
+! scope="col" {{vert header|nb=1|Ireland}}
+! scope="col" {{vert header|nb=1|Italy}}
+! scope="col" {{vert header|nb=1|United Kingdom}}
+! scope="col" {{vert header|nb=1|Netherlands}}
+! scope="col" {{vert header|nb=1|Sweden}}
+! scope="col" {{vert header|nb=1|Belgium}}
+! scope="col" {{vert header|nb=1|Switzerland}}
+! scope="col" {{vert header|nb=1|Norway}}
+! scope="col" {{vert header|nb=1|Germany}}
+! scope="col" {{vert header|nb=1|France}}
+! scope="col" {{vert header|nb=1|Portugal}}
+! scope="col" {{vert header|nb=1|Finland}}
+|-
+! rowspan="16" {{vert header|va=middle|Contestants}}
+! scope="row" style="text-align:left; background:#f2f2f2;" | Yugoslavia
+| style="text-align:right; background:#f2f2f2;" | 5 || style="text-align:left; background:#aaa;"| ||  || 1 ||  ||  ||  ||  ||  ||  || 1 ||  ||  ||  ||  || 3 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Luxembourg
+| style="text-align:right; background:#f2f2f2;" | 7 || 1 || style="text-align:left; background:#aaa;"| ||  || 3 ||  ||  ||  || 1 ||  || 1 ||  ||  || 1 ||  ||  ||
+|- style="background:gold;"
+! scope="row" style="text-align:left; font-weight:bold; background:gold;" | Spain
+| style="text-align:right; font-weight:bold;" | 18 || 1 || 2 || style="text-align:left; background:#aaa;"| || 3 || 1 ||  ||  ||  ||  || 3 ||  || 1 || 3 || 2 || 2 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Monaco
+| style="text-align:right; background:#f2f2f2;" | 11 ||  ||  || 2 || style="text-align:left; background:#aaa;"| ||  || 4 ||  || 2 || 2 || 1 ||  ||  ||  ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Ireland
+| style="text-align:right; background:#f2f2f2;" | 10 ||  ||  ||  ||  || style="text-align:left; background:#aaa;"| ||  || 1 || 1 || 1 ||  || 3 ||  || 1 ||  ||  || 3
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Italy
+| style="text-align:right; background:#f2f2f2;" | 5 || 1 ||  ||  || 1 || 1 || style="text-align:left; background:#aaa;"| ||  ||  ||  ||  ||  ||  ||  ||  || 1 || 1
+|- style="background:gold;"
+! scope="row" style="text-align:left; font-weight:bold; background:gold;" | United Kingdom
+| style="text-align:right; font-weight:bold;" | 18 || 2 || 4 ||  ||  ||  || 3 || style="text-align:left; background:#aaa;"| || 1 || 5 ||  ||  ||  || 1 ||  || 1 || 1
+|- style="background:gold;"
+! scope="row" style="text-align:left; font-weight:bold; background:gold;" | Netherlands
+| style="text-align:right; font-weight:bold;" | 18 ||  || 2 ||  || 1 ||  || 3 ||  || style="text-align:left; background:#aaa;"| ||  || 1 || 4 || 1 ||  || 6 ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Sweden
+| style="text-align:right; background:#f2f2f2;" | 8 ||  ||  ||  ||  ||  ||  ||  || 1 || style="text-align:left; background:#aaa;"| ||  ||  || 3 ||  ||  || 1 || 3
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Belgium
+| style="text-align:right; background:#f2f2f2;" | 10 ||  ||  || 2 ||  ||  ||  || 3 || 1 ||  || style="text-align:left; background:#aaa;"| || 2 || 2 ||  ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Switzerland
+| style="text-align:right; background:#f2f2f2;" | 13 || 2 ||  ||  ||  || 3 ||  || 2 ||  ||  || 1 || style="text-align:left; background:#aaa;"| || 1 || 2 ||  ||  || 2
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Norway
+| style="text-align:right; background:#f2f2f2;" | 1 ||  ||  ||  ||  ||  ||  ||  ||  || 1 ||  ||  || style="text-align:left; background:#aaa;"| ||  ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Germany
+| style="text-align:right; background:#f2f2f2;" | 8 || 3 ||  || 2 ||  ||  ||  ||  ||  ||  || 1 ||  || 1 || style="text-align:left; background:#aaa;"| || 1 ||  ||
+|- style="background:gold;"
+! scope="row" style="text-align:left; font-weight:bold; background:gold;" | France
+| style="text-align:right; font-weight:bold;" | 18 ||  || 1 ||  || 2 || 4 ||  || 4 || 2 || 1 ||  || 1 ||  || 1 || style="text-align:left; background:#aaa;"| || 2 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Portugal
+| style="text-align:right; background:#f2f2f2;" | 4 ||  ||  || 2 ||  ||  ||  ||  ||  ||  || 1 ||  ||  ||  || 1 || style="text-align:left; background:#aaa;"| ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Finland
+| style="text-align:right; background:#f2f2f2;" | 6 ||  || 1 || 1 ||  || 1 ||  ||  || 1 ||  ||  ||  || 1 || 1 ||  ||  || style="text-align:left; background:#aaa;"|
+|}
+
+== Broadcasts<span class="anchor" id="Broadcasters and commentators"></span> ==
+<!-- Anchor in the header is the old section name -->
+Each participating broadcaster was required to relay the contest live via its networks after receiving it through the Eurovision network. Non-participating EBU member broadcasters were also able to relay the contest as "passive participants". Broadcasters were able to send commentators to provide coverage of the contest in their own native language and to relay information about the artists and songs to their television viewers.<ref>{{cite web |title=The Rules of the Contest |url=https://eurovision.tv/about/rules |publisher=European Broadcasting Union |access-date=19 December 2022 |archive-url=https://web.archive.org/web/20221004011300/https://eurovision.tv/about/rules |archive-date=4 October 2022 |url-status=live}}</ref> In addition to the participating countries, the contest was also reportedly broadcast in 26 countries including Tunisia; in Bulgaria, Czechoslovakia, East Germany, Hungary, Poland, Romania, and the Soviet Union received via [[International Radio and Television Organisation|Intervision]]; and in Brazil, Chile, Mexico, Panama, and Puerto Rico.<ref name="Roxburgh" /><ref>{{cite news |title=Songfestival: 250 miljoen kijkers maar geen muzikale verrassingen  |trans-title=Eurovision Song Contest: 250 million viewers but no musical surprises |url=https://resolver.kb.nl/resolve?urn=ABCDDD:010818018:mpeg21:p025 |access-date=23 January 2025 |work=[[Trouw]] |date=29 March 1969 |language=nl |location=[[Meppel]], Netherlands |page=19 |via=[[Delpher]]}}</ref><ref>{{cite news |last=Gibson |first=David |date=29 March 1969 |title=World's eyes on Lulu |url=https://books.google.com/books?id=_-pAAAAAIBAJ |access-date=15 May 2024 |work=[[Glasgow Times|Evening Times]] |location=[[Glasgow]], Scotland |page=7 |via=[[Google Books]]}}</ref> 30 radio and television commentators are reported to be present at the contest,<ref>{{cite news |title=Top of the Pops: this is it |url=https://www.newspapers.com/article/irish-independent-top-of-the-pops-this/169255955/ |access-date=31 March 2025 |work=[[Irish Independent]] |date=27 March 1969 |location=[[Dublin]], Ireland |page=8 |via=Newspapers.com}}</ref> with an estimated global audience of 250 to 400 million viewers.<ref>{{cite news |title=Songfestival is voor de Spaanse tv prestige zaak |trans-title=Eurovision is a matter of prestige for Spanish TV |url=https://leiden.courant.nu/issue/LD/1969-03-28/edition/0/page/5 |access-date=15 December 2024 |work=[[Leidsch Dagblad]] |agency=[[Geassocieerde Pers Diensten]] (GPD) |location=[[Leiden]], Netherlands |language=nl |page=5 |date=28 March 1969 |via=Erfgoed Leiden en Omstreken}}</ref>
+
+Known details on the broadcasts in each country, including the specific broadcasting stations and commentators are shown in the tables below.
+
+{| class="wikitable plainrowheaders sticky-header"
+|-
+|+ Broadcasters and commentators in participating countries
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Channel(s)
+! scope="col" | Commentator(s)
+! scope="col" | {{abbr|Ref(s)|References}}
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|Belgium}}
+| [[Belgische Radio- en Televisieomroep|BRT]]
+| [[VRT 1|BRT]]
+| {{ill|Jan Theys|lt=Jan Theys|nl|Jan Theys (presentator)}}
+| style="text-align:center" | <ref name="DeS">{{cite news |title=Televisie en radio |trans-title=Television and radio |url=https://uurl.kbr.be/2213735/p29 |url-access=registration |date=29 March 1969 |work=[[De Standaard]] |location=[[Brussels]], Belgium |access-date=20 December 2024 |page=29 |language=nl |via={{ill|BelgicaPress|nl}}}}</ref><ref>{{cite news |title=De festival-herinneringen van Jan Theys |trans-title=The festival memories of Jan Theys |url=https://gisterennogvandaag.com/2022/05/20/jan-theys-ik-zag-hoe-de-mythe-rond-julio-iglesias-werd-geboren-story-12-mei-1987/ |access-date=3 January 2023 |work={{ill|Story (Belgian magazine)|nl|Story (Vlaams tijdschrift)|lt=Story}} |date=12 May 1987 |archive-url=https://web.archive.org/web/20220630022005/https://gisterennogvandaag.com/2022/05/20/jan-theys-ik-zag-hoe-de-mythe-rond-julio-iglesias-werd-geboren-story-12-mei-1987/ |archive-date=30 June 2022 |language=nl |url-status=live}}</ref>
+|-
+| rowspan="2" | [[Radiodiffusion-télévision belge|RTB]]
+| [[La Une|RTB]]
+| [[Paule Herreman]]
+| style="text-align:center" | <ref name="LeSoir">{{cite news |title=Télévision {{!}} À la radio |trans-title=Television {{!}} On the radio |url=https://uurl.kbr.be/1613134/p12 |url-access=registration |date=29 March 1969 |work=[[Le Soir]] |location=[[Brussels]], Belgium |access-date=28 June 2025 |page=12 |language=fr |via={{ill|BelgicaPress|nl}}}}</ref><ref>{{cite news |last=Thirifays |first=André |title=À Madrid : Le Grand Prix Eurovision de la Chanson |trans-title=In Madrid: The Eurovision Song Contest |url=https://uurl.kbr.be/1613135/p7 |url-access=registration |date=30–31 March 1969 |work=[[Le Soir]] |location=[[Brussels]], Belgium |access-date=30 November 2024 |page=7 |language=fr |via={{ill|BelgicaPress|nl}}}}</ref>
+|-
+| [[La Première (Belgium)|RTB 1]]
+| {{N/A|}}
+| style="text-align:center" | <ref name="LeSoir" />
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Finland}}
+| rowspan="2" | [[Yle|YLE]]
+| {{lang|fi|[[Yle TV1|TV-ohjelma 1]]|i=unset}}, {{lang|fi|{{ill|Yleisohjelma|fi|Yleisohjelma (Suomen Yleisradio)}}|i=unset}}
+| {{ill|Aarno Walli|fi}}
+| style="text-align:center" | <ref name="HS2">{{cite news |title=Eurovision laulukipailu -69 |trans-title=Eurovision Song Contest -69 |url=https://nakoislehti.hs.fi/c45bb92f-e49e-4f2d-8757-b0d101228634 |access-date=23 December 2022 |work=[[Helsingin Sanomat]] |date=29 March 1969 |page=33 |location=[[Helsinki]], Finland |language=fi |url-access=subscription}}</ref><ref name="HS">{{cite news |title=Radio ja televisio |trans-title=Radio and television |url=https://nakoislehti.hs.fi/c45bb92f-e49e-4f2d-8757-b0d101228634 |access-date=23 December 2022 |work=Helsingin Sanomat |date=29 March 1969 |page=33 |language=fi |location=Helsinki, Finland |url-access=subscription}}</ref>
+|-
+| {{lang|fi|Ruotsinkielinen ohjelma|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="HS" />
+|-
+! scope="row" | {{Flagu|France}}
+| [[Office de Radiodiffusion Télévision Française|ORTF]]
+| {{lang|fr|[[France 2|Deuxième Chaîne]]|i=unset}}, [[France Inter]]
+| [[Pierre Tchernia]]
+| style="text-align:center" | <ref name="Luxemburger" /><ref>{{Cite news |title=Radio-sélection – Samedi 29 |trans-title=Radio selection – Saturday 29 |url=https://archives.lalozerenouvelle.com/la-lozere-nouvelle/1960-1970/1969/03/1969-03-21/ |access-date=27 November 2024 |work={{ill|Lozère nouvelle|fr|lt=La Lozère nouvelle}} |date=21 March 1969 |location=[[Mende, Lozère|Mende]], France |page=9 |language=fr}}</ref>
+|-
+! scope="row" | {{Flagu|Germany}}
+| [[ARD (broadcaster)|ARD]]
+| {{lang|de|[[Das Erste|Deutsches Fernsehen]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Fernsehen heute |trans-title=Television today |url=https://archiv.ndz.de/resources/cimage/page/3176018/320 |access-date=8 August 2025 |work={{ill|Neue Deister-Zeitung|de}} |date=29 March 1969 |location=[[Springe]], West Germany |archive-url=https://web.archive.org/web/20250808183533/https://archiv.ndz.de/resources/cimage/page/3176018/320 |archive-date=8 August 2025 |page=18 |language=de |url-status=dead}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Ireland}}
+| rowspan="2" | [[RTÉ]]
+| [[RTÉ One|RTÉ]]
+| [[Gay Byrne]]
+| style="text-align:center" | <ref name=":1" /><ref>{{cite news |title=Tonight's television |url=https://www.newspapers.com/article/evening-herald-tonights-television/176968226/ |access-date=18 July 2025 |work=Evening Herald |date=29 March 1969 |location=Dublin, Ireland |page=17 |via=Newspapers.com}}</ref>
+|-
+| [[RTÉ Radio 1|RTÉ Radio]]
+| Kevin Roche
+| style="text-align:center" | <ref>{{cite news |title=On the radio |url=https://www.newspapers.com/article/evening-herald-on-the-radio/176967067/ |access-date=18 July 2025 |work=Evening Herald |date=29 March 1969 |location=Dublin, Ireland |page=17 |via=Newspapers.com}}</ref>
+|-
+! scope="row" | {{Flagu|Italy}}
+| [[RAI]]
+| {{lang|it|[[Rai 2|Secondo Programma TV]]|i=unset}}
+| {{ill|Renato Tagliani|it}}
+| style="text-align:center" | <ref>{{cite magazine |title=sabato {{!}} TV {{!}} 29 marzo |trans-title=Saturday {{!}} TV {{!}} 29 March |url= http://www.radiocorriere.teche.rai.it/Download.aspx?data=1969{{!}}12{{!}}000{{!}}P |magazine=[[Radiocorriere TV]] |location=[[Turin]], Italy |volume=46 |issue=12 |pages=104–105 |date=23-29 March 1969 |access-date=6 June 2024 |language=it |via=[[Rai Teche]]}}</ref>
+|-
+! scope="row" | {{Flagu|Luxembourg}}
+| [[Compagnie Luxembourgeoise de Télédiffusion|CLT]]
+| {{lang|fr|[[RTL9|Télé-Luxembourg]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Luxemburger">{{cite news |title=Radio-Télévision |url=https://viewer.eluxemburgensia.lu/ark:70795/k9f5gbdn0/pages/23 |access-date=3 January 2023 |work=[[Luxemburger Wort]] |date=28 March 1969 |location=[[Luxembourg City]], Luxembourg |language=de, fr |page=23 |via=[[National Library of Luxembourg]]}}</ref>
+|-
+! scope="row" | {{Flagu|Netherlands}}
+| [[Nederlandse Televisie Stichting|NTS]]
+| {{lang|nl|[[NPO 1|Nederland 1]]|i=unset}}
+| [[Pim Jacobs]]
+| style="text-align:center" | <ref name="Limburger">{{cite news |title=Televisie |trans-title=Television |url=https://resolver.kb.nl/resolve?urn=MMCC01:048157025:mpeg21:p00038 |access-date=3 January 2023 |work=[[De Limburger|De Nieuwe Limburger]] |date=29 March 1969 |language=nl |location=[[Maastricht]], Netherlands |page=38 |via=[[Delpher]]}}</ref><ref>{{cite news |title=De zeventien stemmen van Madrid |trans-title=The seventeen voices of Madrid |url=https://resolver.kb.nl/resolve?urn=KBPERS01:002828025:mpeg21:p00019 |access-date=3 January 2023 |work=[[Algemeen Dagblad]] |date=29 March 1969 |language=nl |location=[[Rotterdam]], Netherlands |page=19 |via=[[Delpher]]}}</ref>
+|-
+! scope="row" | {{Flagu|Norway}}
+| [[NRK]]
+| {{lang|no|[[NRK1|NRK Fjernsynet]]|i=unset}}, [[NRK P1|NRK]]{{efn|Deferred broadcast on NRK at 22:30 ([[Central European Time|CET]])<ref name="Norsk" />}}
+| {{ill|Sverre Christophersen|no}}{{efn|The connection between the commentary booth in Madrid and the NRK studios in Oslo was disabled partway through the broadcast, resulting in the Norwegian commentary provided by {{ill|Sverre Christophersen|no}} not being relayed to Norwegian viewers and listeners. Commentary was temporarily provided by {{ill|Janka Polanyi|no}} before the Swedish feed was rerouted to also cover the Norwegian broadcasts, with the original connection to Christophersen ultimately fixed before the start of the voting sequence.<ref>{{cite news |title=Fire ikke-vinnere! |trans-title=Four non-winners! |url=https://www.nb.no/items/fb3fab3aad31e9031c6da004539fa927?page=7 |access-date=3 January 2023 |work=[[Verdens Gang]] |date=31 March 1969 |page=7 |location=[[Oslo]], Norway |language=no |via=[[National Library of Norway]]}} {{Subscription or libraries}}</ref>}}
+| style="text-align:center" | <ref name="Norsk">{{cite news |title=Radio ∗ Fjernsyn |trans-title=Radio ∗ Television |url=https://www.nb.no/items/b6e004cf3b178e24c1eb04a63a05ff6e?page=11 |access-date=3 January 2023 |work=[[Østlands-Posten]] |date=29 March 1969 |page=12 |location=[[Larvik]], Norway |language=no |via=National Library of Norway}}</ref>
+|-
+! scope="row" | {{Flagu|Portugal}}
+| [[Radiotelevisão Portuguesa|RTP]]
+| {{lang|pt|[[RTP1|I Programa]]|i=unset}}, {{lang|pt|[[RTP2|II Programa]]|i=unset}}
+| [[Henrique Mendes]]
+| style="text-align:center" | <ref>{{cite news |title=Programa de hoje |trans-title=Programmes for today |url=http://casacomum.org/cc/visualizador?pasta=06599.137.23399#!14 |access-date=3 January 2023 |work=[[Diário de Lisboa]] |date=29 March 1969 |page=14 |location=[[Lisbon]], Portugal |language=pt |via=Casa Comum}}</ref><ref>{{cite AV media|url=https://arquivos.rtp.pt/conteudos/bastidores-da-rtp-no-festival-eurovisao-da-cancao |title=Bastidores da RTP no Festival Eurovisão da Canção |trans-title=Behind the scenes at RTP at the Eurovision Song Contest |date=30 March 1969 |access-date=30 July 2024 |type=Television programme |publisher=[[Rádio e Televisão de Portugal]] (RTP) |via=RTP Arquivos}}</ref>
+|-
+! scope="rowgroup" rowspan="5" | {{Flagu|Spain|1945}}
+| [[Televisión Española|TVE]]
+| [[La 1 (Spanish TV channel)|TVE 1]], [[La 2 (Spanish TV channel)|TVE 2]], [[RTVE Canarias|TVE Canarias]]{{efn|Deferred broadcast on TVE Canarias the following day at 22:35 ([[Western European Time|WET]])<ref name="Canary Islands" />}}
+| [[José Luis Uribarri]]
+| style="text-align:center" | <ref name="Canary Islands">{{cite web |title=Programa para hoy |trans-title=Today's programme |url=https://jable.ulpgc.es/viewer.vm?id=5911576&page=4 |work={{ill|El Eco de Canarias|es}} |location=[[Las Palmas]], [[Canary Islands]], Spain |page=4 |language=es |date=30 March 1969 |access-date=2 July 2024 |via=[[University of Las Palmas de Gran Canaria]]}}</ref><ref>{{cite news |title=Programas para hoy |trans-title=Programs for today |url=https://arca.bnc.cat/arcabib_pro/ca/consulta/registro.do?id=10000285328 |access-date=18 July 2024 |work={{ill|El Noticiero Universal|es}} |date=29 March 1969 |page=21 |location=[[Barcelona]], Spain |language=es |via={{ill|Arxiu de Revistes Catalanes Antigues|ca}}}}</ref><ref>{{cite magazine |title=tv teletipo |trans-title=tv teletype |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000875426 |access-date=18 December 2024 |magazine=[[Pueblo (newspaper)|Sábado revista]] |date=29 March 1969 |location=[[Madrid]], Spain |page=12 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>
+|-
+| [[Radio Nacional de España|RNE]]
+| {{lang|es|[[Radio Nacional (Spanish radio station)|Radio Nacional]]|i=unset}}
+| rowspan="3" {{N/A|}}
+| style="text-align:center" | <ref name="Barcelona">{{cite news |title=Radiodifusion |trans-title=Broadcasting |url=https://ahcbdigital.bcn.cat/hemeroteca/visualitzador/ahcb-d102744 |access-date=31 July 2024 |work=[[Diario de Barcelona]] |date=29 March 1969 |location=[[Barcelona]], Spain |page=24 |language=es |via={{ill|Arxiu Històric de la Ciutat de Barcelona|ca}}}}</ref>
+|-
+| colspan="2" | {{ill|Cadena Azul de Radiodifusión|es|lt=Radio Juventud}}
+| style="text-align:center" | <ref>{{cite news |title=Radio |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000695444 |access-date=23 June 2024 |work=Baleares |date=29 March 1969 |page=2 |location=[[Balearic Islands]], Spain |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>
+|-
+| colspan="2" | [[Cadena COPE|Radio Popular]]
+| style="text-align:center" | <ref name="Galicia" />
+|-
+| colspan="2" | {{lang|es|[[Cadena SER]]|i=no}}{{efn|[[Simulcast]] on {{ill|Ràdio Barcelona|es|lt=Radio Barcelona}},<ref name="Barcelona" /> {{ill|Radio Castellón|es}},<ref>{{cite news |title=Programa de las emisoras castellonenses |trans-title=Programmes of Castellón radio stations |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=10005076599 |access-date=23 June 2024 |work={{ill|El Periódico Mediterráneo|es|lt=Mediterráneo}} |date=29 March 1969 |page=4 |location=[[Castellón de la Plana]], Spain |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> {{ill|Ràdio Girona|ca|lt=Radio Girona}},<ref>{{cite news |title=Programas de Televisión y Radio |trans-title=Television and Radio Programmes |url=https://pandora.girona.cat/viewer.vm?id=0001452977&page=3&lang=ca&view=hemeroteca |access-date=19 August 2024 |work={{ill|Los Sitios|ca}} |date=29 March 1969 |page=3 |location=[[Girona]], Spain |language=es |via={{ill|Ayuntamiento de Gerona|es}}}}</ref> Radio Lérida,<ref>{{cite news |title=Radio |url=https://arxiudigital.paeria.cat/viewer.vm?id=154536&lang=en&page=2 |access-date=30 August 2024 |work={{ill|Diario de Lérida|es|Diario de Lérida (1966-1993)}} |date=29 March 1969 |page=3 |location=[[Lleida]], Spain |language=es |via={{ill|Arxiu Municipal de Lleida|ca}}}}</ref> {{ill|Radio Murcia|es}},<ref>{{cite news |title=Radio y Televisión |trans-title=Radio and Television |url=https://www.archivodemurcia.es/p_pandora4/viewer.vm?id=0000448056&page=19&lang=es&view=todo |access-date=19 August 2024 |work={{ill|Línea (newspaper)|es|Línea (periódico)|lt=Línea}} |date=29 March 1969 |page=19 |location=[[Region of Murcia]], Spain |language=es |via=Archivo Municipal de Murcia}}</ref> Radio Orense,<ref name="Galicia">{{cite news |title=Emisoras |trans-title=Stations |url=http://galiciana.bibliotecadegalicia.xunta.es/gl/consulta/registro.do?id=10000380395 |access-date=2 July 2024 |work=[[La Región]] |date=29 March 1969 |page=2 |location=[[Ourense]], Spain |language=es |via={{ill|Galiciana|gl}} {{Subscription or libraries}}}}</ref> Radio Pamplona,<ref>{{cite news |title=Radio |url=https://hemerotecadigital.bne.es/hd/es/results?d=date&d=1969-03-29&d=1969-03-29&g=e&g=i&g=o&p=0~1~13642496~0~0# |access-date=30 August 2024 |work=[[Diario de Navarra]] |date=29 March 1969 |page=7 |location=[[Pamplona]], Spain |language=es |via=[[Biblioteca Nacional de España]]}} {{Subscription or libraries}}</ref> Radio Rioja,<ref>{{cite news |title=Radio y Television |trans-title=Radio and Television |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000772992 |access-date=23 June 2024 |work={{ill|La Rioja (periódico)|es|lt=La Rioja}} |date=29 March 1969 |page=12 |location=[[Logroño]], Spain |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> Radio San Sebastián,<ref>{{cite news |title=tv |url=https://w390w.gipuzkoa.net/WAS/CORP/DKPAtzokoPrentsaWEB/argitalpen/179902/data/-24019200000 |access-date=31 July 2024 |work={{ill|La Voz de España|es}} |date=29 March 1969 |page=14 |location=[[San Sebastián]], Spain |language=es |via={{ill|Koldo Mitxelena Cultural Center|eu|Koldo Mitxelena Kulturunea}}}}</ref> {{ill|Radio Sevilla|es}},<ref>{{cite news |title=Programas de radio para hoy |trans-title=Radio programmes for today |url=https://www.abc.es/archivo/periodicos/abc-sevilla-19690329-110.html |access-date=10 October 2024 |work=[[ABC (newspaper)|ABC Sevilla]] |location=[[Seville]], Spain |date=29 March 1969 |page=110 |language=es |url-access=subscription}}</ref> {{ill|Radio Tarragona|ca}},<ref>{{cite news |title=Dietario |trans-title=Diary |url=https://web.tarragona.cat/pandora/cgi-bin/Pandora?xslt=ejemplar;place=none;publication=Diario%20Espa%C3%B1ol;day=29;month=03;year=1969;page=003;id=0000373957;collection=premsa;url_high=premsa/Diario%20Espa%C3%B1ol/1969/196903/19690329/Diario%20Espa%C3%B1ol_19690329008.pdf |access-date=31 January 2025 |work={{ill|Diario Español|es}} |date=29 March 1969 |page=3 |location=[[Tarragona]], Spain |language=es |via={{ill|Biblioteca Hemeroteca Municipal de Tarragona|ca}}}}</ref> {{ill|Radio Valladolid|es}},<ref>{{cite news |title=Radio y Televisión |trans-title=Radio and Television |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000757981 |access-date=23 June 2024 |work=[[Libertad (newspaper)|Libertad]] |date=29 March 1969 |page=4 |location=[[Valladolid]], Spain |language=es|via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> and Radio Zaragoza.<ref>{{cite news |title=Programas para hoy de las emisoras locales radiodifusión |trans-title=Today's programmes from local radio stations |url=https://www.zaragoza.es/hemeroteca/prensa/HMZ_P0016/HMZ_P0016_1969-03-29/HMZ_P0016_1969-03-29.pdf |access-date=19 August 2024 |work={{ill|El Noticiero (Zaragoza)|es|lt=El Noticiero}} |date=29 March 1969 |page=11 |location=[[Zaragoza]], Spain |language=es |via={{ill|Ayuntamiento de Zaragoza|es}}}}</ref>}}
+| {{N/A|}} 
+| style="text-align:center" | <ref name="Barcelona" />
+|-
+! scope="row" | {{Flagu|Sweden}}
+| [[Sveriges Radio|SR]]
+| {{lang|sv|[[SVT1|Sveriges TV]]|i=unset}}, [[Sveriges Radio P3|SR P3]]
+| {{ill|Christina Hansegård|sv}}
+| style="text-align:center" | <ref>{{cite news |title=TV i dag |trans-title=TV today |work=[[Svenska Dagbladet]] |date=29 March 1969 |location=Stockholm, Sweden |page=25 |language=sv}}</ref><ref>{{cite news |title=Radio programmen |trans-title=Radio programmes |work=[[Svenska Dagbladet]] |date=29 March 1969 |location=Stockholm, Sweden |page=25 |language=sv}}</ref>
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|Switzerland}}
+| rowspan="3" | [[Swiss Broadcasting Corporation|SRG SSR]]
+| [[SRF 1|TV DRS]]
+| {{N/A|}}
+| style="text-align:center" | <ref name="Schweiz">{{cite news |title=Fernsehen – Samstag |trans-title=Television – Saturday |url=https://www.e-newspaperarchives.ch/?a=d&d=DTT19690329-01.1.23 |access-date=3 January 2023 |work=[[Die Tat (Swiss newspaper)|Die Tat]] |page=23 |date=29 March 1969 |location=[[Zürich]], Switzerland |language=de |via=[[E-newspaperarchives.ch]]}}</ref>
+|-
+| [[RTS 1 (Swiss TV channel)|TSR]]
+| {{ill|Georges Hardy|fr|Georges Hardy (journaliste)}}
+| style="text-align:center" | <ref>{{cite magazine |title=TV – samedi 29 mars |trans-title=TV – Saturday 29 March |url=https://www.scriptorium.ch/zoom/321781/view?page=50&p=verso&tool=info |access-date=3 January 2023 |magazine=[[TV8 (magazine)|Radio TV – Je vois tout]] |date=27 March 1969 |volume=47 |issue=13 |location=[[Lausanne]], Switzerland |pages=86–87 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref>
+|-
+| [[RSI La 1|TSI]]
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Sabato – Televisione Svizzera Italiana |trans-title=Saturday – Italian Swiss Television |url=https://www.sbt.ti.ch/quotidiani-public-pdf/main_part.php?fullscreen=true&paper=pel&day=29&month=3&year=1969&page=8&papername=Popolo%20e%20Libert%C3%A0&allpages=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 |access-date=3 January 2023 |work=Popolo e Libertà |date=29 March 1969 |location=[[Bellinzona]], Switzerland |page=8 |language=it |via={{ill|Sistema bibliotecario ticinese|it}}}}</ref>
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|United Kingdom}}
+| rowspan="2" | [[BBC]]
+| [[BBC One|BBC1]]
+| [[David Gell]]
+| style="text-align:center" | <ref name="Radio Times">{{cite magazine |title=Eurovision Song Contest: Grand Prix 1969 – BBC1 |url=https://genome.ch.bbc.co.uk/cdc26f2046cf463599d48ccb91fbe7e4 |access-date=3 January 2023 |magazine=[[Radio Times]] |location=London, United Kingdom |date=29 March 1969 |via=[[BBC Genome Project]]}}</ref>
+|-
+| [[BBC Radio 1]], [[BBC Radio 2]]
+| [[Pete Murray (DJ)|Pete Murray]]
+| style="text-align:center" | <ref>{{cite magazine |title=Eurovision Song Contest – BBC Radio 1 |url=https://genome.ch.bbc.co.uk/75cf0462ed5a4d448bfb31659ed5cfc5 |access-date=3 January 2023 |magazine=Radio Times |location=London, United Kingdom |date=29 March 1969 |via=BBC Genome Project}}</ref><ref>{{cite magazine |title=as Radio 1 – BBC Radio 2 |url=https://genome.ch.bbc.co.uk/01b5953e1d884f2eb9b66943cd970878 |access-date=10 January 2023 |magazine=Radio Times |location=London, United Kingdom |date=29 March 1969 |via=BBC Genome Project}}</ref>
+|-
+| [[British Forces Broadcasting Service|BFBS]]
+| [[BFBS Radio]]
+| John Russell
+| style="text-align:center" | <ref>{{cite book |last1=Roxburgh |first1=Gordon |title=Songs for Europe: The United Kingdom at the Eurovision Song Contest |date=2014 |publisher=[[Telos Publishing]] |location=Prestatyn |isbn=978-1-84583-093-9 |pages=370–372 |series=Volume Two: The 1970s}}</ref>
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|Yugoslavia}}
+| rowspan="3" | [[Yugoslav Radio Television|JRT]]
+| {{lang|sh|[[TV Belgrade|Televizija Beograd]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Телевизија |trans-title=Television |url=https://istorijskenovine.unilib.rs/view/index.html#panel:pp{{!}}issue:UB_00064_19690329{{!}}page:24 |access-date=25 May 2024 |work=[[Borba (newspaper)|Borba]] |date=29 March 1969 |location=[[Belgrade]], Yugoslavia |page=24 |language=sh-cyrl |via=[[Belgrade University Library]]}}</ref>
+|-
+| {{lang|sl|[[TV Ljubljana|Televizija Ljubljana]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=RTV Ljubljana |url=http://www.dlib.si/listalnik/URN_NBN_SI_doc-VFETHHCW/8/index.html |access-date=27 October 2024 |work=[[Delo (newspaper)|Delo]] |date=29 March 1969 |page=8 |language=sl |location=[[Ljubljana]], Yugoslavia |via=[[Digital Library of Slovenia]]}}</ref>
+|-
+| {{lang|sh|[[TV Zagreb|Televizija Zagreb]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Co vysílá záhřebská televize? |trans-title=What does Zagreb TV broadcast? |url=https://library.foi.hr/dbook/novine.php?B=1&C=95&godina=1969&broj=000012&page=017 |access-date=2 September 2024 |work=Jednota |date=22 March 1969 |page=17 |language=cs |volume=24 |issue=12 |location=[[Daruvar]], Yugoslavia |via=[[Faculty of Organization and Informatics, University of Zagreb]]}}</ref>
+|}
+
+{| class="wikitable plainrowheaders sticky-header"
+|-
+|+ Broadcasters and commentators in non-participating countries
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Channel(s)
+! scope="col" | Commentator(s)
+! scope="col" | {{abbr|Ref(s)|References}}
+|-
+! scope="row" | {{Flagu|Austria}}
+| [[ORF (broadcaster)|ORF]]
+| [[ORF 1|FS1]]
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Programme für heute |trans-title=Programmes for today |url=https://www.arbeiterzeitung.at/ausgabe/19690329a/9 |access-date=28 July 2026 |work=[[Arbeiter-Zeitung (Vienna)|Arbeiter-Zeitung]] |date=29 March 1969 |location=[[Vienna]], Austria |page=9 |language=de |archive-date=28 July 2026 |archive-url=https://web.archive.org/web/20260728202146/https://www.arbeiterzeitung.at/ausgabe/19690329a/9 |url-status=live}}</ref>
+|-
+! scope="rowgroup" rowspan="6" | {{Flagu|Brazil|1968}}
+| rowspan="6" | [[Rede Tupi]]
+| [[TV Tupi Rio de Janeiro]]
+| rowspan="6" | Rubens Amaral
+| style="text-align:center" rowspan="3" | <ref>{{Cite news |title=Via Satélite {{!}} Dia 29 – Festival da Eurovisão – O concurso da Canção da Europa! |trans-title=Via Satellite {{!}} Day 29 – Eurovision Festival – The European Song Contest! |url=https://memoria.bn.gov.br/DocReader/DocReader.aspx?bib=030015_08&pasta=ano%20196&hf=memoria.bn.gov.br&pagfis=131466 |work=[[Jornal do Brasil]] |location=[[Rio de Janeiro (state)|Rio de Janeiro]], Brazil |page=9 |language=pt-BR |date=28 March 1969 |access-date=15 May 2024 |via=[[National Library of Brazil]]}}</ref><ref name="Brazil com">{{cite web |title=Esta noche, el Eurofestival |trans-title=Tonight, the Eurofestival |url=https://jable.ulpgc.es/jable/el.eco.de.canarias/1969/03/29/0003.htm |work={{ill|El Eco de Canarias|es}} |location=[[Las Palmas]], [[Canary Islands]], Spain |page=3 |language=es |date=29 March 1969 |accessdate=2 July 2024 |via=[[University of Las Palmas de Gran Canaria]]}}</ref>
+|-
+| [[TV Tupi São Paulo]]
+|-
+| [[TV Itacolomi]]
+|-
+| [[CNT Curitiba|TV Paraná]]
+| style="text-align:center" | <ref name="Brazil com" /><ref>{{Cite news |title=Feito histórico |trans-title=Historical feat |url=https://memoria.bn.gov.br/DocReader/docreader.aspx?bib=761672&pasta=ano%20196&pagfis=71529 |work={{ill|Diário do Paraná|pt}} |location=[[Curitiba]], [[Paraná (state)|Paraná]], Brazil |page=1 |language=pt-BR |date=29–30 March 1969 |access-date=15 May 2024 |via=National Library of Brazil}}</ref>
+|-
+| [[TV Piratini]]
+| style="text-align:center" | <ref name="Brazil com" /><ref>{{Cite news |title=Um feito espetacular da TV-Piratini |trans-title=A spectacular feat by TV-Piratini |url=http://memoria.bn.gov.br/docreader/DocReader.aspx?bib=093726_04&pagfis=56468 |work={{ill|Diário de Notícias (Porto Alegre)|pt|lt=Diário de Notícias}} |location=[[Porto Alegre]], [[Rio Grande do Sul]], Brazil |page=1 |language=pt-BR |date=29 March 1969 |access-date=15 May 2024 |via=National Library of Brazil}}</ref>
+|-
+| [[TV Rádio Clube de Pernambuco|TV Rádio Clube]]{{efn|Delayed broadcast on 5 April at 21:30 ([[Brasília Time|BRT]])<ref name="Pernambuco" />}}
+| style="text-align:center" | <ref name="Brazil com" /><ref name="Pernambuco">{{Cite news |title=Canal 6 à frente dos grandes espetáculos! |trans-title=Channel 6 ahead of the big shows! |url=http://memoria.bn.gov.br/DocReader/029033_14/68853 |work=[[Diário de Pernambuco]] |location=[[Recife]], [[Pernambuco]], Brazil |page=10 |language=pt-BR |date=4 April 1969 |access-date=20 December 2024 |via=National Library of Brazil}}</ref>
+|-
+! scope="row" | {{Flagu|Chile}}
+| [[Universidad de Chile Televisión|TVU]]
+| {{lang|es|[[Chilevisión|Canal 9]]|i=no}}{{efn|Delayed broadcast on 29 March 1969 at 20:15 ([[Chile Standard Time|CLT]])<ref>{{cite news |title=Programación de TV |trans-title=TV programming |work=[[Las Últimas Noticias]] |location=[[Santiago]], Chile |date=29 March 1969 |page=3 |language=es }}</ref>}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite web |url=http://www.bibliotecanacionaldigital.gob.cl/visor/BND:77675 |title='Capo' el Festival Eurovisión |work={{ill|Ecran|es}} |location=Santiago, Chile |date=8 April 1969 |access-date=5 May 2023 |format=PDF |page=41 |language=es |via=[[National Library of Chile]]}}</ref>
+|-
+! scope="row" | {{Flagu|Colombia}}
+| [[Inravisión]]
+| [[Canal 1|Canal Nacional]]{{efn|Delayed broadcast in a shortened format on 1 May 1969 at 16:00 ([[Colombia Time|COT]])<ref name="Colombia"/>}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Colombia">{{cite web |url=https://books.google.com/books?id=ZD4gAAAAIBAJ&pg=PA1 |title=Televisión |trans-title=Television |work=[[El Tiempo (Colombia)|El Tiempo]] |location=[[Bogotá]], Colombia |date=1 May 1969 |access-date=1 July 2024 |page=12 |language=es |via=Google Books}}</ref><ref>{{cite web |url=https://books.google.com/books?id=ZD4gAAAAIBAJ&pg=PA1 |title=XIV Gran Premio de la Canción de Eurovision |trans-title=XIV Eurovision Song Contest |work=El Tiempo |location=Bogotá, Colombia |date=1 May 1969 |access-date=15 May 2024 |page=1 |language=es |via=Google Books}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Costa Rica}}
+| [[Corporación Costarricense de Televisión|Telecentro]]
+| [[Telecentro Canal 6]]{{efn|Delayed broadcast on 4 May 1969 at 21:00 ([[Central Standard Time|CST]])<ref name="Nación"/>|name="Costa Rica"}}
+| rowspan="2" | Roberto Giralt
+| style="text-align:center" rowspan="2" | <ref name="Nación">{{cite news |url=https://books.google.com/books?id=BqwcAAAAIBAJ&pg=PA44 |title=Hoy es noche de gala: Festival Eurovision 1969 |trans-title=Today is gala night: Eurovision Festival 1969 |work=[[La Nación (Costa Rica)|La Nación]] |location=[[San José, Costa Rica|San José]], Costa Rica |date=4 May 1969 |access-date=15 May 2024 |pages=86–87 |language=es |via=Google Books}}</ref>
+|-
+| [[Telesistema Nacional|Telenac]]
+| {{lang|es|[[Telenac Canal 2]]|i=no}}{{efn|name="Costa Rica"}}
+|-
+! scope="row" | {{Flagu|Czechoslovakia}}
+| [[Czechoslovak Television|ČST]]
+| {{ill|I. program|cs|lt=ČST}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite magazine |title=so 9. března |trans-title=Sat 29 March |url=https://kramerius.rozhlas.cz/view/uuid:33565d3e-ff09-4d1b-89a4-9d2da7849003?page=uuid:4a2347de-d750-45e2-8af6-1719f89f122f |access-date=19 May 2024 |magazine={{ill|Týdeník Rozhlas|cs|lt=Československý Rozhlas}} |location=[[Prague]], Czechoslovakia |date=17 March 1969 |volume=36 |issue=13 |page=11 |language=cs |via={{ill|Kramerius (digital library)|cs|Kramerius (digitální knihovna)|lt=Kramerius}}}}</ref>
+|-
+! scope="row" | {{Flagu|Hungary}}
+| [[Magyar Televízió|MTV]]
+| [[M1 (Hungarian TV channel)|MTV]]
+| {{ill|Klári Poór|hu|Poór Klára}}
+| style="text-align:center" | <ref>{{cite magazine |title=TV – szombat III.29 |trans-title=TV – Saturday III.29 |url=https://nemzetiarchivum.hu/news_archive/item/NEWS-OGxnbXdCck9wajRGbDdJdjNwSVhkZGVCcTJSYlJkZlVCRVdLd1U3OW5Maz0 |access-date=15 February 2025 |work=Rádió– és Televízióújság |location=[[Budapest]], Hungary |volume=14 |issue=13 |date=24 March 1969 |page=13 |language=hu |via=Nemzeti Archívum}}</ref><ref>{{cite news |title=Eurovíziós dalfesztivál |trans-title=Eurovision Song Contest |url=https://library.hungaricana.hu/hu/view/DunantuliNaplo_1969_04/?pg=3&layout=s |access-date=8 May 2025 |work={{ill|Dunántúli Napló |hu|Új Dunántúli Napló|lt=Dunántúli Napló}} |date=1 April 1969 |location=[[Pécs]], Hungary |page=4 |language=hu |via={{ill|Hungaricana|hu}}}}</ref>
+|-
+! scope="row" | {{Flagu|Malta}}
+| [[Maltese Broadcasting Authority|MBA]]
+| [[Television Malta|MTS]]
+| Victor Aquilina
+| style="text-align:center" | <ref>{{cite news |title=Sound and Vision |work=[[Times of Malta]] |location=[[Birkirkara]], Malta |date=29 March 1969 |page=10}}</ref><ref>{{cite news |last1=Barry |first1=Fred |title=Europe Ready for Song Finals Tonight – Maltese viewers' eyes on British, Italian entries |work=Times of Malta |location=Birkirkara, Malta |date=29 March 1969 |page=19}}</ref>
+|-
+! scope="row" | {{Flagu|Romania|1965}}
+| [[TVR (TV network)|TVR]]
+| {{lang|ro|[[TVR 1|Programul 1]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite magazine |title=Televiziune |trans-title=Television |url=https://newspapers.arcanum.com/en/view/ProgramulDeRadioSiTeleviziune_1969/?pg=184&layout=s |access-date=27 July 2026 |work=Radio TV  |volume=18 |issue=12 |page=15 |date=23 March 1969 |location=[[Bucharest]], Romania |language=ro |url-access=subscription |via=[[Arcanum Newspapers]]}}</ref>
+|}
+
+==Notes==
+{{notelist}}
+
+== References ==
+{{Reflist}}
+
+== External links ==
+{{commons category|Eurovision Song Contest 1969}}
+*{{Official website|http://www.eurovision.tv/}}
+
+{{Eurovision Song Contest 1969}}
+{{Eurovision Song Contest}}
+{{Eurovision Song Contest's Greatest Hits}}
+{{Portal bar|Music}}
+{{Use dmy dates|date=October 2019}}
+{{coord|40|25|06|N|3|42|37|W|region:ES_type:landmark|display=title}}
+
+[[Category:Eurovision Song Contest 1969| ]]
+[[Category:Eurovision Song Contest by year|1969]]
+[[Category:Music festivals in Spain]]
+[[Category:1969 in Spain]]
+[[Category:1969 in music]]
+[[Category:1960s in Madrid]]
+[[Category:March 1969 in Europe]]
+[[Category:Organised events in Madrid]]

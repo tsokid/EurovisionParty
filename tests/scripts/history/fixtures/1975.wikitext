@@ -1,0 +1,821 @@
+{{Short description|International song competition}}
+{{good article}}
+{{Use dmy dates|date=December 2020}}
+{{Infobox song contest
+| name        = Eurovision Song Contest
+| year        = 1975
+| logo        = Eurovision Song Contest 1975 logo.png
+| size        = 250px
+| final       = {{start date|1975|03|22|df=y}}
+| venue       = {{lang|sv|[[Stockholm International Fairs|Stockholmsmässan]]|i=unset}}<br />Stockholm, Sweden
+| presenter   = [[Karin Falck]]
+| musdirector = [[Mats Olsson (musician)|Mats Olsson]]
+| director    = Bo Billtén
+| scrutineer  = [[Clifford Brown (director)|Clifford Brown]]
+| exproducer  = Roland Eiworth
+| organiser   = [[European Broadcasting Union]] (EBU)
+| host        = {{lang|sv|[[Sveriges Radio]]|i=unset}} (SR)
+| entries     = 19
+| debut       = {{Esc|Turkey}}
+| return      = {{Unbulleted list|{{Esc|France}}|{{Esc|Malta}}}}
+| nonreturn   = {{Esc|Greece|1970}}
+| vote        = Each country awarded 12, 10, 8-1 points to their ten favourite songs
+| winner      = {{esc|Netherlands|y=1975}}<br />"[[Ding-a-dong]]"
+<!-- Map Legend Colours -->
+| Map NoSemis = Y
+}}
+
+The '''Eurovision Song Contest 1975''' was the 20th edition of the [[Eurovision Song Contest]], held on 22 March 1975 at the {{lang|sv|[[Stockholm International Fairs|Stockholmsmässan]]|i=unset}} in [[Stockholm]], Sweden, and presented by [[Karin Falck]]. It was organised by the [[European Broadcasting Union]] (EBU) and host broadcaster {{lang|sv|[[Sveriges Radio]]|i=unset}} (SR), who staged the event after winning the {{escyr|1974||1974 contest}} for {{esccnty|Sweden|y=1974}} with the song "[[Waterloo (song)|Waterloo]]" by [[ABBA]].
+
+Broadcasters from nineteen countries were represented at the contest{{snd}}a new record number of participants. {{esccnty|Turkey}} made its first entry in the contest, and {{esccnty|France}} and {{esccnty|Malta}} returned after a one- and two-year absence, respectively. {{esccnty|Greece}}, after participating for the first time in the previous year's event, opted not to participate in 1975, due to the Turkish invasion of Cyprus in 1974.
+
+The winner was the {{esccnty|Netherlands|y=1975}} with the song "[[Ding-a-dong]]", composed by [[Dick Bakker]], written by {{ill|Will Luikinga|nl}} and [[Eddy Ouwens]], and performed by the group [[Teach-In (band)|Teach-In]]. This was the Netherlands' fourth contest victory, matching the record number of contest wins previously set by France and {{esccnty|Luxembourg}}. Having been the opening song of the contest, it was also the first time that a country had won from first position in the running order. The {{esccnty|United Kingdom|y=1975}}, {{esccnty|Italy|y=1975}}, {{esccnty|France|y=1975}}, and {{esccnty|Luxembourg|y=1975}} rounded out the top five, with the United Kingdom achieving a record-extending ninth second-place finish.
+
+A [[Voting at the Eurovision Song Contest|new voting system]] was introduced at this contest; each country gave 12 points to its favourite, 10 points to its second favourite, and then 8 points to 1 point to other countries in descending order of preference. This numerical order of awarded points has since been used in every subsequent edition of the contest.
+
+== Location ==
+[[File:Älvsjö - KMB - 16001000290784.jpg|thumb|250px|left|{{lang|sv|[[Stockholm International Fairs|Stockholmsmässan]]|i=unset}}, Stockholm – host venue of the 1975 contest]]
+The 1975 contest took place in [[Stockholm]], Sweden, following the country's victory at the {{escyr|1974||1974 contest}} with the song "[[Waterloo (song)|Waterloo]]" performed by [[ABBA]]. It was the first time that Sweden had hosted the event.<ref>{{cite web |title=Sweden – Participation history |url=https://www.eurovision.com/eurovision-song-contest/countries/sweden |publisher=European Broadcasting Union (EBU) |access-date=3 May 2026}}</ref><ref name="recall" /> The chosen venue was the {{lang|sv|[[Stockholm International Fairs|Sankt Eriks-Mässan]]|i=unset}}, an exhibition centre in the [[Älvsjö]] district of southern Stockholm opened in 1971; in 1976 the venue was renamed to {{lang|sv|Stockholmsmässan|i=unset}}.<ref name="recall" /><ref>{{cite web |title=Stockholmsmässan – Our history |url=https://www.stockholmsmassan.se/about-us/in-business-since-1942 |publisher=[[Stockholm International Fairs|Stockholmsmässan]] |access-date=10 April 2024 |language=en}} {{Dead link|date=January 2025|fix-attempted=yes |url=}}</ref>
+
+The Swedish broadcaster {{lang|sv|[[Sveriges Radio]]|i=unset}} (SR) had initially been reluctant to stage the event, mainly due to the high costs that came with it which would have been placed on the organisation. There had also been considerable pressure and disquiet from [[Left-wing politics|left-wing groups]] in the country that initially opposed the amount of money being spent by the public broadcaster on a commercial event, which subsequently developed into a wider protest against the general commercialisation of [[Music of Sweden|music in Sweden]];<ref name="recall" /><ref>{{cite web |title=All eyes on Stockholm |url=https://eurovision.tv/story/all-eyes-on-stockholm |publisher=European Broadcasting Union (EBU) |access-date=10 April 2024 |archive-url=https://web.archive.org/web/20171017110728/https://eurovision.tv/story/recalling-sweden-s-first-staging-of-the-contest-in-1975 |archive-date=17 October 2017 |language=en |date=4 January 2016 |url-status=live}}</ref> this led to street protests and a counter-festival, {{lang|sv|{{ill|Alternativfestivalen|sv}}}} ({{gloss|the Alternative Festival}}), being held during the week of Eurovision 1975.<ref name="SR">{{cite news |title=Swedish protests against hosting Eurovision Song Contest |url=https://sverigesradio.se/artikel/6194571 |access-date=10 April 2024 |publisher={{lang|sv|[[Sveriges Radio]]|i=unset}} (SR) |date=1 July 2015 |archive-url=https://web.archive.org/web/20230114224645/https://sverigesradio.se/artikel/6194571 |archive-date=14 January 2023 |language=en |url-status=live}}</ref>{{sfn|Thorsson|Verhage|2006|pp=118–119}}{{sfn|West|2020|pp=91–94|loc="1975"}}<ref>{{cite web |title=Alternativfestivalen |trans-title=The Alternative Festival |url=https://mellopedia.svt.se/index.php/Alternativfestivalen |work=Mellopedia |publisher=[[Sveriges Television]] (SVT) |access-date=10 April 2024}}</ref>
+
+SR had attempted to negotiate with the [[European Broadcasting Union]] (EBU) and other participating broadcasters to enact a form of cost-sharing to fund the event, however a solution failed to materialise prior to the contest and SR was ultimately faced with funding the contest alone. These discussions, however, did eventually lead to the introduction of a new financing system for {{escyr|1976}} and future events, with the running costs of the event being split across all participating countries.<ref name="recall" />{{sfn|Roxburgh|2014|pp=180–182}} However, fears of the potential costs required to host the event should Sweden have won again, coupled with the pressure from left-wing groups, meant that SR ultimately decided not to participate in the 1976 event.<ref name="recall" /><ref name="SR" />{{sfn|Roxburgh|2014|p=227}}
+
+== Participants ==
+{{further|List of countries in the Eurovision Song Contest}}
+{{ESC 1975 participants}}
+[[File:Ellen Nikolaysen (11097025886).jpg|thumb|upright|[[Ellen Nikolaysen]] represented {{esccnty|Norway}} for a second time]]
+A total of 19 countries participated in the 1975 contest{{snd}}a new record number of participants. This included the first ever appearance of {{esccnty|Turkey}}, and entries from {{esccnty|France}} and {{esccnty|Malta}}, which last participated in {{escyr|1973}} and {{escyr|1972}}, respectively.<ref name="recall">{{Cite web |title=Recalling Sweden's first staging of the contest in 1975 |date=22 March 2013 |url=https://eurovision.tv/story/recalling-sweden-s-first-staging-of-the-contest-in-1975 |url-status=live |archive-url=https://web.archive.org/web/20171017110728/https://eurovision.tv/story/recalling-sweden-s-first-staging-of-the-contest-in-1975 |archive-date=17 October 2017 |access-date=10 April 2024 |publisher=European Broadcasting Union (EBU)}}</ref><ref name="ESC1975">{{Cite web |title=Stockholm 1975 |url=https://eurovision.tv/event/stockholm-1975 |url-status=live |archive-url=https://web.archive.org/web/20220531111909/https://eurovision.tv/event/stockholm-1975 |archive-date=31 May 2022 |access-date=10 April 2024 |publisher=European Broadcasting Union (EBU)}}</ref> Broadcasters in {{esccnty|Greece}}, which participated for the first time in {{escyr|1974}}, and {{esccnty|Austria}}, last seen in the contest in 1972, had also considered participating in the contest, however no entries from these countries were ultimately submitted;{{sfn|Roxburgh|2014|pp=180–182}}<ref name="ESC1975" /> Greece had reportedly decided against participating at a late stage, and may have opted to refuse to compete alongside Turkey following the [[Turkish invasion of Cyprus]].{{sfn|Thorsson|Verhage|2006|pp=118–119}}{{sfn|West|2020|pp=91–94|loc="1975"}}{{sfn|Roxburgh|2014|pp=180–182}}
+
+[[Ellen Nikolaysen]] competed in the contest for a second time, having previously participated for {{esccnty|Norway|y=1973|t=Norway in 1973}} as a member of the [[Bendik Singers]].{{sfn|Roxburgh|2014|pp=182–189}} Additionally, [[John Farrar]], a member of [[the Shadows]], had previously supported the {{esccnty|United Kingdom|y=1973|t=United Kingdom in 1973}} as a [[backing vocalist]].<ref>{{cite web |last1=Nissim |first1=Mayer |title=When The Shadows represented the UK at Eurovision without Cliff Richard |url=https://www.goldradiouk.com/news/music/shadows-eurovision-song-contest/ |publisher=[[Gold (British radio network)|Gold]] |access-date=10 April 2024 |archive-url=https://web.archive.org/web/20230514192007/https://www.goldradiouk.com/news/music/shadows-eurovision-song-contest/ |archive-date=14 May 2023 |date=12 May 2023 |url-status=live}}</ref>
+
+{{sticky header}}
+{| class="wikitable plainrowheaders sticky-header"
+|-
+|+ Eurovision Song Contest 1975 participants{{sfn|Roxburgh|2014|pp=182–189}}<ref>{{cite web |title=Stockholm 1975 – Participants |url=https://eurovision.tv/event/stockholm-1975/participants |url-status=live |archive-url=https://web.archive.org/web/20230329035025/https://eurovision.tv/event/stockholm-1975/participants |archive-date=29 March 2023 |access-date=6 July 2023 |publisher=European Broadcasting Union (EBU)}}</ref>
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Artist
+! scope="col" | Song
+! scope="col" | Language
+! scope="col" | Songwriter(s)
+! scope="col" | Conductor
+|-
+! scope="row" | {{Esc|Belgium}}
+| [[Belgische Radio- en Televisieomroep|BRT]]
+| [[Ann Christy (singer)|Ann Christy]]
+| "{{lang|nl|Gelukkig zijn|i=unset}}"
+| Dutch, English
+| {{ill|Mary Boduin|nl}}
+| [[Francis Bay]]
+|-
+! scope="row" | {{Esc|Finland}}
+| [[Yle|YLE]]
+| {{lang|fi|[[Pihasoittajat]]|i=unset}}
+| "Old Man Fiddle"
+| English
+| {{hlist|Hannu Karlsson|[[Kim Kuusi]]|Arthur Ridgway Spencer}}
+| [[Ossi Runne]]
+|-
+! scope="row" | {{Esc|France}}
+| [[TF1]]
+| [[Nicole Rieu|Nicole]]
+| "{{lang|fr|Et bonjour à toi l'artiste|i=unset}}"
+| French
+| {{hlist|{{ill|Jeff Barnel|fr}}|[[Pierre Delanoë]]}}
+| {{ill|Jean Musy|fr}}
+|-
+! scope="row" | {{Esc|Germany}}
+| [[Hessischer Rundfunk|HR]]{{efn|On behalf of the German public broadcasting consortium [[ARD (broadcaster)|ARD]]<ref>{{cite web |title=Alle deutschen ESC-Acts und ihre Titel |trans-title=All German ESC acts and their songs |url=https://www.eurovision.de/teilnehmer/vorentscheid386_glossaryPage-25.html |publisher=[[ARD (broadcaster)|ARD]] |access-date=12 June 2023 |archive-url=https://web.archive.org/web/20230612084259/https://www.eurovision.de/teilnehmer/vorentscheid386_glossaryPage-25.html |archive-date=12 June 2023 |language=de |url-status=live}}</ref>}}
+| [[Joy Fleming]]
+| "{{lang|de|[[Ein Lied kann eine Brücke sein]]|i=unset}}"
+| German, English
+| {{hlist|[[Michael Holm]]|{{ill|Rainer Pietsch|de|Rainer Pietsch (Musiker)}}}}
+| Rainer Pietsch
+|-
+! scope="row" | {{Esc|Ireland}}
+| [[RTÉ]]
+| [[The Swarbriggs]]
+| "That's What Friends Are For"
+| English
+| {{hlist|[[Jimmy Swarbrigg]]|[[Tommy Swarbrigg]]}}
+| [[Colman Pearce]]
+|-
+! scope="row" | {{Esc|Israel}}
+| [[Israel Broadcasting Authority|IBA]]
+| [[Shlomo Artzi]]
+| "{{lang|he-latn|At Ve'Ani|i=unset}}" <small>({{lang|he|את ואני}})</small>
+| Hebrew
+| {{hlist|[[Shlomo Artzi]]|[[Ehud Manor]]}}
+| {{ill|Eldad Shrem|he|אלדד שרים}}
+|-
+! scope="row" | {{Esc|Italy}}
+| [[RAI]]
+| [[Wess]] and [[Dori Ghezzi]]
+| "{{lang|it|[[Era (song)|Era]]|i=unset}}"
+| Italian
+| {{hlist|[[Andrea Lo Vecchio]]|[[Shel Shapiro]]}}
+| [[Natale Massara]]
+|-
+! scope="row" | {{Esc|Luxembourg}}
+| [[Compagnie Luxembourgeoise de Télédiffusion|CLT]]
+| [[Geraldine Brannigan|Géraldine]]
+| "{{lang|fr|Toi|i=unset}}"
+| French
+| {{hlist|[[Phil Coulter]]|[[Pierre Cour]]|[[Bill Martin (songwriter)|Bill Martin]]}}
+| [[Phil Coulter]]
+|-
+! scope="row" | {{Esc|Malta}}
+| [[Maltese Broadcasting Authority|MBA]]
+| [[Renato Micallef|Renato]]
+| "Singing This Song"
+| English
+| {{hlist|Sammy Galea|M. Iris Misfud}}
+| [[Vince Tempera]]
+|-
+! scope="row" | {{Esc|Monaco}}
+| [[TMC (TV channel)|TMC]]
+| [[Sophie Hecquet|Sophie]]
+| "{{lang|fr|Une chanson c'est une lettre|i=unset}}"
+| French
+| {{hlist|{{ill|Boris Bergman|fr}}|[[André Popp]]}}
+| [[André Popp]]
+|-
+! scope="row" | {{Esc|Netherlands}}
+| [[Nederlandse Omroep Stichting|NOS]]
+| [[Teach-In (band)|Teach-In]]
+| "[[Ding-a-dong]]"
+| English
+| {{hlist|[[Dick Bakker]]|{{ill|Will Luikinga|nl}}|[[Eddy Ouwens]]}}
+| [[Harry van Hoof]]
+|-
+! scope="row" | {{Esc|Norway}}
+| [[NRK]]
+| [[Ellen Nikolaysen]]
+| "Touch My Life with Summer"
+| English
+| {{hlist|{{ill|Svein Hundnes|no}}|{{ill|Johnny Sareussen|no}}}}
+| [[Carsten Klouman]]
+|-
+! scope="row" | {{Esc|Portugal}}
+| [[Radiotelevisão Portuguesa|RTP]]
+| [[Duarte Mendes]]
+| "{{lang|pt|Madrugada|i=unset}}"
+| Portuguese
+| {{ill|José Luís Tinoco|pt}}
+| {{ill|Pedro Osório (musician)|pt|Pedro Osório (maestro)|lt=Pedro Osório}}
+|-
+! scope="row" | {{Esc|Spain|1945}}
+| [[Televisión Española|TVE]]
+| [[Sergio and Estíbaliz]]
+| "{{lang|es|Tú volverás|i=unset}}"
+| Spanish
+| [[Juan Carlos Calderón]]
+| Juan Carlos Calderón
+|-
+! scope="row" | {{Esc|Sweden}}
+| [[Sveriges Radio|SR]]
+| [[Lasse Berghagen|Lars Berghagen]]
+| "Jennie, Jennie"
+| English
+| [[Lasse Berghagen|Lars Berghagen]]
+| [[Lars Samuelson (musician)|Lars Samuelson]]
+|-
+! scope="row" | {{Esc|Switzerland}}
+| [[Swiss Broadcasting Corporation|SRG SSR]]
+| [[Simone Drexel]]
+| "Mikado"
+| German
+| [[Simone Drexel]]
+| {{ill|Peter Jacques(musician)|de|Peter Jacques (Musiker)|lt=Peter Jacques}}
+|-
+! scope="row" | {{Esc|Turkey}}
+| [[Turkish Radio and Television Corporation|TRT]]
+| [[Semiha Yankı]]
+| "{{lang|tr|Seninle Bir Dakika|i=unset}}"
+| Turkish
+| {{hlist|Hikmet Münir Ebcioğlu|Kemal Ebcioğlu}}
+| [[Timur Selçuk]]
+|-
+! scope="row" | {{Esc|United Kingdom}}
+| [[BBC]]
+| [[The Shadows]]
+| "[[Let Me Be the One (The Shadows song)|Let Me Be the One]]"
+| English
+| [[Paul Curtis (musician)|Paul Curtis]]
+| [[Alyn Ainsworth]]
+|-
+! scope="row" | {{Esc|Yugoslavia}}
+| [[Yugoslav Radio Television|JRT]]
+| {{lang|sl|{{ill|Pepel in kri|sl}}|i=unset}}{{efn|Credited on screen as "Ashes and Blood"|name="YU"}}
+| "{{lang|sl|Dan ljubezni|i=unset}}"
+| Slovene
+| {{hlist|{{ill|Tadej Hrušovar|sl}}|[[Dušan Velkaverh]]}}
+| {{ill|Mario Rijavec|sl}}
+|}
+
+== Production and format ==
+The Eurovision Song Contest 1975 was produced by SR.<ref name="ESC1975" /> {{ill|Roland Eiworth|sv}} served as executive producer, {{ill|Bo Billtén|sv}} served as producer and director, {{ill|Bo-Ruben Hedwall|sv}} served as production designer and [[Mats Olsson (musician)|Mats Olsson]] served as musical director, leading the orchestra.{{sfn|Roxburgh|2014|p=193}} A separate musical director could be nominated by each participating delegation to lead the orchestra during its country's performance, with the host musical director also available to [[conducting|conduct]] for those countries which did not send their own conductor.{{sfn|Roxburgh|2014|pp=182–189}} On behalf of the contest organisers, the EBU, the event was overseen by [[Clifford Brown (director)|Clifford Brown]] as [[Executive supervisors of the Eurovision Song Contest|scrutineer]].{{sfn|Roxburgh|2014|p=193}}<ref>{{cite web |title=The Organisers behind the Eurovision Song Contest |date=27 March 2019 |url=https://eurovision.tv/about/organisers |publisher=European Broadcasting Union (EBU) |access-date=31 October 2024 |archive-url=https://web.archive.org/web/20240925231140/https://eurovision.tv/about/organisers |archive-date=25 September 2024 |url-status=live}}</ref>{{sfn|O'Connor|2010|p=210}}
+
+Each participating broadcaster submitted one song, which was required to be no longer than three minutes in duration.<ref name="HowItWorks">{{Cite web |date=18 May 2019 |title=How it works |url=https://eurovision.tv/about/how-it-works |url-status=dead |archive-url=https://web.archive.org/web/20220531032850/https://eurovision.tv/about/how-it-works |archive-date=31 May 2022 |access-date=4 April 2024 |publisher=European Broadcasting Union (EBU) |language=en-gb}}</ref><ref name="Rules">{{Cite web |date=31 October 2018 |title=The Rules of the Contest |url=https://eurovision.tv/about/rules |url-status=live |archive-url=https://web.archive.org/web/20221004011300/https://eurovision.tv/about/rules |archive-date=4 October 2022 |access-date=24 October 2023 |publisher=European Broadcasting Union (EBU)}}</ref> As in 1973 and 1974, artists were able to perform in any language, and not necessarily that of the country their represented.<ref>{{Cite web |title=Luxembourg 1973 |url=https://eurovision.tv/event/luxembourg-1973 |url-status=live |archive-url=https://web.archive.org/web/20220531031318/https://eurovision.tv/event/luxembourg-1973 |archive-date=31 May 2022 |access-date=3 April 2024 |publisher=European Broadcasting Union (EBU)}}</ref>{{sfn|Roxburgh|2014|pp=113–116}} A maximum of six performers were allowed on stage during each country's performance.<ref name="HowItWorks" /><ref>{{Cite web |title=Dublin 1971 |url=https://eurovision.tv/event/dublin-1971 |url-status=live |archive-url=https://web.archive.org/web/20220531032406/https://eurovision.tv/event/dublin-1971 |archive-date=31 May 2022 |access-date=3 April 2024 |publisher=European Broadcasting Union (EBU)}}</ref> Each entry could utilise all or part of the live orchestra and could use instrumental-only [[backing track]]s, however any backing tracks used could only include the sound of instruments featured on stage being [[Miming in instrumental performance|mimed by the performers]].{{sfn|Roxburgh|2014|pp=51–53}}
+
+Rehearsals in the contest venue for the competing entries began on 19 March 1975, with each participating act having a 50-minute slot on stage to perform through its entry with the orchestra.{{sfn|Roxburgh|2014|pp=180–182}} The first full rehearsals for all entries were held over two days on 19 and 20 March and conducted without stage costumes.{{sfn|Roxburgh|2014|pp=180–182}} A second round of rehearsals, this time in full costume, was held for all acts on 21 March, with each country given 20 minutes on stage.{{sfn|Roxburgh|2014|pp=180–182}} This was followed that evening with a general [[dress rehearsal]], including a dummy voting process.{{sfn|Roxburgh|2014|pp=180–182}} Technical rehearsals and a final dress rehearsal were held on the morning of 22 March.{{sfn|Roxburgh|2014|pp=180–182}} During the dress rehearsals some of the artists performed their songs in different languages to that which they would be presented during the live broadcast; specifically, the Yugoslav and Portuguese acts performed their entries in English in the dress rehearsal, and then in Slovene and Portuguese in the final, respectively.{{sfn|Thorsson|Verhage|2006|pp=118–119}} The Dutch entrants were given an additional rehearsal shortly before the live transmission; this was requested by [[Dick Bakker]], the composer of the Dutch song. Bakker felt that during the general rehearsals the sound quality was noticeably poorer during their entry, the first to perform each time, and that the sound technicians needed time to fix their equipment, which was generally done during their rehearsal slot.{{sfn|Roxburgh|2014|pp=180–182}}
+
+There was a tight security situation at the venue in the run-up to, and during, the event;{{sfn|Thorsson|Verhage|2006|pp=118–119}}{{sfn|West|2020|pp=91–94|loc="1975"}}<ref name="VrijeVolk" /> the [[Swedish Security Service]] ({{lang|sv|SÄPO|i=unset}}) had received intelligence reports that the contest may become a target of the West German [[Far-left politics|far-left]] militant group the [[Red Army Faction]] (RAF). The threat to the contest did not ultimately materialise, however one month after the event the RAF [[West German Embassy siege in Stockholm|targeted the West German embassy]] in Stockholm.{{sfn|Thorsson|Verhage|2006|pp=118–119}}{{sfn|West|2020|pp=91–94|loc="1975"}}
+
+=== Voting procedure ===
+{{further|Voting at the Eurovision Song Contest}}
+Following the [[Eurovision Song Contest 1974#Voting procedure|abandoned attempt at introducing a new voting system]] at the previous year's event, plans for a new system to replace both the system used between 1971 and 1973 and that used in 1974 came to fruition in autumn 1974. A sub-group, comprising individuals from Germany's [[ARD (broadcaster)|ARD]], Sweden's SR, and Finland's [[Yle|YLE]], was set up, and various new voting systems were proposed: ARD suggested that each country should identify its top nine entries and award points ranging between 1 and 10, while YLE proposed a scoring system to award points to eight countries, with the favourite of each country given 14 points, then 10, 7 and 5–1. The Finnish broadcaster also proposed as a compromise awarding to nine countries 10 and 8–1 points. Based on the above ideas, the UK's [[BBC]] proposed the 12, 10 and 8–1 pattern which was later adopted for this contest, and which had been used in all subsequent editions {{as of|2025|lc=y}}.<ref name="ESC1975" />{{sfn|Roxburgh|2014|pp=165–116}}
+
+Each country had a jury of eleven members ranging from ages 16 to 60, with a recommendation that there should be a balance between the sexes and that half should be under 25 years old. Each jury member awarded all songs a score between one and five immediately after they had been performed, with no abstentions allowed and without voting for the country they represented. The song which gained the most votes received 12 points, followed by 10 points to the song which got the second highest number of votes, and then between 8 and 1 points for the third- to tenth-placed songs. Ties for any of the positions would be decided by a show of hands.<ref name="ESC1975" />{{sfn|Roxburgh|2014|pp=189–193}} The order of presenting the points by each country's spokesperson was done in performance order; it would not be until {{escyr|1980}} that the points would be awarded in ascending order, starting at 1 point and finishing with 12 points.<ref name="recall" />{{sfn|Roxburgh|2014|pp=189–193}}
+
+== Contest overview<span class="anchor" id="Results"></span><span class="anchor" id="Participants and results"></span> ==
+<!-- Anchors in the header are the old section names -->
+{{multiple image
+| align             = right
+| direction         = vertical
+| width             = 200
+| header            = 
+| image1            = Popgroep Teach in van Schiphol naar Stockholm voor Eurovisie Songfestival, Bestanddeelnr 927-8107 (cropped).jpg
+| caption1          = Members of [[Teach-In]] at [[Amsterdam Airport Schiphol|Schiphol Airport]] prior to the contest
+| image2            = Teach-in (winnaar Eurovisie Songfestival) terug op Schiphol Teach-in na aankoms, Bestanddeelnr 927-8208.jpg
+| caption2          = Teach-In and the songwriters of "Ding-a-dong" at Schiphol Airport following the contest, with the medallions awarded to the songwriters
+}}
+The contest was held on 22 March 1975, beginning at 21:00 ([[Central European Time|CET]]) and lasting 2 hours and 12 minutes.<ref name="ESC1975" />{{sfn|Roxburgh|2014|pp=182–189}} The contest was presented by the Swedish television presenter, producer and director [[Karin Falck]].<ref name="recall" /><ref>{{cite web |title=Karin Falck |url=https://mellopedia.svt.se/index.php/Karin_Falck |work=Mellopedia |publisher=[[Sveriges Television]] (SVT) |access-date=10 April 2024 |language=sv}}</ref> Following the confirmation of the 19 participating countries, a draw was held in [[Geneva]] on 24 January 1975 to determine the running order (R/O) of the contest.{{sfn|Roxburgh|2014|pp=180–182}}
+
+The contest was opened by a film montage portraying various cultural stereotypes of Sweden and the [[Swedes|Swedish people]]. Each entry was preceded by a video postcard, which served as an introduction to that country's entry and to create a transition between entries to allow stage crew to make changes on stage;<ref>{{cite web |last1=Egan |first1=John |title=All Kinds of Everything: a history of Eurovision Postcards |url=https://escinsight.com/2015/05/22/all-kinds-of-everything-a-history-of-eurovision-postcards/ |publisher=ESC Insight |access-date=24 June 2022 |archive-url=https://web.archive.org/web/20150524073150/http://www.escinsight.com/2015/05/22/all-kinds-of-everything-a-history-of-eurovision-postcards/ |archive-date=24 May 2015 |date=22 May 2015 |url-status=live}}</ref><ref>{{cite web |last1=Kurris |first1=Denis |title=Eurovision 2022: The theme of this year's Eurovision postcards |url=https://www.esc-plus.com/eurovision-2022-the-theme-of-this-years-eurovision-postcards/ |publisher=ESC Plus |access-date=24 June 2022 |archive-url=https://web.archive.org/web/20220501103821/https://www.esc-plus.com/eurovision-2022-the-theme-of-this-years-eurovision-postcards/ |archive-date=1 May 2022 |date=1 May 2022 |url-status=live}}</ref> the postcards showed each country's entrant backstage painting a portrait of themselves and the flag of their nation onto a blank canvas.<ref name="contestAV" />{{sfn|O'Connor|2010|pp=60–63}} The interval act was entitled "The World of [[John Bauer (illustrator)|John Bauer]]" ({{langx|sv|John Bauers värld}}), comprising a montage of examples of the Swedish illustrator's work, particularly from his anthology ''[[Among Gnomes and Trolls]]'', set to music from the orchestra.<ref name="contestAV">{{Cite AV media |title=Eurovision Song Contest 1975 |date=22 March 1975 |type=Television programme |language=en, fr, sv |publisher=[[Sveriges Radio]] (SR) |location=[[Stockholm]], Sweden}}</ref>{{sfn|O'Connor|2010|p=217}} The medallions awarded to the winning songwriters were presented by the Secretary-General of the European Broadcasting Union {{ill|Henrik Hahr|sv}}.<ref name="contestAV" />{{sfn|O'Connor|2010|p=217}}
+
+The winner was the {{esccnty|Netherlands|y=1975}} represented by the song "[[Ding-a-dong]]", composed by Bakker, written by {{ill|Will Luikinga|nl}} and [[Eddy Ouwens]], and performed by [[Teach-In (band)|Teach-In]].<ref>{{cite web |title=Stockholm 1975 – Teach-In |url=https://eurovision.tv/participant/teach-in |url-status=live |archive-url=https://web.archive.org/web/20221006055734/https://eurovision.tv/participant/teach-in |archive-date=6 October 2022 |access-date=11 April 2024 |publisher=European Broadcasting Union (EBU)}}</ref> It was the Netherlands' fourth contest win, following victories in {{escyr|1957}}, {{escyr|1959}} and {{escyr|1969}}; the Netherlands thus joined {{esccnty|France}} and {{esccnty|Luxembourg}} as the countries with the most contest wins at that point.{{sfn|Roxburgh|2014|pp=189–193}}<ref>{{Cite web |title=Netherlands – Participation history |url=https://www.eurovision.com/eurovision-song-contest/countries/netherlands |publisher=[[European Broadcasting Union]] (EBU) |access-date=3 May 2026}}</ref> It was additionally the first time that the song which was performed first had gone on to win the contest.<ref name="recall" />{{sfn|Roxburgh|2014|pp=189–193}} The UK came second for a record-extending ninth time, and Malta, which had come last in its two previous contest appearances, achieved its best result to date with a twelfth-place finish.{{sfn|Roxburgh|2014|pp=189–193}}<ref>{{cite web |title=Malta – Participation history |url=https://www.eurovision.com/eurovision-song-contest/countries/malta |publisher=[[European Broadcasting Union]] (EBU) |access-date=3 May 2026}}</ref> Turkey, meanwhile, finished in last place on its debut appearance.<ref>{{cite web |title=Türkiye – Participation history |url=https://www.eurovision.com/eurovision-song-contest/countries/turkiye |publisher=[[European Broadcasting Union]] (EBU) |access-date=3 May 2026}}</ref>
+
+{| class="sortable wikitable plainrowheaders sticky-header"
+|+ Results of the Eurovision Song Contest 1975{{sfn|Roxburgh|2014|pp=189–193}}<ref>{{cite web |title=Stockholm 1975 – Scoreboard |url=https://eurovision.tv/event/stockholm-1975/final |publisher=European Broadcasting Union (EBU) |access-date=9 April 2021 |archive-url=https://web.archive.org/web/20210409175434/https://eurovision.tv/event/stockholm-1975/final |archive-date=9 April 2021 |url-status=live}}</ref>
+|-
+! scope="col" | {{abbr|R/O|Running order}}
+! scope="col" | Country
+! scope="col" | Artist
+! scope="col" | Song
+! scope="col" class="unsortable" | Points
+! scope="col" | Place
+|- style="font-weight:bold; background:gold;"
+! scope="row" style="text-align:center;" | 1
+| {{Esc|Netherlands|y=1975}}
+| [[Teach-In (band)|Teach-In]]
+| "[[Ding-a-dong]]"
+| 152
+| 1
+|-
+! scope="row" style="text-align:center;" | 2
+| {{Esc|Ireland|y=1975}}
+| {{sortname|The|Swarbriggs}}
+| "That's What Friends Are For"
+| 68
+| 9
+|-
+! scope="row" style="text-align:center;" | 3
+| {{Esc|France|y=1975}}
+| [[Nicole Rieu|Nicole]]
+| "{{lang|fr|Et bonjour à toi l'artiste|i=unset}}"
+| 91
+| 4
+|-
+! scope="row" style="text-align:center;" | 4
+| {{Esc|Germany|y=1975}}
+| {{sortname|Joy|Fleming}}
+| "{{lang|de|[[Ein Lied kann eine Brücke sein]]|i=unset}}"
+| 15
+| 17
+|-
+! scope="row" style="text-align:center;" | 5
+| {{Esc|Luxembourg|y=1975}}
+| [[Geraldine Brannigan|Géraldine]]
+| "{{lang|fr|Toi|i=unset}}"
+| 84
+| 5
+|-
+! scope="row" style="text-align:center;" | 6
+| {{Esc|Norway|y=1975}}
+| {{sortname|Ellen|Nikolaysen}}
+| "Touch My Life with Summer"
+| 11
+| 18
+|-
+! scope="row" style="text-align:center;" | 7
+| {{Esc|Switzerland|y=1975}}
+| {{sortname|Simone|Drexel}}
+| "Mikado"
+| 77
+| 6
+|-
+! scope="row" style="text-align:center;" | 8
+| {{Esc|Yugoslavia|y=1975}}
+| {{lang|sl|Pepel in kri|i=unset}}{{efn|name="YU"}}
+| "{{lang|sl|Dan ljubezni|i=unset}}"
+| 22
+| 13
+|-
+! scope="row" style="text-align:center;" | 9
+| {{Esc|United Kingdom|y=1975}}
+| {{sortname|The|Shadows}}
+| "[[Let Me Be the One (The Shadows song)|Let Me Be the One]]"
+| 138
+| 2
+|-
+! scope="row" style="text-align:center;" | 10
+| {{Esc|Malta|y=1975}}
+| [[Renato Micallef|Renato]]
+| "Singing This Song"
+| 32
+| 12
+|-
+! scope="row" style="text-align:center;" | 11
+| {{Esc|Belgium|y=1975}}
+| {{sortname|Ann|Christy|dab=singer}}
+| "{{lang|nl|Gelukkig zijn|i=unset}}"
+| 17
+| 15
+|-
+! scope="row" style="text-align:center;" | 12
+| {{Esc|Israel|y=1975}}
+| {{sortname|Shlomo|Artzi}}
+| "{{lang|he-latn|At Ve'Ani|i=unset}}"
+| 40
+| 11
+|-
+! scope="row" style="text-align:center;" | 13
+| {{Esc|Turkey|y=1975}}
+| {{sortname|Semiha|Yankı}}
+| "{{lang|tr|Seninle Bir Dakika|i=unset}}"
+| 3
+| 19
+|-
+! scope="row" style="text-align:center;" | 14
+| {{Esc|Monaco|y=1975}}
+| [[Sophie Hecquet|Sophie]]
+| "{{lang|fr|Une chanson c'est une lettre|i=unset}}"
+| 22
+| 13
+|-
+! scope="row" style="text-align:center;" | 15
+| {{Esc|Finland|y=1975}}
+| {{lang|fi|[[Pihasoittajat]]|i=unset}}
+| "Old Man Fiddle"
+| 74
+| 7
+|-
+! scope="row" style="text-align:center;" | 16
+| {{Esc|Portugal|y=1975}}
+| {{sortname|Duarte|Mendes}}
+| "{{lang|pt|Madrugada|i=unset}}"
+| 16
+| 16
+|-
+! scope="row" style="text-align:center;" | 17
+| {{Esc|Spain|1945|y=1975}}
+| [[Sergio and Estíbaliz]]
+| "{{lang|es|Tú volverás|i=unset}}"
+| 53
+| 10
+|-
+! scope="row" style="text-align:center;" | 18
+| {{Esc|Sweden|y=1975}}
+| {{sortname|Lars|Berghagen|Lasse Berghagen}}
+| "Jennie, Jennie"
+| 72
+| 8
+|-
+! scope="row" style="text-align:center;" | 19
+| {{Esc|Italy|y=1975}}
+| [[Wess]] and [[Dori Ghezzi]]
+| "{{lang|it|[[Era (song)|Era]]|i=unset}}"
+| 115
+| 3
+|}
+
+=== Spokespersons ===
+Each participating broadcaster appointed a spokesperson, connected to the contest venue via [[telephone line]]s and responsible for announcing, in English or French, the votes for its respective country.<ref name="HowItWorks"/><ref>{{Cite web |date=24 May 2021 |title=Lugano to Liverpool: Broadcasting Eurovision |url=https://blog.scienceandmediamuseum.org.uk/broadcasting-eurovision/ |url-status=live |archive-url=https://web.archive.org/web/20230512185848/https://blog.scienceandmediamuseum.org.uk/broadcasting-eurovision/ |archive-date=12 May 2023 |access-date=23 October 2023 |publisher=[[National Science and Media Museum]]}}</ref> Known spokespersons at the 1975 contest are listed below.
+
+* {{flagu|Finland}}{{snd}}Kaarina Pönniö{{sfn|Murtomäki|2007|pp=84–89}}
+* {{flagu|Spain}}{{snd}}[[José María Íñigo]]{{sfn|Dubin|Vuletic|Obregón|2022|loc=[[Robert Deam Tobin|Tobin, Robert Deam]]. "Queer Camp against Franco: Iván Zulueta's Eurovision Song Contest Parody Un Dos Tres"}}
+* {{flagu|Sweden}}{{snd}}[[Sven Lindahl]]{{sfn|Thorsson|Verhage|2006|pp=118–119}}
+* {{flagu|United Kingdom}}{{snd}}[[Ray Moore (broadcaster)|Ray Moore]]{{sfn|Roxburgh|2014|pp=189–193}}
+
+== Detailed voting results<span class="anchor" id="Scoreboard"></span> ==
+<!-- Anchor in the header is the old section name -->
+Jury voting was used to determine the points awarded by all countries.{{sfn|Roxburgh|2014|pp=189–193}} The announcement of the results from each country was conducted in the order in which they performed, with the spokespersons announcing their country's points in English or French in performance order.{{sfn|Roxburgh|2014|pp=189–193}}<ref name="contestAV" /> The detailed breakdown of the points awarded by each country is listed in the tables below, with voting countries listed in the order in which they presented their votes.
+
+{| class="wikitable plainrowheaders" style="text-align:center;"
+|-
+|+ Detailed voting results of the Eurovision Song Contest 1975<ref name="results">{{cite web |title=Stockholm 1975 – Detailed voting results |url=https://eurovision.tv/event/stockholm-1975/final/results |publisher=European Broadcasting Union (EBU) |access-date=9 April 2021 |archive-url=https://web.archive.org/web/20210409175428/https://eurovision.tv/event/stockholm-1975/final/results |archive-date=9 April 2021 |url-status=live}}</ref><ref name="scoreboard">{{cite web |title=Eurovision Song Contest 1975 – Scoreboard |url=https://eurovision.tv/page/history/by-year/contest?event=291#Scoreboard |publisher=European Broadcasting Union (EBU) |access-date=13 July 2021 |archive-url=https://web.archive.org/web/20150924043110/http://www.eurovision.tv/page/history/by-year/contest?event=291#Scoreboard |archive-date=24 September 2015 |url-status=dead}}</ref>
+|-
+! colspan="2" |
+! scope="col" {{vert header|nb=1|Total score}}
+! scope="col" {{vert header|nb=1|Netherlands}}
+! scope="col" {{vert header|nb=1|Ireland}}
+! scope="col" {{vert header|nb=1|France}}
+! scope="col" {{vert header|nb=1|Germany}}
+! scope="col" {{vert header|nb=1|Luxembourg}}
+! scope="col" {{vert header|nb=1|Norway}}
+! scope="col" {{vert header|nb=1|Switzerland}}
+! scope="col" {{vert header|nb=1|Yugoslavia}}
+! scope="col" {{vert header|nb=1|United Kingdom}}
+! scope="col" {{vert header|nb=1|Malta}}
+! scope="col" {{vert header|nb=1|Belgium}}
+! scope="col" {{vert header|nb=1|Israel}}
+! scope="col" {{vert header|nb=1|Turkey}}
+! scope="col" {{vert header|nb=1|Monaco}}
+! scope="col" {{vert header|nb=1|Finland}}
+! scope="col" {{vert header|nb=1|Portugal}}
+! scope="col" {{vert header|nb=1|Spain}}
+! scope="col" {{vert header|nb=1|Sweden}}
+! scope="col" {{vert header|nb=1|Italy}}
+|- style="background:gold;"
+! rowspan="19" {{vert header|va=middle|Contestants}}
+! scope="row" style="text-align:left; font-weight:bold; background:gold;" | Netherlands
+| style="text-align:right; font-weight:bold;" | 152 || style="text-align:left; background:#aaa;"| || 8 || 5 || 8 || 10 || '''12''' || 6 || 8 || '''12''' || '''12''' || 3 || '''12''' || 4 || 10 || 10 || 7 || '''12''' || '''12''' || 1
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Ireland
+| style="text-align:right; background:#f2f2f2;" | 68 || 6 || style="text-align:left; background:#aaa;"| || 6 ||  ||  || 4 || 7 || 1 || 6 || 4 || '''12''' ||  ||  ||  || 1 || 4 || 3 || 10 || 4
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | France
+| style="text-align:right; background:#f2f2f2;" | 91 || 8 || '''12''' || style="text-align:left; background:#aaa;"| ||  ||  ||  || 3 ||  || 8 || 7 || 2 || 7 || 1 || 7 ||  || '''12''' || 8 || 8 || 8
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Germany
+| style="text-align:right; background:#f2f2f2;" | 15 ||  ||  ||  || style="text-align:left; background:#aaa;"| || 8 ||  ||  ||  ||  || 3 ||  ||  ||  ||  ||  ||  || 4 ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Luxembourg
+| style="text-align:right; background:#f2f2f2;" | 84 || '''12''' || 10 || 3 ||  || style="text-align:left; background:#aaa;"| ||  ||  || 7 || 3 || 5 ||  || 6 || 5 ||  || 5 || 8 || 6 || 4 || 10
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Norway
+| style="text-align:right; background:#f2f2f2;" | 11 || 2 ||  ||  ||  ||  || style="text-align:left; background:#aaa;"| ||  ||  ||  ||  ||  ||  ||  || 2 ||  ||  ||  ||  || 7
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Switzerland
+| style="text-align:right; background:#f2f2f2;" | 77 || 7 || 2 || 10 || 6 || 2 || 1 || style="text-align:left; background:#aaa;"| ||  || 5 || 6 || 8 ||  || 7 || 5 || 4 || 2 ||  ||  || '''12'''
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Yugoslavia
+| style="text-align:right; background:#f2f2f2;" | 22 || 3 || 4 ||  || 2 ||  ||  ||  || style="text-align:left; background:#aaa;"| ||  ||  || 5 ||  ||  ||  ||  || 1 ||  || 7 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | United Kingdom
+| style="text-align:right; background:#f2f2f2;" | 138 || 4 || 3 || '''12''' || 10 || '''12''' || 7 || 8 || '''12''' || style="text-align:left; background:#aaa;"| || 8 || 10 || 10 ||  || '''12''' || 7 || 5 || 10 || 5 || 3
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Malta
+| style="text-align:right; background:#f2f2f2;" | 32 || 1 ||  || 8 ||  || 5 || 2 || 4 || 2 ||  || style="text-align:left; background:#aaa;"| || 7 || 1 || 2 ||  ||  ||  ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Belgium
+| style="text-align:right; background:#f2f2f2;" | 17 || 5 ||  ||  || 7 ||  ||  ||  || 3 ||  ||  || style="text-align:left; background:#aaa;"| ||  ||  ||  ||  ||  ||  || 2 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Israel
+| style="text-align:right; background:#f2f2f2;" | 40 || 10 || 1 || 1 || 1 || 1 || 5 || 2 ||  || 1 ||  || 1 || style="text-align:left; background:#aaa;"| || 6 ||  || 3 ||  ||  || 6 || 2
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Turkey
+| style="text-align:right; background:#f2f2f2;" | 3 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || style="text-align:left; background:#aaa;"| || 3 ||  ||  ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Monaco
+| style="text-align:right; background:#f2f2f2;" | 22 ||  ||  ||  || 3 || 4 ||  ||  ||  || 2 || 1 ||  || 2 ||  || style="text-align:left; background:#aaa;"| || 2 || 3 ||  ||  || 5
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Finland
+| style="text-align:right; background:#f2f2f2;" | 74 ||  || 5 ||  || '''12''' || 6 || 10 || '''12''' || 5 || 4 ||  ||  || 8 ||  || 8 || style="text-align:left; background:#aaa;"| ||  || 1 || 3 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Portugal
+| style="text-align:right; background:#f2f2f2;" | 16 ||  ||  || 2 ||  ||  ||  ||  ||  ||  ||  ||  ||  || '''12''' ||  ||  || style="text-align:left; background:#aaa;"| || 2 ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Spain
+| style="text-align:right; background:#f2f2f2;" | 53 ||  || 7 ||  || 5 ||  || 3 || 5 || 4 ||  ||  || 4 || 4 || 3 || 4 || 8 ||  || style="text-align:left; background:#aaa;"| ||  || 6
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Sweden
+| style="text-align:right; background:#f2f2f2;" | 72 ||  ||  || 7 ||  || 7 || 8 || 1 || 6 || 7 || 2 ||  || 3 || 8 || 6 || 6 || 6 || 5 || style="text-align:left; background:#aaa;"| ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Italy
+| style="text-align:right; background:#f2f2f2;" | 115 ||  || 6 || 4 || 4 || 3 || 6 || 10 || 10 || 10 || 10 || 6 || 5 || 10 || 1 || '''12''' || 10 || 7 || 1 || style="text-align:left; background:#aaa;"|
+|}
+
+=== 12 points ===
+The below table summarises how the maximum 12 points were awarded from one country to another. The winning country is shown in bold. The Netherlands received the maximum score of 12 points from six of the voting countries, with the UK receiving four sets of 12 points, Finland and France each receiving two sets of maximum scores, and Ireland, Italy, Luxembourg, Portugal and Switzerland receiving one maximum score each.<ref name="results" /><ref name="scoreboard" />
+
+{| class="wikitable plainrowheaders"
+|-
+|+ Distribution of 12 points awarded at the Eurovision Song Contest 1975<ref name="results" /><ref name="scoreboard" />
+|-
+! scope="col" | N.
+! scope="col" | Contestant
+! scope="col" | Nation(s) giving 12 points
+|-
+! scope="row" | 6
+| '''{{Esc|Netherlands|y=1975}}'''
+| {{Esc|Israel|y=1975}}, {{Esc|Malta|y=1975}}, {{Esc|Norway|y=1975}}, {{Esc|Spain|1945|y=1975}}, {{Esc|Sweden|y=1975}}, {{Esc|United Kingdom|y=1975}}
+|-
+! scope="row" | 4
+| {{Esc|United Kingdom|y=1975}}
+| {{Esc|France|y=1975}}, {{Esc|Luxembourg|y=1975}}, {{Esc|Monaco|y=1975}}, {{Esc|Yugoslavia|y=1975}}
+|-
+! scope="row" rowspan="2" | 2
+| {{Esc|Finland|y=1975}}
+| {{Esc|Germany|y=1975}}, {{Esc|Switzerland|y=1975}}
+|-
+| {{Esc|France|y=1975}}
+| {{Esc|Ireland|y=1975}}, {{Esc|Portugal|y=1975}}
+|-
+! scope="row" rowspan="5" | 1
+| {{Esc|Ireland|y=1975}}
+| {{Esc|Belgium|y=1975}}
+|-
+| {{Esc|Italy|y=1975}}
+| {{Esc|Finland|y=1975}}
+|-
+| {{Esc|Luxembourg|y=1975}}
+| {{Esc|Netherlands|y=1975}}
+|-
+| {{Esc|Portugal|y=1975}}
+| {{Esc|Turkey|y=1975}}
+|-
+| {{Esc|Switzerland|y=1975}}
+| {{Esc|Italy|y=1975}}
+|}
+
+== Broadcasts<span class="anchor" id="Broadcasters and commentators"></span> ==
+<!-- Anchor in the header is the old section name -->
+Broadcasters competing in the event were required to relay the contest via its networks; non-participating EBU member broadcasters were also able to relay the contest. Broadcasters were able to send commentators to provide coverage of the contest in their own native language and to relay information about the artists and songs to their television viewers.<ref name="Rules" />
+
+In addition to the participating nations, the contest was also reportedly aired, live or deferred, by broadcasters in Eastern European countries via [[International Radio and Television Organisation|Intervision]], and in Australia, Denmark, Greece, Hong Kong, Iceland, Japan, Jordan, Morocco and South Korea.<ref name="recall" />{{sfn|Roxburgh|2014|pp=180–182}}<ref name="Aragón">{{cite news |title=Grandes medidas de seguridad |trans-title=Great security measures |url=https://www.zaragoza.es/hemeroteca/prensa/HMZ_P0041/HMZ_P0041_1975-03-21/HMZ_P0041_1975-03-21.pdf |access-date=18 December 2024 |work=Aragón expres |date=21 March 1975 |page=8 |location=[[Zaragoza]], Spain |language=es |via={{ill|Ayuntamiento de Zaragoza|es}}}}</ref> The contest was reported to have had a possible maximum audience of over 700 million people.<ref name="VrijeVolk">{{cite news |last=Van Dijk |first=Ale |title=Songfestival-vesting |trans-title=Eurovision fortress |url=https://www.delpher.nl/nl/kranten/view?coll=ddd&identifier=ddd:010958723:mpeg21:p009 |access-date=11 April 2024 |work=[[Het Vrije Volk]] |date=22 March 1975 |page=9 |location=[[Rotterdam]], Netherlands |language=nl |via=[[Delpher]]}}</ref>
+
+A planned broadcast in Chile by its public broadcaster {{lang|es|[[Televisión Nacional de Chile]]|i=unset}} was prevented by SR, following pressure from the [[Swedish Musicians' Union]] in opposition to the [[Military dictatorship of Chile|Chilean military dictatorship]].<ref name="HS" /><ref>{{cite news |last=Van Dijk |first=Ale |title=Zweedse tv: geen beelden van songfestival naar Chili |trans-title=Swedish TV: no footage from the Eurovision Song Contest to Chile |url=https://resolver.kb.nl/resolve?urn=ddd:010958723:mpeg21:p001 |access-date=9 January 2023 |work=[[Het Vrije Volk]] |date=22 March 1975 |page=1 |location=[[Rotterdam]], Netherlands |language=nl |via=[[Delpher]]}}</ref><ref>{{cite news |date=22 March 1975 |title='Affaire' Eurovisión probó solidaridad de la TV chilena |trans-title=Eurovision 'affair' tested solidarity of Chilean TV |language=es |work=[[El Mercurio]] |location=[[Santiago]], Chile |pages=33}}</ref><ref>{{cite web |url=http://www.commoditiescontrol.com/commodity-market/dowjonescommoditiesnews/geopolitics-of-eurovision-chile-edition-20150505DN008017.html |title=Geopolitics of Eurovision: Chile Edition |date=5 May 2015 |access-date=6 May 2017 |work=CommoditiesControl |archive-date=17 October 2017 |archive-url=https://web.archive.org/web/20171017222625/http://www.commoditiescontrol.com/commodity-market/dowjonescommoditiesnews/geopolitics-of-eurovision-chile-edition-20150505DN008017.html |url-status=dead}}</ref> [[Rolf Rembe]], spokesman for the union, said that broadcasting the festival to Chile "would give the impression that relations between Chile and world artists are normal".<ref>{{cite news |url=https://books.google.com/books?id=NpJcAAAAIBAJ&dq=eurovision+1975+chile&pg=PA15&article_id=1116,1821192 |title=El certamen de Eurovisión no llegará a Chile |trans-title=The Eurovision contest will not come to Chile |work=[[La Opinión]] |location=[[Los Angeles|Los Angeles, CA]], United States |date=23 March 1975 |access-date=15 May 2024 |page=7 |language=es |via=[[Google Books]]}}</ref>
+
+Known details on the broadcasts in each country, including the specific broadcasting stations and commentators are shown in the tables below.
+
+{| class="wikitable plainrowheaders sticky-header"
+|-
+|+ Broadcasters and commentators in participating countries
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Channel(s)
+! scope="col" | Commentator(s)
+! scope="col" | {{refh}}
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|Belgium}}
+| [[Belgische Radio- en Televisieomroep|BRT]]
+| [[VRT 1|BRT]], [[Radio 1 (Belgium)|BRT 1]]
+| {{ill|Jan Geysen|nl}} and Robrecht Willaert
+| style="text-align:center" | <ref name="DeS">{{cite news |title=TV–programma's van zaterdag 22 maart 1975 |trans-title=TV programmes of Saturday 22 March 1975 |url=https://uurl.kbr.be/2258659/p17 |url-access=registration |date=22 March 1975 |work=[[De Standaard]] |location=[[Brussels]], Belgium |access-date=22 May 2025 |page=20 |language=nl |via={{ill|BelgicaPress|nl}}}}</ref><ref>{{cite news |last=Van Hemeledonck |first=Jan |title=Elk zijn gorilla op Eurosong-festival: Ann Christy—Nederlands Engels en rood |trans-title=Everyone has their gorilla at the Eurovision Song Contest: Ann Christy—Dutch, English, and Red |url=https://uurl.kbr.be/2373481/p9 |url-access=registration |date=22 March 1975 |work=[[Het Laatste Nieuws]] |location=[[Brussels]], Belgium |access-date=1 June 2026 |page=9 |language=nl |via={{ill|BelgicaPress|nl}}}}</ref>
+|-
+| rowspan="2" | [[Radiodiffusion-télévision belge|RTB]]
+| [[La Une|RTB]]
+| [[Paule Herreman]]
+| rowspan="2" style="text-align:center" | <ref>{{cite news |title=tv en radio |trans-title=tv and radio |url=https://uurl.kbr.be/2373481/p29 |url-access=registration |date=22 March 1975 |work=[[Het Laatste Nieuws]] |location=[[Brussels]], Belgium |access-date=30 May 2026 |page=29 |language=nl |via={{ill|BelgicaPress|nl}}}}</ref>
+|-
+| {{lang|fr|{{ill|Radio Deux (Belgium)|fr|Radio Deux|lt=RTB 2}}|i=unset}}
+| {{N/A|}}
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Finland}}
+| rowspan="2" | [[Yle|YLE]]
+| [[Yle TV1|TV1]]
+| {{ill|Heikki Seppälä|fi}}
+| rowspan="2" style="text-align:center" | <ref name="HS">{{cite news |title=Viulu-ukko loppusuoralla |trans-title=Old man fiddle on the final stretch |url=https://nakoislehti.hs.fi/c2dc9632-86bc-499b-9ee0-d58e22349adf |access-date=23 December 2022 |work=[[Helsingin Sanomat]] |location=[[Helsinki]], Finland |date=22 March 1975 |page=41 |language=fi |url-access=subscription}}</ref><ref>{{cite news |title=Radio ja TV |trans-title=Radio and TV |url=https://nakoislehti.hs.fi/c2dc9632-86bc-499b-9ee0-d58e22349adf |access-date=23 December 2022 |work=[[Helsingin Sanomat]] |location=[[Helsinki]], Finland |date=22 March 1975 |page=41 |language=fi |url-access=subscription}}</ref>
+|-
+| {{ill|Rinnakkaisohjelma|fi}}
+| {{ill|Erkki Melakoski|fi}}
+|-
+! scope="row" | {{Flagu|France}}
+| colspan="2" | [[TF1]]
+| [[Georges de Caunes]]
+| style="text-align:center" | <ref>{{cite news |title=Radio-Télévision {{!}} Les programmes |trans-title=Radio-Television {{!}} Programmes |url=https://archive.org/details/LeMondeDiplomatique1975FranceFrench/Mar%2022%201975%2C%20Le%20Monde%20Diplomatique%2C%20%233988%2C%20France%20%28fr%29/page/n23/mode/2up |access-date=18 June 2024 |work=[[Le Monde diplomatique]] |date=22 March 1975 |location=Paris, France |page=24 |via=[[Internet Archive]]}}</ref><ref name="JVT" />
+|-
+! scope="row" | {{Flagu|Germany}}
+| [[ARD (broadcaster)|ARD]]
+| {{lang|de|[[Das Erste|Deutsches Fernsehen]]|i=unset}}
+| [[Werner Veigel]]
+| style="text-align:center" | <ref name="Algemeen" /><ref>{{cite news |title=Tele-schau: Gesehen – Grand Prix Eurovision (I. Programm) |trans-title=Tele-show: Seen – Grand Prix Eurovision (1st Programme) |url=https://www.ecgermany.de/images/rbrk_esc/1975/Presse_1.jpg |work={{ill|Bocholter-Borkener Volksblatt|de}} |location=[[Bocholt, Germany|Bocholt]], West Germany |access-date=18 January 2023 |language=de}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Ireland}}
+| rowspan="2" | [[RTÉ]]
+| [[RTÉ One|RTÉ]]
+| [[Mike Murphy (presenter)|Mike Murphy]]
+| style="text-align:center" | <ref>{{cite news |title=Television Today |url=https://www.irishtimes.com/newspaper/archive/1975/0322/Pg020.html |access-date=22 December 2022 |newspaper=[[The Irish Times]] |location=[[Dublin]], Ireland |date=22 March 1975 |page=20 |url-access=subscription}}</ref><ref name="Examiner">{{cite news |title=The Swabriggs quietly confident |newspaper=[[Irish Examiner]] |location=[[Cork (city)|Cork]], Ireland |date=19 March 1975 |quote=RTE's television commentator will be Mike Murphy and the radio commentary will be by Liam Devally.}}</ref>
+|-
+| [[RTÉ Radio 1|RTÉ Radio]]
+| [[Liam Devally]]
+| style="text-align:center" | <ref name="Examiner" /><ref>{{cite news |title=Radio Today |url=https://www.irishtimes.com/newspaper/archive/1975/0322/Pg020.html |access-date=22 December 2022 |newspaper=[[The Irish Times]] |location=[[Dublin]], Ireland |date=22 March 1975 |page=20 |url-access=subscription}}</ref>
+|-
+! scope="row" | {{Flagu|Israel}}
+| [[Israel Broadcasting Authority|IBA]]
+| [[Channel 1 (Israel)|Israeli Television]]
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=רדיו ∗ טלוויזיה |trans-title=Radio ∗ Television |url=https://www.nli.org.il/en/newspapers/?a=d&d=mar19750321-01.1.100 |access-date=9 January 2023 |work=[[Maariv (newspaper)|Maariv]] |date=21 March 1975 |location=[[Tel Aviv]], Israel |language=he |page=100 |via=[[National Library of Israel]]}}</ref>
+|-
+! scope="row" | {{Flagu|Italy}}
+| [[RAI]]
+| {{lang|it|[[Rai 1|Programma Nazionale TV]]|i=unset}}, {{lang|it|[[Rai Radio 2|Secondo Programma]]|i=unset}}
+| [[Silvio Noto]]
+| style="text-align:center" | <ref>{{cite magazine |title=TV {{!}} 22 marzo {{!}} sabato |trans-title=TV {{!}} 22 March {{!}} Saturday |url=http://www.radiocorriere.teche.rai.it/Download.aspx?data=1975{{!}}12{{!}}000{{!}}P |magazine=[[Radiocorriere TV]] |location=[[Turin]], Italy |date=16–22 March 1975 |volume=52 |issue=12 |pages=64–65 |access-date=31 May 2024 |language=it |via=[[Rai Teche]]}}</ref><ref>{{cite magazine |title=radio {{!}} sabato 22 marzo |trans-title=radio {{!}} Saturday 22 March |url=http://www.radiocorriere.teche.rai.it/Download.aspx?data=1975{{!}}12{{!}}000{{!}}P |magazine=[[Radiocorriere TV]] |location=[[Turin]], Italy |date=16–22 March 1975 |volume=52 |issue=12 |pages=66–67 |access-date=31 May 2024 |language=it |via=[[Rai Teche]]}}</ref>
+|-
+! scope="row" | {{Flagu|Luxembourg}}
+| [[Compagnie Luxembourgeoise de Télédiffusion|CLT]]
+| {{lang|fr|[[RTL9|RTL Télé-Luxembourg]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Télé-programmes – samedi 22 mars |trans-title=TV programmes – Saturday 22 March |url=https://viewer.eluxemburgensia.lu/ark:70795/z4xchxqpr/pages/33 |access-date=8 January 2023 |work=[[Luxemburger Wort]] |date=21 March 1975 |location=[[Luxembourg City]], Luxembourg |language=de, fr |via=[[National Library of Luxembourg]]}}</ref>
+|-
+! scope="row" | {{Flagu|Malta}}
+| [[Maltese Broadcasting Authority|MBA]]
+| [[Television Malta|TVM]], [[Radio Malta]]
+| Norman Hamilton
+| style="text-align:center" | <ref>{{cite news |title=Sound and Vision |work=[[Times of Malta]] |location=[[Birkirkara]], Malta |date=22 March 1975 |page=6}}</ref><ref>{{cite news |last=Barry |first=Fred |title=Eurovision Song Contest Today |work=[[Times of Malta]] |location=[[Birkirkara]], Malta |date=22 March 1975 |page=12}}</ref>
+|-
+! scope="row" | {{Flagu|Netherlands}}
+| [[Nederlandse Omroep Stichting|NOS]]
+| {{lang|nl|[[NPO 2|Nederland 2]]|i=unset}}
+| [[Willem Duys]]
+| style="text-align:center" | <ref name="Algemeen">{{cite news |title=Strips/Radio▪TV |trans-title=Comics/Radio▪TV |url=https://resolver.kb.nl/resolve?urn=KBPERS01:003449019:mpeg21:p00004 |access-date=8 February 2025 |work=[[Algemeen Dagblad]] |date=22 March 1975 |language=nl |location=[[Rotterdam]], Netherlands |page=4 |via=[[Delpher]]}}</ref>
+|-
+! scope="row" | {{Flagu|Norway}}
+| [[NRK]]
+| {{lang|no|[[NRK1|NRK Fjernsynet]]|i=unset}}, [[NRK P1|NRK]]{{efn|Deferred broadcast on NRK at 23:00 ([[Central European Time|CET]])<ref name="Norsk" />}}
+| [[John Andreassen]]
+| style="text-align:center" | <ref name="Norsk">{{cite news |title=Radio og TV |trans-title=Radio and TV |url=https://www.nb.no/items/7bda314481b0d55db0424e18f51a868e?page=9 |access-date=30 January 2025 |work={{ill|Ringsaker Blad|no}} |date=22 March 1975 |page=10 |location=[[Ringsaker Municipality|Ringsaker]], Norway |language=no |via=[[National Library of Norway]]}}</ref>
+|-
+! scope="row" | {{Flagu|Portugal}}
+| [[Radiotelevisão Portuguesa|RTP]]
+| {{lang|pt|[[RTP1|I Programa]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Televisão – Hoje |trans-title=Television – Today |url=http://casacomum.org/cc/visualizador?pasta=06822.172.27148#!5 |access-date=9 January 2023 |work=[[Diário de Lisboa]] |location=[[Lisbon]], Portugal |date=22 March 1975 |page=5 |language=pt |via=Casa Comum}}</ref>
+|-
+! scope="row" rowspan="3" | {{Flagu|Spain|1945}}
+| [[Televisión Española|TVE]]
+| [[La 1 (Spanish TV channel)|TVE 1]]
+| [[José Luis Uribarri]]
+| style="text-align:center" | <ref>{{Cite magazine |title=1a Cadena – Sábado |trans-title=First Channel – Saturday |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000960521 |access-date=27 June 2024 |magazine=[[Pueblo (newspaper)|Tele Pueblo]] |date=22 March 1975 |location=[[Madrid]], Spain |pages=8–9 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref><ref>{{Cite magazine |title=El sábado – Eurofestival 75 |trans-title=Saturday – Eurovision 75 |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000960521 |access-date=27 June 2024 |magazine=[[Pueblo (newspaper)|Tele Pueblo]] |date=22 March 1975 |location=[[Madrid]], Spain |pages=12–13 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>
+|-
+| [[Radio Nacional de España|RNE]]
+| {{lang|es|[[RTVE Canarias|RNE Canarias]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite web |title=Programas de radio |trans-title=Radio programmes |url=https://jable.ulpgc.es/viewer.vm?id=6134737&page=7 |work={{ill|El Eco de Canarias|es}} |location=[[Las Palmas]], Spain |page=7 |language=es |date=22 March 1975 |access-date=10 July 2024 |via=[[University of Las Palmas de Gran Canaria]]}}</ref>
+|-
+| colspan="2" | {{lang|es|[[Cadena SER]]|i=no}}{{efn|[[Simulcast]] on {{ill|Radio Castellón|es}},<ref>{{cite news |title=Programa de las emisoras castellonenses |trans-title=Programmes of Castellón radio stations |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=10005078612 |access-date=10 July 2024 |work={{ill|El Periódico Mediterráneo|es|lt=Mediterráneo}} |date=22 March 1975 |page=4 |location=[[Castellón de la Plana]], Spain |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> {{ill|Ràdio Girona|ca|lt=Radio Girona}},<ref>{{cite news |title=Programas de Televisión y Radio |trans-title=Television and Radio Programmes |url=https://pandora.girona.cat/viewer.vm?id=0000732108&page=3&lang=ca&view=hemeroteca |access-date=20 August 2024 |work={{ill|Los Sitios|ca}} |date=22 March 1975 |page=3 |location=[[Girona]], Spain |language=es |via={{ill|Girona City Hall|es|Ayuntamiento de Gerona}}}}</ref> Radio Huesca,<ref>{{cite news |title=Agenda
+ |url=https://store.diariodelaltoaragon.es/cgi-bin/Pandora?xslt=ejemplar;filename=NE19750322;place=none;publication=Nueva%20España;day=22;month=03;year=1975;page=0002;id=0000421494;collection=prensa;url_high=prensa/Nueva%20España/1975/197503/19750322/NE19750322-0002.pdf;lang=es;archivo=;encoding=utf-8 |access-date=3 February 2025 |work={{ill|Nueva España (newspaper)|es|Nueva España (periódico)|lt=Nueva España}} |date=22 March 1975 |page=2 |location=[[Huesca]], Spain |language=es}}</ref> Radio San Sebastián,<ref>{{Cite news |date=22 March 1975 |title=Programas de Radio |trans-title=Radio Programmes |url=https://w390w.gipuzkoa.net/WAS/CORP/DKPAtzokoPrentsaWEB/argitalpen/69677/data/164736000000 |access-date=10 February 2025 |work= {{ill|Unidad (newspaper)|es|Unidad (periódico)|lt=Unidad}} |page=18 |location=[[San Sebastián]], Spain |language=es |via={{ill|Koldo Mitxelena Cultural Center|eu|Koldo Mitxelena Kulturunea}}}}</ref> {{ill|Radio Sevilla|es}},<ref>{{cite news |title=Programa de radio para hoy |trans-title=Radio programme for today |url=https://www.abc.es/archivo/periodicos/abc-sevilla-19750322-74.html |access-date=11 October 2024 |work=[[ABC (newspaper)|ABC Sevilla]] |location=[[Seville]], Spain |date=22 March 1975 |page=74 |language=es |url-access=subscription}}</ref> {{ill|Radio Valladolid|es}},<ref>{{cite news |title=Programas de radio |trans-title=Radio programmes |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000774234 |access-date=10 July 2024 |work=[[Libertad (newspaper)|Libertad]] |date=22 March 1975 |page=4 |location=[[Valladolid]], Spain |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref> and Radio Zaragoza.<ref>{{cite news |title=Programas de radio para hoy |trans-title=Radio programmes for today |url=https://www.zaragoza.es/hemeroteca/prensa/HMZ_P0016/HMZ_P0016_1975-03-22/HMZ_P0016_1975-03-22.pdf |access-date=1 October 2024 |work={{ill|El Noticiero (Zaragoza)|es|lt=El Noticiero}} |date=22 March 1975 |page=17 |location=[[Zaragoza]], Spain |language=es |via={{ill|Ayuntamiento de Zaragoza|es}}}}</ref>}}
+| [[Joaquín Prat]]
+| style="text-align:center" | <ref name="Pueblo">{{Cite news |title=Informe urgente SER – La S.E.R. ofrece hoy la retransmisión del Festival de Eurovisión |trans-title=SER urgent report – The S.E.R. offers the broadcast of the Eurovision Song Contest today |url=https://prensahistorica.mcu.es/en/consulta/registro.do?id=11000944129 |access-date=10 July 2024 |magazine=[[Pueblo (newspaper)|Pueblo]] |date=22 March 1975 |location=[[Madrid]], Spain |pages=13 |language=es |via={{ill|Virtual Library of Historical Newspapers|es|Biblioteca Virtual de Prensa Histórica}}}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Sweden}}
+| rowspan="2" | [[Sveriges Radio|SR]]
+| [[SVT1|TV1]]
+| [[Åke Strömmer]]
+| style="text-align:center" | <ref>{{cite news |title=tv programmen |trans-title=tv programmes |work=[[Svenska Dagbladet]] |date=22 March 1975 |location=[[Stockholm]], Sweden |page=35 |language=sv}}</ref>
+|-
+| [[Sveriges Radio P3|SR P3]]
+| {{ill|Ursula Richter (broadcaster)|lt=Ursula Richter|sv|Ursula Richter}}
+| style="text-align:center" | <ref>{{cite news |title=radioprogrammen |trans-title=radio programmes |work=[[Svenska Dagbladet]] |date=22 March 1975 |location=[[Stockholm]], Sweden |page=35 |language=sv}}</ref>
+|-
+! scope="rowgroup" rowspan="4" | {{Flagu|Switzerland}}
+| rowspan="4" | [[Swiss Broadcasting Corporation|SRG SSR]]
+| [[SRF 1|TV DRS]]
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Fernsehen – Samstag |trans-title=Television – Saturday |url=https://www.e-newspaperarchives.ch/?a=d&d=NZZ19750322-01.1.39 |access-date=4 January 2025 |work=[[Neue Zürcher Zeitung]] |page=39 |date=22–23 March 1975 |location=[[Zurich]], Switzerland |language=de |via=[[E-newspaperarchives.ch]]}}</ref>
+|-
+| [[RTS 1 (Swiss TV channel)|TSR]]
+| {{ill|Georges Hardy|fr|Georges Hardy (journaliste)}}
+| style="text-align:center" | <ref name="JVT">{{cite magazine |title=TV – samedi 22 mars |trans-title=TV – Saturday 22 March |url=https://www.scriptorium.ch/zoom/324860/view?page=8&p=verso&tool=info |access-date=8 January 2023 |magazine=[[TV8 (magazine)|Radio TV – Je vois tout]] |volume=53 |issue=12 |date=20 March 1975 |location=[[Lausanne]], Switzerland |pages=14–15 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref>
+|-
+| [[RSI La 1|TSI]]{{efn|Delayed broadcast the following day at 15:15 ([[Central European Time|CET]])<ref name="Ticinese" />}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Ticinese">{{cite news |title=Televisione |trans-title=Television |url=https://aqp.sbt.ti.ch/viewer?id=yMbyjpoB2WlOfa--XkA2 |access-date=1 June 2026 |work=[[Gazzetta Ticinese]] |date=22 March 1975 |location=[[Lugano]], Switzerland |page=11 |language=it |via={{ill|Sistema bibliotecario ticinese|it}}}}</ref>
+|-
+| [[La Première (Switzerland)|RSR 1]]
+| Robert Burnier
+| style="text-align:center" | <ref>{{cite magazine |title=Radio – samedi 22 mars |trans-title=Radio – Saturday 22 March |url=https://www.scriptorium.ch/zoom/324860/view?page=36&p=verso |access-date=8 January 2023 |magazine=[[TV8 (magazine)|Radio TV – Je vois tout]]  |volume=53 |issue=12 |date=20 March 1975 |location=[[Lausanne]], Switzerland |page=71 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref>
+|-
+! scope="row" | {{Flagu|Turkey}}
+| [[Turkish Radio and Television Corporation|TRT]]
+| {{lang|tr|[[TRT 1|TRT Televizyon]]|i=unset}}
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Televizyon |trans-title=Television |url=https://egazete.cumhuriyet.com.tr/Archive/CUMHURIYET/GAZETE_ARSIVI/1975/3/22/51475DDB-A04B-415A-AE96-A9B0321C2E9B_3250092_6.jpeg |access-date=9 January 2023 |work=[[Cumhuriyet]] |date=22 March 1975 |location=[[Istanbul]], Turkey |archive-url=https://web.archive.org/web/20230109100553/https://egazete.cumhuriyet.com.tr/Archive/CUMHURIYET/GAZETE_ARSIVI/1975/3/22/51475DDB-A04B-415A-AE96-A9B0321C2E9B_3250092_6.jpeg |archive-date=9 January 2023 |page=6 |language=tr |url-status=live}}</ref>
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|United Kingdom}}
+| rowspan="2" | [[BBC]]
+| [[BBC One|BBC1]]
+| [[Pete Murray (DJ)|Pete Murray]]
+| style="text-align:center" | <ref>{{cite magazine |title=Eurovision Song Contest 1975 – BBC1 |url=https://genome.ch.bbc.co.uk/7903dbc94de1462a897420e91d77500e |access-date=8 January 2023 |magazine=[[Radio Times]] |location=London, United Kingdom |date=22 March 1975 |via=[[BBC Genome Project]]}}</ref>
+|-
+| [[BBC Radio 2]]{{efn|[[Simulcast]] on [[BBC Radio 1]],<ref>{{cite magazine |title=Eurovision Song Contest 1975 – BBC Radio 2 |url=https://genome.ch.bbc.co.uk/45f3d45e4d9d47fcb93b6d0479618554 |access-date=8 January 2023 |magazine=[[Radio Times]] |location=London, United Kingdom |date=22 March 1975 |via=[[BBC Genome Project]]}}</ref> [[BBC Radio WM|BBC Radio Birmingham]],<ref>{{cite news |title=Saturday radio |url=https://www.newspapers.com/article/the-birmingham-post-radio-programmes-for/168377465/ |access-date=19 March 2025 |work=[[Birmingham Post|The Birmingham Post]] |date=22 March 1975 |location=[[Birmingham]], United Kingdom |page=2 |via=Newspapers.com}}</ref> [[BBC Radio Sussex|BBC Radio Brighton]],<ref name="Sevenoaks">{{cite news |title=...and Radio |url=https://www.newspapers.com/article/sevenoaks-chronicle-radio-programmes-for/168503115/ |access-date=21 March 2025 |work=[[Kent and Sussex Courier|Sevenoaks Chronicle]] |date=22 March 1975 |location=[[Sevenoaks]], United Kingdom |page=27 |via=Newspapers.com}}</ref> [[BBC Radio Cumbria|BBC Radio Carlisle]],<ref name="Journal">{{cite news |title=Saturday radio |url=https://www.newspapers.com/article/the-journal-radio-programmes-for-22-marc/168504501/ |access-date=21 March 2025 |work=[[The Journal (Newcastle upon Tyne newspaper)|The Journal]] |date=22 March 1975 |location=[[Newcastle upon Tyne]], United Kingdom |page=4 |via=Newspapers.com}}</ref> [[BBC Radio Tees|BBC Radio Cleveland]],<ref>{{cite news |title=Today's radio |url=https://www.newspapers.com/article/the-northern-echo-north-yorkshire-ed/168958081/ |access-date=27 March 2025 |work=[[The Northern Echo]] |date=22 March 1975 |location=[[Darlington]], United Kingdom |page=20 |via=Newspapers.com}}</ref> [[BBC Radio Leeds]],<ref>{{cite news |title=Radio |url=https://www.newspapers.com/article/huddersfield-daily-examiner-radio-progra/168555496/ |access-date=22 March 2025 |work=[[Huddersfield Daily Examiner]] |date=22 March 1975 |location=[[Huddersfield]], United Kingdom |page=2 |via=Newspapers.com}}</ref> [[BBC Radio London]],<ref>{{cite news |title=to your weekend viewing and listening |url=https://www.newspapers.com/article/evening-standard-radio-programmes-for-22/168502548/ |access-date=19 March 2025 |work=[[Evening Standard]] |date=21 March 1975 |location=London, United Kingdom |page=3 |via=Newspapers.com}}</ref> [[BBC Radio Kent|BBC Radio Medway]],<ref name="Sevenoaks" /> and [[BBC Radio Newcastle]].<ref name="Journal" />}}
+| rowspan="2" | [[Terry Wogan]]
+| style="text-align:center" | <ref>{{cite magazine |title=as Radio 2 – BBC Radio 1 |url=https://genome.ch.bbc.co.uk/20d7f0c739bb4c1598cc69bcf2d53bdf |access-date=10 January 2023 |magazine=[[Radio Times]] |location=London, United Kingdom |date=22 March 1975 |via=[[BBC Genome Project]]}}</ref>
+|-
+| [[British Forces Broadcasting Service|BFBS]]
+| [[BFBS Radio]]
+| style="text-align:center" | {{sfn|Roxburgh|2014|pp=182–189}}
+|-
+! scope="rowgroup" rowspan="6" | {{Flagu|Yugoslavia}}
+| rowspan="6" | [[Yugoslav Radio Television|JRT]]
+| [[TV Belgrade|TV Beograd 1]]
+| {{N/A|}}
+| style="text-align:center" | <ref name="Borba">{{cite news |title=Телевизија |trans-title=Television |url=https://istorijskenovine.unilib.rs/view/index.html#panel:pp{{!}}issue:UB_00064_19750322{{!}}page:16 |access-date=25 May 2024 |work=[[Borba (newspaper)|Borba]] |date=22 March 1975 |location=[[Belgrade]], Yugoslavia |page=16 |language=sh-cyrl |via=[[Belgrade University Library]]}}</ref>
+|-
+| [[TV Koper-Capodistria]]
+| {{N/A|}}
+| style="text-align:center" | <ref>{{Cite news |date=22 March 1975 |title=Radio televizija |trans-title=Radio television |url=https://dlib.si/stream/URN:NBN:SI:DOC-FJDP2DJ2/9d900a58-5c0c-4104-b47b-d8259e7ded4f/PDF |access-date=26 October 2024 |work=[[Primorski dnevnik]] |location=[[Trieste]], Italy |page=4 |language=sl |via=[[Digital Library of Slovenia]]}}</ref>
+|-
+| [[TV Ljubljana|TV Ljubljana 1]]
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Danes, jutri na RTV |trans-title=Today, tomorrow on RTV |url=https://www.dlib.si/listalnik/URN_NBN_SI_doc-B9GDISEL/5/index.html |access-date=24 August 2025 |work=[[Delo (newspaper)|Delo]] |date=22 March 1975 |page=6 |language=sl |location=[[Ljubljana]], Yugoslavia |via=Digital Library of Slovenia}}</ref>
+|-
+| [[TV Sarajevo]]
+| {{N/A|}}
+| rowspan="2" style="text-align:center" | <ref name="Borba" />
+|-
+| [[TV Skopje]]{{efn|Deferred broadcast at 22:45 ([[Central European Time|CET]])<ref name="Borba" />}}
+| {{N/A|}}
+|-
+| [[TV Zagreb|TV Zagreb 1]]
+| {{N/A|}}
+| style="text-align:center" | <ref>{{cite news |title=Tjedni televizijski program {{!}} TV Zagreb od 22. ožujka do 28. ožujka |trans-title=Weekly television schedule {{!}} TV Zagreb from 22 March to 28 March |url=https://library.foi.hr/dbook/novine.php?B=1&C=20&godina=1975&broj=000011&page=011 |access-date=30 May 2024 |work=Glas Podravine |date=21 March 1975 |page=11 |language=sh |location=[[Koprivnica]], Yugoslavia |via={{ill|Faculty of Organization and Informatics in Varaždin, University of Zagreb|hr|Fakultet organizacije i informatike u Varaždinu}}}}</ref>
+|}
+
+{| class="wikitable plainrowheaders sticky-header"
+|-
+|+ Broadcasters and commentators in non-participating countries
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Channel(s)
+! scope="col" | Commentator(s)
+! scope="col" | {{refh}}
+|-
+! scope="row" | {{Flagu|Austria}}
+| [[ORF (broadcaster)|ORF]]
+| [[ORF 2|FS2]]
+| [[Ernst Grissemann]]
+| style="text-align:center" | <ref>{{cite news |title=TV-heute |trans-title=TV-today |url=https://www.arbeiterzeitung.at/ausgabe/19750322a/11 |access-date=28 July 2026 |work=[[Arbeiter-Zeitung (Vienna)|Arbeiter-Zeitung]] |date=22 March 1975 |location=[[Vienna]], Austria |page=11 |language=de |archive-date=28 July 2026 |archive-url=https://web.archive.org/web/20260728210440/https://www.arbeiterzeitung.at/ausgabe/19750322a/11 |url-status=live}}</ref><ref>{{cite news |last1=Halbhuber |first1=Axel |title=Ein virtueller Disput der ESC-Kommentatoren |trans-title=A virtual dispute between Eurovision commentators |url=https://kurier.at/kultur/song-contest/ein-virtueller-disput-der-esc-kommentatoren/131.875.853 |access-date=5 January 2023 |work=[[Kurier]] |date=22 May 2015 |archive-url=https://web.archive.org/web/20150523031620/http://kurier.at/kultur/song-contest/ein-virtueller-disput-der-esc-kommentatoren/131.875.853 |archive-date=23 May 2015 |language=de |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Denmark}}
+| [[DR (broadcaster)|DR]]
+| [[DR1|DR TV]]
+| Per Møller Hansen
+| style="text-align:center" | <ref>{{cite web |title=Fjernsynet – Lørdag 22. marts 1975 |trans-title=Television – Saturday 22 March 1975 |url=https://www.dr.dk/alletidersprogramoversigter/?date=1975-03-20&fileIndex=1 |publisher=[[DR (broadcaster)|DR]] |language=da |access-date=20 April 2024}}</ref>
+|-
+! scope="row" | {{Flagu|Greece|1970}}
+| [[National Radio Television Foundation|EIRT]]
+| [[ERT1|EIRT]]{{efn|Deferred broadcast the following day<ref name="Rizospastis" />}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Rizospastis">{{cite news |title=Τηλεόραση – Το πρόγραμμα τῆς ἑβδομάδας |trans-title=Television – The week's schedule |url=http://rg-dev.nlg.gr/viewer/BnlViewer/view/index.html?lang=el#panel:pp{{!}}issue:1abd_65{{!}}page:10 |access-date=18 December 2024 |work=[[Rizospastis]] |date=23 March 1975 |location=[[Athens]], Greece |page=7 |language=el |via=[[National Library of Greece]]}}</ref>
+|-
+! scope="row" | {{Flagu|Hungary}}
+| [[Magyar Televízió|MTV]]
+| [[M1 (Hungarian TV channel)|MTV1]]{{efn|Delayed broadcast on 20 April 1975 at 16:05 ([[Central European Time|CET]])<ref name="Hungary" />}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Hungary">{{cite magazine |title=Vasárnap – április 20 |trans-title=Sunday – 20 April |url=https://nemzetiarchivum.hu/news_archive/item/NEWS-ZDRxUXN1SGZ2WS9KQU9DVzhPOVluM0R1dDRLdkJoK2VtVW9kTDBEcG0wMD0 |access-date=15 February 2025 |magazine=Rádió– és Televízióújság |location=[[Budapest]], Hungary |volume=20 |issue=15 |date=14 April 1975 |pages=22–23 |language=hu |via=Nemzeti Archívum}}</ref>
+|-
+! scope="row" | {{Flagu|Iceland}}
+| [[RÚV]]
+| {{lang|is|[[RÚV (TV channel)|Sjónvarpið]]|i=unset}}{{efn|Delayed broadcast on 13 April 1975 at 21:10 ([[Western European Time|WET]])<ref name="Iceland" />}}
+| Dóra Hafsteinsdóttir
+| style="text-align:center" | <ref name="Iceland">{{cite news |title=Sunnudagur 13. apríl 1975 |trans-title=Sunday 13 April 1975 |url=https://timarit.is/page/8364068#page/n0/mode/2up |access-date=26 June 2026 |work=Dagskrá sjónvarpsins |date=13 April 1975 |location=[[Reykjavík]], Iceland |language=is |via=[[Timarit.is]]}}</ref>
+|-
+! scope="row" | {{Flagu|Poland|1927}}
+| [[Telewizja Polska|TP]]
+| [[TVP1|TP1]]{{efn|Deferred broadcast in a shortened format on 26 April 1975 at 00:20 ([[Central European Time|CET]])<ref name="Dziennik" />}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Dziennik">{{cite news |title=Tygodniowy program telewizji od 25. IV do 2 V 1975 r. |trans-title=Weekly TV schedule from 25/04 to 02/05 1975 |url=https://mbc.malopolska.pl/en/details/dziennik-polski-114385/ |access-date=18 July 2024 |work=[[Dziennik Polski]] |date=25–27 April 1975 |page=8 |location=[[Kraków]], Poland |language=pl |via={{ill|Digital Library of Małopolska|pl|Małopolska Biblioteka Cyfrowa}}}}</ref>
+|-
+! scope="row" | {{Flagu|Romania|1965}}
+| [[TVR (TV network)|TVR]]
+| {{lang|ro|[[TVR 1|Programul 1]]|i=unset}}{{efn|Delayed broadcast on 5 April 1975 at 22:05 ([[Eastern European Time|EET]])<ref name="Scînteia" />}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Scînteia">{{cite news |title=tv |url=https://adt.arcanum.com/en/view/Scinteia_1975_04/?pg=26&layout=s |access-date=9 March 2025 |work=[[Scînteia]] |date=5 April 1975 |location=[[Bucharest]], Romania |page=5 |language=ro |url-access=subscription |via=[[Arcanum Newspapers]]}}</ref>
+
+|-
+! scope="row" | {{Flagu|South Korea|1949}}
+| [[Korean Broadcasting System|KBS]]
+| [[KBS1|KBS]]{{efn|Delayed broadcast on 25 April 1975 at 19:35 ([[Korea Standard Time|KST]])<ref name="Chosun" />}}
+| {{N/A|}}
+| style="text-align:center" | <ref name="Chosun">{{cite news |title=「유럽 放送 가요제」 |trans-title="European Song Festival" |url=https://newslibrary.naver.com/viewer/index.naver?articleId=1975042500239108017&officeId=00023 |access-date=1 June 2024 |work=[[The Chosun Ilbo]] |date=25 April 1975 |location=[[Seoul]], South Korea |page=8 |language=ko |via=[[Naver]]}}</ref>
+|}
+
+== Notes and references ==
+=== Notes ===
+{{notelist}}
+
+=== References ===
+{{reflist}}
+
+=== Bibliography ===
+* {{Cite book |editor-last=Dubin |editor-first=Adam |editor-last2=Vuletic |editor-first2=Dean |editor-last3=Obregón |editor-first3=Antonio |title=The Eurovision Song Contest as a Cultural Phenomenon: from Concert Halls to the Halls of Academia |publisher=[[Routledge]] |year=2022 |isbn=978-1-032-03774-5 |location=[[Abingdon-on-Thames]], United Kingdom; New York, NY, United States |pages=180–188 |doi=10.4324/9781003188933-16 |oclc=1296690839}}
+* {{cite book |last=Murtomäki |first=Asko |title=Finland 12 points! Suomen Euroviisut |date=2007 |publisher=Teos |location=[[Helsinki]], Finland |isbn=951-851-106-3 |language=fi}}
+* {{cite book |last=O'Connor |first=John Kennedy |author-link=John Kennedy O'Connor |title=The Eurovision Song Contest: The Official History |date=2010 |publisher=[[Carlton Publishing Group|Carlton Books]] |location=London, United Kingdom |isbn=978-1-84732-521-1 |edition=2nd}}
+* {{Cite book |last=Roxburgh |first=Gordon |title=Songs for Europe: The United Kingdom at the Eurovision Song Contest |date=2014 |publisher=[[Telos Publishing]] |location=[[Prestatyn]], United Kingdom |isbn=978-1-84583-093-9 |volume=Two: The 1970s}}
+* {{cite book |last1=Thorsson |first1=Leif |last2=Verhage |first2=Martin |title=Melodifestivalen genom tiderna : de svenska uttagningarna och internationella finalerna |trans-title=Melodifestivalen through the ages: the Swedish selections and international finals |date=2006 |publisher=Premium Publishing |location=[[Stockholm]], Sweden |isbn=91-89136-29-2 |language=sv}}
+* {{cite book |last1=West |first1=Chris |author1-link=Chris West |title=Eurovision! A History of Modern Europe Through the World's Greatest Song Contest |date=April 2020 |publisher=[[Melville House Publishing|Melville House UK]] |location=London, United Kingdom |isbn=978-1-911545-55-2 |edition=Updated}}
+
+== External links ==
+{{commons category|Eurovision Song Contest 1975}}
+*{{Official website|http://www.eurovision.tv/}}
+
+{{Eurovision Song Contest 1975}}
+{{Eurovision Song Contest}}
+{{Portal bar|Music}}
+
+[[Category:Eurovision Song Contest 1975| ]]
+[[Category:Eurovision Song Contest by year|1975]]
+[[Category:Music competitions in Sweden]]
+[[Category:Music festivals in Stockholm]]
+[[Category:1975 in music]]
+[[Category:1975 in Sweden]]
+[[Category:1970s in Stockholm]]
+[[Category:March 1975 in Europe]]

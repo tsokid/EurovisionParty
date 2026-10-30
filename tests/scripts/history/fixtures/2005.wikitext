@@ -1,0 +1,1684 @@
+{{Short description|International song competition}}
+{{Redirect|Eurovision 2005|the junior contest|Junior Eurovision Song Contest 2005}}
+{{Use dmy dates|date=May 2024}}
+{{Infobox Song Contest
+| name = Eurovision Song Contest
+| year = 2005
+| theme = ''Awakening''
+| logo = [[File:Kyiv ESC 2005.svg|192x240px]]
+| semi = {{start date|2005|05|19|df=y}}
+| final = {{start date|2005|05|21|df=y}}
+| venue = [[Palace of Sports (Kyiv)|Palace of Sports]]<br>Kyiv, Ukraine
+| presenters = {{unbulleted list|[[Maria Efrosinina]]|[[Pavlo Shylko]]}}
+| director = [[Sven Stojanovic]]
+| exsupervisor = [[Svante Stockselius]]
+| exproducer = Pavlo Grytsak
+| organiser = [[European Broadcasting Union]] (EBU)
+| host = [[National Television Company of Ukraine]] (NTU)
+| entries = 39
+| finalists = 24
+| debut = {{unbulleted list|{{Esc|Bulgaria}}|{{Esc|Moldova|1990}}}}
+| return = {{Esc|Hungary}}
+| nonreturn = 
+| Map 1Semi = Y
+| vote = Each country awarded 12, 10, 8–1 points to their 10 favourite songs.
+| winner = {{unbulleted list|{{Esc|Greece|y=2005}}|"[[My Number One]]"}}
+}}
+
+The '''Eurovision Song Contest 2005''' was the 50th edition of the [[Eurovision Song Contest]]. It consisted of a semi-final on 19 May and a final on 21 May 2005, held at the [[Palace of Sports (Kyiv)|Palace of Sports]] in [[Kyiv]], Ukraine, and presented by [[Maria Efrosinina]] and [[Pavlo Shylko]]. It was organised by the [[European Broadcasting Union]] (EBU) and host broadcaster [[National Television Company of Ukraine]] (NTU), who staged the event after winning the {{Escyr|2004||2004 contest}} for {{esccnty|Ukraine|y=2004}} with the song "[[Wild Dances]]" by [[Ruslana]].
+
+Broadcasters from thirty-nine countries participated in the contest, three more than the previous record of thirty-six, that took part the year before. {{esccnty|Bulgaria}} and {{esccnty|Moldova}} made their first participation this year, while {{esccnty|Hungary}} returned to the contest after a six-year absence, having last taken part {{esccnty|Hungary|y=1998|t=in 1998}}.
+
+The winner was {{Esccnty|Greece|y=2005}} with the song "[[My Number One]]", performed by [[Helena Paparizou]] and written by Manos Psaltakis, [[Christos Dantis]] and Natalia Germanou. This was Greece's first victory in the contest after 31 years of participation. {{esccnty|Malta|y=2005}}, {{esccnty|Romania|y=2005}}, {{esccnty|Israel|y=2005}}, and {{esccnty|Latvia|y=2005}} rounded out the top five. Malta equalled their best result from {{Escyr|2002}}, while Romania achieved their best result in their Eurovision history. Unusually, all "[[Big Four (Eurovision)|Big Four]]" countries (France, Germany, Spain and United Kingdom) ended up as the "Last Four", all placing in the bottom four positions in the final.
+
+==Location==
+[[File:Kyiv Palace of Sports.jpg|thumb|left|Palace of Sports, Kyiv – host venue pictured during the 2005 contest.]]
+[[Kyiv]] is the capital and largest city of Ukraine, located in the north central part of the country on the [[Dnieper]]. The Palace of Sports, a multi-purpose indoor arena, was confirmed by officials as the host venue on 6 September 2004.<ref>{{cite web|url=http://esctoday.com/3102/ntu_and_ebu_confirm_palats_sportu/|title=Eurovision NTU and EBU confirm: Palats Sportu - ESCToday.com|date=6 September 2004|access-date=8 April 2018|archive-date=19 October 2020|archive-url=https://web.archive.org/web/20201019181823/http://esctoday.com/3102/ntu_and_ebu_confirm_palats_sportu/|url-status=live}}</ref> However, in order to host the contest, the facilities had been brought up to the standard required by the [[European Broadcasting Union]] (EBU).
+
+At the end of December 2004, work began on the renovation of the hall,<ref>{{cite web|url=http://esctoday.com/3533/renovation_of_palats_sportu_has_begun/|title=Eurovision Renovation of Palats Sportu has begun|date=26 December 2004|publisher=ESCToday.com|access-date=8 April 2018|archive-date=6 November 2020|archive-url=https://web.archive.org/web/20201106034551/http://esctoday.com/3533/renovation_of_palats_sportu_has_begun/|url-status=live}}</ref> for which approximately 4 million francs were allocated.<ref>{{cite web|url=http://esctoday.com/4311/ntu_president_doubts_about_palats_sportu_expenses/|title=Eurovision NTU President doubts about Palats Sportu expenses|date=27 April 2005|publisher=ESCToday.com|access-date=8 April 2018|archive-date=22 October 2020|archive-url=https://web.archive.org/web/20201022213549/http://esctoday.com/4311/ntu_president_doubts_about_palats_sportu_expenses/|url-status=live}}</ref> Renovation works were to be finished by 20 April,<ref>{{cite web|url=http://esctoday.com/3910/palats_sportu_must_be_finished_by_20_april/|title=Eurovision 'Palats Sportu must be finished by 20 April'|date=27 February 2005|publisher=ESCToday.com|access-date=8 April 2018|archive-date=23 January 2021|archive-url=https://web.archive.org/web/20210123192342/http://esctoday.com/3910/palats_sportu_must_be_finished_by_20_april/|url-status=live}}</ref> however, they were completed at the beginning of May.<ref>{{cite web|url=http://esctoday.com/4362/kyiv_the_stage_is_taking_shape/|title=Eurovision Kyiv: The stage is taking shape|date=4 May 2005|publisher=ESCToday.com|access-date=8 April 2018|archive-date=23 October 2020|archive-url=https://web.archive.org/web/20201023104558/http://esctoday.com/4362/kyiv_the_stage_is_taking_shape/|url-status=live}}</ref><ref>{{cite web|url=http://esctoday.com/4444/palats_sportu_scene_is_getting_ready/|title=Eurovision Palats Sportu scene is getting ready|date=11 May 2005|publisher=ESCToday.com|access-date=8 April 2018|archive-date=23 October 2020|archive-url=https://web.archive.org/web/20201023135806/http://esctoday.com/4444/palats_sportu_scene_is_getting_ready/|url-status=live}}</ref> The arena could accommodate over 5,000 seated spectators. Additionally 2,000 press delegates were catered for.
+
+Hotel rooms were scarce as the contest organisers asked the [[Government of Ukraine|Ukrainian government]] to put a block on bookings they did not control themselves through official delegation allocations or tour packages: this led to many people's hotel bookings being cancelled.<ref>{{cite web |first=John |last=Marone |publisher=The Ukrainian Observer |url=http://www.ukraine-observer.com/articles/208/655 |title=Where Do We Put The Foreign Tourists? |access-date=18 July 2006 |archive-url=https://web.archive.org/web/20060204201731/http://www.ukraine-observer.com/articles/208/655 |archive-date=4 February 2006 |url-status=dead}}</ref>
+
+Organizers hoped that by hosting Eurovision, it would boost Ukraine's image abroad and increase [[tourism]], while the country's new [[Government of Ukraine|government]] hoped that it would also give a modest boost to the long-term goal of acquiring [[European Union]] membership.
+
+==Participants==
+{{further|List of countries in the Eurovision Song Contest}}
+{{ESC 2005 participants}}
+Thirty-nine countries participated in the 2005 contest. {{esccnty|Hungary}} returned to the contest after a six-year absence, last competing {{esccnty|Hungary|y=1998|t=in 1998}}. {{esccnty|Bulgaria}} and {{esccnty|Moldova}} competed in the contest for the first time. {{esccnty|Czech Republic}} and {{esccnty|Lebanon}} were originally announced as participants, but the former withdrew before the deadline, and the latter withdrew in March 2005, two months before the contest.
+
+Several of the performing artists had previously represented the same country in past editions: [[Constantinos Christoforou]] had represented {{esccnty|Cyprus|y=1996|t=Cyprus in 1996}} as a solo artist and {{esccnty|Cyprus|y=2002|t=in 2002}} as part of [[One (band)|One]]; [[Helena Paparizou]] had represented {{esccnty|Greece|y=2001|t=Greece in 2001}} as part of [[Antique (duo)|Antique]]; [[Selma Björnsdóttir|Selma]] had represented {{esccnty|Iceland|y=1999|t=Iceland in 1999}}; and [[Chiara Siracusa|Chiara]] had represented {{esccnty|Malta|y=1998|t=Malta in 1998}}. In addition, [[Alexandros Panayi]] providing backing vocals for Greece, had represented {{esccnty|Cyprus|y=1995|t=Cyprus in 1995}} as a solo artist and {{esccnty|Cyprus|y=2000|t=in 2000}} as part of [[Voice (duo)|Voice]]; [[Anabel Conde]] providing backing vocals for Andorra, had represented {{esccnty|Spain|y=1995|t=Spain in 1995}}; and [[Elina Konstantopoulou]] providing backing vocals for Cyprus, had represented {{esccnty|Greece|y=1995|t=Greece in 1995}}.
+
+{| class="wikitable plainrowheaders"
+|-
+|+ Eurovision Song Contest 2005 participants<ref>{{cite web |title=Kyiv 2005 – Participants |url=https://eurovision.tv/event/kyiv-2005/participants |url-status=live |archive-url=https://web.archive.org/web/20230402113227/https://eurovision.tv/event/kyiv-2005/participants |archive-date=2 April 2023 |access-date=16 June 2023 |publisher=European Broadcasting Union}}</ref><ref name="participants" />
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Artist
+! scope="col" | Song
+! scope="col" | Language
+! scope="col" | Songwriter(s)
+|-
+! scope="row" | {{Esc|Albania}}
+| [[RTSH]]
+| [[Ledina Çelo]]
+| "[[Tomorrow I Go]]"{{efn|On-screen captions used the Albanian title "Nesër shkoj"|name=Albania}}
+| English
+| {{hlist|{{ill|Adrian Hila|sv}}|[[Pandi Laço]]}}
+|-
+! scope="row" | {{Esc|Andorra}}
+| [[Ràdio i Televisió d'Andorra|RTVA]]
+| [[Marian van de Wal]]
+| "{{lang|ca|La mirada interior|i=unset}}"
+| Catalan
+| {{hlist|{{ill|Daniel Aragay|es}}|Rafael Artesero|Rafael Fernández|Rafah Tanit}}
+|-
+! scope="row" | {{Esc|Austria}}
+| [[ORF (broadcaster)|ORF]]
+| [[Global Kryner|Global.Kryner]]
+| "{{lang|es|Y así|i=unset}}"
+| English, Spanish
+| {{hlist|{{ill|Edi Köhldorfer|de}}|{{ill|Christof Spörk|de}}}}
+|-
+! scope="row" | {{Esc|Belarus|1995}}
+| [[Belteleradio|BTRC]]
+| [[Angelica Agurbash]]
+| "Love Me Tonight"
+| English
+| {{hlist|{{ill|Nikos Terzis|nl}}|Nektarios Tyrakis}}
+|-
+! scope="row" | {{Esc|Belgium}}
+| [[RTBF]]
+| [[Nuno Resende]]
+| "{{lang|fr|Le Grand Soir|i=unset}}"
+| French
+| {{hlist|{{ill|Alec Mansion|fr}}|{{ill|Frédéric Zeitoun|fr}}}}
+|-
+! scope="row" | {{Esc|Bosnia and Herzegovina}}
+| [[Radio and Television of Bosnia and Herzegovina|BHRT]]
+| [[Feminnem]]
+| "Call Me" {{efn|On-screen captions used the Croatian title "Zovi"|name=Bosnia and Herzegovina}}
+| English
+| {{ill|Andrej Babić|de}}
+|-
+! scope="row" | {{Esc|Bulgaria}}
+| [[Bulgarian National Television|BNT]]
+| [[Kaffe (band)|Kaffe]]
+| "Lorraine"
+| English
+| {{hlist|[[Orlin Pavlov]]|{{ill|Vesselin Vesselinov|bg|Веселин Веселинов}}}}
+|-
+! scope="row" | {{Esc|Croatia}}
+| [[Croatian Radiotelevision|HRT]]
+| [[Boris Novković]] {{feat.}} [[National Folk Dance Ensemble of Croatia LADO|Lado Members]]
+| "{{lang|hr|Vukovi umiru sami|i=unset}}"
+| Croatian
+| {{hlist|[[Boris Novković]]|Franjo Valentić}}
+|-
+! scope="row" | {{Esc|Cyprus|1960}}
+| [[Cyprus Broadcasting Corporation|CyBC]]
+| [[Constantinos Christoforou]]
+| "{{lang|el-Latn|Ela, ela|i=unset}}" {{small|({{lang|el|Έλα, έλα}})}}
+| English
+| Constantinos Christoforou
+|-
+! scope="row" | {{Esc|Denmark}}
+| [[DR (broadcaster)|DR]]
+| [[Jakob Sveistrup]]
+| "Talking to You"
+| English
+| {{hlist|Jacob Launbjerg|Andreas Mørck}}
+|-
+! scope="row" | {{Esc|Estonia}}
+| [[Eesti Televisioon|ETV]]
+| [[Suntribe]]
+| "Let's Get Loud"
+| English
+| [[Sven Lõhmus]]
+|-
+! scope="row" | {{Esc|Finland}}
+| [[Yle|YLE]]
+| [[Geir Rönning]]
+| "Why"
+| English
+| {{hlist|Steven Stewart|{{ill|Mika Toivanen|fi}}}}
+|-
+! scope="row" | {{Esc|France}}
+| {{lang|fr|[[France Télévisions]]|i=unset}}
+| [[Marie Ortal Malka|Ortal]]
+| "{{lang|fr|Chacun pense à soi|i=unset}}"
+| French
+| {{hlist|[[Marie Ortal Malka]]|Saad Tabainet}}
+|-
+! scope="row" | {{Esc|Germany}}
+| [[Norddeutscher Rundfunk|NDR]]{{efn|On behalf of the German public broadcasting consortium [[ARD (broadcaster)|ARD]]<ref>{{cite web |title=Alle deutschen ESC-Acts und ihre Titel |trans-title=All German ESC acts and their songs |url=https://www.eurovision.de/teilnehmer/vorentscheid386_glossaryPage-25.html |website=www.eurovision.de |publisher=ARD |access-date=12 June 2023 |archive-url=https://web.archive.org/web/20230612084259/https://www.eurovision.de/teilnehmer/vorentscheid386_glossaryPage-25.html |archive-date=12 June 2023 |language=de |url-status=live}}</ref>}}
+| [[Gracia Baur|Gracia]]
+| "Run & Hide"
+| English
+| {{hlist|[[David Brandes]]|[[Bernd Meinunger|John O'Flynn]]|Jane Tempest}}
+|-
+! scope="row" | {{Esc|Greece}}
+| [[Hellenic Broadcasting Corporation|ERT]]
+| [[Helena Paparizou]]
+| "[[My Number One]]"
+| English
+| {{hlist|[[Christos Dantis]]|[[Natalia Germanou]]|Manos Psaltakis}}
+|-
+! scope="row" | {{Esc|Hungary}}
+| [[Magyar Televízió|MTV]]
+| [[Nox (band)|Nox]]
+| "{{lang|hu|Forogj, világ|i=unset}}"
+| Hungarian
+| {{hlist|Szabolcs Harmath|{{ill|Attila Valla|hu|Valla Attila}}}}
+|-
+! scope="row" | {{Esc|Iceland}}
+| [[RÚV]]
+| [[Selma Björnsdóttir|Selma]]
+| "If I Had Your Love"
+| English
+| {{hlist|Linda Thompson|{{ill|Þorvaldur Bjarni Þorvaldsson|is}}|Vignir Snær Vigfússon}}
+|-
+! scope="row" | {{Esc|Ireland}}
+| [[RTÉ]]
+| [[Donna and Joseph McCaul|Donna and Joe]]
+| "Love?"
+| English
+| [[Karl Broderick]]
+|-
+! scope="row" | {{Esc|Israel}}
+| [[Israel Broadcasting Authority|IBA]]
+| [[Shiri Maimon]]
+| "{{lang|he-latn|HaSheket SheNish'ar|i=unset}}" <small>({{lang|he|השקט שנשאר}})</small>
+| Hebrew, English
+| {{hlist|{{ill|Pini Aharonbayev|he|פיני ארונבייב}}|[[Ben Green (composer)|Ben Green]]|{{ill|Eyal Shahar|he|אייל שחר}}}}
+|-
+! scope="row" | {{Esc|Latvia|pantone}}
+| [[Latvijas Televīzija|LTV]]
+| [[Valters and Kaža|Walters and Kazha]]
+| "The War Is Not Over"
+| English
+| [[Mārtiņš Freimanis]]
+|-
+! scope="row" | {{Esc|Lithuania}}
+| [[Lithuanian National Radio and Television|LRT]]
+| [[Laura and the Lovers]]
+| "Little by Little"
+| English
+| {{hlist|{{ill|Billy Butt|sv|lt=William "Billy" Butt}}|[[Bobby Ljunggren]]}}
+|-
+! scope="row" | {{Esc|Macedonia}}
+| [[Macedonian Radio Television|MRT]]
+| [[Martin Vučić]]
+| "Make My Day"
+| English
+| {{hlist|Branka Kostić|[[Dragan Vučić]]}}
+|-
+! scope="row" | {{Esc|Malta}}
+| [[Public Broadcasting Services|PBS]]
+| [[Chiara Siracusa|Chiara]]
+| "Angel"
+| English
+| [[Chiara Siracusa]]
+|-
+! scope="row" | {{Esc|Moldova|1990}}
+| [[Teleradio-Moldova|TRM]]
+| [[Zdob și Zdub]]
+| "{{lang|ro|Boonika bate doba|i=unset}}"
+| English, Romanian
+| {{hlist|{{ill|Mihai Gîncu|pl}}|[[Roman Iagupov]]}}
+|-
+! scope="row" | {{Esc|Monaco}}
+| [[TMC (TV channel)|TMC]]
+| [[Lise Darly]]
+| "{{lang|fr|Tout de moi|i=unset}}"
+| French
+| {{hlist|Philippe Bosco|Didier Fabre}}
+|-
+! scope="row" | {{Esc|Netherlands}}
+| [[Nederlandse Omroep Stichting|NOS]]
+| [[Glennis Grace]]
+| "My Impossible Dream"
+| English
+| {{hlist|Robert D. Fisher|{{ill|Bruce Smith (songwriter)|nl|Bruce Smith (songwriter)|lt=Bruce Smith}}}}
+|-
+! scope="row" | {{Esc|Norway}}
+| [[NRK]]
+| [[Wig Wam]]
+| "[[In My Dreams (Wig Wam song)|In My Dreams]]"
+| English
+| {{ill|Trond Holter|no|lt=Trond "Teeny" Holter}}
+|-
+! scope="row" | {{Esc|Poland}}
+| [[Telewizja Polska|TVP]]
+| {{ill|Ivan and Delfin|pl|Ivan i Delfin}}
+| "{{lang|pl|Czarna dziewczyna|i=unset}}"
+| Polish, Russian
+| {{hlist|{{ill|Ivan Komarenko|pl}}|Łukasz Lazer|Michał Szymański}}
+|-
+! scope="row" | {{Esc|Portugal}}
+| [[Rádio e Televisão de Portugal|RTP]]
+| [[2B (band)|2B]]
+| "{{lang|pt|Amar|i=unset}}"
+| Portuguese, English
+| {{hlist|{{ill|Alexandre Honrado|pt}}|Ernesto Leite|{{ill|Zé da Ponte|pt|lt=José da Ponte}}}}
+|-
+! scope="row" | {{Esc|Romania}}
+| [[TVR (TV network)|TVR]]
+| [[Luminița Anghel]] and {{ill|Sistem|ro|Sistem (formație)}}
+| "[[Let Me Try]]"
+| English
+| Cristian Faur
+|-
+! scope="row" | {{Esc|Russia}}
+| [[Channel One Russia|C1R]]
+| [[Natalia Podolskaya]]
+| "[[Nobody Hurt No One]]"
+| English
+| {{hlist|[[Mary Susan Applegate]]|[[Viktor Drobysh]]|Jussi-Pekka Järvinen}}
+|-
+! scope="row" | {{Esc|Serbia and Montenegro}}
+| [[Udruženje javnih radija i televizija|UJRT]]
+| [[No Name (Montenegrin band)|No Name]]
+| "{{lang|cnr-latn|Zauvijek moja|i=unset}}" <small>({{lang|cnr-cyrl|Заувијек моја}})</small>
+| Serbian
+| {{hlist|Slaven Knezović|Milan Perić}}
+|-
+! scope="row" | {{Esc|Slovenia}}
+| [[Radiotelevizija Slovenija|RTVSLO]]
+| [[Omar Naber]]
+| "Stop"
+| Slovene
+| {{hlist|Omar Naber|Urša Vlašič}}
+|-
+! scope="row" | {{Esc|Spain}}
+| [[Televisión Española|TVE]]
+| [[Son de Sol]]
+| "{{lang|es|Brujería|i=unset}}"
+| Spanish
+| Alfredo Panebianco
+|-
+! scope="row" | {{Esc|Sweden}}
+| [[Sveriges Television|SVT]]
+| [[Martin Stenmarck]]
+| "[[Las Vegas (Martin Stenmarck song)|Las Vegas]]"
+| English
+| {{hlist|{{ill|Niklas Edberger|sv}}|{{ill|Johan Fransson (singer)|lt=Johan Fransson|sv|Johan Fransson (artist)}}|{{ill|Tim Larsson|sv}}|{{ill|Tobias Lundgren|sv|Tobias Lundgren (musiker)}}}}
+|-
+! scope="row" | {{Esc|Switzerland}}
+| [[Swiss Broadcasting Corporation|SRG SSR]]
+| [[Vanilla Ninja]]
+| "Cool Vibes"
+| English
+| {{hlist|David Brandes|John O'Flynn|Jane Tempest}}
+|-
+! scope="row" | {{Esc|Turkey}}
+| [[Turkish Radio and Television Corporation|TRT]]
+| [[Gülseren]]
+| "Rimi Rimi Ley"
+| Turkish
+| {{hlist|Göksan Arman|Erdinç Tunç}}
+|-
+! scope="row" | {{Esc|Ukraine|1992}}
+| [[National Television Company of Ukraine|NTU]]
+| [[GreenJolly]]
+| "{{lang|uk-latn|[[Razom nas bahato]]|i=unset}}" <small>({{lang|uk|Разом нас багато}})</small>
+| Ukrainian, English
+| [[GreenJolly]]
+|-
+! scope="row" | {{Esc|United Kingdom}}
+| [[BBC]]
+| [[Javine Hylton|Javine]]
+| "[[Touch My Fire]]"
+| English
+| {{hlist|[[Javine Hylton]]|[[John Themis]]}}
+|}
+
+=== Other countries ===
+==== Active EBU members ====
+{{Esccnty|Czech Republic|t=Czech}} broadcaster [[Czech Television]] initially applied to participate in the 2005 contest; however, it reconsidered débuting in the contest and later withdrew its application.<ref>{{Cite web|first=Sietse|last=Bakker|title=Czech Republic Withdraws|url=http://esctoday.com/3435/czech_republic_withdraws/|website=ESC Today|date=3 December 2004|access-date=13 September 2014|archive-date=26 September 2020|archive-url=https://web.archive.org/web/20200926123222/http://esctoday.com/3435/czech_republic_withdraws/|url-status=live}}</ref> {{Esccnty|Lebanon|t=Lebanese}} broadcaster [[Télé Liban]] initially confirmed its début in the contest and selected the song "{{lang|fr|Quand tout s'enfuit|i=no}}" performed by [[Aline Lahoud]] as its entry; however, the broadcaster announced its withdrawal from the competition in March 2005 after finding out the obligation to broadcast all participating entries, including the Israeli one, as well as enabling its viewers to vote for them; this contravened a Lebanese law prohibiting any [[International recognition of Israel|acknowledgement of Israel]].<ref>{{Cite web|first=Sietse|last=Bakker|title=Breaking News: Lebanon Withdraws|url=http://esctoday.com/4060/breaking_news_lebanon_withdraws/|website=ESC Today|date=18 March 2015|access-date=9 August 2008|archive-date=30 September 2020|archive-url=https://web.archive.org/web/20200930151758/http://esctoday.com/4060/breaking_news_lebanon_withdraws/|url-status=live}}</ref>
+
+==Format==
+===Visual design===
+The official logo of the contest remained the same from the {{escyr|2004||2004 contest}} with the country's flag in the heart being changed. Following [[Istanbul]]'s 'Under the Same Sky', the [[slogan]] for the 2005 show was 'Awakening', which symbolised the awakening of the country and city ready to present itself to Europe. The postcards (short clips shown between performances) for the 2005 show illustrated [[Culture of Ukraine|Ukraine's culture]] and heritage along with a more modern and [[Industrial society|industrial]] side to the country.
+
+This was the first edition to be broadcast in [[widescreen]] [[16:9]] format.<ref>{{cite web |last1=Murray |first1=Richard |title=The Eurovision Song Contest 2005 |url=https://heyrick.eu/eurovision/2005/index.html |access-date=25 March 2020 |archive-date=25 March 2020 |archive-url=https://web.archive.org/web/20200325170632/https://heyrick.eu/eurovision/2005/index.html |url-status=live }}</ref>
+
+===Presenters===
+The hosts of the Eurovision Song Contest in Kyiv were [[television presenter]] [[Maria Efrosinina|Maria "Masha" Efrosinina]] and [[DJ]] [[Pavlo Shylko|Pavlo "Pasha" Shylko]]. Previous [[Eurovision Song Contest winners|winner]] [[Ruslana]] returned to the stage in Kyiv to perform in the [[Intermission|interval]] act and to [[interview]] the contestants backstage in the '[[green room]]'. Ruslana was also intended to be a presenter for the show, but was pulled out before the contest for numerous reasons, including her poor English skills. The Ukrainian boxers [[Vitali Klitschko|Vitali]] and [[Wladimir Klitschko]] opened the [[televoting]], while a special trophy was presented to the winner by Ukraine's [[President of Ukraine|president]], [[Viktor Yushchenko]].
+
+===Publicity===
+An official [[CD]] and [[DVD]] was released and a new introduction was an official [[Lapel pin|pin]] set, which contains heart-shaped pins with the flags of all thirty-nine participating countries. The EBU also commissioned a book "The Eurovision Song Contest – The Official History" by British/American author [[John Kennedy O'Connor]] to celebrate the contest's fiftieth anniversary.<ref>O'Connor, John Kennedy. The Eurovision Song Contest – The Official History. Carlton Books, UK {{ISBN|978-1-84442-994-3}}</ref> The book was presented on screen during the break between songs 12 and 13 (Serbia and Montenegro, Denmark). The book was published in English, German, French, Dutch, Swedish, Danish and Finnish.
+
+==Contest overview==
+===Semi-final===
+[[File:ESC 2005 Semi Finals.svg|thumb|299px|{{Legend|#c62ca8|Countries participating in the semi-final}}{{Legend|#9ac3ff|The top ten of the 2004 contest, who automatically qualify.}}{{Legend|#2268b1|The "Big Four" countries, who automatically qualify.}}]]
+The semi-final was held on 19 May 2005 at 22:00 [[Eastern European Summer Time|EEST]] (21:00 [[Central European Time|CEST]]). 25 countries performed but all 39 participants voted.
+{{Legend|navajowhite|Qualifiers}}
+{| class="sortable wikitable plainrowheaders"
+|+Results of the semi-final of the Eurovision Song Contest 2005<ref>{{cite web |title=Kyiv 2005 – Semi-Final – Scoreboard|url=https://eurovision.tv/event/kyiv-2005/semi-final|publisher=European Broadcasting Union|access-date=20 April 2021|archive-url=https://web.archive.org/web/20210420054319/https://eurovision.tv/event/kyiv-2005/semi-final|archive-date=20 April 2021|url-status=live}}</ref>
+! scope="col" |{{abbr|R/O|Running order}}
+! scope="col" |Country
+! scope="col" |Artist
+! scope="col" |Song
+! class="unsortable" scope="col" |Points
+! scope="col" |Place
+|-
+! scope="row" style="text-align:center;" |1
+|{{Esc|Austria|y=2005}}
+|[[Global Kryner|Global.Kryner]]
+|"{{lang|es|Y así|i=unset}}"
+|30
+|21
+|-
+! scope="row" style="text-align:center;" |2
+|{{Esc|Lithuania|y=2005}}
+|[[Laura and the Lovers]]
+|"Little by Little"
+|17
+|25
+|-
+! scope="row" style="text-align:center;" |3
+|{{Esc|Portugal|y=2005}}
+|[[2B (band)|2B]]
+|"{{lang|pt|Amar|i=unset}}"
+|51
+|17
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |4
+|{{Esc|Moldova|1990|y=2005}}
+|[[Zdob și Zdub]]
+|"{{lang|ro|Boonika bate doba|i=unset}}"
+|207
+|2
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |5
+|{{Esc|Latvia|pantone|y=2005}}
+|[[Valters and Kaža|Walters and Kazha]]
+|"The War Is Not Over"
+|85
+|10
+|-
+! scope="row" style="text-align:center;" |6
+|{{Esc|Monaco|y=2005}}
+|{{sortname|Lise|Darly}}
+|"{{lang|fr|Tout de moi|i=unset}}"
+|22
+|24
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |7
+|{{Esc|Israel|y=2005}}
+|{{sortname|Shiri|Maimon}}
+|"{{lang|he-latn|HaSheket SheNish'ar|i=unset}}"
+|158
+|7
+|-
+! scope="row" style="text-align:center;" |8
+|{{Esc|Belarus|1995|y=2005}}
+|{{sortname|Angelica|Agurbash}}
+|"Love Me Tonight"
+|67
+|13
+|-
+! scope="row" style="text-align:center;" |9
+|{{Esc|Netherlands|y=2005}}
+|{{sortname|Glennis|Grace}}
+|"My Impossible Dream"
+|53
+|14
+|-
+! scope="row" style="text-align:center;" |10
+|{{Esc|Iceland|y=2005}}
+|[[Selma Björnsdóttir|Selma]]
+|"If I Had Your Love"
+|52
+|16
+|-
+! scope="row" style="text-align:center;" |11
+|{{Esc|Belgium|y=2005}}
+|{{sortname|Nuno|Resende}}
+|"{{lang|fr|Le Grand Soir|i=unset}}"
+|29
+|22
+|-
+! scope="row" style="text-align:center;" |12
+|{{Esc|Estonia|y=2005}}
+|[[Suntribe]]
+|"Let's Get Loud"
+|31
+|20
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |13
+|{{Esc|Norway|y=2005}}
+|[[Wig Wam]]
+|"[[In My Dreams (Wig Wam song)|In My Dreams]]"
+|164
+|6
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |14
+|{{Esc|Romania|y=2005}}
+|{{sortname|Luminița|Anghel}} and Sistem
+|"[[Let Me Try]]"
+|235
+|1
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |15
+|{{Esc|Hungary|y=2005}}
+|[[Nox (band)|Nox]]
+|"{{lang|hu|Forogj, világ|i=unset}}"
+|167
+|5
+|-
+! scope="row" style="text-align:center;" |16
+|{{Esc|Finland|y=2005}}
+|{{sortname|Geir|Rönning}}
+|"Why"
+|50
+|18
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |17
+|{{Esc|Macedonia|y=2005}}
+|{{sortname|Martin|Vučić}}
+|"Make My Day"
+|97
+|9
+|-
+! scope="row" style="text-align:center;" |18
+|{{Esc|Andorra|y=2005}}
+|{{sortname|Marian van de|Wal}}
+|"{{lang|ca|La mirada interior|i=unset}}"
+|27
+|23
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |19
+|{{Esc|Switzerland|y=2005}}
+|[[Vanilla Ninja]]
+|"Cool Vibes"
+|114
+|8
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |20
+|{{Esc|Croatia|y=2005}}
+|{{sortname|Boris|Novković}} feat. [[National Folk Dance Ensemble of Croatia LADO|Lado members]]
+|"{{lang|hr|Vukovi umiru sami|i=unset}}"
+|169
+|4
+|-
+! scope="row" style="text-align:center;" |21
+|{{Esc|Bulgaria|y=2005}}
+|[[Kaffe (band)|Kaffe]]
+|"Lorraine"
+|49
+|19
+|-
+! scope="row" style="text-align:center;" |22
+|{{Esc|Ireland|y=2005}}
+|[[Donna and Joseph McCaul|Donna and Joe]]
+|"Love?"
+|53
+|14
+|-
+! scope="row" style="text-align:center;" |23
+|{{Esc|Slovenia|y=2005}}
+|{{sortname|Omar|Naber}}
+|"Stop"
+|69
+|12
+|- style="font-weight:bold; background:navajowhite;"
+! scope="row" style="text-align:center;" |24
+|{{Esc|Denmark|y=2005}}
+|{{sortname|Jakob|Sveistrup}}
+|"Talking to You"
+|185
+|3
+|-
+! scope="row" style="text-align:center;" |25
+|{{Esc|Poland|y=2005}}
+|Ivan and Delfin
+|"{{lang|pl|Czarna dziewczyna|i=unset}}"
+|81
+|11
+|}
+
+===Final===
+[[File:Ruslana Eurovision 2005 final.jpg|thumb|upright|Ruslana performing at the opening of the final]]
+The finalists were:
+*the four automatic qualifiers {{Esccnty|France|y=2005}}, {{Esccnty|Germany|y=2005}}, {{Esccnty|Spain|y=2005}}, and the {{Esccnty|United Kingdom|y=2005}};
+*the top 10 countries from the [[Eurovision Song Contest 2004#Final|2004 final]] (other than the automatic qualifiers);
+*the top 10 countries from the 2005 semi-final.
+
+The final was held on 21 May 2005 at 22:00 EEST (21:00 CEST) and was won by {{Esccnty|Greece|y=2005}}. 24 countries performed and all 39 participants voted.
+{{Legend|Gold|Winner}}
+{| class="sortable wikitable plainrowheaders"
+|+Results of the final of the Eurovision Song Contest 2005<ref>{{cite web |title=Kyiv 2005 – Grand Final – Scoreboard|url=https://eurovision.tv/event/kyiv-2005/grand-final|publisher=European Broadcasting Union|access-date=20 April 2021|archive-url=https://web.archive.org/web/20210420054251/https://eurovision.tv/event/kyiv-2005/grand-final|archive-date=20 April 2021|url-status=live}}</ref>
+! scope="col" |{{abbr|R/O|Running order}}
+! scope="col" |Country
+! scope="col" |Artist
+! scope="col" |Song
+! class="unsortable" scope="col" |Points
+! scope="col" |Place
+|-
+! scope="row" style="text-align:center;" |1
+|{{Esc|Hungary|y=2005}}
+|[[Nox (band)|Nox]]
+|"{{lang|hu|Forogj, világ|i=unset}}"
+|97
+|12
+|-
+! scope="row" style="text-align:center;" |2
+|{{Esc|United Kingdom|y=2005}}
+|[[Javine Hylton|Javine]]
+|"[[Touch My Fire]]"
+|18
+|22
+|-
+! scope="row" style="text-align:center;" |3
+|{{Esc|Malta|y=2005}}
+|[[Chiara Siracusa|Chiara]]
+|"Angel"
+|192
+|2
+|-
+! scope="row" style="text-align:center;" |4
+|{{Esc|Romania|y=2005}}
+|{{sortname|Luminița|Anghel}} and Sistem
+|"[[Let Me Try]]"
+|158
+|3
+|-
+! scope="row" style="text-align:center;" |5
+|{{Esc|Norway|y=2005}}
+|[[Wig Wam]]
+|"[[In My Dreams (Wig Wam song)|In My Dreams]]"
+|125
+|9
+|-
+! scope="row" style="text-align:center;" |6
+|{{Esc|Turkey|y=2005}}
+|[[Gülseren]]
+|"Rimi Rimi Ley"
+|92
+|13
+|-
+! scope="row" style="text-align:center;" |7
+|{{Esc|Moldova|1990|y=2005}}
+|[[Zdob și Zdub]]
+|"{{lang|ro|Boonika bate doba|i=unset}}"
+|148
+|6
+|-
+! scope="row" style="text-align:center;" |8
+|{{Esc|Albania|y=2005}}
+|{{sortname|Ledina|Çelo}}
+|"[[Tomorrow I Go]]"{{efn|name=Albania}}
+|53
+|16
+|-
+! scope="row" style="text-align:center;" |9
+|{{Esc|Cyprus|1960|y=2005}}
+|{{sortname|Constantinos|Christoforou}}
+|"Ela Ela"
+|46
+|18
+|-
+! scope="row" style="text-align:center;" |10
+|{{Esc|Spain|y=2005}}
+|[[Son de Sol]]
+|"{{lang|es|Brujería|i=unset}}"
+|28
+|21
+|-
+! scope="row" style="text-align:center;" |11
+|{{Esc|Israel|y=2005}}
+|{{sortname|Shiri|Maimon}}
+|"{{lang|he-latn|HaSheket SheNish'ar|i=unset}}"
+|154
+|4
+|-
+! scope="row" style="text-align:center;" |12
+|{{Esc|Serbia and Montenegro|y=2005}}
+|[[No Name (Montenegrin band)|No Name]]
+|"{{lang|cnr-latn|Zauvijek moja|i=unset}}"
+|137
+|7
+|-
+! scope="row" style="text-align:center;" |13
+|{{Esc|Denmark|y=2005}}
+|{{sortname|Jakob|Sveistrup}}
+|"Talking to You"
+|125
+|9
+|-
+! scope="row" style="text-align:center;" |14
+|{{Esc|Sweden|y=2005}}
+|{{sortname|Martin|Stenmarck}}
+|"[[Las Vegas (Martin Stenmarck song)|Las Vegas]]"
+|30
+|19
+|-
+! scope="row" style="text-align:center;" |15
+|{{Esc|Macedonia|y=2005}}
+|{{sortname|Martin|Vučić}}
+|"Make My Day"
+|52
+|17
+|-
+! scope="row" style="text-align:center;" |16
+|{{Esc|Ukraine|1992|y=2005}}
+|[[GreenJolly]]
+|"{{lang|uk-latn|[[Razom nas bahato]]|i=unset}}"
+|30
+|19
+|-
+! scope="row" style="text-align:center;" |17
+|{{Esc|Germany|y=2005}}
+|[[Gracia Baur|Gracia]]
+|"Run & Hide"
+|4
+|24
+|-
+! scope="row" style="text-align:center;" |18
+|{{Esc|Croatia|y=2005}}
+|{{sortname|Boris|Novković}} feat. [[National Folk Dance Ensemble of Croatia LADO|Lado members]]
+|"{{lang|hr|Vukovi umiru sami|i=unset}}"
+|115
+|11
+|- style="font-weight:bold; background:gold;"
+! scope="row" style="text-align:center;" |19
+|{{Esc|Greece|y=2005}}
+|{{sortname|Helena|Paparizou}}
+|"[[My Number One]]"
+|230
+|1
+|-
+! scope="row" style="text-align:center;" |20
+|{{Esc|Russia|y=2005}}
+|{{sortname|Natalia|Podolskaya}}
+|"[[Nobody Hurt No One]]"
+|57
+|15
+|-
+! scope="row" style="text-align:center;" |21
+|{{Esc|Bosnia and Herzegovina|y=2005}}
+|[[Feminnem]]
+|"Call Me"
+|79
+|14
+|-
+! scope="row" style="text-align:center;" |22
+|{{Esc|Switzerland|y=2005}}
+|[[Vanilla Ninja]]
+|"Cool Vibes"
+|128
+|8
+|-
+! scope="row" style="text-align:center;" |23
+|{{Esc|Latvia|pantone|y=2005}}
+|[[Valters and Kaža|Walters and Kazha]]
+|"The War Is Not Over"
+|153
+|5
+|-
+! scope="row" style="text-align:center;" |24
+|{{Esc|France|y=2005}}
+|[[Marie Ortal Malka|Ortal]]
+|"{{lang|fr|Chacun pense à soi|i=unset}}"
+|11
+|23
+|}
+
+==== Spokespersons ====
+Each participating broadcaster appointed a spokesperson who was responsible for announcing, in English or French, the votes for its respective country. The order in which each country announced their votes was compiled by placing the countries that failed to qualify from the semi-final first in the running order they performed during the semi-final, followed by the finalists which voted in the order they performed in during the final. The spokespersons are shown alongside each country.<ref>{{cite web|last=Philips |first=Roel |title=The 39 spokespersons! |url=http://www.esctoday.com/news/read/4409 |archive-url=https://web.archive.org/web/20051219170216/http://www.esctoday.com/news/read/4409 |url-status=dead |archive-date=19 December 2005 |publisher=ESCToday |access-date=17 May 2005 |date=2005-05-17 }}</ref>
+{{Div col|colwidth=30em}}
+# {{flagu|Austria}}{{snd}}{{ill|Dodo Roscic|de}}
+# {{flagu|Lithuania}}{{snd}}{{ill|Rolandas Vilkončius|lt}}
+# {{flagu|Portugal}}{{snd}}{{ill|Isabel Angelino|pt}}
+# {{flagu|Monaco}}{{snd}}Anne Allegrini
+# {{flagu|Belarus|1995}}{{snd}}Elena Ponomareva
+# {{flagu|Netherlands}}{{snd}}[[Nancy Coolen]]
+# {{flagu|Iceland}}{{snd}}[[Ragnhildur Steinunn Jónsdóttir]]
+# {{flagu|Belgium}}{{snd}}{{ill|Armelle Gysen|fr}}
+# {{flagu|Estonia}}{{snd}}[[Maarja-Liis Ilus]]
+# {{flagu|Finland}}{{snd}}[[Jari Sillanpää]]
+# {{flagu|Andorra}}{{snd}}Ruth Gumbau
+# {{flagu|Bulgaria}}{{snd}}{{ill|Evgeniya Atanasova|bg|Евгения Атанасова}}
+# {{flagu|Ireland}}{{snd}}[[Dana Rosemary Scallon|Dana]]
+# {{flagu|Slovenia}}{{snd}}[[Katarina Čas]]
+# {{flagu|Poland}}{{snd}}[[Maciej Orłoś]]
+# {{flagu|Hungary}}{{snd}}{{ill|Zsuzsa Demcsák|hu|Demcsák Zsuzsa}}
+# {{flagu|United Kingdom}}{{snd}}[[Cheryl Baker]]
+# {{flagu|Malta}}{{snd}}Valerie Vella
+# {{flagu|Romania}}{{snd}}{{ill|Berti Barbera|ro}}
+# {{flagu|Norway}}{{snd}}[[Ingvild Helljesen]]
+# {{flagu|Turkey}}{{snd}}Meltem Ersan Yazgan
+# {{flagu|Moldova|1990}}{{snd}}Elena Camerzan
+# {{flagu|Albania}}{{snd}}{{ill|Zhani Ciko|sq}}
+# {{flagu|Cyprus|1960}}{{snd}}Melani Steliou
+# {{flagu|Spain}}{{snd}}{{ill|Ainhoa Arbizu|es}}
+# {{flagu|Israel}}{{snd}}{{ill|Dana Herman|he|דנה הרמן}}
+# {{flagu|Serbia and Montenegro}}{{snd}}[[Nina Radulović]]
+# {{flagu|Denmark}}{{snd}}[[Gry Johansen]]
+# {{flagu|Sweden}}{{snd}}[[Annika Jankell]]
+# {{flagu|North Macedonia|name=Macedonia}}{{snd}}[[Karolina Gočeva]]
+# {{flagu|Ukraine|1992}}{{snd}}Maria Orlova
+# {{flagu|Germany}}{{snd}}[[Thomas Hermanns]]
+# {{flagu|Croatia}}{{snd}}[[Barbara Kolar]]
+# {{flagu|Greece}}{{snd}}{{ill|Alexis Kostalas|el|Αλέξης Κωστάλας}}
+# {{flagu|Russia}}{{snd}}[[Yana Churikova]]
+# {{flagu|Bosnia and Herzegovina}}{{snd}}[[Ana Mirjana Račanović-Jevtić|Ana Mirjana Račanović]]
+# {{flagu|Switzerland}}{{snd}}{{ill|Cécile Bähler|de}}
+# {{flagu|Latvia|pantone}}{{snd}}[[Marija Naumova]]
+# {{flagu|France}}{{snd}}[[Marie Myriam]]
+{{div col end}}
+
+== Detailed voting results<span class="anchor" id="Scoreboard"></span> ==
+<!-- Anchor in the header is the old section name -->
+The EBU introduced an undisclosed threshold number of [[Televoting|televotes]] that would have to be registered in each voting country in order to make that country's votes valid. If that number was not reached, the country's backup jury would vote instead. This affected Albania, Andorra and Monaco in the semi-final, and Andorra, Moldova and Monaco in the final.<ref>{{cite web |last1=Bakker |first1=Sietse |title=Semifinal: No televoting in three countries |url=https://esctoday.com/4594/semifinal_no_televoting_in_three_countries/ |publisher=ESCToday |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20151222091247/http://esctoday.com/4594/semifinal_no_televoting_in_three_countries/ |archive-date=22 December 2015 |date=20 May 2005 |url-status=live}}</ref><ref>{{cite web |last1=Philips |first1=Roel |title=Moldovan Parliament doubts Moldovan votes |url=https://esctoday.com/4662/moldovan_parliament_doubts_moldovan_votes/ |publisher=ESCToday |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20180402231247/http://esctoday.com/4662/moldovan_parliament_doubts_moldovan_votes/ |archive-date=2 April 2018 |date=1 June 2005 |url-status=live}}</ref>
+
+===Semi-final===
+{| class="wikitable plainrowheaders" style="text-align:center; font-size:85%;"
+|-
+|+ Detailed voting results of the semi-final<ref>{{cite web |title=Kyiv 2005 – Semi-Final – Detailed voting results |url=https://eurovision.tv/event/kyiv-2005/semi-final/results |publisher=European Broadcasting Union |access-date=20 April 2021 |archive-url=https://web.archive.org/web/20210420055534/https://eurovision.tv/event/kyiv-2005/semi-final/results |archive-date=20 April 2021 |url-status=live}}</ref><ref>{{cite web |title=Eurovision Song Contest 2005 Semi-final – Scoreboard |url=https://eurovision.tv/page/history/by-year/contest?event=157#Scoreboard |publisher=European Broadcasting Union |access-date=10 November 2021 |archive-url=https://web.archive.org/web/20150924040437/http://www.eurovision.tv/page/history/by-year/contest?event=157#Scoreboard |archive-date=24 September 2015 |url-status=dead}}</ref>
+|-
+| colspan="2" rowspan="2" style="text-align:left; background:#F2F2F2" | Voting procedure used:<br />{{legend|#EFA4A9|100% televoting|outline=#AAAAAA}}{{legend|#A4D1EF|100% jury vote|outline=#AAAAAA}}
+! scope="col" {{vert header|nb=1|Total score|cellstyle=border-bottom:1px solid transparent;}}
+! scope="col" {{vert header|nb=1|Austria}}
+! scope="col" {{vert header|nb=1|Lithuania}}
+! scope="col" {{vert header|nb=1|Portugal}}
+! scope="col" {{vert header|nb=1|Moldova}}
+! scope="col" {{vert header|nb=1|Latvia}}
+! scope="col" {{vert header|nb=1|Monaco}}
+! scope="col" {{vert header|nb=1|Israel}}
+! scope="col" {{vert header|nb=1|Belarus}}
+! scope="col" {{vert header|nb=1|Netherlands}}
+! scope="col" {{vert header|nb=1|Iceland}}
+! scope="col" {{vert header|nb=1|Belgium}}
+! scope="col" {{vert header|nb=1|Estonia}}
+! scope="col" {{vert header|nb=1|Norway}}
+! scope="col" {{vert header|nb=1|Romania}}
+! scope="col" {{vert header|nb=1|Hungary}}
+! scope="col" {{vert header|nb=1|Finland}}
+! scope="col" {{vert header|nb=1|Macedonia}}
+! scope="col" {{vert header|nb=1|Andorra}}
+! scope="col" {{vert header|nb=1|Switzerland}}
+! scope="col" {{vert header|nb=1|Croatia}}
+! scope="col" {{vert header|nb=1|Bulgaria}}
+! scope="col" {{vert header|nb=1|Ireland}}
+! scope="col" {{vert header|nb=1|Slovenia}}
+! scope="col" {{vert header|nb=1|Denmark}}
+! scope="col" {{vert header|nb=1|Poland}}
+! scope="col" {{vert header|nb=1|United Kingdom}}
+! scope="col" {{vert header|nb=1|Malta}}
+! scope="col" {{vert header|nb=1|Turkey}}
+! scope="col" {{vert header|nb=1|Albania}}
+! scope="col" {{vert header|nb=1|Cyprus}}
+! scope="col" {{vert header|nb=1|Spain}}
+! scope="col" {{vert header|nb=1|Serbia and Montenegro}}
+! scope="col" {{vert header|nb=1|Sweden}}
+! scope="col" {{vert header|nb=1|Ukraine}}
+! scope="col" {{vert header|nb=1|Germany}}
+! scope="col" {{vert header|nb=1|Greece}}
+! scope="col" {{vert header|nb=1|Russia}}
+! scope="col" {{vert header|nb=1|Bosnia and Herzegovina}}
+! scope="col" {{vert header|nb=1|France}}
+|-
+! style="height:2px; border-top:1px solid transparent;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#A4D1EF;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#A4D1EF;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#A4D1EF;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+|-
+! rowspan="25" {{vert header|va=middle|Contestants}}
+! scope="row" style="text-align:left; background:#f2f2f2;" | Austria
+| style="text-align:right; background:#f2f2f2;" | 30 || style="text-align:left; background:#aaa;" | ||  ||  || || || || || ||  ||  ||  ||  || || || || || || 7 || 6 || || ||  || 10 || || || ||  || || 5 ||  ||  || || || || 1 || 1 ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Lithuania
+| style="text-align:right; background:#f2f2f2;" | 17 ||  || style="text-align:left; background:#aaa;" | ||  || || 8 || || || ||  ||  ||  ||  || || || || || || || || || || 5 ||  || || || 4 ||  || || ||  ||  || || || ||  || ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Portugal
+| style="text-align:right; background:#f2f2f2;" | 51 ||  ||  || style="text-align:left; background:#aaa;" | || || || || || ||  ||  || 10 ||  || || || || || || || '''12''' || || ||  ||  || || || ||  || || ||  || 5 || || || || '''12''' || ||  ||  || '''12'''
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Moldova
+| style="text-align:right;" | 207 || 8 || 10 || 8 || style="text-align:left; background:#aaa;" | || 10 || || 10 || 10 ||  || 8 || 4 || 5 || 1 || '''12''' || 6 || 3 || 10 || || || 4 || 6 || 3 || 7 || || 6 || 5 ||  || '''12''' || 3 || 8 || 1 || 6 || || '''12''' ||  || 6 || '''12''' || 6 || 5
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Latvia
+| style="text-align:right;" | 85 ||  || '''12''' || 4 || || style="text-align:left; background:#aaa;" | || || 6 || 7 ||  || 2 ||  || 10 || 3 || || || || || || || 7 || || 6 || 6 || 5 || || || '''12''' || || || 2 ||  || || || 2 ||  || || 1 ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Monaco
+| style="text-align:right; background:#f2f2f2;" | 22 ||  ||  ||  || 2 || || style="text-align:left; background:#aaa;" | || || || ||  ||  ||  || || || || || || 10 || || || ||  ||  || || || ||  || || ||  ||  || || || ||  || ||  ||  || 10
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Israel
+| style="text-align:right;" | 158 ||  || 2 || 6 || 5 || || '''12''' || style="text-align:left; background:#aaa;" | || '''12''' || 10 ||  || 3 ||  || || 8 || 5 || 1 || 1 || '''12''' || 3 || || 4 || 7 ||  || 4 || 4 || 6 || 6 || 6 || 7 || 3 || 4 || 3 || || 5 || 3 || || 8 ||  || 8
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Belarus
+| style="text-align:right; background:#f2f2f2;" | 67 ||  || 3 ||  || || 3 || 1 || 2 || style="text-align:left; background:#aaa;" | ||  ||  ||  ||  || || || || || 6 || || || || '''12''' ||  ||  || || 1 || || 7 || 3 || || 7 ||  || || || 4 ||  || 8 || 10 ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Netherlands
+| style="text-align:right; background:#f2f2f2;" | 53 ||  ||  ||  || || || 8 || 5 || || style="text-align:left; background:#aaa;" | ||  || '''12''' ||  || || 1 || || || || 5 || 2 || || || 4 ||  || 6 || || 2 || 8 || || ||  ||  || || || ||  || ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Iceland
+| style="text-align:right; background:#f2f2f2;" | 52 ||  ||  ||  || 10 || || || 4 || ||  || style="text-align:left; background:#aaa;" | ||  ||  || 8 || || || || || 6 || || || ||  ||  || 10 || || 3 ||  || || ||  || 2 || || 7 || ||  || ||  ||  || 2
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Belgium
+| style="text-align:right; background:#f2f2f2;" | 29 ||  ||  || '''12''' || 3 || || || || || 6 ||  || style="text-align:left; background:#aaa;" | ||  || || || || || || || || || ||  ||  || || || ||  || || 1 ||  ||  || || || ||  || ||  ||  || 7
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Estonia
+| style="text-align:right; background:#f2f2f2;" | 31 ||  || 5 ||  || 1 || '''12''' || || || ||  ||  ||  || style="text-align:left; background:#aaa;" | || || || 1 || 6 || || || || || || 1 || 2 || 3 || || ||  || || ||  ||  || || || ||  || ||  ||  ||
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Norway
+| style="text-align:right;" | 164 || 2 || 6 || 1 || 8 || 6 || || 7 || 5 || 2 || '''12''' || 2 || 6 || style="text-align:left; background:#aaa;" | || 7 || || '''12''' || 2 || || 5 || || 2 || 10 || 3 || '''12''' || 7 || 7 || 3 || 2 || 2 || 4 ||  || 4 || 8 || 6 ||  || 4 ||  || 7 ||
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Romania
+| style="text-align:right;" | 235 || 10 ||  || 10 || '''12''' || || 7 || '''12''' || 3 || 8 || 5 || 8 || 1 || 7 || style="text-align:left; background:#aaa;" | || '''12''' || 4 || 5 || 4 || 4 || 1 || 5 || 8 || 1 || 7 || 8 || 8 || 10 || 7 || || '''12''' || '''12''' || 5 || 5 || 1 || 7 || '''12''' || 3 || 5 || 6
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Hungary
+| style="text-align:right;" | 167 || 7 ||  || 7 || || 5 || || 8 || 4 ||  || 7 || 6 || 4 || 6 || 10 || style="text-align:left; background:#aaa;" | || 5 || 4 || 1 || 1 || 8 || 7 ||  || 4 || 1 || '''12''' || 1 || 2 || 8 || || 6 || 3 || 8 || 3 || 10 ||  || 5 || 7 || 3 || 4
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Finland
+| style="text-align:right; background:#f2f2f2;" | 50 ||  ||  ||  || || || 6 || || || 1 ||  ||  || 8 || 10 || || || style="text-align:left; background:#aaa;" | || || 3 || || || ||  ||  || 8 || || ||  || || ||  ||  || || 10 || || 4 || ||  ||  ||
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Macedonia
+| style="text-align:right;" | 97 || 4 ||  ||  || || || 3 || || || 3 ||  ||  ||  || || 4 || || || style="text-align:left; background:#aaa;" | || || 8 || '''12''' || 10 ||  || 8 || || || ||  || 10 || '''12''' ||  ||  || 10 || 1 || || 2 || ||  || 10 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Andorra
+| style="text-align:right; background:#f2f2f2;" | 27 ||  ||  ||  || 4 || || || || || 7 ||  ||  ||  || || || || || || style="text-align:left; background:#aaa;" | || || || ||  ||  || || || ||  || || 6 ||  || 10 || || || ||  || ||  ||  ||
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Switzerland
+| style="text-align:right;" | 114 || 1 || 8 || 2 || || 7 || 2 || 3 || 8 ||  || 6 ||  || '''12''' || 2 || 2 || 3 || 10 || 3 || || style="text-align:left; background:#aaa;" | || 3 ||  3
+|| 2 || 5 || 2 || 5 || || 1 || || || 5 ||  || 2 || 4 || || 6 || 3 || 2 || 2 ||
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Croatia
+| style="text-align:right;" | 169 || '''12''' || 4 || 3 || 6 || 4 || 5 || || 1 || 4 || 4 || 1 || 3 || 4 || 6 || 8 || 2 || '''12''' || || 10 || style="text-align:left; background:#aaa;" | || 8 ||  || '''12''' || || 3 || ||  || || 10 ||  ||  || '''12''' || 6 || 7 || 10 || ||  || '''12''' ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Bulgaria
+| style="text-align:right; background:#f2f2f2;" | 49 ||  ||  ||  || 7 || || || || ||  ||  ||  ||  || || || || || 8 || || || || style="text-align:left; background:#aaa;" | ||  ||  || || || ||  || 5 || 4 || 10 || 6 || 1 || || ||  || 7 ||  || 1 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Ireland
+| style="text-align:right; background:#f2f2f2;" | 53 ||  ||  ||  || || || || || ||  ||  ||  || 2 || || 5 || 10 || || || 2 || || 5 || 1 || style="text-align:left; background:#aaa;" | ||  || || 2 || '''12''' || 5 || 4 || || 1 ||  || || || ||  || ||  || 4 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Slovenia
+| style="text-align:right; background:#f2f2f2;" | 69 || 3 ||  ||  || || || 4 || 1 || 2 ||  || 1 ||  ||  || || || 2 || 7 || 7 || || || 10 || ||  || style="text-align:left; background:#aaa;" | || || || ||  || || 8 ||  ||  || 7 || || 3 ||  || || 6 || 8 ||
+|- style="background:#ffdead;"
+! scope="row" style="text-align:left; font-weight:bold; background:#ffdead;" | Denmark
+| style="text-align:right;" | 185 || 6 || 7 || 5 || || 2 || 10 || || || '''12''' || 10 || 7 || 7 || '''12''' || 3 || 7 || 8 || || 8 || 7 || 6 || || '''12''' ||  || style="text-align:left; background:#aaa;" | || 10 || 10 || 4 || || ||  || 8 || || '''12''' || || 5 || 2 || 4 ||  || 1
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Poland
+| style="text-align:right; background:#f2f2f2;" | 81 || 5 || 1 ||  || || 1 || || || 6 || 5 || 3 || 5 ||  || 5 || || 4 || || || || || 2 || ||  ||  || || style="text-align:left; background:#aaa;" | || ||  || 1 || ||  || 7 || || 2 || 8 || 8 || 10 || 5 ||  || 3
+|}
+
+==== 12 points ====
+Below is a summary of all 12 points in the semi-final:
+
+{| class="wikitable plainrowheaders"
+|-
+! scope="col" | N.
+! scope="col" | Contestant
+! scope="col" | Nation(s) giving 12 points
+|- 
+! scope="row" | 6
+| {{Esc|Romania|y=2005}} || {{Esc|Cyprus|1960|y=2005}}, {{Esc|Greece|y=2005}}, {{Esc|Hungary|y=2005}}, {{Esc|Israel|y=2005}}, {{Esc|Moldova|y=2005|1990}}, {{Esc|Spain|y=2005}}
+|-
+! scope="row" | 5
+| {{Esc|Croatia|y=2005}} || {{Esc|Austria|y=2005}}, {{Esc|Bosnia and Herzegovina|y=2005}}, {{Esc|Macedonia|y=2005}}, {{Esc|Serbia and Montenegro|y=2005}}, {{Esc|Slovenia|y=2005}}
+|-
+! scope="row" rowspan="2" | 4
+| {{Esc|Denmark|y=2005}} || {{Esc|Ireland|y=2005}}, {{Esc|Netherlands|y=2005}}, {{Esc|Norway|y=2005}}, {{Esc|Sweden|y=2005}}
+|-
+| {{Esc|Moldova|y=2005|1990}}|| {{Esc|Romania|y=2005}}, {{Esc|Russia|y=2005}}, {{Esc|Turkey|y=2005}}, {{Esc|Ukraine|y=2005|1992}}
+|-
+! scope="row" rowspan="3" | 3
+| {{Esc|Israel|y=2005}} || {{Esc|Andorra|y=2005}}, {{Esc|Belarus|1995|y=2005}}, {{Esc|Monaco|y=2005}}
+|-
+| {{Esc|Norway|y=2005}} || {{Esc|Denmark|y=2005}}, {{Esc|Finland|y=2005}}, {{Esc|Iceland|y=2005}}
+|-
+| {{Esc|Portugal|y=2005}} || {{Esc|France|y=2005}}, {{Esc|Germany|y=2005}}, {{Esc|Switzerland|y=2005}}
+|-
+! scope="row" rowspan="2" | 2
+| {{Esc|Latvia|pantone|y=2005}} || {{Esc|Lithuania|y=2005}}, {{Esc|Malta|y=2005}}
+|-
+| {{Esc|Macedonia|y=2005}} || {{Esc|Albania|y=2005}}, {{Esc|Croatia|y=2005}}
+|-
+! scope="row" rowspan="7" | 1
+| {{Esc|Belarus|1995|y=2005}} || {{Esc|Bulgaria|y=2005}}
+|-
+| {{Esc|Belgium|y=2005}} || {{Esc|Portugal|y=2005}}
+|-
+| {{Esc|Estonia|y=2005}} || {{Esc|Latvia|pantone|y=2005}}
+|-
+| {{Esc|Hungary|y=2005}} || {{Esc|Poland|y=2005}}
+|-
+| {{Esc|Ireland|y=2005}} || {{Esc|United Kingdom|y=2005}}
+|-
+| {{Esc|Netherlands|y=2005}} || {{Esc|Belgium|y=2005}}
+|-
+| {{Esc|Switzerland|y=2005}} || {{Esc|Estonia|y=2005}}
+|}
+
+===Final===
+{| class="wikitable plainrowheaders" style="text-align:center; font-size:85%;"
+|-
+|+ Detailed voting results of the final<ref>{{cite web |title=Kyiv 2005 – Grand Final – Detailed voting results |url=https://eurovision.tv/event/kyiv-2005/grand-final/results |publisher=European Broadcasting Union |access-date=20 April 2021 |archive-url=https://web.archive.org/web/20210420055600/https://eurovision.tv/event/kyiv-2005/grand-final/results |archive-date=20 April 2021 |url-status=live}}</ref><ref>{{cite web |title=Eurovision Song Contest 2005 Final – Scoreboard |url=https://eurovision.tv/page/history/by-year/contest?event=159#Scoreboard |publisher=European Broadcasting Union |access-date=10 November 2021 |archive-url=https://web.archive.org/web/20150924043508/http://www.eurovision.tv/page/history/by-year/contest?event=159#Scoreboard |archive-date=24 September 2015 |url-status=dead}}</ref>
+|-
+| colspan="2" rowspan="2" style="text-align:left; background:#F2F2F2" | Voting procedure used:<br />{{legend|#EFA4A9|100% televoting|outline=#AAAAAA}}{{legend|#A4D1EF|100% jury vote|outline=#AAAAAA}}
+! scope="col" {{vert header|nb=1|Total score|cellstyle=border-bottom:1px solid transparent;}}
+! scope="col" {{vert header|nb=1|Austria}}
+! scope="col" {{vert header|nb=1|Lithuania}}
+! scope="col" {{vert header|nb=1|Portugal}}
+! scope="col" {{vert header|nb=1|Monaco}}
+! scope="col" {{vert header|nb=1|Belarus}}
+! scope="col" {{vert header|nb=1|Netherlands}}
+! scope="col" {{vert header|nb=1|Iceland}}
+! scope="col" {{vert header|nb=1|Belgium}}
+! scope="col" {{vert header|nb=1|Estonia}}
+! scope="col" {{vert header|nb=1|Finland}}
+! scope="col" {{vert header|nb=1|Andorra}}
+! scope="col" {{vert header|nb=1|Bulgaria}}
+! scope="col" {{vert header|nb=1|Ireland}}
+! scope="col" {{vert header|nb=1|Slovenia}}
+! scope="col" {{vert header|nb=1|Poland}}
+! scope="col" {{vert header|nb=1|Hungary}}
+! scope="col" {{vert header|nb=1|United Kingdom}}
+! scope="col" {{vert header|nb=1|Malta}}
+! scope="col" {{vert header|nb=1|Romania}}
+! scope="col" {{vert header|nb=1|Norway}}
+! scope="col" {{vert header|nb=1|Turkey}}
+! scope="col" {{vert header|nb=1|Moldova}}
+! scope="col" {{vert header|nb=1|Albania}}
+! scope="col" {{vert header|nb=1|Cyprus}}
+! scope="col" {{vert header|nb=1|Spain}}
+! scope="col" {{vert header|nb=1|Israel}}
+! scope="col" {{vert header|nb=1|Serbia and Montenegro}}
+! scope="col" {{vert header|nb=1|Denmark}}
+! scope="col" {{vert header|nb=1|Sweden}}
+! scope="col" {{vert header|nb=1|Macedonia}}
+! scope="col" {{vert header|nb=1|Ukraine}}
+! scope="col" {{vert header|nb=1|Germany}}
+! scope="col" {{vert header|nb=1|Croatia}}
+! scope="col" {{vert header|nb=1|Greece}}
+! scope="col" {{vert header|nb=1|Russia}}
+! scope="col" {{vert header|nb=1|Bosnia and Herzegovina}}
+! scope="col" {{vert header|nb=1|Switzerland}}
+! scope="col" {{vert header|nb=1|Latvia}}
+! scope="col" {{vert header|nb=1|France}}
+|-
+! style="height:2px; border-top:1px solid transparent;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#A4D1EF;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#A4D1EF;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#A4D1EF;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+| style="background:#EFA4A9;" |
+|-
+! rowspan="24" {{vert header|va=middle|Contestants}}
+! scope="row" style="text-align:left; background:#f2f2f2;" | Hungary
+| style="text-align:right; background:#f2f2f2;" | 97 ||  ||  || 2 ||  || 2 ||  || 6 || 2 || 3 ||  || 6 || 5 ||  ||  || 10 || style="text-align:left; background:#aaa;" | ||  ||  || 8 ||  || 6 ||  ||  || 7 || 5 || 8 || 6 ||  ||  || 1 || 2 ||  || 6 || 2 || 3 || 1 ||  || 3 || 3 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | United Kingdom
+| style="text-align:right; background:#f2f2f2;" | 18 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 8 ||  ||  ||  || style="text-align:left; background:#aaa;" | || 4 ||  ||  || 1 ||  ||  || 5 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Malta
+| style="text-align:right; background:#f2f2f2;" | 192 || 5 || 2 ||  || 5 || 5 || 5 || 4 || 8 || 4 || 8 ||  ||  || 10 || 1 ||  || 5 || 10 || style="text-align:left; background:#aaa;" | || 2 || 10 || 8 ||  || 4 || 6 || 7 || 10 ||  || 10 || 6 ||  || 10 || 8 || 4 || 8 || '''12''' ||  || 3 || 5 || 7 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Romania
+| style="text-align:right; background:#f2f2f2;" | 158 || 6 ||  || '''12''' || 4 || 1 || 3 || 5 || 7 ||  ||  || 7 || 8 || 5 ||  || 7 || 10 ||  || 7 || style="text-align:left; background:#aaa;" | || 6 || 4 || 7 || 5 || 8 || '''12''' || '''12''' || 3 || 3 || 2 || 2 ||  ||  ||  || 5 ||  || 2 ||  ||  || 5 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Norway
+| style="text-align:right; background:#f2f2f2;" | 125 ||  || 5 ||  ||  || 4 || 1 || '''12''' || 3 || 8 || '''12''' || 2 || 1 || 4 || 4 || 8 ||  || 5 || 5 ||  || style="text-align:left; background:#aaa;" | ||  || 3 ||  || 3 || 3 || 1 || 2 || '''12''' || 8 ||  || 6 ||  ||  || 4 ||  || 3 ||  || 6 ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Turkey
+| style="text-align:right; background:#f2f2f2;" | 92 || 7 ||  ||  ||  ||  || '''12''' ||  || 10 ||  ||  ||  || 3 ||  ||  ||  ||  || 1 ||  || 3 ||  || style="text-align:left; background:#aaa;" | ||  || 8 ||  ||  ||  ||  || 8 ||  || 4 ||  || 10 ||  ||  ||  || 8 || 6 ||  || '''12''' 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Moldova
+| style="text-align:right; background:#f2f2f2;" | 148 || 2 || 10 || 10 ||  || 7 ||  || 8 || 1 || 6 ||  ||  || 6 ||  || 3 || 3 || 4 || 2 || 2 || '''12''' ||  || 7 || style="text-align:left; background:#aaa;" | ||  || 2 || 4 || 4 || 5 ||  ||  || 5 || '''12''' || 1 || 1 || 7 || 10 || 4 ||  || 8 || 2 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Albania
+| style="text-align:right; background:#f2f2f2;" | 53 || 3 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 2 ||  || style="text-align:left; background:#aaa;" | ||  ||  ||  || 8 ||  ||  || '''12''' ||  ||  || 2 || 10 ||  || 5 || 10 ||  || 1 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Cyprus
+| style="text-align:right; background:#f2f2f2;" | 46 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 10 ||  ||  ||  ||  || 3 || '''12''' || 1 ||  ||  ||  || 7 || style="text-align:left; background:#aaa;" | ||  ||  || 1 ||  ||  ||  ||  ||  ||  || '''12''' ||  ||  ||  ||  ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Spain
+| style="text-align:right; background:#f2f2f2;" | 28 ||  ||  || 8 ||  ||  ||  ||  ||  ||  ||  || '''12''' ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || style="text-align:left; background:#aaa;" | ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 4 ||  || 4 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Israel
+| style="text-align:right; background:#f2f2f2;" | 154 || 1 || 3 || 5 || '''12''' || 8 || 7 ||  || 6 || 1 || 5 || 8 ||  || 6 ||  ||  || 8 || 7 || 8 || 7 || 5 || 3 || 6 || 3 ||  || 6 || style="text-align:left; background:#aaa;" | ||  || 5 || 1 ||  || 7 || 5 ||  ||  || 8 ||  || 1 || 2 || 10 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Serbia and Montenegro
+| style="text-align:right; background:#f2f2f2;" | 137 || '''12''' ||  ||  || 6 || 3 || 4 ||  ||  ||  ||  ||  || 4 ||  || 10 ||  || 2 ||  ||  || 6 ||  ||  || 1 || 6 || 10 ||  ||  || style="text-align:left; background:#aaa;" | ||  || 4 || 10 || 3 || 3 || '''12''' || 6 || 6 || 10 || '''12''' || 1 || 6 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Denmark
+| style="text-align:right; background:#f2f2f2;" | 125 ||  || 4 || 1 || 10 ||  || 8 || 10 || 4 || 5 || 2 || 3 ||  || 7 ||  || 5 || 6 || 8 || 3 || 4 || '''12''' ||  ||  ||  ||  || 10 || 3 ||  || style="text-align:left; background:#aaa;" | || 10 ||  ||  || 6 ||  ||  ||  ||  ||  || 4 ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Sweden
+| style="text-align:right; background:#f2f2f2;" | 30 ||  ||  ||  || 3 ||  ||  ||  ||  ||  || 6 ||  ||  ||  ||  ||  ||  ||  ||  ||  || 1 ||  || 5 ||  ||  || 2 ||  ||  || 7 || style="text-align:left; background:#aaa;" | || 6 ||  ||  ||  ||  ||  ||  ||  ||  ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Macedonia
+| style="text-align:right; background:#f2f2f2;" | 52 ||  ||  ||  || 1 ||  ||  ||  ||  ||  ||  ||  || 7 ||  || 5 ||  ||  ||  ||  ||  ||  || 5 ||  || 10 ||  ||  ||  || 7 ||  ||  || style="text-align:left; background:#aaa;" | ||  ||  || 8 ||  ||  || 7 || 2 ||  ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Ukraine
+| style="text-align:right; background:#f2f2f2;" | 30 ||  ||  || 7 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || '''12''' ||  ||  ||  ||  ||  ||  || 8 ||  ||  || 1 ||  ||  ||  ||  ||  || style="text-align:left; background:#aaa;" | ||  ||  ||  || 2 ||  ||  ||  ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Germany
+| style="text-align:right; background:#f2f2f2;" | 4 ||  ||  ||  || 2 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 2 ||  ||  ||  ||  ||  ||  ||  ||  ||  || style="text-align:left; background:#aaa;" | ||  ||  ||  ||  ||  ||  ||
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Croatia
+| style="text-align:right; background:#f2f2f2;" | 115 || 8 || 6 ||  || 7 ||  || 2 || 1 ||  || 2 || 1 ||  || 2 ||  || '''12''' || 2 || 7 ||  ||  || 5 || 2 ||  ||  || 2 ||  ||  ||  || 10 ||  ||  || 8 || 8 || 2 || style="text-align:left; background:#aaa;" | ||  || 1 || '''12''' || 8 || 7 ||  
+|- style="background:gold;"
+! scope="row" style="text-align:left; font-weight:bold; background:gold;" | Greece
+| style="text-align:right; font-weight:bold;" | 230 || 4 || 1 || 3 ||  ||  || 10 || 2 || '''12''' ||  || 3 || 4 || '''12''' || 2 || 2 || 1 || '''12''' || '''12''' || 6 || 10 || 4 || '''12''' || 4 || '''12''' || '''12''' || 8 || 7 || '''12''' || 2 || '''12''' || 7 ||  || '''12''' || 5 || style="text-align:left; background:#aaa;" | || 4 || 6 || 7 ||  || 8 
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Russia
+| style="text-align:right; background:#f2f2f2;" | 57 ||  || 7 ||  ||  || '''12''' ||  ||  ||  || 7 || 7 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 10 ||  ||  ||  ||  ||  ||  ||  ||  || 4 ||  ||  ||  || style="text-align:left; background:#aaa;" | ||  ||  || 10 ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Bosnia and Herzegovina
+| style="text-align:right; background:#f2f2f2;" | 79 || 10 ||  ||  ||  ||  || 6 ||  ||  ||  ||  ||  ||  || 1 || 8 ||  ||  || 4 ||  ||  || 7 || 10 ||  ||  ||  ||  ||  || 4 || 4 || 7 || 3 ||  ||  || 10 ||  ||  || style="text-align:left; background:#aaa;" | || 5 ||  ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Switzerland
+| style="text-align:right; background:#f2f2f2;" | 128 ||  || 8 || 4 || 8 || 10 ||  || 7 ||  || '''12''' || 10 || 1 ||  || 3 || 6 || 6 || 3 ||  || 1 ||  || 3 ||  ||  ||  || 4 ||  || 2 ||  || 1 || 5 ||  || 5 || 4 || 3 || 3 || 7 ||  || style="text-align:left; background:#aaa;" | || '''12''' ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | Latvia
+| style="text-align:right; background:#f2f2f2;" | 153 ||  || '''12''' || 6 ||  || 6 ||  || 3 || 5 || 10 || 4 || 10 ||  || '''12''' || 7 || 4 || 1 || 6 || 10 ||  || 8 ||  || '''12''' ||  || 1 ||  || 6 ||  || 6 || 3 ||  || 1 || 7 || 7 || 1 || 5 ||  ||  || style="text-align:left; background:#aaa;" | ||  
+|-
+! scope="row" style="text-align:left; background:#f2f2f2;" | France
+| style="text-align:right; background:#f2f2f2;" | 11 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 5 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 1 ||  ||  || 5 ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || style="text-align:left; background:#aaa;" | 
+|}
+
+====12 points====
+[[File:Points to Greece ESC05.svg|thumb|Points given to Greece.]]
+Below is a summary of all 12 points in the final:
+
+{| class="wikitable plainrowheaders"
+|-
+! scope="col" | N.
+! scope="col" | Contestant
+! scope="col" | Nation(s) giving 12 points
+|- 
+! scope="row" | 10
+| '''{{Esc|Greece|y=2005}}''' || {{Esc|Albania|y=2005}}, {{Esc|Belgium|y=2005}}, {{Esc|Bulgaria|y=2005}}, {{Esc|Cyprus|1960|y=2005}}, {{Esc|Germany|y=2005}}, {{Esc|Hungary|y=2005}}, {{Esc|Serbia and Montenegro|y=2005}}, {{Esc|Sweden|y=2005}}, {{Esc|Turkey|y=2005}}, {{Esc|United Kingdom|y=2005}}
+|-
+! scope="row" rowspan="4" | 3
+| {{Esc|Latvia|pantone|y=2005}} || {{Esc|Ireland|y=2005}}, {{Esc|Lithuania|y=2005}}, {{Esc|Moldova|y=2005|1990}}
+|-
+| {{Esc|Norway|y=2005}} || {{Esc|Denmark|y=2005}}, {{Esc|Finland|y=2005}}, {{Esc|Iceland|y=2005}}
+|-
+| {{Esc|Romania|y=2005}} || {{Esc|Israel|y=2005}}, {{Esc|Spain|y=2005}}, {{Esc|Portugal|y=2005}}
+|-
+| {{Esc|Serbia and Montenegro|y=2005}} || {{Esc|Austria|y=2005}}, {{Esc|Croatia|y=2005}}, {{Esc|Switzerland|y=2005}}
+|-
+! scope="row" rowspan="5" | 2
+| {{Esc|Croatia|y=2005}} || {{Esc|Bosnia and Herzegovina|y=2005}}, {{Esc|Slovenia|y=2005}}
+|-
+| {{Esc|Cyprus|1960|y=2005}} || {{Esc|Greece|y=2005}}, {{Esc|Malta|y=2005}}
+|-
+| {{Esc|Moldova|y=2005|1990}}|| {{Esc|Romania|y=2005}}, {{Esc|Ukraine|y=2005|1992}}
+|-
+| {{Esc|Switzerland|y=2005}} || {{Esc|Estonia|y=2005}}, {{Esc|Latvia|pantone|y=2005}}
+|-
+| {{Esc|Turkey|y=2005}} || {{Esc|France|y=2005}}, {{Esc|Netherlands|y=2005}}
+|-
+! scope="row" rowspan="7" | 1
+| {{Esc|Albania|y=2005}} || {{Esc|Macedonia|y=2005}}
+|-
+| {{Esc|Denmark|y=2005}} || {{Esc|Norway|y=2005}}
+|-
+| {{Esc|Israel|y=2005}} || {{Esc|Monaco|y=2005}}
+|-
+| {{Esc|Malta|y=2005}} || {{Esc|Russia|y=2005}}
+|-
+| {{Esc|Russia|y=2005}} || {{Esc|Belarus|1995|y=2005}}
+|-
+| {{Esc|Spain|y=2005}} || {{Esc|Andorra|y=2005}}
+|-
+| {{Esc|Ukraine|y=2005|1992}}|| {{Esc|Poland|y=2005}}
+|}
+
+== Broadcasts<span class="anchor" id="Commentators"></span> ==
+<!-- Anchor in the header is the old section name -->
+Known details on the broadcasts in each country, including the specific broadcasting stations and commentators, are shown in the tables below. 
+{| class="wikitable plainrowheaders"
+|+ Broadcasters and commentators in participating countries<ref name="participants" />
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Channel(s)
+! scope="col" | {{tooltip|Show(s)|Indicates if the final only, semi-final only or both shows were transmitted on a particular channel.}}
+! scope="col" | Commentator(s)
+! scope="col" | {{abbr|Ref(s)|References}}
+|-
+! scope="row" | {{Flagu|Andorra}}
+| [[Ràdio i Televisió d'Andorra|RTVA]]
+| [[Andorra Televisió|ATV]]
+| All shows
+| {{ill|Meri Picart|ca}} and Josep Lluís Trabal
+| <ref>{{cite news |last1=Ventura Cardús |first1=Núria |title=Un esclat d'il·lusió |url=https://www.diariandorra.ad/noticies/dmg/recordes_quan/2016/11/13/un_esclat_lusio_108959_1196.html |access-date=23 January 2023 |work=[[Diari d'Andorra]] |date=13 November 2016 |archive-url=https://web.archive.org/web/20161114171100/http://www.diariandorra.ad/noticies/dmg/recordes_quan/2016/11/13/un_esclat_lusio_108959_1196.html |archive-date=14 November 2016 |language=ca |url-status=live}}</ref><ref>{{cite web |title=Europinions |url=http://andorradifusio.ad/emissions/europinions |publisher=[[Ràdio i Televisió d'Andorra|Andorra Difusió]] |access-date=23 January 2023 |archive-url=https://web.archive.org/web/20140419030358/http://andorradifusio.ad/emissions/europinions |archive-date=19 April 2014}}</ref>
+|-
+! scope="row" | {{Flagu|Austria}}
+| [[ORF (broadcaster)|ORF]]
+| [[ORF 1]]
+| All shows
+| [[Andi Knoll]]
+| <ref name="Freiburg halb" /><ref name="Freiburg" /><ref>{{cite web |title=Andreas Knoll |url=https://der.orf.at/unternehmen/who-is-who/tv/knoll100.html |publisher=[[ORF (broadcaster)|ORF]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20170414061750/http://der.orf.at/unternehmen/who-is-who/tv/knoll100.html |archive-date=14 April 2017 |language=de |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Belarus|1995}}
+| [[Belteleradio|BTRC]]
+| [[Belarus-1]]
+| All shows
+| Ales Kruglyakov
+| <ref>{{cite news |title=Na ekranach: 14-21 traŭnia 2005 h. |script-title=be:На экранах: 14-21 траўня 2005 г.  |url=http://tvp.netcollect.ru/tvps/riwxxgvfnxsh.pdf |access-date=28 January 2023 |work=Zhoda |archive-url=https://web.archive.org/web/20230128231105/http://tvp.netcollect.ru/tvps/riwxxgvfnxsh.pdf |archive-date=28 January 2023 |pages=7–10 |language=be |url-status=live}}</ref><ref>{{cite web |last1=Zahorodnyy |first1=Oleksandr |title=10 obrantsiv pryyednayutʹsya do 14 uzhe vidibranykh uchasnykiv konkursu Yevrobachennya, finalʹne zmahannya vidbudetʹsya zavtra |script-title=uk:10 обранців приєднаються до 14 уже відібраних учасників конкурсу Євробачення, фінальне змагання відбудеться завтра |url=http://www.kiev2000.com/news/view.asp?Id=147335&Part=38 |publisher=[[1+1 (TV channel)|1+1]] |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20120317180444/http://www.kiev2000.com/news/view.asp?Id=147335&Part=38 |archive-date=17 March 2012 |language=uk |date=20 May 2005 |url-status=dead}}</ref>
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|Belgium}}
+| rowspan="2" | [[RTBF]]
+| rowspan="2" | {{lang|fr|[[La Une]]|i=unset}}, [[RTBF Sat]]
+| All shows
+| [[Jean-Pierre Hautier]]
+| rowspan="2" | <ref name="TV8 démi" /><ref name="TV8" /><ref>{{cite news |title=Examen de passage à l'Eurovision |url=https://www.lesoir.be/art/d-18010425-WK628U |access-date=29 January 2023 |work=[[Le Soir]] |date=19 May 2005 |archive-url=https://web.archive.org/web/20230129083926/https://www.lesoir.be/art/d-18010425-WK628U |archive-date=29 January 2023 |language=fr |url-status=live}} {{subscription required}}</ref><ref>{{cite news |title=L'Eurovision sans Belge pour la quatrième fois |url=https://www.lesoir.be/art/d-18010425-WK63AW |access-date=29 January 2023 |work=[[Le Soir]] |date=21 May 2005 |archive-url=https://web.archive.org/web/20230129083820/https://www.lesoir.be/art/d-18010425-WK63AW |archive-date=29 January 2023 |language=fr |url-status=live}} {{subscription required}}</ref>
+|-
+| Semi-final
+| {{ill|Jean-Louis Lahaye|fr}}
+|-
+| [[VRT (broadcaster)|VRT]]
+| {{lang|nl|[[Eén]]|i=unset}}
+| All shows
+| [[André Vermeulen]] and [[Anja Daems]]
+| <ref name="Leidsch halve" /><ref name="Leidsch" /><ref>{{cite web |last1=Philips |first1=Roel |title=Belgium: Eén and La Une present Eurovision coverage |url=https://esctoday.com/4423/belgium_en_and_la_une_present_eurovision_coverage/ |publisher=ESCToday |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20160304110431/http://esctoday.com/4423/belgium_en_and_la_une_present_eurovision_coverage/ |archive-date=4 March 2016 |date=10 May 2005 |url-status=live}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Croatia}}
+| rowspan="2" | [[Croatian Radiotelevision|HRT]]
+| [[HRT 2]]
+| Semi-final
+| rowspan="2" | [[Duško Ćurlić]]
+| rowspan="2" | <ref>{{cite news |title=TV program – Subota, 21. svibnja – HRT 1 |trans-title=TV schedule – Saturday, 21 May – HRT 1 |url=https://library.foi.hr/dbook/novine.php?C=20&godina=2005&broj=000019&page=010 |access-date=29 May 2024 |work=Glas Podravine |date=20 May 2005 |page=10 |language=hr |location=[[Koprivnica]], [[Croatia]]}}</ref><ref>{{cite web |title='Iznimno se veselim što ću biti komentator i ovogodišnjeg izbora za pjesmu Eurovizije' |url=https://magazin.hrt.hr/zabava/iznimno-se-veselim-sto-cu-i-ove-godine-biti-komentator-dviju-polufinalnih-i-finalne-veceri-ovogodisnjeg-izbora-za-pjesmu-eurovizije-7246604 |publisher=[[Croatian Radiotelevision|HRT]] |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20220509102856/https://magazin.hrt.hr/zabava/iznimno-se-veselim-sto-cu-i-ove-godine-biti-komentator-dviju-polufinalnih-i-finalne-veceri-ovogodisnjeg-izbora-za-pjesmu-eurovizije-7246604 |archive-date=9 May 2022 |language=hr |date=9 May 2022 |url-status=live}}</ref>
+|-
+| [[HRT 1]]
+| Final
+|-
+! scope="row" | {{Flagu|Denmark}}
+| [[DR (broadcaster)|DR]]
+| [[DR1]]
+| All shows
+| [[Jørgen de Mylius]]
+| <ref>{{cite web |title=Alle tiders programoversigter – Torsdag den 19. maj 2005 |trans-title=All-time programme overviews – Thursday 19 May 2005 |url=https://www.dr.dk/alletidersprogramoversigter/?date=2005-05-19 |publisher=[[DR (broadcaster)|DR]] |access-date=22 February 2025}}</ref><ref>{{cite web |title=Alle tiders programoversigter – Lørdag den 21. maj 2005 |trans-title=All-time programme overviews – Saturday 21 May 2005 |url=https://www.dr.dk/alletidersprogramoversigter/?date=2005-05-21 |publisher=[[DR (broadcaster)|DR]] |access-date=22 February 2025}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Estonia}}
+| colspan="2" | [[Eesti Televisioon|ETV]]
+| rowspan="2" | All shows
+| [[Marko Reikop]]
+| rowspan="2" | <ref name="Eesti">{{cite news |title=Televisiooni ja raadio nädalaka – 16.–22. mai |url=https://dea.digar.ee/cgi-bin/dea?a=d&d=sakala20050514 |access-date=28 January 2023 |work=[[Sakala (newspaper)|Sakala]] |date=14 May 2005 |location=[[Viljandi]], Estonia |pages=7–10 |language=et |via=DIGAR Eesti artiklid |archive-date=28 January 2023 |archive-url=https://web.archive.org/web/20230128175231/https://dea.digar.ee/cgi-bin/dea?a=d&d=sakala20050514 |url-status=live }}</ref>
+|-
+| [[Eesti Raadio|ER]]
+| {{lang|et|[[Raadio 2]]|i=unset}}
+| [[Mart Juur]] and [[Andrus Kivirähk]]
+|-
+! scope="rowgroup" rowspan="4" | {{Flagu|Finland}}
+| rowspan="4" | [[Yle|YLE]]
+| rowspan="2" | [[Yle TV2|YLE TV2]]
+| All shows
+| [[Jaana Pelkonen]] and [[Heikki Paasonen (presenter)|Heikki Paasonen]]
+| rowspan="2" | <ref name="Finland final">{{cite web |title=TV & Radio |url=http://www.yle.fi/eurovision/delta/lahetykset.php |publisher=[[Yle|YLE]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20050523002154/http://www.yle.fi/eurovision/delta/lahetykset.php |archive-date=23 May 2005 |language=fi |url-status=dead}}</ref><ref>{{cite web |title=Eurovision 2005: Kiovan Semifinaali |url=http://www.yle.fi/ |publisher=[[Yle|YLE]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20050519082104/http://www.yle.fi/ |archive-date=19 May 2005 |language=fi |date=19 May 2005 |url-status=dead}}</ref><ref>{{cite web |title=Eurovision 2005: Kiovan Finaali |url=http://www.yle.fi/ |publisher=[[Yle|YLE]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20050521020323/http://www.yle.fi/ |archive-date=21 May 2005 |language=fi |date=21 May 2005 |url-status=dead}}</ref>
+|-
+| Final
+| {{ill|Asko Murtomäki|fi}}
+|-
+| [[Yle Fem|YLE FST]], [[Yle Vega|YLE Radio Vega]]
+| rowspan="2" | All shows
+| {{ill|Thomas Lundin (broadcaster)|sv|Thomas Lundin|lt=Thomas Lundin}} and Hans Johansson
+| <ref name="Finland final" /><ref>{{cite web |title=Sändningstider i tv och radio |url=http://www.yle.fi/svenska/eurovision/ |publisher=[[Yle|Svenska YLE]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20050423074615/http://www.yle.fi/svenska/eurovision/ |archive-date=23 April 2005 |language=sv |url-status=dead}}</ref><ref>{{cite news |title=FST – 19.5.2005 |url=https://www.hs.fi/kotimaa/art-2000004310153.html |access-date=4 January 2023 |work=[[Helsingin Sanomat]] |date=19 May 2005 |language=fi |archive-date=4 January 2023 |archive-url=https://web.archive.org/web/20230104111941/https://www.hs.fi/kotimaa/art-2000004310153.html |url-status=live }}{{subscription required}}</ref><ref>{{cite news |title=Radio Vega – 19.5.2005 |url=https://www.hs.fi/radiotelevisio/art-2000004310156.html |access-date=4 January 2023 |work=[[Helsingin Sanomat]] |date=19 May 2005 |language=fi |archive-date=4 January 2023 |archive-url=https://web.archive.org/web/20230104111947/https://www.hs.fi/radiotelevisio/art-2000004310156.html |url-status=live }}{{subscription required}}</ref><ref>{{cite news |title=FST – 21.5.2005 |url=https://www.hs.fi/kotimaa/art-2000004310708.html |access-date=4 January 2023 |work=[[Helsingin Sanomat]] |date=21 May 2005 |language=fi |archive-date=4 January 2023 |archive-url=https://web.archive.org/web/20230104111946/https://www.hs.fi/kotimaa/art-2000004310708.html |url-status=live }}{{subscription required}}</ref><ref>{{cite news |title=Radio Vega – 21.5.2005 |url=https://www.hs.fi/radiotelevisio/art-2000004310710.html |access-date=4 January 2023 |work=[[Helsingin Sanomat]] |date=21 May 2005 |language=fi |archive-date=4 January 2023 |archive-url=https://web.archive.org/web/20230104111945/https://www.hs.fi/radiotelevisio/art-2000004310710.html |url-status=live }}{{subscription required}}</ref>
+|-
+| [[Yle Radio Suomi|YLE Radio Suomi]]
+| Sanna Kojo and Jorma Hietamäki
+| <ref name="Finland final" /><ref>{{cite web |title=YLE Radio Suomen kommentaattorit |url=http://vintti.yle.fi/yle.fi/euroviisut/euroviisut/2010-04-29/yle-radio-suomen-kommentaattorit.html |publisher=[[Yle|YLE]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20170706212808/http://vintti.yle.fi/yle.fi/euroviisut/euroviisut/2010-04-29/yle-radio-suomen-kommentaattorit.html |archive-date=6 July 2017 |language=fi |date=29 April 2010 |url-status=live}}</ref><ref>{{cite news |title=Radio Suomi – 19.5.2005 |url=https://www.hs.fi/radiotelevisio/art-2000004310157.html |access-date=4 January 2023 |work=[[Helsingin Sanomat]] |date=19 May 2005 |language=fi |archive-date=4 January 2023 |archive-url=https://web.archive.org/web/20230104111943/https://www.hs.fi/radiotelevisio/art-2000004310157.html |url-status=live }}{{subscription required}}</ref><ref>{{cite news |title=Radio Suomi – 21.5.2005 |url=https://www.hs.fi/radiotelevisio/art-2000004310711.html |access-date=4 January 2023 |work=[[Helsingin Sanomat]] |date=21 May 2005 |language=fi |archive-date=4 January 2023 |archive-url=https://web.archive.org/web/20230104111941/https://www.hs.fi/radiotelevisio/art-2000004310711.html |url-status=live }}{{subscription required}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|France}}
+| rowspan="2" | {{lang|fr|[[France Télévisions]]|i=unset}}
+| [[France 4]]{{efn|Delayed repeat broadcast on [[France 3]] on 21 May at 01:20 ([[Central European Summer Time|CEST]])<ref>{{cite news |title=Vendredi 20 mai |url=https://www.scriptorium.ch/zoom/323583/view?page=37&p=verso&tool=info&view=0,0,5077,3579 |access-date=28 January 2023 |work=TV8 |date=12 May 2005 |location=[[Zofingen]], Switzerland |page=73 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref>}}
+| Semi-final
+| {{N/A|}}
+| <ref>{{cite web |last1=Philips |first1=Roel |title=France: Semifinal on France 4 |url=https://esctoday.com/4267/france_semifinal_on_france_4/ |publisher=ESCToday |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20201020001451/http://esctoday.com/4267/france_semifinal_on_france_4/ |archive-date=20 October 2020 |date=21 April 2005 |url-status=live}}</ref>
+|-
+| [[France 3]]
+| Final
+| [[Julien Lepers]] and {{ill|Guy Carlier|fr}}
+| <ref name="TV8" />
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Germany}}
+| rowspan="2" | [[ARD (broadcaster)|ARD]]
+| {{lang|de|[[NDR Fernsehen]]|i=unset}}
+| Semi-final
+| rowspan="2" | [[Peter Urban (presenter)|Peter Urban]] 
+| rowspan="2" | <ref name="Freiburg" /><ref>{{cite press release |date=23 March 2005 |title=Eurovision Song Contest in Kiew: Gracia mit günstiger Startnummer 17 |url=https://www.presseportal.de/pm/6561/661487 |language=de |publisher=[[Norddeutscher Rundfunk]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20200521085709/https://www.presseportal.de/pm/6561/661487 |archive-date=21 May 2020 |url-status=live}}</ref>
+|-
+| {{lang|de|[[Das Erste]]|i=unset}}
+| Final
+|-
+! scope="row" | {{Flagu|Greece}}
+| [[Hellenic Broadcasting Corporation|ERT]]
+| [[ERT2|NET]]
+| All shows
+| [[Alexandra Pascalidou]]
+| <ref>{{cite news |title='My Number One' aiming for top spot at Eurovision 2005 {{!}} eKathimerini.com |url=https://www.ekathimerini.com/culture/29961/my-number-one-aiming-for-top-spot-at-eurovision-2005/ |access-date=28 January 2023 |work=[[Kathimerini]] |date=5 March 2005 |archive-url=https://web.archive.org/web/20230128234758/https://www.ekathimerini.com/culture/29961/my-number-one-aiming-for-top-spot-at-eurovision-2005/ |archive-date=28 January 2023 |language=en |url-status=live}}</ref><ref>{{cite web |last1=Jordan |first1=Paul |title=Semi-final Allocation Draw on Monday, pots revealed |url=https://eurovision.tv/story/semi-final-allocation-draw-on-monday-pots-revealed |publisher=[[European Broadcasting Union]] |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20170818221140/https://eurovision.tv/story/semi-final-allocation-draw-on-monday-pots-revealed |archive-date=18 August 2017 |language=en |date=21 January 2016 |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Hungary}}
+| [[Magyar Televízió|MTV]]
+| [[M1 (Hungarian TV channel)|m1]]
+| All shows
+| {{ill|Zsuzsa Demcsák|hr|Demcsák Zsuzsa}}, András Fáber and Dávid Szántó
+| <ref>{{cite news |title=Magyar nyelvű televízió-műsor – csütörtök május 19. |url=https://archivum.mtva.hu/news_archive/item/NEWS-bFhMZ3RVc0d6STNESEJzMFgxQ0oxUjVIcStmSGNjd2JtcHdLMmhqNlZ3Yz0 |access-date=28 January 2023 |work=RTV részletes |date=16 May 2005 |archive-url=https://web.archive.org/web/20230128164845/https://archivum.mtva.hu/news_archive/item/NEWS-bFhMZ3RVc0d6STNESEJzMFgxQ0oxUjVIcStmSGNjd2JtcHdLMmhqNlZ3Yz0 |archive-date=28 January 2023|page=32 |language=hu |url-status=live |via=[[MTVA (Hungary)|MTVA Archívum]]}}</ref><ref>{{cite news |title=Magyar nyelvű televízió-műsor – szombat május 21. |url=https://archivum.mtva.hu/news_archive/item/NEWS-WWdKQ3k3VzdpV2xmeUpzUGF0TWpDcjhjcHVXMkFidGNmeVpDSUQ3UzNGWT0 |access-date=28 January 2023 |work=RTV részletes |date=16 May 2005 |archive-url=https://web.archive.org/web/20230128162448/https://archivum.mtva.hu/news_archive/item/NEWS-WWdKQ3k3VzdpV2xmeUpzUGF0TWpDcjhjcHVXMkFidGNmeVpDSUQ3UzNGWT0 |archive-date=28 January 2023 |page=48 |language=hu |url-status=live |via=[[MTVA (Hungary)|MTVA Archívum]]}}</ref><ref>{{cite news |last1=Varga |first1=Klára |title=Múmiapop Kijevből a királyi tévében |url=https://magyarnemzet.hu/archivum-magyarnemzet/2005/05/mumiapop-kijevbol-a-kiralyi-teveben |access-date=28 January 2023 |work=[[Magyar Nemzet]] |date=25 May 2005 |archive-url=https://web.archive.org/web/20230128162450/https://magyarnemzet.hu/archivum-magyarnemzet/2005/05/mumiapop-kijevbol-a-kiralyi-teveben |archive-date=28 January 2023 |language=hu |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Iceland}}
+| [[RÚV]]
+| {{lang|is|[[RÚV (TV channel)|Sjónvarpið]]|i=unset}}, {{lang|is|[[Rás 2]]|i=unset}}
+| All shows
+| [[Gísli Marteinn Baldursson]]
+| <ref>{{cite news |title=Útvarp/Sjónvarp – fimmtudagur 19. maí 2005 |trans-title=Radio/Television – Thursday 19 May 2005 |url=https://timarit.is/page/3662468#page/n53/mode/2up |access-date=28 January 2023 |work=[[Morgunblaðið]] |date=19 May 2005 |location=[[Reykjavík]], Iceland |page=54 |language=is |via=[[Timarit.is]]}}</ref><ref>{{cite news |title=Útvarp/Sjónvarp – laugardagur 21. maí 2005 |trans-title=Radio/Television – Saturday 21 May 2005 |url=https://timarit.is/page/3662772#page/n69/mode/2up |access-date=28 January 2023 |work=[[Morgunblaðið]] |date=21 May 2005 |location=[[Reykjavík]], Iceland |page=70 |language=is |via=[[Timarit.is]]}}</ref><ref>{{cite news |last=Gunnarsdóttir |first=Þórdís Lilja |title=Við tækið: Áfram Noregur! |url=https://timarit.is/page/3763614#page/n51/mode/2up |access-date=28 January 2023 |work=[[Fréttablaðið]] |date=20 May 2005 |location=[[Reykjavík]], Iceland |page=40 |language=is |via=[[Timarit.is]]}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Ireland}}
+| rowspan="2" | [[RTÉ]]
+| [[RTÉ2|RTÉ Two]]
+| Semi-final
+| rowspan="2" | [[Marty Whelan]]
+| <ref>{{cite web |title=Eurovision Song Contest Running Order: Semi-final |url=http://www.rte.ie/tv/eurovision/running_order_semi.html |publisher=[[RTÉ]] |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20050526170459/http://www.rte.ie/tv/eurovision/running_order_semi.html |archive-date=26 May 2005 |url-status=dead}}</ref>
+|-
+| [[RTÉ One]]
+| Final
+| <ref>{{cite web |title=Eurovision Song Contest Running Order: Grand-final |url=http://www.rte.ie/tv/eurovision/running_order_final.html |publisher=[[RTÉ]] |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20050526170516/http://www.rte.ie/tv/eurovision/running_order_final.html |archive-date=26 May 2005 |url-status=dead}}</ref>
+|-
+! scope="row" | {{Flagu|Latvia|pantone}}
+| [[Latvijas Televīzija|LTV]]
+| {{N/A|}}
+| All shows
+| {{ill|Kārlis Streips|lv}}
+| <ref>{{cite web |title='Walters & Kazha' iekļūst Eirovīzijas finālā |url=https://www.delfi.lv/kultura/news/music/walters-kazha-ieklust-eirovizijas-finala-papildinats.d?id=11247379 |publisher=[[Delfi (web portal)|Delfi]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20230129165429/https://www.delfi.lv/kultura/news/music/walters-kazha-ieklust-eirovizijas-finala-papildinats.d?id=11247379 |archive-date=29 January 2023 |language=lv |date=20 May 2005 |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Lithuania}}
+| [[Lithuanian National Radio and Television|LRT]]
+| {{N/A|}}
+| All shows
+| [[Darius Užkuraitis]]
+| <ref>{{cite web |last1=Osteikaitė |first1=Reda |title=Lietuva susirungs Eurovizijos finalo scenoje |url=https://sekunde.lt/leidinys/paneveziobalsas/lietuva-susirungs-eurovizijos-finalo-scenoje/ |publisher=Panevėžio balsas |access-date=30 January 2023 |archive-url=https://web.archive.org/web/20230130093101/https://sekunde.lt/leidinys/paneveziobalsas/lietuva-susirungs-eurovizijos-finalo-scenoje/ |archive-date=30 January 2023 |language=lt |date=20 May 2006 |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Malta}}
+| [[Public Broadcasting Services|PBS]]
+| [[Television Malta|TVM]]
+| All shows
+| {{N/A|}}
+| <ref>{{cite news |title=Television – May 19, 2005 |work=[[Times of Malta]] |date=19 May 2005 |page=31}}</ref><ref>{{cite news |title=Television – May 21, 2005 |work=[[Times of Malta]] |date=19 May 2005 |page=29}}</ref>
+|-
+! scope="row" | {{Flagu|Monaco}}
+| colspan="2" | [[TMC (TV channel)|TMC Monte Carlo]]
+| All shows
+| {{ill|Bernard Montiel|fr}} and {{ill|Genie Godula|fr}}
+| <ref name="TV8 démi" /><ref name="TV8" />
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Netherlands}}
+| [[Nederlandse Omroep Stichting|NOS]]
+| {{lang|nl|[[NPO 2|Nederland 2]]|i=unset}}
+| rowspan="2" | All shows
+| [[Willem van Beusekom]] and [[Cornald Maas]]
+| rowspan="2" | <ref name="Leidsch halve">{{cite news |title=Radio & Televisie Donderdag |url=https://leiden.courant.nu/issue/LD/2005-05-19/edition/0/page/11 |access-date=18 January 2023 |work=[[Leidsch Dagblad]] |date=19 May 2005 |location=[[Leiden]], Netherlands |page=11 |archive-date=29 January 2023 |archive-url=https://web.archive.org/web/20230129091402/https://leiden.courant.nu/issue/LD/2005-05-19/edition/0/page/11 |url-status=live }}</ref><ref name="Leidsch">{{cite news |title=Radio & Televisie Zaterdag |url=https://leiden.courant.nu/issue/LD/2005-05-21/edition/0/page/28 |access-date=18 January 2023 |work=[[Leidsch Dagblad]] |date=21 May 2005 |location=[[Leiden]], Netherlands |page=28 |archive-date=29 January 2023 |archive-url=https://web.archive.org/web/20230129091402/https://leiden.courant.nu/issue/LD/2005-05-21/edition/0/page/28 |url-status=live }}</ref><ref>{{cite news |last1=Agerbeek |first1=Marjan |title=Met trommel en dansje tel je pas mee bij het vijftigste Eurovisie Songfestival |url=https://www.trouw.nl/nieuws/met-trommel-en-dansje-tel-je-pas-mee-bij-het-vijftigste-eurovisie-songfestival-gerectificeerd~b561a9f7/ |access-date=29 January 2023 |work=[[Trouw]] |date=21 May 2005 |language=nl |url-access=subscription |archive-date=29 January 2023 |archive-url=https://web.archive.org/web/20230129091401/https://www.trouw.nl/nieuws/met-trommel-en-dansje-tel-je-pas-mee-bij-het-vijftigste-eurovisie-songfestival-gerectificeerd~b561a9f7/ |url-status=live}}</ref><ref>{{Cite web |title=Eurovisie Songfestival 2005|url=https://zoeken.beeldengeluid.nl/program/urn:vme:default:program:2101608080068337031|access-date=2026-05-17|website=Beeld en Geluid}}</ref>
+|-
+| colspan="2" | [[NPO Radio 2|Radio 2]]
+| Hijlco Span and {{Interlanguage link|Ron Stoeltie|nl}}
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Norway}}
+| rowspan="2" | [[NRK]]
+| [[NRK1]]
+| rowspan="2" | All shows
+| [[Jostein Pedersen]]
+| rowspan="2" | <ref name="Scandi semi">{{cite news |title=Radio & TV – torsdag 19. mai |url=https://www.nb.no/items/9737760874d186b881e7210bd4aeb7b5?page=41 |access-date=28 January 2023 |work=[[Sandefjords Blad]] |date=19 May 2005 |location=[[Sandefjord]], Norway |pages=42–43 |via=[[National Library of Norway]] |archive-date=16 April 2023 |archive-url=https://web.archive.org/web/20230416100213/https://www.nb.no/items/9737760874d186b881e7210bd4aeb7b5?page=41 |url-status=live }}</ref><ref name="Scandi">{{cite news |title=Radio & TV – lørdag 21. mai |url=https://www.nb.no/items/a541c3bde42b92818aba3e2d5bf61aa2?page=43 |access-date=28 January 2023 |work=[[Sandefjords Blad]] |date=21 May 2005 |location=[[Sandefjord]], Norway |pages=44–45 |via=[[National Library of Norway]] |archive-date=16 April 2023 |archive-url=https://web.archive.org/web/20230416100211/https://www.nb.no/items/a541c3bde42b92818aba3e2d5bf61aa2?page=43 |url-status=live }}</ref><ref>{{cite news |title=TV og radio – torsdag 19. mai 2005 |url=https://www.nb.no/items/2e6fb0c82bc2ece6886b50b96572a8bb?page=59 |access-date=28 January 2023 |work=[[Drammens Tidende]] |date=19 May 2005 |location=[[Drammen]], Norway |via=[[National Library of Norway]] |archive-date=16 April 2023 |archive-url=https://web.archive.org/web/20230416100210/https://www.nb.no/items/2e6fb0c82bc2ece6886b50b96572a8bb?page=59 |url-status=live }}</ref>
+|-
+| [[NRK P1]]
+| {{N/A|}}
+|-
+! scope="row" | {{Flagu|Poland}}
+| [[Telewizja Polska|TVP]]
+| [[TVP1]]
+| All shows
+| [[Artur Orzech]]
+| <ref>{{cite news |title=Eurowizja w TVP |url=https://www.wirtualnemedia.pl/artykul/eurowizja-w-tvp |access-date=29 January 2023 |work=[[Telewizja Polska|TVP]] |date=19 December 2004 |archive-url=https://web.archive.org/web/20150217012453/http://www.wirtualnemedia.pl/artykul/eurowizja-w-tvp |archive-date=17 February 2015 |language=pl |via=Wirtualne Media}}</ref><ref>{{cite web |last1=Erling |first1=Barbara |title=Artur Orzech zapowiada, że skomentuje Eurowizję, ale tym razem na Instagramie |url=https://www.press.pl/tresc/70768,artur-orzech-zapowiada_-ze-skomentuje-eurowizje_-ale-tym-razem-na-instagramie |publisher=Press |access-date=26 January 2023 |archive-url=https://web.archive.org/web/20220514171828/https://www.press.pl/tresc/70768,artur-orzech-zapowiada_-ze-skomentuje-eurowizje_-ale-tym-razem-na-instagramie |archive-date=14 May 2022 |language=pl |date=12 May 2022 |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Portugal}}
+| [[Rádio e Televisão de Portugal|RTP]]
+| [[RTP1]]
+| All shows
+| [[Eládio Clímaco]]
+| <ref>{{cite news |last1=Galopim |first1=Nuno |title=Candidatos à Eurovisão disputam hoje meia-final |url=https://www.dn.pt/arquivo/2005/candidatos-a-eurovisao-disputam-hoje-meia-final-599787.html |access-date=29 January 2023 |work=[[Diário de Notícias]] |date=19 May 2005 |archive-url=https://web.archive.org/web/20230129100510/https://www.dn.pt/arquivo/2005/candidatos-a-eurovisao-disputam-hoje-meia-final-599787.html  |archive-date=29 January 2023 |language=pt}}</ref><ref>{{cite news |last1=Almeida |first1=Marina |title='Amar' chegou, viu ... mas não venceu |url=https://www.dn.pt/arquivo/2005/amar-chegou-viu-mas-nao-venceu-600053.html |access-date=29 January 2023 |work=[[Diário de Notícias]] |date=21 May 2005 |archive-url=https://web.archive.org/web/20230129100510/https://www.dn.pt/arquivo/2005/amar-chegou-viu-mas-nao-venceu-600053.html |archive-date=29 January 2023 |language=pt}}</ref><ref>{{cite web |last1=Rodrigues |first1=André |title=Portuguese delegation leaves for Kyiv |url=https://esctoday.com/4436/portuguese_delegation_leaves_for_kyiv/ |publisher=ESCToday |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20220702201927/https://esctoday.com/4436/portuguese_delegation_leaves_for_kyiv/ |archive-date=2 July 2022 |date=11 May 2005 |url-status=live}}</ref>
+|-
+! scope="row" | {{Flagu|Romania}}
+| [[TVR (TV network)|TVR]]
+| [[TVR 1]]
+| All shows
+| {{N/A|}}
+| <ref>{{cite web |title=Joi 19.05 ora 21:50 la TVR 1 Semifinala - Transmisiune directa de la Kiev |url=http://www.tvr.ro/ |publisher=[[TVR (TV network)|TVR]] |access-date=31 January 2023 |archive-url=https://web.archive.org/web/20050519033630/http://www.tvr.ro/ |archive-date=19 May 2005 |url-status=dead}}</ref><ref>{{cite web |title=Sâmbătă 21.05 ora 21:50 la TVR 1, Finala - Transmisiune directa de la Kiev |url=http://www.tvr.ro:80/ |publisher=[[TVR (TV network)|TVR]] |access-date=31 January 2023 |archive-url=https://web.archive.org/web/20050521025259/http://www.tvr.ro:80/ |archive-date=21 May 2005 |url-status=dead}}</ref>
+|-
+! scope="row" | {{Flagu|Russia}}
+| colspan="2" | [[Channel One (Russia)|Channel One]]{{efn|Also broadcast deferred via the [[Orbita (TV system)|Orbita]] satellite broadcasting system in the [[Russian Far East]]<ref>{{cite news |title=TV. Пятница, 20. мая; TV. Воскресенье, 22. мая |trans-title=TV. Friday, 20 May; Sunday, 22 May |url=http://89.223.124.215/tvps/gflcuikuawgp.pdf |access-date=2 July 2025 |work=[[Sovetskaya Sibir]] |location=[[Novosibirsk]], Russia |date=12 May 2005 |pages=20, 22 |lang=ru}}</ref>}}
+| All shows
+| {{ill|Yuriy Aksyuta|ru|Аксюта, Юрий Викторович}} and {{ill|Yelena Batinova|ru|Батинова, Елена Викторовна}}
+| <ref>{{cite news |title=Telenedelya: Programmy peredach s 16 po 22 maya |script-title=ru:Теленеделя: Программы передач с 16 по 22 мая |url=http://tvp.netcollect.ru/tvps/bbdjamwmanmd.pdf |access-date=28 January 2023 |work=[[Rossiyskaya Gazeta]] |archive-url=https://web.archive.org/web/20230128225808/http://tvp.netcollect.ru/tvps/bbdjamwmanmd.pdf |archive-date=28 January 2023 |pages=11–14, 19–22 |language=ru |url-status=live}}</ref><ref>{{cite web |last1=Kuzina |first1=Olesya |title=V finale pesennogo konkursa Yevrovideniye-2005 za pobedu budut borot'sya 24 ispolnitelya |script-title=ru:В финале песенного конкурса Евровидение-2005 за победу будут бороться 24 исполнителя |url=https://www.1tv.ru/news/2005-05-21/232636-v_finale_pesennogo_konkursa_evrovidenie_2005_za_pobedu_budut_borotsya_24_ispolnitelya |publisher=[[Channel One Russia]] |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20170220035633/http://www.1tv.ru/news/2005-05-21/232636-v_finale_pesennogo_konkursa_evrovidenie_2005_za_pobedu_budut_borotsya_24_ispolnitelya |archive-date=20 February 2017 |language=ru |date=21 March 2005 |url-status=live}}</ref>
+|-
+
+! scope="rowgroup" rowspan="2" | {{Flagu|Serbia and Montenegro}}
+| [[Radio Television of Serbia|RTS]]
+| [[RTS 1 (Serbian TV channel)|RTS 1]]
+| rowspan="2" | All shows
+| {{N/A|}}
+| rowspan="2" | <ref>{{cite news |title=TV program |url=https://istorijskenovine.unilib.rs/view/index.html#panel:pp{{!}}issue:UB_00064_20050519{{!}}page:8 |access-date=25 May 2024 |work=[[Borba (newspaper)|Borba]] |date=19 May 2005 |location=[[Belgrade]], [[Republic of Serbia (1992–2006)|Serbia]], [[Serbia and Montenegro]] |page=8 |language=sr |via=[[Belgrade University Library]]}}</ref><ref>{{cite news |title=TV program |url=https://istorijskenovine.unilib.rs/view/index.html#panel:pp{{!}}issue:UB_00064_20050521{{!}}page:8 |access-date=25 May 2024 |work=[[Borba (newspaper)|Borba]] |date=21–22 May 2005 |location=[[Belgrade]], [[Republic of Serbia (1992–2006)|Serbia]], [[Serbia and Montenegro]] |page=8 |language=sr |via=[[Belgrade University Library]]}}</ref>
+|-
+| [[Radio and Television of Montenegro|RTCG]]
+| [[TVCG 1]]
+| {{N/A|}}
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|Slovenia}}
+| rowspan="3" | [[Radiotelevizija Slovenija|RTVSLO]]
+| [[TV SLO 2|SLO 2]]
+| Semi-final
+| rowspan="2" | {{ill|Mojca Mavec|sl}}
+| rowspan="3" | <ref name="Gorenjski">{{cite news |title=TV spored |url=https://arhiv.gorenjskiglas.si/digitar/16298754_20050517_L.pdf |access-date=28 January 2023 |work=Gorenjski glas |date=17 May 2005 |archive-url=https://web.archive.org/web/20230128234139/https://arhiv.gorenjskiglas.si/digitar/16298754_20050517_L.pdf |archive-date=28 January 2023 |pages=11–18 |language=sl |url-status=live}}</ref><ref>{{cite web |title=Priprave slovenske posadke |url=https://www.rtvslo.si/kultura/glasba/priprave-slovenske-posadke/136704 |publisher=[[Radiotelevizija Slovenija]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20230129172238/https://www.rtvslo.si/kultura/glasba/priprave-slovenske-posadke/136704 |archive-date=29 January 2023 |language=sl |date=19 May 2005 |url-status=live}}</ref><ref>{{Cite web |date=19 May 2005 |title=Dan D |url=http://www.rtvslo.si/ema/novice.php?op=read&id=68 |access-date=2024-04-04 |publisher=[[Radiotelevizija Slovenija]] (RTV Slovenija)|archive-url=https://web.archive.org/web/20071104153839/http://www.rtvslo.si/ema/novice.php?op=read&id=68 |archive-date=4 November 2007 |language=sl}}</ref><ref>{{Cite web |date=2005-05-21 |title=Danes finale, jutri spet doma |url=http://www.rtvslo.si/ema/novice.php?op=read&id=71 |access-date=2024-04-04 |publisher=[[Radiotelevizija Slovenija]] (RTV Slovenija)|archive-url=https://web.archive.org/web/20071104153855/http://www.rtvslo.si/ema/novice.php?op=read&id=71 |archive-date=4 November 2007 |language=sl}}</ref>
+|-
+| [[TV SLO 1|SLO 1]]
+| Final
+|-
+| [[Radio Val 202]]
+| All shows
+| Jernej Vene
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Spain}}
+| rowspan="2" | [[Televisión Española|TVE]]
+| {{lang|es|[[La 2 (Spanish TV channel)|La 2]]|i=unset}}
+| Semi-final
+| {{ill|Beatriz Pécker|es}}, {{ill|Ainhoa Arbizu|es}} and Carlos Cerezo
+| <ref>{{cite news |title=TV – jueves, 19 mayo 2005 |url=https://hemeroteca.lavanguardia.com/preview/2005/05/19/pagina-8/39743912/pdf.html |access-date=28 January 2023 |work=[[La Vanguardia|La Vanguardia: Vivir]] |date=19 May 2005 |page=8 |language=es |archive-date=21 June 2023 |archive-url=https://web.archive.org/web/20230621143713/https://hemeroteca.lavanguardia.com/preview/2005/05/19/pagina-8/39743912/pdf.html |url-status=live }}</ref>
+|-
+| {{lang|es|[[La 1 (Spanish TV channel)|La Primera]]|i=unset}}
+| Final
+| Beatriz Pécker
+| <ref>{{cite news |title=TV – sábado, 21 mayo 2005 |url=https://hemeroteca.lavanguardia.com/preview/2005/05/21/pagina-8/39776795/pdf.html |access-date=28 January 2023 |work=[[La Vanguardia|La Vanguardia: Vivir]] |date=21 May 2005 |page=8 |language=es |archive-date=21 June 2023 |archive-url=https://web.archive.org/web/20230621143711/https://hemeroteca.lavanguardia.com/preview/2005/05/21/pagina-8/39776795/pdf.html |url-status=live }}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Sweden}}
+| [[Sveriges Television|SVT]]
+| [[SVT1]]
+| rowspan="2" | All shows
+| [[Pekka Heino (television presenter)|Pekka Heino]]
+| <ref name="Scandi semi" /><ref name="Scandi" /><ref>{{cite news |title=Swede triumphs in Eurovision |url=https://www.thelocal.se/20050522/1474-2/ |access-date=30 January 2023 |work=[[The Local|The Local Sweden]] |date=22 May 2005 |archive-url=https://web.archive.org/web/20211020020432/https://www.thelocal.se/20050522/1474-2/ |archive-date=20 October 2021 |url-status=live}}</ref><ref name="Melfest">{{cite book |last1=Thorsson |first1=Leif |last2=Verhage |first2=Martin |title=Melodifestivalen genom tiderna : de svenska uttagningarna och internationella finalerna |date=2006 |publisher=Premium Publishing |location=Stockholm |isbn=91-89136-29-2 |language=sv |pages=326–327}}</ref>
+|-
+| [[Sveriges Radio|SR]]
+| [[Sveriges Radio P4|SR P4]]
+| [[Björn Kjellman]] and [[Carolina Norén]]
+| <ref name="Melfest" /><ref>{{cite news |title=Björn Kjellman och Carolina Norén minns Kiev 2005 |url=https://sverigesradio.se/artikel/6688047 |newspaper=[[Sveriges Radio]] |access-date=30 January 2023 |archive-url=https://web.archive.org/web/20230130085959/https://sverigesradio.se/artikel/6688047 |archive-date=30 January 2023 |language=sv |date=29 April 2017 |url-status=live}}</ref>
+|-
+! scope="rowgroup" rowspan="6" | {{Flagu|Switzerland}}
+| rowspan="6" | [[Swiss Broadcasting Corporation|SRG SSR]]
+| [[SRF zwei|SF 2]]
+| Semi-final
+| rowspan="2" | [[Sandra Studer]]
+| <ref name="Freiburg halb">{{cite news |title=TV/Radio – Donnerstag, 19. Mai 2005 |trans-title=TV/Radio – Thursday 19 May 2005 |url=https://www.e-newspaperarchives.ch/?a=d&d=FZG20050519-01 |access-date=28 January 2023 |work=Freiburger Nachrichten |date=19 May 2005 |location=[[Fribourg]], Switzerland |page=25 |language=de |via=[[e-newspaperarchives.ch]] |archive-date=24 May 2024 |archive-url=https://web.archive.org/web/20240524163424/https://www.e-newspaperarchives.ch/?a=d&d=FZG20050519-01 |url-status=live }}</ref><ref>{{cite news |title=Jeudi 19 mai |url=https://www.scriptorium.ch/zoom/436513/view?page=43&p=separate&tool=info&view=0,0,5160,3386 |access-date=28 January 2023 |work=La Côte TV Plus |date=13 May 2005 |pages=31–34 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref>
+|-
+| [[SRF 1|SF 1]]
+| Final
+| <ref name="Freiburg">{{cite news |title=TV/Radio – Samstag, 21. Mai 2005 |trans-title=TV/Radio – Saturday 21 May 2005 |url=https://www.e-newspaperarchives.ch/?a=d&d=FZG20050521-01 |access-date=28 January 2023 |work=Freiburger Nachrichten |date=21 May 2005 |location=[[Fribourg]], Switzerland |page=10 |language=de |via=[[e-newspaperarchives.ch]] |archive-date=24 May 2024 |archive-url=https://web.archive.org/web/20240524163513/https://www.e-newspaperarchives.ch/?a=d&d=FZG20050521-01 |url-status=live }}</ref>
+|-
+| [[RTS 2 (Swiss TV channel)|TSR 2]]
+| Semi-final
+| rowspan="2" | [[Jean-Marc Richard (TV and radio presenter)|Jean-Marc Richard]] and Marie-Thérèse Porchet
+| <ref name="TV8 démi">{{cite news |title=Jeudi 19 mai |trans-title=Thursday 19 May |url=https://www.scriptorium.ch/zoom/323583/view?page=33&p=verso&tool=info&view=0,0,5076,3586 |access-date=28 January 2023 |work=TV8 |date=12 May 2005 |location=[[Zofingen]], Switzerland |pages=64–70 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref>
+|-
+| [[RTS 1 (Swiss TV channel)|TSR 1]]
+| Final
+| <ref name="TV8">{{cite news |title=Samedi 21 mai |trans-title=Saturday 21 May |url=https://scriptorium.ch/zoom/323593/view?page=12&p=verso&tool=info&view=0,0,5087,3586 |access-date=28 January 2023 |work=TV8 |date=19 May 2005 |location=[[Zofingen]], Switzerland |pages=22–28 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref><ref>{{cite news |title=Samedi 21 mai |trans-title=Saturday 21 May |url=https://www.scriptorium.ch/zoom/436300/view?page=35&p=separate&tool=info&view=0,0,5170,3376 |access-date=28 January 2023 |work=La Côte TV Plus |date=20 May 2005 |pages=11–14 |language=fr |via=[[Scriptorium (website)|Scriptorium]]}}</ref>
+|-
+| [[RSI La 2|TSI 2]]
+| Semi-final
+| rowspan="2" | Daniela Tami and Claudio Lazzarino
+| rowspan="2" | <ref>{{cite news |title='Eurosong' 2005: Vanilla Ninja, Olé |url=https://www.sbt.ti.ch/quotidiani-public-pdf/main_part.php?fullscreen=true&paper=gdp&day=18&month=5&year=2005&page=26&papername=Giornale%20del%20Popolo&allpages=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28 |access-date=28 January 2023 |work=Giornale del Popolo |date=18 May 2005 |location=[[Lugano]], Switzerland |page=26 |language=it |via={{ill|Sistema bibliotecario ticinese|it}} |archive-date=28 January 2023 |archive-url=https://web.archive.org/web/20230128112200/https://www.sbt.ti.ch/quotidiani-public-pdf/main_part.php?fullscreen=true&paper=gdp&day=18&month=5&year=2005&page=26&papername=Giornale%20del%20Popolo&allpages=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28 |url-status=live }}</ref>
+|-
+| [[RSI La 1|TSI 1]]
+| Final
+|-
+! scope="row" | {{Flagu|Turkey}}
+| [[Turkish Radio and Television Corporation|TRT]]
+| [[TRT 1]]
+| All shows
+| {{N/A|}}
+| <ref>{{cite news |title=TV Programları – 19 Mayıs 2005 |url=https://egazete.cumhuriyet.com.tr/Archive/CUMHURIYET/GAZETE_ARSIVI/2005/5/19/3CEFEA1E-1F84-4127-8DDD-49FC6E8535EE_3179980_16.jpeg |access-date=20 January 2023 |work=[[Cumhuriyet]] |date=19 May 2005 |archive-url=https://web.archive.org/web/20230128235932/https://egazete.cumhuriyet.com.tr/Archive/CUMHURIYET/GAZETE_ARSIVI/2005/5/19/3CEFEA1E-1F84-4127-8DDD-49FC6E8535EE_3179980_16.jpeg |archive-date=28 January 2023 |page=16 |language=tr |url-status=live}}</ref><ref>{{cite news |title=TV Programları – 21 Mayıs 2005 |url=https://egazete.cumhuriyet.com.tr//Archive/CUMHURIYET/GAZETE_ARSIVI/2005/5/21/4871AF1D-5F2A-4CF8-B580-7D7A05CA705F_3179982_16.jpeg |access-date=20 January 2023 |work=[[Cumhuriyet]] |date=21 May 2005 |archive-url=https://web.archive.org/web/20230128235933/https://egazete.cumhuriyet.com.tr//Archive/CUMHURIYET/GAZETE_ARSIVI/2005/5/21/4871AF1D-5F2A-4CF8-B580-7D7A05CA705F_3179982_16.jpeg |archive-date=28 January 2023 |page=16 |language=tr |url-status=live}}</ref>
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Ukraine|1992}}
+| [[National Television Company of Ukraine|NTU]]
+| {{lang|uk|[[Pershyi|Pershyi Natsionalnyi]]|i=unset}}
+| rowspan="2" | All shows
+| Yaroslav Chornenkyi
+| <ref>{{cite news |title=Chetver, 19 travnya |script-title=uk:Четвер, 19 травня |url=https://image.isu.pub/130920064549-1c05227b60ea06fe025fbc149834cfc3/jpg/page_2.jpg |access-date=28 January 2023 |work=Nove Zhyttia |date=14 May 2005 |archive-url=https://web.archive.org/web/20230128231044/https://image.isu.pub/130920064549-1c05227b60ea06fe025fbc149834cfc3/jpg/page_2.jpg |archive-date=28 January 2023 |page=2 |language=uk |url-status=live}}</ref><ref>{{cite news |title=Subota, 21 travnya |script-title=uk:Субота, 21 травня |url=https://image.isu.pub/130920064549-1c05227b60ea06fe025fbc149834cfc3/jpg/page_3.jpg |access-date=28 January 2023 |work=Nove Zhyttia |date=14 May 2005 |archive-url=https://web.archive.org/web/20230128231046/https://image.isu.pub/130920064549-1c05227b60ea06fe025fbc149834cfc3/jpg/page_3.jpg |archive-date=28 January 2023 |page=3 |language=uk |url-status=live}}</ref><ref>{{cite web |last1=Dym |first1=Nestor |title=Ukrayinsʹka revolyutsiya vzhe ne ye modnoyu v Yevropi, abo Khto za koho i yak holosuvav na 'Yevrobachenni-2005' |script-title=uk:Українська революція вже не є модною в Європі, або Хто за кого і як голосував на 'Євробаченні-2005' |url=https://www.obozrevatel.com/news/2005/5/24/14812.htm |publisher=[[Obozrevatel]] |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20230128232439/https://www.obozrevatel.com/news/2005/5/24/14812.htm |archive-date=28 January 2023 |language=ru |date=24 May 2005 |url-status=live}}</ref>
+|-
+| [[Ukrainian Radio|UR]]
+| {{N/A|}}
+| {{ill|Galyna Babiy|uk|Бабій Галина Василівна}}
+| <ref>{{cite web |title=Galina Babiy {{!}} Ukrayinsʹke radio |script-title=uk:Галина Бабий {{!}} Українське радіо  |url=http://ukr.radio/prog-presenter.html?id=20 |publisher=[[Ukrainian Radio]] |access-date=29 January 2023 |archive-url=https://web.archive.org/web/20190619032346/http://ukr.radio/prog-presenter.html?id=20 |archive-date=19 June 2019 |language=uk |url-status=live}}</ref>
+|-
+! scope="rowgroup" rowspan="3" | {{Flagu|United Kingdom}}
+| rowspan="3" | [[BBC]]
+| [[BBC Three]]
+| Semi-final
+| [[Paddy O'Connell]]
+| <ref>{{cite news |title=Eurovision Song Contest Semi-final – BBC Three |url=https://genome.ch.bbc.co.uk/f3a37ce57dfc41ff8171a860253680c4 |access-date=28 January 2023 |work=[[Radio Times]] |date=14 May 2005 |via=[[BBC Genome Project]] |archive-date=21 June 2023 |archive-url=https://web.archive.org/web/20230621143711/https://genome.ch.bbc.co.uk/f3a37ce57dfc41ff8171a860253680c4 |url-status=live }}</ref>
+|-
+| [[BBC One]], [[BBC Prime]]
+| rowspan="2" | Final
+| [[Terry Wogan]]
+| <ref name="TV8" /><ref>{{cite news |title=The Eurovision Song Contest 2005 – BBC One |url=https://genome.ch.bbc.co.uk/f212d5de9d42458b8be05075a153f0bf |access-date=28 January 2023 |work=[[Radio Times]] |date=21 May 2005 |via=[[BBC Genome Project]] |archive-date=4 February 2023 |archive-url=https://web.archive.org/web/20230204114344/https://genome.ch.bbc.co.uk/f212d5de9d42458b8be05075a153f0bf |url-status=live }}</ref>
+|-
+| [[BBC Radio 2]]
+| [[Ken Bruce]]
+| <ref>{{cite news |title=Eurovision Song Contest – BBC Radio 2 |url=https://genome.ch.bbc.co.uk/441dad2b30f6476f95d29d9337c63e85 |access-date=28 January 2023 |work=[[Radio Times]] |date=21 May 2005 |via=[[BBC Genome Project]] |archive-date=4 February 2023 |archive-url=https://web.archive.org/web/20230204114346/https://genome.ch.bbc.co.uk/441dad2b30f6476f95d29d9337c63e85 |url-status=live }}</ref>
+|}
+
+{| class="wikitable plainrowheaders"
+|-
+|+ Broadcasters and commentators in non-participating countries<ref name="participants">{{cite news |title=Eurovision 2005 |url=http://www.ebu.ch/en/union/news/2005/tcm_6-37904.php |access-date=28 January 2023 |work=[[European Broadcasting Union]] |date=23 May 2005 |archive-url=https://web.archive.org/web/20050526173159/http://www.ebu.ch/en/union/news/2005/tcm_6-37904.php |archive-date=26 May 2005 |url-status=dead}}</ref>
+|-
+! scope="col" | Country
+! scope="col" | Broadcaster
+! scope="col" | Channel(s)
+! scope="col" | {{abbr|Show(s)|Indicates if a particular broadcaster transmitted the final only, semi-final only or both shows.}}
+! scope="col" | Commentator(s)
+! scope="col" | {{abbr|Ref(s)|References}}
+|-
+! scope="rowgroup" rowspan="2" | {{Flagu|Australia}}
+| rowspan="2" | [[Special Broadcasting Service|SBS]]
+| rowspan="2" | [[SBS (Australian TV channel)|SBS TV]]{{efn|Deferred broadcast on 20 May (semi-final) and 22 May (final) at 19:30 ([[Australian Eastern Standard Time|AEST]])<ref name="Australia" />}}
+| Semi-final
+| [[Paddy O'Connell]]
+| rowspan="2" | <ref name="Australia">{{cite news |title=TV Guide Torres News: Friday 20 – Thursday 26 May |url=https://trove.nla.gov.au/newspaper/page/28350444 |access-date=28 January 2023 |work=[[Torres News]] |date=18 May 2005 |location=[[Thursday Island]], [[Queensland]], Australia |page=9 |via=[[Trove]] |archive-date=2 February 2023 |archive-url=https://web.archive.org/web/20230202133339/https://trove.nla.gov.au/newspaper/page/28350444 |url-status=live }}</ref><ref>{{cite web |last1=Egan |first1=John |title=Australian Eurovision Song Contest coverage confirmed |url=https://esctoday.com/4268/australian_eurovision_song_contest_coverage_confirmed/ |publisher=ESCToday |access-date=28 January 2023 |archive-url=https://web.archive.org/web/20200929015945/http://esctoday.com/4268/australian_eurovision_song_contest_coverage_confirmed/ |archive-date=29 September 2020 |date=21 April 2005 |url-status=live}}</ref>
+|-
+| Final
+| [[Terry Wogan]]
+|-
+! scope="row" | {{flagu|Falkland Islands}}
+| [[British Forces Broadcasting Service|BFBS]]
+| BFBS 1{{efn|Deferred broadcast at 21:00 ([[Falkland Islands Time|FKT]])<ref name="Falklands" />}}
+| Final
+| {{N/A|}}
+| <ref name="Falklands">{{cite news |title=BFBS Television programmes |url=https://nationalarchives.gov.fk/jdownloads/Penguin%20News/2005%20Apr-Jun.pdf |access-date=25 September 2024 |work=[[Penguin News|Penguin News Information Pullout]] |page=2 |date=21–27 May 2005 |location=[[Stanley, Falkland Islands|Stanley]], Falkland Islands |via=[[Jane Cameron National Archives]]}}</ref>
+|}
+
+== Other awards ==
+In addition to the main winner's trophy, the [[Marcel Bezençon Awards]] and the [[Barbara Dex Award]] were contested during the 2005 Eurovision Song Contest.
+
+=== Marcel Bezençon Awards ===
+The [[Marcel Bezençon Awards]], organised since 2002 by Sweden's then-Head of Delegation and 1992 representative [[Christer Björkman]], and 1984 winner [[Herreys|Richard Herrey]], honours songs in the contest's final.<ref name="Bezençon">{{cite web|url=http://poplight.zitiz.se/marcelbezenconaward/en |title=Marcel Bezençon Award - an introduction |publisher=[[Poplight]] |access-date=2009-06-02 |url-status=dead |archive-url=https://web.archive.org/web/20131017033001/http://poplight.zitiz.se/marcelbezenconaward/en |archive-date=17 October 2013}}</ref> The awards are divided into three categories: Artistic Award which was voted by [[List of Eurovision Song Contest winners|previous winners]] of the contest, Composer Award and Press Award.<ref>{{cite web |title=Marcel Bezençon Awards–Eurovision Song Contest |url=https://eurovision.tv/about/in-depth/marcel-bezencon-awards/ |website=eurovision.tv |date=2 April 2017 |access-date=19 March 2021 |archive-date=16 July 2019 |archive-url=https://web.archive.org/web/20190716092347/https://eurovision.tv/about/in-depth/marcel-bezencon-awards/ |url-status=live }}</ref>
+
+{| class="wikitable plainrowheaders"
+|-
+! scope="col" | Category
+! scope="col" | Country
+! scope="col" | Song
+! scope="col" | Artist
+! scope="col" | Songwriter(s)
+|-
+! scope="row" | Artistic Award
+| {{Esc|Greece|y=2005}}
+| "[[My Number One]]" 
+| [[Helena Paparizou]] 
+| {{hlist|Manos Psaltakis|[[Christos Dantis]]|[[Natalia Germanou]]}}
+|-
+! scope="row" | Composer Award
+| {{Esc|Serbia and Montenegro|y=2005}}
+| "[[Zauvijek moja]]" 
+| [[No Name (Montenegrin band)|No Name]]
+| {{hlist|Slaven Knezović|Milan Perić}}
+|-
+! scope="row" | Press Award
+| {{Esc|Malta|y=2005}}
+| "[[Angel (Chiara song)|Angel]]"
+| [[Chiara Siracusa|Chiara]]
+| Chiara Siracusa
+|}
+
+===Barbara Dex Award===
+The [[Barbara Dex Award]] is a humorous fan award given to the worst dressed artist each year. Named after [[Barbara Dex]] who came last for {{esccnty|Belgium|y=1993|t=Belgium in 1993}}, wearing her self-designed dress, the award was handed by the fansite House of Eurovision from 1997 to 2016 and is being carried out by the fansite songfestival.be since 2017.<ref>{{cite web|url=http://www.eurovisionhouse.nl/bdaward.php|title=Barbara Dex Award|last=van Thillo|first=Edwin|access-date=24 June 2014|url-status=dead|archive-url=https://web.archive.org/web/20160507232212/http://www.eurovisionhouse.nl/bdaward.php|archive-date=7 May 2016}}</ref>
+{| class="wikitable plainrowheaders"
+|-
+! scope="col" | Place<ref name="Barbara Dex Award 2005">{{cite web|last=Van Bedts|first=Raf|title=Martin Vucic wint Barbara Dex-award 2005|url=http://www.eurosong.be/13795/martin-vucic-wint-barbara-dex-award-2005|website=eurosong.be|access-date=13 September 2014|date=25 May 2005|language=nl|archive-date=24 May 2024|archive-url=https://web.archive.org/web/20240524163428/https://www.vrt.be/vrtmax/kanalen/vrt1/?utm_medium=redirect&utm_source=een_kanaalpagina&utm_campaign=eenmigratie&utm_content=vrt-nu|url-status=live}}</ref>
+! scope="col" | Country<ref name="Barbara Dex Award 2005"/>
+! scope="col" | Artist<ref name="Barbara Dex Award 2005"/>
+! scope="col" | Votes<ref name="Barbara Dex Award 2005"/>
+|- style="background:gold;"
+! scope="row" style="background:gold;" | 1
+| {{Esc|Macedonia|y=2005}}
+| [[Martin Vučić]]
+| 42
+|- style="background:silver;"
+! scope="row" style="background:silver;" | 2
+| {{Esc|Iceland|y=2005}}
+| [[Selma Björnsdóttir|Selma]]
+| 39
+|- style="background:#c96;"
+! scope="row" style="background:#c96;" | 3
+| {{Esc|Portugal|y=2005}}
+| [[2B (band)|2B]]
+| 34
+|-
+! scope="row" | 4
+| {{Esc|Norway|y=2005}}
+| [[Wig Wam]]
+| 29
+|-
+! scope="row" | 5
+| {{Esc|Belarus|y=2005|1995}}
+| [[Angelica Agurbash]]
+| 21
+|-
+|}
+
+==Official album==
+[[File:ESC 2005 album cover.jpg|thumb|right|Cover art of the official album]]
+'''''Eurovision Song Contest: Kyiv 2005''''' was the official compilation album of the 2005 contest, put together by the European Broadcasting Union and released by [[EMI Records]] and [[CMC International]] on 2 May 2005. The album featured all 39 songs that entered in the 2005 contest, including the semi-finalists that failed to qualify into the grand final.<ref>{{cite web|author1=Sietse Bakker|title=Pre-order the official 2005 album and DVD|url=http://esctoday.com/3997/pre-order_the_official_2005_album_and_dvd/|website=esctoday.com|publisher=ESCToday|access-date=5 November 2014|date=9 March 2005|archive-date=5 November 2014|archive-url=https://web.archive.org/web/20141105140117/http://esctoday.com/3997/pre-order_the_official_2005_album_and_dvd/|url-status=live}}</ref>
+
+The original cover designed for the album was changed after {{Esccnty|Lebanon}}'s withdrawal from the Eurovision Song Contest 2005 after announcing they would show advertisements over the Israeli entry. Had they entered, they would have been on track 4, disc 2 with the song "[[Quand tout s'enfuit]]" by [[Aline Lahoud]].<ref>{{cite web|author1=Sietse Bakker|title=Lebanon withdraws|url=http://esctoday.com/4060/breaking_news_lebanon_withdraws/|website=esctoday.com|publisher=ESCToday|access-date=5 November 2014|date=18 March 2005|archive-date=30 September 2020|archive-url=https://web.archive.org/web/20200930151758/http://esctoday.com/4060/breaking_news_lebanon_withdraws/|url-status=live}}</ref>
+
+It was reported that sales of the 2005 Eurovision merchandise reached record-breaking levels.<ref>{{cite web|last1=Phillips|first1=Roel|title=Record sales of Eurovision merchandising|url=http://esctoday.com/4577/record_sales_of_eurovision_merchandising/|website=esctoday.com|publisher=ESCTOday|access-date=5 November 2014|date=19 May 2005|archive-date=5 November 2014|archive-url=https://web.archive.org/web/20141105135741/http://esctoday.com/4577/record_sales_of_eurovision_merchandising/|url-status=live}}</ref>
+
+=== Charts ===
+{| class="wikitable sortable plainrowheaders" style="text-align:center"
+|-
+! scope="col"| Chart (2005)
+! scope="col"| Peak<br /> position
+|-
+{{album chart|GermanyComp|2|M|title=Eurovision Song Contest 2005|url=https://www.offiziellecharts.de/compilation-details-18440|work=Offiziellecharts.de|publisher=[[GfK Entertainment Charts]]|rowheader=true|access-date=17 March 2018}}
+|}
+
+==Notes==
+{{notelist}}
+
+==References==
+{{Reflist}}
+
+==Further reading==
+{{refbegin}}
+* {{cite book |last=Zirin |first=Oleksandr |title=Бачення Євро. Хроніки українського Євробачення |date=2005 |publisher=Nova Kniga |location=[[Vinnitsa]] |isbn=966-8609-46-8 }}
+{{refend}}
+
+==External links==
+{{Commons category|Eurovision Song Contest 2005}}
+* {{Official website|https://eurovision.tv/}}
+* {{IMDb title|0444082}}
+* {{YouTube|u=eurovision|Eurovision Song Contest 2005}}
+
+{{Eurovision Song Contest 2005}}
+{{Eurovision Song Contest}}
+
+{{Authority control}}
+
+[[Category:Eurovision Song Contest 2005| ]]
+[[Category:Eurovision Song Contest by year|2005]]
+[[Category:Music festivals in Ukraine]]
+[[Category:2005 song contests]]
+[[Category:2005 in Ukraine]]
+[[Category:Music in Kyiv]]
+[[Category:2000s in Kyiv]]
+[[Category:May 2005 in Europe]]
+[[Category:Organized events in Kyiv]]
