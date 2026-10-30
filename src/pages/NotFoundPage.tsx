@@ -6,11 +6,14 @@ import RelatedCards from '../components/seo/RelatedCards';
 import CtaBanner from '../components/seo/CtaBanner';
 import { breadcrumbJsonLd, type Crumb } from '../components/seo/Breadcrumbs';
 import { useLocale } from '../lib/seo/LocaleContext';
+import { useHeadCollector } from '../lib/seo/HeadContext';
 import { copy as copyAll } from './content/notFoundCopy';
 
 export function NotFoundPage() {
   const locale = useLocale();
   const c = copyAll[locale];
+  // Prerender: mark this response as a real 404 (no-op in the browser).
+  useHeadCollector()?.setStatus(404);
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
