@@ -18,9 +18,14 @@ import {
   type ParsedEntry,
 } from "./parse.ts";
 import { parseResults, type ResultRow } from "./parseResults.ts";
+import { participantRows, resultRows } from "./rows.ts";
 
-const PROD_URL_2026 =
-  "https://www.eurovision.com/eurovision-song-contest/vienna-2026/vienna-2026-grand-final/";
+// Every write to contest_entries goes through the parser_upsert_entries
+// RPC (migration 071, section C): it sets app.writer = 'parser' for its
+// transaction, so finalized and archived years are refused, and it never
+// deletes rows. Value of contest_entries.source for parser writes.
+const ENTRY_SOURCE = "parser";
+
 const TEST_URL_2025 =
   "https://www.eurovision.com/eurovision-song-contest/basel-2025/basel-2025-grand-final/";
 
@@ -156,11 +161,12 @@ async function handleParticipants(): Promise<Response> {
   if (!job) return jsonResponse({ error: "no running participants job" }, 409);
 
   const year = job.year as number;
-  const sourceUrl = job.source_url ?? PROD_URL_2026;
+  const sourceUrl = (job.source_url as string | null) ?? null;
 
   // 2. Fetch + extract from eurovision.com only — no Wikipedia fallback.
   // We want the Grand Final lineup as it stands on the official page,
-  // not the full announced-contestant list Wikipedia keeps.
+  // not the full announced-contestant list Wikipedia keeps. source_url
+  // is required: there is no hardcoded fallback URL any more.
   let entries: ParsedEntry[] = [];
   let httpStatus = 0;
   let source: "eurovision" = "eurovision";
@@ -168,49 +174,43 @@ async function handleParticipants(): Promise<Response> {
   let err: string | null = null;
   let payloadHash: string | null = null;
 
-  try {
-    const result = await fetchParticipants(sourceUrl);
-    entries = result.entries;
-    httpStatus = result.httpStatus;
-    source = result.source;
-    payloadHash = await sha256(JSON.stringify(entries));
-    if (entries.length === 0) {
-      runStatus = "blocked";
-      err = `no participants extracted from ${sourceUrl} (http ${httpStatus})`;
-    }
-  } catch (e) {
+  if (!sourceUrl) {
     runStatus = "error";
-    err = e instanceof Error ? e.message : String(e);
+    err = `no source_url for year ${year}`;
+  } else {
+    try {
+      const result = await fetchParticipants(sourceUrl);
+      entries = result.entries;
+      httpStatus = result.httpStatus;
+      source = result.source;
+      payloadHash = await sha256(JSON.stringify(entries));
+      if (entries.length === 0) {
+        runStatus = "blocked";
+        err = `no participants extracted from ${sourceUrl} (http ${httpStatus})`;
+      }
+    } catch (e) {
+      runStatus = "error";
+      err = e instanceof Error ? e.message : String(e);
+    }
   }
 
-  // 3. Replace the set (only on ok). Upsert + delete-missing so a
-  // shrunk lineup (e.g. switching from a polluted Wikipedia run with
-  // 37 rows to a real eurovision.com run with 26) doesn't leave stale
-  // rows behind.
+  // 3. Write the lineup (only on ok) into contest_entries through
+  // parser_upsert_entries, upserting on (year, iso). Countries that were
+  // in the year's lineup but are missing from this parse keep their rows
+  // with final_running_order = null; nothing is deleted. Country names
+  // are not written (they live in countries). The RPC raises on an
+  // unknown ISO or a finalized/archived year, which becomes an error run.
   let rowsUpserted = 0;
   if (runStatus === "ok") {
-    const nowIso = new Date().toISOString();
-    const rows = entries.map((e) => ({
-      iso: e.iso, name: e.name, artist: e.artist, song: e.song,
-      running_order: e.runningOrder, source, updated_at: nowIso,
-    }));
-    const { error: upErr, count } = await db
-      .from(`eurovision_${year}_participants`)
-      .upsert(rows, { onConflict: "iso", count: "exact" });
+    const rows = participantRows(year, entries, ENTRY_SOURCE);
+    const { data: n, error: upErr } = await db.rpc("parser_upsert_entries", {
+      p_year: year, p_rows: rows, p_kind: "participants",
+    });
     if (upErr) {
       runStatus = "error";
       err = upErr.message;
     } else {
-      rowsUpserted = count ?? rows.length;
-      // Drop any country that was in the table but is no longer in the
-      // current parsed lineup. Keeps the table in sync with whatever
-      // eurovision.com currently shows for the Grand Final.
-      const keepIsos = rows.map((r) => r.iso);
-      if (keepIsos.length > 0) {
-        await db.from(`eurovision_${year}_participants`)
-          .delete()
-          .not("iso", "in", `(${keepIsos.map((i) => `"${i}"`).join(",")})`);
-      }
+      rowsUpserted = (n as number | null) ?? rows.length;
     }
   }
 
@@ -259,7 +259,7 @@ async function handleResults(): Promise<Response> {
   }
 
   const year = job.year as number;
-  const sourceUrl = job.source_url ?? PROD_URL_2026;
+  const sourceUrl = (job.source_url as string | null) ?? null;
 
   let rows: ResultRow[] = [];
   let httpStatus = 0;
@@ -267,55 +267,69 @@ async function handleResults(): Promise<Response> {
   let err: string | null = null;
   let payloadHash: string | null = null;
 
-  // 2. Fetch + extract
-  try {
-    const fetched = await fetchHtml(sourceUrl);
-    httpStatus = fetched.httpStatus;
-    if (httpStatus !== 200) {
-      runStatus = "error";
-      err = `http ${httpStatus}`;
-    } else {
-      rows = parseResults(fetched.html, sourceUrl);
-      payloadHash = await sha256(JSON.stringify(rows));
-      if (rows.length === 0) {
-        runStatus = "blocked";
-        err = "no scoreboard rows extracted (results not yet published?)";
-      }
-    }
-  } catch (e) {
+  // 2. Fetch + extract. source_url is required (no hardcoded fallback).
+  if (!sourceUrl) {
     runStatus = "error";
-    err = e instanceof Error ? e.message : String(e);
+    err = `no source_url for year ${year}`;
+  } else {
+    try {
+      const fetched = await fetchHtml(sourceUrl);
+      httpStatus = fetched.httpStatus;
+      if (httpStatus !== 200) {
+        runStatus = "error";
+        err = `http ${httpStatus}`;
+      } else {
+        rows = parseResults(fetched.html, sourceUrl);
+        payloadHash = await sha256(JSON.stringify(rows));
+        if (rows.length === 0) {
+          runStatus = "blocked";
+          err = "no scoreboard rows extracted (results not yet published?)";
+        }
+      }
+    } catch (e) {
+      runStatus = "error";
+      err = e instanceof Error ? e.message : String(e);
+    }
   }
 
-  // 3. Upsert — guard against FK violations by filtering to ISOs that
-  //    actually exist in the participants table. Prevents errors when the
-  //    source URL is a prior-year page whose country list differs from the
-  //    current GF lineup.
+  // 3. Write results into contest_entries through parser_upsert_entries,
+  //    only for the year's grand finalists (final_running_order is not
+  //    null). Filtering here keeps a prior-year or wrong page from sending
+  //    ISOs outside the lineup; the RPC applies the same finalist filter.
   let rowsUpserted = 0;
   if (runStatus === "ok") {
-    const nowIso = new Date().toISOString();
-    const { data: pData } = await db
-      .from(`eurovision_${year}_participants`).select("iso");
-    const validIsos = new Set<string>((pData ?? []).map((p: { iso: string }) => p.iso));
-    const records = rows
-      .filter((r) => validIsos.has(r.iso))
-      .map((r) => ({
-        iso: r.iso,
-        ranking: r.ranking,
-        total_points: r.total_points,
-        jury_points: r.jury_points,
-        televote_points: r.televote_points,
-        source: r.source,
-        updated_at: nowIso,
-      }));
-    const { error: upErr, count } = await db
-      .from(`eurovision_${year}_results`)
-      .upsert(records, { onConflict: "iso", count: "exact" });
-    if (upErr) {
+    const { data: fData, error: fErr } = await db
+      .from("contest_entries")
+      .select("iso")
+      .eq("year", year)
+      .not("final_running_order", "is", null);
+    if (fErr) {
       runStatus = "error";
-      err = upErr.message;
+      err = fErr.message;
     } else {
-      rowsUpserted = count ?? records.length;
+      const finalists = new Set<string>((fData ?? []).map((f: { iso: string }) => f.iso));
+      const records = resultRows(
+        year,
+        rows
+          .filter((r) => finalists.has(r.iso))
+          .map((r) => ({
+            iso: r.iso,
+            ranking: r.ranking,
+            total: r.total_points,
+            jury: r.jury_points,
+            televote: r.televote_points,
+          })),
+        ENTRY_SOURCE,
+      );
+      const { data: n, error: upErr } = await db.rpc("parser_upsert_entries", {
+        p_year: year, p_rows: records, p_kind: "results",
+      });
+      if (upErr) {
+        runStatus = "error";
+        err = upErr.message;
+      } else {
+        rowsUpserted = (n as number | null) ?? records.length;
+      }
     }
   }
 

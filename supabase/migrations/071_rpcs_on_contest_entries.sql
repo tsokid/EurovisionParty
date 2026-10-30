@@ -14,6 +14,7 @@
 --       1-argument overload from 039/040 is dropped.
 -- Section B (Task 4): contest lifecycle and entry RPCs, and the
 --   parser write guard on contest_entries.
+-- Section C (Task 5): parser_upsert_entries, the parser's write path.
 -- Later sections are appended by later tasks.
 --
 -- predictions.total_points and players.total_points are generated
@@ -790,5 +791,115 @@ drop trigger if exists contest_entries_parser_guard on public.contest_entries;
 create trigger contest_entries_parser_guard
   before insert or update or delete on public.contest_entries
   for each row execute function public.contest_entries_parser_guard();
+
+-- ════════════════════════════════════════════════════════════
+-- Section C (Task 5): parser writes to contest_entries
+-- ════════════════════════════════════════════════════════════
+
+-- ── C1. parser_upsert_entries ───────────────────────────────
+-- The only write path of the eurovision-parse edge function. Sets
+-- app.writer = 'parser' for the current transaction, so the B9 guard
+-- refuses writes to a finalized or archived year. p_rows is a json
+-- array built by supabase/functions/eurovision-parse/rows.ts; a row's
+-- year, when present, must equal p_year. Every iso must exist in
+-- countries ('unknown country %' rather than an FK error). Duplicate
+-- isos in p_rows: the first one wins.
+--   participants: upserts artist, song, final_running_order, source.
+--     Rows of p_year whose iso is not in p_rows get
+--     final_running_order = null; nothing is deleted.
+--   results: writes final_place, total_points, jury_points,
+--     televote_points, source, only for finalists of p_year
+--     (final_running_order is not null). Other rows are skipped.
+-- Returns the number of rows upserted (the null-outs are not counted).
+-- service_role only: no is_super_admin() gate, no authenticated grant.
+-- Task 9 adds p_kind 'semis'.
+create or replace function public.parser_upsert_entries(p_year int, p_rows jsonb, p_kind text)
+returns int
+language plpgsql
+security definer
+set search_path = public
+as $fn$
+declare
+  v_bad   text;
+  v_count int;
+begin
+  if p_kind is null or p_kind not in ('participants', 'results') then
+    raise exception 'unknown kind %', p_kind;
+  end if;
+  if jsonb_typeof(p_rows) is distinct from 'array' then
+    raise exception 'p_rows must be a json array';
+  end if;
+  if not exists (select 1 from public.contests where year = p_year) then
+    raise exception 'contest % not found', p_year;
+  end if;
+
+  select r->>'year' into v_bad
+    from jsonb_array_elements(p_rows) as t(r)
+   where r ? 'year' and (r->>'year') is distinct from p_year::text
+   limit 1;
+  if found then
+    raise exception 'row year % does not match %', v_bad, p_year;
+  end if;
+
+  select coalesce(r->>'iso', '<null>') into v_bad
+    from jsonb_array_elements(p_rows) as t(r)
+   where not exists (select 1 from public.countries c where c.iso = r->>'iso')
+   limit 1;
+  if found then
+    raise exception 'unknown country %', v_bad;
+  end if;
+
+  perform set_config('app.writer', 'parser', true);
+
+  if p_kind = 'participants' then
+    insert into public.contest_entries as e
+      (year, iso, artist, song, final_running_order, source, updated_at)
+    select distinct on (x.iso)
+           p_year, x.iso, x.artist, x.song, x.final_running_order, x.source, now()
+      from jsonb_array_elements(p_rows) with ordinality as t(r, n),
+           jsonb_to_record(t.r) as x(iso text, artist text, song text,
+                                     final_running_order smallint, source text)
+     order by x.iso, t.n
+    on conflict (year, iso) do update
+       set artist              = excluded.artist,
+           song                = excluded.song,
+           final_running_order = excluded.final_running_order,
+           source              = excluded.source,
+           updated_at          = excluded.updated_at;
+    get diagnostics v_count = row_count;
+
+    update public.contest_entries
+       set final_running_order = null, updated_at = now()
+     where year = p_year
+       and final_running_order is not null
+       and iso not in (select r->>'iso' from jsonb_array_elements(p_rows) as t(r));
+  else
+    insert into public.contest_entries as e
+      (year, iso, final_place, total_points, jury_points, televote_points, source, updated_at)
+    select distinct on (x.iso)
+           p_year, x.iso, x.final_place, x.total_points, x.jury_points, x.televote_points,
+           x.source, now()
+      from jsonb_array_elements(p_rows) with ordinality as t(r, n),
+           jsonb_to_record(t.r) as x(iso text, final_place smallint, total_points int,
+                                     jury_points int, televote_points int, source text)
+      join public.contest_entries f
+        on f.year = p_year and f.iso = x.iso and f.final_running_order is not null
+     order by x.iso, t.n
+    on conflict (year, iso) do update
+       set final_place     = excluded.final_place,
+           total_points    = excluded.total_points,
+           jury_points     = excluded.jury_points,
+           televote_points = excluded.televote_points,
+           source          = excluded.source,
+           updated_at      = excluded.updated_at;
+    get diagnostics v_count = row_count;
+  end if;
+
+  return v_count;
+end;
+$fn$;
+
+revoke execute on function public.parser_upsert_entries(int, jsonb, text) from public, anon, authenticated;
+grant execute on function public.parser_upsert_entries(int, jsonb, text) to service_role;
 
 commit;
