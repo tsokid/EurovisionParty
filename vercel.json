@@ -65,7 +65,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!en/|el/).*)",
+      "source": "/((?!en/|el/|content/).*)",
       "destination": "/"
     }
   ],

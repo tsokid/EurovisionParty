@@ -71,6 +71,29 @@ describe('useContent', () => {
     await waitFor(() => expect(screen.getByText('error')).toBeInTheDocument());
   });
 
+  it('treats a non-JSON response (the SPA shell) as missing', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response('<!doctype html><html></html>', { status: 200, headers: { 'content-type': 'text/html' } }));
+    render(<Probe path="contests/8006.json" />);
+    await waitFor(() => expect(screen.getByText('missing')).toBeInTheDocument());
+    expect(getCachedContent('contests/8006.json')).toBeUndefined();
+  });
+
+  it('an error can be retried', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(jsonResponse({}, 503))
+      .mockResolvedValueOnce(jsonResponse({ year: 8007 }));
+    function Retry() {
+      const s = useContent<{ year: number }>('contests/8007.json');
+      if (s.status === 'error') return <button onClick={s.retry}>retry</button>;
+      return <p>{s.status === 'ready' ? `ready ${s.data.year}` : s.status}</p>;
+    }
+    render(<Retry />);
+    const button = await screen.findByText('retry');
+    button.click();
+    await waitFor(() => expect(screen.getByText('ready 8007')).toBeInTheDocument());
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
+
   it('a null path is missing and fetches nothing', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     render(<Probe path={null} />);

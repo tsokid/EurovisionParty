@@ -6,32 +6,16 @@ import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd } from '../../components/seo/Breadcrumbs';
-import { countryName } from './content/hubCopy';
 import { visibleTable } from './table';
 import { HubGate } from './HubFrame';
-import { byCountry, countryCell, hubCrumbs, hubRelated, songCell, type Hub } from './hub';
+import { byCountry, countryCell, hubCrumbs, hubRelated, songCell, songsItemList, type Hub } from './hub';
 
 function SongsBody({ hub }: { hub: Hub }) {
   const { contest, locale, facts: f, copy: c, base } = hub;
   const crumbs = hubCrumbs(hub, 'songs');
   const entries = byCountry(contest.entries, locale);
 
-  const itemList = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: c.songs.listName(contest.year),
-    numberOfItems: entries.length,
-    itemListElement: entries.map((e, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: {
-        '@type': 'MusicRecording',
-        name: e.song ?? countryName(e, locale),
-        ...(e.artist ? { byArtist: { '@type': 'MusicGroup', name: e.artist } } : {}),
-        ...(e.language ? { inLanguage: e.language } : {}),
-      },
-    })),
-  };
+  const itemList = songsItemList(entries, c.songs.listName(contest.year));
 
   const table = visibleTable(entries, [
     { header: c.headers.country, value: (e) => countryCell(e, locale) },

@@ -13,7 +13,7 @@ import type { Locale } from '../../../lib/seo/locale';
 // ─── Cities ─────────────────────────────────────────────────────────────────
 
 /** Greek name and "in <city>" phrase per city_slug (preposition follows the noun's gender). */
-const CITY_EL: Record<string, { name: string; in: string }> = {
+export const CITY_EL: Record<string, { name: string; in: string }> = {
   amsterdam: { name: 'Άμστερνταμ', in: 'στο Άμστερνταμ' },
   athens: { name: 'Αθήνα', in: 'στην Αθήνα' },
   baku: { name: 'Μπακού', in: 'στο Μπακού' },
@@ -252,6 +252,7 @@ export interface HubCopy {
   };
   loading: string;
   error: string;
+  retry: string;
 }
 
 const en: HubCopy = {
@@ -339,11 +340,12 @@ const en: HubCopy = {
   },
   loading: 'Loading…',
   error: 'This page could not be loaded. Check your connection and try again.',
+  retry: 'Try again',
 };
 
 const el: HubCopy = {
   crumbs: { home: 'Αρχική', hub: (y) => `Eurovision ${y}`, schedule: 'Πρόγραμμα', semis: 'Ημιτελικοί', songs: 'Τραγούδια' },
-  chip: { upcoming: 'Έρχεται', current: 'Τρέχων διαγωνισμός', finalized: 'Τα αποτελέσματα', archived: 'Αρχείο' },
+  chip: { upcoming: 'Έρχεται', current: 'Τρέχων διαγωνισμός', finalized: 'Βγήκαν τα αποτελέσματα', archived: 'Αρχείο' },
   winner: (f) => `${greekCountrySubject(f.winner!.iso, f.winner!.country)} κέρδισε τη Eurovision ${f.year} με ${f.winner!.points} βαθμούς`,
   hub: {
     title: (f) => `Eurovision ${f.year} ${f.cityIn}: ημερομηνίες, ημιτελικοί και τραγούδια`,
@@ -400,13 +402,13 @@ const el: HubCopy = {
     direct: (n) => `Αυτές οι ${n} χώρες δεν διαγωνίζονται σε ημιτελικό· προκρίνονται αυτόματα στον μεγάλο τελικό.`,
   },
   songs: {
-    title: (f) => `Τραγούδια Eurovision ${f.year}: και οι ${f.entries} συμμετοχές`,
+    title: (f) => `Τραγούδια Eurovision ${f.year}: όλες οι ${f.entries} συμμετοχές`,
     description: (f) =>
       `Όλα τα τραγούδια της Eurovision ${f.year} ${f.cityIn} σε μία λίστα: ${f.entries} χώρες με καλλιτέχνες, τίτλους τραγουδιών και ημιτελικό.`,
     h1: (f) => `Τα τραγούδια της Eurovision ${f.year}`,
     lede: (f) =>
-      `Και οι ${f.entries} συμμετοχές του διαγωνισμού του ${f.year}, ανά χώρα. Χρησιμοποιήστε τη λίστα ως οδηγό ακρόασης πριν από τις εκπομπές ή ως φύλλο βαθμολογίας τη βραδιά του τελικού.`,
-    listTitle: (f) => `Και τα ${f.entries} τραγούδια`,
+      `Όλες οι ${f.entries} συμμετοχές του διαγωνισμού του ${f.year}, ανά χώρα. Χρησιμοποιήστε τη λίστα ως οδηγό ακρόασης πριν από τις εκπομπές ή ως φύλλο βαθμολογίας τη βραδιά του τελικού.`,
+    listTitle: (f) => `Όλα τα ${f.entries} τραγούδια`,
     listName: (y) => `Τα τραγούδια της Eurovision ${y}`,
   },
   glance: { hostCity: 'Πόλη διεξαγωγής', hostCountry: 'Χώρα διοργάνωσης', countries: 'Χώρες', finalists: 'Χώρες στον τελικό' },
@@ -426,6 +428,7 @@ const el: HubCopy = {
   },
   loading: 'Φόρτωση…',
   error: 'Η σελίδα δεν φορτώθηκε. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.',
+  retry: 'Δοκίμασε ξανά',
 };
 
 export const hubCopy: Record<Locale, HubCopy> = { en, el };

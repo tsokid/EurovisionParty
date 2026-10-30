@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { cityName, formatDate, formatDayPair, greekCountrySubject, hubCopy, hubFacts } from '@/pages/contest/content/hubCopy';
+import contestIndex from '../../../content/contests/index.json';
+import { songsItemList } from '@/pages/contest/hub';
+import { cityName, CITY_EL, formatDate, formatDayPair, greekCountrySubject, hubCopy, hubFacts } from '@/pages/contest/content/hubCopy';
 import { visibleTable } from '@/pages/contest/table';
 import contest2026 from '../../../content/contests/2026.json';
 import type { ContestSnapshot } from '@/content/contests/types';
@@ -14,6 +16,24 @@ describe('cityName', () => {
   it('falls back to the English name when the city is not in the map', () => {
     expect(cityName('el', 'atlantis', 'Atlantis')).toEqual({ name: 'Atlantis', in: 'στο Atlantis' });
     expect(cityName('en', 'vienna', 'Vienna')).toEqual({ name: 'Vienna', in: 'in Vienna' });
+  });
+});
+
+describe('CITY_EL', () => {
+  it('has a Greek name for every host city in the snapshot', () => {
+    const slugs = [...new Set(Object.values(contestIndex).map((c) => c.city_slug))];
+    expect(slugs.length).toBeGreaterThan(40);
+    for (const slug of slugs) expect(CITY_EL[slug], slug).toBeDefined();
+  });
+});
+
+describe('songsItemList', () => {
+  it('skips entries without a song title', () => {
+    const entries = c2026.entries.slice(0, 3).map((e, i) => (i === 1 ? { ...e, song: null } : e));
+    const list = songsItemList(entries, 'Songs');
+    expect(list.numberOfItems).toBe(2);
+    expect(list.itemListElement.map((i) => i.position)).toEqual([1, 2]);
+    expect(list.itemListElement.map((i) => i.item.name)).toEqual([entries[0].song, entries[2].song]);
   });
 });
 

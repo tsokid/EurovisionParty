@@ -4,6 +4,7 @@ import type { ContestSnapshot, EntrySnapshot } from '../../content/contests/type
 import type { Locale } from '../../lib/seo/locale';
 import type { Crumb } from '../../components/seo/Breadcrumbs';
 import type { RelatedCard } from '../../components/seo/RelatedCards';
+import { compareText } from '../../lib/seo/textSort';
 import { countryName, type HubCopy, type HubFacts } from './content/hubCopy';
 
 export type HubSubpage = 'schedule' | 'semis' | 'songs';
@@ -45,9 +46,30 @@ export function hubRelated(hub: Hub, current?: HubSubpage): RelatedCard[] {
     .map(({ href, title, blurb }) => ({ href, title, blurb }));
 }
 
-/** Entries sorted by country name in the page locale. */
+/** Entries sorted by country name in the page locale (deterministic, see textSort). */
 export function byCountry(entries: EntrySnapshot[], locale: Locale): EntrySnapshot[] {
-  return [...entries].sort((a, b) => countryName(a, locale).localeCompare(countryName(b, locale), locale));
+  return [...entries].sort((a, b) => compareText(countryName(a, locale), countryName(b, locale)));
+}
+
+/** schema.org ItemList of MusicRecording; entries without a song title are skipped. */
+export function songsItemList(entries: EntrySnapshot[], name: string) {
+  const songs = entries.filter((e): e is EntrySnapshot & { song: string } => e.song != null);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name,
+    numberOfItems: songs.length,
+    itemListElement: songs.map((e, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'MusicRecording',
+        name: e.song,
+        ...(e.artist ? { byArtist: { '@type': 'MusicGroup', name: e.artist } } : {}),
+        ...(e.language ? { inLanguage: e.language } : {}),
+      },
+    })),
+  };
 }
 
 export const countryCell = (e: EntrySnapshot, locale: Locale): ReactNode => (

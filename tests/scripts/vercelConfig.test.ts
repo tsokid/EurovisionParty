@@ -52,6 +52,11 @@ describe('vercel.json', () => {
     for (const p of ['/en/no-such-page', '/el/faq']) {
       expect(re.test(p), p).toBe(false)
     }
+    // Missing content files 404 instead of falling back to the SPA shell,
+    // so useContent sees `missing` rather than HTML.
+    for (const p of ['/content/contests/1066.json', '/content/countries/index.json', '/content/site.json']) {
+      expect(re.test(p), p).toBe(false)
+    }
     // Exact /en and /el match the rewrite, which is fine: Vercel checks the
     // filesystem before rewrites, so the prerendered en.html / el.html wins.
     for (const p of ['/en', '/el']) {

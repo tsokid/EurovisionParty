@@ -8,9 +8,10 @@
  * - Client: read synchronously from the cache that boot seeded from that
  *   script, so hydration sees the same data as the server render. On a miss
  *   (client-side navigation), fetch /content/<path>: 'loading', then 'ready',
- *   'missing' (404) or 'error'.
+ *   'missing' (404, or a non-JSON body such as an SPA fallback) or 'error'
+ *   (which carries retry()).
  */
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { ContentCollectorContext } from './contentContext';
 import { bundledContent } from './contentData';
 import { contentUrl, getCachedContent, setCachedContent } from './contentCache';
@@ -19,7 +20,7 @@ export type ContentState<T> =
   | { status: 'ready'; data: T }
   | { status: 'loading' }
   | { status: 'missing' }
-  | { status: 'error' };
+  | { status: 'error'; retry: () => void };
 
 type Outcome = 'missing' | 'error';
 const failed = new Map<string, Outcome>();
@@ -30,8 +31,9 @@ function fetchContent(path: string): Promise<void> {
   if (!p) {
     p = fetch(contentUrl(path))
       .then(async (res) => {
-        if (res.ok) setCachedContent(path, await res.json());
-        else failed.set(path, res.status === 404 ? 'missing' : 'error');
+        const json = (res.headers.get('content-type') ?? '').includes('json');
+        if (res.ok && json) setCachedContent(path, await res.json());
+        else failed.set(path, res.status === 404 || (res.ok && !json) ? 'missing' : 'error');
       })
       .catch(() => {
         failed.set(path, 'error');
@@ -47,6 +49,7 @@ const peek = (path: string): unknown => getCachedContent(path) ?? bundledContent
 export function useContent<T>(path: string | null): ContentState<T> {
   const collector = useContext(ContentCollectorContext);
   const [, rerender] = useState(0);
+  const [attempt, setAttempt] = useState(0);
   const data = path ? peek(path) : undefined;
   if (path && data !== undefined) collector?.record(path, data);
 
@@ -60,6 +63,11 @@ export function useContent<T>(path: string | null): ContentState<T> {
     return () => {
       alive = false;
     };
+  }, [path, attempt]);
+
+  const retry = useCallback(() => {
+    if (path) failed.delete(path);
+    setAttempt((n) => n + 1);
   }, [path]);
 
   if (!path) return { status: 'missing' };
@@ -67,5 +75,6 @@ export function useContent<T>(path: string | null): ContentState<T> {
   // Server render: not in the snapshot means it does not exist.
   if (collector) return { status: 'missing' };
   const outcome = failed.get(path);
+  if (outcome === 'error') return { status: 'error', retry };
   return outcome ? { status: outcome } : { status: 'loading' };
 }
