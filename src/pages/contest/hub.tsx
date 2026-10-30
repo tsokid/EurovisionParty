@@ -5,6 +5,7 @@ import type { Locale } from '../../lib/seo/locale';
 import type { Crumb } from '../../components/seo/Breadcrumbs';
 import type { RelatedCard } from '../../components/seo/RelatedCards';
 import { compareText } from '../../lib/seo/textSort';
+import { SITE_ORIGIN } from '../../lib/seo/registry';
 import { countryName, type HubCopy, type HubFacts } from './content/hubCopy';
 
 export type HubSubpage = 'schedule' | 'semis' | 'songs';
@@ -44,6 +45,38 @@ export function hubRelated(hub: Hub, current?: HubSubpage): RelatedCard[] {
   return all
     .filter((c) => c.key !== (current ?? 'hub'))
     .map(({ href, title, blurb }) => ({ href, title, blurb }));
+}
+
+/**
+ * schema.org Event for a contest (hub and archive pages): the grand final
+ * night, in the host city, organised by the EBU. Null without a final date.
+ * No performer: the line-up is long and the winner alone would mislead.
+ */
+export function contestEventJsonLd(contest: ContestSnapshot, city: string, description: string, url: string) {
+  const final = contest.dates.final;
+  if (!final) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `Eurovision Song Contest ${contest.year}`,
+    description,
+    startDate: final,
+    endDate: final,
+    eventStatus: contest.cancelled ? 'https://schema.org/EventCancelled' : 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    image: `${SITE_ORIGIN}/logo.png`,
+    organizer: { '@type': 'Organization', name: 'European Broadcasting Union', url: 'https://www.ebu.ch' },
+    location: {
+      '@type': 'Place',
+      name: city,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: city,
+        ...(contest.host_iso ? { addressCountry: contest.host_iso } : {}),
+      },
+    },
+    url,
+  };
 }
 
 /** Entries sorted by country name in the page locale (deterministic, see textSort). */

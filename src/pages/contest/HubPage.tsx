@@ -11,7 +11,7 @@ import { absoluteUrl } from '../../lib/seo/registry';
 import { formatDate, showsResults } from './content/hubCopy';
 import { visibleTable } from './table';
 import { HubGate } from './HubFrame';
-import { byCountry, countryCell, hubCrumbs, hubRelated, numCell, songCell, type Hub } from './hub';
+import { byCountry, contestEventJsonLd, countryCell, hubCrumbs, hubRelated, numCell, songCell, type Hub } from './hub';
 
 function HubBody({ hub }: { hub: Hub }) {
   const { contest, locale, facts: f, copy: c, base } = hub;
@@ -19,27 +19,7 @@ function HubBody({ hub }: { hub: Hub }) {
   const results = showsResults(f);
   const description = c.hub.description(f);
 
-  const event = contest.dates.final
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'Event',
-        name: `Eurovision Song Contest ${contest.year}`,
-        description,
-        startDate: contest.dates.final,
-        eventStatus: contest.cancelled ? 'https://schema.org/EventCancelled' : 'https://schema.org/EventScheduled',
-        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-        location: {
-          '@type': 'Place',
-          name: f.city,
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: f.city,
-            ...(contest.host_iso ? { addressCountry: contest.host_iso } : {}),
-          },
-        },
-        url: absoluteUrl(locale, base),
-      }
-    : null;
+  const event = contestEventJsonLd(contest, f.city, description, absoluteUrl(locale, base));
 
   const finalists = contest.entries
     .filter((e) => e.final_place != null)

@@ -17,7 +17,7 @@ import { NotFoundPage } from '../NotFoundPage';
 import { ContentPending } from './ContentPending';
 import { archiveCopy, archiveFacts, type ArchiveFacts } from './content/archiveCopy';
 import { formatDate, hubCopy } from './content/hubCopy';
-import { byCountry, numCell, songCell, songsItemList } from './hub';
+import { byCountry, contestEventJsonLd, numCell, songCell, songsItemList } from './hub';
 import { ARCHIVE_YEARS, countryLinkCell, linkClass, parseArchiveSlug } from './archive';
 import { visibleTable } from './table';
 
@@ -97,27 +97,7 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Loca
 
   const ranking = contest.cancelled ? byCountry(contest.entries, locale) : finalOrder(contest.entries, locale);
 
-  const event = contest.dates.final
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'Event',
-        name: `Eurovision Song Contest ${contest.year}`,
-        description,
-        startDate: contest.dates.final,
-        eventStatus: contest.cancelled ? 'https://schema.org/EventCancelled' : 'https://schema.org/EventScheduled',
-        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-        location: {
-          '@type': 'Place',
-          name: f.city,
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: f.city,
-            ...(contest.host_iso ? { addressCountry: contest.host_iso } : {}),
-          },
-        },
-        url: absoluteUrl(locale, path),
-      }
-    : null;
+  const event = contestEventJsonLd(contest, f.city, description, absoluteUrl(locale, path));
 
   const finalTable = visibleTable(ranking, [
     { header: h.headers.place, value: (e) => numCell(e.final_place), align: 'right' },

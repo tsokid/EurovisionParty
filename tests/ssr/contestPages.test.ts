@@ -426,6 +426,23 @@ describe('review round 1', () => {
     expect(jsonLd(el).find((b) => b['@type'] === 'ItemList')!.name).toBe('Οι συμμετοχές της Eurovision 2020');
   });
 
+  it.each([
+    ['/en/eurovision-2026', '2026-05-16', 'https://schema.org/EventScheduled'],
+    ['/el/past-contests/eurovision-2019-tel-aviv', '2019-05-18', 'https://schema.org/EventScheduled'],
+    ['/en/past-contests/eurovision-2020-rotterdam', '2020-05-16', 'https://schema.org/EventCancelled'],
+  ])('%s Event has image, organizer, endDate, attendance mode and status (M6)', async (url, final, status) => {
+    const event = jsonLd(await render(url)).find((b) => b['@type'] === 'Event')!;
+    expect(event).toMatchObject({
+      startDate: final,
+      endDate: final,
+      image: 'https://eurovision.games/logo.png',
+      organizer: { '@type': 'Organization', name: 'European Broadcasting Union', url: 'https://www.ebu.ch' },
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      eventStatus: status,
+    });
+    expect(event.performer).toBeUndefined();
+  });
+
   it('Event location uses the city name in the page locale', async () => {
     const el = await render('/el/past-contests/eurovision-2019-tel-aviv');
     const event = jsonLd(el).find((b) => b['@type'] === 'Event') as { location: { name: string } };
