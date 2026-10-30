@@ -120,6 +120,9 @@ export function formatDayPair(a: string, b: string, locale: Locale): string {
 
 // ─── Facts ──────────────────────────────────────────────────────────────────
 
+/** The first contest with a semi-final. */
+export const FIRST_SEMI_YEAR = 2004;
+
 export interface HubFacts {
   year: number;
   stage: ContestStage;
@@ -142,6 +145,13 @@ export interface HubFacts {
   qualifiers: number;
   /** Semi-final places, points or qualification are known. */
   hasSemiResults: boolean;
+  /**
+   * Who runs in which semi-final is known: some entry has a semi, or the
+   * contest predates semi-finals (2004). False means the split is unknown
+   * (before the draw, or data not loaded yet): pages must not call anyone a
+   * direct qualifier or count semi-finalists.
+   */
+  semisKnown: boolean;
   winner: { iso: string; country: string; artist: string | null; song: string | null; points: number } | null;
 }
 
@@ -166,6 +176,7 @@ export function hubFacts(contest: ContestSnapshot, locale: Locale): HubFacts {
     semiEntries: inSemi.length,
     qualifiers: inSemi.filter((e) => e.qualified === true).length,
     hasSemiResults: inSemi.some((e) => e.semi_place != null || e.semi_points != null || e.qualified != null),
+    semisKnown: contest.year < FIRST_SEMI_YEAR || inSemi.length > 0,
     winner: top
       ? { iso: top.iso, country: countryName(top, locale), artist: top.artist, song: top.song, points: top.total_points! }
       : null,
@@ -227,13 +238,15 @@ export interface HubCopy {
     glance: string;
     semisTitle: string;
     semisSummary: (f: HubFacts) => string;
+    /** Shown instead of the summary while the semi-final split is unknown. */
+    semisPending: string;
     semisLink: string;
     scheduleTitle: string;
     scheduleLink: string;
     songsLink: string;
   };
   schedule: PageText & { showsTitle: string; howTitle: string; how: string; directTitle: string; direct: (n: number, names: string) => string };
-  semis: PageText & { semiTitle: (n: 1 | 2, date: string | null) => string; directTitle: string; direct: (n: number) => string };
+  semis: PageText & { semiTitle: (n: 1 | 2, date: string | null) => string; directTitle: string; direct: (n: number) => string; pending: string };
   songs: PageText & { listTitle: (f: HubFacts) => string; listName: (y: number) => string };
   glance: { hostCity: string; hostCountry: string; countries: string; finalists: string };
   shows: { semi1: string; semi2: string; final: string };
@@ -276,6 +289,7 @@ const en: HubCopy = {
     semisSummary: (f) =>
       `${f.semi1} countries in semi-final 1 and ${f.semi2} in semi-final 2` +
       (f.direct ? `; ${f.direct} go straight to the grand final.` : '.'),
+    semisPending: 'Semi-final results will appear here.',
     semisLink: 'Semi-final line-ups and results',
     scheduleTitle: 'Show dates',
     scheduleLink: 'Full schedule',
@@ -299,19 +313,24 @@ const en: HubCopy = {
     direct: (n, names) => `${n} countries skip the semi-finals and go straight to the grand final: ${names}.`,
   },
   semis: {
-    title: (f) => f.hasSemiResults
+    title: (f) => f.hasSemiResults || !f.semisKnown
       ? `Eurovision ${f.year} semi-finals: results and qualifiers`
       : `Eurovision ${f.year} semi-finals: who sings in each show`,
-    description: (f) => f.hasSemiResults
+    description: (f) => !f.semisKnown
+      ? `Both Eurovision ${f.year} semi-finals ${f.cityIn}: who sang in each show, places, points and the countries that qualified for the grand final.`
+      : f.hasSemiResults
       ? `Both Eurovision ${f.year} semi-finals ${f.cityIn}: ${f.semiEntries} countries competed for ${f.qualifiers} places in the grand final. Places, points and who qualified.`
       : `Both Eurovision ${f.year} semi-finals ${f.cityIn}: ${f.semiEntries} countries split between semi-final 1 and semi-final 2, competing for a place in the grand final.`,
     h1: (f) => `Eurovision ${f.year} semi-finals`,
-    lede: (f) => f.hasSemiResults
+    lede: (f) => !f.semisKnown
+      ? `Two semi-finals ${f.cityIn} decide which countries join the grand final.`
+      : f.hasSemiResults
       ? `${f.semiEntries} countries, two nights, ${f.qualifiers} tickets to the final. Here is how each semi-final ended.`
       : `${f.semiEntries} countries are split across two semi-finals. Here is who sings on which night.`,
     semiTitle: (n, date) => `Semi-final ${n}${date ? ` · ${date}` : ''}`,
     directTitle: 'Already in the final',
     direct: (n) => `These ${n} countries do not compete in a semi-final; they qualify for the grand final automatically.`,
+    pending: 'Semi-final results will appear here.',
   },
   songs: {
     title: (f) => `Eurovision ${f.year} songs: all ${f.entries} entries and artists`,
@@ -364,6 +383,7 @@ const el: HubCopy = {
     semisSummary: (f) =>
       `${f.semi1} χώρες στον Α΄ ημιτελικό και ${f.semi2} στον Β΄` +
       (f.direct ? `· ${f.direct} περνούν απευθείας στον μεγάλο τελικό.` : '.'),
+    semisPending: 'Τα αποτελέσματα των ημιτελικών θα εμφανιστούν εδώ.',
     semisLink: 'Συμμετοχές και αποτελέσματα των ημιτελικών',
     scheduleTitle: 'Ημερομηνίες',
     scheduleLink: 'Αναλυτικό πρόγραμμα',
@@ -387,19 +407,24 @@ const el: HubCopy = {
     direct: (n, names) => `${n} χώρες δεν διαγωνίζονται σε ημιτελικό και περνούν απευθείας στον μεγάλο τελικό: ${names}.`,
   },
   semis: {
-    title: (f) => f.hasSemiResults
+    title: (f) => f.hasSemiResults || !f.semisKnown
       ? `Ημιτελικοί Eurovision ${f.year}: αποτελέσματα και προκρίσεις`
       : `Ημιτελικοί Eurovision ${f.year}: ποιες χώρες διαγωνίζονται`,
-    description: (f) => f.hasSemiResults
+    description: (f) => !f.semisKnown
+      ? `Οι δύο ημιτελικοί της Eurovision ${f.year} ${f.cityIn}: ποιοι τραγούδησαν σε κάθε βραδιά, κατατάξεις, βαθμοί και οι χώρες που προκρίθηκαν στον μεγάλο τελικό.`
+      : f.hasSemiResults
       ? `Οι δύο ημιτελικοί της Eurovision ${f.year} ${f.cityIn}: ${f.semiEntries} χώρες διεκδίκησαν ${f.qualifiers} θέσεις στον μεγάλο τελικό. Κατατάξεις, βαθμοί και προκρίσεις.`
       : `Οι δύο ημιτελικοί της Eurovision ${f.year} ${f.cityIn}: ${f.semiEntries} χώρες μοιράζονται σε Α΄ και Β΄ ημιτελικό και διεκδικούν μια θέση στον τελικό.`,
     h1: (f) => `Οι ημιτελικοί της Eurovision ${f.year}`,
-    lede: (f) => f.hasSemiResults
+    lede: (f) => !f.semisKnown
+      ? `Δύο ημιτελικοί ${f.cityIn} κρίνουν ποιες χώρες περνούν στον μεγάλο τελικό.`
+      : f.hasSemiResults
       ? `${f.semiEntries} χώρες, δύο βραδιές, ${f.qualifiers} εισιτήρια για τον τελικό. Δείτε πώς έληξε κάθε ημιτελικός.`
       : `${f.semiEntries} χώρες μοιράζονται σε δύο ημιτελικούς. Δείτε ποιος τραγουδά σε κάθε βραδιά.`,
     semiTitle: (n, date) => `${n === 1 ? 'Α΄' : 'Β΄'} ημιτελικός${date ? ` · ${date}` : ''}`,
     directTitle: 'Ήδη στον τελικό',
     direct: (n) => `Αυτές οι ${n} χώρες δεν διαγωνίζονται σε ημιτελικό· προκρίνονται αυτόματα στον μεγάλο τελικό.`,
+    pending: 'Τα αποτελέσματα των ημιτελικών θα εμφανιστούν εδώ.',
   },
   songs: {
     title: (f) => `Τραγούδια Eurovision ${f.year}: όλες οι ${f.entries} συμμετοχές`,

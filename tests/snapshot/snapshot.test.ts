@@ -268,6 +268,21 @@ describe('buildSnapshotFiles', () => {
     expect(countryIndex(buildSnapshotFiles({ ...input(), contests: live, entries: grSecond2026 })).greece.best_place).toBe(6);
   });
 
+  it('rejects a completed contest from 2004 on with entries but no semi-final assignments (C1)', () => {
+    const noSemis = entries.map((e) => (e.year === 2026 ? { ...e, semi: null, semi_place: null, semi_points: null, qualified: null } : e));
+    expect(() => buildSnapshotFiles({ ...input(), entries: noSemis })).toThrow(/2026 \(finalized\) has 2 entries but no semi-final assignments/);
+    // Archived years too.
+    const noSemis2025 = entries.map((e) => (e.year === 2025 ? { ...e, semi: null } : e));
+    expect(() => buildSnapshotFiles({ ...input(), entries: noSemis2025 })).toThrow(/2025 \(archived\)/);
+    // Cancelled 2020 and a current (not yet completed) year are exempt; so are years before 2004.
+    const noSemis2020 = entries.map((e) => (e.year === 2020 ? { ...e, semi: null } : e));
+    expect(() => buildSnapshotFiles({ ...input(), entries: noSemis2020 })).not.toThrow();
+    const current = contests.map((c) => (c.year === 2026 ? { ...c, stage: 'current' as const } : c));
+    expect(() => buildSnapshotFiles({ ...input(), contests: current, entries: noSemis })).not.toThrow();
+    const old = [...contests, contest(2003, 'Riga', 'SE', 'archived')];
+    expect(() => buildSnapshotFiles({ ...input(), contests: old, entries: [...entries, entry(2003, 'SE')] })).not.toThrow();
+  });
+
   it('rejects an entry whose country or year is unknown', () => {
     expect(() => buildSnapshotFiles({ ...input(), entries: [entry(2025, 'XX')] })).toThrow(/XX/);
     expect(() => buildSnapshotFiles({ ...input(), entries: [entry(1999, 'GR')] })).toThrow(/1999/);

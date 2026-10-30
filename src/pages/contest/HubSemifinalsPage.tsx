@@ -24,7 +24,8 @@ function semiOrder(entries: EntrySnapshot[], hub: Hub): EntrySnapshot[] {
 function SemisBody({ hub }: { hub: Hub }) {
   const { contest, locale, facts: f, copy: c, base } = hub;
   const crumbs = hubCrumbs(hub, 'semis');
-  const direct = byCountry(contest.entries.filter((e) => e.semi == null), locale);
+  // Unknown split: nobody is listed as a direct qualifier.
+  const direct = f.semisKnown ? byCountry(contest.entries.filter((e) => e.semi == null), locale) : [];
 
   const semis = ([1, 2] as const)
     .map((n) => {
@@ -48,6 +49,12 @@ function SemisBody({ hub }: { hub: Hub }) {
       <PageHero crumbs={crumbs} chip={c.chip[contest.stage]} chipTone="gold" title={c.semis.h1(f)} lede={c.semis.lede(f)} />
 
       <ContentLayout wide>
+        {!f.semisKnown && (
+          <Section id="semis-pending" title={c.hub.semisTitle}>
+            <p>{c.semis.pending}</p>
+          </Section>
+        )}
+
         {semis.map(({ n, date, entries }) => (
           <Section key={n} id={`semi-${n}`} title={c.semis.semiTitle(n, date ? formatDate(date, locale) : null)}>
             <DataTable

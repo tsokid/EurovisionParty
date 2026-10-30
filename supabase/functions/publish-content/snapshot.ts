@@ -49,6 +49,9 @@ export function stableJson(value: unknown): string {
 /** A country page is indexable from this many non-cancelled participations (mirrors src/lib/seo/dynamicPages.ts, which Deno cannot import). */
 export const COUNTRY_INDEXABLE_MIN = 3;
 
+/** The first contest with a semi-final. */
+export const FIRST_SEMI_YEAR = 2004;
+
 const byIso = (a: { iso: string }, b: { iso: string }) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0);
 
 /**
@@ -111,6 +114,17 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
     seen.add(key);
     entriesByYear.set(e.year, [...(entriesByYear.get(e.year) ?? []), e]);
     entriesByIso.set(e.iso, [...(entriesByIso.get(e.iso) ?? []), e]);
+  }
+
+  // C1: from 2004 every contest has semi-finals. A completed year whose
+  // entries carry no semi assignment is missing data (production 2026 before
+  // migration 075), and publishing it would state that nobody ran in a semi.
+  for (const c of contests.values()) {
+    if (c.year < FIRST_SEMI_YEAR || c.cancelled || (c.stage !== 'finalized' && c.stage !== 'archived')) continue;
+    const ys = entriesByYear.get(c.year) ?? [];
+    if (ys.length > 0 && !ys.some((e) => e.semi !== null)) {
+      throw new Error(`buildSnapshotFiles: contest ${c.year} (${c.stage}) has ${ys.length} entries but no semi-final assignments`);
+    }
   }
 
   const files: Record<string, string> = {};

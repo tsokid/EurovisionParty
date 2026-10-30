@@ -56,7 +56,7 @@ export function stableJson(value: unknown): string {
   return JSON.stringify(sort(value), null, 2) + '\n';
 }
 
-function sqlValue(v: string | number | boolean | null): string {
+export function sqlValue(v: string | number | boolean | null): string {
   if (v === null) return 'null';
   if (typeof v === 'number') {
     if (!Number.isInteger(v)) throw new Error(`sqlValue: non-integer ${v}`);

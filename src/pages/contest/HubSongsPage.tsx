@@ -22,7 +22,7 @@ function SongsBody({ hub }: { hub: Hub }) {
     { header: c.headers.artist, value: (e) => e.artist },
     { header: c.headers.song, value: (e) => songCell(e.song) },
     { header: c.headers.language, value: (e) => e.language },
-    { header: c.headers.semi, value: (e) => (e.semi ? c.values.semi(e.semi) : c.values.direct) },
+    { header: c.headers.semi, value: (e) => (e.semi ? c.values.semi(e.semi) : f.semisKnown ? c.values.direct : null) },
   ]);
 
   return (

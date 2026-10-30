@@ -7,7 +7,7 @@
  */
 import type { CountryParticipation, CountrySnapshot } from '../../../content/contests/types';
 import type { Locale } from '../../../lib/seo/locale';
-import { greekCountrySubject } from './hubCopy';
+import { FIRST_SEMI_YEAR, greekCountrySubject } from './hubCopy';
 import { joinList, ordinal } from './archiveCopy';
 
 // ─── Facts ──────────────────────────────────────────────────────────────────
@@ -117,6 +117,8 @@ const en: CountryCopy = {
       if (p.semi !== null && p.qualified === false) {
         return `Out in semi-final ${p.semi}${p.semi_place !== null ? ` (${ordinal(p.semi_place, 'en')})` : ''}`;
       }
+      // Semi-final not recorded (e.g. missing data): still out before the final.
+      if (p.qualified === false && p.year >= FIRST_SEMI_YEAR) return 'Out in the semi-finals';
       return null;
     },
     allCountries: 'All countries',
@@ -167,6 +169,7 @@ const el: CountryCopy = {
       if (p.semi !== null && p.qualified === false) {
         return `Αποκλεισμός στον ${p.semi === 1 ? 'Α΄' : 'Β΄'} ημιτελικό${p.semi_place !== null ? ` (${ordinal(p.semi_place, 'el')})` : ''}`;
       }
+      if (p.qualified === false && p.year >= FIRST_SEMI_YEAR) return 'Αποκλεισμός στους ημιτελικούς';
       return null;
     },
     allCountries: 'Όλες οι χώρες',

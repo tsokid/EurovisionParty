@@ -14,7 +14,8 @@ import { byCountry, hubCrumbs, hubRelated, type Hub } from './hub';
 function ScheduleBody({ hub }: { hub: Hub }) {
   const { contest, locale, facts: f, copy: c, base } = hub;
   const crumbs = hubCrumbs(hub, 'schedule');
-  const direct = byCountry(contest.entries.filter((e) => e.semi == null), locale);
+  // Unknown split: nobody is listed as a direct qualifier.
+  const direct = f.semisKnown ? byCountry(contest.entries.filter((e) => e.semi == null), locale) : [];
 
   const shows = [
     { show: c.shows.semi1, date: contest.dates.semi1, countries: f.semi1 },

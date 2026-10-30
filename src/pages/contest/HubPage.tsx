@@ -57,7 +57,7 @@ function HubBody({ hub }: { hub: Hub }) {
     { header: c.headers.country, value: (e) => countryCell(e, locale) },
     { header: c.headers.artist, value: (e) => e.artist },
     { header: c.headers.song, value: (e) => songCell(e.song) },
-    { header: c.headers.semi, value: (e) => (e.semi ? c.values.semi(e.semi) : c.values.direct) },
+    { header: c.headers.semi, value: (e) => (e.semi ? c.values.semi(e.semi) : f.semisKnown ? c.values.direct : null) },
   ]);
   const winnerEntry = results ? finalists[0] : null;
 
@@ -123,9 +123,9 @@ function HubBody({ hub }: { hub: Hub }) {
           </dl>
         </Section>
 
-        {f.semiEntries > 0 && (
+        {(f.semiEntries > 0 || !f.semisKnown) && (
           <Section id="semifinals" title={c.hub.semisTitle}>
-            <p>{c.hub.semisSummary(f)}</p>
+            <p>{f.semisKnown ? c.hub.semisSummary(f) : c.hub.semisPending}</p>
             <p><LocaleLink to={`${base}/semifinals`} className="text-euro-pink-light hover:underline">{c.hub.semisLink} →</LocaleLink></p>
           </Section>
         )}
