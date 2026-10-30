@@ -13,7 +13,7 @@
 //
 // This file only wires I/O; the flow is runPublish in run.ts (unit-tested).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.99.3";
-import { commitFiles, readRepoFile } from "./github.ts";
+import { commitFiles } from "./github.ts";
 import { runPublish, type PublishResult } from "./run.ts";
 import type { SnapshotInput } from "./snapshot.ts";
 
@@ -65,14 +65,14 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return jsonResponse({ error: "method not allowed" }, 405);
 
   const authorization = req.headers.get("Authorization") ?? "";
-  if (!(await isSuperAdmin(authorization))) return jsonResponse({ error: "forbidden" }, 403);
-  if (!GITHUB_TOKEN) return jsonResponse({ error: "GITHUB_TOKEN is not set" }, 500);
-
-  const user = userClient(authorization);
-  const service = serviceClient();
-  const github = { token: GITHUB_TOKEN, repo: GITHUB_REPO, branch: GITHUB_BRANCH, fetch };
-
   try {
+    if (!(await isSuperAdmin(authorization))) return jsonResponse({ error: "forbidden" }, 403);
+    if (!GITHUB_TOKEN) return jsonResponse({ status: "error", error: "GITHUB_TOKEN is not set" }, 500);
+
+    const user = userClient(authorization);
+    const service = serviceClient();
+    const github = { token: GITHUB_TOKEN, repo: GITHUB_REPO, branch: GITHUB_BRANCH, fetch };
+
     const result = await runPublish({
       rpc: {
         async beginPublish() {
@@ -92,8 +92,7 @@ Deno.serve(async (req) => {
           if (error) throw new Error(error.message);
         },
       },
-      readVercelJson: () => readRepoFile({ ...github, path: "vercel.json" }),
-      commitFiles: (files, message) => commitFiles({ ...github, files, message }),
+      commitFiles: (files, message, transforms) => commitFiles({ ...github, files, message, transforms }),
     });
     return jsonResponse(result, HTTP_STATUS[result.status]);
   } catch (e) {

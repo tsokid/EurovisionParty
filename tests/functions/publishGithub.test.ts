@@ -1,7 +1,7 @@
 // @vitest-environment node
 // publish-content/github.ts: one commit via the Git Data API, fetch mocked.
 import { describe, it, expect } from 'vitest';
-import { commitFiles, gitBlobSha, readRepoFile } from '../../supabase/functions/publish-content/github';
+import { commitFiles, gitBlobSha } from '../../supabase/functions/publish-content/github';
 
 type Call = { method: string; url: string; body: unknown; headers: Record<string, string> };
 type Route = { method: string; path: string | RegExp; status?: number; body: unknown };
@@ -143,17 +143,17 @@ describe('commitFiles', () => {
     expect(calls.some((c) => c.url.endsWith('/git/commits'))).toBe(false);
   });
 
-  it('throws with the status and GitHub message when the ref update is refused (409)', async () => {
+  it('throws with the status and GitHub message when the ref update is refused (422, as GitHub answers a non-fast-forward)', async () => {
     const routes = await baseRoutes({});
     routes.push(
       { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
       { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
       { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
-      { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, status: 409, body: { message: 'Update is not a fast forward' } },
+      { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, status: 422, body: { message: 'Update is not a fast forward' } },
     );
     const { fetch } = mockFetch(routes);
     await expect(commitFiles(opts(fetch, { 'a.json': 'a\n' }))).rejects.toThrow(
-      'GitHub 409 PATCH /repos/tsokid/EurovisionParty/git/refs/heads/main: Update is not a fast forward',
+      'GitHub 422 PATCH /repos/tsokid/EurovisionParty/git/refs/heads/main: Update is not a fast forward',
     );
   });
 
@@ -186,21 +186,56 @@ describe('commitFiles', () => {
     const tree = calls.find((c) => c.url.endsWith('/git/trees'))!.body as { tree: Array<{ mode: string }> };
     expect(tree.tree[0].mode).toBe('100755');
   });
-});
 
-describe('readRepoFile', () => {
-  it('reads and UTF-8 decodes a file from the contents API at the branch', async () => {
-    const text = '{\n  "ά": 1\n}\n';
-    const b64 = Buffer.from(text, 'utf8').toString('base64').replace(/(.{60})/g, '$1\n');
-    const { fetch, calls } = mockFetch([
-      { method: 'GET', path: `/repos/${REPO}/contents/vercel.json?ref=main`, body: { encoding: 'base64', content: b64 } },
-    ]);
-    expect(await readRepoFile({ token: 'tkn', repo: REPO, branch: 'main', path: 'vercel.json', fetch })).toBe(text);
-    expect(calls[0].headers.authorization).toBe('Bearer tkn');
-  });
+  describe('transforms', () => {
+    const base = '{\n  "redirects": []\n}\n';
+    const b64 = (t: string) => Buffer.from(t, 'utf8').toString('base64').replace(/(.{60})/g, '$1\n');
 
-  it('throws on 404', async () => {
-    const { fetch } = mockFetch([]);
-    await expect(readRepoFile({ token: 'tkn', repo: REPO, branch: 'main', path: 'vercel.json', fetch })).rejects.toThrow(/GitHub 404/);
+    async function routesWithVercel(): Promise<Route[]> {
+      const routes = await baseRoutes({ 'vercel.json': base });
+      const sha = await gitBlobSha(base);
+      routes.push({ method: 'GET', path: `/repos/${REPO}/git/blobs/${sha}`, body: { sha, encoding: 'base64', content: b64(base) } });
+      return routes;
+    }
+
+    it('derives a file from its content in the parent commit tree and commits the result', async () => {
+      const routes = await routesWithVercel();
+      routes.push(
+        { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
+        { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
+        { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
+        { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, body: {} },
+      );
+      const { fetch, calls } = mockFetch(routes);
+      const seen: Array<string | null> = [];
+      const out = await commitFiles({
+        ...opts(fetch, {}),
+        transforms: { 'vercel.json': (cur) => { seen.push(cur); return cur + 'x\n'; } },
+      });
+      expect(seen).toEqual([base]);
+      expect(out).toEqual({ sha: 'commit1', changed: 1, paths: ['vercel.json'] });
+      // The blob read comes after the parent's tree, so it is that commit's content.
+      const urls = calls.map((c) => `${c.method} ${c.url.slice(API.length)}`);
+      expect(urls.indexOf(`GET /repos/${REPO}/git/blobs/${await gitBlobSha(base)}`)).toBe(3);
+      expect(calls.find((c) => c.method === 'POST' && c.url.endsWith('/git/blobs'))!.body).toEqual({ content: base + 'x\n', encoding: 'utf-8' });
+      expect(calls.find((c) => c.method === 'POST' && c.url.endsWith('/git/commits'))!.body).toMatchObject({ parents: ['c0ffee'] });
+    });
+
+    it('an unchanged transform result is skipped like any unchanged file', async () => {
+      const { fetch, calls } = mockFetch(await routesWithVercel());
+      const out = await commitFiles({ ...opts(fetch, {}), transforms: { 'vercel.json': (cur) => cur! } });
+      expect(out).toEqual({ sha: null, changed: 0, paths: [] });
+      expect(calls.some((c) => c.method !== 'GET')).toBe(false);
+    });
+
+    it('passes null for a path missing from the tree', async () => {
+      const { fetch } = mockFetch(await baseRoutes({}));
+      const seen: Array<string | null> = [];
+      await expect(commitFiles({
+        ...opts(fetch, {}),
+        transforms: { 'vercel.json': (cur) => { seen.push(cur); throw new Error('vercel.json is missing'); } },
+      })).rejects.toThrow('vercel.json is missing');
+      expect(seen).toEqual([null]);
+    });
   });
 });

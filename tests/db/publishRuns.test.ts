@@ -121,8 +121,8 @@ describe('074 publish_runs', () => {
     await end(id, 'ok', 'deadbeef', 3, null);
     const s0 = await summary();
     expect(s0.changed_years).toEqual([]);
-    const finished = new Date((await run(id)).finished_at as Date).getTime();
-    expect(Math.abs(new Date(s0.since!).getTime() - finished)).toBeLessThan(1);
+    const started = new Date((await run(id)).started_at as Date).getTime();
+    expect(Math.abs(new Date(s0.since!).getTime() - started)).toBeLessThan(1);
 
     await asUser(db, null);
     await db.exec(`update public.contest_entries set artist = artist, updated_at = now() where year = 1999 and iso = 'SE'`);
@@ -139,6 +139,16 @@ describe('074 publish_runs', () => {
     const id2 = await begin();
     await end(id2, 'error', null, null, 'boom');
     expect((await summary()).changed_years).toEqual([1974]);
+  });
+
+  it('unpublished_summary: an edit made while a run is in flight stays unpublished', async () => {
+    const id = await begin();
+    // The run has read publish_input; the admin edits before it ends.
+    await asUser(db, null);
+    await db.exec(`update public.contest_entries set artist = artist, updated_at = now() where year = 1999 and iso = 'SE'`);
+    await asUser(db, ADMIN);
+    await end(id, 'ok', 'deadbeef', 3, null);
+    expect((await summary()).changed_years).toEqual([1999]);
   });
 
   it('unpublished_summary: a noop run counts as published', async () => {

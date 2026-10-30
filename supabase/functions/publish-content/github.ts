@@ -25,7 +25,16 @@ export type CommitFilesOpts = GitHubOpts & {
   files: Record<string, string>;
   /** Commit message, or a function of the changed paths (sorted). */
   message: string | ((changedPaths: string[]) => string);
+  /**
+   * Files derived from their current content: each gets the path's text in
+   * the parent commit's tree (null if absent) and returns the new text.
+   * Reading the parent itself means a push between reading and committing
+   * cannot be reverted (the ref update is fast-forward only).
+   */
+  transforms?: FileTransforms;
 };
+
+export type FileTransforms = Record<string, (current: string | null) => string>;
 
 export type CommitResult = {
   /** The new commit, or null when nothing changed. */
@@ -74,8 +83,6 @@ function client(opts: GitHubOpts) {
   };
 }
 
-const enc = encodeURIComponent;
-
 type TreeEntry = { path: string; mode: string; type: string; sha: string };
 
 export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> {
@@ -96,9 +103,15 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   }
   const existing = new Map(tree.tree.filter((e) => e.type === 'blob').map((e) => [e.path, e]));
 
+  const files = { ...opts.files };
+  for (const [path, transform] of Object.entries(opts.transforms ?? {})) {
+    const prev = existing.get(path);
+    files[path] = transform(prev ? await readBlob(call, repo, prev.sha) : null);
+  }
+
   const changed: Array<{ path: string; content: string; mode: string }> = [];
-  for (const path of Object.keys(opts.files).sort()) {
-    const content = opts.files[path];
+  for (const path of Object.keys(files).sort()) {
+    const content = files[path];
     const prev = existing.get(path);
     if (prev && prev.sha === (await gitBlobSha(content))) continue;
     changed.push({ path, content, mode: prev?.mode ?? '100644' });
@@ -125,14 +138,10 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   return { sha: newCommit.sha, changed: paths.length, paths };
 }
 
-/** A file's UTF-8 text at the branch head, via the contents API (files up to 1 MB). */
-export async function readRepoFile(opts: GitHubOpts & { path: string }): Promise<string> {
-  const call = client(opts);
-  const res = await call<{ encoding: string; content: string }>(
-    'GET',
-    `/repos/${opts.repo}/contents/${opts.path.split('/').map(enc).join('/')}?ref=${enc(opts.branch)}`,
-  );
-  if (res.encoding !== 'base64') throw new Error(`GitHub contents ${opts.path}: unexpected encoding ${res.encoding}`);
+/** A blob's UTF-8 text (blobs API, base64). */
+async function readBlob(call: ReturnType<typeof client>, repo: string, sha: string): Promise<string> {
+  const res = await call<{ encoding: string; content: string }>('GET', `${repo}/git/blobs/${sha}`);
+  if (res.encoding !== 'base64') throw new Error(`GitHub blob ${sha}: unexpected encoding ${res.encoding}`);
   const bin = atob(res.content.replace(/\s/g, ''));
   return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
 }

@@ -13,7 +13,12 @@ export type VercelRedirect = {
   has?: Array<{ type: string; key: string; value?: string }>;
 };
 
-/** Sources this module owns: the hub of a year, prefixed or not, and anything below it. */
+/**
+ * Sources this module owns: the hub of a year, prefixed or not, and anything
+ * below it. WARNING: every vercel.json redirect matching this is dropped and
+ * regenerated on each Publish, so a hand-written /eurovision-YYYY redirect
+ * does not survive. Put manual year redirects under another source shape.
+ */
 const GENERATED_SOURCE = /^(\/:locale\(en\|el\))?\/eurovision-\d{4}(\/|$)/;
 
 /** Three redirects per archived year, ordered by year. */

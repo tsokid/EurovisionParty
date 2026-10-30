@@ -17,10 +17,12 @@
 --   updated_at of contests and contest_entries, so unchanged data gives a
 --   byte-identical site.json and Publish can be a no-op.
 -- * unpublished_summary() (super admin): { changed_years, since }. since
---   is finished_at of the last successful (ok or noop) run, null before
---   the first; changed_years are the years whose contest row or any entry
---   has updated_at after it (every year when since is null). Deleted
---   entries leave no updated_at behind and are not detected.
+--   is started_at of the last successful (ok or noop) run, null before the
+--   first. started_at precedes the run's publish_input read, so an edit
+--   made while a run is in flight stays unpublished. changed_years are the
+--   years whose contest row or any entry has updated_at after since (every
+--   year when since is null). Deleted entries leave no updated_at behind
+--   and are not detected.
 -- * RLS on publish_runs: super admins read; writes only through the RPCs.
 --
 -- Idempotent: safe to run twice.
@@ -175,7 +177,7 @@ begin
     raise exception 'forbidden';
   end if;
 
-  select max(finished_at) into v_since
+  select max(started_at) into v_since
     from public.publish_runs
    where status in ('ok', 'noop');
 
