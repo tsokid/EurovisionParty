@@ -1,5 +1,5 @@
 /**
- * Deterministic text ordering for prerendered lists. No localeCompare / Intl:
+ * Deterministic text ordering for prerendered lists. No locale-aware collation (Intl):
  * its collation differs between Node and browsers (and ICU builds), which
  * would make server and client renders disagree. Compare code points of the
  * NFD form with diacritics stripped, lowercased; the original string breaks

@@ -96,7 +96,12 @@ export default function DuelsScreen() {
     let streakStillCounting = true;
     const finished = duels
       .filter((d) => isMine(d) && (d.status === 'completed' || d.status === 'tie'))
-      .sort((a, b) => (b.completed_at ?? '').localeCompare(a.completed_at ?? ''));
+      // ISO timestamps: plain string comparison orders them; newest first.
+      .sort((a, b) => {
+        const x = b.completed_at ?? '';
+        const y = a.completed_at ?? '';
+        return x < y ? -1 : x > y ? 1 : 0;
+      });
     for (const d of finished) {
       const won = d.winner_id === player.id;
       if (won) {

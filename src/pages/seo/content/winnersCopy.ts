@@ -16,7 +16,7 @@ interface WinnersCopy {
   hero: { chip: string; title: string; lede: string };
   sections: {
     /** `from`/`to`: the oldest and newest year in the table (from data). */
-    recent: { title: (from: number, to: number) => string; intro: (from: number) => string; headers: { year: string; country: string; artist: string; song: string; points: string } };
+    recent: { title: (from: number, to: number) => string; intro: (from: number, cancelled: number | null) => string; headers: { year: string; country: string; artist: string; song: string; points: string } };
     leaderboard: { title: string; intro: string; headers: { country: string; wins: string; mostRecent: string } };
     all: { title: (from: number) => string; intro: string; cancelled: string; shared: string };
     notable: { title: string; intro: string; bullets: { strong: string; rest: string }[] };
@@ -39,7 +39,7 @@ export const copy: Record<Locale, WinnersCopy> = {
       schemaTitle: 'Eurovision Winners — Every Champion 1956 to Today',
       schemaDescription: 'Reference list of Eurovision Song Contest winners with year, country, artist, song, and points. Plus the all-time wins leaderboard and notable record-holders.',
     },
-    crumbs: { home: 'Home', history: 'Eurovision history', winners: 'Winners' },
+    crumbs: { home: 'Home', history: 'Past contests', winners: 'Winners' },
     hero: {
       chip: 'Eurovision history',
       title: 'Every Eurovision winner — 1956 to today',
@@ -48,7 +48,7 @@ export const copy: Record<Locale, WinnersCopy> = {
     sections: {
       recent: {
         title: (from, to) => `Recent winners (${from}–${to})`,
-        intro: (from) => `Winners since ${from}, with the song, performing artist, and the combined jury + televote points from the grand final. (No 2020 — the contest was cancelled due to COVID.)`,
+        intro: (from, cancelled) => `Winners since ${from}, with the song, performing artist, and the combined jury + televote points from the grand final.${cancelled !== null ? ` (No ${cancelled} — the contest was cancelled due to COVID.)` : ''}`,
         headers: { year: 'Year', country: 'Country', artist: 'Artist', song: 'Song', points: 'Points' },
       },
       leaderboard: {
@@ -127,7 +127,7 @@ export const copy: Record<Locale, WinnersCopy> = {
       schemaTitle: 'Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα',
       schemaDescription: 'Λίστα νικητών της Eurovision με χρονιά, χώρα, καλλιτέχνη, τραγούδι και πόντους. Πίνακας αιώνιων νικών και κατόχοι ρεκόρ.',
     },
-    crumbs: { home: 'Αρχική', history: 'Ιστορία Eurovision', winners: 'Νικητές' },
+    crumbs: { home: 'Αρχική', history: 'Προηγούμενοι διαγωνισμοί', winners: 'Νικητές' },
     hero: {
       chip: 'Ιστορία Eurovision',
       title: 'Όλοι οι νικητές Eurovision — 1956 έως σήμερα',
@@ -136,7 +136,7 @@ export const copy: Record<Locale, WinnersCopy> = {
     sections: {
       recent: {
         title: (from, to) => `Πρόσφατοι νικητές (${from}–${to})`,
-        intro: (from) => `Νικητές από το ${from}, με το τραγούδι, τον καλλιτέχνη, και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό. (Δεν υπάρχει 2020 — ο διαγωνισμός ακυρώθηκε λόγω COVID.)`,
+        intro: (from, cancelled) => `Νικητές από το ${from}, με το τραγούδι, τον καλλιτέχνη, και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό.${cancelled !== null ? ` (Δεν υπάρχει ${cancelled} — ο διαγωνισμός ακυρώθηκε λόγω COVID.)` : ''}`,
         headers: { year: 'Έτος', country: 'Χώρα', artist: 'Καλλιτέχνης', song: 'Τραγούδι', points: 'Πόντοι' },
       },
       leaderboard: {

@@ -7,6 +7,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { supabase } from '../../../lib/supabase';
+import { compareText } from '../../../lib/seo/textSort';
 import { formatError } from '../../lib/formatError';
 
 interface Entry {
@@ -82,7 +83,7 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot, reloa
 
   const nameOf = useMemo(() => new Map(countries.map((c) => [c.iso, c.name_en])), [countries]);
   const sorted = useMemo(
-    () => [...entries].sort((a, b) => (nameOf.get(a.iso) ?? a.iso).localeCompare(nameOf.get(b.iso) ?? b.iso)),
+    () => [...entries].sort((a, b) => compareText(nameOf.get(a.iso) ?? a.iso, nameOf.get(b.iso) ?? b.iso)),
     [entries, nameOf],
   );
   const available = countries.filter((c) => !entries.some((e) => e.iso === c.iso));

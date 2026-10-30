@@ -23,6 +23,7 @@ import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
 import { useParticipants } from '../../hooks/useParticipants';
 import { getLocalizedCountryName } from '../../lib/countryLocale';
+import { compareText } from '../../lib/seo/textSort';
 import { supabase } from '../../lib/supabase';
 import type { Country } from '../../lib/types';
 
@@ -452,8 +453,8 @@ export default function PredictionsScreen() {
   // via useParticipants; falls back to hardcoded 2026 lineup if DB empty.
   const pool = (() => {
     const list = [...participants];
-    if (poolSort === 'az') list.sort((a, b) => getLocalizedCountryName(a).localeCompare(getLocalizedCountryName(b)));
-    if (poolSort === 'za') list.sort((a, b) => getLocalizedCountryName(b).localeCompare(getLocalizedCountryName(a)));
+    if (poolSort === 'az') list.sort((a, b) => compareText(getLocalizedCountryName(a), getLocalizedCountryName(b)));
+    if (poolSort === 'za') list.sort((a, b) => compareText(getLocalizedCountryName(b), getLocalizedCountryName(a)));
     return list;
   })();
 

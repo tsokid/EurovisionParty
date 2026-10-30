@@ -14,7 +14,7 @@ import { useContent } from '../../lib/seo/useContent';
 import { ARCHIVE_INDEX_PATH, archivePath } from '../../lib/seo/dynamicPages';
 import type { ContestIndex, IndexWinner } from '../../content/contests/types';
 import { CONTEST_INDEX, yearCell } from '../contest/archive';
-import { winnersData, type WinnerYear } from '../contest/winners';
+import { cancelledWithin, winnersData, type WinnerYear } from '../contest/winners';
 import { ContentPending } from '../contest/ContentPending';
 import { copy as copyAll } from './content/winnersCopy';
 
@@ -30,6 +30,8 @@ export default function WinnersPage() {
   const recentFrom = recent.length ? recent[recent.length - 1].year : null;
   const recentTo = recent.length ? recent[0].year : null;
   const first = data?.all.length ? data.all[data.all.length - 1].year : null;
+  // A cancelled year inside the recent window gets the "(No 2020 …)" note.
+  const gap = data && recentFrom !== null && recentTo !== null ? cancelledWithin(data.all, recentFrom, recentTo) : null;
   const pending = data ? null : (
     <ContentPending inline locale={locale} retry={index.status === 'error' ? index.retry : undefined} />
   );
@@ -121,7 +123,7 @@ export default function WinnersPage() {
 
       <ContentLayout>
         <Section id="recent" title={recentFrom !== null && recentTo !== null ? c.sections.recent.title(recentFrom, recentTo) : c.hero.chip}>
-          {recentFrom !== null && <p>{c.sections.recent.intro(recentFrom)}</p>}
+          {recentFrom !== null && <p>{c.sections.recent.intro(recentFrom, gap)}</p>}
           {pending ?? <DataTable headers={winnerHeaders} align={winnerAlign} rows={recent.map(winnerRow)} />}
         </Section>
 

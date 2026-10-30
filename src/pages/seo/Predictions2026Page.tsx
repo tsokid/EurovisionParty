@@ -1,3 +1,4 @@
+import { compareText } from '../../lib/seo/textSort';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
@@ -26,7 +27,7 @@ export default function Predictions2026Page() {
       const name = getLocalizedCountryName(country);
       return country.semi === 'host' ? `${name}${c.sections.lineup.hostSuffix}` : name;
     })
-    .sort((a, b) => a.localeCompare(b, locale));
+    .sort(compareText);
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },

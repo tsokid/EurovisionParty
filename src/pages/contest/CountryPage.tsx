@@ -53,7 +53,8 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
   const { slug, country, indexable, countries, contests } = data;
   const c = countryCopy[locale];
   const k = c.country;
-  const f = countryFacts(country, locale);
+  const archived = new Set(Object.entries(contests).filter(([, c]) => c.stage === 'archived').map(([y]) => Number(y)));
+  const f = countryFacts(country, locale, archived);
   const path = countryPath(slug);
   const name = (x: { name_en: string; name_el: string }) => (locale === 'el' ? x.name_el : x.name_en);
 
@@ -76,7 +77,7 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
     { header: k.headers.points, value: (p: CountryParticipation) => numCell(p.points, true), align: 'right' as const },
   ];
   const newestFirst = [...country.participations].reverse();
-  const wins = country.participations.filter((p) => !p.cancelled && p.final_place === 1);
+  const wins = country.participations.filter((p) => f.winYears.includes(p.year));
 
   const bySlugIso = new Map(Object.entries(countries).map(([s, row]) => [row.iso, { slug: s, row }]));
   const related = country.related_iso

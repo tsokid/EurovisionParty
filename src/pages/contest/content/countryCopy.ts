@@ -24,10 +24,14 @@ export interface CountryFacts {
   last: number | null;
 }
 
-export function countryFacts(country: CountrySnapshot, locale: Locale): CountryFacts {
+/** `archived`: years whose contest is archived (from contests/index.json). */
+export function countryFacts(country: CountrySnapshot, locale: Locale, archived: ReadonlySet<number>): CountryFacts {
   const counted = country.participations.filter((p) => !p.cancelled);
-  const places = counted.map((p) => p.final_place).filter((n): n is number => n !== null);
-  const winYears = counted.filter((p) => p.final_place === 1).map((p) => p.year);
+  // Wins and best place count archived years only, like /winners and countries/index.json,
+  // so a live year's result does not show up on one page before the others.
+  const settled = counted.filter((p) => archived.has(p.year));
+  const places = settled.map((p) => p.final_place).filter((n): n is number => n !== null);
+  const winYears = settled.filter((p) => p.final_place === 1).map((p) => p.year);
   return {
     iso: country.iso,
     name: locale === 'el' ? country.name_el : country.name_en,
@@ -83,7 +87,9 @@ const en: CountryCopy = {
   crumbs: { home: 'Home', countries: 'Countries' },
   chip: 'Countries',
   country: {
-    title: (f) => `${f.name} at Eurovision: every entry, result and win`,
+    title: (f) => (f.wins > 0
+      ? `${f.name} at Eurovision: every entry, result and win`
+      : `${f.name} at Eurovision: every entry and result`),
     description: (f) => {
       const record = f.wins > 0
         ? `, ${winsEn(f.wins)} (${joinList(f.winYears.map(String), 'en')})`
@@ -130,7 +136,9 @@ const el: CountryCopy = {
   crumbs: { home: 'Αρχική', countries: 'Χώρες' },
   chip: 'Χώρες',
   country: {
-    title: (f) => `${f.name} στη Eurovision: όλες οι συμμετοχές, τα αποτελέσματα και οι νίκες`,
+    title: (f) => (f.wins > 0
+      ? `${f.name} στη Eurovision: όλες οι συμμετοχές, τα αποτελέσματα και οι νίκες`
+      : `${f.name} στη Eurovision: όλες οι συμμετοχές και τα αποτελέσματα`),
     description: (f) => {
       const record = f.wins > 0
         ? `, ${winsEl(f.wins)} (${joinList(f.winYears.map(String), 'el')})`

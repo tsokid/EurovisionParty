@@ -236,6 +236,21 @@ describe('buildSnapshotFiles', () => {
     expect(index.sweden).toMatchObject({ participations: 2, wins: 0, best_place: 4 });
   });
 
+  it('countries/index.json: wins and best place count archived years only', () => {
+    const files = buildSnapshotFiles({
+      ...input(),
+      // 2026 is finalized, not archived: its first place is not counted yet.
+      entries: entries.map((e) => (e.year === 2026 && e.iso === 'AT' ? { ...e, final_place: 1, total_points: 500 } : e)),
+    });
+    const index = JSON.parse(files['content/countries/index.json']) as CountryIndex;
+    expect(index.austria).toMatchObject({ participations: 2, wins: 1, best_place: 1 });
+    const mixed = buildSnapshotFiles({
+      ...input(),
+      entries: entries.map((e) => (e.year === 2026 && e.iso === 'GR' ? { ...e, in_final: true, final_place: 2, total_points: 400 } : e)),
+    });
+    expect((JSON.parse(mixed['content/countries/index.json']) as CountryIndex).greece.best_place).toBe(6);
+  });
+
   it('rejects an entry whose country or year is unknown', () => {
     expect(() => buildSnapshotFiles({ ...input(), entries: [entry(2025, 'XX')] })).toThrow(/XX/);
     expect(() => buildSnapshotFiles({ ...input(), entries: [entry(1999, 'GR')] })).toThrow(/1999/);

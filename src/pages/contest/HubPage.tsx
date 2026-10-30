@@ -30,10 +30,10 @@ function HubBody({ hub }: { hub: Hub }) {
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         location: {
           '@type': 'Place',
-          name: contest.city,
+          name: f.city,
           address: {
             '@type': 'PostalAddress',
-            addressLocality: contest.city,
+            addressLocality: f.city,
             ...(contest.host_iso ? { addressCountry: contest.host_iso } : {}),
           },
         },

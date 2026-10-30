@@ -372,3 +372,88 @@ describe('every public page', () => {
     }
   }, 120_000);
 });
+
+describe('review round 1', () => {
+  it('2005 (one semi-final) in EN: singular title, lede and heading', async () => {
+    const r = await render('/en/past-contests/eurovision-2005-kyiv');
+    expect(r.status).toBe(200);
+    expect(r.head?.title).toBe('Eurovision 2005 in Kyiv: final results, semi-final & winner');
+    expect(r.html).toContain('id="semi-1"');
+    expect(r.html).not.toContain('id="semi-2"');
+    expect(h2s(r.html)).toContain('Semi-final · 19 May 2005');
+    expect(r.html).toContain('the full grand final ranking and the semi-final');
+    expect(r.html).not.toMatch(/both semi-finals/);
+  });
+
+  it('2005 (one semi-final) in EL: singular title, lede and heading', async () => {
+    const r = await render('/el/past-contests/eurovision-2005-kyiv');
+    expect(r.head?.title).toBe('Eurovision 2005 στο Κίεβο: αποτελέσματα, ημιτελικός και νικητής');
+    expect(h2s(r.html)).toContain('Ημιτελικός · 19 Μαΐου 2005');
+    expect(r.html).toContain('και ο ημιτελικός');
+    expect(r.html).not.toContain('οι δύο ημιτελικοί');
+    expect(r.html).not.toContain('Α΄ ημιτελικός');
+  });
+
+  it('2019 (two semi-finals) keeps the numbered headings', async () => {
+    const r = await render('/en/past-contests/eurovision-2019-tel-aviv');
+    expect(h2s(r.html)).toContain('Semi-final 1 · 14 May 2019');
+    expect(r.html).toContain('both semi-finals');
+  });
+
+  it('1969: plural lede, gender-neutral Greek', async () => {
+    const en = await render('/en/past-contests/eurovision-1969-madrid');
+    expect(en.html).toContain('Below: the winners and the full ranking');
+    const el = await render('/el/past-contests/eurovision-1969-madrid');
+    expect(el.html).toContain('μοιράστηκαν την πρώτη θέση');
+    expect(el.html).toContain('Παρακάτω: οι νικητές και η πλήρης κατάταξη');
+    expect(el.html).not.toContain('όλες πρώτες');
+    expect(el.html).not.toContain('η καθεμία');
+  });
+
+  it('2020: the ItemList is the entries, not a ranking', async () => {
+    const en = await render('/en/past-contests/eurovision-2020-rotterdam');
+    const list = jsonLd(en).find((b) => b['@type'] === 'ItemList')!;
+    expect(list.name).toBe('Eurovision 2020 entries');
+    const el = await render('/el/past-contests/eurovision-2020-rotterdam');
+    expect(jsonLd(el).find((b) => b['@type'] === 'ItemList')!.name).toBe('Οι συμμετοχές της Eurovision 2020');
+  });
+
+  it('Event location uses the city name in the page locale', async () => {
+    const el = await render('/el/past-contests/eurovision-2019-tel-aviv');
+    const event = jsonLd(el).find((b) => b['@type'] === 'Event') as { location: { name: string } };
+    expect(event.location.name).toBe('Τελ Αβίβ');
+    const hub = await render('/el/eurovision-2026');
+    expect((jsonLd(hub).find((b) => b['@type'] === 'Event') as { location: { name: string } }).location.name).toBe('Βιέννη');
+  });
+
+  it('a country with no wins has a title without "win"', async () => {
+    const en = await render('/en/countries/morocco');
+    expect(en.head?.title).toBe('Morocco at Eurovision: every entry and result');
+    const el = await render('/el/countries/morocco');
+    expect(el.head?.title).toBe('Μαρόκο στη Eurovision: όλες οι συμμετοχές και τα αποτελέσματα');
+    const gr = await render('/en/countries/greece');
+    expect(gr.head?.title).toBe('Greece at Eurovision: every entry, result and win');
+  });
+
+  it('wins count archived years only (Bulgaria 2026 is finalized, not archived)', async () => {
+    const r = await render('/en/countries/bulgaria');
+    expect(r.html).not.toContain('id="wins"');
+    expect(r.head?.title).toBe('Bulgaria at Eurovision: every entry and result');
+    // The 2026 result still shows in the history table.
+    expect(rowWith(r.html, 'Bangaranga')).toContain('1st in the final');
+  });
+
+  it('/winners breadcrumb reads Past contests in the page and the JSON-LD', async () => {
+    for (const [locale, label] of [['en', 'Past contests'], ['el', 'Προηγούμενοι διαγωνισμοί']] as const) {
+      const r = await render(`/${locale}/winners`);
+      expect(r.html).toMatch(new RegExp(`href="/${locale}/past-contests"[^>]*>${label}</a>`));
+      const crumbs = jsonLd(r).find((b) => b['@type'] === 'BreadcrumbList') as { itemListElement: { name: string; item: string }[] };
+      expect(crumbs.itemListElement[1]).toMatchObject({ name: label, item: `${ORIGIN}/${locale}/past-contests` });
+    }
+  });
+
+  it('/winners shows the 2020 note because 2020 is inside the recent window', async () => {
+    const r = await render('/en/winners');
+    expect(r.html).toContain('(No 2020 — the contest was cancelled due to COVID.)');
+  });
+});

@@ -51,3 +51,8 @@ export function winnersData(index: ContestIndex, locale: Locale): WinnersData {
       .sort((a, b) => b.wins - a.wins || compareText(a.name, b.name)),
   };
 }
+
+/** The first cancelled year strictly inside (from, to), for the "(No 2020 …)" note; null when none. */
+export function cancelledWithin(all: WinnerYear[], from: number, to: number): number | null {
+  return all.filter((y) => y.cancelled && y.year > from && y.year < to).map((y) => y.year).sort((a, b) => a - b)[0] ?? null;
+}

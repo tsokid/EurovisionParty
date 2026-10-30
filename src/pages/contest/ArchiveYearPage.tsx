@@ -106,10 +106,10 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYear; locale: Locale }
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         location: {
           '@type': 'Place',
-          name: contest.city,
+          name: f.city,
           address: {
             '@type': 'PostalAddress',
-            addressLocality: contest.city,
+            addressLocality: f.city,
             ...(contest.host_iso ? { addressCountry: contest.host_iso } : {}),
           },
         },
@@ -155,7 +155,7 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYear; locale: Locale }
         ogType="website"
         jsonLd={[
           ...(event ? [event] : []),
-          songsItemList(ranking, a.year.listName(contest.year)),
+          songsItemList(ranking, contest.cancelled ? a.year.entriesListName(contest.year) : a.year.listName(contest.year)),
           breadcrumbJsonLd(crumbs, locale),
         ]}
       />
@@ -186,7 +186,7 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYear; locale: Locale }
               <DataTable {...finalTable} />
             </Section>
             {semis.map(({ n, date, entries }) => (
-              <Section key={n} id={`semi-${n}`} title={h.semis.semiTitle(n, date ? formatDate(date, locale) : null)}>
+              <Section key={n} id={`semi-${n}`} title={a.year.semiTitle(n, semis.length === 1, date ? formatDate(date, locale) : null)}>
                 <p>{a.year.semiIntro}</p>
                 <DataTable
                   {...visibleTable(entries, [

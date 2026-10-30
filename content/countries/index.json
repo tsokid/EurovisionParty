@@ -81,13 +81,13 @@
     "wins": 0
   },
   "bulgaria": {
-    "best_place": 1,
+    "best_place": 2,
     "indexable": true,
     "iso": "BG",
     "name_el": "Βουλγαρία",
     "name_en": "Bulgaria",
     "participations": 15,
-    "wins": 1
+    "wins": 0
   },
   "croatia": {
     "best_place": 2,

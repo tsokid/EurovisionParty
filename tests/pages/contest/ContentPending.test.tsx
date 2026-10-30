@@ -19,5 +19,7 @@ describe('ContentPending', () => {
   it('is Greek in el', () => {
     render(<ContentPending locale="el" retry={() => {}} />);
     expect(screen.getByRole('button', { name: 'Δοκίμασε ξανά' })).toBeInTheDocument();
+    // Same informal register as the button.
+    expect(screen.getByRole('alert')).toHaveTextContent('Έλεγξε τη σύνδεσή σου και δοκίμασε ξανά.');
   });
 });
