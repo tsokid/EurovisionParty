@@ -24,12 +24,12 @@ export interface CountryFacts {
   last: number | null;
 }
 
-/** `archived`: years whose contest is archived (from contests/index.json). */
-export function countryFacts(country: CountrySnapshot, locale: Locale, archived: ReadonlySet<number>): CountryFacts {
+/** `completed`: years whose contest is finalized or archived (from contests/index.json). */
+export function countryFacts(country: CountrySnapshot, locale: Locale, completed: ReadonlySet<number>): CountryFacts {
   const counted = country.participations.filter((p) => !p.cancelled);
-  // Wins and best place count archived years only, like /winners and countries/index.json,
-  // so a live year's result does not show up on one page before the others.
-  const settled = counted.filter((p) => archived.has(p.year));
+  // Wins and best place count completed contests (finalized or archived), the same rule as
+  // /winners and countries/index.json, so every page agrees once a result is final.
+  const settled = counted.filter((p) => completed.has(p.year));
   const places = settled.map((p) => p.final_place).filter((n): n is number => n !== null);
   const winYears = settled.filter((p) => p.final_place === 1).map((p) => p.year);
   return {

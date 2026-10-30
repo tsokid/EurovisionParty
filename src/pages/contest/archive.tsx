@@ -31,6 +31,14 @@ export function indexedContests(index: ContestIndex): IndexedContest[] {
     .sort((a, b) => a.year - b.year);
 }
 
+/** A contest is completed once its result is final: stage finalized or archived. */
+export const isCompleted = (c: Pick<ContestIndexEntry, 'stage'>): boolean =>
+  c.stage === 'finalized' || c.stage === 'archived';
+
+/** Completed years (results known), oldest first: /winners and the country win counts. */
+export const completedContests = (index: ContestIndex): IndexedContest[] =>
+  indexedContests(index).filter(isCompleted);
+
 /** Archived years only (the ones with an archive page), oldest first. */
 export const archivedContests = (index: ContestIndex): IndexedContest[] =>
   indexedContests(index).filter((c) => c.stage === 'archived');

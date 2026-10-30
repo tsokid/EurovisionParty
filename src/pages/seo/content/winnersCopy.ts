@@ -6,8 +6,9 @@ interface RelatedCard { href: string; title: string; blurb: string }
 interface WinnersCopy {
   meta: {
     title: string;
-    description: string;
-    keywords: string[];
+    /** `last`: the latest completed year (from data). */
+    description: (last: number) => string;
+    keywords: (last: number) => string[];
     schemaTitle: string;
     schemaDescription: string;
   };
@@ -30,11 +31,11 @@ export const copy: Record<Locale, WinnersCopy> = {
   en: {
     meta: {
       title: 'Eurovision Winners — Every Champion 1956 to Today · Eurovision Games',
-      description: 'Complete list of Eurovision Song Contest winners from 1956 to 2025. Recent champions, all-time leaderboard, record-holders, and notable moments.',
-      keywords: [
+      description: (last) => `Complete list of Eurovision Song Contest winners from 1956 to ${last}. Recent champions, all-time leaderboard, record-holders, and notable moments.`,
+      keywords: (last) => [
         'eurovision winners', 'eurovision song contest winners', 'eurovision champion list',
         'eurovision all winners', 'eurovision winning songs', 'eurovision most wins',
-        'eurovision 2025 winner', 'eurovision history',
+        `eurovision ${last} winner`, 'eurovision history',
       ],
       schemaTitle: 'Eurovision Winners — Every Champion 1956 to Today',
       schemaDescription: 'Reference list of Eurovision Song Contest winners with year, country, artist, song, and points. Plus the all-time wins leaderboard and notable record-holders.',
@@ -118,9 +119,9 @@ export const copy: Record<Locale, WinnersCopy> = {
   el: {
     meta: {
       title: 'Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα · Eurovision Games',
-      description: 'Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το 2025. Πρόσφατοι πρωταθλητές, αιώνιο πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές.',
-      keywords: [
-        'νικητές eurovision', 'πρωταθλητές eurovision', 'eurovision νικητής 2025',
+      description: (last) => `Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το ${last}. Πρόσφατοι πρωταθλητές, αιώνιο πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές.`,
+      keywords: (last) => [
+        'νικητές eurovision', 'πρωταθλητές eurovision', `eurovision νικητής ${last}`,
         'eurovision νικητές λίστα', 'eurovision ιστορία', 'eurovision νικητές χωρών',
         'eurovision όλοι νικητές',
       ],

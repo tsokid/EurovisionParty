@@ -11,9 +11,9 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { useContent } from '../../lib/seo/useContent';
-import { ARCHIVE_INDEX_PATH, archivePath } from '../../lib/seo/dynamicPages';
+import { ARCHIVE_INDEX_PATH } from '../../lib/seo/dynamicPages';
 import type { ContestIndex, IndexWinner } from '../../content/contests/types';
-import { CONTEST_INDEX, yearCell } from '../contest/archive';
+import { CONTEST_INDEX, yearCell, yearPath } from '../contest/archive';
 import { cancelledWithin, winnersData, type WinnerYear } from '../contest/winners';
 import { ContentPending } from '../contest/ContentPending';
 import { copy as copyAll } from './content/winnersCopy';
@@ -30,6 +30,8 @@ export default function WinnersPage() {
   const recentFrom = recent.length ? recent[recent.length - 1].year : null;
   const recentTo = recent.length ? recent[0].year : null;
   const first = data?.all.length ? data.all[data.all.length - 1].year : null;
+  // The latest completed year ends the "1956 to …" range in the meta copy.
+  const lastYear = data?.years[0]?.year ?? null;
   // A cancelled year inside the recent window gets the "(No 2020 …)" note.
   const gap = data && recentFrom !== null && recentTo !== null ? cancelledWithin(data.all, recentFrom, recentTo) : null;
   const pending = data ? null : (
@@ -47,7 +49,7 @@ export default function WinnersPage() {
     const solo = y.winners.length === 1 ? y.winners[0] : null;
     const points = y.winners[0]?.points ?? null;
     return [
-      yearCell(y.year, archivePath(y.year, y.city_slug)),
+      yearCell(y.year, yearPath(y.year, y)),
       countryCell(y),
       solo?.artist ?? '—',
       solo?.song ? <em className="text-white/75">{solo.song}</em> : '—',
@@ -100,18 +102,21 @@ export default function WinnersPage() {
 
   return (
     <>
-      <PageSeo
-        pageId="winners"
-        locale={locale}
-        title={c.meta.title}
-        description={c.meta.description}
-        ogType="article"
-        ogImage="https://eurovision.games/logo.png"
-        articlePublishedTime={PUBLISHED}
-        articleModifiedTime={MODIFIED}
-        keywords={c.meta.keywords}
-        jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
-      />
+      {/* Head tags wait for the index; only a client-side navigation renders before it (prerendered pages inline it). */}
+      {lastYear !== null && (
+        <PageSeo
+          pageId="winners"
+          locale={locale}
+          title={c.meta.title}
+          description={c.meta.description(lastYear)}
+          ogType="article"
+          ogImage="https://eurovision.games/logo.png"
+          articlePublishedTime={PUBLISHED}
+          articleModifiedTime={MODIFIED}
+          keywords={c.meta.keywords(lastYear)}
+          jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
+        />
+      )}
 
       <PageHero
         crumbs={crumbs}

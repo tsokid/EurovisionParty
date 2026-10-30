@@ -141,7 +141,7 @@ export type ContestIndex = Record<string, ContestIndexEntry>;
 
 /**
  * One row of content/countries/index.json. Counts skip cancelled contests (2020);
- * wins and best_place count archived years only, like /winners.
+ * wins and best_place count completed contests (stage finalized or archived), like /winners.
  */
 export type CountryIndexEntry = {
   iso: string;

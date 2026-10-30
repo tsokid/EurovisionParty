@@ -315,7 +315,7 @@ describe('/winners from data (SSR)', () => {
     const row1956 = rowWith(r.html, 'Refrain');
     expect(row1956).toContain('1956');
     expect(row1956).toContain('Switzerland');
-    expect(r.html).toContain('Recent winners (2010–2025)');
+    expect(r.html).toContain('Recent winners (2011–2026)');
     const crumbs = jsonLd(r).find((b) => b['@type'] === 'BreadcrumbList') as { itemListElement: { item: string }[] };
     expect(crumbs.itemListElement.map((i) => i.item)).toContain(`${ORIGIN}/en/past-contests`);
     expect(Object.keys(r.content)).toEqual(['contests/index.json']);
@@ -435,12 +435,25 @@ describe('review round 1', () => {
     expect(gr.head?.title).toBe('Greece at Eurovision: every entry, result and win');
   });
 
-  it('wins count archived years only (Bulgaria 2026 is finalized, not archived)', async () => {
+  it('wins count completed contests: Bulgaria won 2026 (finalized), as the hub says', async () => {
     const r = await render('/en/countries/bulgaria');
-    expect(r.html).not.toContain('id="wins"');
-    expect(r.head?.title).toBe('Bulgaria at Eurovision: every entry and result');
-    // The 2026 result still shows in the history table.
-    expect(rowWith(r.html, 'Bangaranga')).toContain('1st in the final');
+    expect(r.html).toContain('id="wins"');
+    expect(r.head?.title).toBe('Bulgaria at Eurovision: every entry, result and win');
+    expect(r.head?.description).toContain('1 win (2026)');
+    expect(rowWith(r.html, 'Bangaranga')).toContain('href="/en/eurovision-2026"');
+  });
+
+  it('/winners runs to the latest completed year (2026)', async () => {
+    const en = await render('/en/winners');
+    expect(en.head?.title).toBe('Eurovision Winners — Every Champion 1956 to Today · Eurovision Games');
+    expect(en.head?.description).toBe(
+      'Complete list of Eurovision Song Contest winners from 1956 to 2026. Recent champions, all-time leaderboard, record-holders, and notable moments.');
+    expect(en.head?.keywords).toContain('eurovision 2026 winner');
+    const row = rowWith(en.html, 'Bangaranga');
+    for (const s of ['2026', 'Bulgaria', '516', 'href="/en/eurovision-2026"']) expect(row).toContain(s);
+    const el = await render('/el/winners');
+    expect(el.head?.title).toBe('Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα · Eurovision Games');
+    expect(el.head?.description).toContain('από το 1956 μέχρι το 2026.');
   });
 
   it('/winners breadcrumb reads Past contests in the page and the JSON-LD', async () => {

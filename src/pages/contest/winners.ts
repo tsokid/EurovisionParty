@@ -2,7 +2,7 @@
 import type { ContestIndex, IndexWinner } from '../../content/contests/types';
 import type { Locale } from '../../lib/seo/locale';
 import { compareText } from '../../lib/seo/textSort';
-import { archivedContests, type IndexedContest } from './archive';
+import { completedContests, type IndexedContest } from './archive';
 
 /** The leaderboard lists countries with at least this many wins (the copy says "more than twice"). */
 export const LEADERBOARD_MIN_WINS = 3;
@@ -21,17 +21,17 @@ export interface LeaderboardRow {
 }
 
 export interface WinnersData {
-  /** Archived years with a winner, newest first. */
+  /** Completed years with a winner, newest first. */
   years: WinnerYear[];
-  /** Every archived year, newest first (the cancelled one included). */
+  /** Every completed year, newest first (the cancelled one included). */
   all: WinnerYear[];
   /** By wins, then name (deterministic). A shared first place counts as a win for each country. */
   leaderboard: LeaderboardRow[];
 }
 
-/** Archived years only, so the page matches its "1956 to 2025"-style copy until a year is archived. */
+/** Completed contests (finalized or archived): a winner is listed as soon as the result is final. */
 export function winnersData(index: ContestIndex, locale: Locale): WinnersData {
-  const all: WinnerYear[] = archivedContests(index)
+  const all: WinnerYear[] = completedContests(index)
     .reverse()
     .map((c) => ({ ...c, winners: c.winner ? [c.winner, ...c.co_winners] : [] }));
   const tally = new Map<string, LeaderboardRow>();

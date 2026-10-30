@@ -18,7 +18,7 @@ import { ContentPending } from './ContentPending';
 import { countryCopy, countryFacts } from './content/countryCopy';
 import { cityName } from './content/hubCopy';
 import { numCell, songCell } from './hub';
-import { CONTEST_INDEX, COUNTRY_INDEX, linkClass, yearCell, yearPath } from './archive';
+import { completedContests, CONTEST_INDEX, COUNTRY_INDEX, linkClass, yearCell, yearPath } from './archive';
 import { visibleTable } from './table';
 
 interface CountryData {
@@ -53,8 +53,8 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
   const { slug, country, indexable, countries, contests } = data;
   const c = countryCopy[locale];
   const k = c.country;
-  const archived = new Set(Object.entries(contests).filter(([, c]) => c.stage === 'archived').map(([y]) => Number(y)));
-  const f = countryFacts(country, locale, archived);
+  const completed = new Set(completedContests(contests).map((c) => c.year));
+  const f = countryFacts(country, locale, completed);
   const path = countryPath(slug);
   const name = (x: { name_en: string; name_el: string }) => (locale === 'el' ? x.name_el : x.name_en);
 

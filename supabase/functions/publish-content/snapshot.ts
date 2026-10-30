@@ -163,9 +163,9 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
 
     if (participations.length > 0) {
       const counted = participations.filter((p) => !p.cancelled);
-      // Wins and best place: archived years only, matching /winners (a live year is not settled history yet).
+      // Wins and best place: completed contests (finalized or archived), the same rule as /winners and the country pages.
       const places = counted
-        .filter((p) => contests.get(p.year)!.stage === 'archived')
+        .filter((p) => ['finalized', 'archived'].includes(contests.get(p.year)!.stage))
         .map((p) => p.final_place)
         .filter((n): n is number => n !== null);
       countryIndex[co.slug] = {
