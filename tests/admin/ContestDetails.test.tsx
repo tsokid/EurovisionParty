@@ -67,6 +67,24 @@ describe('ContestDetailsForm', () => {
     expect((screen.getByRole('button', { name: 'Save details' }) as HTMLButtonElement).disabled).toBe(true);
   });
 
+  it('locks the city slug of an archived year, with a hint (I3)', async () => {
+    h.contest = { ...h.contest, stage: 'archived' };
+    render(<ContestDetailsForm year={2025} />);
+    await screen.findByDisplayValue('Basel');
+    expect(field('City slug').disabled).toBe(true);
+    expect(screen.getByText(/City slug is part of the archive page URL and cannot change once the year is archived\./)).toBeTruthy();
+    // Other fields stay editable.
+    expect(field('City').disabled).toBe(false);
+  });
+
+  it('leaves the city slug editable before the year is archived', async () => {
+    h.contest = { ...h.contest, stage: 'finalized' };
+    render(<ContestDetailsForm year={2025} />);
+    await screen.findByDisplayValue('Basel');
+    expect(field('City slug').disabled).toBe(false);
+    expect(screen.queryByText(/cannot change once the year is archived/)).toBeNull();
+  });
+
   it('saves only the changed fields through update_contest, then calls onSaved', async () => {
     const onSaved = vi.fn();
     render(<ContestDetailsForm year={2025} onSaved={onSaved} />);

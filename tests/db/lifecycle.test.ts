@@ -36,11 +36,12 @@ describe('071 lifecycle and entry RPCs', () => {
       delete from public.rooms where true;
       delete from public.contests where year >= 2027;
       delete from public.parse_jobs where year >= 2027;
-      update public.contests set stage = 'finalized', archived_at = null where year = 2026;
+      update public.contests set stage = 'finalized', archived_at = null, indexable = false where year = 2026;
+      update public.contests set city_slug = 'vienna' where year = 2026;
 
       insert into public.contests (year, host_iso, city, city_slug, stage, archived_at)
       values (2025, 'CH', 'Basel', 'basel', 'archived', now())
-      on conflict (year) do update set stage = 'archived';
+      on conflict (year) do update set stage = 'archived', city = 'Basel', city_slug = 'basel', indexable = false;
       delete from public.contest_entries where year = 2025;
       insert into public.contest_entries (year, iso, artist, song, in_final, final_running_order, final_place, total_points, source) values
         (2025, 'AT', 'JJ', 'Wasted Love', true, 9, 1, 436, 'import:test'),
@@ -277,6 +278,31 @@ describe('071 lifecycle and entry RPCs', () => {
     ).toEqual({ stage: 'archived', stamped: true });
     expect(await stage(2027)).toBe('current');
     expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2027 });
+  });
+
+  it('archive makes the archived year indexable (I1: it was the live, indexed hub)', async () => {
+    await addContest(2027, 'upcoming');
+    await addEntry(2027, 'GR');
+    expect(await one(`select indexable from public.contests where year = 2026`)).toEqual({ indexable: false });
+    await db.query(`select public.archive_contest(2026)`);
+    expect(await one(`select stage, indexable from public.contests where year = 2026`)).toEqual({ stage: 'archived', indexable: true });
+    expect(await one(`select indexable from public.contests where year = 2027`)).toEqual({ indexable: false });
+  });
+
+  // ── update_contest on archived years (I3) ────────────────────────────
+  it('update_contest refuses a city_slug change once the year is archived', async () => {
+    await expect(db.query(`select public.update_contest(2025, '{"city_slug":"basle"}'::jsonb)`)).rejects.toThrow(
+      /city_slug of an archived year cannot change/,
+    );
+    expect(await one(`select city_slug from public.contests where year = 2025`)).toEqual({ city_slug: 'basel' });
+    // The same value, and every other field, still go through.
+    await db.query(`select public.update_contest(2025, '{"city_slug":"basel","city":"Basel (CH)","indexable":true}'::jsonb)`);
+    expect(await one(`select city, city_slug, indexable from public.contests where year = 2025`)).toEqual({
+      city: 'Basel (CH)', city_slug: 'basel', indexable: true,
+    });
+    // Not archived yet: city_slug may change.
+    await db.query(`select public.update_contest(2026, '{"city_slug":"wien"}'::jsonb)`);
+    expect(await one(`select city_slug from public.contests where year = 2026`)).toEqual({ city_slug: 'wien' });
   });
 
   // ── unarchive_contest ────────────────────────────────────────────────

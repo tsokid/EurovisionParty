@@ -3,7 +3,9 @@
 // dates and the indexable switch. Saved through update_contest with only
 // the changed fields; a change goes live with the next Publish.
 // city_slug is checked here with the same pattern as the contests check
-// constraint of migration 070; the SQL stays authoritative.
+// constraint of migration 070; the SQL stays authoritative. It is locked
+// once the year is archived (part of the archive URL; update_contest
+// refuses the change too).
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
@@ -50,6 +52,7 @@ const orNull = (v: string): string | null => (v === '' ? null : v);
 export function ContestDetailsForm({ year, onSaved }: Props) {
   const [original, setOriginal] = useState<Details | null>(null);
   const [form, setForm] = useState<Details | null>(null);
+  const [archived, setArchived] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -60,14 +63,18 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
       const [c, co] = await Promise.all([
         supabase
           .from('contests')
-          .select('city, city_slug, host_iso, semi1_date, semi2_date, final_date, indexable')
+          .select('city, city_slug, host_iso, semi1_date, semi2_date, final_date, indexable, stage')
           .eq('year', year)
           .maybeSingle(),
         supabase.from('countries').select('iso, name_en').order('name_en'),
       ]);
       if (c.error) throw c.error;
       if (co.error) throw co.error;
-      const row = (c.data ?? null) as Details | null;
+      const data = (c.data ?? null) as (Details & { stage?: string }) | null;
+      const row: Details | null = data
+        ? Object.fromEntries(KEYS.map((k) => [k, data[k]])) as unknown as Details
+        : null;
+      setArchived(data?.stage === 'archived');
       setOriginal(row);
       setForm(row);
       setCountries((co.data ?? []) as Country[]);
@@ -145,8 +152,14 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
             aria-label="City slug"
             value={form.city_slug}
             onChange={(e) => set('city_slug', e.target.value)}
-            className={`${INPUT} font-mono`}
+            disabled={archived}
+            className={`${INPUT} font-mono disabled:opacity-50`}
           />
+          {archived && (
+            <span className="text-xs text-white/50">
+              City slug is part of the archive page URL and cannot change once the year is archived.
+            </span>
+          )}
         </label>
         <label className="text-sm text-white/80 flex flex-col gap-1">
           <span className="text-xs text-white/50 uppercase tracking-wide">Host</span>

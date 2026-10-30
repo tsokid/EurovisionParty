@@ -407,6 +407,7 @@ grant execute on function public.create_contest(int, text, text, text, date, dat
 -- ── B2. update_contest ──────────────────────────────────────
 -- Partial update from a jsonb object. Keys outside the allow-list
 -- raise; stage and timestamps only move through the lifecycle RPCs.
+-- city_slug of an archived year is frozen (it is part of the archive URL).
 -- A key present with JSON null sets the column to null.
 create or replace function public.update_contest(p_year int, p_fields jsonb)
 returns void
@@ -431,6 +432,13 @@ begin
   select * into v_row from public.contests where year = p_year for update;
   if not found then
     raise exception 'contest % not found', p_year;
+  end if;
+
+  -- I3: an archived year's URL (/past-contests/eurovision-{year}-{city_slug})
+  -- is published and indexed; its slug never changes.
+  if v_row.stage = 'archived' and p_fields ? 'city_slug'
+     and (p_fields->>'city_slug') is distinct from v_row.city_slug then
+    raise exception 'city_slug of an archived year cannot change';
   end if;
 
   v_row := jsonb_populate_record(v_row, p_fields);
@@ -668,7 +676,7 @@ revoke execute on function public.finalize_contest(int) from public, anon;
 grant execute on function public.finalize_contest(int) to authenticated;
 
 -- ── B7. archive_contest ─────────────────────────────────────
--- Y finalized -> archived, Y+1 upcoming -> current, in one transaction
+-- Y finalized -> archived (and indexable), Y+1 upcoming -> current, in one transaction
 -- (D4: only once Y+1 has at least one entry). Y is demoted first so
 -- one_live_contest holds at every row.
 create or replace function public.archive_contest(p_year int)
@@ -704,8 +712,10 @@ begin
     raise exception 'no entries for %; archive of % refused', p_year + 1, p_year;
   end if;
 
+  -- I1: Y was the live, indexed hub; its archive page (full results)
+  -- takes over that traffic, so it is indexable from the start.
   update public.contests
-     set stage = 'archived', archived_at = now(), updated_at = now()
+     set stage = 'archived', archived_at = now(), indexable = true, updated_at = now()
    where year = p_year;
 
   update public.contests
