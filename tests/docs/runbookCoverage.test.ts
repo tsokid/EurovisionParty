@@ -92,6 +92,25 @@ const BRIEF_TOKENS = [
   'deptype',
   'importBoundary.test.ts',
   '_shared/contestTypes.ts',
+  // Final fix wave (2b final review).
+  '075_backfill_2026_semis.sql',
+  'semi_set',
+  '**30**',
+  'Excluded by noindex',
+  '144',
+  'git switch -C rollback-main origin/main',
+  'supabase/.gitignore',
+  ':[YOUR-PASSWORD]',
+  'overrides `PGPASSWORD`',
+  'REVOKE',
+  'build-local.ts',
+  '1970-01-01T00:00:00Z',
+  'Redeploy',
+  'commit author',
+  'npm run build',
+  'bundleSize.test.ts',
+  'historicalUrls.test.ts',
+  'eurovision-2026-vienna | grep -c',
 ];
 
 const runbook = readFileSync(RUNBOOK, 'utf8');
@@ -130,6 +149,21 @@ describe('cutover runbook coverage', () => {
     expect(merge).toBeLessThan(game);
     expect(game).toBeLessThan(publish);
     expect(publish).toBeLessThan(drop);
+  });
+
+  it('075 runs after the game reads and before the first Publish; the freeze rule names the right steps', () => {
+    const game = runbook.indexOf('### 8.3 Game reads');
+    const apply075 = runbook.indexOf('### 8.4 Apply 075');
+    const publish = runbook.indexOf('## 9. First Publish');
+    expect(game).toBeGreaterThanOrEqual(0);
+    expect(apply075).toBeGreaterThan(game);
+    expect(publish).toBeGreaterThan(apply075);
+    const freeze = runbook.split(/\r?\n/).find((l) => l.includes('Freeze rule'))!;
+    expect(freeze).toContain('first Publish in step 9');
+    expect(freeze).not.toContain('step 8,');
+    expect(runbook).not.toContain('until rollback or 072');
+    expect(runbook).not.toMatch(/\b5 finalists\b/);
+    expect(runbook).not.toContain('git switch -c rollback-main');
   });
 
   it('backup and restore commands keep privileges (no --no-privileges in any code block)', () => {

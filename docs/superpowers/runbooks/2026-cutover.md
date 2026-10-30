@@ -7,10 +7,10 @@
 | **Scope** | Sub-projects 1 (prerender/SEO), 2a (contests data layer) and 2b (archive pages + Publish) go live together. |
 | **Branch** | `feat/foundation-prerender` (worktree `C:/Users/User/EurovisionParty-foundation`). Merge to `main` = Vercel production deploy. |
 | **Supabase** | Project ref `ameneqrrfdhntfzvchnn`, free tier. Migrations are applied by hand in **Dashboard → SQL Editor** (paste the whole file, Run). Already applied: up to **069**. |
-| **Apply at cutover** | 070, 071, 073, 074, then 072 **last**. |
+| **Apply at cutover** | 070, 071, 073, 074; 075 after the merge, before the first Publish (8.4); then 072 **last**. |
 | **Edge functions** | `eurovision-parse` (changed), `publish-content` (new). `admin-otp` unchanged, do not redeploy. |
 | **Time** | ~2 hours for steps 0–11. Do not start late in the day: step 10 (072) must wait until steps 7–9 pass. |
-| **Old admin** | From step 4 until rollback or 072, the **old** admin's Parser and Results controls stay unused (they would hit 071's functions or write the old tables). |
+| **Old admin** | From step 4 until 072, the **old** admin's Parser and Results controls stay unused (they would hit 071's functions or write the old tables). |
 | **Placeholders** | `<ANON_KEY>`, `<OLD_MAIN_SHA>`, `<SUPABASE_ACCESS_TOKEN>`, `<GITHUB_PAT>`, `<ROOM_CODE>`. Never paste real values into this file, a commit or a chat. |
 
 ## Why this order (Γιατί αυτή η σειρά)
@@ -20,7 +20,11 @@
 - **072 drops the old tables.** It is the only step that cannot be undone by a Vercel rollback, so it runs last, after the new site is verified.
 - **Publish** commits to `main`. It must run **after** the merge, or the bot commit lands on `main` while the branch is unmerged and the merge conflicts on `content/**` and `vercel.json`.
 
-Order: **068/069 (done) → 070 → 071 → 073 → 074 → edge functions + secrets → merge to main → verify site, admin and game → first Publish → verify → 072**.
+Order: **068/069 (done) → 070 → 071 → 073 → 074 → edge functions + secrets → merge to main → verify site, admin and game → 075 (2026 semis) → first Publish → verify → 072**.
+
+**Before the merge** (on the branch, local): run `npm run build`, then `npx vitest run tests/scripts/historicalUrls.test.ts tests/scripts/bundleSize.test.ts`. Both **skip silently without `dist/`**, so they only prove something right after a build. Expect: all pass (85 historical URLs in one hop; main chunk within its budget).
+
+**Never run `scripts/snapshot/build-local.ts` and commit after the first Publish.** It rebuilds `content/` from Wikipedia data and would overwrite production 2026 (and any admin edit) on the next deploy. The script refuses when `content/site.json` carries a Publish's `generated_at` (anything but `1970-01-01T00:00:00Z`); `--force` overrides that, so do not use it on `main`.
 
 ## Checklist (Λίστα ελέγχου)
 
@@ -35,10 +39,10 @@ Order: **068/069 (done) → 070 → 071 → 073 → 074 → edge functions + sec
 | 5 | Apply **073** (history 1956–2025) and **074** (publish_runs) | SQL Editor | yes | ☐ |
 | 6 | Deploy `eurovision-parse` + `publish-content`; set `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | terminal / Dashboard | yes (redeploy old) | ☐ |
 | 7 | Record `<OLD_MAIN_SHA>`; merge `feat/foundation-prerender` → `main`; verify production (SP1 checklist + 10 historical URLs + CLS) | git, Vercel, curl | yes (Instant Rollback) | ☐ |
-| 8 | Admin smoke test (OTP login, Contests 1956–2026) and game reads (lobby lineup = 2026 finalists, `PredictionsResultsScreen`), before Publish | /admin, site, SQL | yes (Instant Rollback) | ☐ |
+| 8 | Admin smoke test (OTP login, Contests 1956–2026) and game reads (lobby lineup = 2026 finalists, `PredictionsResultsScreen`); then apply **075** (2026 semi-final data) and check 30 semi rows, before Publish | /admin, site, SQL | yes (Instant Rollback; 075 only fills semi columns) | ☐ |
 | 9 | First **Publish**; verify commit, Vercel build, `/en/eurovision-2026` | /admin, GitHub, Vercel | yes (git revert to `<OLD_MAIN_SHA>`; **not** Instant Rollback) | ☐ |
 | 10 | Apply **072** (drops old 2026 tables, guarded) | SQL Editor | **no: restore from backup** | ☐ |
-| 11 | Post-deploy: Search Console sitemap + URL Inspection, watch Pages 3 weeks; semis paste check; indexable switches | GSC, /admin | n/a | ☐ |
+| 11 | Post-deploy: Search Console sitemap + URL Inspection, watch Pages 3 weeks; semis cross-check (optional); indexable switches | GSC, /admin | n/a | ☐ |
 | 12 | Before May 2027: create 2027 (Burgas), lineup, Archive 2026, re-enable parser-tick (047) | /admin, SQL Editor | see step | ☐ |
 
 Step format below: **Do** · **Run** · **Expect** · **If it fails**.
@@ -104,7 +108,7 @@ Free tier has **no** daily backups or PITR, and Dashboard → Database → Backu
 
 **0.4a Shell session setup (Ρύθμιση τερματικού).** Run this block in Git Bash at the start of every session that uses `pg_dump`, `pg_restore` or `psql` (steps 0.4, 5.1, Rollback).
 - Install client tools whose major version is **≥ the server's** (from 0.2): `winget install PostgreSQL.PostgreSQL.17`. winget does not add them to PATH; the first line below does (change `17` if you installed another major).
-- Dashboard → **Connect** → **Session pooler** → copy the URI **unchanged** (host and region exactly as shown; do not retype or guess the host; the direct `db.<ref>.supabase.co` host is IPv6-only on free tier). Delete only the `:[YOUR-PASSWORD]` part; the password goes into `PGPASSWORD` instead, so it needs no URL-encoding. (If you ever put a password inside a URI, URL-encode its special characters: `@`→`%40`, `#`→`%23`, `/`→`%2F`, `:`→`%3A`, `?`→`%3F`, `%`→`%25`.)
+- Dashboard → **Connect** → **Session pooler** → copy the URI **unchanged** (host and region exactly as shown; do not retype or guess the host; the direct `db.<ref>.supabase.co` host is IPv6-only on free tier). **Delete the `:[YOUR-PASSWORD]` part** (colon included) before pasting it below: a password left in the URI, even the literal placeholder, overrides `PGPASSWORD` and the login fails. The password goes into `PGPASSWORD` instead, so it needs no URL-encoding. (If you ever put a password inside a URI, URL-encode its special characters: `@`→`%40`, `#`→`%23`, `/`→`%2F`, `:`→`%3A`, `?`→`%3F`, `%`→`%25`.)
 - `read -s` keeps the password out of the shell history and off the screen.
 
 ```bash
@@ -132,7 +136,7 @@ End of session: `unset PGURL PGPASSWORD`.
   pg_restore --list eurogames-pre-cutover-*.dump | grep -c "TABLE DATA"
   grep -c "COPY public.eurovision_2026" old-2026-tables-*.sql
   ```
-  Why these flags: `--no-owner` because the pooler login cannot recreate Supabase's internal owners; **no** `--no-privileges`, so the `GRANT`s for `anon` / `authenticated` / `service_role` come back with a restore (without them the API cannot read the restored tables).
+  Why these flags: `--no-owner` because the pooler login cannot recreate Supabase's internal owners; **no** `--no-privileges`, so a restore re-applies the exact privileges, the `REVOKE`s included. 069, 070, 071 and 074 lock tables and functions down for `anon` / `authenticated` / `service_role`; restored without privileges, objects would fall back to Supabase's default grants and reopen what those migrations closed.
 - **Expect:** both files non-empty; the `grep -c` on the plain file prints `2`.
 - **If it fails:** `server version mismatch` → install a newer major and fix the PATH line. `pg_dump: command not found` → PATH line missing or wrong major folder. `password authentication failed` → re-run the `read -s` line; still failing → Dashboard → Database → Settings → Reset database password (the app uses API keys, not this password). **Do not continue without both files.**
 
@@ -221,7 +225,7 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
 
 ## 4. Apply 071: RPCs, lifecycle, parser guard, phase triggers (Εφαρμογή 071)
 
-> **Freeze rule (Πάγωμα):** from now until 072 (step 10) is applied, **do not edit 2026 entries** — not in the old admin, not in the new admin, not by SQL, no parser runs. 072's guard compares the 070 copy with the old tables and would abort. (The one exception is the first Publish in step 8, which only reads.)
+> **Freeze rule (Πάγωμα):** from now until 072 (step 10) is applied, **do not edit 2026 entries** — not in the old admin, not in the new admin, not by SQL, no parser runs. 072's guard compares the 070 copy with the old tables and would abort. (Exceptions: 075 in step 8.4, which only fills the semi columns that 072's guard does not compare; the first Publish in step 9, which only reads.)
 
 - **Do:** SQL Editor → paste all of `supabase/migrations/071_rpcs_on_contest_entries.sql` → Run.
 - **Run** (function privileges; a missing function raises an error, which is also a failure):
@@ -366,7 +370,7 @@ Use the Supabase CLI through `npx` (no install, no Docker) or the Dashboard.
 - **If it fails:**
   - `401 Missing authorization header` → deployed with JWT verification on. Redeploy with `--no-verify-jwt`, or Dashboard → function → Details → toggle "Enforce JWT verification" off.
   - "Module not found …" for a path outside `supabase/functions/` → should not happen after P.2 (`tests/functions/importBoundary.test.ts` guards it). Stop, fix in the repo, redeploy. Nothing user-facing depends on it yet.
-  - "open supabase/config.toml: no such file or directory" (or "Cannot find project ref") → the repo has no `supabase/config.toml`. Keep `--project-ref` and `--workdir .` as above and run from the repo root. Still failing → `npx supabase@2.122.0 init` (answer **N** to the editor-settings prompts) to create `supabase/config.toml`, deploy again, then delete that generated `supabase/config.toml` (do not commit it).
+  - "open supabase/config.toml: no such file or directory" (or "Cannot find project ref") → the repo has no `supabase/config.toml`. Keep `--project-ref` and `--workdir .` as above and run from the repo root. Still failing → `npx supabase@2.122.0 init` (answer **N** to the editor-settings prompts) to create `supabase/config.toml`, deploy again, then delete what `init` generated: `supabase/config.toml` **and** `supabase/.gitignore` (do not commit either; `git status --short` must be clean again).
   - CLI unusable → Dashboard fallback: Edge Functions → `eurovision-parse` → **Code** → replace each of the 5 files with the repo version (same names), **Deploy**. For `publish-content`: Edge Functions → **Deploy a new function → Via editor**, name `publish-content`, create the 5 files with the repo contents, Deploy, then turn JWT verification off in Details. The editor only has the files you add, so also create `_shared/contestTypes.ts` with the contents of `supabase/functions/_shared/contestTypes.ts`, to match the `../_shared/contestTypes.ts` import.
 - **Then:** revoke the access token (account/tokens → Revoke).
 
@@ -405,7 +409,7 @@ Names are exactly as read in `supabase/functions/publish-content/index.ts`.
   ```
   (Alternative with a record: `gh pr create --base main --head feat/foundation-prerender --title "SP1+SP2 cutover"`, then Merge in GitHub.)
 - **Also write down** the current Production deployment in Vercel → Deployments (its URL; its commit is `<OLD_MAIN_SHA>`).
-- **Expect:** `FAST-FORWARD-OK`; push succeeds; Vercel → Deployments shows a **Production** build from `main` → Ready (build prerenders ~290 pages).
+- **Expect:** `FAST-FORWARD-OK`; push succeeds; Vercel → Deployments shows a **Production** build from `main` → Ready (build prerenders 290 pages).
 - **If it fails:** no `FAST-FORWARD-OK` → `main` moved; merge `origin/main` into the branch, re-run tests, push, retry. Vercel build fails → production stays on the old deployment automatically; fix on the branch and push again.
 - **Main worktree hygiene:** `C:/Users/User/EurovisionParty` has untracked copies of `068_stop_idle_crons.sql` / `069_lock_definer_rpcs.sql` (identical to the committed ones) and local edits to `.gitignore` / `public/sitemap.xml`. Before `git pull` there: delete the two untracked migration files and `git stash` the rest, or the pull refuses.
 
@@ -476,6 +480,23 @@ None of these reads depend on Publish. The admin and the game read Supabase (`co
 - **Clean up** the test room afterwards (Your Rooms → delete, as host).
 - **If it fails:** empty lineup → `current_participants` is empty or the client still has the old bundle (hard reload). Errors calling an RPC → check 071 applied (step 4). Not fixable quickly → Instant Rollback (still valid: nothing published yet); DB stays as is (old tables still exist).
 
+### 8.4 Apply 075: 2026 semi-final data (Εφαρμογή 075 — ημιτελικοί 2026)
+
+070 copied 2026 from the old grand-final tables, which hold no semi-final data. Without 075 the first Publish would state "0 countries in the semi-finals; 35 go straight to the final". Publish now refuses such a snapshot (a completed year from 2004 with no semi assignment), so 075 must run first.
+- **Do:** SQL Editor → paste all of `supabase/migrations/075_backfill_2026_semis.sql` → Run. Generated from `data/history/2026.json` (`scripts/history/backfill2026Semis.ts`); one transaction; idempotent (a second run changes nothing). It touches only `semi`, `semi_place`, `semi_points`, `qualified` (plus `updated_at`), never `in_final` or final results, so 072's guard (step 10) still passes.
+- **Run:**
+  ```sql
+  select count(*) filter (where semi is not null)        as semi_set,
+         count(*) filter (where semi = 1)                as semi1,
+         count(*) filter (where semi = 2)                as semi2,
+         count(*) filter (where qualified)               as qualified,
+         count(*) filter (where in_final)                as in_final,
+         count(*) filter (where final_place is not null) as final_place_set
+    from public.contest_entries where year = 2026;
+  ```
+- **Expect:** `semi_set` = **30** (15 + 15), `qualified` = 20, and `in_final` / `final_place_set` unchanged from step 3.
+- **If it fails:** "075 aborted" → nothing committed; a 2026 ISO from `data/history/2026.json` is missing from `contest_entries` (compare with step 3's 35 entries). Re-run after fixing.
+
 ---
 
 ## 9. First Publish (Πρώτο Publish)
@@ -492,9 +513,9 @@ After this step, Vercel's Instant Rollback (Hobby: previous deployment only) wou
   ```
 - **Expect:**
   - `publish_runs` newest row `ok` with a `commit_sha` and `files_changed` > 0; `unpublished_contests` = 0.
-  - GitHub → `tsokid/EurovisionParty` → commits on `main`: one new commit by the token owner, message naming the changed years, **no** `Co-Authored-By` trailer, touching `content/**` (and `vercel.json` only if redirects changed).
-  - Vercel builds that commit to Production → Ready.
-  - `https://eurovision.games/en/eurovision-2026` shows the real final: **25-ish finalists** (not the 5 from the Wikipedia-only local snapshot) and the winner confirmed in step 3 (expected Bulgaria, 516).
+  - GitHub → `tsokid/EurovisionParty` → commits on `main`: one new commit by the token owner, message naming the changed years, **no** `Co-Authored-By` trailer. Its diff: `content/contests/2026.json` (and the 2026 rows of `content/countries/*.json`) now carry `"source": "parser"` / `"manual"` instead of `"import:wikipedia"`, with the semi fields present (from 075); `content/site.json` gets a real `generated_at`. `vercel.json` is **unchanged**: the repo already holds the generated redirects (210 for 1956–2025 plus 4 for the live 2026 hub; 256 redirects in all, under Vercel's 1024 limit). It changes only when a year is archived or un-archived.
+  - Vercel builds that commit to Production → Ready. **Check this explicitly** (Vercel → Deployments → the newest Production deployment's commit = the `commit_sha` above). Hobby only deploys commits whose author is the Vercel account owner's GitHub identity. publish-content sets no author, so GitHub records the token owner (`tsokid`), which matches. If the commit has no deployment, or it shows "Blocked" / "commit author is not a member": Vercel → Deployments → the latest Production deployment → ⋯ → **Redeploy** (it builds the current `main`, Publish commit included), and check that the PAT belongs to the same GitHub account as the Vercel login. To make it permanent, add an explicit `author` with the owner's GitHub name and email to the commit request in `publish-content/github.ts`.
+  - `https://eurovision.games/en/eurovision-2026` shows the real final with the winner confirmed in step 3 (expected Bulgaria, 516); `/en/eurovision-2026/semifinals` opens with "30 countries, two nights, 20 tickets to the final." and shows both semi-final tables (15 + 15) with places and points.
 - **If it fails:**
   - `status = error`, `error` "Bad credentials" / 401 → `GITHUB_TOKEN` wrong or expired (6.3).
   - 403/404 from GitHub → token not scoped to this repo or lacks Contents write.
@@ -557,13 +578,14 @@ Only after steps 7–9 pass (site, admin, game, first Publish). After this, roll
      | `https://eurovision.games/en/eurovision-predictions` | indexable |
      | `https://eurovision.games/en/eurovision-history` (old redirect) | "Page with redirect" → `/en/past-contests` |
      Request indexing for the indexable ones.
-  3. **Pages** report: check weekly for **3 weeks**. Watch "Not found (404)", "Duplicate without user-selected canonical", "Redirect error". Expected movement: `/` → `/en` consolidation and the `/en/winners` description change (one-off, SP2b T6 ruling).
+  3. **Pages** report: expect about **144 "Excluded by noindex"**, by design: the 70 archive years × 2 locales (all `indexable = false` until 11.3) and the few countries with fewer than 3 participations. That count falls as you switch years indexable. Check weekly for **3 weeks**. Watch "Not found (404)", "Duplicate without user-selected canonical", "Redirect error". Expected movement: `/` → `/en` consolidation and the `/en/winners` description change (one-off, SP2b T6 ruling).
 - **If it fails:** a spike of 404s → compare with `tests/fixtures/historical-urls.txt` and add redirects.
 
-### 11.2 Semis paste check (2a T9 note)
-- **Do (after 072 only — it writes 2026 rows):** Admin → Parser → **Parse semis** for 2026. eurovision.com usually blocks the server fetch (Cloudflare 403); then open each semi-final results page in your browser, View source, copy all, paste into SF1 / SF2, submit. Then Publish.
-- **Expect:** non-qualifiers on `/en/eurovision-2026/semifinals` show semi places and points.
-- **If it fails:** "sanity" refusal → you pasted the wrong page (e.g. SF2 into SF1) or a client-rendered page without the scoreboard; the parser writes nothing. Optional step; skipping it loses nothing.
+### 11.2 Semis cross-check (optional; 2a T9 note)
+075 (8.4) already filled the 2026 semi-finals from Wikipedia, so `/en/eurovision-2026/semifinals` is complete after the first Publish. This step only cross-checks them against eurovision.com and exercises the paste path.
+- **Do (after 072 only — it writes 2026 rows):** Admin → Parser → **Parse semis** for 2026. eurovision.com usually blocks the server fetch (Cloudflare 403); then open each semi-final results page in your browser, View source, copy all, paste into SF1 / SF2, submit. If anything changed, Publish.
+- **Expect:** `select count(*) from contest_entries where year = 2026 and semi is not null` is still **30**; places and points match eurovision.com (differences mean the Wikipedia copy was wrong; the parsed values win).
+- **If it fails:** "sanity" refusal → you pasted the wrong page (e.g. SF2 into SF1) or a client-rendered page without the scoreboard; the parser writes nothing. Skipping this step loses nothing.
 
 ### 11.3 Archive years: noindex → indexable
 All 1956–2025 years import as `indexable = false`. For each year where you add real text and images: Admin → Contests → year → Details → **Indexable** on → Save → Publish. **Expect:** the page loses `noindex` and enters the sitemap after the Vercel build.
@@ -588,7 +610,11 @@ All 1956–2025 years import as `indexable = false`. For each year where you add
 ### 12.2 Lineup, then Archive 2026 (Συμμετοχές, μετά Αρχειοθέτηση 2026)
 - **Do:** Contests → 2027 → **Edit**: enter the announced lineup as it lands. When the 2027 lineup is in: Contests → 2026 → **Archive**, then Publish.
 - **Important:** there is **no separate "Start 2027"** step in this cycle. `start_contest(2027)` is refused while 2026 is `finalized` ("contest 2026 is finalized; start of 2027 refused"). `archive_contest(2026)` archives 2026 **and** makes 2027 `current` in one transaction, and requires 2027 `upcoming` with at least one entry. `start_contest` is only for a year with nothing live.
-- **Expect:** `select public.live_contest_year();` = 2027; `/en/eurovision-2026` redirects to `/en/past-contests/eurovision-2026-vienna` after the Publish (generated redirect in `vercel.json`).
+- **Expect:** `select public.live_contest_year();` = 2027; `select indexable from contests where year = 2026;` = **true** (Archive keeps the year indexed: it was the live hub). After the Publish: `/en/eurovision-2026` redirects to `/en/past-contests/eurovision-2026-vienna` (generated redirect in `vercel.json`), legacy slugs such as `/en/eurovision-2026-schedule` reach the same page in one hop, and the archive page has **no** `noindex`:
+  ```bash
+  curl -s https://eurovision.games/en/past-contests/eurovision-2026-vienna | grep -c 'noindex'   # expect: 0
+  ```
+  The city slug of an archived year is part of its URL and can no longer be edited (the admin field is locked; `update_contest` refuses).
 
 ### 12.3 Re-enable parser-tick (047) (Επανενεργοποίηση parser-tick)
 047 re-creates the per-minute `parser-tick` cron that 068 removed. Its body only touches `parse_jobs` (columns unchanged by 070–074) and calls `eurovision-parse` with `{"action":"participants"}` / `{"action":"results"}` — both still exist, and both now write through `parser_upsert_entries` into `contest_entries`. Compatible, with these checks first:
@@ -625,7 +651,7 @@ In every case below the **old admin's Parser and Results controls stay unused** 
 **Git revert to the old tree** (run in `C:/Users/User/EurovisionParty-foundation`). This works whether `main` was fast-forwarded or merged with a PR, and it also reverts the bot's Publish commits:
 ```bash
 git fetch origin
-git switch -c rollback-main origin/main
+git switch -C rollback-main origin/main          # -C: reuses the name if a rollback-main branch exists
 git rm -r -q .                                   # tracked files only; .superpowers/ and other ignored files stay
 git checkout <OLD_MAIN_SHA> -- .
 git commit -m "revert: roll production back to pre-cutover <OLD_MAIN_SHA>"
@@ -659,7 +685,10 @@ Full disaster only: `pg_restore --dbname="$PGURL" --no-owner --clean --if-exists
 | SP1 T9: preview checklist | 7.2 |
 | SP1: `/` → `/en` 308, Accept-Language `el` → `/el` | 7.2 |
 | SP1: CSP Google Fonts, owner keeps | 11.4 |
-| 2b T2: hub shows 5 finalists until first prod publish | 9.1 |
+| 2b T2: local snapshot 2026 from Wikipedia until first prod publish | 9.1 |
+| 2b final review C1: production 2026 has no semi data → apply 075 before the first Publish | 8.4, 9.1, 11.2 |
+| 2b final review I1: Archive makes the archived year indexable | 12.2 |
+| 2b final review: never run build-local after the first Publish | Why this order |
 | 2b T3: runtime publish commits carry no Co-Authored-By trailer | 9.1 |
 | 2b T6: winners breadcrumb → Past contests; `/winners` description changes once | 7.2, 11.1 |
 | 2b T9: never-built slugs, owner decision | 11.4 |
