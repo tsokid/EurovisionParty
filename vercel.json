@@ -24,6 +24,178 @@
       "permanent": true
     },
     {
+      "source": "/:locale(en|el)/eurovision-2026-predictions",
+      "destination": "/:locale/eurovision-predictions",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-2026-schedule",
+      "destination": "/:locale/eurovision-2026/schedule",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-2026-semifinals",
+      "destination": "/:locale/eurovision-2026/semifinals",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-2026-songs",
+      "destination": "/:locale/eurovision-2026/songs",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-history",
+      "destination": "/:locale/past-contests",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-ellada",
+      "destination": "/:locale/countries/greece",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-kypros",
+      "destination": "/:locale/countries/cyprus",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-2026-elliniko-tragoudi",
+      "destination": "/:locale/countries/greece",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-2026-programma",
+      "destination": "/:locale/eurovision-2026/schedule",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-bingo",
+      "destination": "/:locale/eurovision-games",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-drinking-game",
+      "destination": "/:locale/eurovision-party",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-sweepstake",
+      "destination": "/:locale/eurovision-games",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/glossary",
+      "destination": "/:locale/faq",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/printables",
+      "destination": "/:locale/eurovision-party",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/best-eurovision-app",
+      "destination": "/:locale/eurovision-games",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/compare/:any*",
+      "destination": "/:locale/eurovision-games",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026-predictions",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "(?<l>.*\\bel\\b.*)"
+        }
+      ],
+      "destination": "/el/eurovision-predictions",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026-predictions",
+      "destination": "/en/eurovision-predictions",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026-schedule",
+      "destination": "/en/eurovision-2026/schedule",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026-semifinals",
+      "destination": "/en/eurovision-2026/semifinals",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026-songs",
+      "destination": "/en/eurovision-2026/songs",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-history",
+      "destination": "/en/past-contests",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-ellada",
+      "destination": "/en/countries/greece",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-kypros",
+      "destination": "/en/countries/cyprus",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026-elliniko-tragoudi",
+      "destination": "/en/countries/greece",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026-programma",
+      "destination": "/en/eurovision-2026/schedule",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-bingo",
+      "destination": "/en/eurovision-games",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-drinking-game",
+      "destination": "/en/eurovision-party",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-sweepstake",
+      "destination": "/en/eurovision-games",
+      "permanent": true
+    },
+    {
+      "source": "/glossary",
+      "destination": "/en/faq",
+      "permanent": true
+    },
+    {
+      "source": "/printables",
+      "destination": "/en/eurovision-party",
+      "permanent": true
+    },
+    {
+      "source": "/best-eurovision-app",
+      "destination": "/en/eurovision-games",
+      "permanent": true
+    },
+    {
+      "source": "/compare/:any*",
+      "destination": "/en/eurovision-games",
+      "permanent": true
+    },
+    {
       "source": "/",
       "has": [
         {
@@ -41,7 +213,7 @@
       "permanent": true
     },
     {
-      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-predictions|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
+      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
       "has": [
         {
           "type": "header",
@@ -53,7 +225,7 @@
       "permanent": true
     },
     {
-      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-predictions|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
+      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
       "destination": "/en/:slug",
       "permanent": true
     },

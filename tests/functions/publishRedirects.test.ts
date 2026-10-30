@@ -26,8 +26,12 @@ function contest(year: number, city_slug: string, stage: ContestRow['stage']): C
 const archived2026 = [contest(2025, 'basel', 'archived'), contest(2026, 'vienna', 'archived'), contest(2027, 'burgas', 'current')];
 const live2026 = [contest(2025, 'basel', 'archived'), contest(2026, 'vienna', 'finalized'), contest(2027, 'burgas', 'upcoming')];
 
+// The hub shape only: static flat-slug redirects such as /eurovision-2026-songs
+// (Task 9) share the prefix but are not generated.
 const yearSources = (json: string, year: number) =>
-  (JSON.parse(json).redirects as Array<{ source: string }>).filter((r) => r.source.includes(`/eurovision-${year}`));
+  (JSON.parse(json).redirects as Array<{ source: string }>).filter((r) =>
+    new RegExp(`/eurovision-${year}(/|$)`).test(r.source),
+  );
 
 describe('generatedRedirects', () => {
   it('emits three redirect shapes for an archived year, none for others, by year', () => {
