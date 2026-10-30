@@ -7,6 +7,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { formatError } from "../lib/formatError";
+import { fetchLiveContestYear } from "../../lib/liveContestYear";
 
 const PHASES = [
   { id: "lobby", label: "Lobby", color: "bg-white/15 text-white" },
@@ -43,6 +44,7 @@ export default function PhaseMonitor() {
     setLoading(true);
     setErr(null);
     try {
+      const liveYear = await fetchLiveContestYear();
       const [{ data: r, error: rErr }, { data: j, error: jErr }, { data: hosts, error: hErr }] =
         await Promise.all([
           supabase
@@ -52,7 +54,7 @@ export default function PhaseMonitor() {
           supabase
             .from("parse_jobs")
             .select("kind, status")
-            .eq("year", 2026),
+            .eq("year", liveYear),
           supabase
             .from("players")
             .select("room_id, name")

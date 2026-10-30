@@ -1,9 +1,8 @@
 // src/hooks/useParticipants.ts
-// Loads the active grand-final lineup from the parser-populated table
-// (public.eurovision_2026_participants). Falls back to the hardcoded
-// COUNTRIES_2026 constant only if the table is empty (e.g. fresh DB
-// before the participants parser runs) so existing 2026 flows keep
-// working.
+// Loads the live-year grand-final lineup from the current_participants
+// view (contest_entries filtered to the live year + finalists). Falls
+// back to the hardcoded COUNTRIES_2026 constant only if the view is
+// empty or errors (e.g. fresh DB before the participants parser runs).
 //
 // Returns the same Country[] shape consumers were getting from the
 // hardcoded constant — drop-in replacement for `import { COUNTRIES_2026 }`.
@@ -15,25 +14,18 @@ import type { Country } from "../lib/types";
 
 interface DbRow {
   iso: string;
-  name: string;
+  name_en: string;
+  name_el: string;
   artist: string | null;
   song: string | null;
-  running_order: number | null;
+  final_running_order: number | null;
 }
-
-// ISO → Greek country name lookup, derived from the canonical 2026
-// constant. Used only when the DB row doesn't carry name_el. Future:
-// add name_el column to eurovision_2026_participants so this lookup
-// becomes redundant.
-const ISO_TO_GREEK: Record<string, string> = Object.fromEntries(
-  COUNTRIES_2026.map((c) => [c.id, c.name_el]),
-);
 
 function fromDbRow(row: DbRow): Country {
   return {
     id: row.iso,
-    name: row.name,
-    name_el: ISO_TO_GREEK[row.iso] ?? row.name,
+    name: row.name_en,
+    name_el: row.name_el,
     // Flag emoji isn't used by the redesigned UIs (we render <img> via
     // flagcdn.com keyed on iso). Empty string keeps the type happy.
     flag: "",
@@ -41,7 +33,7 @@ function fromDbRow(row: DbRow): Country {
     song: row.song ?? "",
     language: "",
     semi: "big5" as const,
-    runningOrder: row.running_order ?? undefined,
+    runningOrder: row.final_running_order ?? undefined,
   };
 }
 
@@ -60,9 +52,9 @@ export function useParticipants(): UseParticipants {
   useEffect(() => {
     let cancelled = false;
     supabase
-      .from("eurovision_2026_participants")
-      .select("iso, name, artist, song, running_order")
-      .order("name")
+      .from("current_participants")
+      .select("iso, name_en, name_el, artist, song, final_running_order")
+      .order("name_en")
       .then(({ data, error }) => {
         if (cancelled) return;
         if (!error && Array.isArray(data) && data.length > 0) {

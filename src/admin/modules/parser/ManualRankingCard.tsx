@@ -24,6 +24,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 import { supabase } from "../../../lib/supabase";
+import { fetchLiveContestYear } from "../../../lib/liveContestYear";
 import { formatError } from "../../lib/formatError";
 import type { ParseJob } from "./useParserState";
 
@@ -134,36 +135,53 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
 
-  // Load participants whenever override turns on. Table is currently
-  // year-namespaced (eurovision_2026_participants) — keep that for now since
-  // schema is hardcoded; UI copy is the only thing being de-yeared in this
-  // pass.
+  // Year: the parse job's year, else the live contest year (RPC).
+  const [liveYear, setLiveYear] = useState<number | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchLiveContestYear()
+      .then((y) => { if (!cancelled) setLiveYear(y); })
+      .catch((e) => { if (!cancelled) setErr(formatError(e)); });
+    return () => { cancelled = true; };
+  }, []);
+  const year = job?.year ?? liveYear;
+  const requireYear = (): number => {
+    if (year == null) throw new Error("Contest year not loaded yet");
+    return year;
+  };
+
+  // Load participants whenever override turns on. current_participants is
+  // already scoped to the live year's finalists.
   useEffect(() => {
     if (!overrideOn) return;
     supabase
-      .from("eurovision_2026_participants")
-      .select("iso, name, artist, song")
-      .order("name")
+      .from("current_participants")
+      .select("iso, name_en, artist, song")
+      .order("name_en")
       .then(({ data, error }) => {
         if (error) { setErr(error.message); return; }
-        setParticipants((data ?? []) as Participant[]);
+        setParticipants(
+          ((data ?? []) as { iso: string; name_en: string; artist: string | null; song: string | null }[]).map((r) => ({
+            iso: r.iso, name: r.name_en, artist: r.artist ?? "", song: r.song ?? "",
+          })),
+        );
       });
   }, [overrideOn]);
 
   // Persist ranked draft per browser (no DB chatter on every drag).
   // Storage key is per-year so future years don't clash.
-  const STORAGE_KEY = `eurovision-manual-rankings-${job?.year ?? "default"}`;
+  const STORAGE_KEY = `eurovision-manual-rankings-${year}`;
   useEffect(() => {
-    if (!overrideOn) return;
+    if (!overrideOn || year == null) return;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) setRanked(JSON.parse(stored));
     } catch { /* ignore */ }
-  }, [overrideOn]);
+  }, [overrideOn, STORAGE_KEY]);
   useEffect(() => {
-    if (!overrideOn) return;
+    if (!overrideOn || year == null) return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ranked)); } catch { /* ignore */ }
-  }, [ranked, overrideOn]);
+  }, [ranked, overrideOn, STORAGE_KEY]);
 
   const unranked = participants.filter((p) => !ranked.includes(p.iso));
   const total = participants.length;
@@ -174,7 +192,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
     setBusy("toggle"); setErr(null);
     try {
       const { error } = await supabase.rpc("set_manual_override", {
-        p_year: job?.year ?? 2026, p_active: !overrideOn,
+        p_year: requireYear(), p_active: !overrideOn,
       });
       if (error) throw error;
       onRefresh();
@@ -212,7 +230,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
     setBusy("finalize"); setErr(null);
     try {
       const { error } = await supabase.rpc("commit_manual_results", {
-        p_year: job?.year ?? 2026, p_isos: ranked,
+        p_year: requireYear(), p_isos: ranked,
       });
       if (error) throw error;
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
@@ -229,7 +247,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
   const reset = useCallback(async () => {
     setBusy("reset"); setErr(null);
     try {
-      const { error } = await supabase.rpc("reset_manual_results", { p_year: job?.year ?? 2026 });
+      const { error } = await supabase.rpc("reset_manual_results", { p_year: requireYear() });
       if (error) throw error;
       setRanked([]);
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }

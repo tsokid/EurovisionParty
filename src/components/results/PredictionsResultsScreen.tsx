@@ -14,7 +14,7 @@
 // breakdown (Top-5 vs Worst-5). Footer legend explains the scoring.
 //
 // Only meaningful in `final` phase — assumes the official results have
-// been imported into eurovision_${year}_results.
+// been imported into contest_entries (read via current_entries).
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
@@ -25,17 +25,13 @@ import { supabase } from '../../lib/supabase';
 
 interface ResultRow {
   iso: string;
-  ranking: number;
+  name_en: string;
+  artist: string | null;
+  song: string | null;
+  final_place: number;
   total_points: number;
   jury_points: number;
   televote_points: number;
-}
-
-interface ParticipantRow {
-  iso: string;
-  name: string;
-  artist: string | null;
-  song: string | null;
 }
 
 interface MyPrediction {
@@ -84,7 +80,6 @@ export default function PredictionsResultsScreen() {
   const { player, room } = useGameStore();
 
   const [results, setResults]           = useState<ResultRow[]>([]);
-  const [participants, setParticipants] = useState<Map<string, ParticipantRow>>(new Map());
   const [myPred, setMyPred]             = useState<MyPrediction | null>(null);
   const [loading, setLoading]           = useState(true);
   const [errorMsg, setErrorMsg]         = useState<string | null>(null);
@@ -96,31 +91,23 @@ export default function PredictionsResultsScreen() {
     setErrorMsg(null);
 
     Promise.all([
-      // Year-agnostic via the table name pattern. The 2026 table is the
-      // active one — if/when 2027 ships we add a `year` column to rooms
-      // and resolve dynamically; for now this matches the rest of the app.
+      // Live-year finalists with a final place, via the current_entries view.
       supabase
-        .from('eurovision_2026_results')
-        .select('iso, ranking, total_points, jury_points, televote_points')
-        .order('ranking', { ascending: true }),
-      supabase
-        .from('eurovision_2026_participants')
-        .select('iso, name, artist, song'),
+        .from('current_entries')
+        .select('iso, name_en, artist, song, final_place, total_points, jury_points, televote_points')
+        .not('final_place', 'is', null)
+        .order('final_place', { ascending: true }),
       supabase
         .from('predictions')
         .select('top5, worst5, top5_points, worst5_points')
         .eq('room_id', room.id)
         .eq('player_id', player.id)
         .maybeSingle(),
-    ]).then(([resR, partR, predR]) => {
+    ]).then(([resR, predR]) => {
       if (cancelled) return;
       if (resR.error)  { setErrorMsg(resR.error.message);  setLoading(false); return; }
-      if (partR.error) { setErrorMsg(partR.error.message); setLoading(false); return; }
 
       setResults((resR.data ?? []) as ResultRow[]);
-      const m = new Map<string, ParticipantRow>();
-      for (const row of (partR.data ?? []) as ParticipantRow[]) m.set(row.iso, row);
-      setParticipants(m);
       setMyPred((predR.data ?? null) as MyPrediction | null);
       setLoading(false);
     }).catch((e) => {
@@ -141,15 +128,15 @@ export default function PredictionsResultsScreen() {
 
     const total = results.length;
     const officialWorstRanks = [total, total - 1, total - 2, total - 3, total - 4];
-    const officialTop5Isos   = new Set(results.filter(r => r.ranking <= 5).map(r => r.iso));
-    const officialWorst5Isos = new Set(results.filter(r => officialWorstRanks.includes(r.ranking)).map(r => r.iso));
+    const officialTop5Isos   = new Set(results.filter(r => r.final_place <= 5).map(r => r.iso));
+    const officialWorst5Isos = new Set(results.filter(r => officialWorstRanks.includes(r.final_place)).map(r => r.iso));
 
     for (let i = 0; i < (myPred.top5 ?? []).length; i++) {
       const iso = myPred.top5[i];
       const slot = i + 1;
       const result = results.find(r => r.iso === iso);
       if (!result) continue;
-      if (result.ranking === slot) {
+      if (result.final_place === slot) {
         map.set(iso, { kind: 'top-exact', slot, points: 50, label: t('predResults.tagTopExact', { slot }) });
       } else if (officialTop5Isos.has(iso)) {
         map.set(iso, { kind: 'top-in', slot, points: 20, label: t('predResults.tagTopIn',   { slot }) });
@@ -160,7 +147,7 @@ export default function PredictionsResultsScreen() {
       const slot = i + 1;
       const result = results.find(r => r.iso === iso);
       if (!result) continue;
-      const isExact = result.ranking === officialWorstRanks[i];
+      const isExact = result.final_place === officialWorstRanks[i];
       // Don't overwrite a top-5 hit with a worst-5 entry — shouldn't happen
       // in practice (player can't pick the same country in both lists), but
       // this guards anyway.
@@ -273,7 +260,6 @@ export default function PredictionsResultsScreen() {
         {/* Rows */}
         <div className="divide-y divide-white/[0.04]">
           {results.map((r, i) => {
-            const part = participants.get(r.iso);
             const pick = picksByIso.get(r.iso);
             const style = pick ? PICK_STYLE[pick.kind] : null;
 
@@ -291,7 +277,7 @@ export default function PredictionsResultsScreen() {
                 <div className="grid grid-cols-[44px_1fr_72px] sm:grid-cols-[44px_1fr_72px_60px_72px] items-center gap-3">
                   {/* Rank */}
                   <span className="text-base font-extrabold text-white/85 tabular-nums">
-                    {r.ranking}
+                    {r.final_place}
                   </span>
 
                   {/* Country / artist / song */}
@@ -299,10 +285,10 @@ export default function PredictionsResultsScreen() {
                     <FlagImg iso={r.iso} />
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-white truncate">
-                        {part?.name ?? r.iso}
+                        {r.name_en ?? r.iso}
                       </p>
                       <p className="text-[11px] text-white/45 truncate">
-                        {part?.artist || '—'}{part?.song ? ` · ${part.song}` : ''}
+                        {r.artist || '—'}{r.song ? ` · ${r.song}` : ''}
                       </p>
                       {/* Mobile-only inline jury/tele since columns collapse */}
                       <p className="sm:hidden text-[10px] text-white/35 mt-0.5 tabular-nums">
