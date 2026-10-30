@@ -14,10 +14,10 @@ function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(path, 'utf8')) as T;
 }
 
-/** Per-item files only (`2019.json`, `GR.json`); the summary `index.json` is skipped. */
+/** Per-item files only (`2019.json`, `GR.json`); summaries such as `index.json` and `years.json` are skipped. */
 function readDir<T>(dir: string): T[] {
   return readdirSync(resolve(CONTENT, dir))
-    .filter((f) => f.endsWith('.json') && f !== 'index.json')
+    .filter((f) => /^(\d{4}|[A-Z]{2})\.json$/.test(f))
     .map((f) => readJson<T>(resolve(CONTENT, dir, f)));
 }
 
