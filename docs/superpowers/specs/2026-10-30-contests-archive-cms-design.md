@@ -217,7 +217,7 @@ All in the existing admin, as a new **Contests** module next to `EurovisionParse
 ## 12. Constraints & risks
 
 - **Supabase is currently restricted (402, DB size); no upgrade — the owner waits for it to unlock.** Therefore:
-  - All development and testing runs against a **local Supabase** (`supabase start`, schema from the repo's migrations, 2026 data from fixtures/seed). Nothing touches production while it is locked.
+  - No Docker on the dev machine and no staging project (owner's choice, 2026-10-30). SQL is tested **in-process with PGlite** (Postgres compiled to WASM) inside vitest: repo migrations run against stubbed `auth` / `cron` / `vault` / `net` schemas, with 2026 data from fixtures. Admin UI flows and RLS against real GoTrue are first exercised on production after unlock, as the first steps of the cutover runbook. Nothing touches production while it is locked.
   - **Single cutover:** sub-projects 1 and 2 ship together in one go-live once production unlocks — run new migrations, run the historical import, first Publish, deploy. A written cutover runbook (ordered steps, verification, rollback) is part of the sub-project 2 plan.
   - Cutover must happen before the 2027 lineup lands (≈ January 2027). Sub-project 3 (CMS) ships in a later release unless it is ready in time for the same cutover.
 - **Deadline:** sub-projects 1 + 2 done before the 2027 lineup lands (target mid-January 2027) so Archive 2026 can run on real data. Sub-project 3 before March 2027 (pre-season content).
