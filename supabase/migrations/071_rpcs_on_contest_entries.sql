@@ -100,6 +100,7 @@ begin
 end;
 $fn$;
 
+revoke execute on function public.finalize_results(int) from public, anon;
 grant execute on function public.finalize_results(int) to authenticated;
 
 -- ── A2. commit_manual_results ───────────────────────────────
@@ -189,6 +190,7 @@ begin
 end;
 $fn$;
 
+revoke execute on function public.commit_manual_results(int, text[]) from public, anon;
 grant execute on function public.commit_manual_results(int, text[]) to authenticated;
 
 -- ── A3. reset_manual_results ────────────────────────────────
@@ -247,6 +249,7 @@ begin
 end;
 $fn$;
 
+revoke execute on function public.reset_manual_results(int) from public, anon;
 grant execute on function public.reset_manual_results(int) to authenticated;
 
 -- ── A4. reset_contest ───────────────────────────────────────
@@ -337,6 +340,7 @@ begin
 end;
 $fn$;
 
+revoke execute on function public.reset_contest(int, bool, bool, bool) from public, anon;
 grant execute on function public.reset_contest(int, bool, bool, bool) to authenticated;
 
 -- ════════════════════════════════════════════════════════════
@@ -390,7 +394,7 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.create_contest(int, text, text, text, date, date, date) from public;
+revoke execute on function public.create_contest(int, text, text, text, date, date, date) from public, anon;
 grant execute on function public.create_contest(int, text, text, text, date, date, date) to authenticated;
 
 -- ── B2. update_contest ──────────────────────────────────────
@@ -437,7 +441,7 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.update_contest(int, jsonb) from public;
+revoke execute on function public.update_contest(int, jsonb) from public, anon;
 grant execute on function public.update_contest(int, jsonb) to authenticated;
 
 -- ── B3. upsert_contest_entry ────────────────────────────────
@@ -514,7 +518,7 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.upsert_contest_entry(int, text, jsonb) from public;
+revoke execute on function public.upsert_contest_entry(int, text, jsonb) from public, anon;
 grant execute on function public.upsert_contest_entry(int, text, jsonb) to authenticated;
 
 -- ── B4. delete_contest_entry ────────────────────────────────
@@ -544,7 +548,7 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.delete_contest_entry(int, text) from public;
+revoke execute on function public.delete_contest_entry(int, text) from public, anon;
 grant execute on function public.delete_contest_entry(int, text) to authenticated;
 
 -- ── B5. start_contest ───────────────────────────────────────
@@ -585,11 +589,14 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.start_contest(int) from public;
+revoke execute on function public.start_contest(int) from public, anon;
 grant execute on function public.start_contest(int) to authenticated;
 
 -- ── B6. finalize_contest ────────────────────────────────────
--- current -> finalized. Wraps finalize_results (flips parse_jobs and
+-- current -> finalized, only once p_year has results (at least one
+-- final_place, from the parser or a manual ranking): finalizing is a
+-- one-way door, since manual results are refused afterwards.
+-- Wraps finalize_results (flips parse_jobs and
 -- scores the year's rooms), then computes winners for every room of
 -- p_year that has none yet. Returns that number of rooms.
 create or replace function public.finalize_contest(p_year int)
@@ -614,6 +621,12 @@ begin
   if v_stage <> 'current' then
     raise exception 'contest % is %; finalize requires current', p_year, v_stage;
   end if;
+  -- Spec §6: results parse done or manual ranking entered.
+  if not exists (
+    select 1 from public.contest_entries where year = p_year and final_place is not null
+  ) then
+    raise exception 'contest % has no results; finalize refused', p_year;
+  end if;
 
   perform public.finalize_results(p_year);
 
@@ -636,7 +649,7 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.finalize_contest(int) from public;
+revoke execute on function public.finalize_contest(int) from public, anon;
 grant execute on function public.finalize_contest(int) to authenticated;
 
 -- ── B7. archive_contest ─────────────────────────────────────
@@ -683,7 +696,7 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.archive_contest(int) from public;
+revoke execute on function public.archive_contest(int) from public, anon;
 grant execute on function public.archive_contest(int) to authenticated;
 
 -- ── B8. unarchive_contest ───────────────────────────────────
@@ -736,34 +749,46 @@ begin
 end;
 $fn$;
 
-revoke execute on function public.unarchive_contest(int) from public;
+revoke execute on function public.unarchive_contest(int) from public, anon;
 grant execute on function public.unarchive_contest(int) to authenticated;
 
 -- ── B9. Parser write guard ──────────────────────────────────
--- The parser edge function sets app.writer = 'parser' (Task 5). Its
--- writes to a finalized or archived year are refused; other writers
--- (admin RPCs, imports) are not affected. Not an RPC: trigger only.
+-- The parser edge function sets app.writer = 'parser' (Task 5,
+-- transaction-local). Its inserts, updates and deletes touching a
+-- finalized or archived year are refused, checking both the new year
+-- and, on update/delete, the old one (so a row cannot be moved out of
+-- a locked year). Other writers (admin RPCs, imports) are not
+-- affected. Not an RPC: trigger only.
 create or replace function public.contest_entries_parser_guard()
 returns trigger
 language plpgsql
 set search_path = public
 as $fn$
 declare
+  v_year  int;
   v_stage public.contest_stage;
 begin
   if current_setting('app.writer', true) = 'parser' then
-    select stage into v_stage from public.contests where year = new.year;
-    if v_stage in ('finalized', 'archived') then
-      raise exception 'contest % is %; parser writes refused', new.year, v_stage;
-    end if;
+    for v_year in
+      select y from (values
+        (case when tg_op in ('INSERT', 'UPDATE') then new.year end),
+        (case when tg_op in ('UPDATE', 'DELETE') then old.year end)
+      ) as t(y)
+      where y is not null
+    loop
+      select stage into v_stage from public.contests where year = v_year;
+      if v_stage in ('finalized', 'archived') then
+        raise exception 'contest % is %; parser writes refused', v_year, v_stage;
+      end if;
+    end loop;
   end if;
-  return new;
+  return coalesce(new, old);
 end;
 $fn$;
 
 drop trigger if exists contest_entries_parser_guard on public.contest_entries;
 create trigger contest_entries_parser_guard
-  before insert or update on public.contest_entries
+  before insert or update or delete on public.contest_entries
   for each row execute function public.contest_entries_parser_guard();
 
 commit;

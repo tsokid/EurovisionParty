@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import type { PGlite } from '@electric-sql/pglite';
-import { createDb, asUser, makeAdmin } from './harness';
+import { createDb, asUser, makeAdmin, applyMigration } from './harness';
 
 const ADMIN = '00000000-0000-4000-8000-000000000001';
 const USER = '00000000-0000-4000-8000-000000000002';
@@ -214,6 +214,24 @@ describe('071 lifecycle and entry RPCs', () => {
     await expect(db.query(`select public.finalize_contest(2031)`)).rejects.toThrow(/contest 2031 not found/);
   });
 
+  it('finalize refuses without results', async () => {
+    await db.query(`update public.contests set stage = 'archived' where year = 2026`);
+    await addContest(2027, 'current');
+    await db.exec(`
+      insert into public.parse_jobs (year, kind, status) values (2027, 'results', 'idle');
+      insert into public.contest_entries (year, iso, final_running_order) values (2027, 'SE', 1), (2027, 'GR', 2);
+    `);
+    const jobsBefore = (await db.query<Row>(`select * from public.parse_jobs where year = 2027 order by kind`)).rows;
+    await expect(db.query(`select public.finalize_contest(2027)`)).rejects.toThrow(
+      /contest 2027 has no results; finalize refused/,
+    );
+    expect(await one(`select stage, finalized_at from public.contests where year = 2027`)).toEqual({
+      stage: 'current',
+      finalized_at: null,
+    });
+    expect((await db.query<Row>(`select * from public.parse_jobs where year = 2027 order by kind`)).rows).toEqual(jobsBefore);
+  });
+
   // ── archive_contest ──────────────────────────────────────────────────
   it('archive refuses unless finalized', async () => {
     await addContest(2027, 'upcoming');
@@ -304,6 +322,25 @@ describe('071 lifecycle and entry RPCs', () => {
     await db.query(`update public.contest_entries set artist = artist where year = 2026 and iso = 'GR'`);
   });
 
+  it('parser deletes and year moves out of a finalized year are refused', async () => {
+    await addContest(2027, 'upcoming');
+    await asUser(db, null);
+    const gr2026 = await one(`select * from public.contest_entries where year = 2026 and iso = 'GR'`);
+    expect(gr2026).toBeDefined();
+    await db.exec(`set app.writer = 'parser'`);
+    await expect(db.query(`delete from public.contest_entries where year = 2026 and iso = 'GR'`)).rejects.toThrow(
+      /contest 2026 is finalized; parser writes refused/,
+    );
+    await expect(
+      db.query(`update public.contest_entries set year = 2027 where year = 2026 and iso = 'GR'`),
+    ).rejects.toThrow(/contest 2026 is finalized; parser writes refused/);
+    // Upcoming rows can still be deleted by the parser.
+    await db.query(`insert into public.contest_entries (year, iso) values (2027, 'SE')`);
+    await db.query(`delete from public.contest_entries where year = 2027 and iso = 'SE'`);
+    await db.exec(`reset app.writer`);
+    expect(await one(`select * from public.contest_entries where year = 2026 and iso = 'GR'`)).toEqual(gr2026);
+  });
+
   // ── manual results refused on finalized / archived (controller ruling 1) ──
   it('manual result RPCs refuse finalized and archived years; archived results survive', async () => {
     const before = await entries2025();
@@ -370,5 +407,58 @@ describe('071 lifecycle and entry RPCs', () => {
       await asUser(db, uid);
       await expect(db.query(call)).rejects.toThrow(/forbidden/);
     }
+  });
+});
+
+// Supabase grants anon execute on public functions, directly and through
+// default privileges, so `revoke … from public` alone leaves anon in.
+// Simulate that before applying 071 and prove its revokes cover anon.
+describe('071 revokes execute from anon under Supabase default privileges', () => {
+  let db: PGlite;
+
+  const SIGS_071 = [
+    'archive_contest(integer)',
+    'commit_manual_results(integer,text[])',
+    'create_contest(integer,text,text,text,date,date,date)',
+    'delete_contest_entry(integer,text)',
+    'finalize_contest(integer)',
+    'finalize_results(integer)',
+    'reset_contest(integer,boolean,boolean,boolean)',
+    'reset_manual_results(integer)',
+    'start_contest(integer)',
+    'unarchive_contest(integer)',
+    'update_contest(integer,jsonb)',
+    'upsert_contest_entry(integer,text,jsonb)',
+  ];
+
+  beforeAll(async () => {
+    db = await createDb({ upTo: '070' });
+    await db.exec(`
+      grant execute on all functions in schema public to anon, authenticated;
+      alter default privileges in schema public grant execute on functions to anon, authenticated;
+    `);
+    // Sanity: the simulation really grants anon on pre-existing functions.
+    const pre = await db.query<{ ok: boolean }>(
+      `select has_function_privilege('anon', 'public.finalize_results(integer)', 'execute') as ok`,
+    );
+    expect(pre.rows[0].ok).toBe(true);
+    await applyMigration(db, '071');
+  }, 60_000);
+
+  afterAll(async () => {
+    await db?.close();
+  });
+
+  it('all 12 RPCs: anon cannot execute, authenticated can', async () => {
+    const r = await db.query<Row>(
+      `select p.oid::regprocedure::text as sig,
+              has_function_privilege('anon', p.oid, 'execute') as anon,
+              has_function_privilege('authenticated', p.oid, 'execute') as authed
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'public' and p.oid::regprocedure::text = any($1::text[])
+        order by 1`,
+      [SIGS_071],
+    );
+    expect(r.rows).toEqual(SIGS_071.map((sig) => ({ sig, anon: false, authed: true })));
   });
 });
