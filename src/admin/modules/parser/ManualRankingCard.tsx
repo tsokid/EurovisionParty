@@ -145,10 +145,10 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
     return () => { cancelled = true; };
   }, []);
   const year = job?.year ?? liveYear;
-  const requireYear = (): number => {
+  const requireYear = useCallback((): number => {
     if (year == null) throw new Error("Contest year not loaded yet");
     return year;
-  };
+  }, [year]);
 
   // Load participants whenever override turns on. current_participants is
   // already scoped to the live year's finalists.
@@ -177,11 +177,11 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) setRanked(JSON.parse(stored));
     } catch { /* ignore */ }
-  }, [overrideOn, STORAGE_KEY]);
+  }, [overrideOn, year, STORAGE_KEY]);
   useEffect(() => {
     if (!overrideOn || year == null) return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ranked)); } catch { /* ignore */ }
-  }, [ranked, overrideOn, STORAGE_KEY]);
+  }, [ranked, overrideOn, year, STORAGE_KEY]);
 
   const unranked = participants.filter((p) => !ranked.includes(p.iso));
   const total = participants.length;
@@ -201,7 +201,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
     } finally {
       setBusy(null);
     }
-  }, [overrideOn, onRefresh]);
+  }, [overrideOn, onRefresh, requireYear]);
 
   // ─── Add unranked tile to next available slot ──────────────────────────────
   const addToNextSlot = useCallback((iso: string) => {
@@ -241,7 +241,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
     } finally {
       setBusy(null);
     }
-  }, [ranked, onRefresh]);
+  }, [ranked, onRefresh, requireYear, STORAGE_KEY]);
 
   // ─── Reset ─────────────────────────────────────────────────────────────────
   const reset = useCallback(async () => {
@@ -258,7 +258,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
     } finally {
       setBusy(null);
     }
-  }, [onRefresh]);
+  }, [onRefresh, requireYear, STORAGE_KEY]);
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
