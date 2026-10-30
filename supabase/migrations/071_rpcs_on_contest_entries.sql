@@ -17,6 +17,8 @@
 -- Section C (Task 5): parser_upsert_entries, the parser's write path.
 --   Task 9 adds kind 'semis' to C1 and its exemption to the B9 guard.
 -- Section D (Task 8): read RPCs for the admin Contests module.
+-- Section E (final review I3): the parse_jobs phase triggers (030, 032)
+--   only move rooms of the job's year.
 --
 -- predictions.total_points and players.total_points are generated
 -- columns and are never written here.
@@ -29,7 +31,8 @@ begin;
 -- ════════════════════════════════════════════════════════════
 
 -- ── A1. finalize_results ────────────────────────────────────
--- Ranking now comes from contest_entries (final_place of p_year).
+-- Ranking now comes from contest_entries (final_place of p_year's grand
+-- finalists, in_final).
 -- Propagation is limited to rooms of p_year; before, every room
 -- with predictions and no results got the ranking, whatever its year.
 create or replace function public.finalize_results(p_year int)
@@ -62,10 +65,11 @@ begin
      where year = p_year and kind = 'results';
   end if;
 
-  -- 2. Build the ordered ISO array from the year's final places
+  -- 2. Build the ordered ISO array from the year's final places.
+  --    Grand finalists only: a demoted row (in_final false) never counts.
   select array_agg(iso order by final_place) into v_ranking_arr
     from public.contest_entries
-   where year = p_year and final_place is not null;
+   where year = p_year and in_final and final_place is not null;
 
   if v_ranking_arr is null or array_length(v_ranking_arr, 1) is null then
     return 0;
@@ -451,7 +455,9 @@ grant execute on function public.update_contest(int, jsonb) to authenticated;
 -- Insert or partially update one entry. Allowed keys: every entry
 -- column except year, iso and updated_at (set here). A key present
 -- with JSON null sets the column to null (in_final, which is not null,
--- becomes false; a new entry starts with in_final = false). Refused on an archived
+-- becomes false; a new entry starts with in_final = false). A row that ends
+-- up not in_final gets final_place and the points columns nulled: results
+-- belong to grand finalists only. Refused on an archived
 -- year; corrections there go through Edit + Republish (sub-project
 -- 2b, separate RPC).
 create or replace function public.upsert_contest_entry(p_year int, p_iso text, p_fields jsonb)
@@ -493,6 +499,15 @@ begin
   end if;
 
   v_row := jsonb_populate_record(v_row, p_fields);
+
+  -- Only grand finalists have final results: a row that is (or becomes)
+  -- not in_final loses them, whatever p_fields says.
+  if not coalesce(v_row.in_final, false) then
+    v_row.final_place     := null;
+    v_row.total_points    := null;
+    v_row.jury_points     := null;
+    v_row.televote_points := null;
+  end if;
 
   insert into public.contest_entries as e
     (year, iso, artist, song, language, semi, semi_running_order, semi_place, semi_points,
@@ -598,8 +613,8 @@ revoke execute on function public.start_contest(int) from public, anon;
 grant execute on function public.start_contest(int) to authenticated;
 
 -- ── B6. finalize_contest ────────────────────────────────────
--- current -> finalized, only once p_year has results (at least one
--- final_place, from the parser or a manual ranking): finalizing is a
+-- current -> finalized, only once p_year has results (at least one grand
+-- finalist with a final_place, from the parser or a manual ranking): finalizing is a
 -- one-way door, since manual results are refused afterwards.
 -- Wraps finalize_results (flips parse_jobs and
 -- scores the year's rooms), then computes winners for every room of
@@ -626,9 +641,9 @@ begin
   if v_stage <> 'current' then
     raise exception 'contest % is %; finalize requires current', p_year, v_stage;
   end if;
-  -- Spec §6: results parse done or manual ranking entered.
+  -- Spec §6: results parse done or manual ranking entered (grand finalists only).
   if not exists (
-    select 1 from public.contest_entries where year = p_year and final_place is not null
+    select 1 from public.contest_entries where year = p_year and in_final and final_place is not null
   ) then
     raise exception 'contest % has no results; finalize refused', p_year;
   end if;
@@ -658,8 +673,8 @@ revoke execute on function public.finalize_contest(int) from public, anon;
 grant execute on function public.finalize_contest(int) to authenticated;
 
 -- ── B7. archive_contest ─────────────────────────────────────
--- Y finalized -> archived, Y+1 -> current, in one transaction (D4:
--- only once Y+1 has at least one entry). Y is demoted first so
+-- Y finalized -> archived, Y+1 upcoming -> current, in one transaction
+-- (D4: only once Y+1 has at least one entry). Y is demoted first so
 -- one_live_contest holds at every row.
 create or replace function public.archive_contest(p_year int)
 returns void
@@ -686,6 +701,9 @@ begin
   select stage into v_next from public.contests where year = p_year + 1 for update;
   if v_next is null then
     raise exception 'contest % not found; create it before archiving %', p_year + 1, p_year;
+  end if;
+  if v_next <> 'upcoming' then
+    raise exception 'contest % is %; archive of % requires it upcoming', p_year + 1, v_next, p_year;
   end if;
   if not exists (select 1 from public.contest_entries where year = p_year + 1) then
     raise exception 'no entries for %; archive of % refused', p_year + 1, p_year;
@@ -845,13 +863,13 @@ create trigger contest_entries_parser_guard
 -- isos in p_rows: the first one wins.
 --   participants: upserts artist, song, final_running_order (the parsed
 --     value, possibly null; never invented), source, and in_final = true.
---     Rows of p_year whose iso is not in p_rows get in_final = false;
---     nothing is deleted.
+--     Rows of p_year whose iso is not in p_rows get in_final = false and
+--     their final results (final_place, points) nulled; nothing is deleted.
 --   results: writes final_place, total_points, jury_points,
 --     televote_points, source, only for finalists of p_year (in_final).
 --     Other rows are skipped.
 --   semis (Task 9): writes semi, semi_running_order, semi_place,
---     semi_points, qualified and source, and fills artist / song only
+--     semi_points and qualified, and fills artist / song / source only
 --     where they are null (coalesce: a non-null value is kept). Countries
 --     without a row get one with those columns (in_final false). Never
 --     touches in_final, final_* or the points columns. Refused unless
@@ -920,7 +938,12 @@ begin
     get diagnostics v_count = row_count;
 
     update public.contest_entries
-       set in_final = false, updated_at = now()
+       set in_final        = false,
+           final_place     = null,
+           total_points    = null,
+           jury_points     = null,
+           televote_points = null,
+           updated_at      = now()
      where year = p_year
        and in_final
        and iso not in (select r->>'iso' from jsonb_array_elements(p_rows) as t(r));
@@ -944,7 +967,7 @@ begin
            semi_place         = excluded.semi_place,
            semi_points        = excluded.semi_points,
            qualified          = excluded.qualified,
-           source             = excluded.source,
+           source             = coalesce(e.source, excluded.source),
            updated_at         = excluded.updated_at;
     get diagnostics v_count = row_count;
   else
@@ -1042,5 +1065,148 @@ $fn$;
 
 revoke execute on function public.contest_has_rooms(int) from public, anon;
 grant execute on function public.contest_has_rooms(int) to authenticated;
+
+-- ════════════════════════════════════════════════════════════
+-- Section E (final review I3): phase triggers scoped to the job's year
+-- ------------------------------------------------------------
+-- 030 and 032 moved every room in the matching phase whenever any
+-- parse_jobs row changed status, whatever its year. The helpers now take
+-- the year and only touch rooms of that year; the trigger functions pass
+-- new.year. Trigger names and events are unchanged. The zero-argument
+-- helpers are dropped. The helpers are trigger internals: execute is
+-- revoked from every client role (no grant), so they are not RPCs.
+-- admin_advance_all_rooms (030, manual and explicit) is unchanged.
+-- ════════════════════════════════════════════════════════════
+
+-- ── E1. _open_predictions_for_pre_night_rooms(year) ─────────
+-- participants done -> pre_night rooms of p_year open predictions; their
+-- active players get a 'predictions_open' notification.
+drop function if exists public._open_predictions_for_pre_night_rooms();
+
+create or replace function public._open_predictions_for_pre_night_rooms(p_year int)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $fn$
+begin
+  with flipped as (
+    update public.rooms
+       set phase            = 'predictions_open',
+           phase_updated_at = now()
+     where phase = 'pre_night'
+       and year = p_year
+    returning id
+  )
+  insert into public.notifications (room_id, player_id, type, payload, is_read)
+  select p.room_id, p.id, 'predictions_open',
+         jsonb_build_object('reason', 'participants_published'),
+         false
+    from public.players p
+   where p.is_active = true
+     and p.room_id in (select id from flipped);
+end;
+$fn$;
+
+revoke execute on function public._open_predictions_for_pre_night_rooms(int) from public, anon, authenticated;
+
+-- ── E2. _open_voting_for_predictions_rooms(year) ────────────
+-- results running -> predictions_open rooms of p_year open voting.
+drop function if exists public._open_voting_for_predictions_rooms();
+
+create or replace function public._open_voting_for_predictions_rooms(p_year int)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $fn$
+begin
+  with flipped as (
+    update public.rooms
+       set phase = 'voting_live', phase_updated_at = now()
+     where phase = 'predictions_open'
+       and year = p_year
+    returning id
+  )
+  insert into public.notifications (room_id, player_id, type, payload, is_read)
+  select p.room_id, p.id, 'voting_live',
+         jsonb_build_object('reason', 'results_parser_started'),
+         false
+    from public.players p
+   where p.is_active = true
+     and p.room_id in (select id from flipped);
+end;
+$fn$;
+
+revoke execute on function public._open_voting_for_predictions_rooms(int) from public, anon, authenticated;
+
+-- ── E3. _move_all_to_final(year) ────────────────────────────
+-- results finalized -> every room of p_year not yet in final moves to final.
+drop function if exists public._move_all_to_final();
+
+create or replace function public._move_all_to_final(p_year int)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $fn$
+begin
+  with flipped as (
+    update public.rooms
+       set phase = 'final', phase_updated_at = now()
+     where phase <> 'final'
+       and year = p_year
+    returning id
+  )
+  insert into public.notifications (room_id, player_id, type, payload, is_read)
+  select p.room_id, p.id, 'phase_changed',
+         jsonb_build_object('to', 'final', 'reason', 'results_finalized'),
+         false
+    from public.players p
+   where p.is_active = true
+     and p.room_id in (select id from flipped);
+end;
+$fn$;
+
+revoke execute on function public._move_all_to_final(int) from public, anon, authenticated;
+
+-- ── E4. Trigger functions pass the job's year ───────────────
+-- Same triggers as 030/032 (trg_participants_done_open_predictions,
+-- trg_results_status_advance: after update of status on parse_jobs);
+-- only the function bodies change.
+create or replace function public._tg_participants_done_open_predictions()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $fn$
+begin
+  if new.kind = 'participants'
+     and new.status = 'done'
+     and (old.status is distinct from 'done') then
+    perform public._open_predictions_for_pre_night_rooms(new.year);
+  end if;
+  return new;
+end;
+$fn$;
+
+create or replace function public._tg_results_status_advance()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $fn$
+begin
+  if new.kind = 'results' then
+    if new.status = 'running' and (old.status is distinct from 'running') then
+      perform public._open_voting_for_predictions_rooms(new.year);
+    end if;
+    if new.status = 'finalized' and (old.status is distinct from 'finalized') then
+      perform public._move_all_to_final(new.year);
+    end if;
+  end if;
+  return new;
+end;
+$fn$;
 
 commit;

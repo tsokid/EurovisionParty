@@ -90,17 +90,17 @@ describe('071 parser_upsert_entries kind semis', () => {
 
     const after = await entries(2026);
     const gr = after.find((r) => r.iso === 'GR')!;
-    // Semi columns and source change; the non-null artist/song are kept (not
+    // Semi columns change; the non-null artist/song/source are kept (not
     // refused), and language, in_final, final_* and points do not change.
     expect(gr).toEqual({
       ...before.find((r) => r.iso === 'GR'),
-      semi: 2, semi_running_order: 11, semi_place: 1, semi_points: 210, qualified: true, source: 'parser',
+      semi: 2, semi_running_order: 11, semi_place: 1, semi_points: 210, qualified: true,
     });
-    // MD had null artist/song: filled.
+    // MD had null artist/song: filled. Its source ('manual') is kept.
     expect(after.find((r) => r.iso === 'MD')).toEqual({
       ...before.find((r) => r.iso === 'MD'),
       artist: 'Satoshi', song: 'Viva, Moldova!',
-      semi: 2, semi_running_order: 3, semi_place: 12, semi_points: 20, qualified: false, source: 'parser',
+      semi: 2, semi_running_order: 3, semi_place: 12, semi_points: 20, qualified: false,
     });
     // SE had no row: inserted with its names and semi data, not a finalist.
     expect(after.find((r) => r.iso === 'SE')).toEqual({
