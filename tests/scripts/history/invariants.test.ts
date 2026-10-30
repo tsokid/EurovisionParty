@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ContestRecord } from '../../../scripts/history/parseContest';
 import { toIso } from '../../../scripts/history/countryNames';
-import { slugify } from '../../../scripts/history/import';
+import { buildMigration, loadRecords, slugify } from '../../../scripts/history/import';
 import { recentWinners } from '../../../src/pages/seo/content/winnersCopy';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -44,6 +44,12 @@ const EXPECTED_ENTRIES: Record<number, number> = {
 };
 
 /**
+ * 2026 is imported with --snapshot-only (data/history only, never 073):
+ * 35 entries, 25 finalists.
+ */
+const EXPECTED_2026 = 35;
+
+/**
  * Competition ranking: sorted by place, places run 1..N, a shared place
  * needs equal points, and points never increase down the ranking.
  */
@@ -63,11 +69,15 @@ function expectRanking(label: string, rows: { iso: string; place: number | null;
 describe('history data: coverage', () => {
   it('has the pinned number of entries per year', () => {
     expect(Object.keys(EXPECTED_ENTRIES)).toHaveLength(70);
-    expect(Object.fromEntries(records.map((r) => [r.year, r.entries.length]))).toEqual(EXPECTED_ENTRIES);
+    expect(Object.fromEntries(records.map((r) => [r.year, r.entries.length]))).toEqual({
+      ...EXPECTED_ENTRIES,
+      2026: EXPECTED_2026,
+    });
+    expect(byYear.get(2026)!.entries.filter((e) => e.in_final)).toHaveLength(25);
   });
 
-  it('has exactly one file per year 1956–2025', () => {
-    expect(files).toEqual(Array.from({ length: 70 }, (_, i) => `${1956 + i}.json`));
+  it('has exactly one file per year 1956–2026', () => {
+    expect(files).toEqual(Array.from({ length: 71 }, (_, i) => `${1956 + i}.json`));
     for (const r of records) expect(files).toContain(`${r.year}.json`);
   });
 
@@ -209,5 +219,14 @@ describe('history data: winners 2010–2025 match winnersCopy', () => {
     expect(recentWinners.en.map((r) => Number(r[0])).sort()).toEqual(
       Array.from({ length: 16 }, (_, i) => 2010 + i).filter((y) => y !== 2020),
     );
+  });
+});
+
+describe('history data: 073 never includes 2026', () => {
+  it('regenerating 073 from data/history gives the committed migration, 1956–2025 only', () => {
+    const loaded = loadRecords();
+    expect(loaded.map((r) => r.year)).toEqual(Array.from({ length: 70 }, (_, i) => 1956 + i));
+    const committed = readFileSync(path.join(ROOT, 'supabase/migrations/073_history_import.sql'), 'utf8').replace(/\r\n/g, '\n');
+    expect(buildMigration(loaded)).toBe(committed);
   });
 });

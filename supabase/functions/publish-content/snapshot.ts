@@ -107,9 +107,11 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
       .map((e) => ({
         year: e.year,
         city_slug: contests.get(e.year)!.city_slug,
+        cancelled: contests.get(e.year)!.cancelled,
         final_place: e.final_place,
         semi: e.semi,
         semi_place: e.semi_place,
+        semi_points: e.semi_points,
         qualified: e.qualified,
         artist: e.artist,
         song: e.song,

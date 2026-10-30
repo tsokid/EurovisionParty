@@ -1,6 +1,7 @@
 // Wikipedia history import (sub-project 2b).
 //
 //   tsx scripts/history/import.ts [--from 1956] [--to 2025]
+//   tsx scripts/history/import.ts --from 2026 --to 2026 --snapshot-only
 //
 // For each year: fetch "Eurovision_Song_Contest_{year}" (cached under
 // .cache/wikipedia/), parse it, write data/history/{year}.json. Then
@@ -148,10 +149,24 @@ function arg(name: string, fallback: number): number {
   return v;
 }
 
+/** The newest year --snapshot-only may import (data/history only, never 073). */
+const SNAPSHOT_LAST_YEAR = 2026;
+
 async function main(): Promise<void> {
+  // --snapshot-only: write data/history/{year}.json for the local content
+  // snapshot (scripts/snapshot/build-local.ts) and leave 073 alone. Only
+  // then may --to go past LAST_YEAR: production gets 2026 from its own DB.
+  const snapshotOnly = process.argv.includes('--snapshot-only');
   const from = arg('from', 1956);
   const to = arg('to', LAST_YEAR);
-  if (to > LAST_YEAR) throw new Error(`--to may not exceed ${LAST_YEAR}; 2026 is live data`);
+  const maxTo = snapshotOnly ? SNAPSHOT_LAST_YEAR : LAST_YEAR;
+  if (to > maxTo) {
+    throw new Error(
+      snapshotOnly
+        ? `--to may not exceed ${SNAPSHOT_LAST_YEAR}`
+        : `--to may not exceed ${LAST_YEAR} (2026 is live data); use --snapshot-only for data/history only`,
+    );
+  }
   mkdirSync(DATA_DIR, { recursive: true });
   for (let year = from; year <= to; year++) {
     const record = parseContest(year, await fetchContestWikitext(year));
@@ -160,6 +175,7 @@ async function main(): Promise<void> {
     const semis = record.entries.filter((e) => e.semi !== null).length;
     console.log(`${year}: ${record.entries.length} entries (${finals} final, ${semis} semi) ${record.city}, ${record.host_iso}`);
   }
+  if (snapshotOnly) return console.log('--snapshot-only: 073 not regenerated');
   writeFileSync(MIGRATION, buildMigration(loadRecords()), 'utf8');
   console.log(`wrote ${path.relative(ROOT, MIGRATION)}`);
 }

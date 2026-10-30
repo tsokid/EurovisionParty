@@ -9,7 +9,8 @@ import { createDb, applyMigration } from './harness';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DATA = path.resolve(here, '../../data/history');
 const jsonEntryCount = readdirSync(DATA)
-  .filter((f) => f.endsWith('.json'))
+  // 073 imports 1956–2025 only; 2026.json is snapshot-only (build-local).
+  .filter((f) => /^\d{4}\.json$/.test(f) && Number(f.slice(0, 4)) <= 2025)
   .reduce((n, f) => n + JSON.parse(readFileSync(path.join(DATA, f), 'utf8')).entries.length, 0);
 
 async function snapshot2026(db: PGlite) {

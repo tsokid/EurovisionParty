@@ -72,13 +72,19 @@ export type ContestSnapshot = {
   entries: EntrySnapshot[];
 };
 
-/** One year a country took part in. `points` is the grand-final total. */
+/**
+ * One year a country took part in. `points` is the grand-final total,
+ * `semi_points` the semi-final total (non-qualifiers have only that).
+ * `cancelled` is the contest's flag (2020: selected, never performed).
+ */
 export type CountryParticipation = {
   year: number;
   city_slug: string;
+  cancelled: boolean;
   final_place: number | null;
   semi: 1 | 2 | null;
   semi_place: number | null;
+  semi_points: number | null;
   qualified: boolean | null;
   artist: string | null;
   song: string | null;

@@ -5,23 +5,27 @@
   "participations": [
     {
       "artist": "Željko Joksimović and Ad-Hoc Orchestra",
+      "cancelled": false,
       "city_slug": "istanbul",
       "final_place": 2,
       "points": 263,
       "qualified": true,
       "semi": 1,
       "semi_place": 1,
+      "semi_points": 263,
       "song": "Lane moje",
       "year": 2004
     },
     {
       "artist": "No Name",
+      "cancelled": false,
       "city_slug": "kyiv",
       "final_place": 7,
       "points": 137,
       "qualified": null,
       "semi": null,
       "semi_place": null,
+      "semi_points": null,
       "song": "Zauvijek moja",
       "year": 2005
     }

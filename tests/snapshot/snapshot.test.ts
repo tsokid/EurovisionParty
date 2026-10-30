@@ -11,6 +11,8 @@ import type {
   SiteSnapshot,
 } from '../../src/content/contests/types';
 import { parseCountriesSeed, readCountriesSeed } from '../../scripts/snapshot/countriesSeed';
+import { load2026, localInput } from '../../scripts/snapshot/build-local';
+import { COUNTRIES_2026 } from '../../src/lib/countries2026';
 
 const GENERATED_AT = '2026-11-01T12:00:00Z';
 
@@ -37,6 +39,7 @@ function contest(year: number, city: string, host: string, stage: ContestRow['st
 }
 
 const contests: ContestRow[] = [
+  { ...contest(2020, 'Rotterdam', 'NL', 'archived'), cancelled: true },
   contest(2024, 'Malmo', 'SE', 'archived'),
   contest(2025, 'Basel', 'AT', 'archived'),
   contest(2026, 'Vienna', 'AT', 'finalized'),
@@ -66,6 +69,7 @@ function entry(year: number, iso: string, over: Partial<EntryRow> = {}): EntryRo
 }
 
 const entries: EntryRow[] = [
+  entry(2020, 'GR', { semi: 1, in_final: false }),
   entry(2024, 'GR', { semi: 2, semi_place: 3, semi_points: 120, qualified: true, final_place: 11, total_points: 126 }),
   entry(2024, 'SE', { final_place: 9, total_points: 174 }),
   entry(2025, 'GR', { semi: 1, semi_place: 4, semi_points: 98, qualified: true, final_place: 6, total_points: 231 }),
@@ -94,6 +98,7 @@ describe('buildSnapshotFiles', () => {
     expect(Object.keys(a).sort()).toEqual(Object.keys(b).sort());
     for (const k of Object.keys(a)) expect(b[k]).toBe(a[k]);
     expect(Object.keys(a).sort()).toEqual([
+      'content/contests/2020.json',
       'content/contests/2024.json',
       'content/contests/2025.json',
       'content/contests/2026.json',
@@ -117,19 +122,22 @@ describe('buildSnapshotFiles', () => {
     const files = buildSnapshotFiles(input());
     const gr = JSON.parse(files['content/countries/GR.json']) as CountrySnapshot;
     expect(gr).toMatchObject({ iso: 'GR', slug: 'greece', name_en: 'Greece', name_el: 'Ελλάδα', related_iso: [] });
-    expect(gr.participations.map((p) => p.year)).toEqual([2024, 2025, 2026]);
-    expect(gr.participations[0]).toEqual({
+    expect(gr.participations.map((p) => p.year)).toEqual([2020, 2024, 2025, 2026]);
+    expect(gr.participations[0]).toMatchObject({ year: 2020, city_slug: 'rotterdam', cancelled: true, points: null });
+    expect(gr.participations[1]).toEqual({
       year: 2024,
       city_slug: 'malmo',
+      cancelled: false,
       final_place: 11,
       semi: 2,
       semi_place: 3,
+      semi_points: 120,
       qualified: true,
       artist: 'GR artist 2024',
       song: 'GR song 2024',
       points: 126,
     });
-    expect(gr.participations[2]).toMatchObject({ year: 2026, city_slug: 'vienna', final_place: null, points: null });
+    expect(gr.participations[3]).toMatchObject({ year: 2026, city_slug: 'vienna', cancelled: false, final_place: null, points: null });
     // A country with no entries still gets a file.
     const ma = JSON.parse(files['content/countries/MA.json']) as CountrySnapshot;
     expect(ma.participations).toEqual([]);
@@ -143,7 +151,7 @@ describe('buildSnapshotFiles', () => {
     // 'current' counts as live too, even when it is not the latest year.
     const current = buildSnapshotFiles({
       ...input(),
-      contests: [contest(2025, 'Basel', 'AT', 'current'), contest(2026, 'Vienna', 'AT', 'upcoming'), contests[0]],
+      contests: [contest(2025, 'Basel', 'AT', 'current'), contest(2026, 'Vienna', 'AT', 'upcoming'), ...contests.filter((c) => c.year < 2025)],
     });
     expect(JSON.parse(current['content/site.json'])).toMatchObject({ current_year: 2025, live_stage: 'current' });
 
@@ -151,7 +159,7 @@ describe('buildSnapshotFiles', () => {
     expect(() =>
       buildSnapshotFiles({
         ...input(),
-        contests: [contest(2025, 'Basel', 'AT', 'current'), contest(2026, 'Vienna', 'AT', 'finalized'), contests[0]],
+        contests: [contest(2025, 'Basel', 'AT', 'current'), contest(2026, 'Vienna', 'AT', 'finalized'), ...contests.filter((c) => c.year < 2025)],
       }),
     ).toThrow(/live/);
   });
@@ -203,5 +211,42 @@ on conflict (iso) do nothing;`;
       { iso: 'XX', name_en: "Côte d'Ivoire", name_el: 'Ακτή', slug: 'cote-d-ivoire', related_iso: [] },
     ]);
     expect(() => parseCountriesSeed('select 1;')).toThrow();
+  });
+});
+
+describe('build-local', () => {
+  it('takes 2026 from data/history/2026.json with real results, as the 070 seed row', () => {
+    const y = load2026();
+    expect(y).not.toBeNull();
+    expect(y!.contest).toEqual({
+      year: 2026,
+      host_iso: 'AT',
+      city: 'Vienna',
+      city_slug: 'vienna',
+      semi1_date: '2026-05-12',
+      semi2_date: '2026-05-14',
+      final_date: '2026-05-16',
+      stage: 'finalized',
+      indexable: false,
+      cancelled: false,
+    });
+    expect(y!.entries).toHaveLength(35);
+    const finalists = y!.entries.filter((e) => e.in_final);
+    expect(finalists).toHaveLength(25);
+    expect(finalists.every((e) => e.final_place !== null && e.total_points !== null)).toBe(true);
+    // Same lineup as COUNTRIES_2026.
+    expect(y!.entries.map((e) => e.iso).sort()).toEqual(COUNTRIES_2026.map((c) => c.id).sort());
+  });
+
+  it('builds a snapshot with 71 contests and every seeded country', () => {
+    const files = buildSnapshotFiles(localInput());
+    const paths = Object.keys(files);
+    expect(paths.filter((p) => p.startsWith('content/contests/'))).toHaveLength(71);
+    expect(paths.filter((p) => p.startsWith('content/countries/'))).toHaveLength(52);
+    expect(JSON.parse(files['content/site.json'])).toEqual({
+      current_year: 2026,
+      live_stage: 'finalized',
+      generated_at: '1970-01-01T00:00:00Z',
+    });
   });
 });

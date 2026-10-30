@@ -3,21 +3,22 @@
 //   tsx scripts/snapshot/build-local.ts
 //
 // * 1956-2025: data/history/*.json (the same records migration 073 imports).
-// * 2026: the lineup from COUNTRIES_2026 plus the contest row seeded in 070
-//   (Vienna, stage finalized). No places or points: the finalists are only
-//   known from the production table 070 copied, so here only the
-//   auto-qualifiers (Big Four and host) are marked in_final; semi-final
-//   entrants have in_final false and qualified null (unknown).
+// * 2026: data/history/2026.json (imported with
+//   `tsx scripts/history/import.ts --from 2026 --to 2026 --snapshot-only`,
+//   never part of 073), as stage finalized like the 070 seed. If that file
+//   is missing, falls back to the COUNTRIES_2026 lineup with no results
+//   (only the Big Four and host marked as finalists).
 // * countries: the VALUES block of migration 070 (single source).
 //
 // generated_at is fixed so rebuilding gives byte-identical files. The first
 // production Publish replaces everything, 2026 included, with database data.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSnapshotFiles } from '../../supabase/functions/publish-content/snapshot';
 import type { ContestRow, EntryRow } from '../../src/content/contests/types';
-import { loadRecords, slugify } from '../history/import';
+import { DATA_DIR, loadRecords, slugify } from '../history/import';
+import type { ContestRecord } from '../history/parseContest';
 import { COUNTRIES_2026 } from '../../src/lib/countries2026';
 import { readCountriesSeed } from './countriesSeed';
 
@@ -25,7 +26,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, '../..');
 export const LOCAL_GENERATED_AT = '1970-01-01T00:00:00Z';
 
-/** The 2026 contest row as seeded in migration 070. */
+/** The 2026 contest row as seeded in migration 070 (stage finalized, not indexable). */
 const CONTEST_2026: ContestRow = {
   year: 2026,
   host_iso: 'AT',
@@ -39,21 +40,21 @@ const CONTEST_2026: ContestRow = {
   cancelled: false,
 };
 
-export function localInput() {
-  const records = loadRecords();
-  const contests: ContestRow[] = records.map((r) => ({
-    year: r.year,
-    host_iso: r.host_iso,
-    city: r.city,
-    city_slug: slugify(r.city),
-    semi1_date: r.semi1_date,
-    semi2_date: r.semi2_date,
-    final_date: r.final_date,
-    stage: 'archived',
-    indexable: false,
-    cancelled: r.cancelled,
-  }));
-  const entries: EntryRow[] = records.flatMap((r) =>
+const contestRow = (r: ContestRecord): ContestRow => ({
+  year: r.year,
+  host_iso: r.host_iso,
+  city: r.city,
+  city_slug: slugify(r.city),
+  semi1_date: r.semi1_date,
+  semi2_date: r.semi2_date,
+  final_date: r.final_date,
+  stage: 'archived',
+  indexable: false,
+  cancelled: r.cancelled,
+});
+
+const entryRows = (records: ContestRecord[]): EntryRow[] =>
+  records.flatMap((r) =>
     r.entries.map((e) => ({
       year: r.year,
       iso: e.iso,
@@ -75,7 +76,20 @@ export function localInput() {
     })),
   );
 
-  contests.push(CONTEST_2026);
+/** 2026 from data/history/2026.json, or null when the file is missing. */
+export function load2026(file = path.join(DATA_DIR, '2026.json')): { contest: ContestRow; entries: EntryRow[] } | null {
+  if (!existsSync(file)) return null;
+  const r = JSON.parse(readFileSync(file, 'utf8')) as ContestRecord;
+  if (r.year !== 2026) throw new Error(`${file}: year ${r.year}, expected 2026`);
+  return {
+    contest: { ...contestRow(r), stage: CONTEST_2026.stage, indexable: CONTEST_2026.indexable },
+    entries: entryRows([r]),
+  };
+}
+
+/** 2026 lineup from COUNTRIES_2026 with no results: the fallback when 2026.json is missing. */
+function fallback2026(): EntryRow[] {
+  const entries: EntryRow[] = [];
   for (const c of COUNTRIES_2026) {
     const inSemi = c.semi === 1 || c.semi === 2;
     entries.push({
@@ -98,7 +112,22 @@ export function localInput() {
       source: 'manual',
     });
   }
+  return entries;
+}
 
+export function localInput() {
+  const records = loadRecords();
+  const contests = records.map(contestRow);
+  const entries = entryRows(records);
+  const y2026 = load2026();
+  if (y2026) {
+    contests.push(y2026.contest);
+    entries.push(...y2026.entries);
+  } else {
+    console.warn('data/history/2026.json missing: 2026 falls back to COUNTRIES_2026 with no results');
+    contests.push(CONTEST_2026);
+    entries.push(...fallback2026());
+  }
   return { contests, countries: readCountriesSeed(), entries, generated_at: LOCAL_GENERATED_AT };
 }
 

@@ -5,12 +5,14 @@
   "participations": [
     {
       "artist": "Samira Bensaïd",
+      "cancelled": false,
       "city_slug": "the-hague",
       "final_place": 18,
       "points": 7,
       "qualified": null,
       "semi": null,
       "semi_place": null,
+      "semi_points": null,
       "song": "Bitakat Hob",
       "year": 1980
     }
