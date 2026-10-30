@@ -18,6 +18,8 @@ export const DATA_DIR = path.join(ROOT, 'data/history');
 const MIGRATION = path.join(ROOT, 'supabase/migrations/073_history_import.sql');
 const LAST_YEAR = 2025;
 const SLUG_RE = /^[a-z]+(-[a-z]+)*$/;
+/** Fixed archived_at for every imported contest, so 073 is deterministic. */
+const ARCHIVED_AT = '2026-10-31T00:00:00Z';
 
 /** Lowercase ASCII slug with hyphens (Malmö → malmo, Tel Aviv → tel-aviv). */
 export function slugify(name: string): string {
@@ -86,6 +88,8 @@ export function buildMigration(records: ContestRecord[]): string {
         sqlValue(r.final_date),
         `'archived'`,
         'false',
+        sqlValue(r.cancelled),
+        `'${ARCHIVED_AT}'`,
       ].join(', ')})`,
   );
   const entryCols: (keyof EntryRecord)[] = [
@@ -107,18 +111,21 @@ export function buildMigration(records: ContestRecord[]): string {
 -- Source: English Wikipedia, "Eurovision Song Contest {year}" articles,
 -- CC BY-SA 4.0 (see content/SOURCES.md).
 --
--- * contests: one row per year, stage 'archived', indexable false.
---   2020 (cancelled) has a row and its selected entries, with no results.
+-- * contests: one row per year, stage 'archived', indexable false,
+--   archived_at fixed at ${ARCHIVED_AT}. 2020 has cancelled = true
+--   (planned dates kept) and its selected entries, with no results.
 -- * contest_entries: source 'import:wikipedia'.
--- * Never touches 2026. Every insert is "on conflict do nothing", so
---   rows already present (e.g. edited in admin) are kept and re-running
---   this migration is a no-op.
+-- * Never touches 2026. Both inserts are "on conflict do nothing": an
+--   existing contest row or entry is kept as is, and re-running this
+--   migration is a no-op. Entries are inserted per (year, iso) even when
+--   that year's contest row already existed; harmless at cutover, where
+--   only 2026 exists.
 -- ============================================================
 
 begin;
 
 insert into public.contests
-  (year, host_iso, city, city_slug, semi1_date, semi2_date, final_date, stage, indexable)
+  (year, host_iso, city, city_slug, semi1_date, semi2_date, final_date, stage, indexable, cancelled, archived_at)
 values
 ${contests.join(',\n')}
 on conflict (year) do nothing;

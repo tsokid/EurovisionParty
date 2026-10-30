@@ -32,6 +32,13 @@ qualifiers per semi-final, every country in our countries table, and the
 2010–2025 winners matching our own winners page. Totals were also checked
 against each article's separate detailed-voting tables.
 
+**Test fixtures:** `tests/scripts/history/fixtures/{1969,1975,2005,2019,2023}.wikitext`
+are verbatim copies of those five articles' wikitext as retrieved above,
+committed for the parser tests. They are Wikipedia content under
+CC BY-SA 4.0, attributed to the Wikipedia contributors of each
+"Eurovision Song Contest {year}" article, and are redistributed under the
+same licence.
+
 **Known limits:**
 
 - 1956: only the winner was announced; other places and all points are

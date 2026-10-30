@@ -57,6 +57,7 @@ create table if not exists public.contests (
   final_date    date,
   stage         public.contest_stage not null default 'upcoming',
   indexable     boolean not null default false,
+  cancelled     boolean not null default false,   -- contest did not take place (2020)
   finalized_at  timestamptz,
   archived_at   timestamptz,
   published_at  timestamptz,

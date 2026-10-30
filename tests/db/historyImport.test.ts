@@ -54,6 +54,27 @@ describe('073 history import', () => {
     expect(r.rows[0]).toEqual({ n: 70, lo: 1956, hi: 2025, idx: 0 });
   });
 
+  it('marks only 2020 cancelled, keeping its planned dates', async () => {
+    const r = await db.query<{ year: number }>(`select year from public.contests where cancelled order by year`);
+    expect(r.rows).toEqual([{ year: 2020 }]);
+    const n = await db.query<{ n: number }>(
+      `select count(*)::int as n from public.contests where not cancelled and year between 1956 and 2025`,
+    );
+    expect(n.rows[0].n).toBe(69);
+    const d = await db.query(
+      `select semi1_date::text, semi2_date::text, final_date::text from public.contests where year = 2020`,
+    );
+    expect(d.rows).toEqual([{ semi1_date: '2020-05-12', semi2_date: '2020-05-14', final_date: '2020-05-16' }]);
+  });
+
+  it('sets the fixed archived_at on every imported contest', async () => {
+    const r = await db.query<{ n: number }>(
+      `select count(*)::int as n
+         from public.contests where year <= 2025 and archived_at = '2026-10-31T00:00:00Z'`,
+    );
+    expect(r.rows[0].n).toBe(70);
+  });
+
   it('inserts every entry from data/history with source import:wikipedia', async () => {
     const r = await db.query<{ n: number; other: number }>(
       `select count(*)::int as n, count(*) filter (where source <> 'import:wikipedia')::int as other

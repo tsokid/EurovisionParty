@@ -28,7 +28,44 @@ const SEEDED = new Set([...countriesBlock.matchAll(/\('([A-Z]{2})',/g)].map((m) 
 /** The one entry the 2024 final table strikes through (disqualified before the show). */
 const DISQUALIFIED = new Set(['2024:NL']);
 
+// Entries per year (finalists + semi-finalists), verified against the
+// historical participant counts. A parse change that drops or adds a row
+// fails here.
+const EXPECTED_ENTRIES: Record<number, number> = {
+  1956: 7, 1957: 10, 1958: 10, 1959: 11, 1960: 13, 1961: 16, 1962: 16, 1963: 16,
+  1964: 16, 1965: 18, 1966: 18, 1967: 17, 1968: 17, 1969: 16, 1970: 12, 1971: 18,
+  1972: 18, 1973: 17, 1974: 17, 1975: 19, 1976: 18, 1977: 18, 1978: 20, 1979: 19,
+  1980: 19, 1981: 20, 1982: 18, 1983: 20, 1984: 19, 1985: 19, 1986: 20, 1987: 22,
+  1988: 21, 1989: 22, 1990: 22, 1991: 22, 1992: 23, 1993: 25, 1994: 25, 1995: 23,
+  1996: 23, 1997: 25, 1998: 25, 1999: 23, 2000: 24, 2001: 23, 2002: 24, 2003: 26,
+  2004: 36, 2005: 39, 2006: 37, 2007: 42, 2008: 43, 2009: 42, 2010: 39, 2011: 43,
+  2012: 42, 2013: 39, 2014: 37, 2015: 40, 2016: 42, 2017: 42, 2018: 43, 2019: 41,
+  2020: 41, 2021: 39, 2022: 40, 2023: 37, 2024: 37, 2025: 37,
+};
+
+/**
+ * Competition ranking: sorted by place, places run 1..N, a shared place
+ * needs equal points, and points never increase down the ranking.
+ */
+function expectRanking(label: string, rows: { iso: string; place: number | null; points: number | null }[]): void {
+  const ranked = [...rows].sort((a, b) => a.place! - b.place!);
+  ranked.forEach((e, i) => {
+    expect(e.place, `${label} ${e.iso} place`).not.toBeNull();
+    expect(e.points, `${label} ${e.iso} points`).not.toBeNull();
+    if (i === 0) return expect(e.place, label).toBe(1);
+    const prev = ranked[i - 1];
+    expect(prev.points!, `${label} ${e.iso}`).toBeGreaterThanOrEqual(e.points!);
+    if (e.place === prev.place) expect(e.points, `${label} ${e.iso} shared place`).toBe(prev.points);
+    else expect(e.place, `${label} ${e.iso}`).toBe(i + 1);
+  });
+}
+
 describe('history data: coverage', () => {
+  it('has the pinned number of entries per year', () => {
+    expect(Object.keys(EXPECTED_ENTRIES)).toHaveLength(70);
+    expect(Object.fromEntries(records.map((r) => [r.year, r.entries.length]))).toEqual(EXPECTED_ENTRIES);
+  });
+
   it('has exactly one file per year 1956–2025', () => {
     expect(files).toEqual(Array.from({ length: 70 }, (_, i) => `${1956 + i}.json`));
     for (const r of records) expect(files).toContain(`${r.year}.json`);
@@ -94,6 +131,34 @@ describe('history data: per-year invariants', () => {
     // Ties for the win only in 1969.
     if (r.year !== 1969) expect(ranked.filter((e) => e.final_place === 1)).toHaveLength(1);
   });
+
+  it.each(played.map((r) => [r.year, r] as const))('%i: final running orders are unique', (_, r) => {
+    const finalists = r.entries.filter((e) => e.in_final);
+    const orders = finalists.map((e) => e.final_running_order).filter((o): o is number => o !== null);
+    expect(new Set(orders).size).toBe(orders.length);
+    // Every finalist has one, except 1956's merged two-song rows (only the
+    // winner, CH, keeps its order). NL 2024 is not a finalist and has none.
+    const missing = finalists.filter((e) => e.final_running_order === null).map((e) => e.iso);
+    if (r.year === 1956) expect(missing).toEqual(['BE', 'DE', 'FR', 'IT', 'LU', 'NL']);
+    else expect(missing).toEqual([]);
+    // Orders run 1..N; 2024 skips slot 5, NL's slot before its disqualification.
+    const expected =
+      r.year === 1956 ? [9]
+      : r.year === 2024 ? Array.from({ length: 26 }, (_, i) => i + 1).filter((o) => o !== 5)
+      : Array.from({ length: orders.length }, (_, i) => i + 1);
+    expect([...orders].sort((a, b) => a - b)).toEqual(expected);
+  });
+
+  it.each(played.filter((r) => r.year >= 2004).map((r) => [r.year, r] as const))(
+    '%i: semi places run 1..N in points order',
+    (_, r) => {
+      for (const n of [1, 2] as const) {
+        const semi = r.entries.filter((e) => e.semi === n);
+        if (semi.length === 0) continue;
+        expectRanking(`${r.year} semi ${n}`, semi.map((e) => ({ iso: e.iso, place: e.semi_place, points: e.semi_points })));
+      }
+    },
+  );
 
   it.each(played.map((r) => [r.year, r] as const))('%i: jury + televote = total where known', (_, r) => {
     for (const e of r.entries) {
