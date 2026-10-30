@@ -31,6 +31,64 @@ Eurovision Games is an unofficial fan-made party game. It is not affiliated with
 - [privacy](https://eurovision.games/en/privacy): Privacy policy: data we collect, what we do with it, how to delete it.
 - [terms](https://eurovision.games/en/terms): Terms of use for Eurovision Games.
 
+## Contests & countries
+- [eurovision-2026](https://eurovision.games/en/eurovision-2026): Eurovision 2026 in Vienna: entries, dates and results.
+- [eurovision-2026/schedule](https://eurovision.games/en/eurovision-2026/schedule): Eurovision 2026 schedule: semi-final and grand final dates.
+- [eurovision-2026/semifinals](https://eurovision.games/en/eurovision-2026/semifinals): Eurovision 2026 semi-finals: running order and qualifiers.
+- [eurovision-2026/songs](https://eurovision.games/en/eurovision-2026/songs): Every song and artist at Eurovision 2026.
+- [past-contests](https://eurovision.games/en/past-contests): Every Eurovision Song Contest since 1956: host city, winner and results per year.
+- [countries](https://eurovision.games/en/countries): Every country that has competed at Eurovision, with participations and best results.
+- [countries/andorra](https://eurovision.games/en/countries/andorra): Andorra at Eurovision: 6 participations, results by year.
+- [countries/albania](https://eurovision.games/en/countries/albania): Albania at Eurovision: 22 participations, results by year.
+- [countries/armenia](https://eurovision.games/en/countries/armenia): Armenia at Eurovision: 18 participations, results by year.
+- [countries/austria](https://eurovision.games/en/countries/austria): Austria at Eurovision: 58 participations, results by year.
+- [countries/australia](https://eurovision.games/en/countries/australia): Australia at Eurovision: 11 participations, results by year.
+- [countries/azerbaijan](https://eurovision.games/en/countries/azerbaijan): Azerbaijan at Eurovision: 18 participations, results by year.
+- [countries/bosnia-and-herzegovina](https://eurovision.games/en/countries/bosnia-and-herzegovina): Bosnia and Herzegovina at Eurovision: 19 participations, results by year.
+- [countries/belgium](https://eurovision.games/en/countries/belgium): Belgium at Eurovision: 67 participations, results by year.
+- [countries/bulgaria](https://eurovision.games/en/countries/bulgaria): Bulgaria at Eurovision: 15 participations, results by year.
+- [countries/belarus](https://eurovision.games/en/countries/belarus): Belarus at Eurovision: 16 participations, results by year.
+- [countries/switzerland](https://eurovision.games/en/countries/switzerland): Switzerland at Eurovision: 66 participations, results by year.
+- [countries/cyprus](https://eurovision.games/en/countries/cyprus): Cyprus at Eurovision: 42 participations, results by year.
+- [countries/czechia](https://eurovision.games/en/countries/czechia): Czechia at Eurovision: 14 participations, results by year.
+- [countries/germany](https://eurovision.games/en/countries/germany): Germany at Eurovision: 69 participations, results by year.
+- [countries/denmark](https://eurovision.games/en/countries/denmark): Denmark at Eurovision: 54 participations, results by year.
+- [countries/estonia](https://eurovision.games/en/countries/estonia): Estonia at Eurovision: 31 participations, results by year.
+- [countries/spain](https://eurovision.games/en/countries/spain): Spain at Eurovision: 64 participations, results by year.
+- [countries/finland](https://eurovision.games/en/countries/finland): Finland at Eurovision: 59 participations, results by year.
+- [countries/france](https://eurovision.games/en/countries/france): France at Eurovision: 68 participations, results by year.
+- [countries/united-kingdom](https://eurovision.games/en/countries/united-kingdom): United Kingdom at Eurovision: 68 participations, results by year.
+- [countries/georgia](https://eurovision.games/en/countries/georgia): Georgia at Eurovision: 18 participations, results by year.
+- [countries/greece](https://eurovision.games/en/countries/greece): Greece at Eurovision: 46 participations, results by year.
+- [countries/croatia](https://eurovision.games/en/countries/croatia): Croatia at Eurovision: 31 participations, results by year.
+- [countries/hungary](https://eurovision.games/en/countries/hungary): Hungary at Eurovision: 17 participations, results by year.
+- [countries/ireland](https://eurovision.games/en/countries/ireland): Ireland at Eurovision: 58 participations, results by year.
+- [countries/israel](https://eurovision.games/en/countries/israel): Israel at Eurovision: 48 participations, results by year.
+- [countries/iceland](https://eurovision.games/en/countries/iceland): Iceland at Eurovision: 37 participations, results by year.
+- [countries/italy](https://eurovision.games/en/countries/italy): Italy at Eurovision: 51 participations, results by year.
+- [countries/lithuania](https://eurovision.games/en/countries/lithuania): Lithuania at Eurovision: 26 participations, results by year.
+- [countries/luxembourg](https://eurovision.games/en/countries/luxembourg): Luxembourg at Eurovision: 40 participations, results by year.
+- [countries/latvia](https://eurovision.games/en/countries/latvia): Latvia at Eurovision: 26 participations, results by year.
+- [countries/monaco](https://eurovision.games/en/countries/monaco): Monaco at Eurovision: 24 participations, results by year.
+- [countries/moldova](https://eurovision.games/en/countries/moldova): Moldova at Eurovision: 20 participations, results by year.
+- [countries/montenegro](https://eurovision.games/en/countries/montenegro): Montenegro at Eurovision: 14 participations, results by year.
+- [countries/north-macedonia](https://eurovision.games/en/countries/north-macedonia): North Macedonia at Eurovision: 21 participations, results by year.
+- [countries/malta](https://eurovision.games/en/countries/malta): Malta at Eurovision: 38 participations, results by year.
+- [countries/netherlands](https://eurovision.games/en/countries/netherlands): Netherlands at Eurovision: 65 participations, results by year.
+- [countries/norway](https://eurovision.games/en/countries/norway): Norway at Eurovision: 64 participations, results by year.
+- [countries/poland](https://eurovision.games/en/countries/poland): Poland at Eurovision: 28 participations, results by year.
+- [countries/portugal](https://eurovision.games/en/countries/portugal): Portugal at Eurovision: 57 participations, results by year.
+- [countries/romania](https://eurovision.games/en/countries/romania): Romania at Eurovision: 24 participations, results by year.
+- [countries/serbia](https://eurovision.games/en/countries/serbia): Serbia at Eurovision: 18 participations, results by year.
+- [countries/russia](https://eurovision.games/en/countries/russia): Russia at Eurovision: 23 participations, results by year.
+- [countries/sweden](https://eurovision.games/en/countries/sweden): Sweden at Eurovision: 65 participations, results by year.
+- [countries/slovenia](https://eurovision.games/en/countries/slovenia): Slovenia at Eurovision: 30 participations, results by year.
+- [countries/slovakia](https://eurovision.games/en/countries/slovakia): Slovakia at Eurovision: 7 participations, results by year.
+- [countries/san-marino](https://eurovision.games/en/countries/san-marino): San Marino at Eurovision: 16 participations, results by year.
+- [countries/turkey](https://eurovision.games/en/countries/turkey): Turkey at Eurovision: 34 participations, results by year.
+- [countries/ukraine](https://eurovision.games/en/countries/ukraine): Ukraine at Eurovision: 21 participations, results by year.
+- [countries/yugoslavia](https://eurovision.games/en/countries/yugoslavia): Yugoslavia at Eurovision: 27 participations, results by year.
+
 ## Optional
 - [sitemap.xml](https://eurovision.games/sitemap.xml): full URL list with hreflang
 - [robots.txt](https://eurovision.games/robots.txt): crawl policy (AI bots welcome)

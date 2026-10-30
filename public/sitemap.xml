@@ -308,4 +308,1012 @@
     <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/winners" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/winners" />
   </url>
+  <url>
+    <loc>https://eurovision.games/en/eurovision-2026</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/eurovision-2026</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/eurovision-2026/schedule</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026/schedule" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026/schedule" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026/schedule" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/eurovision-2026/schedule</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026/schedule" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026/schedule" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026/schedule" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/eurovision-2026/semifinals</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026/semifinals" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026/semifinals" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026/semifinals" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/eurovision-2026/semifinals</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026/semifinals" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026/semifinals" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026/semifinals" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/eurovision-2026/songs</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026/songs" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026/songs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026/songs" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/eurovision-2026/songs</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/eurovision-2026/songs" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/eurovision-2026/songs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/eurovision-2026/songs" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/past-contests</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/past-contests" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/past-contests" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/past-contests" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/past-contests</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/past-contests" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/past-contests" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/past-contests" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/andorra</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/andorra" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/andorra" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/andorra" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/andorra</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/andorra" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/andorra" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/andorra" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/albania</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/albania" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/albania" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/albania" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/albania</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/albania" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/albania" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/albania" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/armenia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/armenia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/armenia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/armenia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/armenia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/armenia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/armenia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/armenia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/austria</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/austria" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/austria" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/austria" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/austria</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/austria" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/austria" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/austria" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/australia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/australia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/australia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/australia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/australia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/australia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/australia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/australia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/azerbaijan</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/azerbaijan" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/azerbaijan" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/azerbaijan" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/azerbaijan</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/azerbaijan" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/azerbaijan" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/azerbaijan" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/bosnia-and-herzegovina</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/bosnia-and-herzegovina" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/bosnia-and-herzegovina" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/bosnia-and-herzegovina" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/bosnia-and-herzegovina</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/bosnia-and-herzegovina" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/bosnia-and-herzegovina" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/bosnia-and-herzegovina" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/belgium</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/belgium" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/belgium" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/belgium" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/belgium</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/belgium" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/belgium" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/belgium" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/bulgaria</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/bulgaria" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/bulgaria" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/bulgaria" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/bulgaria</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/bulgaria" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/bulgaria" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/bulgaria" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/belarus</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/belarus" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/belarus" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/belarus" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/belarus</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/belarus" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/belarus" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/belarus" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/switzerland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/switzerland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/switzerland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/switzerland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/switzerland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/switzerland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/switzerland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/switzerland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/cyprus</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/cyprus" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/cyprus" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/cyprus" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/cyprus</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/cyprus" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/cyprus" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/cyprus" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/czechia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/czechia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/czechia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/czechia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/czechia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/czechia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/czechia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/czechia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/germany</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/germany" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/germany" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/germany" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/germany</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/germany" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/germany" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/germany" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/denmark</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/denmark" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/denmark" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/denmark" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/denmark</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/denmark" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/denmark" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/denmark" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/estonia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/estonia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/estonia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/estonia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/estonia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/estonia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/estonia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/estonia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/spain</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/spain" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/spain" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/spain" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/spain</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/spain" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/spain" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/spain" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/finland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/finland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/finland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/finland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/finland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/finland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/finland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/finland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/france</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/france" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/france" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/france" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/france</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/france" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/france" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/france" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/united-kingdom</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/united-kingdom" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/united-kingdom" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/united-kingdom" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/united-kingdom</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/united-kingdom" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/united-kingdom" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/united-kingdom" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/georgia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/georgia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/georgia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/georgia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/georgia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/georgia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/georgia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/georgia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/greece</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/greece" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/greece" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/greece" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/greece</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/greece" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/greece" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/greece" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/croatia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/croatia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/croatia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/croatia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/croatia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/croatia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/croatia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/croatia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/hungary</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/hungary" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/hungary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/hungary" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/hungary</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/hungary" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/hungary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/hungary" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/ireland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/ireland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/ireland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/ireland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/ireland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/ireland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/ireland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/ireland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/israel</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/israel" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/israel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/israel" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/israel</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/israel" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/israel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/israel" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/iceland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/iceland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/iceland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/iceland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/iceland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/iceland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/iceland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/iceland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/italy</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/italy" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/italy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/italy" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/italy</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/italy" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/italy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/italy" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/lithuania</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/lithuania" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/lithuania" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/lithuania" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/lithuania</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/lithuania" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/lithuania" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/lithuania" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/luxembourg</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/luxembourg" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/luxembourg" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/luxembourg" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/luxembourg</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/luxembourg" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/luxembourg" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/luxembourg" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/latvia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/latvia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/latvia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/latvia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/latvia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/latvia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/latvia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/latvia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/monaco</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/monaco" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/monaco" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/monaco" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/monaco</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/monaco" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/monaco" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/monaco" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/moldova</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/moldova" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/moldova" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/moldova" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/moldova</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/moldova" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/moldova" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/moldova" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/montenegro</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/montenegro" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/montenegro" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/montenegro" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/montenegro</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/montenegro" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/montenegro" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/montenegro" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/north-macedonia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/north-macedonia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/north-macedonia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/north-macedonia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/north-macedonia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/north-macedonia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/north-macedonia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/north-macedonia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/malta</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/malta" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/malta" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/malta" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/malta</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/malta" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/malta" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/malta" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/netherlands</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/netherlands" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/netherlands" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/netherlands" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/netherlands</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/netherlands" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/netherlands" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/netherlands" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/norway</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/norway" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/norway" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/norway" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/norway</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/norway" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/norway" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/norway" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/poland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/poland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/poland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/poland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/poland</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/poland" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/poland" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/poland" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/portugal</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/portugal" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/portugal" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/portugal" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/portugal</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/portugal" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/portugal" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/portugal" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/romania</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/romania" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/romania" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/romania" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/romania</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/romania" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/romania" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/romania" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/serbia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/serbia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/serbia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/serbia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/serbia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/serbia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/serbia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/serbia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/russia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/russia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/russia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/russia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/russia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/russia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/russia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/russia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/sweden</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/sweden" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/sweden" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/sweden" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/sweden</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/sweden" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/sweden" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/sweden" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/slovenia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/slovenia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/slovenia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/slovenia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/slovenia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/slovenia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/slovenia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/slovenia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/slovakia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/slovakia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/slovakia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/slovakia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/slovakia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/slovakia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/slovakia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/slovakia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/san-marino</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/san-marino" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/san-marino" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/san-marino" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/san-marino</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/san-marino" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/san-marino" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/san-marino" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/turkey</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/turkey" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/turkey" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/turkey" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/turkey</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/turkey" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/turkey" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/turkey" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/ukraine</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/ukraine" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/ukraine" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/ukraine" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/ukraine</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/ukraine" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/ukraine" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/ukraine" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/en/countries/yugoslavia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/yugoslavia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/yugoslavia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/yugoslavia" />
+  </url>
+  <url>
+    <loc>https://eurovision.games/el/countries/yugoslavia</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/countries/yugoslavia" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://eurovision.games/el/countries/yugoslavia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://eurovision.games/en/countries/yugoslavia" />
+  </url>
 </urlset>
