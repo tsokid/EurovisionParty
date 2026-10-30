@@ -9,7 +9,9 @@
 -- * live_contest_year(): the live year, else the latest non-archived
 --   year, else the calendar year. rooms.year now defaults to it.
 -- * RLS: public read on all three tables. No write policies; writes go
---   through super-admin RPCs (later migrations).
+--   through super-admin RPCs (later migrations). Table privileges: anon and
+--   authenticated get select only (Supabase's default write grants are
+--   revoked); service_role gets select.
 -- * Seeds every country that has taken part in Eurovision 1956-2026
 --   (52, including the historical YU, CS and MA), which also covers
 --   every ISO the parser's COUNTRY_TO_ISO can emit.
@@ -48,7 +50,7 @@ create table if not exists public.contests (
   year          int primary key,
   host_iso      text references public.countries(iso),
   city          text not null,
-  city_slug     text not null,
+  city_slug     text not null check (city_slug ~ '^[a-z]+(-[a-z]+)*$'),  -- same format as countries.slug
   semi1_date    date,
   semi2_date    date,
   final_date    date,
@@ -104,7 +106,12 @@ create policy contests_read        on public.contests        for select to anon,
 create policy countries_read       on public.countries       for select to anon, authenticated using (true);
 create policy contest_entries_read on public.contest_entries for select to anon, authenticated using (true);
 
+-- Supabase default privileges give anon and authenticated every privilege
+-- on new public tables; take them back so RLS is not the only barrier,
+-- then grant read. service_role (the parser) reads the tables too.
+revoke all on public.contests, public.countries, public.contest_entries from anon, authenticated;
 grant select on public.contests, public.countries, public.contest_entries to anon, authenticated;
+grant select on public.contests, public.countries, public.contest_entries to service_role;
 
 -- ── Views ───────────────────────────────────────────────────────────────
 -- Dropped and recreated (not "or replace"): e.* is frozen at creation,
@@ -123,7 +130,8 @@ create view public.current_entries with (security_invoker = true) as
 create view public.current_participants with (security_invoker = true) as
   select * from public.current_entries where in_final;
 
-grant select on public.current_entries, public.current_participants to anon, authenticated;
+revoke all on public.current_entries, public.current_participants from anon, authenticated;
+grant select on public.current_entries, public.current_participants to anon, authenticated, service_role;
 
 -- ── live_contest_year() ─────────────────────────────────────────────────
 create or replace function public.live_contest_year()
