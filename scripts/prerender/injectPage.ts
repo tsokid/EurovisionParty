@@ -1,9 +1,12 @@
 import type { Locale } from '../../src/lib/seo/locale';
+import { CONTENT_SCRIPT_ID } from '../../src/lib/seo/contentCache';
 
 export interface PrerenderedPage {
   html: string;
   headHtml: string;
   lang: Locale;
+  /** Content files the page read (path → JSON); inlined so the client hydrates without fetching. */
+  content?: Record<string, unknown>;
 }
 
 const SEO_START = '<!--seo:start-->';
@@ -52,6 +55,14 @@ export function injectPage(template: string, page: PrerenderedPage, opts: Inject
   out = out.replace(/<html lang="[^"]*">/, () => `<html lang="${page.lang}">`);
 
   if (!out.includes('<div id="root">')) throw new Error('injectPage: missing marker <div id="root">');
+
+  if (page.content && Object.keys(page.content).length > 0) {
+    if (!out.includes('</body>')) throw new Error('injectPage: missing marker </body>');
+    // `<` escaped so no string in the data can close the script or open a comment.
+    const json = JSON.stringify(page.content).replace(/</g, '\\u003c');
+    out = out.replace('</body>', () => `<script type="application/json" id="${CONTENT_SCRIPT_ID}">${json}</script>\n</body>`);
+  }
+
   if (!prerenderedFlag) return out;
   out = out.replace('<div id="root">', () => '<div id="root" data-prerendered="true">');
   return out;

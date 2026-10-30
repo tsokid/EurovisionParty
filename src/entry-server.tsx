@@ -9,6 +9,8 @@ import { routes } from './routeConfig';
 import i18n from './i18n';
 import { createHeadCollector, HeadProvider } from './lib/seo/HeadContext';
 import type { HeadInput } from './lib/seo/headTags';
+import ContentProvider from './lib/seo/ContentProvider';
+import { createContentCollector } from './lib/seo/contentContext';
 import { isLocale, stripLocaleFromPath, type Locale } from './lib/seo/locale';
 
 const ORIGIN = 'https://eurovision.games';
@@ -18,6 +20,8 @@ export interface RenderResult {
   head: HeadInput | null;
   status: number;
   lang: Locale;
+  /** Content files (paths relative to content/) the page read; inlined for hydration. */
+  content: Record<string, unknown>;
 }
 
 function localeOf(url: string): Locale {
@@ -38,18 +42,21 @@ export async function render(url: string): Promise<RenderResult> {
   const handler = createStaticHandler(routes);
   const context = await handler.query(new Request(ORIGIN + url));
   if (context instanceof Response) {
-    return { html: '', head: null, status: context.status, lang };
+    return { html: '', head: null, status: context.status, lang, content: {} };
   }
 
   const router = createStaticRouter(handler.dataRoutes, context);
   const collector = createHeadCollector();
+  const content = createContentCollector();
   const html = renderToString(
     <StrictMode>
       <HeadProvider collector={collector}>
-        <StaticRouterProvider router={router} context={context} hydrate={false} />
+        <ContentProvider collector={content}>
+          <StaticRouterProvider router={router} context={context} hydrate={false} />
+        </ContentProvider>
       </HeadProvider>
     </StrictMode>,
   );
 
-  return { html, head: collector.head, status: collector.status, lang };
+  return { html, head: collector.head, status: collector.status, lang, content: content.files };
 }

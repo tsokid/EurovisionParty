@@ -59,6 +59,7 @@ async function main(): Promise<void> {
       html: result.html,
       headHtml: headTagsHtml(result.head),
       lang: result.lang,
+      content: result.content,
     }, { prerenderedFlag: job.hydrate });
     writePage(job.file, html);
     written++;

@@ -70,6 +70,20 @@ describe('injectPage', () => {
     expect(out).toContain("<p>$& $1 $' cost</p>");
   });
 
+  it('inlines the content files the page read as escaped JSON before </body>', () => {
+    const content = { 'contests/2026.json': { year: 2026, song: '</script><script>alert(1)</script>' } };
+    const out = injectPage(TEMPLATE, { ...page, content });
+    const m = /<script type="application\/json" id="__content__">([\s\S]*?)<\/script>\s*<\/body>/.exec(out);
+    expect(m).not.toBeNull();
+    expect(m![1]).not.toContain('<');
+    expect(JSON.parse(m![1])).toEqual(content);
+  });
+
+  it('emits no content script when the page read no content', () => {
+    expect(injectPage(TEMPLATE, page)).not.toContain('__content__');
+    expect(injectPage(TEMPLATE, { ...page, content: {} })).not.toContain('__content__');
+  });
+
   it.each(['<!--seo:start-->', '<!--seo:end-->', '<!--app:start-->', '<!--app:end-->'])(
     'throws missing marker when %s is absent',
     (marker) => {
