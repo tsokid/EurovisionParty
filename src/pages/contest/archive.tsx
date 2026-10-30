@@ -10,6 +10,8 @@ import LocaleLink from '../../components/seo/LocaleLink';
 import { countryName } from './content/hubCopy';
 
 export const CONTEST_INDEX = 'contests/index.json';
+/** Archived years and city slugs only (archive pages' slug check and prev/next). */
+export const ARCHIVE_YEARS = 'contests/years.json';
 export const COUNTRY_INDEX = 'countries/index.json';
 
 const ARCHIVE_SLUG = /^eurovision-(\d{4})-([a-z0-9]+(?:-[a-z0-9]+)*)$/;

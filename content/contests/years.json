@@ -1,0 +1,284 @@
+{
+  "years": [
+    {
+      "city_slug": "lugano",
+      "year": 1956
+    },
+    {
+      "city_slug": "frankfurt",
+      "year": 1957
+    },
+    {
+      "city_slug": "hilversum",
+      "year": 1958
+    },
+    {
+      "city_slug": "cannes",
+      "year": 1959
+    },
+    {
+      "city_slug": "london",
+      "year": 1960
+    },
+    {
+      "city_slug": "cannes",
+      "year": 1961
+    },
+    {
+      "city_slug": "luxembourg-city",
+      "year": 1962
+    },
+    {
+      "city_slug": "london",
+      "year": 1963
+    },
+    {
+      "city_slug": "copenhagen",
+      "year": 1964
+    },
+    {
+      "city_slug": "naples",
+      "year": 1965
+    },
+    {
+      "city_slug": "luxembourg-city",
+      "year": 1966
+    },
+    {
+      "city_slug": "vienna",
+      "year": 1967
+    },
+    {
+      "city_slug": "london",
+      "year": 1968
+    },
+    {
+      "city_slug": "madrid",
+      "year": 1969
+    },
+    {
+      "city_slug": "amsterdam",
+      "year": 1970
+    },
+    {
+      "city_slug": "dublin",
+      "year": 1971
+    },
+    {
+      "city_slug": "edinburgh",
+      "year": 1972
+    },
+    {
+      "city_slug": "luxembourg-city",
+      "year": 1973
+    },
+    {
+      "city_slug": "brighton",
+      "year": 1974
+    },
+    {
+      "city_slug": "stockholm",
+      "year": 1975
+    },
+    {
+      "city_slug": "the-hague",
+      "year": 1976
+    },
+    {
+      "city_slug": "london",
+      "year": 1977
+    },
+    {
+      "city_slug": "paris",
+      "year": 1978
+    },
+    {
+      "city_slug": "jerusalem",
+      "year": 1979
+    },
+    {
+      "city_slug": "the-hague",
+      "year": 1980
+    },
+    {
+      "city_slug": "dublin",
+      "year": 1981
+    },
+    {
+      "city_slug": "harrogate",
+      "year": 1982
+    },
+    {
+      "city_slug": "munich",
+      "year": 1983
+    },
+    {
+      "city_slug": "luxembourg-city",
+      "year": 1984
+    },
+    {
+      "city_slug": "gothenburg",
+      "year": 1985
+    },
+    {
+      "city_slug": "bergen",
+      "year": 1986
+    },
+    {
+      "city_slug": "brussels",
+      "year": 1987
+    },
+    {
+      "city_slug": "dublin",
+      "year": 1988
+    },
+    {
+      "city_slug": "lausanne",
+      "year": 1989
+    },
+    {
+      "city_slug": "zagreb",
+      "year": 1990
+    },
+    {
+      "city_slug": "rome",
+      "year": 1991
+    },
+    {
+      "city_slug": "malmo",
+      "year": 1992
+    },
+    {
+      "city_slug": "millstreet",
+      "year": 1993
+    },
+    {
+      "city_slug": "dublin",
+      "year": 1994
+    },
+    {
+      "city_slug": "dublin",
+      "year": 1995
+    },
+    {
+      "city_slug": "oslo",
+      "year": 1996
+    },
+    {
+      "city_slug": "dublin",
+      "year": 1997
+    },
+    {
+      "city_slug": "birmingham",
+      "year": 1998
+    },
+    {
+      "city_slug": "jerusalem",
+      "year": 1999
+    },
+    {
+      "city_slug": "stockholm",
+      "year": 2000
+    },
+    {
+      "city_slug": "copenhagen",
+      "year": 2001
+    },
+    {
+      "city_slug": "tallinn",
+      "year": 2002
+    },
+    {
+      "city_slug": "riga",
+      "year": 2003
+    },
+    {
+      "city_slug": "istanbul",
+      "year": 2004
+    },
+    {
+      "city_slug": "kyiv",
+      "year": 2005
+    },
+    {
+      "city_slug": "athens",
+      "year": 2006
+    },
+    {
+      "city_slug": "helsinki",
+      "year": 2007
+    },
+    {
+      "city_slug": "belgrade",
+      "year": 2008
+    },
+    {
+      "city_slug": "moscow",
+      "year": 2009
+    },
+    {
+      "city_slug": "oslo",
+      "year": 2010
+    },
+    {
+      "city_slug": "dusseldorf",
+      "year": 2011
+    },
+    {
+      "city_slug": "baku",
+      "year": 2012
+    },
+    {
+      "city_slug": "malmo",
+      "year": 2013
+    },
+    {
+      "city_slug": "copenhagen",
+      "year": 2014
+    },
+    {
+      "city_slug": "vienna",
+      "year": 2015
+    },
+    {
+      "city_slug": "stockholm",
+      "year": 2016
+    },
+    {
+      "city_slug": "kyiv",
+      "year": 2017
+    },
+    {
+      "city_slug": "lisbon",
+      "year": 2018
+    },
+    {
+      "city_slug": "tel-aviv",
+      "year": 2019
+    },
+    {
+      "city_slug": "rotterdam",
+      "year": 2020
+    },
+    {
+      "city_slug": "rotterdam",
+      "year": 2021
+    },
+    {
+      "city_slug": "turin",
+      "year": 2022
+    },
+    {
+      "city_slug": "liverpool",
+      "year": 2023
+    },
+    {
+      "city_slug": "malmo",
+      "year": 2024
+    },
+    {
+      "city_slug": "basel",
+      "year": 2025
+    }
+  ]
+}

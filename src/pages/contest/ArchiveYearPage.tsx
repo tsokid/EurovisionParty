@@ -7,7 +7,7 @@ import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import LocaleLink from '../../components/seo/LocaleLink';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
-import type { ContestIndex, ContestSnapshot, EntrySnapshot } from '../../content/contests/types';
+import type { ArchiveYears, ContestSnapshot, EntrySnapshot } from '../../content/contests/types';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { useContent } from '../../lib/seo/useContent';
 import { absoluteUrl } from '../../lib/seo/registry';
@@ -18,25 +18,27 @@ import { ContentPending } from './ContentPending';
 import { archiveCopy, archiveFacts, type ArchiveFacts } from './content/archiveCopy';
 import { formatDate, hubCopy } from './content/hubCopy';
 import { byCountry, numCell, songCell, songsItemList } from './hub';
-import { archivedContests, CONTEST_INDEX, countryLinkCell, linkClass, parseArchiveSlug, type IndexedContest } from './archive';
+import { ARCHIVE_YEARS, countryLinkCell, linkClass, parseArchiveSlug } from './archive';
 import { visibleTable } from './table';
 
 const LAST = Number.MAX_SAFE_INTEGER;
 
-interface ArchiveYear {
+type ArchiveYear = ArchiveYears['years'][number];
+
+interface ArchiveYearData {
   contest: ContestSnapshot;
-  prev: IndexedContest | null;
-  next: IndexedContest | null;
+  prev: ArchiveYear | null;
+  next: ArchiveYear | null;
 }
 
-type State = { status: 'ready'; data: ArchiveYear } | { status: 'loading' | 'missing' } | { status: 'error'; retry: () => void };
+type State = { status: 'ready'; data: ArchiveYearData } | { status: 'loading' | 'missing' } | { status: 'error'; retry: () => void };
 
-/** Slug → index row (archived, matching city) → contests/{year}.json. Anything else is a 404. */
+/** Slug → years.json row (archived, matching city) → contests/{year}.json. Anything else is a 404. */
 function useArchiveYear(): State {
   const { slug } = useParams<{ slug: string }>();
   const parsed = parseArchiveSlug(slug);
-  const index = useContent<ContestIndex>(parsed ? CONTEST_INDEX : null);
-  const archived = index.status === 'ready' ? archivedContests(index.data) : [];
+  const index = useContent<ArchiveYears>(parsed ? ARCHIVE_YEARS : null);
+  const archived = index.status === 'ready' ? index.data.years : [];
   const at = parsed ? archived.findIndex((c) => c.year === parsed.year && c.city_slug === parsed.citySlug) : -1;
   const contest = useContent<ContestSnapshot>(at >= 0 ? `contests/${parsed!.year}.json` : null);
 
@@ -79,7 +81,7 @@ function WinnerCallout({ f, text }: { f: ArchiveFacts; text: string }) {
   );
 }
 
-function ArchiveYearBody({ data, locale }: { data: ArchiveYear; locale: Locale }) {
+function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Locale }) {
   const { contest, prev, next } = data;
   const a = archiveCopy[locale];
   const h = hubCopy[locale];

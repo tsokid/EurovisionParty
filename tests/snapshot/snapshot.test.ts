@@ -108,6 +108,7 @@ describe('buildSnapshotFiles', () => {
       'content/contests/2025.json',
       'content/contests/2026.json',
       'content/contests/index.json',
+      'content/contests/years.json',
       'content/countries/AT.json',
       'content/countries/GR.json',
       'content/countries/MA.json',
@@ -224,6 +225,17 @@ describe('buildSnapshotFiles', () => {
     // Cancelled: no winner. No place 1 yet: no winner.
     expect(index['2020']).toMatchObject({ cancelled: true, winner: null, co_winners: [] });
     expect(index['2024'].winner).toBeNull();
+  });
+
+  it('contests/years.json: archived years with their city slug, oldest first (M7)', () => {
+    const files = buildSnapshotFiles(input());
+    expect(JSON.parse(files['content/contests/years.json'])).toEqual({
+      years: [
+        { year: 2020, city_slug: 'rotterdam' },
+        { year: 2024, city_slug: 'malmo' },
+        { year: 2025, city_slug: 'basel' },
+      ],
+    });
   });
 
   it('contests/index.json: a shared first place (1969) keeps every winner', () => {

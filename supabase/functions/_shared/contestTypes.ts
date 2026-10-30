@@ -162,6 +162,13 @@ export type ContestIndexEntry = {
 export type ContestIndex = Record<string, ContestIndexEntry>;
 
 /**
+ * content/contests/years.json: the archived years (the ones with an archive
+ * page) and their city slug, oldest first. Small enough for the archive
+ * pages' slug check and prev/next links.
+ */
+export type ArchiveYears = { years: Array<{ year: number; city_slug: string }> };
+
+/**
  * One row of content/countries/index.json. Counts skip cancelled contests (2020);
  * wins and best_place count completed contests (stage finalized or archived), like /winners.
  */

@@ -6,12 +6,14 @@
 //
 // Output: { 'content/site.json', 'content/contests/{year}.json',
 // 'content/countries/{iso}.json', 'content/contests/index.json',
-// 'content/countries/index.json' } → file text. The index files are small
+// 'content/countries/index.json', 'content/contests/years.json' } → file
+// text. The index files are small
 // summaries (keyed by year / by slug) so list pages and slug lookups never
 // need the whole snapshot on the client. JSON is deterministic: keys
 // sorted at every level, 2-space indent, trailing newline; contests by year,
 // entries by ISO, participations by year. Input row order does not matter.
 import type {
+  ArchiveYears,
   ContestIndex,
   ContestRow,
   CountryIndex,
@@ -172,6 +174,13 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
     };
   }
   files['content/contests/index.json'] = stableJson(contestIndex);
+  const years: ArchiveYears = {
+    years: [...contests.values()]
+      .filter((c) => c.stage === 'archived')
+      .sort((a, b) => a.year - b.year)
+      .map((c) => ({ year: c.year, city_slug: c.city_slug })),
+  };
+  files['content/contests/years.json'] = stableJson(years);
 
   for (const co of [...countries.values()].sort(byIso)) {
     const participations: CountryParticipation[] = [...(entriesByIso.get(co.iso) ?? [])]

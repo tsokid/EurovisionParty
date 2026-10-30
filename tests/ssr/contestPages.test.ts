@@ -148,6 +148,13 @@ function rowWith(html: string, needle: string, from = 0): string {
 }
 
 describe('archive year pages (SSR)', () => {
+  it('archive year pages read the slim years.json, not the contests index (M7)', async () => {
+    const r = await render('/en/past-contests/eurovision-2019-tel-aviv');
+    expect(Object.keys(r.content)).toContain('contests/years.json');
+    expect(Object.keys(r.content)).not.toContain('contests/index.json');
+    expect(JSON.stringify(r.content['contests/years.json']).length).toBeLessThan(4000);
+  });
+
   it('/en/past-contests/eurovision-2019-tel-aviv: winner, final, both semis, nav', async () => {
     const r = await render('/en/past-contests/eurovision-2019-tel-aviv');
     expect(r.status).toBe(200);
@@ -173,7 +180,7 @@ describe('archive year pages (SSR)', () => {
     expect(types).toEqual(expect.arrayContaining(['Event', 'ItemList', 'BreadcrumbList']));
     const event = jsonLd(r).find((b) => b['@type'] === 'Event')!;
     expect(event.startDate).toBe('2019-05-18');
-    expect(Object.keys(r.content).sort()).toEqual(['contests/2019.json', 'contests/index.json', 'site.json']);
+    expect(Object.keys(r.content).sort()).toEqual(['contests/2019.json', 'contests/years.json', 'site.json']);
   });
 
   it('/el/past-contests/eurovision-2019-tel-aviv has the Greek title', async () => {
