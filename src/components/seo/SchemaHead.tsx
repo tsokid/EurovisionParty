@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { HeadInput } from '../../lib/seo/headTags';
+import { SSR_ATTR, type HeadInput } from '../../lib/seo/headTags';
 import { useHeadCollector } from '../../lib/seo/HeadContext';
 
 type Props = HeadInput;
@@ -16,6 +16,10 @@ export default function SchemaHead({
     articlePublishedTime, articleModifiedTime, keywords,
   });
   useEffect(() => {
+    // Drop the prerendered copies of the tags appended below (JSON-LD,
+    // hreflang, og:locale:alternate, article:*); this effect owns them now.
+    document.head.querySelectorAll(`[${SSR_ATTR}]`).forEach((el) => el.remove());
+
     const prevTitle = document.title;
     const prevDesc = readMeta('description');
     const prevOgTitle = readMeta('og:title', true);

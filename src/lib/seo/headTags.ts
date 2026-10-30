@@ -35,6 +35,14 @@ function esc(v: string): string {
 const metaName = (name: string, content: string) => `<meta name="${name}" content="${esc(content)}">`;
 const metaProp = (prop: string, content: string) => `<meta property="${prop}" content="${esc(content)}">`;
 
+/**
+ * Attribute on every prerendered tag that SchemaHead's effect *appends*
+ * (rather than updates in place). The client removes these before appending
+ * its own, so hydration never duplicates them.
+ */
+export const SSR_ATTR = 'data-ssr';
+const ssrProp = (prop: string, content: string) => `<meta property="${prop}" content="${esc(content)}" ${SSR_ATTR}>`;
+
 /** HTML string for every head tag SchemaHead writes client-side in its effect. */
 export function headTagsHtml(input: HeadInput): string {
   const {
@@ -57,19 +65,19 @@ export function headTagsHtml(input: HeadInput): string {
     metaName('twitter:description', twitterDescription ?? description),
   ];
   if (ogLocale) out.push(metaProp('og:locale', ogLocale));
-  for (const loc of ogLocaleAlternate ?? []) out.push(metaProp('og:locale:alternate', loc));
+  for (const loc of ogLocaleAlternate ?? []) out.push(ssrProp('og:locale:alternate', loc));
   if (keywords && keywords.length) out.push(metaName('keywords', keywords.join(', ')));
   if (ogType === 'article') {
-    if (articlePublishedTime) out.push(metaProp('article:published_time', articlePublishedTime));
-    if (articleModifiedTime) out.push(metaProp('article:modified_time', articleModifiedTime));
+    if (articlePublishedTime) out.push(ssrProp('article:published_time', articlePublishedTime));
+    if (articleModifiedTime) out.push(ssrProp('article:modified_time', articleModifiedTime));
   }
   out.push(`<link rel="canonical" href="${esc(canonical)}">`);
   for (const h of hreflang ?? []) {
-    out.push(`<link rel="alternate" hreflang="${esc(h.hreflang)}" href="${esc(h.href)}">`);
+    out.push(`<link rel="alternate" hreflang="${esc(h.hreflang)}" href="${esc(h.href)}" ${SSR_ATTR}>`);
   }
   const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   for (const b of blocks) {
-    out.push(`<script type="application/ld+json">${JSON.stringify(b).replace(/</g, '\\u003c')}</script>`);
+    out.push(`<script type="application/ld+json" ${SSR_ATTR}>${JSON.stringify(b).replace(/</g, '\\u003c')}</script>`);
   }
   return out.join('\n');
 }
