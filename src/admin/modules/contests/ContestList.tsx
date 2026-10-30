@@ -1,6 +1,7 @@
 // src/admin/modules/contests/ContestList.tsx
 // Table of contests, newest first, with stage badges and only the
-// lifecycle buttons that allowedActions permits.
+// lifecycle buttons that allowedActions permits. "Edit" opens the year's
+// details form and entries editor below the table.
 
 import { ACTION_LABELS, allowedActions, type ContestAction, type ContestRow, type ContestStage } from './lifecycle';
 
@@ -79,7 +80,7 @@ export function ContestList({ contests, hasRooms, selectedYear, busy, onAction, 
                       onClick={() => onSelect(c.year)}
                       className="px-2.5 py-1 rounded border border-white/15 text-white/80 text-xs cursor-pointer"
                     >
-                      Entries
+                      Edit
                     </button>
                     {actions.map((a) => (
                       <button

@@ -2,8 +2,8 @@
 // Entries of one contest year. Rows are edited inline and saved through
 // upsert_contest_entry (only the changed fields are sent); countries are
 // added and removed through upsert_contest_entry / delete_contest_entry.
-// Archived years are read-only: the RPCs refuse them, and corrections
-// go through Edit + Republish (sub-project 2b).
+// Archived years are edited the same way (Edit + Republish): the change
+// reaches the public archive page with the next Publish, as the banner says.
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { supabase } from '../../../lib/supabase';
@@ -42,7 +42,8 @@ const INPUT = 'bg-[#1a0a2e] border border-white/15 text-white rounded px-1.5 py-
 
 interface Props {
   year: number;
-  readOnly: boolean;
+  /** Archived year: shows the "go live after Publish" banner. */
+  archived?: boolean;
   /** Called after any write, so the parent can refresh its counts. */
   onChanged?: () => void;
   /** Slot for the "Parse semifinals" button (Task 9). Rendered in the toolbar when given. */
@@ -56,7 +57,7 @@ const toText = (v: string): string | null => (v.trim() === '' ? null : v);
 const triState = (v: boolean | null) => (v === null ? '' : v ? 'yes' : 'no');
 const fromTriState = (v: string): boolean | null => (v === '' ? null : v === 'yes');
 
-export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot, reloadKey }: Props) {
+export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlot, reloadKey }: Props) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
@@ -153,11 +154,13 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot, reloa
       <header className="flex flex-wrap items-center gap-3">
         <h3 className="text-lg font-bold text-white">Entries {year}</h3>
         <span className="text-xs text-white/50">{entries.length} entries</span>
-        {!readOnly && parseSemisSlot}
+        {parseSemisSlot}
       </header>
 
-      {readOnly && (
-        <p className="text-sm text-amber-200/80">Edit + Republish arrives with publishing (2b)</p>
+      {archived && (
+        <p className="rounded border border-amber-400/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+          Edits to an archived year go live after Publish.
+        </p>
       )}
 
       <div className="overflow-x-auto">
@@ -174,28 +177,12 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot, reloa
               <th className="px-2 py-1.5">Final RO</th>
               <th className="px-2 py-1.5">Final place</th>
               <th className="px-2 py-1.5">Points</th>
-              {!readOnly && <th className="px-2 py-1.5" />}
+              <th className="px-2 py-1.5" />
             </tr>
           </thead>
           <tbody>
             {sorted.map((e) => {
               const name = nameOf.get(e.iso) ?? e.iso;
-              if (readOnly) {
-                return (
-                  <tr key={e.iso} className="border-b border-white/5 last:border-0 text-white/80">
-                    <td className="px-2 py-1.5 text-white">{name}</td>
-                    <td className="px-2 py-1.5">{e.artist ?? '—'}</td>
-                    <td className="px-2 py-1.5">{e.song ?? '—'}</td>
-                    <td className="px-2 py-1.5">{e.semi ?? '—'}</td>
-                    <td className="px-2 py-1.5">{e.semi_place ?? '—'}</td>
-                    <td className="px-2 py-1.5">{e.qualified === null ? '—' : e.qualified ? 'yes' : 'no'}</td>
-                    <td className="px-2 py-1.5">{e.in_final ? 'yes' : 'no'}</td>
-                    <td className="px-2 py-1.5">{e.final_running_order ?? '—'}</td>
-                    <td className="px-2 py-1.5">{e.final_place ?? '—'}</td>
-                    <td className="px-2 py-1.5">{e.total_points ?? '—'}</td>
-                  </tr>
-                );
-              }
               const dirty = Object.keys(drafts[e.iso] ?? {}).length > 0;
               return (
                 <tr key={e.iso} className="border-b border-white/5 last:border-0">
@@ -296,29 +283,27 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot, reloa
         {sorted.length === 0 && <p className="text-sm text-white/50 py-2">No entries yet.</p>}
       </div>
 
-      {!readOnly && (
-        <div className="flex flex-wrap items-center gap-2">
-          <select
-            aria-label="Add country"
-            value={addIso}
-            onChange={(ev) => setAddIso(ev.target.value)}
-            className={INPUT}
-          >
-            <option value="" className="bg-[#1a0a2e]">Choose a country…</option>
-            {available.map((c) => (
-              <option key={c.iso} value={c.iso} className="bg-[#1a0a2e]">{c.name_en}</option>
-            ))}
-          </select>
-          <button
-            type="button"
-            disabled={busy || !addIso}
-            onClick={add}
-            className="px-3 py-1.5 rounded bg-amber-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
-          >
-            Add
-          </button>
-        </div>
-      )}
+      <div className="flex flex-wrap items-center gap-2">
+        <select
+          aria-label="Add country"
+          value={addIso}
+          onChange={(ev) => setAddIso(ev.target.value)}
+          className={INPUT}
+        >
+          <option value="" className="bg-[#1a0a2e]">Choose a country…</option>
+          {available.map((c) => (
+            <option key={c.iso} value={c.iso} className="bg-[#1a0a2e]">{c.name_en}</option>
+          ))}
+        </select>
+        <button
+          type="button"
+          disabled={busy || !addIso}
+          onClick={add}
+          className="px-3 py-1.5 rounded bg-amber-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
+        >
+          Add
+        </button>
+      </div>
 
       {err && <p className="text-sm text-red-300">{err}</p>}
     </section>

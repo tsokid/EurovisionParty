@@ -1,15 +1,21 @@
 // src/admin/modules/Contests.tsx
-// Admin Contests module: every contest year with its lifecycle
-// (start, finalize, archive, un-archive), a "Create year" form, and the
-// entries editor of the selected year. Lifecycle rules live in
+// Admin Contests module: the publish bar, every contest year with its
+// lifecycle (start, finalize, archive, un-archive), a "Create year" form,
+// and the details form and entries editor of the selected year (archived
+// years included: Edit + Republish). Lifecycle rules live in
 // contests/lifecycle.ts and mirror the SQL guards of migration 071; the
 // SQL stays authoritative and its refusals show through formatError.
+// Finalize, Archive and Un-archive publish automatically once they
+// succeed (spec §7); a failed publish never undoes the lifecycle move.
 
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { formatError } from '../lib/formatError';
 import { ContestList, type ContestSummary } from './contests/ContestList';
 import { EntriesEditor } from './contests/EntriesEditor';
+import { ContestDetailsForm } from './contests/ContestDetailsForm';
+import { PublishBar } from './contests/PublishBar';
+import { usePublisher } from './contests/publish';
 import { ParseSemisButton } from './parser/ParseSemisButton';
 import { ACTION_LABELS, confirmText, type ContestAction } from './contests/lifecycle';
 
@@ -19,6 +25,9 @@ const RPC: Record<ContestAction, string> = {
   archive: 'archive_contest',
   unarchive: 'unarchive_contest',
 };
+
+// Lifecycle moves that change public pages, so they publish on success.
+const AUTO_PUBLISH: ReadonlySet<ContestAction> = new Set(['finalize', 'archive', 'unarchive']);
 
 const INPUT = 'bg-[#1a0a2e] border border-white/15 text-white rounded px-2 py-1.5';
 
@@ -47,6 +56,8 @@ export default function Contests() {
   const [err, setErr] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [entriesReload, setEntriesReload] = useState(0);
+  const publisher = usePublisher();
+  const { refresh: refreshPublish, publish } = publisher;
 
   const load = useCallback(async () => {
     try {
@@ -72,6 +83,12 @@ export default function Contests() {
 
   useEffect(() => { load(); }, [load]);
 
+  // After any edit: refresh the list and the "unpublished changes" count.
+  const changed = useCallback(() => {
+    load();
+    refreshPublish();
+  }, [load, refreshPublish]);
+
   const hasRooms = (year: number) => roomsChecked[year] ?? true;
 
   const act = async (action: ContestAction, c: ContestSummary) => {
@@ -90,9 +107,13 @@ export default function Contests() {
       await load();
     } catch (e) {
       setErr(formatError(e));
+      return;
     } finally {
       setBusy(false);
     }
+    // Outcome (including failure) shows in the PublishBar; the move stands either way.
+    if (AUTO_PUBLISH.has(action)) await publish();
+    else refreshPublish();
   };
 
   const create = async () => {
@@ -118,7 +139,7 @@ export default function Contests() {
       setNotice(`Created ${year}.`);
       setForm(EMPTY_FORM);
       setShowCreate(false);
-      await load();
+      changed();
     } catch (e) {
       setErr(formatError(e));
     } finally {
@@ -146,6 +167,8 @@ export default function Contests() {
           Create year
         </button>
       </header>
+
+      <PublishBar publisher={publisher} />
 
       {showCreate && (
         <section className="rounded-xl border border-white/10 bg-white/5 p-4 max-w-3xl">
@@ -186,11 +209,15 @@ export default function Contests() {
       />
 
       {selected && (
+        <ContestDetailsForm key={`details-${selected.year}`} year={selected.year} onSaved={changed} />
+      )}
+
+      {selected && (
         <EntriesEditor
           key={selected.year}
           year={selected.year}
-          readOnly={selected.stage === 'archived'}
-          onChanged={load}
+          archived={selected.stage === 'archived'}
+          onChanged={changed}
           reloadKey={entriesReload}
           parseSemisSlot={
             selected.stage === 'current' || selected.stage === 'finalized' ? (
@@ -198,7 +225,7 @@ export default function Contests() {
                 year={selected.year}
                 onParsed={() => {
                   setEntriesReload((n) => n + 1);
-                  load();
+                  changed();
                 }}
               />
             ) : undefined

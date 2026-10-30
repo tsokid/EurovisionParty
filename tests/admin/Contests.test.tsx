@@ -23,6 +23,11 @@ vi.mock('../../src/lib/supabase', () => {
       select: () => chain,
       eq: () => chain,
       order: () => chain,
+      maybeSingle: () =>
+        Promise.resolve({
+          data: { city: 'City', city_slug: 'city', host_iso: null, semi1_date: null, semi2_date: null, final_date: null, indexable: false },
+          error: null,
+        }),
       then: (ok: (v: unknown) => unknown, bad?: (e: unknown) => unknown) =>
         Promise.resolve({ data: rows(), error: null }).then(ok, bad),
     };
@@ -63,6 +68,7 @@ describe('Contests module', () => {
   beforeEach(() => {
     h.rpc.mockClear();
     h.invoke.mockReset();
+    h.invoke.mockResolvedValue({ data: { status: 'noop', run_id: 1, sha: null, files_changed: 0 }, error: null });
     h.loads = 0;
     h.rpcError = {};
     h.summaries = [summary(2027, 'upcoming', 5), summary(2026, 'finalized', 26), summary(2025, 'archived', 26)];
@@ -150,7 +156,7 @@ describe('Contests module', () => {
     ];
     render(<Contests />);
     const r26 = await rowFor(2026);
-    fireEvent.click(r26.getByRole('button', { name: 'Entries' }));
+    fireEvent.click(r26.getByRole('button', { name: 'Edit' }));
     const artist = await screen.findByDisplayValue('A1');
     const entry = within(artist.closest('tr')!);
     expect(entry.getByText('Greece')).toBeTruthy();
@@ -173,7 +179,7 @@ describe('Contests module', () => {
       { year: 2026, iso: 'GR', artist: 'A1', song: 'S1', in_final: false },
     ];
     render(<Contests />);
-    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
     fireEvent.change(await screen.findByDisplayValue('A1'), { target: { value: 'A1 edited' } });
     fireEvent.change(screen.getByDisplayValue('B1'), { target: { value: 'B1 edited' } });
     fireEvent.click(within(screen.getByDisplayValue('A1 edited').closest('tr')!).getByRole('button', { name: 'Save' }));
@@ -192,7 +198,7 @@ describe('Contests module', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     h.entries = [{ year: 2026, iso: 'GR', artist: 'A1', song: 'S1', in_final: false }];
     render(<Contests />);
-    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
     await screen.findByDisplayValue('A1');
 
     const pick = screen.getByLabelText('Add country');
@@ -210,15 +216,82 @@ describe('Contests module', () => {
     );
   });
 
-  it('archived years are read-only', async () => {
+  it('archived years are editable, with a banner that edits go live after Publish', async () => {
     h.entries = [{ year: 2025, iso: 'AT', artist: 'JJ', song: 'Wasted Love', in_final: true, final_place: 1 }];
     render(<Contests />);
-    fireEvent.click((await rowFor(2025)).getByRole('button', { name: 'Entries' }));
-    expect(await screen.findByText('Edit + Republish arrives with publishing (2b)')).toBeTruthy();
-    expect(screen.getByText('JJ')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Delete' })).toBeNull();
-    expect(screen.queryByLabelText('Add country')).toBeNull();
+    fireEvent.click((await rowFor(2025)).getByRole('button', { name: 'Edit' }));
+    expect(await screen.findByText('Edits to an archived year go live after Publish.')).toBeTruthy();
+    const artist = await screen.findByDisplayValue('JJ');
+    fireEvent.change(artist, { target: { value: 'JJ (AT)' } });
+    fireEvent.click(within(artist.closest('tr')!).getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(h.rpc).toHaveBeenCalledWith('upsert_contest_entry', { p_year: 2025, p_iso: 'AT', p_fields: { artist: 'JJ (AT)' } }),
+    );
+    expect(screen.getByLabelText('Add country')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Parse semifinals' })).toBeNull();
+  });
+
+  it('non-archived years show no archive banner', async () => {
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
+    await screen.findByText('Entries 2026');
+    expect(screen.queryByText('Edits to an archived year go live after Publish.')).toBeNull();
+  });
+
+  it('the selected year shows its details form', async () => {
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
+    expect(await screen.findByText('Details 2026')).toBeTruthy();
+  });
+
+  it('the publish bar sits at the top of the module', async () => {
+    render(<Contests />);
+    expect(await screen.findByRole('button', { name: 'Publish' })).toBeTruthy();
+    await waitFor(() => expect(h.rpc).toHaveBeenCalledWith('unpublished_summary', undefined));
+    expect(h.rpc).toHaveBeenCalledWith('last_publish_run', undefined);
+  });
+
+  it.each([
+    ['Archive', 'archive_contest', [summary(2027, 'upcoming', 5), summary(2026, 'finalized', 26)], 2026],
+    ['Finalize', 'finalize_contest', [summary(2026, 'current', 26)], 2026],
+    ['Un-archive', 'unarchive_contest', [summary(2027, 'current', 5), summary(2026, 'archived', 26)], 2026],
+  ])('%s publishes automatically after it succeeds', async (label, rpc, rows, year) => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    h.summaries = rows as Row[];
+    h.invoke.mockResolvedValue({ data: { status: 'ok', run_id: 2, sha: 'abc1234ffff', files_changed: 3 }, error: null });
+    render(<Contests />);
+    fireEvent.click(await (await rowFor(year)).findByRole('button', { name: label }));
+    await waitFor(() => expect(h.rpc).toHaveBeenCalledWith(rpc, { p_year: year }));
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: {} }));
+    expect(await screen.findByText(/Published: 3 files changed/)).toBeTruthy();
+    const order = h.rpc.mock.invocationCallOrder[h.rpc.mock.calls.findIndex(([n]) => n === rpc)];
+    expect(h.invoke.mock.invocationCallOrder[0]).toBeGreaterThan(order);
+  });
+
+  it('a failed auto-publish keeps the lifecycle change, shows the error and leaves Publish available', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    h.invoke.mockResolvedValue({
+      data: null,
+      error: {
+        message: 'Edge Function returned a non-2xx status code',
+        context: { json: async () => ({ status: 'error', run_id: 4, sha: null, files_changed: 0, error: 'GitHub 401: Bad credentials' }) },
+      },
+    });
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Archive' }));
+    expect(await screen.findByText('Archive 2026 done.')).toBeTruthy();
+    expect(await screen.findByText('Publish failed: GitHub 401: Bad credentials')).toBeTruthy();
+    expect(h.rpc).not.toHaveBeenCalledWith('unarchive_contest', expect.anything());
+    expect((screen.getByRole('button', { name: 'Publish' }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('a refused lifecycle action does not publish', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    h.rpcError = { archive_contest: { message: 'contest 2027 has no entries; archive refused', code: 'P0001' } };
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Archive' }));
+    expect(await screen.findByText('contest 2027 has no entries; archive refused · (P0001)')).toBeTruthy();
+    expect(h.invoke).not.toHaveBeenCalledWith('publish-content', expect.anything());
   });
 
   it('shows RPC errors through formatError', async () => {
@@ -232,12 +305,12 @@ describe('Contests module', () => {
   it('Parse semifinals is offered for current and finalized years only', async () => {
     h.summaries = [summary(2027, 'upcoming', 5), summary(2026, 'finalized', 26), summary(2025, 'archived', 26)];
     render(<Contests />);
-    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
     expect(await screen.findByRole('button', { name: 'Parse semifinals' })).toBeTruthy();
-    fireEvent.click((await rowFor(2027)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2027)).getByRole('button', { name: 'Edit' }));
     await screen.findByText('Entries 2027');
     expect(screen.queryByRole('button', { name: 'Parse semifinals' })).toBeNull();
-    fireEvent.click((await rowFor(2025)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2025)).getByRole('button', { name: 'Edit' }));
     await screen.findByText('Entries 2025');
     expect(screen.queryByRole('button', { name: 'Parse semifinals' })).toBeNull();
   });
@@ -247,7 +320,7 @@ describe('Contests module', () => {
     h.summaries = [summary(2026, 'current', 26)];
     h.invoke.mockResolvedValue({ data: { ok: true, rows: 31, sf1: 15, sf2: 16 }, error: null });
     render(<Contests />);
-    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
     const button = await screen.findByRole('button', { name: 'Parse semifinals' });
 
     fireEvent.click(button); // cancelled
@@ -278,7 +351,7 @@ describe('Contests module', () => {
       })
       .mockResolvedValueOnce({ data: { ok: true, rows: 15, sf1: 15 }, error: null });
     render(<Contests />);
-    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
 
     expect(await screen.findByText('semi-final 1: http 403 from https://x/; paste the page HTML instead')).toBeTruthy();
@@ -307,7 +380,7 @@ describe('Contests module', () => {
     h.summaries = [summary(2026, 'current', 26)];
     h.invoke.mockResolvedValue({ data: null, error: { message: 'Failed to send a request to the Edge Function' } });
     render(<Contests />);
-    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
     expect(await screen.findByText('Failed to send a request to the Edge Function')).toBeTruthy();
     expect(screen.getByLabelText('Paste page HTML for semi-final 2')).toBeTruthy();
@@ -317,7 +390,7 @@ describe('Contests module', () => {
     h.summaries = [summary(2026, 'current', 26)];
     h.invoke.mockResolvedValue({ data: { ok: true, rows: 15, sf1: 15, sf2: 'not available' }, error: null });
     render(<Contests />);
-    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Edit' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
     expect(
       await screen.findByText('Semi-finals parsed: 15 entries written. Semi-final 2 is not available yet.'),
