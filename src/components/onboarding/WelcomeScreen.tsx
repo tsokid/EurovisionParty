@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import YourRoomsPanel from '../home/YourRoomsPanel';
+import { useCurrentContest } from '../../lib/currentContest';
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { contestTexts } from '../../pages/seo/content/contestText';
 
 interface WelcomeScreenProps {
   onCreateRoom: () => void;
@@ -39,6 +42,10 @@ export default function WelcomeScreen({
   onJoinRoom,
 }: WelcomeScreenProps) {
   const { t } = useTranslation();
+  const locale = useLocale();
+  // The live contest (client-rendered: null until site.json + contests/{year}.json are cached).
+  const cc = useCurrentContest();
+  const live = cc ? contestTexts(cc)[locale] : null;
 
   return (
     <div className="min-h-[calc(100svh-5rem)] sm:min-h-[calc(100svh-6rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-3 sm:py-5 lg:py-8 relative overflow-hidden">
@@ -65,7 +72,7 @@ export default function WelcomeScreen({
       ))}
 
       {/* Stage container — logo lives in SiteHeader now, so the brand block
-          (♪ EuroVision 2026 wordmark + location pill) starts directly here. */}
+          (♪ EuroVision {year} wordmark + location pill) starts directly here. */}
       <div className="w-full max-w-[1140px] flex flex-col items-center justify-center flex-1 relative">
         {/* Two-column hero — flat 2x2 grid for responsive reorder */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-y-4 sm:gap-y-6 lg:gap-y-10 gap-x-10 lg:gap-x-16 items-start relative">
@@ -91,9 +98,11 @@ export default function WelcomeScreen({
               <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight bg-gradient-to-br from-white via-euro-purple-light to-euro-pink bg-clip-text text-transparent">
                 ♪ EuroVision
               </span>
-              <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight text-euro-gold glow-text-gold">
-                2026
-              </span>
+              {live && (
+                <span className="text-[1.85rem] sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-tight text-euro-gold glow-text-gold">
+                  {live.year}
+                </span>
+              )}
             </div>
 
             {/* Event name + category */}
@@ -104,10 +113,12 @@ export default function WelcomeScreen({
             </p>
 
             {/* Location pill */}
-            <div className="mt-2 sm:mt-4 inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-xs sm:text-sm font-semibold text-white/65">
-              <span className="w-1.5 h-1.5 rounded-full bg-euro-green shadow-[0_0_8px_#34d399] animate-pulse" />
-              {t('welcome.location')}
-            </div>
+            {live && (
+              <div className="mt-2 sm:mt-4 inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-xs sm:text-sm font-semibold text-white/65">
+                <span className="w-1.5 h-1.5 rounded-full bg-euro-green shadow-[0_0_8px_#34d399] animate-pulse" />
+                {t('welcome.location', { city: live.city, month: live.finalMonth, year: live.year, flag: live.flag })}
+              </div>
+            )}
           </motion.div>
 
           {/* ─── E — Rooms (mobile order-2, desktop col-2 row-2) ─── */}

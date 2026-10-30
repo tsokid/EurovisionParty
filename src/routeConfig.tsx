@@ -13,7 +13,7 @@ import EurovisionNightPage from './pages/seo/EurovisionNightPage';
 import EurovisionGamesPage from './pages/seo/EurovisionGamesPage';
 import EurovisionPartyPage from './pages/seo/EurovisionPartyPage';
 import EurovisionTriviaPage from './pages/seo/EurovisionTriviaPage';
-import Predictions2026Page from './pages/seo/Predictions2026Page';
+import PredictionsPage from './pages/seo/PredictionsPage';
 import FAQPage from './pages/seo/FAQPage';
 import RulesPage from './pages/seo/RulesPage';
 import ScoringPage from './pages/seo/ScoringPage';
@@ -52,7 +52,7 @@ export const routes: RouteObject[] = [
       { path: 'eurovision-games', element: <EurovisionGamesPage /> },
       { path: 'eurovision-party', element: <EurovisionPartyPage /> },
       { path: 'eurovision-trivia', element: <EurovisionTriviaPage /> },
-      { path: 'eurovision-2026-predictions', element: <Predictions2026Page /> },
+      { path: 'eurovision-predictions', element: <PredictionsPage /> },
       { path: 'faq', element: <FAQPage /> },
       { path: 'rules', element: <RulesPage /> },
       { path: 'scoring', element: <ScoringPage /> },
@@ -66,7 +66,7 @@ export const routes: RouteObject[] = [
 
       // Data-driven pages (src/lib/seo/dynamicPages.ts). Each renders
       // NotFoundPage (404) for a slug the content index does not know.
-      // Static siblings above rank higher, so e.g. `eurovision-2026-predictions`
+      // Static siblings above rank higher, so e.g. `eurovision-predictions`
       // never reaches `:slug`. React Router v7 has no partial segments
       // (`eurovision-:year`), so the hub is `:slug`, parsed with hubYearFromSlug.
       {
@@ -96,7 +96,7 @@ export const routes: RouteObject[] = [
   { path: '/eurovision-games', element: <LocaleRedirect /> },
   { path: '/eurovision-party', element: <LocaleRedirect /> },
   { path: '/eurovision-trivia', element: <LocaleRedirect /> },
-  { path: '/eurovision-2026-predictions', element: <LocaleRedirect /> },
+  { path: '/eurovision-predictions', element: <LocaleRedirect /> },
   { path: '/faq', element: <LocaleRedirect /> },
   { path: '/rules', element: <LocaleRedirect /> },
   { path: '/scoring', element: <LocaleRedirect /> },

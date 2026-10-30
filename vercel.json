@@ -41,7 +41,7 @@
       "permanent": true
     },
     {
-      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
+      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-predictions|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
       "has": [
         {
           "type": "header",
@@ -53,7 +53,7 @@
       "permanent": true
     },
     {
-      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
+      "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-predictions|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)",
       "destination": "/en/:slug",
       "permanent": true
     },

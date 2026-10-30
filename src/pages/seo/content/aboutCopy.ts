@@ -147,7 +147,7 @@ const en: AboutCopy = {
         bold: 'Predictions',
         lead: ' — lock your Top 5 and Worst 5 before the show. Points stack as the broadcast plays out. See ',
         linkLabel: "this year's predictions page",
-        linkHref: '/eurovision-2026-predictions',
+        linkHref: '/eurovision-predictions',
         tail: '.',
       },
       {
@@ -208,8 +208,8 @@ const en: AboutCopy = {
       blurb: 'Run-of-show, snack ideas, and how the game fits the broadcast.',
     },
     {
-      href: '/eurovision-2026-predictions',
-      title: '2026 predictions',
+      href: '/eurovision-predictions',
+      title: 'Predictions game',
       blurb: 'Lock your Top 5 and Worst 5 before the show — points stack with duels.',
     },
     { href: '/faq', title: 'FAQ', blurb: 'Hosting, scoring, leaving rooms, and other common questions.' },
@@ -296,7 +296,7 @@ const el: AboutCopy = {
         lead:
           ' — κλείδωσε το Top 5 και το Worst 5 σου πριν την εκπομπή. Οι πόντοι στοιβάζονται καθώς εξελίσσεται η μετάδοση. Δες ',
         linkLabel: 'τη φετινή σελίδα προβλέψεων',
-        linkHref: '/eurovision-2026-predictions',
+        linkHref: '/eurovision-predictions',
         tail: '.',
       },
       {
@@ -360,8 +360,8 @@ const el: AboutCopy = {
       blurb: 'Run-of-show, ιδέες για σνακ και πώς το παιχνίδι ταιριάζει με τη μετάδοση.',
     },
     {
-      href: '/eurovision-2026-predictions',
-      title: 'Προβλέψεις 2026',
+      href: '/eurovision-predictions',
+      title: 'Παιχνίδι προβλέψεων',
       blurb: 'Κλείδωσε το Top 5 και το Worst 5 σου πριν την εκπομπή — οι πόντοι στοιβάζονται με τις μονομαχίες.',
     },
     {

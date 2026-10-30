@@ -58,7 +58,13 @@ function contentPlugin(isSsrBuild: boolean): Plugin {
   }
 }
 
+/** Build day (UTC), shared by the client and SSR builds: e.g. a guide page's dateModified. */
+const BUILD_DATE = new Date().toISOString().slice(0, 10)
+
 export default defineConfig(({ isSsrBuild }) => ({
+  define: {
+    'import.meta.env.VITE_BUILD_DATE': JSON.stringify(BUILD_DATE),
+  },
   plugins: [
     contentPlugin(!!isSsrBuild),
     react(),
@@ -76,7 +82,7 @@ export default defineConfig(({ isSsrBuild }) => ({
         globIgnores: ['en.html', 'el.html', 'en/**', 'el/**', '404.html', 'content/**'],
       },
       manifest: {
-        name: 'Eurovision Games 2026',
+        name: 'Eurovision Games',
         short_name: 'Eurovision Games',
         description: 'Eurovision Grand Final Party Game',
         theme_color: '#1a0533',

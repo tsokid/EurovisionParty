@@ -164,7 +164,7 @@ describe('dynamic routes', () => {
   });
 
   it('static routes still win over the dynamic :slug route', () => {
-    for (const path of ['/en/faq', '/en/eurovision-2026-predictions', '/el/winners']) {
+    for (const path of ['/en/faq', '/en/eurovision-predictions', '/el/winners']) {
       expect(matchRoutes(routes, path)!.at(-1)!.route.path).not.toBe(':slug');
     }
   });

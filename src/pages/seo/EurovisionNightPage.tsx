@@ -10,10 +10,13 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/eurovisionNightCopy';
+import { contestTexts } from './content/contestText';
+import CurrentContestGate from '../../components/seo/CurrentContestGate';
+import type { CurrentContest } from '../../lib/currentContest';
 
-export default function EurovisionNightPage() {
+function EurovisionNightBody({ cc }: { cc: CurrentContest }) {
   const locale = useLocale();
-  const c = copyAll[locale];
+  const c = copyAll(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -142,4 +145,8 @@ export default function EurovisionNightPage() {
       <SiteFooter />
     </>
   );
+}
+
+export default function EurovisionNightPage() {
+  return <CurrentContestGate page={(cc) => <EurovisionNightBody cc={cc} />} />;
 }

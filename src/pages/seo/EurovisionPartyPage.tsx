@@ -11,10 +11,19 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/eurovisionPartyCopy';
+import { contestTexts } from './content/contestText';
+import CurrentContestGate from '../../components/seo/CurrentContestGate';
+import type { CurrentContest } from '../../lib/currentContest';
 
-export default function EurovisionPartyPage() {
+/** `YYYY-MM-DD` + 1 day (UTC). */
+function nextDay(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10);
+}
+
+function EurovisionPartyBody({ cc }: { cc: CurrentContest }) {
   const locale = useLocale();
-  const c = copyAll[locale];
+  const c = copyAll(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -49,12 +58,14 @@ export default function EurovisionPartyPage() {
       acceptedAnswer: { '@type': 'Answer', text: f.a },
     })),
   };
-  const event = {
+  // The watch party runs 20:00–00:30 (CEST) on the live contest's final night.
+  const final = cc.finalDate;
+  const event = final && {
     '@context': 'https://schema.org',
     '@type': 'Event',
     name: c.meta.eventName,
-    startDate: '2026-05-16T20:00:00+02:00',
-    endDate: '2026-05-17T00:30:00+02:00',
+    startDate: `${final}T20:00:00+02:00`,
+    endDate: `${nextDay(final)}T00:30:00+02:00`,
     eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
     description: c.meta.eventDescription,
@@ -81,7 +92,7 @@ export default function EurovisionPartyPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, faqJsonLd, event, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={[article, faqJsonLd, ...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero
@@ -205,4 +216,8 @@ export default function EurovisionPartyPage() {
       <SiteFooter />
     </>
   );
+}
+
+export default function EurovisionPartyPage() {
+  return <CurrentContestGate page={(cc) => <EurovisionPartyBody cc={cc} />} />;
 }

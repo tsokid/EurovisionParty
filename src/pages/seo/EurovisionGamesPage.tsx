@@ -1,5 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
+import LocaleLink from '../../components/seo/LocaleLink';
 import PageHero from '../../components/seo/PageHero';
 import ContentLayout from '../../components/seo/ContentLayout';
 import Section from '../../components/seo/Section';
@@ -11,10 +12,13 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/eurovisionGamesCopy';
+import { contestTexts } from './content/contestText';
+import CurrentContestGate from '../../components/seo/CurrentContestGate';
+import type { CurrentContest } from '../../lib/currentContest';
 
-export default function EurovisionGamesPage() {
+function EurovisionGamesBody({ cc }: { cc: CurrentContest }) {
   const locale = useLocale();
-  const c = copyAll[locale];
+  const c = copyAll(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -97,9 +101,9 @@ export default function EurovisionGamesPage() {
           <p>{c.sections.predictions.p1}</p>
           <p>
             {c.sections.predictions.p2Before}
-            <a href="/eurovision-2026-predictions" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <LocaleLink to="/eurovision-predictions" className="text-euro-pink-light hover:text-white underline underline-offset-2">
               {c.sections.predictions.p2Link}
-            </a>
+            </LocaleLink>
             {c.sections.predictions.p2After}
           </p>
         </Section>
@@ -108,9 +112,9 @@ export default function EurovisionGamesPage() {
           <p>{c.sections.quiz.p1}</p>
           <p>
             {c.sections.quiz.p2Before}
-            <a href="/eurovision-trivia" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <LocaleLink to="/eurovision-trivia" className="text-euro-pink-light hover:text-white underline underline-offset-2">
               {c.sections.quiz.p2Link}
-            </a>
+            </LocaleLink>
             {c.sections.quiz.p2After}
           </p>
         </Section>
@@ -125,9 +129,9 @@ export default function EurovisionGamesPage() {
           </p>
           <p>
             {c.sections.duels.p2Before}
-            <a href="/duels" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <LocaleLink to="/duels" className="text-euro-pink-light hover:text-white underline underline-offset-2">
               {c.sections.duels.p2Link}
-            </a>
+            </LocaleLink>
             {c.sections.duels.p2After}
           </p>
         </Section>
@@ -136,9 +140,9 @@ export default function EurovisionGamesPage() {
           <p>{c.sections.dashboard.p1}</p>
           <p>
             {c.sections.dashboard.p2Before}
-            <a href="/dashboard" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <LocaleLink to="/dashboard" className="text-euro-pink-light hover:text-white underline underline-offset-2">
               {c.sections.dashboard.p2Link}
-            </a>
+            </LocaleLink>
             {c.sections.dashboard.p2After}
           </p>
         </Section>
@@ -183,4 +187,8 @@ export default function EurovisionGamesPage() {
       <SiteFooter />
     </>
   );
+}
+
+export default function EurovisionGamesPage() {
+  return <CurrentContestGate page={(cc) => <EurovisionGamesBody cc={cc} />} />;
 }

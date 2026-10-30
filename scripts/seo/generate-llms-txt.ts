@@ -20,7 +20,7 @@ const DESCRIPTIONS: Record<string, string> = {
   'eurovision-games': 'Free interactive party games to play during Eurovision: predictions, trivia, live scoring.',
   'eurovision-party': 'Hosting playbook for a Eurovision party: guests, theme, decor, food, run-of-show.',
   'eurovision-trivia': '50+ Eurovision trivia questions with answers, plus how to run trivia duels live.',
-  'eurovision-2026-predictions': 'Top 5 / Worst 5 predictions for Eurovision 2026, weekly-refreshed odds and country breakdowns.',
+  'eurovision-predictions': 'The Eurovision predictions game: Top 5 / Worst 5 format, scoring, strategy and the current line-up.',
   winners: 'Every Eurovision winner from 1956 to today — songs, artists, points, voting breakdown.',
   faq: 'Eurovision Games FAQ: setup, gameplay, scoring, hosting, technical questions answered.',
   rules: 'Eurovision Games rules: predictions, duels, scoring, winner categories.',
@@ -35,7 +35,7 @@ const DESCRIPTIONS: Record<string, string> = {
 
 const TIER_1 = ['home', 'eurovision-night', 'eurovision-party', 'eurovision-games', 'how-to-play'] as const;
 const TIER_2 = [
-  'eurovision-2026-predictions', 'eurovision-trivia', 'eurovision-duels', 'dashboard',
+  'eurovision-predictions', 'eurovision-trivia', 'eurovision-duels', 'dashboard',
   'winners',
 ] as const;
 const TIER_3 = [
@@ -93,7 +93,7 @@ const out = [
   '',
   '> Free browser-based multiplayer party game for the Eurovision Song Contest. Predictions, trivia duels, live scoring, no signup, no install.',
   '',
-  'Eurovision Games at https://eurovision.games is a watch-party companion: hosts create a room (60s), friends join with a code, everyone predicts Top 5 and Worst 5 of Eurovision 2026, plays head-to-head trivia duels during ad breaks, and competes for five trophy titles (Champion, Thief, Duelist, Oracle, Guru). Available in English (/en/) and Greek (/el/).',
+  `Eurovision Games at https://eurovision.games is a watch-party companion: hosts create a room (60s), friends join with a code, everyone predicts Top 5 and Worst 5 of Eurovision ${content.site.current_year}, plays head-to-head trivia duels during ad breaks, and competes for five trophy titles (Champion, Thief, Duelist, Oracle, Guru). Available in English (/en/) and Greek (/el/).`,
   '',
   '## Important clarification',
   '',
@@ -102,7 +102,7 @@ const out = [
   '## Core pages',
   ...TIER_1.map(lineFor),
   '',
-  '## Eurovision 2026',
+  `## Eurovision ${content.site.current_year}`,
   ...TIER_2.map(lineFor),
   '',
   '## Reference & related',

@@ -1,4 +1,3 @@
-import { compareText } from '../../lib/seo/textSort';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
@@ -8,34 +7,82 @@ import DataTable from '../../components/seo/DataTable';
 import FaqAccordion from '../../components/seo/FaqAccordion';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
+import CurrentContestGate from '../../components/seo/CurrentContestGate';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
-import { COUNTRIES_2026 as CANON } from '../../lib/countries2026';
-import { getLocalizedCountryName } from '../../lib/countryLocale';
+import type { CurrentContest } from '../../lib/currentContest';
+import type { Locale } from '../../lib/seo/locale';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
-import { copy as copyAll } from './content/predictionsCopy';
+import { compareText } from '../../lib/seo/textSort';
+import { countryName, hubCopy } from '../contest/content/hubCopy';
+import { byCountry, countryCell, numCell, songCell } from '../contest/hub';
+import { visibleTable } from '../contest/table';
+import { copy as copyFor } from './content/predictionsCopy';
+import { contestTexts } from './content/contestText';
 
-export default function Predictions2026Page() {
-  const locale = useLocale();
-  const c = copyAll[locale];
+const PUBLISHED = '2026-04-30T00:00:00Z';
+/** The build day: the line-up block changes with every content publish. */
+const MODIFIED = `${import.meta.env.VITE_BUILD_DATE ?? new Date().toISOString().slice(0, 10)}T00:00:00Z`;
 
-  // Build the display list straight off the canonical participant table so the
-  // SEO copy can never drift from the actual game line-up. Sorted alphabetically
-  // and host (Austria) tagged inline for clarity.
-  const COUNTRIES_2026 = [...CANON]
-    .map((country) => {
-      const name = getLocalizedCountryName(country);
-      return country.semi === 'host' ? `${name}${c.sections.lineup.hostSuffix}` : name;
-    })
+/** The final is decided: the line-up block shows the ranking with places. */
+const hasResults = (cc: CurrentContest): boolean =>
+  (cc.stage === 'finalized' || cc.stage === 'archived') && cc.entries.some((e) => e.final_place != null);
+
+function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
+  const c = copyFor(contestTexts(cc))[locale].sections.lineup;
+  const h = hubCopy[locale].headers;
+
+  if (cc.entries.length === 0) {
+    return (
+      <Section id="lineup" title={c.title}>
+        <p>{c.empty}</p>
+      </Section>
+    );
+  }
+
+  if (hasResults(cc)) {
+    // Finalists by place, then the semi-final non-qualifiers by country name.
+    const finalists = cc.entries.filter((e) => e.final_place != null).sort((a, b) => a.final_place! - b.final_place!);
+    const others = byCountry(cc.entries.filter((e) => e.final_place == null), locale);
+    const table = visibleTable([...finalists, ...others], [
+      { header: h.place, value: (e) => (e.final_place != null ? numCell(e.final_place) : c.notInFinal), align: 'right' },
+      { header: h.country, value: (e) => countryCell(e, locale) },
+      { header: h.artist, value: (e) => e.artist },
+      { header: h.song, value: (e) => songCell(e.song) },
+      { header: h.points, value: (e) => numCell(e.total_points, true), align: 'right' },
+    ]);
+    return (
+      <Section id="lineup" title={c.resultsTitle}>
+        <p>{c.resultsIntro}</p>
+        <DataTable {...table} />
+      </Section>
+    );
+  }
+
+  const names = cc.entries
+    .map((e) => (e.iso === cc.hostIso ? `${countryName(e, locale)}${c.hostSuffix}` : countryName(e, locale)))
     .sort(compareText);
+  return (
+    <Section id="lineup" title={c.title}>
+      <p>{c.intro}</p>
+      <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5 text-white/80">
+        {names.map((name) => (
+          <li key={name}>{name}</li>
+        ))}
+      </ul>
+      <p className="text-sm text-white/60">{c.runningOrder}</p>
+    </Section>
+  );
+}
+
+function PredictionsBody({ cc }: { cc: CurrentContest }) {
+  const locale = useLocale();
+  const c = copyFor(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
-    { label: c.crumbs.predictions, href: '/eurovision-2026-predictions' },
+    { label: c.crumbs.predictions, href: '/eurovision-predictions' },
   ];
-
-  const PUBLISHED = '2026-04-30T00:00:00Z';
-  const MODIFIED = '2026-04-30T00:00:00Z';
 
   const article = {
     '@context': 'https://schema.org',
@@ -51,7 +98,7 @@ export default function Predictions2026Page() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('eurovision-2026-predictions', locale) },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('eurovision-predictions', locale) },
   };
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -66,7 +113,7 @@ export default function Predictions2026Page() {
   return (
     <>
       <PageSeo
-        pageId="eurovision-2026-predictions"
+        pageId="eurovision-predictions"
         locale={locale}
         title={c.meta.title}
         description={c.meta.description}
@@ -87,20 +134,7 @@ export default function Predictions2026Page() {
       />
 
       <ContentLayout>
-        <Section title={c.sections.lineup.title}>
-          <p>{c.sections.lineup.intro(COUNTRIES_2026.length)}</p>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5 text-white/80">
-            {COUNTRIES_2026.map((country) => (
-              <li key={country}>{country}</li>
-            ))}
-          </ul>
-          <p className="text-sm text-white/60">
-            {c.sections.lineup.withdrawnPre}
-            {c.withdrawn.join(', ')}
-            {c.sections.lineup.withdrawnPost}
-          </p>
-          <p className="text-sm text-white/60">{c.sections.lineup.runningOrder}</p>
-        </Section>
+        <Lineup cc={cc} locale={locale} />
 
         <Section title={c.sections.format.title}>
           <p>{c.sections.format.intro}</p>
@@ -184,4 +218,8 @@ export default function Predictions2026Page() {
       <SiteFooter />
     </>
   );
+}
+
+export default function PredictionsPage() {
+  return <CurrentContestGate page={(cc) => <PredictionsBody cc={cc} />} />;
 }

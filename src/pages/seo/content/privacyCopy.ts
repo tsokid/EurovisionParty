@@ -111,6 +111,7 @@ const en: PrivacyCopy = {
     chip: 'Privacy',
     title: 'Privacy policy',
     lede:
+      // fact: date the policy was last updated
       'Eurovision Games is a free browser-based party game. We do not sell data, we do not run third-party advertising, and we collect the minimum needed for the game to work. Last updated 30 April 2026.',
   },
   breadcrumbs: { home: 'Home', privacy: 'Privacy' },
@@ -266,6 +267,7 @@ const el: PrivacyCopy = {
     chip: 'Απόρρητο',
     title: 'Πολιτική απορρήτου',
     lede:
+      // fact: date the policy was last updated
       'Το Eurovision Games είναι ένα δωρεάν party game μέσα στον browser. Δεν πουλάμε δεδομένα, δεν προβάλλουμε διαφημίσεις τρίτων και συλλέγουμε το ελάχιστο που χρειάζεται για να δουλεύει το παιχνίδι. Τελευταία ενημέρωση: 30 Απριλίου 2026.',
   },
   breadcrumbs: { home: 'Αρχική', privacy: 'Απόρρητο' },

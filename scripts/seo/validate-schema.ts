@@ -3,6 +3,12 @@ import {
   buildHowTo, buildBreadcrumbList, buildEvent, buildDefinedTermSet,
   buildItemList, buildQuiz, buildVideoGame, buildWebApplication,
 } from '../../src/lib/seo/schema';
+import { loadContent } from './loadContent';
+
+// Sample Event values from the live contest in the content snapshot, not hardcoded.
+const content = loadContent();
+const live = content.contests.find((c) => c.year === content.site.current_year);
+if (!live) throw new Error(`validate-schema: no content/contests/${content.site.current_year}.json`);
 
 interface Issue { builder: string; field: string; message: string }
 const issues: Issue[] = [];
@@ -21,7 +27,7 @@ check('Article', buildArticle({ headline: 'X', url: 'u', datePublished: 'd', dat
 check('FAQPage', buildFaqPage([{ q: 'q', a: 'a' }]), ['mainEntity']);
 check('HowTo', buildHowTo({ name: 'n', steps: [{ name: 'a', text: 'b' }] }), ['name', 'step']);
 check('BreadcrumbList', buildBreadcrumbList([{ name: 'h', url: 'u' }]), ['itemListElement']);
-check('Event', buildEvent({ name: 'n', startDate: '2026-05-16', location: 'Vienna', url: 'u' }), ['name', 'startDate', 'location']);
+check('Event', buildEvent({ name: 'n', startDate: live.dates.final ?? `${live.year}-05-01`, location: live.city, url: 'u' }), ['name', 'startDate', 'location']);
 check('DefinedTermSet', buildDefinedTermSet({ name: 'g', url: 'u', terms: [{ name: 't', description: 'd' }] }), ['name', 'hasDefinedTerm']);
 check('ItemList', buildItemList({ name: 'l', items: [{ name: 'i', url: 'u' }] }), ['itemListElement']);
 check('Quiz', buildQuiz({ name: 'q', questions: [{ question: 'q', correctAnswer: 'a', wrongAnswers: ['x'] }] }), ['name', 'hasPart']);

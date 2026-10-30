@@ -179,7 +179,7 @@ export const copy: Record<Locale, ScoringCopy> = {
     },
     related: {
       items: [
-        { href: '/eurovision-2026-predictions', title: 'Predictions', blurb: 'Top 5 and Worst 5 mechanics with the 2026 country list.' },
+        { href: '/eurovision-predictions', title: 'Predictions', blurb: "Top 5 and Worst 5 mechanics with this year's country list." },
         { href: '/duels', title: 'Duels', blurb: 'Steal vs Double strategy, per-pair caps, and trophy impact.' },
         { href: '/eurovision-trivia', title: 'Trivia', blurb: '50+ sample questions and the bank quiz/duels pull from.' },
         { href: '/rules', title: 'Rule book', blurb: 'Phase-by-phase rules, sudden death, and edge cases.' },
@@ -304,7 +304,7 @@ export const copy: Record<Locale, ScoringCopy> = {
     },
     related: {
       items: [
-        { href: '/eurovision-2026-predictions', title: 'Προβλέψεις', blurb: 'Μηχανική Top 5 και Worst 5 με τη λίστα χωρών 2026.' },
+        { href: '/eurovision-predictions', title: 'Προβλέψεις', blurb: 'Μηχανική Top 5 και Worst 5 με τη φετινή λίστα χωρών.' },
         { href: '/duels', title: 'Μονομαχίες', blurb: 'Στρατηγική Κλοπής vs Διπλασιασμού, όρια ανά ζευγάρι και επίδραση στα τρόπαια.' },
         { href: '/eurovision-trivia', title: 'Trivia', blurb: '50+ ενδεικτικές ερωτήσεις και η τράπεζα από όπου τραβάνε quiz/μονομαχίες.' },
         { href: '/rules', title: 'Κανονισμός', blurb: 'Κανόνες ανά φάση, sudden death και ακραίες περιπτώσεις.' },

@@ -120,6 +120,7 @@ const en: TermsCopy = {
     chip: 'Terms of use',
     title: 'Terms of use',
     lede:
+      // fact: date the terms were last updated
       "By using Eurovision Games you agree to these terms. The short version: it's a free fan project, play nicely, and we're not affiliated with the European Broadcasting Union. Last updated 30 April 2026.",
   },
   breadcrumbs: { home: 'Home', terms: 'Terms' },
@@ -282,6 +283,7 @@ const el: TermsCopy = {
     chip: 'Όροι χρήσης',
     title: 'Όροι χρήσης',
     lede:
+      // fact: date the terms were last updated
       'Χρησιμοποιώντας το Eurovision Games αποδέχεσαι αυτούς τους όρους. Σύντομη εκδοχή: είναι ένα δωρεάν fan project, παίξε ωραία και δεν έχουμε καμία σχέση με την European Broadcasting Union. Τελευταία ενημέρωση: 30 Απριλίου 2026.',
   },
   breadcrumbs: { home: 'Αρχική', terms: 'Όροι' },

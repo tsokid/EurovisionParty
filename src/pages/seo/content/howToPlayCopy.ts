@@ -106,7 +106,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       steps: [
         { name: 'Create a room', text: 'Click "Create Room", set max players (2-20) and quiz rounds (1-3).' },
         { name: 'Invite friends', text: 'Share the 6-character room code, link, and auto-generated room password. Friends join in their browser, no app install.' },
-        { name: 'Lock predictions', text: 'Each player picks their Top 5 and Worst 5 of Eurovision 2026. Picks lock when the host advances the phase.' },
+        { name: 'Lock predictions', text: 'Each player picks their Top 5 and Worst 5 of the Eurovision grand final. Picks lock when the host advances the phase.' },
         { name: 'Battle in duels', text: 'During the live show, challenge friends to head-to-head 3-question trivia duels. Steal points or double your own.' },
         { name: 'Watch live scoring', text: 'As Eurovision jury and televote results land, predictions auto-score and the leaderboard updates in real time.' },
         { name: 'Crown winners', text: 'Five trophies reveal at the end: Champion, Thief, Duelist, Oracle, Guru. Optional sudden-death tiebreak settles ties.' },
@@ -199,7 +199,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
     },
     related: {
       items: [
-        { href: '/eurovision-2026-predictions', title: 'Predictions explained', blurb: 'Top 5 and Worst 5 mechanics, scoring, and 2026 country list.' },
+        { href: '/eurovision-predictions', title: 'Predictions explained', blurb: "Top 5 and Worst 5 mechanics, scoring, and this year's country list." },
         { href: '/eurovision-trivia', title: 'Eurovision trivia', blurb: '50+ sample questions and the bank quiz/duels pull from.' },
         { href: '/duels', title: 'Duel deep-dive', blurb: 'Steal vs Double strategy, per-pair caps, and trophy impact.' },
         { href: '/scoring', title: 'Scoring formulas', blurb: 'Exact point math behind every prediction, quiz answer, and duel.' },
@@ -232,7 +232,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
       steps: [
         { name: 'Δημιουργία δωματίου', text: 'Πάτα "Δημιουργία Δωματίου", όρισε μέγιστους παίκτες (2-20) και γύρους quiz (1-3).' },
         { name: 'Πρόσκληση φίλων', text: 'Μοιράσου τον 6ψήφιο κωδικό δωματίου, τον σύνδεσμο και τον αυτόματο κωδικό δωματίου. Οι φίλοι μπαίνουν από τον browser τους, χωρίς εφαρμογή.' },
-        { name: 'Κλείδωμα προβλέψεων', text: 'Κάθε παίκτης διαλέγει το Top 5 και Worst 5 για τη Eurovision 2026. Οι επιλογές κλειδώνουν όταν ο οικοδεσπότης προχωρά τη φάση.' },
+        { name: 'Κλείδωμα προβλέψεων', text: 'Κάθε παίκτης διαλέγει το Top 5 και Worst 5 για τον μεγάλο τελικό της Eurovision. Οι επιλογές κλειδώνουν όταν ο οικοδεσπότης προχωρά τη φάση.' },
         { name: 'Μάχη στις μονομαχίες', text: 'Στη ζωντανή εκπομπή, προκάλεσε φίλους σε μονομαχίες trivia 3 ερωτήσεων ένας προς έναν. Κλέψε πόντους ή διπλασίασε τους δικούς σου.' },
         { name: 'Live βαθμολογία', text: 'Καθώς έρχονται τα αποτελέσματα κριτικής επιτροπής και televote, οι προβλέψεις βαθμολογούνται αυτόματα και ο πίνακας βαθμολογίας ενημερώνεται σε πραγματικό χρόνο.' },
         { name: 'Στέψη νικητών', text: 'Στο τέλος αποκαλύπτονται πέντε τρόπαια: Πρωταθλητής, Κλέφτης, Μονομάχος, Μάντης, Γκουρού. Προαιρετικό sudden death σπάει τις ισοπαλίες.' },
@@ -325,7 +325,7 @@ export const copy: Record<Locale, HowToPlayCopy> = {
     },
     related: {
       items: [
-        { href: '/eurovision-2026-predictions', title: 'Προβλέψεις', blurb: 'Μηχανική Top 5 και Worst 5, βαθμολογία και λίστα χωρών 2026.' },
+        { href: '/eurovision-predictions', title: 'Προβλέψεις', blurb: 'Μηχανική Top 5 και Worst 5, βαθμολογία και η φετινή λίστα χωρών.' },
         { href: '/eurovision-trivia', title: 'Eurovision trivia', blurb: '50+ ενδεικτικές ερωτήσεις και η τράπεζα από όπου τραβάνε quiz/μονομαχίες.' },
         { href: '/duels', title: 'Μονομαχίες σε βάθος', blurb: 'Στρατηγική Κλοπής vs Διπλασιασμού, όρια ανά ζευγάρι και επίδραση στα τρόπαια.' },
         { href: '/scoring', title: 'Φόρμουλες βαθμολογίας', blurb: 'Ακριβή μαθηματικά πόντων για κάθε πρόβλεψη, απάντηση quiz και μονομαχία.' },

@@ -1,4 +1,5 @@
 import type { Locale } from '../../../lib/seo/locale';
+import type { ContestTexts } from './contestText';
 
 interface PredictionsFaq {
   q: string;
@@ -17,12 +18,18 @@ interface PredictionsCopy {
   hero: { chip: string; title: string; lede: string };
   sections: {
     lineup: {
+      /** Before the final: the competing entries. */
       title: string;
-      intro: (n: number) => string;
+      intro: string;
       hostSuffix: string;
-      withdrawnPre: string;
-      withdrawnPost: string;
       runningOrder: string;
+      /** Once the final is decided: the ranking with places. */
+      resultsTitle: string;
+      resultsIntro: string;
+      /** Place cell of a country that did not reach the final. */
+      notInFinal: string;
+      /** No entries known yet. */
+      empty: string;
     };
     format: {
       title: string;
@@ -64,44 +71,45 @@ interface PredictionsCopy {
     howToPlay: { title: string; blurb: string };
     faq: { title: string; blurb: string };
   };
-  withdrawn: string[];
   faq: PredictionsFaq[];
 }
 
-export const copy: Record<Locale, PredictionsCopy> = {
+/** Copy for the permanent predictions guide; the live contest's facts come from the ContestTexts. */
+export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, PredictionsCopy> => ({
   en: {
     meta: {
-      title: 'Eurovision 2026 Predictions — Top 5 / Worst 5 Format & Strategy',
+      title: 'Eurovision Predictions Game: Top 5 / Worst 5 Format & Strategy',
       description:
-        'A complete predictions guide for Eurovision 2026 in Vienna: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips.',
-      schemaTitle: 'Eurovision 2026 Predictions — Top 5 / Worst 5 Format',
+        `A complete predictions guide for Eurovision ${t.year} ${t.cityIn}: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips.`,
+      schemaTitle: 'Eurovision Predictions Game: Top 5 / Worst 5 Format',
       schemaDescription:
-        'A complete predictions guide for Eurovision 2026 in Vienna: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips.',
+        `A complete predictions guide for Eurovision ${t.year} ${t.cityIn}: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips.`,
       keywords: [
-        'eurovision 2026 predictions',
-        'eurovision 2026 top 5',
-        'eurovision 2026 worst 5',
+        `eurovision ${t.year} predictions`,
+        `eurovision ${t.year} top 5`,
+        `eurovision ${t.year} worst 5`,
         'eurovision predictions game',
-        'eurovision 2026 lineup',
+        `eurovision ${t.year} lineup`,
       ],
     },
-    crumbs: { home: 'Home', predictions: '2026 predictions' },
+    crumbs: { home: 'Home', predictions: 'Predictions' },
     hero: {
-      chip: '2026 format',
-      title: 'Eurovision 2026 predictions — Top 5 and Worst 5 format',
+      chip: 'Predictions game',
+      title: 'Eurovision predictions game — Top 5 and Worst 5 format',
       lede:
-        "Eurovision 2026 takes place in Vienna, Austria on Saturday 16 May 2026, hosted by ORF after JJ\u2019s 2025 win in Basel. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before the show starts, then watches them auto-score against the official jury and televote results in real time.",
+        `Eurovision ${t.year} takes place ${t.cityIn}${t.host ? `, ${t.host}` : ''}, with the grand final on ${t.finalDay}. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before the show starts, then watches them auto-score against the official jury and televote results in real time.`,
     },
     sections: {
       lineup: {
-        title: 'The 2026 line-up',
-        intro: (n) => `${n} countries are confirmed for Eurovision 2026 across two semi-finals and the grand final:`,
+        title: `The Eurovision ${t.year} line-up`,
+        intro: `${t.lineup} countries are confirmed for Eurovision ${t.year} across two semi-finals and the grand final:`,
         hostSuffix: ' (host)',
-        withdrawnPre: 'Withdrawn / boycotting in 2026: ',
-        withdrawnPost:
-          '. Spain\u2019s exit shrinks the "Big Five" to a Big Four (France, Germany, Italy, United Kingdom).',
         runningOrder:
           'The grand-final running order is fixed after the second semi-final; this page updates with live entries as they are confirmed.',
+        resultsTitle: `Eurovision ${t.year} final ranking`,
+        resultsIntro: `Eurovision ${t.year} is decided. Here is the final ranking of all ${t.lineup} countries, so you can check your Top 5 and Worst 5:`,
+        notInFinal: 'Semi-final',
+        empty: `The Eurovision ${t.year} line-up is not confirmed yet; this page lists the entries as soon as it is.`,
       },
       format: {
         title: 'Prediction format',
@@ -157,7 +165,7 @@ export const copy: Record<Locale, PredictionsCopy> = {
           },
           {
             strong: "Don\u2019t bet against the host.",
-            rest: " Austria 2026 won\u2019t win, but they probably won\u2019t bottom either.",
+            rest: ' Host countries rarely win, but they rarely finish last either.',
           },
         ],
       },
@@ -177,7 +185,6 @@ export const copy: Record<Locale, PredictionsCopy> = {
       howToPlay: { title: 'How to play', blurb: 'The 60-second walkthrough from create-room to trophy reveal.' },
       faq: { title: 'FAQ', blurb: 'Answers to common questions about hosting, joining, and scoring.' },
     },
-    withdrawn: ['Iceland', 'Ireland', 'Netherlands', 'Slovenia', 'Spain'],
     faq: [
       {
         q: 'Can I change my list?',
@@ -195,36 +202,36 @@ export const copy: Record<Locale, PredictionsCopy> = {
   },
   el: {
     meta: {
-      title: 'Προβλέψεις Eurovision 2026 — Φόρμα Top 5 / Worst 5 και Στρατηγική',
+      title: 'Παιχνίδι Προβλέψεων Eurovision: Φόρμα Top 5 / Worst 5 και Στρατηγική',
       description:
-        'Ένας πλήρης οδηγός προβλέψεων για την Eurovision 2026 στη Βιέννη: οι συμμετέχουσες χώρες, η φόρμα Top 5 / Worst 5, μαθηματικά βαθμολογίας και συμβουλές στρατηγικής.',
-      schemaTitle: 'Προβλέψεις Eurovision 2026 — Φόρμα Top 5 / Worst 5',
+        `Ένας πλήρης οδηγός προβλέψεων για την Eurovision ${g.year} ${g.cityIn}: οι συμμετέχουσες χώρες, η φόρμα Top 5 / Worst 5, μαθηματικά βαθμολογίας και συμβουλές στρατηγικής.`,
+      schemaTitle: 'Παιχνίδι Προβλέψεων Eurovision: Φόρμα Top 5 / Worst 5',
       schemaDescription:
-        'Ένας πλήρης οδηγός προβλέψεων για την Eurovision 2026 στη Βιέννη: οι συμμετέχουσες χώρες, η φόρμα Top 5 / Worst 5, μαθηματικά βαθμολογίας και συμβουλές στρατηγικής.',
+        `Ένας πλήρης οδηγός προβλέψεων για την Eurovision ${g.year} ${g.cityIn}: οι συμμετέχουσες χώρες, η φόρμα Top 5 / Worst 5, μαθηματικά βαθμολογίας και συμβουλές στρατηγικής.`,
       keywords: [
-        'προβλέψεις eurovision 2026',
-        'eurovision 2026 top 5',
-        'eurovision 2026 worst 5',
+        `προβλέψεις eurovision ${g.year}`,
+        `eurovision ${g.year} top 5`,
+        `eurovision ${g.year} worst 5`,
         'παιχνίδι προβλέψεων eurovision',
-        'λίστα χωρών eurovision 2026',
+        `λίστα χωρών eurovision ${g.year}`,
       ],
     },
-    crumbs: { home: 'Αρχική', predictions: 'Προβλέψεις 2026' },
+    crumbs: { home: 'Αρχική', predictions: 'Προβλέψεις' },
     hero: {
-      chip: 'Φόρμα 2026',
-      title: 'Προβλέψεις Eurovision 2026 — Φόρμα Top 5 και Worst 5',
+      chip: 'Παιχνίδι προβλέψεων',
+      title: 'Παιχνίδι προβλέψεων Eurovision — Φόρμα Top 5 και Worst 5',
       lede:
-        'Η Eurovision 2026 διεξάγεται στη Βιέννη της Αυστρίας το Σάββατο 16 Μαΐου 2026, με οικοδεσπότη τον ORF μετά τη νίκη του JJ το 2025 στη Βασιλεία. Στο Eurovision Games κάθε παίκτης φτιάχνει δύο λίστες προβλέψεων — Top 5 και Worst 5 — πριν ξεκινήσει η εκπομπή, και τις βλέπει να βαθμολογούνται αυτόματα σε πραγματικό χρόνο με βάση τα επίσημα αποτελέσματα κριτικής επιτροπής και televote.',
+        `Η Eurovision ${g.year} διεξάγεται ${g.cityIn}${g.host ? ` (${g.host})` : ''}, με τον μεγάλο τελικό το ${g.finalDay}. Στο Eurovision Games κάθε παίκτης φτιάχνει δύο λίστες προβλέψεων — Top 5 και Worst 5 — πριν ξεκινήσει η εκπομπή, και τις βλέπει να βαθμολογούνται αυτόματα σε πραγματικό χρόνο με βάση τα επίσημα αποτελέσματα κριτικής επιτροπής και televote.`,
     },
     sections: {
       lineup: {
-        title: 'Η λίστα του 2026',
-        intro: (n) =>
-          `${n} χώρες έχουν επιβεβαιωθεί για την Eurovision 2026 σε δύο ημιτελικούς και τον μεγάλο τελικό:`,
+        title: `Οι συμμετοχές της Eurovision ${g.year}`,
+        intro: `${g.lineup} χώρες έχουν επιβεβαιωθεί για την Eurovision ${g.year} σε δύο ημιτελικούς και τον μεγάλο τελικό:`,
         hostSuffix: ' (οικοδεσπότης)',
-        withdrawnPre: 'Έχουν αποχωρήσει / κάνουν μποϊκοτάζ το 2026: ',
-        withdrawnPost:
-          '. Η αποχώρηση της Ισπανίας μειώνει τους «Big Five» σε Big Four (Γαλλία, Γερμανία, Ιταλία, Ηνωμένο Βασίλειο).',
+        resultsTitle: `Η τελική κατάταξη της Eurovision ${g.year}`,
+        resultsIntro: `Η Eurovision ${g.year} κρίθηκε. Αυτή είναι η τελική κατάταξη και των ${g.lineup} χωρών, για να ελέγξεις το Top 5 και το Worst 5 σου:`,
+        notInFinal: 'Ημιτελικός',
+        empty: `Οι συμμετοχές της Eurovision ${g.year} δεν έχουν επιβεβαιωθεί ακόμη· η σελίδα τις δείχνει μόλις ανακοινωθούν.`,
         runningOrder:
           'Η σειρά εμφάνισης του μεγάλου τελικού οριστικοποιείται μετά τον δεύτερο ημιτελικό· η σελίδα ενημερώνεται με ζωντανές συμμετοχές μόλις επιβεβαιωθούν.',
       },
@@ -287,7 +294,7 @@ export const copy: Record<Locale, PredictionsCopy> = {
           },
           {
             strong: 'Μην ποντάρεις εναντίον του οικοδεσπότη.',
-            rest: ' Η Αυστρία το 2026 δεν θα κερδίσει, αλλά μάλλον δεν θα είναι ούτε στον πάτο.',
+            rest: ' Οι χώρες-οικοδεσπότες σπάνια κερδίζουν, αλλά σπάνια τερματίζουν και τελευταίες.',
           },
         ],
       },
@@ -310,7 +317,6 @@ export const copy: Record<Locale, PredictionsCopy> = {
       howToPlay: { title: 'Πώς να παίξεις', blurb: 'Ο οδηγός 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι τα τρόπαια.' },
       faq: { title: 'FAQ', blurb: 'Απαντήσεις σε συνηθισμένες ερωτήσεις για hosting, join και βαθμολογία.' },
     },
-    withdrawn: ['Ισλανδία', 'Ιρλανδία', 'Ολλανδία', 'Σλοβενία', 'Ισπανία'],
     faq: [
       {
         q: 'Μπορώ να αλλάξω τη λίστα μου;',
@@ -326,4 +332,4 @@ export const copy: Record<Locale, PredictionsCopy> = {
       },
     ],
   },
-};
+});

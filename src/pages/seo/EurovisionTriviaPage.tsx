@@ -163,7 +163,7 @@ export default function EurovisionTriviaPage() {
         <RelatedCards
           items={[
             { href: '/duels', title: c.related.duels.title, blurb: c.related.duels.blurb },
-            { href: '/eurovision-2026-predictions', title: c.related.predictions.title, blurb: c.related.predictions.blurb },
+            { href: '/eurovision-predictions', title: c.related.predictions.title, blurb: c.related.predictions.blurb },
             { href: '/how-to-play', title: c.related.howToPlay.title, blurb: c.related.howToPlay.blurb },
             { href: '/scoring', title: c.related.scoring.title, blurb: c.related.scoring.blurb },
             { href: '/rules', title: c.related.rules.title, blurb: c.related.rules.blurb },

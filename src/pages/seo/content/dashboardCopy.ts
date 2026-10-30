@@ -189,7 +189,7 @@ export const copy: Record<Locale, DashboardCopy> = {
       heading: 'Keep reading',
       items: [
         {
-          href: '/eurovision-2026-predictions',
+          href: '/eurovision-predictions',
           title: 'Predictions',
           blurb: 'Top 5 and Worst 5 — the biggest single feeder into the Dashboard.',
         },
@@ -347,7 +347,7 @@ export const copy: Record<Locale, DashboardCopy> = {
       heading: 'Συνέχισε την ανάγνωση',
       items: [
         {
-          href: '/eurovision-2026-predictions',
+          href: '/eurovision-predictions',
           title: 'Προβλέψεις',
           blurb: 'Top 5 και Worst 5 — η μεγαλύτερη πηγή πόντων που τροφοδοτεί το Dashboard.',
         },

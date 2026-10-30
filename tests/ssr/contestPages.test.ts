@@ -122,7 +122,8 @@ describe('contest hub pages (SSR)', () => {
     expect(Object.keys(r.content).sort()).toEqual(['contests/2026.json', 'site.json']);
     expect((r.content['contests/2026.json'] as { year: number }).year).toBe(2026);
     const faq = await render('/en/faq');
-    expect(faq.content).toEqual({});
+    // The header reads site.json (the nav's "Eurovision {year}" link) on every page.
+    expect(faq.content).toEqual({ 'site.json': expect.anything() });
   });
 
   it.each([
@@ -172,7 +173,7 @@ describe('archive year pages (SSR)', () => {
     expect(types).toEqual(expect.arrayContaining(['Event', 'ItemList', 'BreadcrumbList']));
     const event = jsonLd(r).find((b) => b['@type'] === 'Event')!;
     expect(event.startDate).toBe('2019-05-18');
-    expect(Object.keys(r.content).sort()).toEqual(['contests/2019.json', 'contests/index.json']);
+    expect(Object.keys(r.content).sort()).toEqual(['contests/2019.json', 'contests/index.json', 'site.json']);
   });
 
   it('/el/past-contests/eurovision-2019-tel-aviv has the Greek title', async () => {
@@ -240,7 +241,7 @@ describe('past contests index (SSR)', () => {
     expect(r.html.indexOf('/en/past-contests/eurovision-2025-basel')).toBeLessThan(
       r.html.indexOf('/en/past-contests/eurovision-1956-lugano'));
     expect(r.html).not.toContain('eurovision-2026-vienna');
-    expect(Object.keys(r.content)).toEqual(['contests/index.json']);
+    expect(Object.keys(r.content).sort()).toEqual(['contests/index.json', 'site.json']);
   });
 
   it('/el/past-contests is Greek', async () => {
@@ -264,7 +265,7 @@ describe('country pages (SSR)', () => {
     expect(links).toContain('/en/past-contests/eurovision-2005-kyiv');
     expect(links).toContain('/en/past-contests/eurovision-1974-brighton');
     expect(links).toContain('/en/eurovision-2026');
-    expect(Object.keys(r.content).sort()).toEqual(['contests/index.json', 'countries/GR.json', 'countries/index.json']);
+    expect(Object.keys(r.content).sort()).toEqual(['contests/index.json', 'countries/GR.json', 'countries/index.json', 'site.json']);
   });
 
   it('/el/countries/greece: Greek H1', async () => {
@@ -296,7 +297,7 @@ describe('countries index (SSR)', () => {
     expect(h2s(r.html)).toEqual(expect.arrayContaining(['Α', 'Ε']));
     expect(r.html).toContain('href="/el/countries/greece"');
     expect(r.html.indexOf('Αλβανία')).toBeLessThan(r.html.indexOf('Ελλάδα'));
-    expect(Object.keys(r.content)).toEqual(['countries/index.json']);
+    expect(Object.keys(r.content).sort()).toEqual(['countries/index.json', 'site.json']);
   });
 
   it('/en/countries groups by the English initial', async () => {
@@ -318,7 +319,7 @@ describe('/winners from data (SSR)', () => {
     expect(r.html).toContain('Recent winners (2011–2026)');
     const crumbs = jsonLd(r).find((b) => b['@type'] === 'BreadcrumbList') as { itemListElement: { item: string }[] };
     expect(crumbs.itemListElement.map((i) => i.item)).toContain(`${ORIGIN}/en/past-contests`);
-    expect(Object.keys(r.content)).toEqual(['contests/index.json']);
+    expect(Object.keys(r.content).sort()).toEqual(['contests/index.json', 'site.json']);
   });
 
   it('the recent table has the last 15 champions', async () => {

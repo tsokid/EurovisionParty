@@ -142,7 +142,7 @@ export const copy: Record<Locale, TriviaCopy> = {
     },
     related: {
       duels: { title: 'Eurovision duels', blurb: 'Head-to-head 3-question duels during the live show.' },
-      predictions: { title: '2026 predictions', blurb: 'Top 5 and Worst 5 format, scoring, and strategy.' },
+      predictions: { title: 'Predictions game', blurb: 'Top 5 and Worst 5 format, scoring, and strategy.' },
       howToPlay: { title: 'How to play', blurb: 'The 60-second walkthrough from create-room to trophy reveal.' },
       scoring: { title: 'Scoring formulas', blurb: 'How quiz, duel, and prediction points feed the Champion total.' },
       rules: { title: 'Rule book', blurb: 'Sudden death, refused duels, and tiebreak protocol.' },
@@ -160,9 +160,9 @@ export const copy: Record<Locale, TriviaCopy> = {
         answer: '1974, with "Waterloo" representing Sweden.',
       },
       {
-        q: 'Where will Eurovision 2026 be held?',
-        options: ['Stockholm', 'Vienna', 'Liverpool', 'Madrid'],
-        answer: 'Vienna, Austria — JJ won 2025 in Basel.',
+        q: 'Where was Eurovision 2026 held?', // fact: Eurovision 2026 was held in Vienna
+        options: ['Stockholm', 'Vienna', 'Liverpool', 'Madrid'], // fact: options of the 2026 host-city question
+        answer: 'Vienna, Austria — JJ won 2025 in Basel.', // fact: Vienna hosted 2026 after JJ won 2025 in Basel
       },
       {
         q: 'What does the "douze points" award?',
@@ -296,7 +296,7 @@ export const copy: Record<Locale, TriviaCopy> = {
     },
     related: {
       duels: { title: 'Eurovision μονομαχίες', blurb: 'Head-to-head μονομαχίες 3 ερωτήσεων κατά τη ζωντανή εκπομπή.' },
-      predictions: { title: 'Προβλέψεις 2026', blurb: 'Φόρμα Top 5 και Worst 5, βαθμολογία και στρατηγική.' },
+      predictions: { title: 'Παιχνίδι προβλέψεων', blurb: 'Φόρμα Top 5 και Worst 5, βαθμολογία και στρατηγική.' },
       howToPlay: { title: 'Πώς να παίξεις', blurb: 'Ο οδηγός 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι τα τρόπαια.' },
       scoring: { title: 'Μαθηματικά βαθμολογίας', blurb: 'Πώς οι πόντοι από quiz, μονομαχίες και προβλέψεις τροφοδοτούν τον Πρωταθλητή.' },
       rules: { title: 'Κανονισμός', blurb: 'Sudden death, απορριμμένες μονομαχίες και πρωτόκολλο tiebreak.' },
@@ -314,9 +314,9 @@ export const copy: Record<Locale, TriviaCopy> = {
         answer: '1974, με το «Waterloo» εκπροσωπώντας τη Σουηδία.',
       },
       {
-        q: 'Πού θα διεξαχθεί η Eurovision 2026;',
-        options: ['Stockholm', 'Vienna', 'Liverpool', 'Madrid'],
-        answer: 'Βιέννη, Αυστρία — ο JJ κέρδισε το 2025 στη Βασιλεία.',
+        q: 'Πού διεξήχθη η Eurovision 2026;', // fact: Eurovision 2026 was held in Vienna
+        options: ['Stockholm', 'Vienna', 'Liverpool', 'Madrid'], // fact: options of the 2026 host-city question
+        answer: 'Βιέννη, Αυστρία — ο JJ κέρδισε το 2025 στη Βασιλεία.', // fact: Vienna hosted 2026 after JJ won 2025 in Basel
       },
       {
         q: 'Πόσους πόντους δίνει το «douze points»;',

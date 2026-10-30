@@ -9,7 +9,7 @@ export type PageId =
   | 'eurovision-games'
   | 'eurovision-party'
   | 'eurovision-trivia'
-  | 'eurovision-2026-predictions'
+  | 'eurovision-predictions'
   | 'faq'
   | 'rules'
   | 'scoring'
@@ -42,7 +42,7 @@ export const PAGE_REGISTRY: PageEntry[] = [
   { id: 'eurovision-games', slugByLocale: { en: '/eurovision-games', el: '/eurovision-games' }, priority: 0.9, changefreq: 'monthly' },
   { id: 'eurovision-party', slugByLocale: { en: '/eurovision-party', el: '/eurovision-party' }, priority: 0.9, changefreq: 'monthly' },
   { id: 'eurovision-trivia', slugByLocale: { en: '/eurovision-trivia', el: '/eurovision-trivia' }, priority: 0.9, changefreq: 'monthly' },
-  { id: 'eurovision-2026-predictions', slugByLocale: { en: '/eurovision-2026-predictions', el: '/eurovision-2026-predictions' }, priority: 0.9, changefreq: 'weekly' },
+  { id: 'eurovision-predictions', slugByLocale: { en: '/eurovision-predictions', el: '/eurovision-predictions' }, priority: 0.9, changefreq: 'weekly' },
   { id: 'faq', slugByLocale: { en: '/faq', el: '/faq' }, priority: 0.7, changefreq: 'monthly' },
   { id: 'rules', slugByLocale: { en: '/rules', el: '/rules' }, priority: 0.7, changefreq: 'yearly' },
   { id: 'scoring', slugByLocale: { en: '/scoring', el: '/scoring' }, priority: 0.7, changefreq: 'yearly' },

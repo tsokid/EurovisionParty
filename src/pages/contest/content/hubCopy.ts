@@ -58,7 +58,7 @@ export const CITY_EL: Record<string, { name: string; in: string }> = {
   'tel-aviv': { name: 'Τελ Αβίβ', in: 'στο Τελ Αβίβ' },
   'the-hague': { name: 'Χάγη', in: 'στη Χάγη' },
   turin: { name: 'Τορίνο', in: 'στο Τορίνο' },
-  vienna: { name: 'Βιέννη', in: 'στη Βιέννη' },
+  vienna: { name: 'Βιέννη', in: 'στη Βιέννη' }, // fact: Greek name of a host city (lookup table)
   zagreb: { name: 'Ζάγκρεμπ', in: 'στο Ζάγκρεμπ' },
 };
 
@@ -97,7 +97,7 @@ function parts(iso: string): { y: number; m: number; d: number } {
   return { y, m, d };
 }
 
-/** `2026-05-16` → "16 May 2026" / "16 Μαΐου 2026". */
+/** `2025-05-17` → "17 May 2025" / "17 Μαΐου 2025". */
 export function formatDate(iso: string, locale: Locale): string {
   const { y, m, d } = parts(iso);
   return `${d} ${MONTHS[locale][m - 1]} ${y}`;
@@ -124,7 +124,7 @@ export interface HubFacts {
   year: number;
   stage: ContestStage;
   city: string;
-  /** "in Vienna" / "στη Βιέννη". */
+  /** "in Basel" / "στη Βασιλεία". */
   cityIn: string;
   /** Host country in the page locale, when known. */
   host: string | null;
@@ -192,7 +192,7 @@ function showsClause(f: HubFacts, locale: Locale): string {
   return semis ?? fin ?? 'dates to be announced';
 }
 
-/** "semi-final 1 on 12 May, semi-final 2 on 14 May, grand final on 16 May 2026". */
+/** "semi-final 1 on 13 May, semi-final 2 on 15 May, grand final on 17 May 2025". */
 function datesList(f: HubFacts, locale: Locale): string | null {
   const { semi1, semi2, final } = f.dates;
   const out: string[] = [];

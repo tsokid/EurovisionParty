@@ -29,7 +29,7 @@ const PAGE_FILES: Record<PageId, string[]> = {
   'eurovision-games': ['src/pages/seo/EurovisionGamesPage.tsx', 'src/pages/seo/content/eurovisionGamesCopy.ts'],
   'eurovision-party': ['src/pages/seo/EurovisionPartyPage.tsx', 'src/pages/seo/content/eurovisionPartyCopy.ts'],
   'eurovision-trivia': ['src/pages/seo/EurovisionTriviaPage.tsx', 'src/pages/seo/content/triviaCopy.ts'],
-  'eurovision-2026-predictions': ['src/pages/seo/Predictions2026Page.tsx', 'src/pages/seo/content/predictionsCopy.ts'],
+  'eurovision-predictions': ['src/pages/seo/PredictionsPage.tsx', 'src/pages/seo/content/predictionsCopy.ts'],
   'faq': ['src/pages/seo/FAQPage.tsx', 'src/pages/seo/content/faqCopy.ts'],
   'rules': ['src/pages/seo/RulesPage.tsx', 'src/pages/seo/content/rulesCopy.ts'],
   'scoring': ['src/pages/seo/ScoringPage.tsx', 'src/pages/seo/content/scoringCopy.ts'],

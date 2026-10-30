@@ -51,7 +51,7 @@ export const copy: Record<Locale, NotFoundCopy> = {
     related: {
       heading: 'Popular destinations',
       night: { title: 'Eurovision night', blurb: '10-step playbook for hosting the watch party.' },
-      predictions: { title: '2026 predictions', blurb: 'Top 5 / Worst 5 format and the 35-country lineup.' },
+      predictions: { title: 'Predictions game', blurb: "Top 5 / Worst 5 format and this year's line-up." },
       trivia: { title: 'Eurovision trivia', blurb: '10 sample questions and how duels work.' },
       duels: { title: 'Duels', blurb: 'Head-to-head trivia rules during the live show.' },
       dashboard: { title: 'Dashboard', blurb: 'How the live leaderboard updates as you play.' },
@@ -83,7 +83,7 @@ export const copy: Record<Locale, NotFoundCopy> = {
     related: {
       heading: 'Δημοφιλείς προορισμοί',
       night: { title: 'Βραδιά Eurovision', blurb: 'Playbook 10 βημάτων για τη φιλοξενία του watch party.' },
-      predictions: { title: 'Προβλέψεις 2026', blurb: 'Φόρμα Top 5 / Worst 5 και η λίστα 35 χωρών.' },
+      predictions: { title: 'Παιχνίδι προβλέψεων', blurb: 'Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.' },
       trivia: { title: 'Eurovision trivia', blurb: '10 δείγματα ερωτήσεων και πώς δουλεύουν οι μονομαχίες.' },
       duels: { title: 'Μονομαχίες', blurb: 'Κανόνες head-to-head trivia κατά τη ζωντανή εκπομπή.' },
       dashboard: { title: 'Dashboard', blurb: 'Πώς ενημερώνεται ο ζωντανός πίνακας βαθμολογίας καθώς παίζεις.' },

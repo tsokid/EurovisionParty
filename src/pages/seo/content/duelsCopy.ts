@@ -213,7 +213,7 @@ export const copy: Record<Locale, DuelsCopy> = {
       trivia: { title: 'Eurovision trivia', blurb: '50+ sample questions plus the bank duels pull from.' },
       scoring: { title: 'Full scoring formulas', blurb: 'Where Steal and Double feed into Champion / Thief / Duelist.' },
       predictions: {
-        title: '2026 predictions',
+        title: 'Predictions game',
         blurb: 'Lock Top 5 and Worst 5 before the show — points stack with duels.',
       },
       howToPlay: { title: 'How to play in 60 seconds', blurb: 'Setup walkthrough from create-room to trophy reveal.' },
@@ -389,7 +389,7 @@ export const copy: Record<Locale, DuelsCopy> = {
         blurb: 'Πού τροφοδοτούν Κλοπή και Διπλασιασμός τον Πρωταθλητή / Κλέφτη / Μονομάχο.',
       },
       predictions: {
-        title: 'Προβλέψεις 2026',
+        title: 'Παιχνίδι προβλέψεων',
         blurb: 'Κλείδωσε Top 5 και Worst 5 πριν την εκπομπή — οι πόντοι αθροίζονται με τις μονομαχίες.',
       },
       howToPlay: {

@@ -106,7 +106,7 @@ export const copy: Record<Locale, WinnersCopy> = {
     related: {
       heading: 'Keep reading',
       items: [
-        { href: '/eurovision-2026-predictions', title: 'Eurovision 2026 predictions', blurb: 'Top 5 / Worst 5 format and the 35-country lineup.' },
+        { href: '/eurovision-predictions', title: 'Predictions game', blurb: "Top 5 / Worst 5 format and this year's line-up." },
         { href: '/eurovision-night', title: 'Eurovision night', blurb: '10-step playbook for the watch party.' },
         { href: '/eurovision-trivia', title: 'Eurovision trivia', blurb: '50+ sample questions across decades.' },
         { href: '/eurovision-party', title: 'Eurovision party', blurb: 'Hosting playbook with run-of-show.' },
@@ -119,7 +119,7 @@ export const copy: Record<Locale, WinnersCopy> = {
   el: {
     meta: {
       title: 'Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα · Eurovision Games',
-      description: (last) => `Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το ${last}. Πρόσφατοι πρωταθλητές, αιώνιο πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές.`,
+      description: (last) => `Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το ${last}. Πρόσφατοι πρωταθλητές, αιώνιος πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές.`,
       keywords: (last) => [
         'νικητές eurovision', 'πρωταθλητές eurovision', `eurovision νικητής ${last}`,
         'eurovision νικητές λίστα', 'eurovision ιστορία', 'eurovision νικητές χωρών',
@@ -194,7 +194,7 @@ export const copy: Record<Locale, WinnersCopy> = {
     related: {
       heading: 'Συνέχισε να διαβάζεις',
       items: [
-        { href: '/eurovision-2026-predictions', title: 'Προβλέψεις Eurovision 2026', blurb: 'Φόρμα Top 5 / Worst 5 και λίστα 35 χωρών.' },
+        { href: '/eurovision-predictions', title: 'Παιχνίδι προβλέψεων', blurb: 'Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.' },
         { href: '/eurovision-night', title: 'Βραδιά Eurovision', blurb: 'Οδηγός 10 βημάτων για το watch party.' },
         { href: '/eurovision-trivia', title: 'Trivia Eurovision', blurb: '50+ ενδεικτικές ερωτήσεις από όλες τις δεκαετίες.' },
         { href: '/eurovision-party', title: 'Πάρτι Eurovision', blurb: 'Οδηγός διοργάνωσης με ροή της βραδιάς.' },

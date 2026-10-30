@@ -1,4 +1,5 @@
 import type { Locale } from '../../../lib/seo/locale';
+import type { ContestTexts } from './contestText';
 
 interface RelatedItem {
   href: string;
@@ -44,10 +45,10 @@ export interface RulesCopy {
   crumbs: { home: string; current: string };
 }
 
-export const copy: Record<Locale, RulesCopy> = {
+export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, RulesCopy> => ({
   en: {
     meta: {
-      title: 'Eurovision Games Rules \u2014 Full Rule Book (2026)',
+      title: `Eurovision Games Rules \u2014 Full Rule Book (${t.year})`,
       description:
         'The complete rules of Eurovision Games: phases, prediction lists, trivia duels, scoring, winner categories, sudden-death tiebreak, and dispute resolution.',
       keywords: [
@@ -58,7 +59,7 @@ export const copy: Record<Locale, RulesCopy> = {
       ],
     },
     schema: {
-      articleHeadline: 'Eurovision Games \u2014 Full Rule Book (2026)',
+      articleHeadline: `Eurovision Games \u2014 Full Rule Book (${t.year})`,
       articleDescription:
         'The complete rules of Eurovision Games: phases, prediction lists, trivia duels, scoring, winner categories, sudden-death tiebreak, disputes, and edge cases.',
     },
@@ -175,7 +176,7 @@ export const copy: Record<Locale, RulesCopy> = {
         { href: '/scoring', title: 'Scoring formulas', blurb: 'Exact point math behind every prediction, quiz answer, and duel.' },
         { href: '/how-to-play', title: 'How to play', blurb: '60-second setup walkthrough from create-room to trophy reveal.' },
         { href: '/faq', title: 'FAQ', blurb: 'Quick answers on creating rooms, joining, leaving, and disputes.' },
-        { href: '/eurovision-2026-predictions', title: 'Predictions', blurb: 'Top 5 and Worst 5 mechanics with the 2026 country list.' },
+        { href: '/eurovision-predictions', title: 'Predictions', blurb: `Top 5 and Worst 5 mechanics with the ${t.year} country list.` },
         { href: '/duels', title: 'Duels', blurb: 'Head-to-head trivia rules, Steal vs Double, and trophy impact.' },
         { href: '/eurovision-trivia', title: 'Trivia', blurb: 'Sample questions and the bank quiz/duels pull from.' },
       ],
@@ -184,7 +185,7 @@ export const copy: Record<Locale, RulesCopy> = {
   },
   el: {
     meta: {
-      title: 'Κανόνες Eurovision Games \u2014 Πλήρης Κανονισμός (2026)',
+      title: `Κανόνες Eurovision Games \u2014 Πλήρης Κανονισμός (${g.year})`,
       description:
         'Οι πλήρεις κανόνες του Eurovision Games: φάσεις, λίστες προβλέψεων, μονομαχίες trivia, βαθμολογία, κατηγορίες νικητών, sudden death και επίλυση διαφωνιών.',
       keywords: [
@@ -195,7 +196,7 @@ export const copy: Record<Locale, RulesCopy> = {
       ],
     },
     schema: {
-      articleHeadline: 'Eurovision Games \u2014 Πλήρης Κανονισμός (2026)',
+      articleHeadline: `Eurovision Games \u2014 Πλήρης Κανονισμός (${g.year})`,
       articleDescription:
         'Οι πλήρεις κανόνες του Eurovision Games: φάσεις, λίστες προβλέψεων, μονομαχίες trivia, βαθμολογία, κατηγορίες νικητών, sudden death, διαφωνίες και ακραίες περιπτώσεις.',
     },
@@ -312,11 +313,11 @@ export const copy: Record<Locale, RulesCopy> = {
         { href: '/scoring', title: 'Φόρμουλες βαθμολογίας', blurb: 'Ακριβή μαθηματικά πόντων για κάθε πρόβλεψη, απάντηση quiz και μονομαχία.' },
         { href: '/how-to-play', title: 'Πώς παίζεται', blurb: 'Οδηγός εγκατάστασης 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.' },
         { href: '/faq', title: 'Συχνές Ερωτήσεις', blurb: 'Σύντομες απαντήσεις για δημιουργία, είσοδο, αποχώρηση και διαφωνίες.' },
-        { href: '/eurovision-2026-predictions', title: 'Προβλέψεις', blurb: 'Μηχανική Top 5 και Worst 5 με τη λίστα χωρών 2026.' },
+        { href: '/eurovision-predictions', title: 'Προβλέψεις', blurb: `Μηχανική Top 5 και Worst 5 με τη λίστα χωρών ${g.year}.` },
         { href: '/duels', title: 'Μονομαχίες', blurb: 'Κανόνες trivia ένας προς έναν, Κλοπή vs Διπλασιασμός και επίδραση στα τρόπαια.' },
         { href: '/eurovision-trivia', title: 'Trivia', blurb: 'Ενδεικτικές ερωτήσεις και η τράπεζα από όπου τραβάνε quiz/μονομαχίες.' },
       ],
     },
     crumbs: { home: 'Αρχική', current: 'Κανόνες' },
   },
-};
+});

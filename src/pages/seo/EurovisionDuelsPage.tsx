@@ -200,7 +200,7 @@ export default function EurovisionDuelsPage() {
           items={[
             { href: '/eurovision-trivia', title: c.related.trivia.title, blurb: c.related.trivia.blurb },
             { href: '/scoring', title: c.related.scoring.title, blurb: c.related.scoring.blurb },
-            { href: '/eurovision-2026-predictions', title: c.related.predictions.title, blurb: c.related.predictions.blurb },
+            { href: '/eurovision-predictions', title: c.related.predictions.title, blurb: c.related.predictions.blurb },
             { href: '/how-to-play', title: c.related.howToPlay.title, blurb: c.related.howToPlay.blurb },
             { href: '/rules', title: c.related.rules.title, blurb: c.related.rules.blurb },
             { href: '/faq#leave', title: c.related.leave.title, blurb: c.related.leave.blurb },

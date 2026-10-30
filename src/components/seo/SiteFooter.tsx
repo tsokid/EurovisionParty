@@ -6,7 +6,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="border-t border-white/10 mt-16 px-4 pb-10 pt-10 text-sm bg-black/30">
-      <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8">
 
         {/* About */}
         <div>
@@ -25,8 +25,18 @@ export default function SiteFooter() {
             <li><LocaleLink to="/how-to-play" className="text-white/70 hover:text-white transition">{t('siteFooter.links.gameStages')}</LocaleLink></li>
             <li><LocaleLink to="/eurovision-trivia" className="text-white/70 hover:text-white transition">{t('siteFooter.links.trivia')}</LocaleLink></li>
             <li><LocaleLink to="/duels" className="text-white/70 hover:text-white transition">{t('siteFooter.links.duels')}</LocaleLink></li>
-            <li><LocaleLink to="/eurovision-2026-predictions" className="text-white/70 hover:text-white transition">{t('siteFooter.links.predictions')}</LocaleLink></li>
+            <li><LocaleLink to="/eurovision-predictions" className="text-white/70 hover:text-white transition">{t('siteFooter.links.predictions')}</LocaleLink></li>
             <li><LocaleLink to="/dashboard" className="text-white/70 hover:text-white transition">{t('siteFooter.links.dashboard')}</LocaleLink></li>
+          </ul>
+        </div>
+
+        {/* Eurovision: contests archive */}
+        <div>
+          <h4 className="text-euro-gold font-bold mb-3">{t('siteFooter.eurovision')}</h4>
+          <ul className="space-y-2">
+            <li><LocaleLink to="/past-contests" className="text-white/70 hover:text-white transition">{t('siteFooter.links.pastContests')}</LocaleLink></li>
+            <li><LocaleLink to="/countries" className="text-white/70 hover:text-white transition">{t('siteFooter.links.countries')}</LocaleLink></li>
+            <li><LocaleLink to="/winners" className="text-white/70 hover:text-white transition">{t('siteFooter.links.winners')}</LocaleLink></li>
           </ul>
         </div>
 

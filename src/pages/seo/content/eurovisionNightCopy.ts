@@ -1,4 +1,5 @@
 import type { Locale } from '../../../lib/seo/locale';
+import type { ContestTexts } from './contestText';
 
 export interface EurovisionNightCopy {
   meta: {
@@ -36,10 +37,10 @@ export interface EurovisionNightCopy {
   };
 }
 
-export const copy: Record<Locale, EurovisionNightCopy> = {
+export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, EurovisionNightCopy> => ({
   en: {
     meta: {
-      title: 'Eurovision Night — Host the Perfect Watch Party (2026 Guide)',
+      title: `Eurovision Night — Host the Perfect Watch Party (${t.year} Guide)`,
       description:
         'A practical guide to hosting Eurovision night: setup, food, drinks, predictions, trivia, voting, and live scoring with friends. Free to play.',
       headline: 'Eurovision Night — How to Host the Perfect Watch Party',
@@ -49,7 +50,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
         'eurovision night',
         'host eurovision night',
         'eurovision watch party',
-        'eurovision 2026 watch party',
+        `eurovision ${t.year} watch party`,
         'eurovision party guide',
       ],
     },
@@ -64,10 +65,10 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
       what: {
         title: 'What is Eurovision night?',
         bodyBefore:
-          'Eurovision night is the live grand-final broadcast of the Eurovision Song Contest, held on the second Saturday of May each year. In 2026 the grand final airs on ',
-        bodyDate: 'Saturday 16 May 2026',
+          `Eurovision night is the live grand-final broadcast of the Eurovision Song Contest, held on the second Saturday of May each year. In ${t.year} the grand final airs on `,
+        bodyDate: t.finalDay,
         bodyAfter:
-          ' from Vienna, with semi-finals earlier that week. Across Europe (and Australia) it is a single televised live event watched by ~160 million people; in homes it has become a competitive social event, a costume party, and a drinking game all at once.',
+          ` ${t.cityFrom}, with semi-finals earlier that week. Across Europe (and Australia) it is a single televised live event watched by ~160 million people; in homes it has become a competitive social event, a costume party, and a drinking game all at once.`,
       },
       playbook: {
         title: 'How to host (10-step playbook)',
@@ -94,7 +95,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           },
           {
             boldHead: '5. Set the lineup.',
-            rest: ' Print or screenshot the 2026 running order so everyone has a reference for predictions.',
+            rest: ` Print or screenshot the ${t.year} running order so everyone has a reference for predictions.`,
           },
           {
             boldHead: '6. Lock predictions.',
@@ -160,9 +161,9 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
         a: 'The phone or laptop is the dashboard; the broadcast stays on the TV.',
       },
       {
-        q: 'When is Eurovision 2026?',
+        q: `When is Eurovision ${t.year}?`,
         a:
-          'The grand final airs on Saturday 16 May 2026 from Vienna, with semi-finals earlier that week. Start times vary by country (21:00 CET / 20:00 BST / 22:00 EET).',
+          `The grand final airs on ${t.finalDay} ${t.cityFrom}, with semi-finals earlier that week. Start times vary by country (21:00 CET / 20:00 BST / 22:00 EET).`,
       },
     ],
     howTo: {
@@ -205,9 +206,9 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           blurb: 'The 60-second walkthrough from create-room to trophy reveal.',
         },
         {
-          href: '/eurovision-2026-predictions',
-          title: '2026 predictions',
-          blurb: 'Top 5 and Worst 5 format, scoring, and strategy for the Vienna final.',
+          href: '/eurovision-predictions',
+          title: 'Predictions game',
+          blurb: `Top 5 and Worst 5 format, scoring, and strategy for the ${t.city} final.`,
         },
         {
           href: '/eurovision-trivia',
@@ -229,7 +230,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
   },
   el: {
     meta: {
-      title: 'Βραδιά Eurovision — Διοργάνωσε το τέλειο watch party (Οδηγός 2026)',
+      title: `Βραδιά Eurovision — Διοργάνωσε το τέλειο watch party (Οδηγός ${g.year})`,
       description:
         'Πρακτικός οδηγός διοργάνωσης βραδιάς Eurovision: εκκίνηση, φαγητό, ποτό, προβλέψεις, trivia, ψηφοφορία και ζωντανή βαθμολογία με την παρέα σου. Δωρεάν.',
       headline: 'Βραδιά Eurovision — Πώς να διοργανώσεις το τέλειο watch party',
@@ -239,7 +240,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
         'βραδιά eurovision',
         'διοργάνωση βραδιάς eurovision',
         'eurovision watch party',
-        'eurovision 2026 watch party',
+        `eurovision ${g.year} watch party`,
         'οδηγός πάρτι eurovision',
       ],
     },
@@ -254,10 +255,10 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
       what: {
         title: 'Τι είναι η βραδιά Eurovision;',
         bodyBefore:
-          'Η βραδιά Eurovision είναι η ζωντανή μετάδοση του μεγάλου τελικού της Eurovision Song Contest, που γίνεται κάθε δεύτερο Σάββατο του Μαΐου. Το 2026 ο μεγάλος τελικός μεταδίδεται το ',
-        bodyDate: 'Σάββατο 16 Μαΐου 2026',
+          `Η βραδιά Eurovision είναι η ζωντανή μετάδοση του μεγάλου τελικού της Eurovision Song Contest, που γίνεται κάθε δεύτερο Σάββατο του Μαΐου. Το ${g.year} ο μεγάλος τελικός μεταδίδεται το `,
+        bodyDate: g.finalDay,
         bodyAfter:
-          ' από τη Βιέννη, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Σε όλη την Ευρώπη (και την Αυστραλία) είναι ένα ενιαίο τηλεοπτικό ζωντανό γεγονός που παρακολουθούν περίπου 160 εκατομμύρια άνθρωποι· στα σπίτια έχει γίνει ταυτόχρονα ανταγωνιστική κοινωνική εκδήλωση, costume party και drinking game.',
+          ` ${g.cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Σε όλη την Ευρώπη (και την Αυστραλία) είναι ένα ενιαίο τηλεοπτικό ζωντανό γεγονός που παρακολουθούν περίπου 160 εκατομμύρια άνθρωποι· στα σπίτια έχει γίνει ταυτόχρονα ανταγωνιστική κοινωνική εκδήλωση, costume party και drinking game.`,
       },
       playbook: {
         title: 'Πώς να διοργανώσεις (οδηγός 10 βημάτων)',
@@ -284,7 +285,7 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           },
           {
             boldHead: '5. Ετοίμασε τη λίστα.',
-            rest: ' Τύπωσε ή κάνε screenshot τη σειρά εμφάνισης του 2026, ώστε όλοι να έχουν αναφορά για τις προβλέψεις.',
+            rest: ` Τύπωσε ή κάνε screenshot τη σειρά εμφάνισης του ${g.year}, ώστε όλοι να έχουν αναφορά για τις προβλέψεις.`,
           },
           {
             boldHead: '6. Κλείδωσε τις προβλέψεις.',
@@ -354,9 +355,9 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
         a: 'Το κινητό ή το laptop είναι το dashboard· η μετάδοση μένει στην τηλεόραση.',
       },
       {
-        q: 'Πότε είναι η Eurovision 2026;',
+        q: `Πότε είναι η Eurovision ${g.year};`,
         a:
-          'Ο μεγάλος τελικός μεταδίδεται το Σάββατο 16 Μαΐου 2026 από τη Βιέννη, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Οι ώρες έναρξης διαφέρουν ανά χώρα (21:00 CET / 20:00 BST / 22:00 EET).',
+          `Ο μεγάλος τελικός μεταδίδεται το ${g.finalDay} ${g.cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Οι ώρες έναρξης διαφέρουν ανά χώρα (21:00 CET / 20:00 BST / 22:00 EET).`,
       },
     ],
     howTo: {
@@ -408,9 +409,9 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
           blurb: 'Ο οδηγός 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.',
         },
         {
-          href: '/eurovision-2026-predictions',
-          title: 'Προβλέψεις 2026',
-          blurb: 'Μορφή Top 5 και Worst 5, βαθμολογία και στρατηγική για τον τελικό της Βιέννης.',
+          href: '/eurovision-predictions',
+          title: 'Παιχνίδι προβλέψεων',
+          blurb: 'Μορφή Top 5 και Worst 5, βαθμολογία και στρατηγική για τον φετινό τελικό.',
         },
         {
           href: '/eurovision-trivia',
@@ -430,4 +431,4 @@ export const copy: Record<Locale, EurovisionNightCopy> = {
       ],
     },
   },
-};
+});

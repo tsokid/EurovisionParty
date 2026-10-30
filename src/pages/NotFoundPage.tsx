@@ -54,7 +54,7 @@ export function NotFoundPage() {
           heading={c.related.heading}
           items={[
             { href: '/eurovision-night', title: c.related.night.title, blurb: c.related.night.blurb },
-            { href: '/eurovision-2026-predictions', title: c.related.predictions.title, blurb: c.related.predictions.blurb },
+            { href: '/eurovision-predictions', title: c.related.predictions.title, blurb: c.related.predictions.blurb },
             { href: '/eurovision-trivia', title: c.related.trivia.title, blurb: c.related.trivia.blurb },
             { href: '/duels', title: c.related.duels.title, blurb: c.related.duels.blurb },
             { href: '/dashboard', title: c.related.dashboard.title, blurb: c.related.dashboard.blurb },

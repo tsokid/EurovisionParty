@@ -9,14 +9,37 @@ import { useLocale } from '../../lib/seo/LocaleContext';
 import { localizePath, stripLocaleFromPath } from '../../lib/seo/locale';
 import { useGameStore } from '../../stores/gameStore';
 import LockedBadge from '../ui/LockedBadge';
+import type { SiteSnapshot } from '../../content/contests/types';
+import { useContent } from '../../lib/seo/useContent';
+import { hubPath } from '../../lib/seo/dynamicPages';
 
-const HOW_TO_PLAY_LINKS = [
-  { href: '/eurovision-trivia', key: 'trivia' as const },
-  { href: '/eurovision-2026-predictions', key: 'predictions' as const },
-  { href: '/rules', key: 'rules' as const },
-  { href: '/scoring', key: 'scoring' as const },
-  { href: '/faq', key: 'otherFaq' as const },
+interface NavLink {
+  href: string;
+  key: 'trivia' | 'predictions' | 'hub' | 'rules' | 'scoring' | 'otherFaq';
+}
+
+const HOW_TO_PLAY_LINKS: NavLink[] = [
+  { href: '/eurovision-trivia', key: 'trivia' },
+  { href: '/eurovision-predictions', key: 'predictions' },
+  { href: '/rules', key: 'rules' },
+  { href: '/scoring', key: 'scoring' },
+  { href: '/faq', key: 'otherFaq' },
 ];
+
+/**
+ * The dropdown links, with "Eurovision {year}" (the live contest hub) after
+ * Predictions. The year comes from site.json, which every prerendered page
+ * inlines because the header reads it; no hub link while it is unknown or the
+ * live contest is archived (the hub then redirects to the archive).
+ */
+function useHowToPlayLinks(): { links: NavLink[]; year: number | null } {
+  const site = useContent<SiteSnapshot>('site.json');
+  const year = site.status === 'ready' && site.data.live_stage !== 'archived' ? site.data.current_year : null;
+  if (year === null) return { links: HOW_TO_PLAY_LINKS, year };
+  const hub: NavLink = { href: hubPath(year), key: 'hub' };
+  const at = HOW_TO_PLAY_LINKS.findIndex((l) => l.key === 'predictions') + 1;
+  return { links: [...HOW_TO_PLAY_LINKS.slice(0, at), hub, ...HOW_TO_PLAY_LINKS.slice(at)], year };
+}
 
 
 function ChevronIcon({ open }: { open: boolean }) {
@@ -49,6 +72,8 @@ export default function SiteHeader() {
   const room = useGameStore((s) => s.room);
   const inRoomBroadcasting = !!room && (room.phase === 'voting_live' || room.phase === 'final');
   const triviaLocked = inRoomBroadcasting;
+  const { links: howLinks, year } = useHowToPlayLinks();
+  const label = (l: NavLink) => t(`siteNav.${l.key}`, { year });
 
   useEffect(() => { setOpen(false); }, [pathname]);
 
@@ -120,7 +145,7 @@ export default function SiteHeader() {
               aria-haspopup="menu"
               aria-expanded={howDropdownOpen}
               className={`px-3 py-1.5 rounded-full text-sm transition flex items-center gap-1 ${
-                howDropdownOpen || HOW_TO_PLAY_LINKS.some((l) => l.href === cleanPath) || cleanPath === '/how-to-play'
+                howDropdownOpen || howLinks.some((l) => l.href === cleanPath) || cleanPath === '/how-to-play'
                   ? 'text-white bg-white/10'
                   : 'text-white/70 hover:text-white hover:bg-white/5'
               }`}
@@ -130,11 +155,11 @@ export default function SiteHeader() {
             </button>
             {howDropdownOpen && (
               <div className="absolute right-0 top-full mt-2 min-w-[220px] rounded-xl border border-white/10 bg-euro-deep/95 backdrop-blur-md shadow-xl shadow-black/40 py-1.5 z-50" role="menu">
-                {HOW_TO_PLAY_LINKS.map((l) => {
+                {howLinks.map((l) => {
                   if (l.key === 'trivia' && triviaLocked) {
                     return (
                       <div key={l.href} className="px-4 py-2" role="menuitem">
-                        <LockedBadge label={t(`siteNav.${l.key}`)} />
+                        <LockedBadge label={label(l)} />
                       </div>
                     );
                   }
@@ -146,7 +171,7 @@ export default function SiteHeader() {
                       className="block px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white transition"
                       onClick={() => setHowDropdownOpen(false)}
                     >
-                      {t(`siteNav.${l.key}`)}
+                      {label(l)}
                     </LocaleLink>
                   );
                 })}
@@ -290,11 +315,11 @@ export default function SiteHeader() {
               </button>
               {howOpen && (
                 <div className="ml-3 pl-3 border-l border-white/10 flex flex-col">
-                  {HOW_TO_PLAY_LINKS.map((l) => {
+                  {howLinks.map((l) => {
                     if (l.key === 'trivia' && triviaLocked) {
                       return (
                         <div key={l.href} className="px-3 py-2.5">
-                          <LockedBadge label={t(`siteNav.${l.key}`)} />
+                          <LockedBadge label={label(l)} />
                         </div>
                       );
                     }
@@ -304,7 +329,7 @@ export default function SiteHeader() {
                         to={l.href}
                         className="px-3 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/5 hover:text-white transition"
                       >
-                        {t(`siteNav.${l.key}`)}
+                        {label(l)}
                       </LocaleLink>
                     );
                   })}

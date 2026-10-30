@@ -10,10 +10,13 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/rulesCopy';
+import { contestTexts } from './content/contestText';
+import CurrentContestGate from '../../components/seo/CurrentContestGate';
+import type { CurrentContest } from '../../lib/currentContest';
 
-export default function RulesPage() {
+function RulesBody({ cc }: { cc: CurrentContest }) {
   const locale = useLocale();
-  const c = copyAll[locale];
+  const c = copyAll(contestTexts(cc))[locale];
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -166,4 +169,8 @@ export default function RulesPage() {
       <SiteFooter />
     </>
   );
+}
+
+export default function RulesPage() {
+  return <CurrentContestGate page={(cc) => <RulesBody cc={cc} />} />;
 }

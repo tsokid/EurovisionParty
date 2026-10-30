@@ -77,7 +77,7 @@ describe('entry-server render', () => {
   it('home prerenders its static content while auth is loading', async () => {
     const en = await render('/en');
     expect(en.html).toContain(enJson.homeSeo.headline);
-    expect(en.head?.title).toBe(homeCopy.en.meta.title);
+    expect(en.head?.title).toBe(homeCopy(2026).en.meta.title);
     const el = await render('/el');
     expect(el.html).toContain(elJson.homeSeo.headline);
   });
@@ -108,6 +108,39 @@ describe('entry-server render', () => {
       expect(r.head?.canonical, url).toBeUndefined();
     }
   });
+
+  it('/eurovision-predictions renders the live line-up (final ranking once finalized)', async () => {
+    const en = await render('/en/eurovision-predictions');
+    expect(en.status).toBe(200);
+    expect(en.head?.canonical).toBe('https://eurovision.games/en/eurovision-predictions');
+    expect(en.content['contests/2026.json']).toBeDefined();
+    const lineup = /<section[^>]*id="lineup"[\s\S]*?<\/section>/.exec(en.html)?.[0] ?? '';
+    // 2026 is finalized: places in order, Bulgaria first.
+    expect(lineup).toMatch(/<td[^>]*>[\s\S]*?1[\s\S]*?<\/td>[\s\S]*?Bulgaria/);
+    expect(lineup).toContain('516');
+    expect(lineup.match(/<tr/g)!.length).toBe(36); // header + 35 countries
+    const el = await render('/el/eurovision-predictions');
+    expect(el.html).toContain('Βουλγαρία');
+  });
+
+  it('the old predictions slug is gone (301 comes with the redirects task)', async () => {
+    expect((await render('/en/eurovision-2026-predictions')).status).toBe(404);
+  });
+
+  it('every static page inlines site.json for the nav, and the nav links the renamed pages', async () => {
+    for (const { path } of allPageUrls()) {
+      const r = await render(path);
+      expect(r.content['site.json'], path).toBeDefined();
+      expect(r.html, path).not.toContain('eurovision-2026-predictions');
+    }
+    const en = await render('/en/faq');
+    expect(en.html).toContain('href="/en/eurovision-predictions"');
+    expect(en.html).toContain('href="/en/past-contests"');
+    expect(en.html).toContain('href="/en/countries"');
+    expect(en.html).toContain('href="/en/winners"');
+    const el = await render('/el/faq');
+    for (const label of ['Προηγούμενοι διαγωνισμοί', 'Χώρες', 'Νικητές']) expect(el.html).toContain(label);
+  }, 60_000);
 
   it('does not touch the network', () => {
     expect(fetchSpy).not.toHaveBeenCalled();

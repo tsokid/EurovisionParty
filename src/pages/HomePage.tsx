@@ -7,6 +7,7 @@ import SiteFooter from '../components/seo/SiteFooter';
 import PageSeo from '../components/seo/PageSeo';
 import { useLocale } from '../lib/seo/LocaleContext';
 import { copy as homeCopy } from './content/homeCopy';
+import { useCurrentYear } from '../lib/currentContest';
 import { useAuth } from '../hooks/useAuth';
 import { useRoom } from '../hooks/useRoom';
 
@@ -22,6 +23,7 @@ export function HomePage() {
   const { createRoom, joinRoom, isLoading, error } = useRoom();
   const navigate = useNavigate();
   const locale = useLocale();
+  const meta = homeCopy(useCurrentYear())[locale].meta;
 
   // Rendered in every state so the prerendered (auth-loading) HTML carries
   // the home page's head tags too.
@@ -29,8 +31,8 @@ export function HomePage() {
     <PageSeo
       pageId="home"
       locale={locale}
-      title={homeCopy[locale].meta.title}
-      description={homeCopy[locale].meta.description}
+      title={meta.title}
+      description={meta.description}
       ogType="website"
       ogImage="https://eurovision.games/logo.png"
     />

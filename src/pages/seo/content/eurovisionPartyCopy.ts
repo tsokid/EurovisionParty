@@ -1,4 +1,5 @@
 import type { Locale } from '../../../lib/seo/locale';
+import type { ContestTexts } from './contestText';
 
 export interface EurovisionPartyCopy {
   meta: {
@@ -58,18 +59,18 @@ export interface EurovisionPartyCopy {
   };
 }
 
-export const copy: Record<Locale, EurovisionPartyCopy> = {
+export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, EurovisionPartyCopy> => ({
   en: {
     meta: {
-      title: 'Eurovision Party \u2014 The Complete Hosting Playbook for 2026',
+      title: `Eurovision Party \u2014 The Complete Hosting Playbook for ${t.year}`,
       description:
-        'Throw a Eurovision party in 2026: headcount, venue, theme, country-themed buffet, four-hour run-of-show, and the free scoring games that keep every song competitive.',
-      headline: 'Eurovision Party — The Complete Hosting Playbook for 2026',
+        `Throw a Eurovision party in ${t.year}: headcount, venue, theme, country-themed buffet, four-hour run-of-show, and the free scoring games that keep every song competitive.`,
+      headline: `Eurovision Party — The Complete Hosting Playbook for ${t.year}`,
       articleDescription:
-        'How to throw a Eurovision party in 2026: headcount, venue, theme, country-themed food, a four-hour run-of-show, and the free games to keep guests competitive.',
-      eventName: 'Eurovision Song Contest 2026 — Grand Final watch party',
+        `How to throw a Eurovision party in ${t.year}: headcount, venue, theme, country-themed food, a four-hour run-of-show, and the free games to keep guests competitive.`,
+      eventName: `Eurovision Song Contest ${t.year} — Grand Final watch party`,
       eventDescription:
-        'Host a Eurovision watch party for the 2026 grand final on Saturday 16 May. Country-themed food, costumes, and a free scoring app for predictions, quiz, and duels.',
+        `Host a Eurovision watch party for the ${t.year} grand final on ${t.finalDayShort}. Country-themed food, costumes, and a free scoring app for predictions, quiz, and duels.`,
       keywords: [
         'eurovision party',
         'how to host eurovision party',
@@ -192,7 +193,7 @@ export const copy: Record<Locale, EurovisionPartyCopy> = {
         bullets: [
           {
             label: 'Predictions',
-            href: '/eurovision-2026-predictions',
+            href: '/eurovision-predictions',
             rest: ' — Top 5 and Worst 5, locked at T-0. The 500-point spine of the leaderboard.',
           },
           {
@@ -265,7 +266,7 @@ export const copy: Record<Locale, EurovisionPartyCopy> = {
           blurb: 'Sixty-second setup walkthrough — create-room to trophy reveal.',
         },
         {
-          href: '/eurovision-2026-predictions',
+          href: '/eurovision-predictions',
           title: 'Predictions',
           blurb: 'Top 5 and Worst 5 — the 500-point engine of every party leaderboard.',
         },
@@ -289,15 +290,15 @@ export const copy: Record<Locale, EurovisionPartyCopy> = {
   },
   el: {
     meta: {
-      title: 'Πάρτι Eurovision \u2014 Ο πλήρης οδηγός διοργάνωσης για το 2026',
+      title: `Πάρτι Eurovision \u2014 Ο πλήρης οδηγός διοργάνωσης για το ${g.year}`,
       description:
-        'Διοργάνωσε πάρτι Eurovision το 2026: αριθμός καλεσμένων, χώρος, θέμα, μπουφές με πιάτα ανά χώρα, σειρά εμφάνισης τεσσάρων ωρών και τα δωρεάν παιχνίδια βαθμολογίας που κρατούν κάθε τραγούδι ανταγωνιστικό.',
-      headline: 'Πάρτι Eurovision — Ο πλήρης οδηγός διοργάνωσης για το 2026',
+        `Διοργάνωσε πάρτι Eurovision το ${g.year}: αριθμός καλεσμένων, χώρος, θέμα, μπουφές με πιάτα ανά χώρα, σειρά εμφάνισης τεσσάρων ωρών και τα δωρεάν παιχνίδια βαθμολογίας που κρατούν κάθε τραγούδι ανταγωνιστικό.`,
+      headline: `Πάρτι Eurovision — Ο πλήρης οδηγός διοργάνωσης για το ${g.year}`,
       articleDescription:
-        'Πώς διοργανώνεις πάρτι Eurovision το 2026: αριθμός καλεσμένων, χώρος, θέμα, φαγητό ανά χώρα, σειρά εμφάνισης τεσσάρων ωρών και τα δωρεάν παιχνίδια που κρατούν τους καλεσμένους ανταγωνιστικούς.',
-      eventName: 'Eurovision Song Contest 2026 — Βραδιά μεγάλου τελικού',
+        `Πώς διοργανώνεις πάρτι Eurovision το ${g.year}: αριθμός καλεσμένων, χώρος, θέμα, φαγητό ανά χώρα, σειρά εμφάνισης τεσσάρων ωρών και τα δωρεάν παιχνίδια που κρατούν τους καλεσμένους ανταγωνιστικούς.`,
+      eventName: `Eurovision Song Contest ${g.year} — Βραδιά μεγάλου τελικού`,
       eventDescription:
-        'Διοργάνωσε βραδιά Eurovision για τον μεγάλο τελικό του 2026, Σάββατο 16 Μαΐου. Φαγητό ανά χώρα, κοστούμια και μια δωρεάν εφαρμογή βαθμολογίας για προβλέψεις, quiz και μονομαχίες.',
+        `Διοργάνωσε βραδιά Eurovision για τον μεγάλο τελικό του ${g.year}, ${g.finalDayShort}. Φαγητό ανά χώρα, κοστούμια και μια δωρεάν εφαρμογή βαθμολογίας για προβλέψεις, quiz και μονομαχίες.`,
       keywords: [
         'πάρτι eurovision',
         'πώς διοργανώνεις πάρτι eurovision',
@@ -422,7 +423,7 @@ export const copy: Record<Locale, EurovisionPartyCopy> = {
         bullets: [
           {
             label: 'Προβλέψεις',
-            href: '/eurovision-2026-predictions',
+            href: '/eurovision-predictions',
             rest: ' — Top 5 και Worst 5, κλειδωμένες στο T-0. Η σπονδυλική στήλη των 500 πόντων του πίνακα βαθμολογίας.',
           },
           {
@@ -495,7 +496,7 @@ export const copy: Record<Locale, EurovisionPartyCopy> = {
           blurb: 'Οδηγός εκκίνησης 60 δευτερολέπτων — από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.',
         },
         {
-          href: '/eurovision-2026-predictions',
+          href: '/eurovision-predictions',
           title: 'Προβλέψεις',
           blurb: 'Top 5 και Worst 5 — η μηχανή των 500 πόντων κάθε πίνακα βαθμολογίας πάρτι.',
         },
@@ -517,4 +518,4 @@ export const copy: Record<Locale, EurovisionPartyCopy> = {
       ],
     },
   },
-};
+});

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import LocaleLink from './LocaleLink';
+import { useCurrentYear } from '../../lib/currentContest';
 
 interface CardDef {
   href: string;
@@ -10,7 +11,7 @@ interface CardDef {
 
 const PRIMARY_CARDS: CardDef[] = [
   { href: '/eurovision-night', titleKey: 'nightTitle', descKey: 'nightDesc', icon: '🎤' },
-  { href: '/eurovision-2026-predictions', titleKey: 'predictionsTitle', descKey: 'predictionsDesc', icon: '🎯' },
+  { href: '/eurovision-predictions', titleKey: 'predictionsTitle', descKey: 'predictionsDesc', icon: '🎯' },
   { href: '/eurovision-trivia', titleKey: 'triviaTitle', descKey: 'triviaDesc', icon: '🧠' },
 ];
 
@@ -53,6 +54,7 @@ function Card({ card, t }: { card: CardDef; t: (k: string) => string }) {
 // kit-style "Keep reading" cards, soft secondary CTA.
 export default function HomeSeoBlock() {
   const { t } = useTranslation();
+  const year = useCurrentYear();
 
   return (
     <section className="bg-euro-deep text-white border-t border-white/10">
@@ -64,7 +66,7 @@ export default function HomeSeoBlock() {
           </h1>
           <p className="mt-5 text-lg text-white/75 max-w-2xl mx-auto leading-relaxed">
             <strong className="text-white">{t('homeSeo.leadStrong')}</strong>
-            {t('homeSeo.leadRest')}
+            {t('homeSeo.leadRest', { year: year ?? '' })}
           </p>
         </header>
 

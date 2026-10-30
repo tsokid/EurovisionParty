@@ -1,4 +1,5 @@
 import type { Locale } from '../../../lib/seo/locale';
+import type { ContestTexts } from './contestText';
 
 export interface EurovisionGamesCopy {
   meta: {
@@ -41,13 +42,13 @@ export interface EurovisionGamesCopy {
   };
 }
 
-export const copy: Record<Locale, EurovisionGamesCopy> = {
+export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, EurovisionGamesCopy> => ({
   en: {
     meta: {
-      title: 'Eurovision Games \u2014 Free Multiplayer Party Game for Eurovision 2026',
+      title: `Eurovision Games \u2014 Free Multiplayer Party Game for Eurovision ${t.year}`,
       description:
         'The free, browser-based Eurovision party game: Top 5 and Worst 5 predictions, trivia duels, quiz rounds, a live dashboard, and five trophies. 2\u201320 players, no install.',
-      headline: 'Eurovision Games — The Free Multiplayer Companion for Eurovision 2026',
+      headline: `Eurovision Games — The Free Multiplayer Companion for Eurovision ${t.year}`,
       articleDescription:
         'A free, browser-based party game built around Eurovision: predictions, quiz, duels, a live dashboard, and five trophies. Two to twenty players, no install.',
       keywords: [
@@ -77,7 +78,7 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
             game: 'Predictions',
             when: 'Lobby \u2192 lock at song 1',
             scoring: 'Top 5 + Worst 5, weighted slots, 500 cap',
-            href: '/eurovision-2026-predictions',
+            href: '/eurovision-predictions',
           },
           { game: 'Quiz', when: 'Preshow only', scoring: '3 rounds \u00d7 120 = 360 cap', href: '/eurovision-trivia' },
           {
@@ -92,9 +93,9 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
       predictions: {
         title: 'Predictions — Top 5 and Worst 5',
         p1:
-          'Before song one, every player locks a Top 5 and a Worst 5 from the 2026 grand-final running order. Weighted slots reward conviction (your #1 pick is worth more than your #5), and the formula scores against the official jury + televote total once the host enters results. The hard cap is 500 points so no single category can run the night.',
+          `Before song one, every player locks a Top 5 and a Worst 5 from the ${t.year} grand-final running order. Weighted slots reward conviction (your #1 pick is worth more than your #5), and the formula scores against the official jury + televote total once the host enters results. The hard cap is 500 points so no single category can run the night.`,
         p2Before: 'Full format on the ',
-        p2Link: '2026 predictions page',
+        p2Link: 'predictions game page',
         p2After: '.',
       },
       quiz: {
@@ -192,7 +193,7 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
       heading: 'Keep reading',
       items: [
         {
-          href: '/eurovision-2026-predictions',
+          href: '/eurovision-predictions',
           title: 'Predictions',
           blurb: 'Lock Top 5 and Worst 5 before the show — the 500-point engine of the night.',
         },
@@ -231,10 +232,10 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
   },
   el: {
     meta: {
-      title: 'Eurovision Games \u2014 Δωρεάν multiplayer party game για τη Eurovision 2026',
+      title: `Eurovision Games \u2014 Δωρεάν multiplayer party game για τη Eurovision ${g.year}`,
       description:
         'Το δωρεάν party game της Eurovision μέσα στον browser: προβλέψεις Top 5 και Worst 5, μονομαχίες trivia, γύροι quiz, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια. 2\u201320 παίκτες, χωρίς install.',
-      headline: 'Eurovision Games — Ο δωρεάν multiplayer σύντροφος για τη Eurovision 2026',
+      headline: `Eurovision Games — Ο δωρεάν multiplayer σύντροφος για τη Eurovision ${g.year}`,
       articleDescription:
         'Ένα δωρεάν party game μέσα στον browser, χτισμένο γύρω από τη Eurovision: προβλέψεις, quiz, μονομαχίες, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια. Από δύο έως είκοσι παίκτες, χωρίς install.',
       keywords: [
@@ -264,7 +265,7 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
             game: 'Προβλέψεις',
             when: 'Λόμπι \u2192 κλείδωμα στο τραγούδι 1',
             scoring: 'Top 5 + Worst 5, σταθμισμένες θέσεις, όριο 500',
-            href: '/eurovision-2026-predictions',
+            href: '/eurovision-predictions',
           },
           {
             game: 'Quiz',
@@ -289,9 +290,9 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
       predictions: {
         title: 'Προβλέψεις — Top 5 και Worst 5',
         p1:
-          'Πριν το πρώτο τραγούδι, κάθε παίκτης κλειδώνει ένα Top 5 και ένα Worst 5 από τη σειρά εμφάνισης του μεγάλου τελικού του 2026. Οι σταθμισμένες θέσεις ανταμείβουν την πεποίθηση (η #1 επιλογή σου αξίζει περισσότερο από τη #5) και ο τύπος βαθμολογεί έναντι του επίσημου συνόλου κριτικής επιτροπής + televote, μόλις ο οικοδεσπότης καταχωρήσει τα αποτελέσματα. Το όριο είναι 500 πόντοι, ώστε καμία κατηγορία να μην μπορεί να μονοπωλήσει τη βραδιά.',
+          `Πριν το πρώτο τραγούδι, κάθε παίκτης κλειδώνει ένα Top 5 και ένα Worst 5 από τη σειρά εμφάνισης του μεγάλου τελικού του ${g.year}. Οι σταθμισμένες θέσεις ανταμείβουν την πεποίθηση (η #1 επιλογή σου αξίζει περισσότερο από τη #5) και ο τύπος βαθμολογεί έναντι του επίσημου συνόλου κριτικής επιτροπής + televote, μόλις ο οικοδεσπότης καταχωρήσει τα αποτελέσματα. Το όριο είναι 500 πόντοι, ώστε καμία κατηγορία να μην μπορεί να μονοπωλήσει τη βραδιά.`,
         p2Before: 'Πλήρης μορφή στη ',
-        p2Link: 'σελίδα προβλέψεων 2026',
+        p2Link: 'σελίδα του παιχνιδιού προβλέψεων',
         p2After: '.',
       },
       quiz: {
@@ -392,7 +393,7 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
       heading: 'Συνέχισε την ανάγνωση',
       items: [
         {
-          href: '/eurovision-2026-predictions',
+          href: '/eurovision-predictions',
           title: 'Προβλέψεις',
           blurb: 'Κλείδωσε Top 5 και Worst 5 πριν την εκπομπή — η μηχανή των 500 πόντων της βραδιάς.',
         },
@@ -429,4 +430,4 @@ export const copy: Record<Locale, EurovisionGamesCopy> = {
       ],
     },
   },
-};
+});
