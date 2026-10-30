@@ -24,6 +24,10 @@ import EurovisionDuelsPage from './pages/seo/EurovisionDuelsPage';
 import DashboardPage from './pages/seo/DashboardPage';
 import CookiesPage from './pages/seo/CookiesPage';
 import WinnersPage from './pages/seo/WinnersPage';
+import HubPage from './pages/contest/HubPage';
+import HubSchedulePage from './pages/contest/HubSchedulePage';
+import HubSemifinalsPage from './pages/contest/HubSemifinalsPage';
+import HubSongsPage from './pages/contest/HubSongsPage';
 
 /** Locale child route paths fed by content data, not PAGE_REGISTRY (excluded from route parity). */
 export const DYNAMIC_ROUTE_PATHS = [':slug', 'past-contests', 'past-contests/:slug', 'countries', 'countries/:slug'];
@@ -56,19 +60,19 @@ export const routes: RouteObject[] = [
       { path: 'cookies', element: <CookiesPage /> },
       { path: 'winners', element: <WinnersPage /> },
 
-      // Data-driven pages (src/lib/seo/dynamicPages.ts). Placeholders render
-      // NotFoundPage (404) until Tasks 5 (hub) and 6 (archive, countries)
-      // replace them; the pages render NotFoundPage for unknown params too.
+      // Data-driven pages (src/lib/seo/dynamicPages.ts). The archive and
+      // country placeholders render NotFoundPage (404) until Task 6 replaces
+      // them; the pages render NotFoundPage for unknown params too.
       // Static siblings above rank higher, so e.g. `eurovision-2026-predictions`
       // never reaches `:slug`. React Router v7 has no partial segments
       // (`eurovision-:year`), so the hub is `:slug`, parsed with hubYearFromSlug.
       {
         path: ':slug',
         children: [
-          { index: true, element: <NotFoundPage /> },
-          { path: 'schedule', element: <NotFoundPage /> },
-          { path: 'semifinals', element: <NotFoundPage /> },
-          { path: 'songs', element: <NotFoundPage /> },
+          { index: true, element: <HubPage /> },
+          { path: 'schedule', element: <HubSchedulePage /> },
+          { path: 'semifinals', element: <HubSemifinalsPage /> },
+          { path: 'songs', element: <HubSongsPage /> },
         ],
       },
       { path: 'past-contests', element: <NotFoundPage /> },
