@@ -1,8 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/:locale(en|el)/eurovision-quiz", "destination": "/:locale/eurovision-trivia", "permanent": true },
+    { "source": "/:locale(en|el)/host-eurovision-party", "destination": "/:locale/eurovision-party", "permanent": true },
+    { "source": "/eurovision-quiz", "destination": "/en/eurovision-trivia", "permanent": true },
+    { "source": "/host-eurovision-party", "destination": "/en/eurovision-party", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/((?!en(?:/|$)|el(?:/|$)).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
