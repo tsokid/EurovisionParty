@@ -1,4 +1,4 @@
-import SchemaHead from '../../components/seo/SchemaHead';
+import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
 import ContentLayout from '../../components/seo/ContentLayout';
@@ -61,14 +61,13 @@ export default function EurovisionTriviaPage() {
 
   return (
     <>
-      <SchemaHead
+      <PageSeo
+        pageId="eurovision-trivia"
+        locale={locale}
         title={c.meta.title}
         description={c.meta.description}
-        canonical="https://eurovision.games/eurovision-trivia"
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
-        ogLocale={locale === 'el' ? 'el_GR' : 'en_US'}
-        ogLocaleAlternate={[locale === 'el' ? 'en_US' : 'el_GR']}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}

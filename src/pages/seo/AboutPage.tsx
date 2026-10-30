@@ -1,4 +1,4 @@
-import SchemaHead from '../../components/seo/SchemaHead';
+import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
 import ContentLayout from '../../components/seo/ContentLayout';
@@ -43,14 +43,13 @@ export default function AboutPage() {
 
   return (
     <>
-      <SchemaHead
+      <PageSeo
+        pageId="about"
+        locale={locale}
         title={c.meta.title}
         description={c.meta.description}
-        canonical="https://eurovision.games/about"
         ogType="website"
         ogImage="https://eurovision.games/logo.png"
-        ogLocale="en_US"
-        ogLocaleAlternate={['el_GR']}
         keywords={c.meta.keywords}
         jsonLd={[organization, aboutPage, breadcrumbJsonLd(crumbs)]}
       />
