@@ -5,25 +5,27 @@ import { router } from './routes';
 import ErrorBoundary from './components/ErrorBoundary';
 import i18n from './i18n';
 import { localeFromPath } from './lib/seo/locale';
-import { bootMode } from './lib/bootMode';
+import { startApp } from './lib/bootMode';
 import './index.css';
 
-async function boot() {
-  // Match the server render: set language from the URL before hydrating.
-  const lang = localeFromPath(location.pathname);
-  if (lang) await i18n.changeLanguage(lang);
+const root = document.getElementById('root')!;
+const app = (
+  <StrictMode>
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  </StrictMode>
+);
 
-  const root = document.getElementById('root')!;
-  const app = (
-    <StrictMode>
-      <ErrorBoundary>
-        <RouterProvider router={router} />
-      </ErrorBoundary>
-    </StrictMode>
-  );
-
-  if (bootMode(root) === 'hydrate') hydrateRoot(root, app);
-  else createRoot(root).render(app);
-}
-
-void boot();
+void startApp(
+  root,
+  async () => {
+    // Match the server render: set language from the URL before hydrating.
+    const lang = localeFromPath(location.pathname);
+    if (lang) await i18n.changeLanguage(lang);
+  },
+  (mode) => {
+    if (mode === 'hydrate') hydrateRoot(root, app);
+    else createRoot(root).render(app);
+  },
+);
