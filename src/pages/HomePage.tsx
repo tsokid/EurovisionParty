@@ -4,6 +4,9 @@ import WelcomeScreen from '../components/onboarding/WelcomeScreen';
 import NameEntry from '../components/onboarding/NameEntry';
 import HomeSeoBlock from '../components/seo/HomeSeoBlock';
 import SiteFooter from '../components/seo/SiteFooter';
+import PageSeo from '../components/seo/PageSeo';
+import { useLocale } from '../lib/seo/LocaleContext';
+import { copy as homeCopy } from './content/homeCopy';
 import { useAuth } from '../hooks/useAuth';
 import { useRoom } from '../hooks/useRoom';
 
@@ -18,6 +21,20 @@ export function HomePage() {
   const { isLoading: authLoading } = useAuth();
   const { createRoom, joinRoom, isLoading, error } = useRoom();
   const navigate = useNavigate();
+  const locale = useLocale();
+
+  // Rendered in every state so the prerendered (auth-loading) HTML carries
+  // the home page's head tags too.
+  const seo = (
+    <PageSeo
+      pageId="home"
+      locale={locale}
+      title={homeCopy[locale].meta.title}
+      description={homeCopy[locale].meta.description}
+      ogType="website"
+      ogImage="https://eurovision.games/logo.png"
+    />
+  );
 
   // ?join=CODE prefills join mode; ?action=create|join opens the matching screen
   useEffect(() => {
@@ -26,20 +43,28 @@ export function HomePage() {
     else if (action === 'join') setMode('join');
   }, [prefillCode, action]);
 
+  // While auth initialises (and in the prerendered HTML) the game panel is a
+  // spinner, but the static SEO content below it still renders.
   if (authLoading) {
     return (
-      <div className="min-h-svh bg-euro-gradient flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-5xl animate-float mb-4">🎤</div>
-          <p className="text-white/60">Loading...</p>
+      <>
+        {seo}
+        <div className="min-h-svh bg-euro-gradient flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-5xl animate-float mb-4">🎤</div>
+            <p className="text-white/60">Loading...</p>
+          </div>
         </div>
-      </div>
+        <HomeSeoBlock />
+        <SiteFooter />
+      </>
     );
   }
 
   if (mode === 'welcome') {
     return (
       <>
+        {seo}
         <WelcomeScreen
           onCreateRoom={() => setMode('create')}
           onJoinRoom={() => setMode('join')}
@@ -65,13 +90,16 @@ export function HomePage() {
   };
 
   return (
-    <NameEntry
-      mode={mode}
-      onSubmit={handleSubmit}
-      onBack={() => setMode('welcome')}
-      isLoading={isLoading}
-      error={error}
-      initialRoomCode={prefillCode}
-    />
+    <>
+      {seo}
+      <NameEntry
+        mode={mode}
+        onSubmit={handleSubmit}
+        onBack={() => setMode('welcome')}
+        isLoading={isLoading}
+        error={error}
+        initialRoomCode={prefillCode}
+      />
+    </>
   );
 }
