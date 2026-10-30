@@ -15,6 +15,12 @@ const PARTICIPANTS = [
   { iso: 'ES', name: 'Spain', artist: 'Fixture Artist', song: 'Fixture Song', running_order: null, source: 'manual' },
   { iso: 'DE', name: 'Germany', artist: 'Fixture DE', song: 'Fixture DE Song', running_order: null, source: 'parser' },
 ];
+// 070 refuses a lineup outside 20-30 rows, so 18 more finalists from
+// COUNTRIES_2026 (not GR/AT/DE) pad the fixture to a plausible 22.
+const FILLER = COUNTRIES_2026.filter((c) => !['GR', 'AT', 'DE'].includes(c.id))
+  .slice(0, 18)
+  .map((c) => ({ iso: c.id, name: c.name, artist: c.artist, song: c.song, running_order: null, source: 'parser' }));
+const ALL_PARTICIPANTS = [...PARTICIPANTS, ...FILLER];
 const RESULTS = [
   { iso: 'GR', ranking: 2, total_points: 400, jury_points: 150, televote_points: 250, source: 'manual' },
   { iso: 'AT', ranking: 1, total_points: 500, jury_points: 300, televote_points: 200, source: 'parser' },
@@ -39,7 +45,7 @@ describe('070 contests core', () => {
 
   beforeAll(async () => {
     db = await createDb({ upTo: '069' });
-    for (const p of PARTICIPANTS) {
+    for (const p of ALL_PARTICIPANTS) {
       await db.query(
         `insert into public.eurovision_2026_participants (iso, name, artist, song, running_order, source)
          values ($1, $2, $3, $4, $5, $6)`,
@@ -71,7 +77,7 @@ describe('070 contests core', () => {
 
   it('copies 2026 participants and results losslessly', async () => {
     const byIso = new Map((await entries()).map((e) => [e.iso, e]));
-    for (const p of PARTICIPANTS) {
+    for (const p of ALL_PARTICIPANTS) {
       const e = byIso.get(p.iso);
       const r = RESULTS.find((x) => x.iso === p.iso);
       expect(e, p.iso).toBeDefined();
@@ -93,19 +99,19 @@ describe('070 contests core', () => {
   it('2026 copy marks all participants in_final even with null running_order', async () => {
     const all = await entries();
     const finalists = all.filter((e) => e.in_final).map((e) => e.iso).sort();
-    expect(finalists).toEqual(PARTICIPANTS.map((p) => p.iso).sort());
+    expect(finalists).toEqual(ALL_PARTICIPANTS.map((p) => p.iso).sort());
     expect(all.find((e) => e.iso === 'ES')).toMatchObject({ in_final: true, final_running_order: null });
     expect(all.find((e) => e.iso === 'DE')).toMatchObject({ in_final: true, final_running_order: null });
     const lineup = await db.query<{ iso: string }>(`select iso from public.current_participants order by iso`);
-    expect(lineup.rows.map((x) => x.iso)).toEqual(['AT', 'DE', 'ES', 'GR']);
+    expect(lineup.rows.map((x) => x.iso)).toEqual(ALL_PARTICIPANTS.map((p) => p.iso).sort());
   });
 
   it('adds non-finalist 2026 countries from COUNTRIES_2026', async () => {
     const all = await entries();
-    const finalists = new Set(PARTICIPANTS.map((p) => p.iso));
+    const finalists = new Set(ALL_PARTICIPANTS.map((p) => p.iso));
     const overlap = COUNTRIES_2026.filter((c) => finalists.has(c.id)).length;
     expect(COUNTRIES_2026).toHaveLength(35);
-    expect(all).toHaveLength(PARTICIPANTS.length + (35 - overlap));
+    expect(all).toHaveLength(ALL_PARTICIPANTS.length + (35 - overlap));
 
     for (const c of COUNTRIES_2026.filter((x) => !finalists.has(x.id))) {
       const e = all.find((x) => x.iso === c.id);
@@ -124,7 +130,12 @@ describe('070 contests core', () => {
     const r = await db.query<{ iso: string; name_en: string | null; name_el: string | null }>(
       `select iso, name_en, name_el from public.current_participants order by final_running_order nulls last, iso`,
     );
-    expect(r.rows.map((x) => x.iso)).toEqual(['GR', 'AT', 'DE', 'ES']);
+    // GR, AT have running orders; the rest are null, so they sort by iso.
+    expect(r.rows.map((x) => x.iso)).toEqual([
+      'GR',
+      'AT',
+      ...[...PARTICIPANTS.slice(2), ...FILLER].map((p) => p.iso).sort(),
+    ]);
     for (const row of r.rows) {
       expect(row.name_en).toBeTruthy();
       expect(row.name_el).toBeTruthy();
@@ -190,7 +201,7 @@ describe('070 contests core', () => {
       );
       expect(r.rows[0].c).toBeGreaterThan(0);
       expect(r.rows[0].n).toBeGreaterThan(0);
-      expect(r.rows[0].e).toBe(PARTICIPANTS.length);
+      expect(r.rows[0].e).toBe(ALL_PARTICIPANTS.length);
       await expect(
         db.query(`insert into public.countries (iso, name_en, name_el, slug) values ('XX', 'X', 'X', 'x')`),
       ).rejects.toThrow();

@@ -17,6 +17,9 @@
 --   the 2026 entries that did not reach the final (from COUNTRIES_2026
 --   in src/lib/countries2026.ts, hardcoded below).
 --
+-- * Refuses to copy (raises) unless eurovision_2026_participants has 20-30
+--   rows and every ISO is in the countries seed.
+--
 -- The old 2026 tables are left in place; nothing reads the new ones yet.
 -- Idempotent: safe to run twice.
 -- ============================================================
@@ -196,6 +199,29 @@ insert into public.countries (iso, name_en, name_el, slug, related_iso) values
 on conflict (iso) do nothing;
 
 -- ── 2026 ────────────────────────────────────────────────────────────────
+-- Guard: the old participants table must hold a plausible grand final
+-- (20-30 rows) and every ISO must be in the countries seed. Otherwise
+-- raise before anything is copied, with a readable message instead of an
+-- FK error or a silently empty lineup. running_order may be null (the
+-- parser never fills it); in_final marks the finalists.
+do $$
+declare
+  v_count   int;
+  v_unknown text;
+begin
+  select count(*) into v_count from public.eurovision_2026_participants;
+  if v_count not between 20 and 30 then
+    raise exception 'eurovision_2026_participants has % rows; expected 20-30 (the 2026 grand final). 070 aborted.', v_count;
+  end if;
+
+  select string_agg(p.iso, ', ' order by p.iso) into v_unknown
+    from public.eurovision_2026_participants p
+   where not exists (select 1 from public.countries c where c.iso = p.iso);
+  if v_unknown is not null then
+    raise exception 'eurovision_2026_participants has unknown ISO(s) not in countries: %. 070 aborted.', v_unknown;
+  end if;
+end $$;
+
 -- finalize_results already ran for 2026, so it is migrated as finalized.
 insert into public.contests
   (year, host_iso, city, city_slug, semi1_date, semi2_date, final_date, stage, finalized_at)

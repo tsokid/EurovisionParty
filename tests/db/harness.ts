@@ -10,6 +10,7 @@ import { pgcrypto } from '@electric-sql/pglite/contrib/pgcrypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { COUNTRIES_2026 } from '../../src/lib/countries2026';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS_DIR = path.resolve(here, '../../supabase/migrations');
@@ -69,12 +70,37 @@ export async function createDb(opts: { upTo?: string } = {}): Promise<PGlite> {
   const db = await PGlite.create({ extensions: { pgcrypto } });
   try {
     await db.exec(readFileSync(STUBS_FILE, 'utf8'));
-    for (const file of files.slice(0, last + 1)) await runFile(db, file);
+    for (const file of files.slice(0, last + 1)) {
+      // 070 refuses to copy an implausible 2026 lineup (production has the
+      // real one), so a fresh database gets a 25-finalist fixture first.
+      if (file.startsWith('070_')) await seed2026Lineup(db, 25, { onlyIfEmpty: true });
+      await runFile(db, file);
+    }
   } catch (e) {
     await db.close();
     throw e;
   }
   return db;
+}
+
+/**
+ * Inserts the first `n` COUNTRIES_2026 entries into the pre-070 table
+ * eurovision_2026_participants (running_order null, source 'parser'), as
+ * production holds the 2026 grand-final lineup there. Existing ISOs are
+ * kept. With onlyIfEmpty, does nothing when the table already has rows.
+ */
+export async function seed2026Lineup(db: PGlite, n: number, opts: { onlyIfEmpty?: boolean } = {}): Promise<void> {
+  if (opts.onlyIfEmpty) {
+    const r = await db.query<{ n: number }>(`select count(*)::int as n from public.eurovision_2026_participants`);
+    if (r.rows[0].n > 0) return;
+  }
+  for (const c of COUNTRIES_2026.slice(0, n)) {
+    await db.query(
+      `insert into public.eurovision_2026_participants (iso, name, artist, song, running_order, source)
+       values ($1, $2, $3, $4, null, 'parser') on conflict (iso) do nothing`,
+      [c.id, c.name, c.artist, c.song],
+    );
+  }
 }
 
 /** Applies exactly one migration file (with PATCHES). The prefix must be unambiguous. */
