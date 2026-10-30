@@ -12,7 +12,11 @@ export default defineConfig(({ isSsrBuild }) => ({
       registerType: 'autoUpdate',
       workbox: {
         navigateFallbackDenylist: [/^\/sitemap\.xml$/, /^\/robots\.txt$/, /^\/llms\.txt$/],
-        // Prerendered pages are served fresh from the CDN, never precached.
+        // Belt-and-braces only: keeps prerendered HTML out of the precache
+        // manifest. Once the SW controls the page, its NavigationRoute still
+        // answers navigations (including /en/** and /el/**) with the cached
+        // index.html SPA shell; prerendered HTML reaches crawlers and first
+        // visits, not SW-controlled navigations.
         globIgnores: ['en.html', 'el.html', 'en/**', 'el/**', '404.html'],
       },
       manifest: {
