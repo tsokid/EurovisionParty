@@ -1,8 +1,12 @@
 // src/hooks/useParticipants.ts
-// Loads the live-year grand-final lineup from the current_participants
-// view (contest_entries filtered to the live year + finalists). Falls
-// back to the hardcoded COUNTRIES_2026 constant only if the view is
-// empty or errors (e.g. fresh DB before the participants parser runs).
+// Loads a grand-final lineup (finalists, in_final).
+//   * useParticipants(year) — inside a room, pass room.year: reads
+//     entries_with_names for that year, so a room keeps its own year's
+//     lineup whatever the live year is. Falls back to the hardcoded
+//     COUNTRIES_2026 only when year is 2026 and the query is empty or
+//     errors; any other year gets an empty lineup (source 'db').
+//   * useParticipants() — no year: the live year's lineup from the
+//     current_participants view, with the COUNTRIES_2026 fallback.
 //
 // Returns the same Country[] shape consumers were getting from the
 // hardcoded constant — drop-in replacement for `import { COUNTRIES_2026 }`.
@@ -44,32 +48,45 @@ export interface UseParticipants {
   source: "db" | "hardcoded" | "loading";
 }
 
-export function useParticipants(): UseParticipants {
+const COLUMNS = "iso, name_en, name_el, artist, song, final_running_order";
+
+export function useParticipants(year?: number): UseParticipants {
   const [participants, setParticipants] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [source, setSource] = useState<UseParticipants["source"]>("loading");
 
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from("current_participants")
-      .select("iso, name_en, name_el, artist, song, final_running_order")
-      .order("name_en")
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (!error && Array.isArray(data) && data.length > 0) {
-          setParticipants((data as DbRow[]).map(fromDbRow));
-          setSource("db");
-        } else {
-          // Empty table or query error — fall back so 2026 flows still work
-          // while the parser hasn't published yet.
-          setParticipants(COUNTRIES_2026);
-          setSource("hardcoded");
-        }
-        setLoading(false);
-      });
+    setLoading(true);
+    setSource("loading");
+    const query =
+      year === undefined
+        ? supabase.from("current_participants").select(COLUMNS).order("name_en")
+        : supabase
+            .from("entries_with_names")
+            .select(COLUMNS)
+            .eq("year", year)
+            .eq("in_final", true)
+            .order("name_en");
+    query.then(({ data, error }) => {
+      if (cancelled) return;
+      if (!error && Array.isArray(data) && data.length > 0) {
+        setParticipants((data as DbRow[]).map(fromDbRow));
+        setSource("db");
+      } else if (year === undefined || year === 2026) {
+        // Empty or query error — fall back so 2026 flows still work
+        // while the parser hasn't published yet.
+        setParticipants(COUNTRIES_2026);
+        setSource("hardcoded");
+      } else {
+        // Any other year has no hardcoded lineup.
+        setParticipants([]);
+        setSource("db");
+      }
+      setLoading(false);
+    });
     return () => { cancelled = true; };
-  }, []);
+  }, [year]);
 
   const byId = useMemo(
     () => new Map(participants.map((c) => [c.id, c])),

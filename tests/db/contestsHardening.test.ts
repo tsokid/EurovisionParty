@@ -1,11 +1,11 @@
 // @vitest-environment node
-// Final-review M3 (070 grants under Supabase default privileges) and M5
-// (contests.city_slug format check).
+// Final-review M3 (070 grants under Supabase default privileges), M5
+// (contests.city_slug format check) and M1 (entries_with_names view).
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { PGlite } from '@electric-sql/pglite';
 import { createDb, applyMigration, seed2026Lineup } from './harness';
 
-const RELATIONS = ['contests', 'countries', 'contest_entries', 'current_entries', 'current_participants'];
+const RELATIONS = ['contests', 'countries', 'contest_entries', 'current_entries', 'current_participants', 'entries_with_names'];
 const WRITES = ['insert', 'update', 'delete', 'truncate'];
 
 type Priv = { rel: string; role: string; priv: string; ok: boolean };
@@ -69,7 +69,35 @@ describe('070 grants and city_slug check on a plain database (M3, M5)', () => {
     await db?.close();
   });
 
-  it('service_role can select the three tables and both views', async () => {
+  it('entries_with_names: every year, with names, security_invoker (M1)', async () => {
+    await db.exec(`begin`);
+    try {
+      await db.exec(`
+        insert into public.contests (year, city, city_slug, stage) values (2025, 'Basel', 'basel', 'archived');
+        insert into public.contest_entries (year, iso, artist, in_final, final_place) values (2025, 'AT', 'JJ', true, 1);
+      `);
+      const r = await db.query<Record<string, unknown>>(
+        `select year, iso, artist, in_final, final_place, name_en, name_el from public.entries_with_names
+          where year = 2025`,
+      );
+      expect(r.rows).toEqual([
+        { year: 2025, iso: 'AT', artist: 'JJ', in_final: true, final_place: 1, name_en: 'Austria', name_el: 'Αυστρία' },
+      ]);
+      const n = await db.query<{ v: number; e: number }>(
+        `select (select count(*)::int from public.entries_with_names) as v,
+                (select count(*)::int from public.contest_entries) as e`,
+      );
+      expect(n.rows[0].v).toBe(n.rows[0].e);
+    } finally {
+      await db.exec(`rollback`);
+    }
+    const o = await db.query<{ opts: string[] | null }>(
+      `select reloptions as opts from pg_class where oid = 'public.entries_with_names'::regclass`,
+    );
+    expect(o.rows[0].opts).toContain('security_invoker=true');
+  });
+
+  it('service_role can select the three tables and the views', async () => {
     expect((await privileges(db, ['service_role'], ['select'])).filter((p) => !p.ok)).toEqual([]);
   });
 

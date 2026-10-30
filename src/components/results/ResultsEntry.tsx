@@ -16,7 +16,7 @@ type ResultsPhase = 'entry' | 'confirm' | 'scoring' | 'done';
 export default function ResultsEntry() {
   const { t } = useTranslation();
   const { room, player } = useGameStore();
-  const { participants, byId, loading: loadingParticipants } = useParticipants();
+  const { participants, byId, loading: loadingParticipants } = useParticipants(room?.year);
   const TOTAL = participants.length;
   const [ranking, setRanking] = useState<Country[]>([]);
   const [phase, setPhase] = useState<ResultsPhase>('entry');

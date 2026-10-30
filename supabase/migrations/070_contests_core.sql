@@ -3,9 +3,10 @@
 -- ------------------------------------------------------------
 -- * contest_stage enum; contests, countries, contest_entries.
 -- * At most one contest is live (stage current or finalized).
--- * Views current_entries (every entry of the live year) and
---   current_participants (grand finalists only, in_final), both with country
---   names, both security_invoker so RLS of the caller applies.
+-- * Views current_entries (every entry of the live year),
+--   current_participants (grand finalists only, in_final) and
+--   entries_with_names (every entry of every year), all with country
+--   names, all security_invoker so RLS of the caller applies.
 -- * live_contest_year(): the live year, else the latest non-archived
 --   year, else the calendar year. rooms.year now defaults to it.
 -- * RLS: public read on all three tables. No write policies; writes go
@@ -118,6 +119,14 @@ grant select on public.contests, public.countries, public.contest_entries to ser
 -- so a column change on contest_entries needs a fresh view.
 drop view if exists public.current_participants;
 drop view if exists public.current_entries;
+drop view if exists public.entries_with_names;
+
+-- Every entry of every year, with country names. Game screens read a
+-- room's own year from it (rooms.year), not the live year.
+create view public.entries_with_names with (security_invoker = true) as
+  select e.*, co.name_en, co.name_el
+    from public.contest_entries e
+    join public.countries co on co.iso = e.iso;
 
 -- Every entry of the live year (hub, songs, semifinal pages).
 create view public.current_entries with (security_invoker = true) as
@@ -130,8 +139,9 @@ create view public.current_entries with (security_invoker = true) as
 create view public.current_participants with (security_invoker = true) as
   select * from public.current_entries where in_final;
 
-revoke all on public.current_entries, public.current_participants from anon, authenticated;
-grant select on public.current_entries, public.current_participants to anon, authenticated, service_role;
+revoke all on public.current_entries, public.current_participants, public.entries_with_names from anon, authenticated;
+grant select on public.current_entries, public.current_participants, public.entries_with_names
+  to anon, authenticated, service_role;
 
 -- ── live_contest_year() ─────────────────────────────────────────────────
 create or replace function public.live_contest_year()

@@ -14,7 +14,8 @@
 // breakdown (Top-5 vs Worst-5). Footer legend explains the scoring.
 //
 // Only meaningful in `final` phase — assumes the official results have
-// been imported into contest_entries (read via current_entries).
+// been imported into contest_entries (read via entries_with_names for the
+// room's own year, grand finalists only).
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
@@ -25,7 +26,7 @@ import { supabase } from '../../lib/supabase';
 
 interface ResultRow {
   iso: string;
-  name_en: string;
+  name_en: string | null;
   artist: string | null;
   song: string | null;
   final_place: number;
@@ -91,10 +92,12 @@ export default function PredictionsResultsScreen() {
     setErrorMsg(null);
 
     Promise.all([
-      // Live-year finalists with a final place, via the current_entries view.
+      // The room's year (not the live year): grand finalists with a final place.
       supabase
-        .from('current_entries')
+        .from('entries_with_names')
         .select('iso, name_en, artist, song, final_place, total_points, jury_points, televote_points')
+        .eq('year', room.year)
+        .eq('in_final', true)
         .not('final_place', 'is', null)
         .order('final_place', { ascending: true }),
       supabase
@@ -117,7 +120,7 @@ export default function PredictionsResultsScreen() {
     });
 
     return () => { cancelled = true; };
-  }, [room?.id, player?.id]);
+  }, [room?.id, room?.year, player?.id]);
 
   // Map iso → pick for fast lookup during render.
   // Worst-5 mapping mirrors the score_predictions SQL: worst5[0] = "I think

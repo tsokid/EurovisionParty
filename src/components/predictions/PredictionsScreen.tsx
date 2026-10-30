@@ -399,7 +399,7 @@ function SubmittedView({ top5, worst5, n }: { top5: Country[]; worst5: Country[]
 export default function PredictionsScreen() {
   const { t } = useTranslation();
   const { room, player } = useGameStore();
-  const { participants, byId, loading: loadingParticipants } = useParticipants();
+  const { participants, byId, loading: loadingParticipants } = useParticipants(room?.year);
   const N = participants.length;
 
   const [top5, setTop5] = useState<string[]>([]);
