@@ -8,11 +8,13 @@ type Row = Record<string, unknown>;
 const ALL_COLS = `iso, artist, song, language, semi, semi_running_order, semi_place, semi_points, qualified,
   in_final, final_running_order, final_place, total_points, jury_points, televote_points, source`;
 
-/** Semi rows as rows.ts semiRows builds them: [iso, running order, place, points, qualified]. */
-const semis = (year: number, semi: number, rows: [string, number, number | null, number | null, boolean | null][]) =>
+/** Semi rows as rows.ts semiRows builds them: [iso, running order, place, points, qualified, artist?, song?]. */
+type SemiTuple = [string, number, number | null, number | null, boolean | null, string?, string?];
+const semis = (year: number, semi: number, rows: SemiTuple[]) =>
   JSON.stringify(
-    rows.map(([iso, ro, place, points, qualified]) => ({
-      year, iso, semi, semi_running_order: ro, semi_place: place, semi_points: points, qualified, source: 'parser',
+    rows.map(([iso, ro, place, points, qualified, artist, song]) => ({
+      year, iso, artist: artist ?? null, song: song ?? null,
+      semi, semi_running_order: ro, semi_place: place, semi_points: points, qualified, source: 'parser',
     })),
   );
 
@@ -43,7 +45,7 @@ describe('071 parser_upsert_entries kind semis', () => {
         (year, iso, artist, song, language, semi, semi_running_order, semi_place, semi_points, qualified,
          in_final, final_running_order, final_place, total_points, jury_points, televote_points, source) values
         (2026, 'GR', 'Akylas', 'Ferto', 'Greek', 1, 4, 3, 150, true, true, 7, 2, 300, 200, 100, 'import:test'),
-        (2026, 'MD', 'Satoshi', 'Viva, Moldova!', null, null, null, null, null, null, false, null, null, null, null, null, 'manual'),
+        (2026, 'MD', null, null, null, null, null, null, null, null, false, null, null, null, null, null, 'manual'),
         (2025, 'AT', 'JJ', 'Wasted Love', null, null, null, null, null, null, true, 9, 1, 436, 258, 178, 'import:test');
       update public.contests set stage = 'archived', archived_at = now() where year = 2025;
     `);
@@ -74,25 +76,35 @@ describe('071 parser_upsert_entries kind semis', () => {
     }
   }
 
-  it('semis on a finalized year write only the semi columns and insert missing countries', async () => {
+  it('semis on a finalized year write only the semi columns, null-fill names and insert missing countries', async () => {
     const before = await entries(2026);
-    const n = await upsert(2026, semis(2026, 2, [['GR', 11, 1, 210, true], ['MD', 3, 12, 20, false], ['SE', 6, 2, 190, true]]));
+    const n = await upsert(
+      2026,
+      semis(2026, 2, [
+        ['GR', 11, 1, 210, true, 'Someone Else', 'Other Song'],
+        ['MD', 3, 12, 20, false, 'Satoshi', 'Viva, Moldova!'],
+        ['SE', 6, 2, 190, true, 'KAJ', 'Bara bada bastu'],
+      ]),
+    );
     expect(n).toBe(3);
 
     const after = await entries(2026);
     const gr = after.find((r) => r.iso === 'GR')!;
-    // Semi columns and source change; artist, language, in_final, final_* and points do not.
+    // Semi columns and source change; the non-null artist/song are kept (not
+    // refused), and language, in_final, final_* and points do not change.
     expect(gr).toEqual({
       ...before.find((r) => r.iso === 'GR'),
       semi: 2, semi_running_order: 11, semi_place: 1, semi_points: 210, qualified: true, source: 'parser',
     });
+    // MD had null artist/song: filled.
     expect(after.find((r) => r.iso === 'MD')).toEqual({
       ...before.find((r) => r.iso === 'MD'),
+      artist: 'Satoshi', song: 'Viva, Moldova!',
       semi: 2, semi_running_order: 3, semi_place: 12, semi_points: 20, qualified: false, source: 'parser',
     });
-    // SE had no row: inserted with semi data only, not a finalist.
+    // SE had no row: inserted with its names and semi data, not a finalist.
     expect(after.find((r) => r.iso === 'SE')).toEqual({
-      iso: 'SE', artist: null, song: null, language: null,
+      iso: 'SE', artist: 'KAJ', song: 'Bara bada bastu', language: null,
       semi: 2, semi_running_order: 6, semi_place: 2, semi_points: 190, qualified: true,
       in_final: false, final_running_order: null, final_place: null,
       total_points: null, jury_points: null, televote_points: null, source: 'parser',
@@ -141,15 +153,25 @@ describe('071 parser_upsert_entries kind semis', () => {
     await expect(asParser('semis', `update public.contest_entries set total_points = 1 where year = 2026 and iso = 'GR'`)).rejects.toThrow(
       /semis writes may only change semi columns/,
     );
-    await expect(asParser('semis', `update public.contest_entries set artist = 'X' where year = 2026 and iso = 'MD'`)).rejects.toThrow(
+    // A non-null artist or song may not change; a null one may be filled.
+    await expect(asParser('semis', `update public.contest_entries set artist = 'X' where year = 2026 and iso = 'GR'`)).rejects.toThrow(
       /semis writes may only change semi columns/,
     );
+    await expect(asParser('semis', `update public.contest_entries set song = null where year = 2026 and iso = 'GR'`)).rejects.toThrow(
+      /semis writes may only change semi columns/,
+    );
+    await expect(
+      asParser('semis', `update public.contest_entries set artist = 'Satoshi', song = 'Viva' where year = 2026 and iso = 'MD'`),
+    ).resolves.toBeUndefined();
+    await expect(
+      asParser('semis', `insert into public.contest_entries (year, iso, semi, language) values (2026, 'SE', 1, 'Swedish')`),
+    ).rejects.toThrow(/semis writes may only change semi columns/);
     await expect(
       asParser('semis', `insert into public.contest_entries (year, iso, semi, in_final) values (2026, 'SE', 1, true)`),
     ).rejects.toThrow(/semis writes may only change semi columns/);
     await expect(
-      asParser('semis', `insert into public.contest_entries (year, iso, semi, artist) values (2026, 'SE', 1, 'KAJ')`),
-    ).rejects.toThrow(/semis writes may only change semi columns/);
+      asParser('semis', `insert into public.contest_entries (year, iso, semi, artist, song) values (2026, 'SE', 1, 'KAJ', 'B')`),
+    ).resolves.toBeUndefined();
     await expect(asParser('semis', `delete from public.contest_entries where year = 2026 and iso = 'MD'`)).rejects.toThrow(
       /semis writes may only change semi columns/,
     );
@@ -159,11 +181,14 @@ describe('071 parser_upsert_entries kind semis', () => {
     ).resolves.toBeUndefined();
   });
 
-  it('the guard applies the column rule on an upcoming year too', async () => {
+  it('semis are refused on an upcoming year, by the RPC and by the guard', async () => {
     await db.exec(`insert into public.contests (year, host_iso, city, city_slug, stage) values (2027, 'CH', 'Basel', 'basel', 'upcoming');
                    insert into public.contest_entries (year, iso, artist, in_final) values (2027, 'GR', 'A', true);`);
-    await expect(asParser('semis', `update public.contest_entries set in_final = false where year = 2027`)).rejects.toThrow(
-      /semis writes may only change semi columns/,
+    await expect(upsert(2027, semis(2027, 1, [['GR', 1, 1, 100, true]]))).rejects.toThrow(
+      /contest 2027 is upcoming; semis refused/,
+    );
+    await expect(asParser('semis', `update public.contest_entries set semi_place = 1 where year = 2027`)).rejects.toThrow(
+      /contest 2027 is upcoming; semis refused/,
     );
     // Without the semis kind the parser may still write an upcoming year freely.
     await expect(asParser('participants', `update public.contest_entries set in_final = false where year = 2027`)).resolves.toBeUndefined();

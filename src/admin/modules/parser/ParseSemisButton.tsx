@@ -6,8 +6,9 @@
 //
 // eurovision.com is behind Cloudflare and may refuse the server-side fetch.
 // When the call fails, two textareas let the admin paste each page's HTML
-// (View Source in a browser, copy everything); the second button resends
+// (view source in a browser, copy everything); the second button resends
 // with html_sf1 / html_sf2, and the edge function parses those instead.
+// A semi-final 2 page that is not up yet is reported, not an error.
 
 import { useState } from 'react';
 import { supabase } from '../../../lib/supabase';
@@ -22,6 +23,7 @@ interface Props {
 interface SemisResponse {
   ok?: boolean;
   rows?: number;
+  sf2?: number | 'not available';
   error?: string;
 }
 
@@ -67,7 +69,10 @@ export function ParseSemisButton({ year, onParsed }: Props) {
       if (error) throw await withBody(error);
       const res = (data ?? {}) as SemisResponse;
       if (res.ok === false) throw new Error(res.error ?? 'semi-final parse failed');
-      setNotice(`Semi-finals parsed: ${res.rows ?? 0} entries written.`);
+      setNotice(
+        `Semi-finals parsed: ${res.rows ?? 0} entries written.` +
+          (res.sf2 === 'not available' ? ' Semi-final 2 is not available yet.' : ''),
+      );
       setShowPaste(false);
       setSf1('');
       setSf2('');
@@ -95,9 +100,9 @@ export function ParseSemisButton({ year, onParsed }: Props) {
       {showPaste && (
         <div className="space-y-2 rounded-lg border border-white/10 p-3">
           <p className="text-xs text-white/60">
-            eurovision.com may block the server. Open each semi-final page in your browser, use View Source,
-            select everything and paste it below. Leave a box empty to skip that semi-final.
+            Open the semi-final page on eurovision.com, press Ctrl+U (view source), then Ctrl+A and Ctrl+C, and paste here.
           </p>
+          <p className="text-xs text-white/40">Leave a box empty to skip that semi-final.</p>
           <label className="block text-xs text-white/70">
             Paste page HTML for semi-final 1
             <textarea value={sf1} onChange={(e) => setSf1(e.target.value)} className={AREA} />

@@ -20,7 +20,7 @@ import {
 } from "./parse.ts";
 import { parseResults, type ResultRow } from "./parseResults.ts";
 import { participantRows, resultRows, semiRows, type SemiEntryRow } from "./rows.ts";
-import { parseSemis, semiUrl } from "./parseSemis.ts";
+import { parseSemis, semiProblem, semiUrl } from "./parseSemis.ts";
 
 // Every write to contest_entries goes through the parser_upsert_entries
 // RPC (migration 071, section C): it sets app.writer = 'parser' for its
@@ -45,9 +45,9 @@ interface RequestBody {
   override_url?: string;
   /** semis: the contest year. */
   year?: number;
-  /** semis: page HTML pasted by the admin when eurovision.com blocks our fetch. */
-  html_sf1?: string;
-  html_sf2?: string;
+  /** semis: page HTML pasted by the admin when eurovision.com blocks our fetch. Checked to be strings. */
+  html_sf1?: unknown;
+  html_sf2?: unknown;
 }
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -366,18 +366,26 @@ async function handleResults(): Promise<Response> {
 // Fetches both semi-final pages of `year` (URLs derived from
 // contests.city_slug) and writes semi, semi_running_order, semi_place,
 // semi_points and qualified through parser_upsert_entries kind 'semis',
-// inserting countries that have no row yet. Allowed for stages current and
-// finalized; the RPC's guard exempts semis from the finalized lock but
-// keeps them to the semi columns. eurovision.com sits behind Cloudflare
-// and may refuse our fetch, so the admin can paste the pages instead:
-// when html_sf1 or html_sf2 is given, only the given pages are parsed and
-// nothing is fetched. Not logged in parse_runs (its kinds are
-// participants and results).
+// filling a null artist/song and inserting countries that have no row yet.
+// Allowed for stages current and finalized (the RPC and its guard refuse
+// the others too). eurovision.com sits behind Cloudflare and may refuse our
+// fetch, so the admin can paste the pages instead: when html_sf1 or
+// html_sf2 is given, only the given pages are parsed and nothing is
+// fetched. In fetch mode a non-200 for semi-final 2 (not held or not
+// published yet) still writes semi-final 1 and reports sf2: 'not available';
+// a failure on semi-final 1 is an error. Every parsed page must pass
+// semiProblem() (complete results) before anything is written. Not logged
+// in parse_runs (its kinds are participants and results).
 // ---------------------------------------------------------------------------
 async function handleSemis(body: RequestBody): Promise<Response> {
   const year = body.year;
   if (typeof year !== "number" || !Number.isInteger(year)) {
     return jsonResponse({ ok: false, error: "semis needs an integer year" }, 400);
+  }
+  for (const key of ["html_sf1", "html_sf2"] as const) {
+    if (body[key] !== undefined && body[key] !== null && typeof body[key] !== "string") {
+      return jsonResponse({ ok: false, error: `${key} must be a string` }, 400);
+    }
   }
   const db = admin();
   const { data: contest, error: cErr } = await db.from("contests")
@@ -388,14 +396,12 @@ async function handleSemis(body: RequestBody): Promise<Response> {
     return jsonResponse({ ok: false, error: `contest ${year} is ${contest.stage}; semis need current or finalized` }, 409);
   }
 
-  const pasted: Record<1 | 2, string | undefined> = {
-    1: body.html_sf1?.trim() || undefined,
-    2: body.html_sf2?.trim() || undefined,
-  };
+  const asHtml = (v: unknown) => (typeof v === "string" && v.trim() ? v : undefined);
+  const pasted: Record<1 | 2, string | undefined> = { 1: asHtml(body.html_sf1), 2: asHtml(body.html_sf2) };
   const usePasted = !!(pasted[1] || pasted[2]);
 
   const rows: SemiEntryRow[] = [];
-  const counts: Record<string, number> = {};
+  const counts: Record<string, number | "not available"> = {};
   for (const semi of [1, 2] as const) {
     let html = pasted[semi];
     if (usePasted && !html) continue;
@@ -404,6 +410,10 @@ async function handleSemis(body: RequestBody): Promise<Response> {
       try {
         const fetched = await fetchHtml(url);
         if (fetched.httpStatus !== 200) {
+          if (semi === 2) {
+            counts.sf2 = "not available";
+            continue;
+          }
           return jsonResponse({
             ok: false,
             error: `semi-final ${semi}: http ${fetched.httpStatus} from ${url}; paste the page HTML instead`,
@@ -420,8 +430,9 @@ async function handleSemis(body: RequestBody): Promise<Response> {
     } catch (e) {
       return jsonResponse({ ok: false, error: `semi-final ${semi}: ${e instanceof Error ? e.message : String(e)}` }, 422);
     }
-    if (parsed.length === 0) {
-      return jsonResponse({ ok: false, error: `semi-final ${semi}: no scoreboard entries found` }, 422);
+    const problem = semiProblem(parsed);
+    if (problem) {
+      return jsonResponse({ ok: false, error: `semi-final ${semi}: ${problem}; nothing written` }, 422);
     }
     counts[`sf${semi}`] = parsed.length;
     rows.push(...semiRows(year, semi, parsed, ENTRY_SOURCE));

@@ -282,6 +282,11 @@ describe('Contests module', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
 
     expect(await screen.findByText('semi-final 1: http 403 from https://x/; paste the page HTML instead')).toBeTruthy();
+    expect(
+      screen.getByText(
+        'Open the semi-final page on eurovision.com, press Ctrl+U (view source), then Ctrl+A and Ctrl+C, and paste here.',
+      ),
+    ).toBeTruthy();
     const resend = screen.getByRole('button', { name: 'Parse pasted HTML' }) as HTMLButtonElement;
     expect(resend.disabled).toBe(true);
     fireEvent.change(screen.getByLabelText('Paste page HTML for semi-final 1'), { target: { value: '<html>sf1</html>' } });
@@ -306,5 +311,16 @@ describe('Contests module', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
     expect(await screen.findByText('Failed to send a request to the Edge Function')).toBeTruthy();
     expect(screen.getByLabelText('Paste page HTML for semi-final 2')).toBeTruthy();
+  });
+  it('notes a semi-final 2 that is not available yet', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    h.summaries = [summary(2026, 'current', 26)];
+    h.invoke.mockResolvedValue({ data: { ok: true, rows: 15, sf1: 15, sf2: 'not available' }, error: null });
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
+    expect(
+      await screen.findByText('Semi-finals parsed: 15 entries written. Semi-final 2 is not available yet.'),
+    ).toBeTruthy();
   });
 });

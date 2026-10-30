@@ -763,11 +763,13 @@ grant execute on function public.unarchive_contest(int) to authenticated;
 -- updates and deletes touching a finalized or archived year are refused,
 -- checking both the new year and, on update/delete, the old one (so a row
 -- cannot be moved out of a locked year).
--- Exception (Task 9): kind 'semis' may write a finalized year (never an
--- archived one). Semis writes, on any year, may only
+-- Exception (Task 9): kind 'semis' may write current and finalized years
+-- only (refused on upcoming and archived). Semis writes may only
 --   * update the semi columns (semi, semi_running_order, semi_place,
---     semi_points, qualified) plus updated_at and source;
---   * insert rows that carry nothing but those columns, with in_final false;
+--     semi_points, qualified) plus updated_at and source, and fill an
+--     artist or song that is null (a non-null one may not change);
+--   * insert rows that carry nothing but those columns plus artist and
+--     song, with in_final false;
 -- and never delete.
 -- Other writers (admin RPCs, imports) are not affected. Not an RPC:
 -- trigger only.
@@ -796,15 +798,23 @@ begin
       if v_stage = 'archived' or (v_stage = 'finalized' and not v_semis) then
         raise exception 'contest % is %; parser writes refused', v_year, v_stage;
       end if;
+      if v_semis and v_stage = 'upcoming' then
+        raise exception 'contest % is upcoming; semis refused', v_year;
+      end if;
     end loop;
 
     if v_semis and (
          tg_op = 'DELETE'
-      or (tg_op = 'UPDATE' and (to_jsonb(new) - c_semi) is distinct from (to_jsonb(old) - c_semi))
+      or (tg_op = 'UPDATE' and (
+            (to_jsonb(new) - c_semi - array['artist', 'song'])
+              is distinct from (to_jsonb(old) - c_semi - array['artist', 'song'])
+         or (old.artist is not null and new.artist is distinct from old.artist)
+         or (old.song is not null and new.song is distinct from old.song)))
       or (tg_op = 'INSERT' and (
             new.in_final
          or exists (select 1
-                      from jsonb_each(to_jsonb(new) - c_semi - array['year', 'iso', 'in_final']) as j
+                      from jsonb_each(to_jsonb(new) - c_semi
+                                      - array['year', 'iso', 'in_final', 'artist', 'song']) as j
                      where j.value <> 'null'::jsonb))))
     then
       raise exception 'semis writes may only change semi columns (% %)', v_row.year, v_row.iso;
@@ -827,9 +837,10 @@ create trigger contest_entries_parser_guard
 -- The only write path of the eurovision-parse edge function. Sets
 -- app.writer = 'parser' and app.writer_kind = p_kind for the current
 -- transaction, so the B9 guard refuses writes to a finalized or archived
--- year (semis: archived only, and semi columns only). p_rows is a json
--- array built by supabase/functions/eurovision-parse/rows.ts; a row's
--- year, when present, must equal p_year. Every iso must exist in
+-- year (semis: current and finalized only, semi columns and null names
+-- only). p_rows is a json array built by
+-- supabase/functions/eurovision-parse/rows.ts; a row's year, when
+-- present, must equal p_year. Every iso must exist in
 -- countries ('unknown country %' rather than an FK error). Duplicate
 -- isos in p_rows: the first one wins.
 --   participants: upserts artist, song, final_running_order (the parsed
@@ -840,9 +851,11 @@ create trigger contest_entries_parser_guard
 --     televote_points, source, only for finalists of p_year (in_final).
 --     Other rows are skipped.
 --   semis (Task 9): writes semi, semi_running_order, semi_place,
---     semi_points, qualified and source. Countries without a row get one
---     carrying only those columns (in_final false). Never touches
---     in_final, artist/song, final_* or the points columns.
+--     semi_points, qualified and source, and fills artist / song only
+--     where they are null (coalesce: a non-null value is kept). Countries
+--     without a row get one with those columns (in_final false). Never
+--     touches in_final, final_* or the points columns. Refused unless
+--     p_year is current or finalized.
 -- Returns the number of rows upserted (the demotions are not counted).
 -- service_role only: no is_super_admin() gate, no authenticated grant.
 create or replace function public.parser_upsert_entries(p_year int, p_rows jsonb, p_kind text)
@@ -863,6 +876,10 @@ begin
   end if;
   if not exists (select 1 from public.contests where year = p_year) then
     raise exception 'contest % not found', p_year;
+  end if;
+  if p_kind = 'semis'
+     and exists (select 1 from public.contests where year = p_year and stage = 'upcoming') then
+    raise exception 'contest % is upcoming; semis refused', p_year;
   end if;
 
   select r->>'year' into v_bad
@@ -909,17 +926,20 @@ begin
        and iso not in (select r->>'iso' from jsonb_array_elements(p_rows) as t(r));
   elsif p_kind = 'semis' then
     insert into public.contest_entries as e
-      (year, iso, semi, semi_running_order, semi_place, semi_points, qualified, source, updated_at)
+      (year, iso, artist, song, semi, semi_running_order, semi_place, semi_points, qualified,
+       source, updated_at)
     select distinct on (x.iso)
-           p_year, x.iso, x.semi, x.semi_running_order, x.semi_place, x.semi_points,
-           x.qualified, x.source, now()
+           p_year, x.iso, x.artist, x.song, x.semi, x.semi_running_order, x.semi_place,
+           x.semi_points, x.qualified, x.source, now()
       from jsonb_array_elements(p_rows) with ordinality as t(r, n),
-           jsonb_to_record(t.r) as x(iso text, semi smallint, semi_running_order smallint,
-                                     semi_place smallint, semi_points int, qualified boolean,
-                                     source text)
+           jsonb_to_record(t.r) as x(iso text, artist text, song text, semi smallint,
+                                     semi_running_order smallint, semi_place smallint,
+                                     semi_points int, qualified boolean, source text)
      order by x.iso, t.n
     on conflict (year, iso) do update
-       set semi               = excluded.semi,
+       set artist             = coalesce(e.artist, excluded.artist),
+           song               = coalesce(e.song, excluded.song),
+           semi               = excluded.semi,
            semi_running_order = excluded.semi_running_order,
            semi_place         = excluded.semi_place,
            semi_points        = excluded.semi_points,

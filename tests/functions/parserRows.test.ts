@@ -37,14 +37,15 @@ describe('eurovision-parse rows', () => {
 });
 
 describe('eurovision-parse semiRows', () => {
-  it('maps parsed semi rows to the semi columns only', () => {
+  it('maps parsed semi rows to the semi columns plus artist and song', () => {
     const parsed = [
       { iso: 'UA', country: 'Ukraine', artist: 'Ziferblat', song: 'Bird of Pray', runningOrder: 5, place: 1, points: 137, qualified: true },
-      { iso: 'AZ', country: 'Azerbaijan', artist: 'Mamagama', song: 'Run With U', runningOrder: 10, place: null, points: null, qualified: null },
+      { iso: 'AZ', country: 'Azerbaijan', artist: '', song: ' ', runningOrder: 10, place: null, points: null, qualified: null },
     ];
     expect(semiRows(2025, 1, parsed, 'parser')).toEqual([
-      { year: 2025, iso: 'UA', semi: 1, semi_running_order: 5, semi_place: 1, semi_points: 137, qualified: true, source: 'parser' },
-      { year: 2025, iso: 'AZ', semi: 1, semi_running_order: 10, semi_place: null, semi_points: null, qualified: null, source: 'parser' },
+      { year: 2025, iso: 'UA', artist: 'Ziferblat', song: 'Bird of Pray', semi: 1, semi_running_order: 5, semi_place: 1, semi_points: 137, qualified: true, source: 'parser' },
+      // Blank names become null, so they never fill a column with ''.
+      { year: 2025, iso: 'AZ', artist: null, song: null, semi: 1, semi_running_order: 10, semi_place: null, semi_points: null, qualified: null, source: 'parser' },
     ]);
   });
 });
