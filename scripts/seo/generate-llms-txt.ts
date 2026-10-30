@@ -1,8 +1,12 @@
 import { writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PAGE_REGISTRY } from '../../src/lib/seo/registry';
+import { PAGE_REGISTRY, allPublicUrls } from '../../src/lib/seo/registry';
 import { localizePath } from '../../src/lib/seo/locale';
+import {
+  ARCHIVE_INDEX_PATH, COUNTRY_INDEX_PATH, HUB_SUBPAGES, archivePath, countedParticipations, countryPath, hubPath,
+} from '../../src/lib/seo/dynamicPages';
+import { loadContent } from './loadContent';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -45,6 +49,45 @@ function lineFor(id: string): string {
   return `- [${id}](${url}): ${DESCRIPTIONS[id] ?? ''}`;
 }
 
+// Data-driven pages: listed only when allPublicUrls has them as indexable
+// (nothing while INCLUDE_DYNAMIC is off). Descriptions are templates over data.
+const content = loadContent();
+const listed = new Set(
+  allPublicUrls(content)
+    .filter((u) => 'kind' in u && u.indexable && u.locale === 'en')
+    .map((u) => u.path),
+);
+
+function dynamicLine(path: string, desc: string): string[] {
+  const enPath = localizePath('en', path);
+  if (!listed.has(enPath)) return [];
+  return [`- [${path.slice(1)}](${SITE + enPath}): ${desc}`];
+}
+
+const HUB_DESC: Record<(typeof HUB_SUBPAGES)[number], (year: number) => string> = {
+  schedule: (y) => `Eurovision ${y} schedule: semi-final and grand final dates.`,
+  semifinals: (y) => `Eurovision ${y} semi-finals: running order and qualifiers.`,
+  songs: (y) => `Every song and artist at Eurovision ${y}.`,
+};
+
+const live = content.contests.find((c) => c.year === content.site.current_year);
+const archiveLines = [
+  ...(live
+    ? [
+        ...dynamicLine(hubPath(live.year), `Eurovision ${live.year} in ${live.city}: entries, dates and results.`),
+        ...HUB_SUBPAGES.flatMap((sub) => dynamicLine(`${hubPath(live.year)}/${sub}`, HUB_DESC[sub](live.year))),
+      ]
+    : []),
+  ...dynamicLine(ARCHIVE_INDEX_PATH, 'Every Eurovision Song Contest since 1956: host city, winner and results per year.'),
+  ...[...content.contests]
+    .reverse()
+    .flatMap((c) => dynamicLine(archivePath(c.year, c.city_slug), `Eurovision ${c.year} in ${c.city}: final ranking, points and semi-finals.`)),
+  ...dynamicLine(COUNTRY_INDEX_PATH, 'Every country that has competed at Eurovision, with participations and best results.'),
+  ...content.countries.flatMap((c) =>
+    dynamicLine(countryPath(c.slug), `${c.name_en} at Eurovision: ${countedParticipations(c)} participations, results by year.`),
+  ),
+];
+
 const out = [
   '# Eurovision Games',
   '',
@@ -65,6 +108,7 @@ const out = [
   '## Reference & related',
   ...TIER_3.map(lineFor),
   '',
+  ...(archiveLines.length ? ['## Contests & countries', ...archiveLines, ''] : []),
   '## Optional',
   '- [sitemap.xml](https://eurovision.games/sitemap.xml): full URL list with hreflang',
   '- [robots.txt](https://eurovision.games/robots.txt): crawl policy (AI bots welcome)',

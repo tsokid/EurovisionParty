@@ -8,7 +8,8 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { allPageUrls } from '../src/lib/seo/registry';
+import { allPublicUrls } from '../src/lib/seo/registry';
+import { loadContent } from './seo/loadContent';
 import { headTagsHtml } from '../src/lib/seo/headTags';
 import type { RenderResult } from '../src/entry-server';
 import { injectPage, outputPath } from './prerender/injectPage';
@@ -36,7 +37,7 @@ async function main(): Promise<void> {
 
   // Sequential on purpose: render() switches i18n's global language.
   const jobs = [
-    ...allPageUrls().map(({ path }) => ({ url: path, file: outputPath(path), expect: 200, hydrate: true })),
+    ...allPublicUrls(loadContent()).map(({ path }) => ({ url: path, file: outputPath(path), expect: 200, hydrate: true })),
     { url: NOT_FOUND_URL, file: '404.html', expect: 404, hydrate: false },
   ];
 

@@ -87,6 +87,19 @@ describe('entry-server render', () => {
     expect(r.status).toBe(404);
   });
 
+  it('unknown params on the dynamic route patterns are 404', async () => {
+    const urls = [
+      '/en/eurovision-1800', '/en/eurovision-abc', '/en/no-such-page/schedule', '/el/eurovision-9999/songs',
+      '/en/past-contests/eurovision-1800-nowhere', '/en/countries/atlantis', '/el/countries/atlantis',
+      '/en/past-contests/x/y',
+    ];
+    for (const url of urls) {
+      const r = await render(url);
+      expect(r.status, url).toBe(404);
+      expect(r.head?.robots, url).toBe('noindex');
+    }
+  });
+
   it('404 page is noindex with no canonical (M4)', async () => {
     for (const url of ['/en/__404', '/el/__404']) {
       const r = await render(url);

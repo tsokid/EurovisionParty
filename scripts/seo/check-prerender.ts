@@ -6,6 +6,8 @@ import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { resolve, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkPrerender, type BuiltPage } from './checkPrerender';
+import { loadContent } from './loadContent';
+import { allPublicUrls } from '../../src/lib/seo/registry';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const DIST = resolve(ROOT, 'dist');
@@ -35,7 +37,11 @@ function main(): void {
   const sitemap = readFileSync(resolve(ROOT, 'public/sitemap.xml'), 'utf8');
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
 
-  const errors = checkPrerender(pages, locs, existsSync(resolve(DIST, '404.html')));
+  const noindexUrls = allPublicUrls(loadContent())
+    .filter((u) => !u.indexable)
+    .map((u) => ORIGIN + u.path);
+
+  const errors = checkPrerender(pages, locs, existsSync(resolve(DIST, '404.html')), noindexUrls);
   if (errors.length) {
     console.error(`prerender check failed (${errors.length}):\n` + errors.map((e) => `  - ${e}`).join('\n'));
     process.exit(1);

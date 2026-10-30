@@ -25,6 +25,9 @@ import DashboardPage from './pages/seo/DashboardPage';
 import CookiesPage from './pages/seo/CookiesPage';
 import WinnersPage from './pages/seo/WinnersPage';
 
+/** Locale child route paths fed by content data, not PAGE_REGISTRY (excluded from route parity). */
+export const DYNAMIC_ROUTE_PATHS = [':slug', 'past-contests', 'past-contests/:slug', 'countries', 'countries/:slug'];
+
 export const routes: RouteObject[] = [
   // Game + admin own their own chrome
   { path: '/room/:roomCode', element: <RoomPage /> },
@@ -52,6 +55,27 @@ export const routes: RouteObject[] = [
       { path: 'dashboard', element: <DashboardPage /> },
       { path: 'cookies', element: <CookiesPage /> },
       { path: 'winners', element: <WinnersPage /> },
+
+      // Data-driven pages (src/lib/seo/dynamicPages.ts). Placeholders render
+      // NotFoundPage (404) until Tasks 5 (hub) and 6 (archive, countries)
+      // replace them; the pages render NotFoundPage for unknown params too.
+      // Static siblings above rank higher, so e.g. `eurovision-2026-predictions`
+      // never reaches `:slug`. React Router v7 has no partial segments
+      // (`eurovision-:year`), so the hub is `:slug`, parsed with hubYearFromSlug.
+      {
+        path: ':slug',
+        children: [
+          { index: true, element: <NotFoundPage /> },
+          { path: 'schedule', element: <NotFoundPage /> },
+          { path: 'semifinals', element: <NotFoundPage /> },
+          { path: 'songs', element: <NotFoundPage /> },
+        ],
+      },
+      { path: 'past-contests', element: <NotFoundPage /> },
+      { path: 'past-contests/:slug', element: <NotFoundPage /> },
+      { path: 'countries', element: <NotFoundPage /> },
+      { path: 'countries/:slug', element: <NotFoundPage /> },
+
       { path: '*', element: <NotFoundPage /> },
     ],
   },

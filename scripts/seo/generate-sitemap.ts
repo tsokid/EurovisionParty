@@ -2,8 +2,10 @@ import { writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
-import { PAGE_REGISTRY, type PageId } from '../../src/lib/seo/registry';
-import { localizePath } from '../../src/lib/seo/locale';
+import { PAGE_REGISTRY, allPublicUrls, type PageId, type PublicUrl } from '../../src/lib/seo/registry';
+import { localizePath, stripLocaleFromPath } from '../../src/lib/seo/locale';
+import type { DynamicPage, DynamicPageKind } from '../../src/lib/seo/dynamicPages';
+import { loadContent } from './loadContent';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -64,6 +66,29 @@ function lastModFromGit(paths: string[]): string {
   }
 }
 
+/** Newest commit date across `paths` in one git call (dynamic pages can list ~70 files). */
+function lastModFromGitBatch(paths: string[]): string {
+  const existing = paths.filter((p) => existsSync(resolve(REPO_ROOT, p)));
+  if (existing.length === 0) return BUILD_DATE;
+  try {
+    const out = execSync(`git log -1 --format=%cs -- ${existing.map((p) => `"${p}"`).join(' ')}`, {
+      cwd: REPO_ROOT,
+      encoding: 'utf8',
+    }).trim();
+    return out || BUILD_DATE;
+  } catch {
+    return BUILD_DATE;
+  }
+}
+
+const DYNAMIC_META: Record<DynamicPageKind, { priority: number; changefreq: string }> = {
+  hub: { priority: 0.9, changefreq: 'weekly' },
+  'archive-index': { priority: 0.7, changefreq: 'monthly' },
+  archive: { priority: 0.6, changefreq: 'yearly' },
+  'country-index': { priority: 0.7, changefreq: 'monthly' },
+  country: { priority: 0.6, changefreq: 'yearly' },
+};
+
 interface UrlEntry {
   loc: string;
   alternates: { hreflang: string; href: string }[];
@@ -90,6 +115,30 @@ function buildEntries(): UrlEntry[] {
     if (elUrl) {
       entries.push({ loc: elUrl, alternates, priority: page.priority, changefreq: page.changefreq, lastmod });
     }
+  }
+  return entries;
+}
+
+const isDynamic = (u: PublicUrl): u is DynamicPage => 'kind' in u;
+
+/**
+ * Data-driven pages from allPublicUrls (empty while INCLUDE_DYNAMIC is off).
+ * Indexable pages only: noindex years/countries stay out of the sitemap.
+ */
+function buildDynamicEntries(): UrlEntry[] {
+  const groups = new Map<string, DynamicPage[]>();
+  for (const page of allPublicUrls(loadContent()).filter(isDynamic)) {
+    if (!page.indexable) continue;
+    const key = stripLocaleFromPath(page.path);
+    groups.set(key, [...(groups.get(key) ?? []), page]);
+  }
+  const entries: UrlEntry[] = [];
+  for (const pages of groups.values()) {
+    const alternates: UrlEntry['alternates'] = pages.map((p) => ({ hreflang: p.locale, href: SITE + p.path }));
+    alternates.push({ hreflang: 'x-default', href: (alternates.find((a) => a.hreflang === 'en') ?? alternates[0]).href });
+    const { priority, changefreq } = DYNAMIC_META[pages[0].kind];
+    const lastmod = lastModFromGitBatch(pages[0].files);
+    for (const p of pages) entries.push({ loc: SITE + p.path, alternates, priority, changefreq, lastmod });
   }
   return entries;
 }
@@ -122,7 +171,7 @@ function buildXml(entries: UrlEntry[]): string {
   ].join('\n');
 }
 
-const entries = buildEntries();
+const entries = [...buildEntries(), ...buildDynamicEntries()];
 const xml = buildXml(entries);
 writeFileSync(OUT, xml, 'utf8');
 console.log(`Sitemap written: ${OUT} (${entries.length} URLs, lastmod from git)`);

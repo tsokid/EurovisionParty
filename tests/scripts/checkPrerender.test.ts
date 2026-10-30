@@ -40,3 +40,37 @@ describe('checkPrerender', () => {
     expect(checkPrerender(good(), locs, false).some((e) => e.includes('404'))).toBe(true);
   });
 });
+
+describe('checkPrerender: non-indexable pages', () => {
+  const noindex = (url: string, title: string, desc: string) => ({
+    url,
+    html: `<html><head><title>${title}</title><meta name="description" content="${desc}"><link rel="canonical" href="${url}"><meta name="robots" content="noindex"></head><body></body></html>`,
+  });
+  const MA = `${B}/en/countries/morocco`;
+
+  it('passes when a non-indexable page carries robots noindex and is not in the sitemap', () => {
+    expect(checkPrerender([...good(), noindex(MA, 'Morocco', 'MA desc')], locs, true, [MA])).toEqual([]);
+  });
+  it('flags a non-indexable page without robots noindex', () => {
+    const errs = checkPrerender([...good(), page(MA, 'Morocco', 'MA desc')], locs, true, [MA]);
+    expect(errs.some((e) => /noindex/.test(e) && e.includes(MA))).toBe(true);
+  });
+  it('flags a non-indexable page listed in the sitemap', () => {
+    const errs = checkPrerender([...good(), noindex(MA, 'Morocco', 'MA desc')], [...locs, MA], true, [MA]);
+    expect(errs.some((e) => /sitemap/.test(e) && e.includes(MA))).toBe(true);
+  });
+  it('flags a non-indexable page with no built file', () => {
+    const errs = checkPrerender(good(), locs, true, [MA]);
+    expect(errs.some((e) => e.includes(MA))).toBe(true);
+  });
+  it('reads attributes with spaces around =', () => {
+    const p = noindex(MA, 'Morocco', 'MA desc');
+    p.html = p.html.replace('content="noindex"', 'content = "noindex"');
+    expect(checkPrerender([...good(), p], locs, true, [MA])).toEqual([]);
+  });
+  it('accepts robots values that contain noindex among other directives', () => {
+    const p = noindex(MA, 'Morocco', 'MA desc');
+    p.html = p.html.replace('content="noindex"', 'content="noindex, follow"');
+    expect(checkPrerender([...good(), p], locs, true, [MA])).toEqual([]);
+  });
+});

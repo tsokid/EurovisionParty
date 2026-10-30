@@ -1,5 +1,6 @@
 import type { Locale } from './locale';
 import { localizePath } from './locale';
+import { dynamicPageUrls, type ContentData } from './dynamicPages';
 
 export type PageId =
   | 'home'
@@ -73,6 +74,33 @@ export function allPageUrls(registry: PageEntry[] = PAGE_REGISTRY): { locale: Lo
     if (!page.englishExclusive) urls.push({ locale: 'el', path: localizePath('el', page.slugByLocale.el) });
   }
   return urls;
+}
+
+/**
+ * Gate for the data-driven pages (hub, archive, countries). Off until their
+ * page components exist (Task 6 flips it); while off, every consumer of
+ * allPublicUrls sees exactly the static registry.
+ */
+export const INCLUDE_DYNAMIC = false;
+
+export interface PublicUrl {
+  locale: Locale;
+  /** Locale-prefixed path, e.g. `/el/faq`. */
+  path: string;
+  /** false → prerendered with robots noindex and left out of the sitemap. */
+  indexable: boolean;
+}
+
+/**
+ * Every public URL: the static registry (always indexable) ∪ dynamicPageUrls(content)
+ * when the gate is on. The content snapshot is a parameter so the registry stays
+ * loader-agnostic: app code passes contentData() (import.meta.glob), Node build
+ * scripts pass loadContent() (fs). Dynamic entries keep their extra DynamicPage
+ * fields (kind, files).
+ */
+export function allPublicUrls(content: ContentData, includeDynamic: boolean = INCLUDE_DYNAMIC): PublicUrl[] {
+  const statics: PublicUrl[] = allPageUrls().map((u) => ({ ...u, indexable: true }));
+  return includeDynamic ? [...statics, ...dynamicPageUrls(content)] : statics;
 }
 
 export const SITE_ORIGIN = 'https://eurovision.games';
