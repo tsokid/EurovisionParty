@@ -46,6 +46,8 @@ interface Props {
   onChanged?: () => void;
   /** Slot for the "Parse semifinals" button (Task 9). Rendered in the toolbar when given. */
   parseSemisSlot?: ReactNode;
+  /** Bump to reload the entries (e.g. after a semi-final parse). Unsaved edits are kept. */
+  reloadKey?: number;
 }
 
 const toNum = (v: string): number | null => (v.trim() === '' ? null : Number(v));
@@ -53,7 +55,7 @@ const toText = (v: string): string | null => (v.trim() === '' ? null : v);
 const triState = (v: boolean | null) => (v === null ? '' : v ? 'yes' : 'no');
 const fromTriState = (v: string): boolean | null => (v === '' ? null : v === 'yes');
 
-export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot }: Props) {
+export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot, reloadKey }: Props) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
@@ -76,7 +78,7 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot }: Pro
     }
   }, [year]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); }, [load, reloadKey]);
 
   const nameOf = useMemo(() => new Map(countries.map((c) => [c.iso, c.name_en])), [countries]);
   const sorted = useMemo(

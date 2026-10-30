@@ -6,6 +6,7 @@
 //   results                 production results parser (poll, gated by job state)
 //   test-participants-2025  ephemeral test (auth required, no DB write)
 //   test-results-2025       ephemeral test (auth required, no DB write)
+//   semis                   semi-final results of { year } (super-admin JWT only)
 //
 // Auth:
 //   - Cron calls present `Authorization: Bearer <SERVICE_ROLE_KEY>`.
@@ -18,7 +19,8 @@ import {
   type ParsedEntry,
 } from "./parse.ts";
 import { parseResults, type ResultRow } from "./parseResults.ts";
-import { participantRows, resultRows } from "./rows.ts";
+import { participantRows, resultRows, semiRows, type SemiEntryRow } from "./rows.ts";
+import { parseSemis, semiUrl } from "./parseSemis.ts";
 
 // Every write to contest_entries goes through the parser_upsert_entries
 // RPC (migration 071, section C): it sets app.writer = 'parser' for its
@@ -35,11 +37,17 @@ type Action =
   | "participants"
   | "results"
   | "test-participants-2025"
-  | "test-results-2025";
+  | "test-results-2025"
+  | "semis";
 
 interface RequestBody {
   action: Action;
   override_url?: string;
+  /** semis: the contest year. */
+  year?: number;
+  /** semis: page HTML pasted by the admin when eurovision.com blocks our fetch. */
+  html_sf1?: string;
+  html_sf2?: string;
 }
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -61,25 +69,27 @@ function admin() {
 // ---------------------------------------------------------------------------
 // Auth
 // ---------------------------------------------------------------------------
-async function isCallerSuperAdmin(req: Request): Promise<boolean> {
+// "service": the cron (service role key or PARSER_CRON_SECRET).
+// "admin": a super-admin user JWT. null: anyone else.
+async function callerKind(req: Request): Promise<"service" | "admin" | null> {
   const auth = req.headers.get("Authorization") ?? "";
   // Cron path 1: legacy — service role key (only works while
   // SUPABASE_SERVICE_ROLE_KEY env matches what the cron sends)
-  if (auth === `Bearer ${SERVICE_KEY}`) return true;
+  if (auth === `Bearer ${SERVICE_KEY}`) return "service";
   // Cron path 2: custom shared secret (PARSER_CRON_SECRET). This is the
   // path actually used by parser-tick from migration 046 onward.
-  if (CRON_SECRET && auth === `Bearer ${CRON_SECRET}`) return true;
-  if (!auth.startsWith("Bearer ")) return false;
+  if (CRON_SECRET && auth === `Bearer ${CRON_SECRET}`) return "service";
+  if (!auth.startsWith("Bearer ")) return null;
 
   const userClient = createClient(SUPABASE_URL, ANON_KEY, {
     global: { headers: { Authorization: auth } },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const { data: { user } } = await userClient.auth.getUser();
-  if (!user) return false;
+  if (!user) return null;
   const { data } = await admin()
     .from("super_admins").select("user_id").eq("user_id", user.id).maybeSingle();
-  return !!data;
+  return data ? "admin" : null;
 }
 
 // ---------------------------------------------------------------------------
@@ -351,6 +361,80 @@ async function handleResults(): Promise<Response> {
 }
 
 // ---------------------------------------------------------------------------
+// Semi-finals (admin button in the Contests entries editor)
+//
+// Fetches both semi-final pages of `year` (URLs derived from
+// contests.city_slug) and writes semi, semi_running_order, semi_place,
+// semi_points and qualified through parser_upsert_entries kind 'semis',
+// inserting countries that have no row yet. Allowed for stages current and
+// finalized; the RPC's guard exempts semis from the finalized lock but
+// keeps them to the semi columns. eurovision.com sits behind Cloudflare
+// and may refuse our fetch, so the admin can paste the pages instead:
+// when html_sf1 or html_sf2 is given, only the given pages are parsed and
+// nothing is fetched. Not logged in parse_runs (its kinds are
+// participants and results).
+// ---------------------------------------------------------------------------
+async function handleSemis(body: RequestBody): Promise<Response> {
+  const year = body.year;
+  if (typeof year !== "number" || !Number.isInteger(year)) {
+    return jsonResponse({ ok: false, error: "semis needs an integer year" }, 400);
+  }
+  const db = admin();
+  const { data: contest, error: cErr } = await db.from("contests")
+    .select("stage, city_slug").eq("year", year).maybeSingle();
+  if (cErr) return jsonResponse({ ok: false, error: cErr.message }, 500);
+  if (!contest) return jsonResponse({ ok: false, error: `contest ${year} not found` }, 404);
+  if (contest.stage !== "current" && contest.stage !== "finalized") {
+    return jsonResponse({ ok: false, error: `contest ${year} is ${contest.stage}; semis need current or finalized` }, 409);
+  }
+
+  const pasted: Record<1 | 2, string | undefined> = {
+    1: body.html_sf1?.trim() || undefined,
+    2: body.html_sf2?.trim() || undefined,
+  };
+  const usePasted = !!(pasted[1] || pasted[2]);
+
+  const rows: SemiEntryRow[] = [];
+  const counts: Record<string, number> = {};
+  for (const semi of [1, 2] as const) {
+    let html = pasted[semi];
+    if (usePasted && !html) continue;
+    if (!html) {
+      const url = semiUrl(contest.city_slug as string, year, semi);
+      try {
+        const fetched = await fetchHtml(url);
+        if (fetched.httpStatus !== 200) {
+          return jsonResponse({
+            ok: false,
+            error: `semi-final ${semi}: http ${fetched.httpStatus} from ${url}; paste the page HTML instead`,
+          }, 502);
+        }
+        html = fetched.html;
+      } catch (e) {
+        return jsonResponse({ ok: false, error: `semi-final ${semi}: ${e instanceof Error ? e.message : String(e)}` }, 502);
+      }
+    }
+    let parsed;
+    try {
+      parsed = parseSemis(html);
+    } catch (e) {
+      return jsonResponse({ ok: false, error: `semi-final ${semi}: ${e instanceof Error ? e.message : String(e)}` }, 422);
+    }
+    if (parsed.length === 0) {
+      return jsonResponse({ ok: false, error: `semi-final ${semi}: no scoreboard entries found` }, 422);
+    }
+    counts[`sf${semi}`] = parsed.length;
+    rows.push(...semiRows(year, semi, parsed, ENTRY_SOURCE));
+  }
+
+  const { data: n, error: upErr } = await db.rpc("parser_upsert_entries", {
+    p_year: year, p_rows: rows, p_kind: "semis",
+  });
+  if (upErr) return jsonResponse({ ok: false, error: upErr.message }, 502);
+  return jsonResponse({ ok: true, rows: (n as number | null) ?? rows.length, ...counts });
+}
+
+// ---------------------------------------------------------------------------
 // Test handlers (no DB writes)
 //
 // CONTRACT: Test handlers MUST call the exact same extractor functions
@@ -426,7 +510,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return jsonResponse({ error: "method not allowed" }, 405);
   }
-  if (!await isCallerSuperAdmin(req)) {
+  const caller = await callerKind(req);
+  if (!caller) {
     return jsonResponse({ error: "forbidden" }, 403);
   }
 
@@ -445,6 +530,10 @@ Deno.serve(async (req) => {
     case "results":                return await handleResults();
     case "test-participants-2025": return await handleTestParticipants(body.override_url);
     case "test-results-2025":      return await handleTestResults(body.override_url);
+    case "semis":
+      // Admin-initiated only: the cron never parses semis.
+      if (caller !== "admin") return jsonResponse({ error: "forbidden" }, 403);
+      return await handleSemis(body);
     default:
       return jsonResponse({ error: `unknown action: ${body.action}` }, 400);
   }

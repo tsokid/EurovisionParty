@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { participantRows, resultRows } from '../../supabase/functions/eurovision-parse/rows';
+import { participantRows, resultRows, semiRows } from '../../supabase/functions/eurovision-parse/rows';
 
 describe('eurovision-parse rows', () => {
   it('participantRows maps the lineup to contest_entries columns and drops name', () => {
@@ -33,5 +33,18 @@ describe('eurovision-parse rows', () => {
   it('empty input yields no rows', () => {
     expect(participantRows(2027, [], 'parser')).toEqual([]);
     expect(resultRows(2027, [], 'parser')).toEqual([]);
+  });
+});
+
+describe('eurovision-parse semiRows', () => {
+  it('maps parsed semi rows to the semi columns only', () => {
+    const parsed = [
+      { iso: 'UA', country: 'Ukraine', artist: 'Ziferblat', song: 'Bird of Pray', runningOrder: 5, place: 1, points: 137, qualified: true },
+      { iso: 'AZ', country: 'Azerbaijan', artist: 'Mamagama', song: 'Run With U', runningOrder: 10, place: null, points: null, qualified: null },
+    ];
+    expect(semiRows(2025, 1, parsed, 'parser')).toEqual([
+      { year: 2025, iso: 'UA', semi: 1, semi_running_order: 5, semi_place: 1, semi_points: 137, qualified: true, source: 'parser' },
+      { year: 2025, iso: 'AZ', semi: 1, semi_running_order: 10, semi_place: null, semi_points: null, qualified: null, source: 'parser' },
+    ]);
   });
 });

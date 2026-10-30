@@ -15,7 +15,8 @@
 -- Section B (Task 4): contest lifecycle and entry RPCs, and the
 --   parser write guard on contest_entries.
 -- Section C (Task 5): parser_upsert_entries, the parser's write path.
--- Later sections are appended by later tasks.
+--   Task 9 adds kind 'semis' to C1 and its exemption to the B9 guard.
+-- Section D (Task 8): read RPCs for the admin Contests module.
 --
 -- predictions.total_points and players.total_points are generated
 -- columns and are never written here.
@@ -757,20 +758,31 @@ revoke execute on function public.unarchive_contest(int) from public, anon;
 grant execute on function public.unarchive_contest(int) to authenticated;
 
 -- ── B9. Parser write guard ──────────────────────────────────
--- The parser edge function sets app.writer = 'parser' (Task 5,
--- transaction-local). Its inserts, updates and deletes touching a
--- finalized or archived year are refused, checking both the new year
--- and, on update/delete, the old one (so a row cannot be moved out of
--- a locked year). Other writers (admin RPCs, imports) are not
--- affected. Not an RPC: trigger only.
+-- parser_upsert_entries (C1) sets app.writer = 'parser' and
+-- app.writer_kind = its p_kind, both transaction-local. Parser inserts,
+-- updates and deletes touching a finalized or archived year are refused,
+-- checking both the new year and, on update/delete, the old one (so a row
+-- cannot be moved out of a locked year).
+-- Exception (Task 9): kind 'semis' may write a finalized year (never an
+-- archived one). Semis writes, on any year, may only
+--   * update the semi columns (semi, semi_running_order, semi_place,
+--     semi_points, qualified) plus updated_at and source;
+--   * insert rows that carry nothing but those columns, with in_final false;
+-- and never delete.
+-- Other writers (admin RPCs, imports) are not affected. Not an RPC:
+-- trigger only.
 create or replace function public.contest_entries_parser_guard()
 returns trigger
 language plpgsql
 set search_path = public
 as $fn$
 declare
+  c_semi  constant text[] := array['semi', 'semi_running_order', 'semi_place', 'semi_points',
+                                   'qualified', 'updated_at', 'source'];
+  v_semis boolean := coalesce(current_setting('app.writer_kind', true) = 'semis', false);
   v_year  int;
   v_stage public.contest_stage;
+  v_row   record := coalesce(new, old);
 begin
   if current_setting('app.writer', true) = 'parser' then
     for v_year in
@@ -781,10 +793,22 @@ begin
       where y is not null
     loop
       select stage into v_stage from public.contests where year = v_year;
-      if v_stage in ('finalized', 'archived') then
+      if v_stage = 'archived' or (v_stage = 'finalized' and not v_semis) then
         raise exception 'contest % is %; parser writes refused', v_year, v_stage;
       end if;
     end loop;
+
+    if v_semis and (
+         tg_op = 'DELETE'
+      or (tg_op = 'UPDATE' and (to_jsonb(new) - c_semi) is distinct from (to_jsonb(old) - c_semi))
+      or (tg_op = 'INSERT' and (
+            new.in_final
+         or exists (select 1
+                      from jsonb_each(to_jsonb(new) - c_semi - array['year', 'iso', 'in_final']) as j
+                     where j.value <> 'null'::jsonb))))
+    then
+      raise exception 'semis writes may only change semi columns (% %)', v_row.year, v_row.iso;
+    end if;
   end if;
   return coalesce(new, old);
 end;
@@ -801,8 +825,9 @@ create trigger contest_entries_parser_guard
 
 -- ── C1. parser_upsert_entries ───────────────────────────────
 -- The only write path of the eurovision-parse edge function. Sets
--- app.writer = 'parser' for the current transaction, so the B9 guard
--- refuses writes to a finalized or archived year. p_rows is a json
+-- app.writer = 'parser' and app.writer_kind = p_kind for the current
+-- transaction, so the B9 guard refuses writes to a finalized or archived
+-- year (semis: archived only, and semi columns only). p_rows is a json
 -- array built by supabase/functions/eurovision-parse/rows.ts; a row's
 -- year, when present, must equal p_year. Every iso must exist in
 -- countries ('unknown country %' rather than an FK error). Duplicate
@@ -814,9 +839,12 @@ create trigger contest_entries_parser_guard
 --   results: writes final_place, total_points, jury_points,
 --     televote_points, source, only for finalists of p_year (in_final).
 --     Other rows are skipped.
+--   semis (Task 9): writes semi, semi_running_order, semi_place,
+--     semi_points, qualified and source. Countries without a row get one
+--     carrying only those columns (in_final false). Never touches
+--     in_final, artist/song, final_* or the points columns.
 -- Returns the number of rows upserted (the demotions are not counted).
 -- service_role only: no is_super_admin() gate, no authenticated grant.
--- Task 9 adds p_kind 'semis'.
 create or replace function public.parser_upsert_entries(p_year int, p_rows jsonb, p_kind text)
 returns int
 language plpgsql
@@ -827,7 +855,7 @@ declare
   v_bad   text;
   v_count int;
 begin
-  if p_kind is null or p_kind not in ('participants', 'results') then
+  if p_kind is null or p_kind not in ('participants', 'results', 'semis') then
     raise exception 'unknown kind %', p_kind;
   end if;
   if jsonb_typeof(p_rows) is distinct from 'array' then
@@ -854,6 +882,7 @@ begin
   end if;
 
   perform set_config('app.writer', 'parser', true);
+  perform set_config('app.writer_kind', p_kind, true);
 
   if p_kind = 'participants' then
     insert into public.contest_entries as e
@@ -878,6 +907,26 @@ begin
      where year = p_year
        and in_final
        and iso not in (select r->>'iso' from jsonb_array_elements(p_rows) as t(r));
+  elsif p_kind = 'semis' then
+    insert into public.contest_entries as e
+      (year, iso, semi, semi_running_order, semi_place, semi_points, qualified, source, updated_at)
+    select distinct on (x.iso)
+           p_year, x.iso, x.semi, x.semi_running_order, x.semi_place, x.semi_points,
+           x.qualified, x.source, now()
+      from jsonb_array_elements(p_rows) with ordinality as t(r, n),
+           jsonb_to_record(t.r) as x(iso text, semi smallint, semi_running_order smallint,
+                                     semi_place smallint, semi_points int, qualified boolean,
+                                     source text)
+     order by x.iso, t.n
+    on conflict (year, iso) do update
+       set semi               = excluded.semi,
+           semi_running_order = excluded.semi_running_order,
+           semi_place         = excluded.semi_place,
+           semi_points        = excluded.semi_points,
+           qualified          = excluded.qualified,
+           source             = excluded.source,
+           updated_at         = excluded.updated_at;
+    get diagnostics v_count = row_count;
   else
     insert into public.contest_entries as e
       (year, iso, final_place, total_points, jury_points, televote_points, source, updated_at)

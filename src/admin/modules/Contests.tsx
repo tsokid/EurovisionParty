@@ -10,6 +10,7 @@ import { supabase } from '../../lib/supabase';
 import { formatError } from '../lib/formatError';
 import { ContestList, type ContestSummary } from './contests/ContestList';
 import { EntriesEditor } from './contests/EntriesEditor';
+import { ParseSemisButton } from './parser/ParseSemisButton';
 import { ACTION_LABELS, confirmText, type ContestAction } from './contests/lifecycle';
 
 const RPC: Record<ContestAction, string> = {
@@ -45,6 +46,7 @@ export default function Contests() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [entriesReload, setEntriesReload] = useState(0);
 
   const load = useCallback(async () => {
     try {
@@ -189,6 +191,18 @@ export default function Contests() {
           year={selected.year}
           readOnly={selected.stage === 'archived'}
           onChanged={load}
+          reloadKey={entriesReload}
+          parseSemisSlot={
+            selected.stage === 'current' || selected.stage === 'finalized' ? (
+              <ParseSemisButton
+                year={selected.year}
+                onParsed={() => {
+                  setEntriesReload((n) => n + 1);
+                  load();
+                }}
+              />
+            ) : undefined
+          }
         />
       )}
     </div>

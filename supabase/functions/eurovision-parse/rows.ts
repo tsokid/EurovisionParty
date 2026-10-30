@@ -3,6 +3,9 @@
 // parser_upsert_entries (migration 071, section C). No Deno APIs and no
 // imports, so vitest can import it (tests/functions/parserRows.test.ts).
 //
+// Semi rows (Task 9) carry only the semi columns; parser_upsert_entries
+// kind 'semis' never touches in_final, final_* or the points columns.
+//
 // Every parsed participant is a grand finalist (in_final: true); its
 // running order is passed through as parsed, usually null.
 //
@@ -72,6 +75,43 @@ export function resultRows(
     total_points: r.total,
     jury_points: r.jury,
     televote_points: r.televote,
+    source,
+  }));
+}
+
+export interface SemiInput {
+  iso: string;
+  runningOrder: number | null;
+  place: number | null;
+  points: number | null;
+  qualified: boolean | null;
+}
+
+export interface SemiEntryRow {
+  year: number;
+  iso: string;
+  semi: 1 | 2;
+  semi_running_order: number | null;
+  semi_place: number | null;
+  semi_points: number | null;
+  qualified: boolean | null;
+  source: string;
+}
+
+export function semiRows(
+  year: number,
+  semi: 1 | 2,
+  parsed: SemiInput[],
+  source: string,
+): SemiEntryRow[] {
+  return parsed.map((s) => ({
+    year,
+    iso: s.iso,
+    semi,
+    semi_running_order: s.runningOrder,
+    semi_place: s.place,
+    semi_points: s.points,
+    qualified: s.qualified,
     source,
   }));
 }

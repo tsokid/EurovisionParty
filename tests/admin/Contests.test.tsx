@@ -9,11 +9,16 @@ const h = vi.hoisted(() => ({
   summaries: [] as Row[],
   entries: [] as Row[],
   countries: [] as Row[],
+  invoke: vi.fn(),
+  loads: 0,
 }));
 
 vi.mock('../../src/lib/supabase', () => {
   const table = (name: string) => {
-    const rows = () => (name === 'contest_entries' ? h.entries : name === 'countries' ? h.countries : []);
+    const rows = () => {
+      if (name === 'contest_entries') h.loads += 1;
+      return name === 'contest_entries' ? h.entries : name === 'countries' ? h.countries : [];
+    };
     const chain: Record<string, unknown> = {
       select: () => chain,
       eq: () => chain,
@@ -33,6 +38,7 @@ vi.mock('../../src/lib/supabase', () => {
         if (name === 'contest_has_rooms') return Promise.resolve({ data: false, error: null });
         return Promise.resolve({ data: null, error: null });
       },
+      functions: { invoke: (name: string, opts: unknown) => h.invoke(name, opts) },
     },
   };
 });
@@ -56,6 +62,8 @@ const rowFor = async (year: number) => within((await screen.findByText(String(ye
 describe('Contests module', () => {
   beforeEach(() => {
     h.rpc.mockClear();
+    h.invoke.mockReset();
+    h.loads = 0;
     h.rpcError = {};
     h.summaries = [summary(2027, 'upcoming', 5), summary(2026, 'finalized', 26), summary(2025, 'archived', 26)];
     h.entries = [];
@@ -220,5 +228,83 @@ describe('Contests module', () => {
     render(<Contests />);
     fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Finalize' }));
     expect(await screen.findByText('contest 2026 has no results; finalize refused · (P0001)')).toBeTruthy();
+  });
+  it('Parse semifinals is offered for current and finalized years only', async () => {
+    h.summaries = [summary(2027, 'upcoming', 5), summary(2026, 'finalized', 26), summary(2025, 'archived', 26)];
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    expect(await screen.findByRole('button', { name: 'Parse semifinals' })).toBeTruthy();
+    fireEvent.click((await rowFor(2027)).getByRole('button', { name: 'Entries' }));
+    await screen.findByText('Entries 2027');
+    expect(screen.queryByRole('button', { name: 'Parse semifinals' })).toBeNull();
+    fireEvent.click((await rowFor(2025)).getByRole('button', { name: 'Entries' }));
+    await screen.findByText('Entries 2025');
+    expect(screen.queryByRole('button', { name: 'Parse semifinals' })).toBeNull();
+  });
+
+  it('Parse semifinals invokes the edge function after confirm, then reloads', async () => {
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValueOnce(false).mockReturnValue(true);
+    h.summaries = [summary(2026, 'current', 26)];
+    h.invoke.mockResolvedValue({ data: { ok: true, rows: 31, sf1: 15, sf2: 16 }, error: null });
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    const button = await screen.findByRole('button', { name: 'Parse semifinals' });
+
+    fireEvent.click(button); // cancelled
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(h.invoke).not.toHaveBeenCalled();
+
+    await waitFor(() => expect(h.loads).toBeGreaterThan(0));
+    const loadsBefore = h.loads;
+    fireEvent.click(button);
+    await waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith('eurovision-parse', { body: { action: 'semis', year: 2026 } }),
+    );
+    expect(await screen.findByText('Semi-finals parsed: 31 entries written.')).toBeTruthy();
+    await waitFor(() => expect(h.loads).toBeGreaterThan(loadsBefore));
+    expect(screen.queryByLabelText('Paste page HTML for semi-final 1')).toBeNull();
+  });
+
+  it('a failed fetch offers the paste boxes and resends with the pasted HTML', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    h.summaries = [summary(2026, 'finalized', 26)];
+    h.invoke
+      .mockResolvedValueOnce({
+        data: null,
+        error: {
+          message: 'Edge Function returned a non-2xx status code',
+          context: { json: async () => ({ ok: false, error: 'semi-final 1: http 403 from https://x/; paste the page HTML instead' }) },
+        },
+      })
+      .mockResolvedValueOnce({ data: { ok: true, rows: 15, sf1: 15 }, error: null });
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
+
+    expect(await screen.findByText('semi-final 1: http 403 from https://x/; paste the page HTML instead')).toBeTruthy();
+    const resend = screen.getByRole('button', { name: 'Parse pasted HTML' }) as HTMLButtonElement;
+    expect(resend.disabled).toBe(true);
+    fireEvent.change(screen.getByLabelText('Paste page HTML for semi-final 1'), { target: { value: '<html>sf1</html>' } });
+    expect(resend.disabled).toBe(false);
+    fireEvent.click(resend);
+
+    await waitFor(() =>
+      expect(h.invoke).toHaveBeenLastCalledWith('eurovision-parse', {
+        body: { action: 'semis', year: 2026, html_sf1: '<html>sf1</html>' },
+      }),
+    );
+    expect(await screen.findByText('Semi-finals parsed: 15 entries written.')).toBeTruthy();
+    expect(screen.queryByLabelText('Paste page HTML for semi-final 1')).toBeNull();
+  });
+
+  it('a semis error without a response body still shows through formatError', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    h.summaries = [summary(2026, 'current', 26)];
+    h.invoke.mockResolvedValue({ data: null, error: { message: 'Failed to send a request to the Edge Function' } });
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Parse semifinals' }));
+    expect(await screen.findByText('Failed to send a request to the Edge Function')).toBeTruthy();
+    expect(screen.getByLabelText('Paste page HTML for semi-final 2')).toBeTruthy();
   });
 });
