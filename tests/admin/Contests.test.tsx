@@ -159,6 +159,27 @@ describe('Contests module', () => {
     );
   });
 
+  it('saving one row keeps unsaved edits of other rows', async () => {
+    h.entries = [
+      { year: 2026, iso: 'AT', artist: 'B1', song: 'S2', in_final: false },
+      { year: 2026, iso: 'GR', artist: 'A1', song: 'S1', in_final: false },
+    ];
+    render(<Contests />);
+    fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Entries' }));
+    fireEvent.change(await screen.findByDisplayValue('A1'), { target: { value: 'A1 edited' } });
+    fireEvent.change(screen.getByDisplayValue('B1'), { target: { value: 'B1 edited' } });
+    fireEvent.click(within(screen.getByDisplayValue('A1 edited').closest('tr')!).getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(h.rpc).toHaveBeenCalledWith('upsert_contest_entry', {
+        p_year: 2026,
+        p_iso: 'GR',
+        p_fields: { artist: 'A1 edited' },
+      }),
+    );
+    await waitFor(() => expect(screen.getByDisplayValue('A1')).toBeTruthy()); // reloaded from the mock
+    expect(screen.getByDisplayValue('B1 edited')).toBeTruthy();
+  });
+
   it('entries editor adds a country and deletes after confirm', async () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     h.entries = [{ year: 2026, iso: 'GR', artist: 'A1', song: 'S1', in_final: false }];

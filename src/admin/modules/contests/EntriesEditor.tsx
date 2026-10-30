@@ -71,7 +71,6 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot }: Pro
       if (c.error) throw c.error;
       setEntries((e.data ?? []) as Entry[]);
       setCountries((c.data ?? []) as Country[]);
-      setDrafts({});
     } catch (x) {
       setErr(formatError(x));
     }
@@ -86,12 +85,14 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot }: Pro
   );
   const available = countries.filter((c) => !entries.some((e) => e.iso === c.iso));
 
-  const run = async (fn: () => PromiseLike<{ error: unknown }>) => {
+  // Runs one RPC, then reloads. Unsaved drafts of other rows are kept.
+  const run = async (fn: () => PromiseLike<{ error: unknown }>, onDone?: () => void) => {
     setBusy(true);
     setErr(null);
     try {
       const { error } = await fn();
       if (error) throw error;
+      onDone?.();
       await load();
       onChanged?.();
     } catch (x) {
@@ -100,6 +101,13 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot }: Pro
       setBusy(false);
     }
   };
+
+  const dropDraft = (iso: string) =>
+    setDrafts((d) => {
+      const next = { ...d };
+      delete next[iso];
+      return next;
+    });
 
   const edit = (iso: string, key: EditableKey, value: Entry[EditableKey]) => {
     const original = entries.find((e) => e.iso === iso);
@@ -115,7 +123,10 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot }: Pro
     (drafts[e.iso] && key in drafts[e.iso] ? drafts[e.iso][key] : e[key]) as Entry[K];
 
   const save = (iso: string) =>
-    run(() => supabase.rpc('upsert_contest_entry', { p_year: year, p_iso: iso, p_fields: drafts[iso] ?? {} }));
+    run(
+      () => supabase.rpc('upsert_contest_entry', { p_year: year, p_iso: iso, p_fields: drafts[iso] ?? {} }),
+      () => dropDraft(iso),
+    );
 
   const add = () => {
     if (!addIso) return;
@@ -128,7 +139,10 @@ export function EntriesEditor({ year, readOnly, onChanged, parseSemisSlot }: Pro
     if (!window.confirm(`Delete ${nameOf.get(iso) ?? iso} from ${year}? Its semi and final data are removed too.`)) {
       return;
     }
-    return run(() => supabase.rpc('delete_contest_entry', { p_year: year, p_iso: iso }));
+    return run(
+      () => supabase.rpc('delete_contest_entry', { p_year: year, p_iso: iso }),
+      () => dropDraft(iso),
+    );
   };
 
   return (
