@@ -8,14 +8,14 @@ describe('eurovision-parse rows', () => {
       { iso: 'AT', name: 'Austria', artist: 'Cosmó', song: 'Tanzschein', runningOrder: 2 },
     ];
     expect(participantRows(2027, parsed, 'parser')).toEqual([
-      { year: 2027, iso: 'GR', artist: 'Akylas', song: 'Ferto', final_running_order: 1, source: 'parser' },
-      { year: 2027, iso: 'AT', artist: 'Cosmó', song: 'Tanzschein', final_running_order: 2, source: 'parser' },
+      { year: 2027, iso: 'GR', artist: 'Akylas', song: 'Ferto', in_final: true, final_running_order: 1, source: 'parser' },
+      { year: 2027, iso: 'AT', artist: 'Cosmó', song: 'Tanzschein', in_final: true, final_running_order: 2, source: 'parser' },
     ]);
   });
 
   it('participantRows keeps a null running order', () => {
     expect(participantRows(2027, [{ iso: 'SE', artist: 'A', song: 'S', runningOrder: null }], 'parser')).toEqual([
-      { year: 2027, iso: 'SE', artist: 'A', song: 'S', final_running_order: null, source: 'parser' },
+      { year: 2027, iso: 'SE', artist: 'A', song: 'S', in_final: true, final_running_order: null, source: 'parser' },
     ]);
   });
 

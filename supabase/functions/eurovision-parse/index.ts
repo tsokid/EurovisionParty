@@ -197,7 +197,7 @@ async function handleParticipants(): Promise<Response> {
   // 3. Write the lineup (only on ok) into contest_entries through
   // parser_upsert_entries, upserting on (year, iso). Countries that were
   // in the year's lineup but are missing from this parse keep their rows
-  // with final_running_order = null; nothing is deleted. Country names
+  // with in_final = false; nothing is deleted. Country names
   // are not written (they live in countries). The RPC raises on an
   // unknown ISO or a finalized/archived year, which becomes an error run.
   let rowsUpserted = 0;
@@ -293,8 +293,8 @@ async function handleResults(): Promise<Response> {
   }
 
   // 3. Write results into contest_entries through parser_upsert_entries,
-  //    only for the year's grand finalists (final_running_order is not
-  //    null). Filtering here keeps a prior-year or wrong page from sending
+  //    only for the year's grand finalists (in_final; the running order
+  //    is not parsed). Filtering here keeps a prior-year or wrong page from sending
   //    ISOs outside the lineup; the RPC applies the same finalist filter.
   let rowsUpserted = 0;
   if (runStatus === "ok") {
@@ -302,7 +302,7 @@ async function handleResults(): Promise<Response> {
       .from("contest_entries")
       .select("iso")
       .eq("year", year)
-      .not("final_running_order", "is", null);
+      .eq("in_final", true);
     if (fErr) {
       runStatus = "error";
       err = fErr.message;

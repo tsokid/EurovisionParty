@@ -3,6 +3,9 @@
 // parser_upsert_entries (migration 071, section C). No Deno APIs and no
 // imports, so vitest can import it (tests/functions/parserRows.test.ts).
 //
+// Every parsed participant is a grand finalist (in_final: true); its
+// running order is passed through as parsed, usually null.
+//
 // Country names are not written: contest_entries has no name column,
 // names live in countries.
 
@@ -26,6 +29,7 @@ export interface ParticipantEntryRow {
   iso: string;
   artist: string;
   song: string;
+  in_final: true;
   final_running_order: number | null;
   source: string;
 }
@@ -50,6 +54,7 @@ export function participantRows(
     iso: p.iso,
     artist: p.artist,
     song: p.song,
+    in_final: true,
     final_running_order: p.runningOrder,
     source,
   }));

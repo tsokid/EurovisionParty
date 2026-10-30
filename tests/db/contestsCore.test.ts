@@ -6,11 +6,14 @@ import { COUNTRIES_2026 } from '../../src/lib/countries2026';
 import { COUNTRY_TO_ISO } from '../../supabase/functions/eurovision-parse/parse';
 
 // Finalist fixtures as they sit in the old 2026 tables before 070 runs.
-// ES is deliberately not in COUNTRIES_2026 (boycott), so the overlap is 2.
+// ES is deliberately not in COUNTRIES_2026 (boycott), so the overlap is 3
+// (GR, AT, DE). ES and DE have a null running_order, as the production
+// parser leaves it.
 const PARTICIPANTS = [
   { iso: 'GR', name: 'Greece', artist: 'Akylas', song: 'Ferto', running_order: 1, source: 'parser' },
   { iso: 'AT', name: 'Austria', artist: 'Cosmó', song: 'Tanzschein', running_order: 2, source: 'parser' },
-  { iso: 'ES', name: 'Spain', artist: 'Fixture Artist', song: 'Fixture Song', running_order: 3, source: 'manual' },
+  { iso: 'ES', name: 'Spain', artist: 'Fixture Artist', song: 'Fixture Song', running_order: null, source: 'manual' },
+  { iso: 'DE', name: 'Germany', artist: 'Fixture DE', song: 'Fixture DE Song', running_order: null, source: 'parser' },
 ];
 const RESULTS = [
   { iso: 'GR', ranking: 2, total_points: 400, jury_points: 150, televote_points: 250, source: 'manual' },
@@ -21,6 +24,7 @@ type Entry = {
   iso: string;
   artist: string | null;
   song: string | null;
+  in_final: boolean;
   final_running_order: number | null;
   final_place: number | null;
   total_points: number | null;
@@ -58,7 +62,7 @@ describe('070 contests core', () => {
 
   async function entries(): Promise<Entry[]> {
     const r = await db.query<Entry>(
-      `select iso, artist, song, final_running_order, final_place, total_points, jury_points,
+      `select iso, artist, song, in_final, final_running_order, final_place, total_points, jury_points,
               televote_points, qualified, source
          from public.contest_entries where year = 2026 order by iso`,
     );
@@ -74,6 +78,7 @@ describe('070 contests core', () => {
       expect(e).toMatchObject({
         artist: p.artist,
         song: p.song,
+        in_final: true,
         final_running_order: p.running_order,
         final_place: r?.ranking ?? null,
         total_points: r?.total_points ?? null,
@@ -85,18 +90,29 @@ describe('070 contests core', () => {
     expect(byIso.get('ES')!.final_place).toBeNull();
   });
 
+  it('2026 copy marks all participants in_final even with null running_order', async () => {
+    const all = await entries();
+    const finalists = all.filter((e) => e.in_final).map((e) => e.iso).sort();
+    expect(finalists).toEqual(PARTICIPANTS.map((p) => p.iso).sort());
+    expect(all.find((e) => e.iso === 'ES')).toMatchObject({ in_final: true, final_running_order: null });
+    expect(all.find((e) => e.iso === 'DE')).toMatchObject({ in_final: true, final_running_order: null });
+    const lineup = await db.query<{ iso: string }>(`select iso from public.current_participants order by iso`);
+    expect(lineup.rows.map((x) => x.iso)).toEqual(['AT', 'DE', 'ES', 'GR']);
+  });
+
   it('adds non-finalist 2026 countries from COUNTRIES_2026', async () => {
     const all = await entries();
     const finalists = new Set(PARTICIPANTS.map((p) => p.iso));
     const overlap = COUNTRIES_2026.filter((c) => finalists.has(c.id)).length;
     expect(COUNTRIES_2026).toHaveLength(35);
-    expect(all).toHaveLength(3 + (35 - overlap));
+    expect(all).toHaveLength(PARTICIPANTS.length + (35 - overlap));
 
     for (const c of COUNTRIES_2026.filter((x) => !finalists.has(x.id))) {
       const e = all.find((x) => x.iso === c.id);
       expect(e, c.id).toMatchObject({
         artist: c.artist,
         song: c.song,
+        in_final: false,
         final_running_order: null,
         qualified: false,
         source: 'manual',
@@ -106,9 +122,9 @@ describe('070 contests core', () => {
 
   it('current_participants has finalists only, with names', async () => {
     const r = await db.query<{ iso: string; name_en: string | null; name_el: string | null }>(
-      `select iso, name_en, name_el from public.current_participants order by final_running_order`,
+      `select iso, name_en, name_el from public.current_participants order by final_running_order nulls last, iso`,
     );
-    expect(r.rows.map((x) => x.iso)).toEqual(['GR', 'AT', 'ES']);
+    expect(r.rows.map((x) => x.iso)).toEqual(['GR', 'AT', 'DE', 'ES']);
     for (const row of r.rows) {
       expect(row.name_en).toBeTruthy();
       expect(row.name_el).toBeTruthy();
@@ -174,7 +190,7 @@ describe('070 contests core', () => {
       );
       expect(r.rows[0].c).toBeGreaterThan(0);
       expect(r.rows[0].n).toBeGreaterThan(0);
-      expect(r.rows[0].e).toBe(3);
+      expect(r.rows[0].e).toBe(PARTICIPANTS.length);
       await expect(
         db.query(`insert into public.countries (iso, name_en, name_el, slug) values ('XX', 'X', 'X', 'x')`),
       ).rejects.toThrow();

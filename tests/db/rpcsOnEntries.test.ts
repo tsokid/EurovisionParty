@@ -14,7 +14,7 @@ const R25 = '10000000-0000-4000-8000-000000000025';
 const R25_OPEN = '10000000-0000-4000-8000-0000000025f0';
 
 const ENTRY_COLS = `iso, semi, semi_running_order, semi_place, semi_points, qualified,
-  final_running_order, final_place, total_points, jury_points, televote_points, source`;
+  in_final, final_running_order, final_place, total_points, jury_points, televote_points, source`;
 
 type Row = Record<string, unknown>;
 
@@ -47,16 +47,16 @@ describe('071 result RPCs on contest_entries', () => {
       update public.contests set stage = 'current' where year = 2026;
 
       -- 2026: three grand finalists without results, one semi-finalist that did not qualify.
-      insert into public.contest_entries (year, iso, artist, song, semi, semi_running_order, semi_place, semi_points, qualified, final_running_order, source) values
-        (2026, 'GR', 'A1', 'S1', 1, 4, 2, 180, true, 1, 'parser'),
-        (2026, 'AT', 'A2', 'S2', null, null, null, null, null, 2, 'parser'),
-        (2026, 'SE', 'A3', 'S3', 2, 7, 1, 220, true, 3, 'parser'),
-        (2026, 'MD', 'A4', 'S4', 1, 9, 12, 20, false, null, 'parser');
+      insert into public.contest_entries (year, iso, artist, song, semi, semi_running_order, semi_place, semi_points, qualified, in_final, final_running_order, source) values
+        (2026, 'GR', 'A1', 'S1', 1, 4, 2, 180, true, true, 1, 'parser'),
+        (2026, 'AT', 'A2', 'S2', null, null, null, null, null, true, 2, 'parser'),
+        (2026, 'SE', 'A3', 'S3', 2, 7, 1, 220, true, true, 3, 'parser'),
+        (2026, 'MD', 'A4', 'S4', 1, 9, 12, 20, false, false, null, 'parser');
 
       -- 2025: archived, with results.
-      insert into public.contest_entries (year, iso, artist, song, final_running_order, final_place, total_points, jury_points, televote_points, source) values
-        (2025, 'AT', 'JJ', 'Wasted Love', 9, 1, 436, 258, 178, 'import:test'),
-        (2025, 'IL', 'Yuval Raphael', 'New Day Will Rise', 20, 2, 357, 60, 297, 'import:test');
+      insert into public.contest_entries (year, iso, artist, song, in_final, final_running_order, final_place, total_points, jury_points, televote_points, source) values
+        (2025, 'AT', 'JJ', 'Wasted Love', true, 9, 1, 436, 258, 178, 'import:test'),
+        (2025, 'IL', 'Yuval Raphael', 'New Day Will Rise', true, 20, 2, 357, 60, 297, 'import:test');
 
       insert into public.parse_jobs (year, kind) values (2026, 'results') on conflict (year, kind) do nothing;
       update public.parse_jobs
@@ -118,7 +118,7 @@ describe('071 result RPCs on contest_entries', () => {
     const got = (
       await db.query<Row>(
         `select iso, final_place, total_points, jury_points, televote_points, source
-           from public.contest_entries where year = 2026 and final_running_order is not null order by final_place`,
+           from public.contest_entries where year = 2026 and in_final order by final_place`,
       )
     ).rows;
     expect(got).toEqual([
@@ -151,6 +151,25 @@ describe('071 result RPCs on contest_entries', () => {
     await expect(commit(['SE', 'GR'])).rejects.toThrow(/expected 3 rankings/);
     await expect(commit(['SE', 'SE', 'GR'])).rejects.toThrow(/duplicate/);
     expect((await entries(2026)).every((e) => e.final_place === null)).toBe(true);
+  });
+
+  it('commit_manual_results defines finalists by in_final, not running order', async () => {
+    // AT loses its running order but stays a finalist; MD gets one but is not a finalist.
+    await asUser(db, null);
+    await db.exec(`
+      update public.contest_entries set final_running_order = null where year = 2026 and iso = 'AT';
+      update public.contest_entries set final_running_order = 4 where year = 2026 and iso = 'MD';
+    `);
+    await asUser(db, ADMIN);
+    await expect(commit(['SE', 'GR', 'MD'])).rejects.toThrow(/not .*finalist/i);
+    expect((await commit(['AT', 'SE', 'GR'])).rows[0].n).toBe(3);
+    expect(
+      (await db.query<Row>(`select iso, final_place from public.contest_entries where year = 2026 and final_place is not null order by final_place`)).rows,
+    ).toEqual([
+      { iso: 'AT', final_place: 1 },
+      { iso: 'SE', final_place: 2 },
+      { iso: 'GR', final_place: 3 },
+    ]);
   });
 
   // ── finalize_results ─────────────────────────────────────────────────
@@ -215,6 +234,7 @@ describe('071 result RPCs on contest_entries', () => {
     expect(e26.map((e) => e.iso)).toEqual(['AT', 'GR', 'MD', 'SE']);
     for (const e of e26) {
       expect(e).toMatchObject({
+        in_final: false,
         final_running_order: null,
         final_place: null,
         total_points: null,
@@ -279,7 +299,7 @@ describe('071 result RPCs on contest_entries', () => {
     await expect(db.query(`select public.reset_contest(2025, false, false, false)`)).rejects.toThrow(
       /contest 2025 is archived; reset refused/,
     );
-    expect((await entries(2026)).filter((e) => e.final_running_order !== null)).toHaveLength(3);
+    expect((await entries(2026)).filter((e) => e.in_final)).toHaveLength(3);
   });
 
   it('legacy reset_contest(int) gone', async () => {

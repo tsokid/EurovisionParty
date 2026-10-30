@@ -11,7 +11,7 @@ type Row = Record<string, unknown>;
 const lineup = (rows: [string, string, number | null][]) =>
   JSON.stringify(
     rows.map(([iso, artist, ro]) => ({
-      year: 2027, iso, artist, song: artist + ' song', final_running_order: ro, source: 'parser',
+      year: 2027, iso, artist, song: artist + ' song', in_final: true, final_running_order: ro, source: 'parser',
     })),
   );
 
@@ -53,7 +53,7 @@ describe('071 parser_upsert_entries', () => {
   const entries = async (year: number) =>
     (
       await db.query<Row>(
-        `select iso, artist, final_running_order, final_place, total_points, jury_points, televote_points, source
+        `select iso, artist, in_final, final_running_order, final_place, total_points, jury_points, televote_points, source
            from public.contest_entries where year = $1 order by iso`,
         [year],
       )
@@ -64,28 +64,37 @@ describe('071 parser_upsert_entries', () => {
   it('participants upsert the lineup and return the row count', async () => {
     expect(await upsert(2027, lineup([['GR', 'Akylas', 1], ['AT', 'Cosmo', 2]]), 'participants')).toBe(2);
     expect(await entries(2027)).toEqual([
-      { iso: 'AT', artist: 'Cosmo', final_running_order: 2, ...blank, source: 'parser' },
-      { iso: 'GR', artist: 'Akylas', final_running_order: 1, ...blank, source: 'parser' },
+      { iso: 'AT', artist: 'Cosmo', in_final: true, final_running_order: 2, ...blank, source: 'parser' },
+      { iso: 'GR', artist: 'Akylas', in_final: true, final_running_order: 1, ...blank, source: 'parser' },
     ]);
     // app.writer is transaction-local: nothing leaks into the session.
     const w = await db.query<{ w: string | null }>(`select nullif(current_setting('app.writer', true), '') as w`);
     expect(w.rows[0].w).toBeNull();
   });
 
-  it('participants absent from a re-parse keep their rows with final_running_order null', async () => {
+  it('participants absent from a re-parse keep their rows with in_final false', async () => {
     await upsert(2027, lineup([['GR', 'Akylas', 1], ['AT', 'Cosmo', 2], ['SE', 'KAJ', 3]]), 'participants');
-    expect(await upsert(2027, lineup([['SE', 'KAJ', 1], ['GR', 'Akylas', 2]]), 'participants')).toBe(2);
-    expect((await entries(2027)).map((r) => [r.iso, r.artist, r.final_running_order])).toEqual([
-      ['AT', 'Cosmo', null],
-      ['GR', 'Akylas', 2],
-      ['SE', 'KAJ', 1],
+    expect(await upsert(2027, lineup([['SE', 'KAJ', null], ['GR', 'Akylas', null]]), 'participants')).toBe(2);
+    // Running orders are taken as parsed (null here), never invented; AT
+    // is demoted but its row and other columns stay.
+    expect((await entries(2027)).map((r) => [r.iso, r.artist, r.in_final, r.final_running_order])).toEqual([
+      ['AT', 'Cosmo', false, 2],
+      ['GR', 'Akylas', true, null],
+      ['SE', 'KAJ', true, null],
+    ]);
+    // A later parse that lists AT again promotes it back.
+    await upsert(2027, lineup([['AT', 'Cosmo', null]]), 'participants');
+    expect((await entries(2027)).map((r) => [r.iso, r.in_final])).toEqual([
+      ['AT', true],
+      ['GR', false],
+      ['SE', false],
     ]);
   });
 
   it('results are written only for finalists of the year', async () => {
     await upsert(2027, lineup([['GR', 'Akylas', 1], ['AT', 'Cosmo', 2]]), 'participants');
-    // MD is a semi-only entry (no final_running_order); SE has no row at all.
-    await db.query(`insert into public.contest_entries (year, iso, artist, semi) values (2027, 'MD', 'M', 1)`);
+    // MD is a semi-only entry (not in_final, even with a running order); SE has no row at all.
+    await db.query(`insert into public.contest_entries (year, iso, artist, semi, final_running_order) values (2027, 'MD', 'M', 1, 9)`);
     const result = (iso: string, place: number, total: number, jury: number, televote: number) => ({
       year: 2027, iso, final_place: place, total_points: total, jury_points: jury, televote_points: televote, source: 'parser',
     });
@@ -97,9 +106,23 @@ describe('071 parser_upsert_entries', () => {
     ]);
     expect(await upsert(2027, results, 'results')).toBe(2);
     expect(await entries(2027)).toEqual([
-      { iso: 'AT', artist: 'Cosmo', final_running_order: 2, final_place: 1, total_points: 436, jury_points: 258, televote_points: 178, source: 'parser' },
-      { iso: 'GR', artist: 'Akylas', final_running_order: 1, final_place: 2, total_points: 300, jury_points: 200, televote_points: 100, source: 'parser' },
-      { iso: 'MD', artist: 'M', final_running_order: null, ...blank, source: null },
+      { iso: 'AT', artist: 'Cosmo', in_final: true, final_running_order: 2, final_place: 1, total_points: 436, jury_points: 258, televote_points: 178, source: 'parser' },
+      { iso: 'GR', artist: 'Akylas', in_final: true, final_running_order: 1, final_place: 2, total_points: 300, jury_points: 200, televote_points: 100, source: 'parser' },
+      { iso: 'MD', artist: 'M', in_final: false, final_running_order: 9, ...blank, source: null },
+    ]);
+  });
+
+  it('results parse writes for in_final finalists with null running order', async () => {
+    // As in production: the participants extractor yields no running orders.
+    await upsert(2027, lineup([['GR', 'Akylas', null], ['AT', 'Cosmo', null]]), 'participants');
+    const results = JSON.stringify([
+      { year: 2027, iso: 'AT', final_place: 1, total_points: 436, jury_points: 258, televote_points: 178, source: 'parser' },
+      { year: 2027, iso: 'GR', final_place: 2, total_points: 300, jury_points: 200, televote_points: 100, source: 'parser' },
+    ]);
+    expect(await upsert(2027, results, 'results')).toBe(2);
+    expect((await entries(2027)).map((r) => [r.iso, r.in_final, r.final_running_order, r.final_place, r.total_points])).toEqual([
+      ['AT', true, null, 1, 436],
+      ['GR', true, null, 2, 300],
     ]);
   });
 
@@ -107,7 +130,7 @@ describe('071 parser_upsert_entries', () => {
     // The harness has no legacy 2026 lineup, so make one 2026 entry a
     // finalist (as a non-parser writer) for the results call to target.
     const iso = (await entries(2026))[0].iso as string;
-    await db.query(`update public.contest_entries set final_running_order = 1 where year = 2026 and iso = $1`, [iso]);
+    await db.query(`update public.contest_entries set in_final = true where year = 2026 and iso = $1`, [iso]);
     const before = await entries(2026);
     await expect(
       upsert(2026, JSON.stringify([{ iso, artist: 'X', song: 'Y', final_running_order: 2, source: 'parser' }]), 'participants'),

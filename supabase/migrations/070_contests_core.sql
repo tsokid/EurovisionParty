@@ -4,7 +4,7 @@
 -- * contest_stage enum; contests, countries, contest_entries.
 -- * At most one contest is live (stage current or finalized).
 -- * Views current_entries (every entry of the live year) and
---   current_participants (grand finalists only), both with country
+--   current_participants (grand finalists only, in_final), both with country
 --   names, both security_invoker so RLS of the caller applies.
 -- * live_contest_year(): the live year, else the latest non-archived
 --   year, else the calendar year. rooms.year now defaults to it.
@@ -72,6 +72,10 @@ create table if not exists public.contest_entries (
   semi_place          smallint,
   semi_points         int,
   qualified           boolean,                          -- null when no semis that year
+  -- Grand finalist. The finalist flag is separate from the running
+  -- order: the parser does not extract running orders, so a finalist
+  -- may have final_running_order null.
+  in_final            boolean not null default false,
   final_running_order smallint,
   final_place         smallint,
   total_points        int,
@@ -100,16 +104,21 @@ create policy contest_entries_read on public.contest_entries for select to anon,
 grant select on public.contests, public.countries, public.contest_entries to anon, authenticated;
 
 -- ── Views ───────────────────────────────────────────────────────────────
+-- Dropped and recreated (not "or replace"): e.* is frozen at creation,
+-- so a column change on contest_entries needs a fresh view.
+drop view if exists public.current_participants;
+drop view if exists public.current_entries;
+
 -- Every entry of the live year (hub, songs, semifinal pages).
-create or replace view public.current_entries with (security_invoker = true) as
+create view public.current_entries with (security_invoker = true) as
   select e.*, co.name_en, co.name_el
     from public.contest_entries e
     join public.contests  c  on c.year = e.year and c.stage in ('current', 'finalized')
     join public.countries co on co.iso = e.iso;
 
 -- The game's lineup: grand-final entries only.
-create or replace view public.current_participants with (security_invoker = true) as
-  select * from public.current_entries where final_running_order is not null;
+create view public.current_participants with (security_invoker = true) as
+  select * from public.current_entries where in_final;
 
 grant select on public.current_entries, public.current_participants to anon, authenticated;
 
@@ -194,11 +203,12 @@ values
   (2026, 'AT', 'Vienna', 'vienna', '2026-05-12', '2026-05-14', '2026-05-16', 'finalized', now())
 on conflict (year) do nothing;
 
--- Grand finalists, with results where present.
+-- Grand finalists, with results where present. Every participants row is
+-- a finalist (in_final); running_order is copied as-is and may be null.
 insert into public.contest_entries
-  (year, iso, artist, song, final_running_order, final_place,
+  (year, iso, artist, song, in_final, final_running_order, final_place,
    total_points, jury_points, televote_points, source)
-select 2026, p.iso, p.artist, p.song, p.running_order, r.ranking,
+select 2026, p.iso, p.artist, p.song, true, p.running_order, r.ranking,
        r.total_points, r.jury_points, r.televote_points, coalesce(r.source, p.source)
   from public.eurovision_2026_participants p
   left join public.eurovision_2026_results r using (iso)
@@ -207,8 +217,8 @@ on conflict (year, iso) do nothing;
 -- 2026 entries that did not reach the final: every COUNTRIES_2026 entry
 -- not already copied above.
 insert into public.contest_entries
-  (year, iso, artist, song, final_running_order, qualified, source)
-select 2026, v.iso, v.artist, v.song, null, false, 'manual'
+  (year, iso, artist, song, in_final, final_running_order, qualified, source)
+select 2026, v.iso, v.artist, v.song, false, null, false, 'manual'
   from (values
     ('MD', 'Satoshi', 'Viva, Moldova!'),
     ('SE', 'Felicia', 'My System'),

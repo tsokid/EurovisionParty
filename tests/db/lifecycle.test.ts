@@ -42,9 +42,9 @@ describe('071 lifecycle and entry RPCs', () => {
       values (2025, 'CH', 'Basel', 'basel', 'archived', now())
       on conflict (year) do update set stage = 'archived';
       delete from public.contest_entries where year = 2025;
-      insert into public.contest_entries (year, iso, artist, song, final_running_order, final_place, total_points, source) values
-        (2025, 'AT', 'JJ', 'Wasted Love', 9, 1, 436, 'import:test'),
-        (2025, 'IL', 'Yuval Raphael', 'New Day Will Rise', 20, 2, 357, 'import:test');
+      insert into public.contest_entries (year, iso, artist, song, in_final, final_running_order, final_place, total_points, source) values
+        (2025, 'AT', 'JJ', 'Wasted Love', true, 9, 1, 436, 'import:test'),
+        (2025, 'IL', 'Yuval Raphael', 'New Day Will Rise', true, 20, 2, 357, 'import:test');
 
       insert into public.parse_jobs (year, kind, manual_override) values (2025, 'results', true)
       on conflict (year, kind) do update set manual_override = true;
@@ -129,8 +129,16 @@ describe('071 lifecycle and entry RPCs', () => {
     await db.query(`select public.upsert_contest_entry(2027, 'GR', '{"artist":"A","song":"S","semi":1}'::jsonb)`);
     await db.query(`select public.upsert_contest_entry(2027, 'GR', '{"song":"S2","semi_running_order":4}'::jsonb)`);
     expect(
-      await one(`select artist, song, semi, semi_running_order from public.contest_entries where year = 2027 and iso = 'GR'`),
-    ).toEqual({ artist: 'A', song: 'S2', semi: 1, semi_running_order: 4 });
+      await one(`select artist, song, semi, semi_running_order, in_final from public.contest_entries where year = 2027 and iso = 'GR'`),
+    ).toEqual({ artist: 'A', song: 'S2', semi: 1, semi_running_order: 4, in_final: false });
+    // in_final is editable; a JSON null resets it to false (the column is not null).
+    await db.query(`select public.upsert_contest_entry(2027, 'GR', '{"in_final":true}'::jsonb)`);
+    expect(await one(`select in_final, artist from public.contest_entries where year = 2027 and iso = 'GR'`)).toEqual({
+      in_final: true,
+      artist: 'A',
+    });
+    await db.query(`select public.upsert_contest_entry(2027, 'GR', '{"in_final":null}'::jsonb)`);
+    expect(await one(`select in_final from public.contest_entries where year = 2027 and iso = 'GR'`)).toEqual({ in_final: false });
     await expect(
       db.query(`select public.upsert_contest_entry(2027, 'GR', '{"year":2030}'::jsonb)`),
     ).rejects.toThrow(/unknown field year/);
@@ -173,8 +181,8 @@ describe('071 lifecycle and entry RPCs', () => {
     await addContest(2028, 'upcoming');
     await db.exec(`
       insert into public.parse_jobs (year, kind) values (2027, 'results');
-      insert into public.contest_entries (year, iso, final_running_order, final_place) values
-        (2027, 'SE', 1, 1), (2027, 'GR', 2, 2);
+      insert into public.contest_entries (year, iso, in_final, final_running_order, final_place) values
+        (2027, 'SE', true, 1, 1), (2027, 'GR', true, 2, 2);
       insert into public.rooms (id, code, host_id, host_name, year, phase) values
         ('${ROOM_DONE}', 'L27D', '${ADMIN}', 'h', 2027, 'final'),
         ('${ROOM_OPEN}', 'L27O', '${ADMIN}', 'h', 2027, 'final'),
@@ -219,7 +227,7 @@ describe('071 lifecycle and entry RPCs', () => {
     await addContest(2027, 'current');
     await db.exec(`
       insert into public.parse_jobs (year, kind, status) values (2027, 'results', 'idle');
-      insert into public.contest_entries (year, iso, final_running_order) values (2027, 'SE', 1), (2027, 'GR', 2);
+      insert into public.contest_entries (year, iso, in_final, final_running_order) values (2027, 'SE', true, 1), (2027, 'GR', true, 2);
     `);
     const jobsBefore = (await db.query<Row>(`select * from public.parse_jobs where year = 2027 order by kind`)).rows;
     await expect(db.query(`select public.finalize_contest(2027)`)).rejects.toThrow(

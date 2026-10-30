@@ -106,7 +106,7 @@ grant execute on function public.finalize_results(int) to authenticated;
 
 -- ── A2. commit_manual_results ───────────────────────────────
 -- p_isos is the full final ranking, winner first. It must name every
--- grand finalist of p_year (final_running_order is not null) exactly once.
+-- grand finalist of p_year (in_final) exactly once.
 -- Clears the year's result columns, then sets final_place = position and
 -- source = 'manual'. Points stay null: the old synthetic points
 -- ((n + 1 - i) * 10) are no longer invented. Other years are untouched.
@@ -146,7 +146,7 @@ begin
 
   select count(*) into v_expected
     from public.contest_entries
-   where year = p_year and final_running_order is not null;
+   where year = p_year and in_final;
   if v_expected = 0 then
     raise exception 'no finalists found for % — set the final lineup first', p_year;
   end if;
@@ -158,7 +158,7 @@ begin
     from unnest(p_isos) iso(code)
    where not exists (
      select 1 from public.contest_entries e
-      where e.year = p_year and e.iso = iso.code and e.final_running_order is not null
+      where e.year = p_year and e.iso = iso.code and e.in_final
    )
    limit 1;
   if found then
@@ -254,7 +254,7 @@ revoke execute on function public.reset_manual_results(int) from public, anon;
 grant execute on function public.reset_manual_results(int) to authenticated;
 
 -- ── A4. reset_contest ───────────────────────────────────────
--- Clears p_year's lineup and results (final_running_order, qualified and
+-- Clears p_year's lineup and results (in_final, final_running_order, qualified and
 -- the result columns); entry rows and semi data stay. Refused once the
 -- contest is finalized or archived. Room effects are limited to rooms of
 -- p_year. Before, it deleted every participant and every room's results.
@@ -285,7 +285,8 @@ begin
 
   -- Core: always runs
   update public.contest_entries
-     set final_running_order = null,
+     set in_final            = false,
+         final_running_order = null,
          final_place         = null,
          total_points        = null,
          jury_points         = null,
@@ -448,7 +449,8 @@ grant execute on function public.update_contest(int, jsonb) to authenticated;
 -- ── B3. upsert_contest_entry ────────────────────────────────
 -- Insert or partially update one entry. Allowed keys: every entry
 -- column except year, iso and updated_at (set here). A key present
--- with JSON null sets the column to null. Refused on an archived
+-- with JSON null sets the column to null (in_final, which is not null,
+-- becomes false; a new entry starts with in_final = false). Refused on an archived
 -- year; corrections there go through Edit + Republish (sub-project
 -- 2b, separate RPC).
 create or replace function public.upsert_contest_entry(p_year int, p_iso text, p_fields jsonb)
@@ -468,7 +470,7 @@ begin
 
   for v_key in select jsonb_object_keys(p_fields) loop
     if v_key not in ('artist', 'song', 'language', 'semi', 'semi_running_order', 'semi_place',
-                     'semi_points', 'qualified', 'final_running_order', 'final_place',
+                     'semi_points', 'qualified', 'in_final', 'final_running_order', 'final_place',
                      'total_points', 'jury_points', 'televote_points', 'source') then
       raise exception 'unknown field %', v_key;
     end if;
@@ -493,12 +495,12 @@ begin
 
   insert into public.contest_entries as e
     (year, iso, artist, song, language, semi, semi_running_order, semi_place, semi_points,
-     qualified, final_running_order, final_place, total_points, jury_points, televote_points,
-     source, updated_at)
+     qualified, in_final, final_running_order, final_place, total_points, jury_points,
+     televote_points, source, updated_at)
   values
     (v_row.year, v_row.iso, v_row.artist, v_row.song, v_row.language, v_row.semi,
      v_row.semi_running_order, v_row.semi_place, v_row.semi_points, v_row.qualified,
-     v_row.final_running_order, v_row.final_place, v_row.total_points, v_row.jury_points,
+     coalesce(v_row.in_final, false), v_row.final_running_order, v_row.final_place, v_row.total_points, v_row.jury_points,
      v_row.televote_points, v_row.source, now())
   on conflict (year, iso) do update
      set artist              = excluded.artist,
@@ -509,6 +511,7 @@ begin
          semi_place          = excluded.semi_place,
          semi_points         = excluded.semi_points,
          qualified           = excluded.qualified,
+         in_final            = excluded.in_final,
          final_running_order = excluded.final_running_order,
          final_place         = excluded.final_place,
          total_points        = excluded.total_points,
@@ -804,13 +807,14 @@ create trigger contest_entries_parser_guard
 -- year, when present, must equal p_year. Every iso must exist in
 -- countries ('unknown country %' rather than an FK error). Duplicate
 -- isos in p_rows: the first one wins.
---   participants: upserts artist, song, final_running_order, source.
---     Rows of p_year whose iso is not in p_rows get
---     final_running_order = null; nothing is deleted.
+--   participants: upserts artist, song, final_running_order (the parsed
+--     value, possibly null; never invented), source, and in_final = true.
+--     Rows of p_year whose iso is not in p_rows get in_final = false;
+--     nothing is deleted.
 --   results: writes final_place, total_points, jury_points,
---     televote_points, source, only for finalists of p_year
---     (final_running_order is not null). Other rows are skipped.
--- Returns the number of rows upserted (the null-outs are not counted).
+--     televote_points, source, only for finalists of p_year (in_final).
+--     Other rows are skipped.
+-- Returns the number of rows upserted (the demotions are not counted).
 -- service_role only: no is_super_admin() gate, no authenticated grant.
 -- Task 9 adds p_kind 'semis'.
 create or replace function public.parser_upsert_entries(p_year int, p_rows jsonb, p_kind text)
@@ -853,9 +857,9 @@ begin
 
   if p_kind = 'participants' then
     insert into public.contest_entries as e
-      (year, iso, artist, song, final_running_order, source, updated_at)
+      (year, iso, artist, song, in_final, final_running_order, source, updated_at)
     select distinct on (x.iso)
-           p_year, x.iso, x.artist, x.song, x.final_running_order, x.source, now()
+           p_year, x.iso, x.artist, x.song, true, x.final_running_order, x.source, now()
       from jsonb_array_elements(p_rows) with ordinality as t(r, n),
            jsonb_to_record(t.r) as x(iso text, artist text, song text,
                                      final_running_order smallint, source text)
@@ -863,15 +867,16 @@ begin
     on conflict (year, iso) do update
        set artist              = excluded.artist,
            song                = excluded.song,
+           in_final            = true,
            final_running_order = excluded.final_running_order,
            source              = excluded.source,
            updated_at          = excluded.updated_at;
     get diagnostics v_count = row_count;
 
     update public.contest_entries
-       set final_running_order = null, updated_at = now()
+       set in_final = false, updated_at = now()
      where year = p_year
-       and final_running_order is not null
+       and in_final
        and iso not in (select r->>'iso' from jsonb_array_elements(p_rows) as t(r));
   else
     insert into public.contest_entries as e
@@ -883,7 +888,7 @@ begin
            jsonb_to_record(t.r) as x(iso text, final_place smallint, total_points int,
                                      jury_points int, televote_points int, source text)
       join public.contest_entries f
-        on f.year = p_year and f.iso = x.iso and f.final_running_order is not null
+        on f.year = p_year and f.iso = x.iso and f.in_final
      order by x.iso, t.n
     on conflict (year, iso) do update
        set final_place     = excluded.final_place,
