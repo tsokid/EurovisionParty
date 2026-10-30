@@ -14,6 +14,7 @@ const cfg: VercelConfig = {
     { source: '/:slug(faq|rules)', has: AL_EL, destination: '/el/:slug', permanent: true },
     { source: '/:slug(faq|rules)', destination: '/en/:slug', permanent: true },
     { source: '/:locale(en|el)/old', destination: '/:locale/faq', permanent: true },
+    { source: '/:locale(en|el)/glossary', destination: '/:locale/faq', permanent: true },
     { source: '/:locale(en|el)/compare/:any*', destination: '/:locale/faq', permanent: true },
     { source: '/:locale(en|el)/chain', destination: '/:locale/old', permanent: true },
     { source: '/loop-a', destination: '/loop-b', permanent: true },
@@ -110,6 +111,27 @@ describe('resolveUrl', () => {
   it('404s an unbuilt, unredirected locale path (no soft-404)', () => {
     expect(resolveUrl('/en/no-such-page', cfg, built)).toMatchObject({ status: 404, via: 'none', hops: 0 });
     expect(resolveUrl('/el/rules', cfg, built)).toMatchObject({ status: 404 });
+  });
+
+  it('matches case-sensitively, as Vercel does', () => {
+    expect(compileSource('/:locale(en|el)/glossary')('/EN/glossary')).toBeNull();
+    expect(resolveUrl('/en/glossary', cfg, built)).toMatchObject({ final: '/en/faq', hops: 1 });
+    // Not redirected; the rewrite's (?!en/) lookahead is case-sensitive too, so it gets the shell.
+    expect(resolveUrl('/EN/glossary', cfg, built)).toEqual({ final: '/EN/glossary', hops: 0, status: 200, via: 'rewrite' });
+  });
+
+  it('throws on conditions it does not emulate (non-header `has`, any `missing`)', () => {
+    const withRedirect = (r: VercelConfig['redirects']) => ({ ...cfg, redirects: [...r!, ...cfg.redirects!] });
+    const query = withRedirect([{ source: '/q', has: [{ type: 'query', key: 'x' }], destination: '/en', permanent: true }]);
+    expect(() => resolveUrl('/en/faq', query, built)).toThrow(/Unsupported `has` type "query"/);
+    const cookie = withRedirect([{ source: '/c', has: [{ type: 'cookie', key: 'k' }], destination: '/en', permanent: true }]);
+    expect(() => resolveUrl('/en/faq', cookie, built)).toThrow(/Unsupported `has` type "cookie"/);
+    const missing = withRedirect([
+      { source: '/m', missing: [{ type: 'header', key: 'accept-language' }], destination: '/en', permanent: true },
+    ]);
+    expect(() => resolveUrl('/en/faq', missing, built)).toThrow(/Unsupported `missing`/);
+    const rw: VercelConfig = { ...cfg, rewrites: [{ source: '/(.*)', destination: '/', missing: [{ type: 'host', key: 'h' }] }] };
+    expect(() => resolveUrl('/en/faq', rw, built)).toThrow(/Unsupported `missing`/);
   });
 
   it('throws on a redirect loop', () => {

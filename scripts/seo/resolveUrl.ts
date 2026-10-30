@@ -6,10 +6,18 @@
 //
 // Only the subset of path-to-regexp that vercel.json uses is supported:
 // literals, `:name`, `:name(regex)`, unnamed `(regex)`, and the `*`, `+`, `?`
-// modifiers (a preceding `/` becomes part of an optional param).
+// modifiers (a preceding `/` becomes part of an optional param). Matching is
+// case-sensitive, as on Vercel. Conditions other than `has` of type header
+// (other `has` types, any `missing`) throw rather than being emulated wrongly.
 
 export type VercelHas = { type: string; key: string; value?: string };
-export type VercelRoute = { source: string; destination: string; permanent?: boolean; has?: VercelHas[] };
+export type VercelRoute = {
+  source: string;
+  destination: string;
+  permanent?: boolean;
+  has?: VercelHas[];
+  missing?: VercelHas[];
+};
 export type VercelConfig = {
   cleanUrls?: boolean;
   trailingSlash?: boolean;
@@ -89,7 +97,7 @@ export function compileSource(source: string): Matcher {
     const body = `(?:${pattern})${repeat}`;
     re += mod === '+' ? `${escapeRe(prefix)}(${body})` : `(?:${escapeRe(prefix)}(${body}))?`;
   }
-  const rx = new RegExp(`^${re}$`, 'i');
+  const rx = new RegExp(`^${re}$`);
   return (path) => {
     const m = rx.exec(path);
     if (!m) return null;
@@ -97,9 +105,16 @@ export function compileSource(source: string): Matcher {
   };
 }
 
+/** Reject route conditions this emulation does not model. */
+function assertSupported(r: VercelRoute): void {
+  if (r.missing !== undefined) throw new Error(`Unsupported \`missing\` condition on route ${r.source}`);
+  for (const h of r.has ?? []) {
+    if (h.type !== 'header') throw new Error(`Unsupported \`has\` type "${h.type}" on route ${r.source}`);
+  }
+}
+
 function hasMatches(has: VercelHas[] | undefined, headers: Record<string, string>): boolean {
   return (has ?? []).every((h) => {
-    if (h.type !== 'header') return false;
     const v = headers[h.key.toLowerCase()];
     if (v === undefined) return false;
     return h.value === undefined || new RegExp(`^${h.value}$`).test(v);
@@ -120,6 +135,7 @@ export function resolveUrl(
 ): Resolution {
   const headers: Record<string, string> = {};
   if (opts.acceptLanguage !== undefined) headers['accept-language'] = opts.acceptLanguage;
+  for (const r of [...(vercel.redirects ?? []), ...(vercel.rewrites ?? [])]) assertSupported(r);
   const redirects = (vercel.redirects ?? []).map((r) => ({ r, match: compileSource(r.source) }));
   const rewrites = (vercel.rewrites ?? []).map((r) => ({ r, match: compileSource(r.source) }));
   const seen = new Set<string>();

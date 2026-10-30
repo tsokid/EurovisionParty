@@ -130,16 +130,33 @@ describe.skipIf(!hasDist)('every historical URL resolves to a built page', () =>
     );
   });
 
-  it('unprefixed old slugs redirect straight to /en/<new> (not via the SPA shell)', () => {
+  it('unprefixed Greek-word slugs redirect straight to /el/<new>, whatever the browser language', () => {
+    const greek: Array<[string, string]> = [
+      ['/eurovision-ellada', '/el/countries/greece'],
+      ['/eurovision-kypros', '/el/countries/cyprus'],
+      ['/eurovision-2026-elliniko-tragoudi', '/el/countries/greece'],
+      ['/eurovision-2026-programma', '/el/eurovision-2026/schedule'],
+    ];
+    for (const [from, to] of greek) {
+      for (const acceptLanguage of [undefined, 'en-US,en;q=0.9', 'el-GR']) {
+        expect(resolveUrl(from, vercel, built, { acceptLanguage }), `${from} ${acceptLanguage}`).toEqual({
+          final: to,
+          hops: 1,
+          status: 200,
+          via: 'file',
+        });
+      }
+      const r = (vercel.redirects ?? []).find((x) => x.source === from);
+      expect(r?.has, from).toBeUndefined();
+    }
+  });
+
+  it('other unprefixed old slugs redirect straight to /en/<new> (not via the SPA shell)', () => {
     const olds = [
       'eurovision-2026-schedule',
       'eurovision-2026-semifinals',
       'eurovision-2026-songs',
       'eurovision-history',
-      'eurovision-ellada',
-      'eurovision-kypros',
-      'eurovision-2026-elliniko-tragoudi',
-      'eurovision-2026-programma',
       'eurovision-bingo',
       'eurovision-drinking-game',
       'eurovision-sweepstake',

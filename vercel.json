@@ -142,22 +142,22 @@
     },
     {
       "source": "/eurovision-ellada",
-      "destination": "/en/countries/greece",
+      "destination": "/el/countries/greece",
       "permanent": true
     },
     {
       "source": "/eurovision-kypros",
-      "destination": "/en/countries/cyprus",
+      "destination": "/el/countries/cyprus",
       "permanent": true
     },
     {
       "source": "/eurovision-2026-elliniko-tragoudi",
-      "destination": "/en/countries/greece",
+      "destination": "/el/countries/greece",
       "permanent": true
     },
     {
       "source": "/eurovision-2026-programma",
-      "destination": "/en/eurovision-2026/schedule",
+      "destination": "/el/eurovision-2026/schedule",
       "permanent": true
     },
     {
