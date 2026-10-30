@@ -82,11 +82,10 @@ describe('commitFiles', () => {
     }
   });
 
-  it('creates blobs, a tree on base_tree with only the changed paths, a commit and a fast-forward ref update, in order', async () => {
+  it('creates one tree on base_tree with the changed files inline (no blob requests), a commit and a fast-forward ref update, in order (M3)', async () => {
     const base = { 'content/site.json': '{}\n', 'content/contests/2026.json': 'old\n', 'vercel.json': 'v\n' };
     const routes = await baseRoutes(base);
     routes.push(
-      { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
       { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
       { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
       { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, body: { object: { sha: 'commit1' } } },
@@ -100,29 +99,24 @@ describe('commitFiles', () => {
       `GET /repos/${REPO}/git/ref/heads/main`,
       `GET /repos/${REPO}/git/commits/c0ffee`,
       `GET /repos/${REPO}/git/trees/tree0?recursive=1`,
-      `POST /repos/${REPO}/git/blobs`,
-      `POST /repos/${REPO}/git/blobs`,
       `POST /repos/${REPO}/git/trees`,
       `POST /repos/${REPO}/git/commits`,
       `PATCH /repos/${REPO}/git/refs/heads/main`,
     ]);
-    expect(calls[3].body).toEqual({ content: 'new\n', encoding: 'utf-8' });
-    expect(calls[4].body).toEqual({ content: 'gr\n', encoding: 'utf-8' });
-    expect(calls[5].body).toEqual({
+    expect(calls[3].body).toEqual({
       base_tree: 'tree0',
       tree: [
-        { path: 'content/contests/2026.json', mode: '100644', type: 'blob', sha: 'blob1' },
-        { path: 'content/countries/gr.json', mode: '100644', type: 'blob', sha: 'blob1' },
+        { path: 'content/contests/2026.json', mode: '100644', type: 'blob', content: 'new\n' },
+        { path: 'content/countries/gr.json', mode: '100644', type: 'blob', content: 'gr\n' },
       ],
     });
-    expect(calls[6].body).toEqual({ message: 'content: publish 2026', tree: 'tree1', parents: ['c0ffee'] });
-    expect(calls[7].body).toEqual({ sha: 'commit1', force: false });
+    expect(calls[4].body).toEqual({ message: 'content: publish 2026', tree: 'tree1', parents: ['c0ffee'] });
+    expect(calls[5].body).toEqual({ sha: 'commit1', force: false });
   });
 
   it('builds the message from the changed paths when given a function', async () => {
     const routes = await baseRoutes({});
     routes.push(
-      { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
       { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
       { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
       { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, body: {} },
@@ -135,7 +129,6 @@ describe('commitFiles', () => {
   it('treats a new tree equal to the base tree as no change', async () => {
     const routes = await baseRoutes({});
     routes.push(
-      { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
       { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree0' } },
     );
     const { fetch, calls } = mockFetch(routes);
@@ -146,7 +139,6 @@ describe('commitFiles', () => {
   it('throws with the status and GitHub message when the ref update is refused (422, as GitHub answers a non-fast-forward)', async () => {
     const routes = await baseRoutes({});
     routes.push(
-      { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
       { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
       { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
       { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, status: 422, body: { message: 'Update is not a fast forward' } },
@@ -176,7 +168,6 @@ describe('commitFiles', () => {
     const routes = await baseRoutes({});
     (routes[2].body as { tree: unknown[] }).tree.push({ path: 'run.sh', mode: '100755', type: 'blob', sha: 'x' });
     routes.push(
-      { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
       { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
       { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
       { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, body: {} },
@@ -201,7 +192,6 @@ describe('commitFiles', () => {
     it('derives a file from its content in the parent commit tree and commits the result', async () => {
       const routes = await routesWithVercel();
       routes.push(
-        { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blob1' } },
         { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
         { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
         { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, body: {} },
@@ -217,7 +207,11 @@ describe('commitFiles', () => {
       // The blob read comes after the parent's tree, so it is that commit's content.
       const urls = calls.map((c) => `${c.method} ${c.url.slice(API.length)}`);
       expect(urls.indexOf(`GET /repos/${REPO}/git/blobs/${await gitBlobSha(base)}`)).toBe(3);
-      expect(calls.find((c) => c.method === 'POST' && c.url.endsWith('/git/blobs'))!.body).toEqual({ content: base + 'x\n', encoding: 'utf-8' });
+      expect(calls.find((c) => c.method === 'POST' && c.url.endsWith('/git/trees'))!.body).toEqual({
+        base_tree: 'tree0',
+        tree: [{ path: 'vercel.json', mode: '100644', type: 'blob', content: base + 'x\n' }],
+      });
+      expect(calls.some((c) => c.url.endsWith('/git/blobs'))).toBe(false);
       expect(calls.find((c) => c.method === 'POST' && c.url.endsWith('/git/commits'))!.body).toMatchObject({ parents: ['c0ffee'] });
     });
 

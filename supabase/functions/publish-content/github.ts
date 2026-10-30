@@ -118,11 +118,9 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   }
   if (changed.length === 0) return { sha: null, changed: 0, paths: [] };
 
-  const entries: TreeEntry[] = [];
-  for (const f of changed) {
-    const blob = await call<{ sha: string }>('POST', `${repo}/git/blobs`, { content: f.content, encoding: 'utf-8' });
-    entries.push({ path: f.path, mode: f.mode, type: 'blob', sha: blob.sha });
-  }
+  // File text goes inline in the tree entries: GitHub creates the blobs, so
+  // the whole commit is one tree request however many files changed.
+  const entries = changed.map((f) => ({ path: f.path, mode: f.mode, type: 'blob', content: f.content }));
   const newTree = await call<{ sha: string }>('POST', `${repo}/git/trees`, { base_tree: baseTree, tree: entries });
   // An identical tree means there is nothing to commit.
   if (newTree.sha === baseTree) return { sha: null, changed: 0, paths: [] };
