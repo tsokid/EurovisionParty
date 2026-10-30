@@ -1,7 +1,7 @@
 // supabase/functions/eurovision-parse/parseResults.ts
 // Extracts the grand-final scoreboard from the eurovision.com page.
 //
-// Output shape matches the columns of public.eurovision_2026_results:
+// Output shape matches the columns of public.contest_entries (result columns):
 //   iso, ranking, total_points, jury_points, televote_points, source
 //
 // The scoreboard markup on eurovision.com is HTML-fragile. We support three

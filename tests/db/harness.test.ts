@@ -32,8 +32,8 @@ describe('PGlite migration harness', () => {
   });
 
   it('applies every migration', async () => {
-    // 069 is the last migration; its revoke ran only if everything before it did.
-    expect(await tableExists(db, 'eurovision_2026_participants')).toBe(true);
+    // 072 is the last migration; it ran only if everything before it did.
+    expect(await tableExists(db, 'contest_entries')).toBe(true);
     expect(await functionExists(db, 'compute_winners')).toBe(true);
   });
 
