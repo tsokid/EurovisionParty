@@ -1,0 +1,221 @@
+{
+  "iso": "RS",
+  "name_el": "Σερβία",
+  "name_en": "Serbia",
+  "participations": [
+    {
+      "artist": "Marija Šerifović",
+      "city_slug": "helsinki",
+      "final_place": 1,
+      "points": 268,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 1,
+      "song": "Molitva",
+      "year": 2007
+    },
+    {
+      "artist": "Jelena Tomašević feat. Bora Dugić",
+      "city_slug": "belgrade",
+      "final_place": 6,
+      "points": 160,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Oro",
+      "year": 2008
+    },
+    {
+      "artist": "Marko Kon and Milaan",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Cipela",
+      "year": 2009
+    },
+    {
+      "artist": "Milan Stanković",
+      "city_slug": "oslo",
+      "final_place": 13,
+      "points": 72,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 5,
+      "song": "Ovo je Balkan",
+      "year": 2010
+    },
+    {
+      "artist": "Nina",
+      "city_slug": "dusseldorf",
+      "final_place": 14,
+      "points": 85,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Čaroban",
+      "year": 2011
+    },
+    {
+      "artist": "Željko Joksimović",
+      "city_slug": "baku",
+      "final_place": 3,
+      "points": 214,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 2,
+      "song": "Nije ljubav stvar",
+      "year": 2012
+    },
+    {
+      "artist": "Moje 3",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 11,
+      "song": "Ljubav je svuda",
+      "year": 2013
+    },
+    {
+      "artist": "Bojana Stamenov",
+      "city_slug": "vienna",
+      "final_place": 10,
+      "points": 53,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 9,
+      "song": "Beauty Never Lies",
+      "year": 2015
+    },
+    {
+      "artist": "Sanja Vučić Zaa",
+      "city_slug": "stockholm",
+      "final_place": 18,
+      "points": 115,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Goodbye (Shelter)",
+      "year": 2016
+    },
+    {
+      "artist": "Tijana Bogićević",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 11,
+      "song": "In Too Deep",
+      "year": 2017
+    },
+    {
+      "artist": "Sanja Ilić and Balkanika",
+      "city_slug": "lisbon",
+      "final_place": 19,
+      "points": 113,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Nova deca",
+      "year": 2018
+    },
+    {
+      "artist": "Nevena Božović",
+      "city_slug": "tel-aviv",
+      "final_place": 18,
+      "points": 89,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 7,
+      "song": "Kruna",
+      "year": 2019
+    },
+    {
+      "artist": "Hurricane",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Hasta la vista",
+      "year": 2020
+    },
+    {
+      "artist": "Hurricane",
+      "city_slug": "rotterdam",
+      "final_place": 15,
+      "points": 102,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 8,
+      "song": "Loco loco",
+      "year": 2021
+    },
+    {
+      "artist": "Konstrakta",
+      "city_slug": "turin",
+      "final_place": 5,
+      "points": 312,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 3,
+      "song": "In corpore sano",
+      "year": 2022
+    },
+    {
+      "artist": "Luke Black",
+      "city_slug": "liverpool",
+      "final_place": 24,
+      "points": 30,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Samo mi se spava",
+      "year": 2023
+    },
+    {
+      "artist": "Teya Dora",
+      "city_slug": "malmo",
+      "final_place": 17,
+      "points": 54,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Ramonda",
+      "year": 2024
+    },
+    {
+      "artist": "Princ",
+      "city_slug": "basel",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 14,
+      "song": "Mila",
+      "year": 2025
+    },
+    {
+      "artist": "Lavina",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Kraj mene",
+      "year": 2026
+    }
+  ],
+  "related_iso": [
+    "YU",
+    "CS"
+  ],
+  "slug": "serbia"
+}

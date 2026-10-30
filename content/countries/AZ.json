@@ -1,0 +1,218 @@
+{
+  "iso": "AZ",
+  "name_el": "Αζερμπαϊτζάν",
+  "name_en": "Azerbaijan",
+  "participations": [
+    {
+      "artist": "Elnur and Samir",
+      "city_slug": "belgrade",
+      "final_place": 8,
+      "points": 132,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 6,
+      "song": "Day After Day",
+      "year": 2008
+    },
+    {
+      "artist": "Aysel and Arash",
+      "city_slug": "moscow",
+      "final_place": 3,
+      "points": 207,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 2,
+      "song": "Always",
+      "year": 2009
+    },
+    {
+      "artist": "Safura",
+      "city_slug": "oslo",
+      "final_place": 5,
+      "points": 145,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 2,
+      "song": "Drip Drop",
+      "year": 2010
+    },
+    {
+      "artist": "Ell and Nikki",
+      "city_slug": "dusseldorf",
+      "final_place": 1,
+      "points": 221,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Running Scared",
+      "year": 2011
+    },
+    {
+      "artist": "Sabina Babayeva",
+      "city_slug": "baku",
+      "final_place": 4,
+      "points": 150,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "When the Music Dies",
+      "year": 2012
+    },
+    {
+      "artist": "Farid Mammadov",
+      "city_slug": "malmo",
+      "final_place": 2,
+      "points": 234,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 1,
+      "song": "Hold Me",
+      "year": 2013
+    },
+    {
+      "artist": "Dilara Kazimova",
+      "city_slug": "copenhagen",
+      "final_place": 22,
+      "points": 33,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 9,
+      "song": "Start a Fire",
+      "year": 2014
+    },
+    {
+      "artist": "Elnur Hüseynov",
+      "city_slug": "vienna",
+      "final_place": 12,
+      "points": 49,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Hour of the Wolf",
+      "year": 2015
+    },
+    {
+      "artist": "Samra",
+      "city_slug": "stockholm",
+      "final_place": 17,
+      "points": 117,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 6,
+      "song": "Miracle",
+      "year": 2016
+    },
+    {
+      "artist": "Dihaj",
+      "city_slug": "kyiv",
+      "final_place": 14,
+      "points": 120,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Skeletons",
+      "year": 2017
+    },
+    {
+      "artist": "Aisel",
+      "city_slug": "lisbon",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 11,
+      "song": "X My Heart",
+      "year": 2018
+    },
+    {
+      "artist": "Chingiz",
+      "city_slug": "tel-aviv",
+      "final_place": 8,
+      "points": 302,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 5,
+      "song": "Truth",
+      "year": 2019
+    },
+    {
+      "artist": "Efendi",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Cleopatra",
+      "year": 2020
+    },
+    {
+      "artist": "Efendi",
+      "city_slug": "rotterdam",
+      "final_place": 20,
+      "points": 65,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Mata Hari",
+      "year": 2021
+    },
+    {
+      "artist": "Nadir Rustamli",
+      "city_slug": "turin",
+      "final_place": 16,
+      "points": 106,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Fade to Black",
+      "year": 2022
+    },
+    {
+      "artist": "TuralTuranX",
+      "city_slug": "liverpool",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 14,
+      "song": "Tell Me More",
+      "year": 2023
+    },
+    {
+      "artist": "Fahree feat. Ilkin Dovlatov",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 14,
+      "song": "Özünlə apar",
+      "year": 2024
+    },
+    {
+      "artist": "Mamagama",
+      "city_slug": "basel",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "Run with U",
+      "year": 2025
+    },
+    {
+      "artist": "Jiva",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Just Go",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "azerbaijan"
+}

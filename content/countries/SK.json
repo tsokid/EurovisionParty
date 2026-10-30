@@ -1,0 +1,86 @@
+{
+  "iso": "SK",
+  "name_el": "Σλοβακία",
+  "name_en": "Slovakia",
+  "participations": [
+    {
+      "artist": "Martin Ďurinda and Tublatanka",
+      "city_slug": "dublin",
+      "final_place": 19,
+      "points": 15,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Nekonečná pieseň",
+      "year": 1994
+    },
+    {
+      "artist": "Marcel Palonder",
+      "city_slug": "oslo",
+      "final_place": 18,
+      "points": 19,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Kým nás máš",
+      "year": 1996
+    },
+    {
+      "artist": "Katarína Hasprová",
+      "city_slug": "birmingham",
+      "final_place": 21,
+      "points": 8,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Modlitba",
+      "year": 1998
+    },
+    {
+      "artist": "Kamil Mikulčík and Nela Pocisková",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 18,
+      "song": "Leť tmou",
+      "year": 2009
+    },
+    {
+      "artist": "Kristína",
+      "city_slug": "oslo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Horehronie",
+      "year": 2010
+    },
+    {
+      "artist": "Twiins",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 13,
+      "song": "I'm Still Alive",
+      "year": 2011
+    },
+    {
+      "artist": "Max Jason Mai",
+      "city_slug": "baku",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 18,
+      "song": "Don't Close Your Eyes",
+      "year": 2012
+    }
+  ],
+  "related_iso": [],
+  "slug": "slovakia"
+}

@@ -1,0 +1,75 @@
+{
+  "iso": "AD",
+  "name_el": "Ανδόρα",
+  "name_en": "Andorra",
+  "participations": [
+    {
+      "artist": "Marta Roure",
+      "city_slug": "istanbul",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 18,
+      "song": "Jugarem a estimar-nos",
+      "year": 2004
+    },
+    {
+      "artist": "Marian van de Wal",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 23,
+      "song": "La mirada interior",
+      "year": 2005
+    },
+    {
+      "artist": "Jenny",
+      "city_slug": "athens",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 23,
+      "song": "Sense tu",
+      "year": 2006
+    },
+    {
+      "artist": "Anonymous",
+      "city_slug": "helsinki",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 12,
+      "song": "Salvem el món",
+      "year": 2007
+    },
+    {
+      "artist": "Gisela",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Casanova",
+      "year": 2008
+    },
+    {
+      "artist": "Susanne Georgi",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "La teva decisió (Get a Life)",
+      "year": 2009
+    }
+  ],
+  "related_iso": [],
+  "slug": "andorra"
+}

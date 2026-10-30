@@ -1,0 +1,20 @@
+{
+  "iso": "MA",
+  "name_el": "Μαρόκο",
+  "name_en": "Morocco",
+  "participations": [
+    {
+      "artist": "Samira Bensaïd",
+      "city_slug": "the-hague",
+      "final_place": 18,
+      "points": 7,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Bitakat Hob",
+      "year": 1980
+    }
+  ],
+  "related_iso": [],
+  "slug": "morocco"
+}

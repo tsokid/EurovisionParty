@@ -1,0 +1,218 @@
+{
+  "iso": "GE",
+  "name_el": "Γεωργία",
+  "name_en": "Georgia",
+  "participations": [
+    {
+      "artist": "Sopho",
+      "city_slug": "helsinki",
+      "final_place": 12,
+      "points": 97,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Visionary Dream",
+      "year": 2007
+    },
+    {
+      "artist": "Diana Gurtskaya",
+      "city_slug": "belgrade",
+      "final_place": 11,
+      "points": 83,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 5,
+      "song": "Peace Will Come",
+      "year": 2008
+    },
+    {
+      "artist": "Sofia Nizharadze",
+      "city_slug": "oslo",
+      "final_place": 9,
+      "points": 136,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 3,
+      "song": "Shine",
+      "year": 2010
+    },
+    {
+      "artist": "Eldrine",
+      "city_slug": "dusseldorf",
+      "final_place": 9,
+      "points": 110,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 6,
+      "song": "One More Day",
+      "year": 2011
+    },
+    {
+      "artist": "Anri Jokhadze",
+      "city_slug": "baku",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 14,
+      "song": "I'm a Joker",
+      "year": 2012
+    },
+    {
+      "artist": "Nodi Tatishvili and Sophie Gelovani",
+      "city_slug": "malmo",
+      "final_place": 15,
+      "points": 50,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Waterfall",
+      "year": 2013
+    },
+    {
+      "artist": "The Shin and Mariko",
+      "city_slug": "copenhagen",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Three Minutes to Earth",
+      "year": 2014
+    },
+    {
+      "artist": "Nina Sublatti",
+      "city_slug": "vienna",
+      "final_place": 11,
+      "points": 51,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "Warrior",
+      "year": 2015
+    },
+    {
+      "artist": "Nika Kocharov and Young Georgian Lolitaz",
+      "city_slug": "stockholm",
+      "final_place": 20,
+      "points": 104,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Midnight Gold",
+      "year": 2016
+    },
+    {
+      "artist": "Tamara Gachechiladze",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 11,
+      "song": "Keep the Faith",
+      "year": 2017
+    },
+    {
+      "artist": "Ethno-Jazz Band Iriao",
+      "city_slug": "lisbon",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 18,
+      "song": "For You",
+      "year": 2018
+    },
+    {
+      "artist": "Oto Nemsadze",
+      "city_slug": "tel-aviv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 14,
+      "song": "Keep On Going",
+      "year": 2019
+    },
+    {
+      "artist": "Tornike Kipiani",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Take Me as I Am",
+      "year": 2020
+    },
+    {
+      "artist": "Tornike Kipiani",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "You",
+      "year": 2021
+    },
+    {
+      "artist": "Circus Mircus",
+      "city_slug": "turin",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 18,
+      "song": "Lock Me In",
+      "year": 2022
+    },
+    {
+      "artist": "Iru",
+      "city_slug": "liverpool",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 12,
+      "song": "Echo",
+      "year": 2023
+    },
+    {
+      "artist": "Nutsa Buzaladze",
+      "city_slug": "malmo",
+      "final_place": 21,
+      "points": 34,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 8,
+      "song": "Firefighter",
+      "year": 2024
+    },
+    {
+      "artist": "Mariam Shengelia",
+      "city_slug": "basel",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Freedom",
+      "year": 2025
+    },
+    {
+      "artist": "Bzikebi",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "On Replay",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "georgia"
+}

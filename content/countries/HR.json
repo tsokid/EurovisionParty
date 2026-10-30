@@ -1,0 +1,363 @@
+{
+  "iso": "HR",
+  "name_el": "Κροατία",
+  "name_en": "Croatia",
+  "participations": [
+    {
+      "artist": "Put",
+      "city_slug": "millstreet",
+      "final_place": 15,
+      "points": 31,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Don't Ever Cry",
+      "year": 1993
+    },
+    {
+      "artist": "Tony Cetinski",
+      "city_slug": "dublin",
+      "final_place": 16,
+      "points": 27,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Nek' ti bude ljubav sva",
+      "year": 1994
+    },
+    {
+      "artist": "Magazin and Lidija",
+      "city_slug": "dublin",
+      "final_place": 6,
+      "points": 91,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Nostalgija",
+      "year": 1995
+    },
+    {
+      "artist": "Maja Blagdan",
+      "city_slug": "oslo",
+      "final_place": 4,
+      "points": 98,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Sveta ljubav",
+      "year": 1996
+    },
+    {
+      "artist": "E.N.I.",
+      "city_slug": "dublin",
+      "final_place": 17,
+      "points": 24,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Probudi me",
+      "year": 1997
+    },
+    {
+      "artist": "Danijela",
+      "city_slug": "birmingham",
+      "final_place": 5,
+      "points": 131,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Neka mi ne svane",
+      "year": 1998
+    },
+    {
+      "artist": "Doris",
+      "city_slug": "jerusalem",
+      "final_place": 4,
+      "points": 118,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Marija Magdalena",
+      "year": 1999
+    },
+    {
+      "artist": "Goran Karan",
+      "city_slug": "stockholm",
+      "final_place": 9,
+      "points": 70,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Kad zaspu anđeli",
+      "year": 2000
+    },
+    {
+      "artist": "Vanna",
+      "city_slug": "copenhagen",
+      "final_place": 10,
+      "points": 42,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Strings of My Heart",
+      "year": 2001
+    },
+    {
+      "artist": "Vesna Pisarović",
+      "city_slug": "tallinn",
+      "final_place": 11,
+      "points": 44,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Everything I Want",
+      "year": 2002
+    },
+    {
+      "artist": "Claudia Beni",
+      "city_slug": "riga",
+      "final_place": 15,
+      "points": 29,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Više nisam tvoja",
+      "year": 2003
+    },
+    {
+      "artist": "Ivan Mikulić",
+      "city_slug": "istanbul",
+      "final_place": 12,
+      "points": 50,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 9,
+      "song": "You Are the Only One",
+      "year": 2004
+    },
+    {
+      "artist": "Boris Novković feat. Lado members",
+      "city_slug": "kyiv",
+      "final_place": 11,
+      "points": 115,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "Vukovi umiru sami",
+      "year": 2005
+    },
+    {
+      "artist": "Severina",
+      "city_slug": "athens",
+      "final_place": 12,
+      "points": 56,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Moja štikla",
+      "year": 2006
+    },
+    {
+      "artist": "Dragonfly feat. Dado Topić",
+      "city_slug": "helsinki",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Vjerujem u ljubav",
+      "year": 2007
+    },
+    {
+      "artist": "Kraljevi ulice and 75 Cents",
+      "city_slug": "belgrade",
+      "final_place": 21,
+      "points": 44,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 4,
+      "song": "Romanca",
+      "year": 2008
+    },
+    {
+      "artist": "Igor Cukrov feat. Andrea",
+      "city_slug": "moscow",
+      "final_place": 18,
+      "points": 45,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 13,
+      "song": "Lijepa Tena",
+      "year": 2009
+    },
+    {
+      "artist": "Feminnem",
+      "city_slug": "oslo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 13,
+      "song": "Lako je sve",
+      "year": 2010
+    },
+    {
+      "artist": "Daria",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "Celebrate",
+      "year": 2011
+    },
+    {
+      "artist": "Nina Badrić",
+      "city_slug": "baku",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 12,
+      "song": "Nebo",
+      "year": 2012
+    },
+    {
+      "artist": "Klapa s Mora",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 13,
+      "song": "Mižerja",
+      "year": 2013
+    },
+    {
+      "artist": "Nina Kraljić",
+      "city_slug": "stockholm",
+      "final_place": 23,
+      "points": 73,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Lighthouse",
+      "year": 2016
+    },
+    {
+      "artist": "Jacques Houdek",
+      "city_slug": "kyiv",
+      "final_place": 13,
+      "points": 128,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 8,
+      "song": "My Friend",
+      "year": 2017
+    },
+    {
+      "artist": "Franka",
+      "city_slug": "lisbon",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 17,
+      "song": "Crazy",
+      "year": 2018
+    },
+    {
+      "artist": "Roko",
+      "city_slug": "tel-aviv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 14,
+      "song": "The Dream",
+      "year": 2019
+    },
+    {
+      "artist": "Damir Kedžo",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Divlji vjetre",
+      "year": 2020
+    },
+    {
+      "artist": "Albina",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 11,
+      "song": "Tick-Tock",
+      "year": 2021
+    },
+    {
+      "artist": "Mia Dimšić",
+      "city_slug": "turin",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 11,
+      "song": "Guilty Pleasure",
+      "year": 2022
+    },
+    {
+      "artist": "Let 3",
+      "city_slug": "liverpool",
+      "final_place": 13,
+      "points": 123,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Mama ŠČ!",
+      "year": 2023
+    },
+    {
+      "artist": "Baby Lasagna",
+      "city_slug": "malmo",
+      "final_place": 2,
+      "points": 547,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 1,
+      "song": "Rim Tim Tagi Dim",
+      "year": 2024
+    },
+    {
+      "artist": "Marko Bošnjak",
+      "city_slug": "basel",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 12,
+      "song": "Poison Cake",
+      "year": 2025
+    },
+    {
+      "artist": "Lelek",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Andromeda",
+      "year": 2026
+    }
+  ],
+  "related_iso": [
+    "YU"
+  ],
+  "slug": "croatia"
+}

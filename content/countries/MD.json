@@ -1,0 +1,240 @@
+{
+  "iso": "MD",
+  "name_el": "Μολδαβία",
+  "name_en": "Moldova",
+  "participations": [
+    {
+      "artist": "Zdob și Zdub",
+      "city_slug": "kyiv",
+      "final_place": 6,
+      "points": 148,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Boonika bate doba",
+      "year": 2005
+    },
+    {
+      "artist": "Arsenium feat. Natalia Gordienko and Connect-R",
+      "city_slug": "athens",
+      "final_place": 20,
+      "points": 22,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Loca",
+      "year": 2006
+    },
+    {
+      "artist": "Natalia Barbu",
+      "city_slug": "helsinki",
+      "final_place": 10,
+      "points": 109,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Fight",
+      "year": 2007
+    },
+    {
+      "artist": "Geta Burlacu",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 11,
+      "song": "A Century of Love",
+      "year": 2008
+    },
+    {
+      "artist": "Nelly Ciobanu",
+      "city_slug": "moscow",
+      "final_place": 14,
+      "points": 69,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 5,
+      "song": "Hora din Moldova",
+      "year": 2009
+    },
+    {
+      "artist": "SunStroke Project and Olia Tira",
+      "city_slug": "oslo",
+      "final_place": 22,
+      "points": 27,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Run Away",
+      "year": 2010
+    },
+    {
+      "artist": "Zdob și Zdub",
+      "city_slug": "dusseldorf",
+      "final_place": 12,
+      "points": 97,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "So Lucky",
+      "year": 2011
+    },
+    {
+      "artist": "Pasha Parfeny",
+      "city_slug": "baku",
+      "final_place": 11,
+      "points": 81,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 5,
+      "song": "Lăutar",
+      "year": 2012
+    },
+    {
+      "artist": "Aliona Moon",
+      "city_slug": "malmo",
+      "final_place": 11,
+      "points": 71,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "O mie",
+      "year": 2013
+    },
+    {
+      "artist": "Cristina Scarlat",
+      "city_slug": "copenhagen",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Wild Soul",
+      "year": 2014
+    },
+    {
+      "artist": "Eduard Romanyuta",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 11,
+      "song": "I Want Your Love",
+      "year": 2015
+    },
+    {
+      "artist": "Lidia Isac",
+      "city_slug": "stockholm",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 17,
+      "song": "Falling Stars",
+      "year": 2016
+    },
+    {
+      "artist": "SunStroke Project",
+      "city_slug": "kyiv",
+      "final_place": 3,
+      "points": 374,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Hey Mamma",
+      "year": 2017
+    },
+    {
+      "artist": "DoReDoS",
+      "city_slug": "lisbon",
+      "final_place": 10,
+      "points": 209,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 3,
+      "song": "My Lucky Day",
+      "year": 2018
+    },
+    {
+      "artist": "Anna Odobescu",
+      "city_slug": "tel-aviv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 12,
+      "song": "Stay",
+      "year": 2019
+    },
+    {
+      "artist": "Natalia Gordienko",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Prison",
+      "year": 2020
+    },
+    {
+      "artist": "Natalia Gordienko",
+      "city_slug": "rotterdam",
+      "final_place": 13,
+      "points": 115,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 7,
+      "song": "Sugar",
+      "year": 2021
+    },
+    {
+      "artist": "Zdob și Zdub and Advahov Brothers",
+      "city_slug": "turin",
+      "final_place": 7,
+      "points": 253,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Trenulețul",
+      "year": 2022
+    },
+    {
+      "artist": "Pasha Parfeni",
+      "city_slug": "liverpool",
+      "final_place": 18,
+      "points": 96,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 5,
+      "song": "Soarele și luna",
+      "year": 2023
+    },
+    {
+      "artist": "Natalia Barbu",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 13,
+      "song": "In the Middle",
+      "year": 2024
+    },
+    {
+      "artist": "Satoshi",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Viva, Moldova!",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "moldova"
+}

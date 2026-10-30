@@ -1,0 +1,273 @@
+{
+  "iso": "MC",
+  "name_el": "Μονακό",
+  "name_en": "Monaco",
+  "participations": [
+    {
+      "artist": "Jacques Pills",
+      "city_slug": "cannes",
+      "final_place": 11,
+      "points": 1,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Mon ami Pierrot",
+      "year": 1959
+    },
+    {
+      "artist": "François Deguelt",
+      "city_slug": "london",
+      "final_place": 3,
+      "points": 15,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Ce soir-là",
+      "year": 1960
+    },
+    {
+      "artist": "Colette Deréal",
+      "city_slug": "cannes",
+      "final_place": 10,
+      "points": 6,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Allons, allons les enfants",
+      "year": 1961
+    },
+    {
+      "artist": "François Deguelt",
+      "city_slug": "luxembourg-city",
+      "final_place": 2,
+      "points": 13,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Dis rien",
+      "year": 1962
+    },
+    {
+      "artist": "Françoise Hardy",
+      "city_slug": "london",
+      "final_place": 5,
+      "points": 25,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "L'amour s'en va",
+      "year": 1963
+    },
+    {
+      "artist": "Romuald",
+      "city_slug": "copenhagen",
+      "final_place": 3,
+      "points": 15,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Où sont-elles passées ?",
+      "year": 1964
+    },
+    {
+      "artist": "Marjorie Noël",
+      "city_slug": "naples",
+      "final_place": 9,
+      "points": 7,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Va dire à l'amour",
+      "year": 1965
+    },
+    {
+      "artist": "Téréza",
+      "city_slug": "luxembourg-city",
+      "final_place": 17,
+      "points": 0,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Bien plus fort",
+      "year": 1966
+    },
+    {
+      "artist": "Minouche Barelli",
+      "city_slug": "vienna",
+      "final_place": 5,
+      "points": 10,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Boum-Badaboum",
+      "year": 1967
+    },
+    {
+      "artist": "Line and Willy",
+      "city_slug": "london",
+      "final_place": 7,
+      "points": 8,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "À chacun sa chanson",
+      "year": 1968
+    },
+    {
+      "artist": "Jean-Jacques",
+      "city_slug": "madrid",
+      "final_place": 6,
+      "points": 11,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Maman, Maman",
+      "year": 1969
+    },
+    {
+      "artist": "Dominique Dussault",
+      "city_slug": "amsterdam",
+      "final_place": 8,
+      "points": 5,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Marlène",
+      "year": 1970
+    },
+    {
+      "artist": "Séverine",
+      "city_slug": "dublin",
+      "final_place": 1,
+      "points": 128,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Un banc, un arbre, une rue",
+      "year": 1971
+    },
+    {
+      "artist": "Anne-Marie Godart and Peter MacLane",
+      "city_slug": "edinburgh",
+      "final_place": 16,
+      "points": 65,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Comme on s'aime",
+      "year": 1972
+    },
+    {
+      "artist": "Marie",
+      "city_slug": "luxembourg-city",
+      "final_place": 8,
+      "points": 85,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Un train qui part",
+      "year": 1973
+    },
+    {
+      "artist": "Romuald",
+      "city_slug": "brighton",
+      "final_place": 4,
+      "points": 14,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Celui qui reste et celui qui s'en va",
+      "year": 1974
+    },
+    {
+      "artist": "Sophie",
+      "city_slug": "stockholm",
+      "final_place": 13,
+      "points": 22,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Une chanson c'est une lettre",
+      "year": 1975
+    },
+    {
+      "artist": "Mary Christy",
+      "city_slug": "the-hague",
+      "final_place": 3,
+      "points": 93,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Toi, la musique et moi",
+      "year": 1976
+    },
+    {
+      "artist": "Michèle Torr",
+      "city_slug": "london",
+      "final_place": 4,
+      "points": 96,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Une petite française",
+      "year": 1977
+    },
+    {
+      "artist": "Caline and Olivier Toussaint",
+      "city_slug": "paris",
+      "final_place": 4,
+      "points": 107,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Les Jardins de Monaco",
+      "year": 1978
+    },
+    {
+      "artist": "Laurent Vaguener",
+      "city_slug": "jerusalem",
+      "final_place": 16,
+      "points": 12,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Notre vie c'est la musique",
+      "year": 1979
+    },
+    {
+      "artist": "Maryon",
+      "city_slug": "istanbul",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 19,
+      "song": "Notre planète",
+      "year": 2004
+    },
+    {
+      "artist": "Lise Darly",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 24,
+      "song": "Tout de moi",
+      "year": 2005
+    },
+    {
+      "artist": "Séverine Ferrer",
+      "city_slug": "athens",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 21,
+      "song": "La Coco-Dance",
+      "year": 2006
+    }
+  ],
+  "related_iso": [],
+  "slug": "monaco"
+}

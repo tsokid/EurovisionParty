@@ -1,0 +1,196 @@
+{
+  "iso": "SM",
+  "name_el": "Άγιος Μαρίνος",
+  "name_en": "San Marino",
+  "participations": [
+    {
+      "artist": "Miodio",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 19,
+      "song": "Complice",
+      "year": 2008
+    },
+    {
+      "artist": "Senit",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Stand By",
+      "year": 2011
+    },
+    {
+      "artist": "Valentina Monetta",
+      "city_slug": "baku",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 14,
+      "song": "The Social Network Song (Oh Oh – Uh – Oh Oh)",
+      "year": 2012
+    },
+    {
+      "artist": "Valentina Monetta",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 11,
+      "song": "Crisalide (Vola)",
+      "year": 2013
+    },
+    {
+      "artist": "Valentina Monetta",
+      "city_slug": "copenhagen",
+      "final_place": 24,
+      "points": 14,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Maybe",
+      "year": 2014
+    },
+    {
+      "artist": "Anita Simoncini and Michele Perniola",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "Chain of Lights",
+      "year": 2015
+    },
+    {
+      "artist": "Serhat",
+      "city_slug": "stockholm",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 12,
+      "song": "I Didn't Know",
+      "year": 2016
+    },
+    {
+      "artist": "Valentina Monetta and Jimmie Wilson",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 18,
+      "song": "Spirit of the Night",
+      "year": 2017
+    },
+    {
+      "artist": "Jessika feat. Jenifer Brening",
+      "city_slug": "lisbon",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 17,
+      "song": "Who We Are",
+      "year": 2018
+    },
+    {
+      "artist": "Serhat",
+      "city_slug": "tel-aviv",
+      "final_place": 19,
+      "points": 77,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Say Na Na Na",
+      "year": 2019
+    },
+    {
+      "artist": "Senhit",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Freaky!",
+      "year": 2020
+    },
+    {
+      "artist": "Senhit",
+      "city_slug": "rotterdam",
+      "final_place": 22,
+      "points": 50,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Adrenalina",
+      "year": 2021
+    },
+    {
+      "artist": "Achille Lauro",
+      "city_slug": "turin",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 14,
+      "song": "Stripper",
+      "year": 2022
+    },
+    {
+      "artist": "Piqued Jacks",
+      "city_slug": "liverpool",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "Like an Animal",
+      "year": 2023
+    },
+    {
+      "artist": "Megara",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 14,
+      "song": "11:11",
+      "year": 2024
+    },
+    {
+      "artist": "Gabry Ponte",
+      "city_slug": "basel",
+      "final_place": 26,
+      "points": 27,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Tutta l'Italia",
+      "year": 2025
+    },
+    {
+      "artist": "Senhit",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Superstar",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "san-marino"
+}

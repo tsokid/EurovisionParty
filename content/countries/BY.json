@@ -1,0 +1,196 @@
+{
+  "iso": "BY",
+  "name_el": "Λευκορωσία",
+  "name_en": "Belarus",
+  "participations": [
+    {
+      "artist": "Aleksandra and Konstantin",
+      "city_slug": "istanbul",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 19,
+      "song": "My Galileo",
+      "year": 2004
+    },
+    {
+      "artist": "Angelica Agurbash",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 13,
+      "song": "Love Me Tonight",
+      "year": 2005
+    },
+    {
+      "artist": "Polina Smolova",
+      "city_slug": "athens",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 22,
+      "song": "Mum",
+      "year": 2006
+    },
+    {
+      "artist": "Koldun",
+      "city_slug": "helsinki",
+      "final_place": 6,
+      "points": 145,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "Work Your Magic",
+      "year": 2007
+    },
+    {
+      "artist": "Ruslan Alehno",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 17,
+      "song": "Hasta la vista",
+      "year": 2008
+    },
+    {
+      "artist": "Petr Elfimov",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 13,
+      "song": "Eyes That Never Lie",
+      "year": 2009
+    },
+    {
+      "artist": "3+2 feat. Robert Wells",
+      "city_slug": "oslo",
+      "final_place": 24,
+      "points": 18,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 9,
+      "song": "Butterflies",
+      "year": 2010
+    },
+    {
+      "artist": "Anastasia Vinnikova",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 14,
+      "song": "I Love Belarus",
+      "year": 2011
+    },
+    {
+      "artist": "Litesound",
+      "city_slug": "baku",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "We Are the Heroes",
+      "year": 2012
+    },
+    {
+      "artist": "Alyona Lanskaya",
+      "city_slug": "malmo",
+      "final_place": 16,
+      "points": 48,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 7,
+      "song": "Solayoh",
+      "year": 2013
+    },
+    {
+      "artist": "Teo",
+      "city_slug": "copenhagen",
+      "final_place": 16,
+      "points": 43,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 5,
+      "song": "Cheesecake",
+      "year": 2014
+    },
+    {
+      "artist": "Uzari and Maimuna",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 12,
+      "song": "Time",
+      "year": 2015
+    },
+    {
+      "artist": "Ivan",
+      "city_slug": "stockholm",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 12,
+      "song": "Help You Fly",
+      "year": 2016
+    },
+    {
+      "artist": "Naviband",
+      "city_slug": "kyiv",
+      "final_place": 17,
+      "points": 83,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Story of My Life",
+      "year": 2017
+    },
+    {
+      "artist": "Alekseev",
+      "city_slug": "lisbon",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Forever",
+      "year": 2018
+    },
+    {
+      "artist": "Zena",
+      "city_slug": "tel-aviv",
+      "final_place": 24,
+      "points": 31,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Like It",
+      "year": 2019
+    },
+    {
+      "artist": "VAL",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Da vidna",
+      "year": 2020
+    }
+  ],
+  "related_iso": [],
+  "slug": "belarus"
+}

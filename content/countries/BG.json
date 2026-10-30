@@ -1,0 +1,185 @@
+{
+  "iso": "BG",
+  "name_el": "Βουλγαρία",
+  "name_en": "Bulgaria",
+  "participations": [
+    {
+      "artist": "Kaffe",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 19,
+      "song": "Lorraine",
+      "year": 2005
+    },
+    {
+      "artist": "Mariana Popova",
+      "city_slug": "athens",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 17,
+      "song": "Let Me Cry",
+      "year": 2006
+    },
+    {
+      "artist": "Elitsa Todorova and Stoyan Yankoulov",
+      "city_slug": "helsinki",
+      "final_place": 5,
+      "points": 157,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 6,
+      "song": "Water",
+      "year": 2007
+    },
+    {
+      "artist": "Deep Zone and Balthazar",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 11,
+      "song": "DJ, Take Me Away",
+      "year": 2008
+    },
+    {
+      "artist": "Krassimir Avramov",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Illusion",
+      "year": 2009
+    },
+    {
+      "artist": "Miro",
+      "city_slug": "oslo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Angel si ti",
+      "year": 2010
+    },
+    {
+      "artist": "Poli Genova",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 12,
+      "song": "Na inat",
+      "year": 2011
+    },
+    {
+      "artist": "Sofi Marinova",
+      "city_slug": "baku",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 11,
+      "song": "Love Unlimited",
+      "year": 2012
+    },
+    {
+      "artist": "Elitsa Todorova and Stoyan Yankoulov",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 12,
+      "song": "Samo shampioni",
+      "year": 2013
+    },
+    {
+      "artist": "Poli Genova",
+      "city_slug": "stockholm",
+      "final_place": 4,
+      "points": 307,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 5,
+      "song": "If Love Was a Crime",
+      "year": 2016
+    },
+    {
+      "artist": "Kristian Kostov",
+      "city_slug": "kyiv",
+      "final_place": 2,
+      "points": 615,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 1,
+      "song": "Beautiful Mess",
+      "year": 2017
+    },
+    {
+      "artist": "Equinox",
+      "city_slug": "lisbon",
+      "final_place": 14,
+      "points": 166,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 7,
+      "song": "Bones",
+      "year": 2018
+    },
+    {
+      "artist": "Victoria",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Tears Getting Sober",
+      "year": 2020
+    },
+    {
+      "artist": "Victoria",
+      "city_slug": "rotterdam",
+      "final_place": 11,
+      "points": 170,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 3,
+      "song": "Growing Up Is Getting Old",
+      "year": 2021
+    },
+    {
+      "artist": "Intelligent Music Project",
+      "city_slug": "turin",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 16,
+      "song": "Intention",
+      "year": 2022
+    },
+    {
+      "artist": "Dara",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Bangaranga",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "bulgaria"
+}

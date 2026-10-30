@@ -1,0 +1,253 @@
+{
+  "iso": "MK",
+  "name_el": "Βόρεια Μακεδονία",
+  "name_en": "North Macedonia",
+  "participations": [
+    {
+      "artist": "Vlado Janevski",
+      "city_slug": "birmingham",
+      "final_place": 19,
+      "points": 16,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Ne zori, zoro",
+      "year": 1998
+    },
+    {
+      "artist": "XXL",
+      "city_slug": "stockholm",
+      "final_place": 15,
+      "points": 29,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "100% te ljubam",
+      "year": 2000
+    },
+    {
+      "artist": "Karolina",
+      "city_slug": "tallinn",
+      "final_place": 19,
+      "points": 25,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Od nas zavisi",
+      "year": 2002
+    },
+    {
+      "artist": "Toše Proeski",
+      "city_slug": "istanbul",
+      "final_place": 14,
+      "points": 47,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Life",
+      "year": 2004
+    },
+    {
+      "artist": "Martin Vučić",
+      "city_slug": "kyiv",
+      "final_place": 17,
+      "points": 52,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 9,
+      "song": "Make My Day",
+      "year": 2005
+    },
+    {
+      "artist": "Elena Risteska",
+      "city_slug": "athens",
+      "final_place": 12,
+      "points": 56,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Ninanajna",
+      "year": 2006
+    },
+    {
+      "artist": "Karolina",
+      "city_slug": "helsinki",
+      "final_place": 14,
+      "points": 73,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 9,
+      "song": "Mojot svet",
+      "year": 2007
+    },
+    {
+      "artist": "Tamara, Vrčak and Adrijan",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Let Me Love You",
+      "year": 2008
+    },
+    {
+      "artist": "Next Time",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Nešto što kje ostane",
+      "year": 2009
+    },
+    {
+      "artist": "Gjoko Taneski",
+      "city_slug": "oslo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "Jas ja imam silata",
+      "year": 2010
+    },
+    {
+      "artist": "Vlatko Ilievski",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "Rusinka",
+      "year": 2011
+    },
+    {
+      "artist": "Kaliopi",
+      "city_slug": "baku",
+      "final_place": 13,
+      "points": 71,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Crno i belo",
+      "year": 2012
+    },
+    {
+      "artist": "Esma and Lozano",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "Pred da se razdeni",
+      "year": 2013
+    },
+    {
+      "artist": "Tijana",
+      "city_slug": "copenhagen",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 13,
+      "song": "To the Sky",
+      "year": 2014
+    },
+    {
+      "artist": "Daniel Kajmakoski",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "Autumn Leaves",
+      "year": 2015
+    },
+    {
+      "artist": "Kaliopi",
+      "city_slug": "stockholm",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 11,
+      "song": "Dona",
+      "year": 2016
+    },
+    {
+      "artist": "Jana Burčeska",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Dance Alone",
+      "year": 2017
+    },
+    {
+      "artist": "Eye Cue",
+      "city_slug": "lisbon",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 18,
+      "song": "Lost and Found",
+      "year": 2018
+    },
+    {
+      "artist": "Tamara Todevska",
+      "city_slug": "tel-aviv",
+      "final_place": 7,
+      "points": 305,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 2,
+      "song": "Proud",
+      "year": 2019
+    },
+    {
+      "artist": "Vasil",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "You",
+      "year": 2020
+    },
+    {
+      "artist": "Vasil",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "Here I Stand",
+      "year": 2021
+    },
+    {
+      "artist": "Andrea",
+      "city_slug": "turin",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 11,
+      "song": "Circles",
+      "year": 2022
+    }
+  ],
+  "related_iso": [
+    "YU"
+  ],
+  "slug": "north-macedonia"
+}

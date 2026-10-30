@@ -1,0 +1,35 @@
+{
+  "iso": "CS",
+  "name_el": "Σερβία και Μαυροβούνιο",
+  "name_en": "Serbia and Montenegro",
+  "participations": [
+    {
+      "artist": "Željko Joksimović and Ad-Hoc Orchestra",
+      "city_slug": "istanbul",
+      "final_place": 2,
+      "points": 263,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 1,
+      "song": "Lane moje",
+      "year": 2004
+    },
+    {
+      "artist": "No Name",
+      "city_slug": "kyiv",
+      "final_place": 7,
+      "points": 137,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Zauvijek moja",
+      "year": 2005
+    }
+  ],
+  "related_iso": [
+    "YU",
+    "RS",
+    "ME"
+  ],
+  "slug": "serbia-and-montenegro"
+}

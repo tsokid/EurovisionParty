@@ -1,0 +1,196 @@
+{
+  "iso": "HU",
+  "name_el": "Ουγγαρία",
+  "name_en": "Hungary",
+  "participations": [
+    {
+      "artist": "Friderika",
+      "city_slug": "dublin",
+      "final_place": 4,
+      "points": 122,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Kinek mondjam el vétkeimet?",
+      "year": 1994
+    },
+    {
+      "artist": "Csaba Szigeti",
+      "city_slug": "dublin",
+      "final_place": 22,
+      "points": 3,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Új név egy régi ház falán",
+      "year": 1995
+    },
+    {
+      "artist": "V.I.P.",
+      "city_slug": "dublin",
+      "final_place": 12,
+      "points": 39,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Miért kell, hogy elmenj?",
+      "year": 1997
+    },
+    {
+      "artist": "Charlie",
+      "city_slug": "birmingham",
+      "final_place": 23,
+      "points": 4,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "A holnap már nem lesz szomorú",
+      "year": 1998
+    },
+    {
+      "artist": "Nox",
+      "city_slug": "kyiv",
+      "final_place": 12,
+      "points": 97,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 5,
+      "song": "Forogj, világ",
+      "year": 2005
+    },
+    {
+      "artist": "Magdi Rúzsa",
+      "city_slug": "helsinki",
+      "final_place": 9,
+      "points": 128,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Unsubstantial Blues",
+      "year": 2007
+    },
+    {
+      "artist": "Csézy",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 19,
+      "song": "Candlelight",
+      "year": 2008
+    },
+    {
+      "artist": "Zoli Ádok",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Dance with Me",
+      "year": 2009
+    },
+    {
+      "artist": "Kati Wolf",
+      "city_slug": "dusseldorf",
+      "final_place": 22,
+      "points": 53,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 7,
+      "song": "What About My Dreams?",
+      "year": 2011
+    },
+    {
+      "artist": "Compact Disco",
+      "city_slug": "baku",
+      "final_place": 24,
+      "points": 19,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "Sound of Our Hearts",
+      "year": 2012
+    },
+    {
+      "artist": "ByeAlex",
+      "city_slug": "malmo",
+      "final_place": 10,
+      "points": 84,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 8,
+      "song": "Kedvesem",
+      "year": 2013
+    },
+    {
+      "artist": "András Kállay-Saunders",
+      "city_slug": "copenhagen",
+      "final_place": 5,
+      "points": 143,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 3,
+      "song": "Running",
+      "year": 2014
+    },
+    {
+      "artist": "Boggie",
+      "city_slug": "vienna",
+      "final_place": 20,
+      "points": 19,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Wars for Nothing",
+      "year": 2015
+    },
+    {
+      "artist": "Freddie",
+      "city_slug": "stockholm",
+      "final_place": 19,
+      "points": 108,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "Pioneer",
+      "year": 2016
+    },
+    {
+      "artist": "Joci Pápai",
+      "city_slug": "kyiv",
+      "final_place": 8,
+      "points": 200,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 2,
+      "song": "Origo",
+      "year": 2017
+    },
+    {
+      "artist": "AWS",
+      "city_slug": "lisbon",
+      "final_place": 21,
+      "points": 93,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Viszlát nyár",
+      "year": 2018
+    },
+    {
+      "artist": "Joci Pápai",
+      "city_slug": "tel-aviv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 12,
+      "song": "Az én apám",
+      "year": 2019
+    }
+  ],
+  "related_iso": [],
+  "slug": "hungary"
+}

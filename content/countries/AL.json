@@ -1,0 +1,262 @@
+{
+  "iso": "AL",
+  "name_el": "Αλβανία",
+  "name_en": "Albania",
+  "participations": [
+    {
+      "artist": "Anjeza Shahini",
+      "city_slug": "istanbul",
+      "final_place": 7,
+      "points": 106,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "The Image of You",
+      "year": 2004
+    },
+    {
+      "artist": "Ledina Çelo",
+      "city_slug": "kyiv",
+      "final_place": 16,
+      "points": 53,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Tomorrow I Go",
+      "year": 2005
+    },
+    {
+      "artist": "Luiz Ejlli",
+      "city_slug": "athens",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 14,
+      "song": "Zjarr e ftohtë",
+      "year": 2006
+    },
+    {
+      "artist": "Frederik Ndoci",
+      "city_slug": "helsinki",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 17,
+      "song": "Hear My Plea",
+      "year": 2007
+    },
+    {
+      "artist": "Olta Boka",
+      "city_slug": "belgrade",
+      "final_place": 17,
+      "points": 55,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Zemrën e lamë peng",
+      "year": 2008
+    },
+    {
+      "artist": "Kejsi Tola",
+      "city_slug": "moscow",
+      "final_place": 17,
+      "points": 48,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 7,
+      "song": "Carry Me in Your Dreams",
+      "year": 2009
+    },
+    {
+      "artist": "Juliana Pasha",
+      "city_slug": "oslo",
+      "final_place": 16,
+      "points": 62,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 6,
+      "song": "It's All About You",
+      "year": 2010
+    },
+    {
+      "artist": "Aurela Gaçe",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 14,
+      "song": "Feel the Passion",
+      "year": 2011
+    },
+    {
+      "artist": "Rona Nishliu",
+      "city_slug": "baku",
+      "final_place": 5,
+      "points": 146,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Suus",
+      "year": 2012
+    },
+    {
+      "artist": "Adrian Lulgjuraj and Bledar Sejko",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Identitet",
+      "year": 2013
+    },
+    {
+      "artist": "Hersi",
+      "city_slug": "copenhagen",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "One Night's Anger",
+      "year": 2014
+    },
+    {
+      "artist": "Elhaida Dani",
+      "city_slug": "vienna",
+      "final_place": 17,
+      "points": 34,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 10,
+      "song": "I'm Alive",
+      "year": 2015
+    },
+    {
+      "artist": "Eneda Tarifa",
+      "city_slug": "stockholm",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "Fairytale",
+      "year": 2016
+    },
+    {
+      "artist": "Lindita",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 14,
+      "song": "World",
+      "year": 2017
+    },
+    {
+      "artist": "Eugent Bushpepa",
+      "city_slug": "lisbon",
+      "final_place": 11,
+      "points": 184,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 8,
+      "song": "Mall",
+      "year": 2018
+    },
+    {
+      "artist": "Jonida Maliqi",
+      "city_slug": "tel-aviv",
+      "final_place": 17,
+      "points": 90,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Ktheju tokës",
+      "year": 2019
+    },
+    {
+      "artist": "Arilena Ara",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Fall from the Sky",
+      "year": 2020
+    },
+    {
+      "artist": "Anxhela Peristeri",
+      "city_slug": "rotterdam",
+      "final_place": 21,
+      "points": 57,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Karma",
+      "year": 2021
+    },
+    {
+      "artist": "Ronela Hajati",
+      "city_slug": "turin",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 12,
+      "song": "Sekret",
+      "year": 2022
+    },
+    {
+      "artist": "Albina and Familja Kelmendi",
+      "city_slug": "liverpool",
+      "final_place": 22,
+      "points": 76,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 9,
+      "song": "Duje",
+      "year": 2023
+    },
+    {
+      "artist": "Besa",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Titan",
+      "year": 2024
+    },
+    {
+      "artist": "Shkodra Elektronike",
+      "city_slug": "basel",
+      "final_place": 8,
+      "points": 218,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Zjerm",
+      "year": 2025
+    },
+    {
+      "artist": "Alis",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 1,
+      "semi_place": null,
+      "song": "Nân",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "albania"
+}

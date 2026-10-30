@@ -1,0 +1,218 @@
+{
+  "iso": "AM",
+  "name_el": "Αρμενία",
+  "name_en": "Armenia",
+  "participations": [
+    {
+      "artist": "André",
+      "city_slug": "athens",
+      "final_place": 8,
+      "points": 129,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 6,
+      "song": "Without Your Love",
+      "year": 2006
+    },
+    {
+      "artist": "Hayko",
+      "city_slug": "helsinki",
+      "final_place": 8,
+      "points": 138,
+      "qualified": null,
+      "semi": null,
+      "semi_place": null,
+      "song": "Anytime You Need",
+      "year": 2007
+    },
+    {
+      "artist": "Sirusho",
+      "city_slug": "belgrade",
+      "final_place": 4,
+      "points": 199,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Qélé, Qélé",
+      "year": 2008
+    },
+    {
+      "artist": "Inga and Anush",
+      "city_slug": "moscow",
+      "final_place": 10,
+      "points": 92,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 5,
+      "song": "Jan Jan",
+      "year": 2009
+    },
+    {
+      "artist": "Eva Rivas",
+      "city_slug": "oslo",
+      "final_place": 7,
+      "points": 141,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 6,
+      "song": "Apricot Stone",
+      "year": 2010
+    },
+    {
+      "artist": "Emmy",
+      "city_slug": "dusseldorf",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 12,
+      "song": "Boom Boom",
+      "year": 2011
+    },
+    {
+      "artist": "Dorians",
+      "city_slug": "malmo",
+      "final_place": 18,
+      "points": 41,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 7,
+      "song": "Lonely Planet",
+      "year": 2013
+    },
+    {
+      "artist": "Aram Mp3",
+      "city_slug": "copenhagen",
+      "final_place": 4,
+      "points": 174,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "Not Alone",
+      "year": 2014
+    },
+    {
+      "artist": "Genealogy",
+      "city_slug": "vienna",
+      "final_place": 16,
+      "points": 34,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 7,
+      "song": "Face the Shadow",
+      "year": 2015
+    },
+    {
+      "artist": "Iveta Mukuchyan",
+      "city_slug": "stockholm",
+      "final_place": 7,
+      "points": 249,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "LoveWave",
+      "year": 2016
+    },
+    {
+      "artist": "Artsvik",
+      "city_slug": "kyiv",
+      "final_place": 18,
+      "points": 79,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 7,
+      "song": "Fly with Me",
+      "year": 2017
+    },
+    {
+      "artist": "Sevak Khanagyan",
+      "city_slug": "lisbon",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 15,
+      "song": "Qami",
+      "year": 2018
+    },
+    {
+      "artist": "Srbuk",
+      "city_slug": "tel-aviv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 16,
+      "song": "Walking Out",
+      "year": 2019
+    },
+    {
+      "artist": "Athena Manoukian",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Chains on You",
+      "year": 2020
+    },
+    {
+      "artist": "Rosa Linn",
+      "city_slug": "turin",
+      "final_place": 20,
+      "points": 61,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 5,
+      "song": "Snap",
+      "year": 2022
+    },
+    {
+      "artist": "Brunette",
+      "city_slug": "liverpool",
+      "final_place": 14,
+      "points": 122,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 6,
+      "song": "Future Lover",
+      "year": 2023
+    },
+    {
+      "artist": "Ladaniva",
+      "city_slug": "malmo",
+      "final_place": 8,
+      "points": 183,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 3,
+      "song": "Jako",
+      "year": 2024
+    },
+    {
+      "artist": "Parg",
+      "city_slug": "basel",
+      "final_place": 20,
+      "points": 72,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 10,
+      "song": "Survivor",
+      "year": 2025
+    },
+    {
+      "artist": "Simón",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Paloma Rumba",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "armenia"
+}

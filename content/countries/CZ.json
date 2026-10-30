@@ -1,0 +1,174 @@
+{
+  "iso": "CZ",
+  "name_el": "Τσεχία",
+  "name_en": "Czechia",
+  "participations": [
+    {
+      "artist": "Kabát",
+      "city_slug": "helsinki",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 28,
+      "song": "Malá dáma",
+      "year": 2007
+    },
+    {
+      "artist": "Tereza Kerndlová",
+      "city_slug": "belgrade",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 18,
+      "song": "Have Some Fun",
+      "year": 2008
+    },
+    {
+      "artist": "Gipsy.cz",
+      "city_slug": "moscow",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 18,
+      "song": "Aven Romale",
+      "year": 2009
+    },
+    {
+      "artist": "Marta Jandová and Václav Noid Bárta",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 13,
+      "song": "Hope Never Dies",
+      "year": 2015
+    },
+    {
+      "artist": "Gabriela Gunčíková",
+      "city_slug": "stockholm",
+      "final_place": 25,
+      "points": 41,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 9,
+      "song": "I Stand",
+      "year": 2016
+    },
+    {
+      "artist": "Martina Bárta",
+      "city_slug": "kyiv",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 1,
+      "semi_place": 13,
+      "song": "My Turn",
+      "year": 2017
+    },
+    {
+      "artist": "Mikolas Josef",
+      "city_slug": "lisbon",
+      "final_place": 6,
+      "points": 281,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 3,
+      "song": "Lie to Me",
+      "year": 2018
+    },
+    {
+      "artist": "Lake Malawi",
+      "city_slug": "tel-aviv",
+      "final_place": 11,
+      "points": 157,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 2,
+      "song": "Friend of a Friend",
+      "year": 2019
+    },
+    {
+      "artist": "Benny Cristo",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Kemama",
+      "year": 2020
+    },
+    {
+      "artist": "Benny Cristo",
+      "city_slug": "rotterdam",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 15,
+      "song": "Omaga",
+      "year": 2021
+    },
+    {
+      "artist": "We Are Domi",
+      "city_slug": "turin",
+      "final_place": 22,
+      "points": 38,
+      "qualified": true,
+      "semi": 2,
+      "semi_place": 4,
+      "song": "Lights Off",
+      "year": 2022
+    },
+    {
+      "artist": "Vesna",
+      "city_slug": "liverpool",
+      "final_place": 10,
+      "points": 129,
+      "qualified": true,
+      "semi": 1,
+      "semi_place": 4,
+      "song": "My Sister's Crown",
+      "year": 2023
+    },
+    {
+      "artist": "Aiko",
+      "city_slug": "malmo",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 11,
+      "song": "Pedestal",
+      "year": 2024
+    },
+    {
+      "artist": "Adonxs",
+      "city_slug": "basel",
+      "final_place": null,
+      "points": null,
+      "qualified": false,
+      "semi": 2,
+      "semi_place": 12,
+      "song": "Kiss Kiss Goodbye",
+      "year": 2025
+    },
+    {
+      "artist": "Daniel Zizka",
+      "city_slug": "vienna",
+      "final_place": null,
+      "points": null,
+      "qualified": null,
+      "semi": 2,
+      "semi_place": null,
+      "song": "Crossroads",
+      "year": 2026
+    }
+  ],
+  "related_iso": [],
+  "slug": "czechia"
+}
