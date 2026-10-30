@@ -9,7 +9,9 @@ import type { ContestIndex, IndexWinner } from '../../content/contests/types';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { useContent } from '../../lib/seo/useContent';
 import { absoluteUrl } from '../../lib/seo/registry';
-import { ARCHIVE_INDEX_PATH, archivePath } from '../../lib/seo/dynamicPages';
+import { ARCHIVE_INDEX_PATH, archivePath, hubPath } from '../../lib/seo/dynamicPages';
+import { useCurrentYear } from '../../lib/currentContest';
+import LocaleLink from '../../components/seo/LocaleLink';
 import type { Locale } from '../../lib/seo/locale';
 import { NotFoundPage } from '../NotFoundPage';
 import { ContentPending } from './ContentPending';
@@ -24,6 +26,7 @@ const winners = (c: IndexedContest): IndexWinner[] => (c.winner ? [c.winner, ...
 function PastContestsBody({ index, locale }: { index: ContestIndex; locale: Locale }) {
   const a = archiveCopy[locale];
   const x = a.index;
+  const liveYear = useCurrentYear();
   const contests = archivedContests(index).reverse(); // newest first
   if (contests.length === 0) return <NotFoundPage />;
   const facts = { first: contests[contests.length - 1].year, last: contests[0].year, count: contests.length };
@@ -75,6 +78,9 @@ function PastContestsBody({ index, locale }: { index: ContestIndex; locale: Loca
       />
       <PageHero crumbs={crumbs} chip={a.chip.archive} chipTone="gold" title={x.h1} lede={x.lede(facts)} />
       <ContentLayout wide>
+        <p>
+          <LocaleLink to={hubPath(liveYear)} className="text-euro-pink-light hover:underline">{x.liveLink(liveYear)} →</LocaleLink>
+        </p>
         <Section id="contests" title={x.tableTitle}>
           <DataTable {...table} />
         </Section>

@@ -30,6 +30,8 @@ interface PredictionsCopy {
       notInFinal: string;
       /** No entries known yet. */
       empty: string;
+      /** Link to the live contest's hub. */
+      hubLink: string;
     };
     format: {
       title: string;
@@ -110,6 +112,7 @@ export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, Predictions
         resultsIntro: `Eurovision ${t.year} is decided. Here is the final ranking, plus the countries out in the semi-finals, so you can check your Top 5 and Worst 5:`,
         notInFinal: 'Semi-final',
         empty: `The Eurovision ${t.year} line-up is not confirmed yet; this page lists the entries as soon as it is.`,
+        hubLink: `Everything about Eurovision ${t.year}: results, semi-finals, schedule and songs`,
       },
       format: {
         title: 'Prediction format',
@@ -232,6 +235,7 @@ export const copy = ({ en: t, el: g }: ContestTexts): Record<Locale, Predictions
         resultsIntro: `Η Eurovision ${g.year} κρίθηκε. Αυτή είναι η τελική κατάταξη, μαζί με τις χώρες που αποκλείστηκαν στους ημιτελικούς, για να ελέγξεις το Top 5 και το Worst 5 σου:`,
         notInFinal: 'Ημιτελικός',
         empty: `Οι συμμετοχές της Eurovision ${g.year} δεν έχουν επιβεβαιωθεί ακόμη· η σελίδα τις δείχνει μόλις ανακοινωθούν.`,
+        hubLink: `Όλα για τη Eurovision ${g.year}: αποτελέσματα, ημιτελικοί, πρόγραμμα και τραγούδια`,
         runningOrder:
           'Η σειρά εμφάνισης του μεγάλου τελικού οριστικοποιείται μετά τον δεύτερο ημιτελικό· η σελίδα ενημερώνεται με ζωντανές συμμετοχές μόλις επιβεβαιωθούν.',
       },

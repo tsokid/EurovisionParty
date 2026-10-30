@@ -1,8 +1,11 @@
 import LocaleLink from './LocaleLink';
 import { useTranslation } from 'react-i18next';
+import { useCurrentYear } from '../../lib/currentContest';
+import { hubPath } from '../../lib/seo/dynamicPages';
 
 export default function SiteFooter() {
   const { t } = useTranslation();
+  const year = useCurrentYear();
 
   return (
     <footer className="border-t border-white/10 mt-16 px-4 pb-10 pt-10 text-sm bg-black/30">
@@ -34,6 +37,7 @@ export default function SiteFooter() {
         <div>
           <h4 className="text-euro-gold font-bold mb-3">{t('siteFooter.eurovision')}</h4>
           <ul className="space-y-2">
+            <li><LocaleLink to={hubPath(year)} className="text-white/70 hover:text-white transition">{t('siteFooter.links.hub', { year })}</LocaleLink></li>
             <li><LocaleLink to="/past-contests" className="text-white/70 hover:text-white transition">{t('siteFooter.links.pastContests')}</LocaleLink></li>
             <li><LocaleLink to="/countries" className="text-white/70 hover:text-white transition">{t('siteFooter.links.countries')}</LocaleLink></li>
             <li><LocaleLink to="/winners" className="text-white/70 hover:text-white transition">{t('siteFooter.links.winners')}</LocaleLink></li>

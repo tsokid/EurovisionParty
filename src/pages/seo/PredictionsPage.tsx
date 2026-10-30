@@ -19,6 +19,8 @@ import { compareText } from '../../lib/seo/textSort';
 import { countryName, hubCopy } from '../contest/content/hubCopy';
 import { byCountry, countryCell, numCell, songCell } from '../contest/hub';
 import { visibleTable } from '../contest/table';
+import LocaleLink from '../../components/seo/LocaleLink';
+import { hubPath } from '../../lib/seo/dynamicPages';
 import { copy as copyFor } from './content/predictionsCopy';
 import { contestTexts } from './content/contestText';
 
@@ -39,12 +41,17 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
   const c = copyFor(contestTexts(cc))[locale].sections.lineup;
   const h = hubCopy[locale].headers;
   const file = useContent<ContestSnapshot>(contestPath(cc.year));
+  // Crawlable link to the live hub, in every state of the block.
+  const hubLink = (
+    <p><LocaleLink to={hubPath(cc.year)} className="text-euro-pink-light hover:underline">{c.hubLink} →</LocaleLink></p>
+  );
 
   if (file.status !== 'ready') {
     const retry = file.status === 'error' ? file.retry : file.status === 'missing' ? reload : undefined;
     return (
       <Section id="lineup" title={c.title}>
         <ContentPending locale={locale} retry={retry} inline />
+        {hubLink}
       </Section>
     );
   }
@@ -54,6 +61,7 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
     return (
       <Section id="lineup" title={c.title}>
         <p>{c.empty}</p>
+        {hubLink}
       </Section>
     );
   }
@@ -74,6 +82,7 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
       <Section id="lineup" title={c.resultsTitle}>
         <p>{c.resultsIntro}</p>
         <DataTable {...table} />
+        {hubLink}
       </Section>
     );
   }
@@ -90,6 +99,7 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
         ))}
       </ul>
       <p className="text-sm text-white/60">{c.runningOrder}</p>
+      {hubLink}
     </Section>
   );
 }

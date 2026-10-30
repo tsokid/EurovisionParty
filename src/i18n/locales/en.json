@@ -605,6 +605,7 @@
     "legal": "Legal",
     "eurovision": "Eurovision",
     "links": {
+      "hub": "Eurovision {{year}}",
       "pastContests": "Past contests",
       "countries": "Countries",
       "winners": "Winners",

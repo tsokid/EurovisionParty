@@ -605,6 +605,7 @@
     "legal": "Νομικά",
     "eurovision": "Eurovision",
     "links": {
+      "hub": "Eurovision {{year}}",
       "pastContests": "Προηγούμενοι διαγωνισμοί",
       "countries": "Χώρες",
       "winners": "Νικητές",
