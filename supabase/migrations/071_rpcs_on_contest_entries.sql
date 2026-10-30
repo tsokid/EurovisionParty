@@ -457,9 +457,10 @@ grant execute on function public.update_contest(int, jsonb) to authenticated;
 -- with JSON null sets the column to null (in_final, which is not null,
 -- becomes false; a new entry starts with in_final = false). A row that ends
 -- up not in_final gets final_place and the points columns nulled: results
--- belong to grand finalists only. Refused on an archived
--- year; corrections there go through Edit + Republish (sub-project
--- 2b, separate RPC).
+-- belong to grand finalists only. Allowed on every stage, archived
+-- included: that is Edit + Republish (sub-project 2b); the change goes
+-- live with the next Publish. Parser writes to finalized and archived
+-- years stay refused by the B9 guard trigger.
 create or replace function public.upsert_contest_entry(p_year int, p_iso text, p_fields jsonb)
 returns void
 language plpgsql
@@ -486,9 +487,6 @@ begin
   select stage into v_stage from public.contests where year = p_year;
   if v_stage is null then
     raise exception 'contest % not found', p_year;
-  end if;
-  if v_stage = 'archived' then
-    raise exception 'contest % is archived; use Edit + Republish', p_year;
   end if;
 
   select * into v_row from public.contest_entries
@@ -542,7 +540,7 @@ revoke execute on function public.upsert_contest_entry(int, text, jsonb) from pu
 grant execute on function public.upsert_contest_entry(int, text, jsonb) to authenticated;
 
 -- ── B4. delete_contest_entry ────────────────────────────────
--- Same archived refusal as upsert_contest_entry.
+-- Allowed on every stage, like upsert_contest_entry.
 create or replace function public.delete_contest_entry(p_year int, p_iso text)
 returns void
 language plpgsql
@@ -559,9 +557,6 @@ begin
   select stage into v_stage from public.contests where year = p_year;
   if v_stage is null then
     raise exception 'contest % not found', p_year;
-  end if;
-  if v_stage = 'archived' then
-    raise exception 'contest % is archived; use Edit + Republish', p_year;
   end if;
 
   delete from public.contest_entries where year = p_year and iso = p_iso;

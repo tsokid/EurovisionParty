@@ -147,17 +147,28 @@ describe('071 lifecycle and entry RPCs', () => {
     expect((await db.query(`select 1 from public.contest_entries where year = 2027`)).rows).toEqual([]);
   });
 
-  it('entry edits refused on archived year', async () => {
+  it('admin entry edits are allowed on an archived year (Edit + Republish)', async () => {
+    await db.query(`select public.upsert_contest_entry(2025, 'AT', '{"total_points":437}'::jsonb)`);
+    await db.query(`select public.upsert_contest_entry(2025, 'GR', '{"artist":"x"}'::jsonb)`);
+    await db.query(`select public.delete_contest_entry(2025, 'IL')`);
+    expect(await entries2025()).toEqual([
+      { iso: 'AT', final_place: 1, total_points: 437 },
+      { iso: 'GR', final_place: null, total_points: null },
+    ]);
+    expect(await stage(2025)).toBe('archived');
+  });
+
+  it('parser writes on an archived year are still refused', async () => {
     const before = await entries2025();
+    await asUser(db, null);
+    await db.exec(`set app.writer = 'parser'`);
     await expect(
-      db.query(`select public.upsert_contest_entry(2025, 'AT', '{"total_points":1}'::jsonb)`),
-    ).rejects.toThrow(/contest 2025 is archived; use Edit \+ Republish/);
-    await expect(
-      db.query(`select public.upsert_contest_entry(2025, 'GR', '{"artist":"x"}'::jsonb)`),
-    ).rejects.toThrow(/contest 2025 is archived; use Edit \+ Republish/);
-    await expect(db.query(`select public.delete_contest_entry(2025, 'AT')`)).rejects.toThrow(
-      /contest 2025 is archived; use Edit \+ Republish/,
+      db.query(`insert into public.contest_entries (year, iso, artist) values (2025, 'GR', 'p')`),
+    ).rejects.toThrow(/contest 2025 is archived; parser writes refused/);
+    await expect(db.query(`delete from public.contest_entries where year = 2025`)).rejects.toThrow(
+      /contest 2025 is archived; parser writes refused/,
     );
+    await db.exec(`reset app.writer`);
     expect(await entries2025()).toEqual(before);
   });
 

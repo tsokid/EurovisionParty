@@ -162,10 +162,27 @@ describe('074 publish_runs', () => {
     expect((await summary()).changed_years).toEqual([]);
   });
 
-  it('non-admins are forbidden from begin_publish and unpublished_summary', async () => {
+  type LastRun = { id: number; status: string; commit_sha: string | null; finished_at: string | null; error: string | null } | null;
+  const lastRun = async () => (await db.query<{ r: LastRun }>(`select public.last_publish_run() as r`)).rows[0].r;
+
+  it('last_publish_run: null before any run, then the newest run with its outcome', async () => {
+    expect(await lastRun()).toBeNull();
+    const id = await begin();
+    expect(await lastRun()).toMatchObject({ id: Number(id), status: 'running', commit_sha: null, finished_at: null });
+    await end(id, 'error', null, null, 'boom');
+    expect(await lastRun()).toMatchObject({ id: Number(id), status: 'error', error: 'boom' });
+    const id2 = await begin();
+    await end(id2, 'ok', 'deadbeefcafe', 2, null);
+    const r = await lastRun();
+    expect(r).toMatchObject({ id: Number(id2), status: 'ok', commit_sha: 'deadbeefcafe', files_changed: 2, error: null });
+    expect(r!.finished_at).not.toBeNull();
+  });
+
+  it('non-admins are forbidden from begin_publish and unpublished_summary and last_publish_run', async () => {
     await asUser(db, STRANGER);
     await expect(begin()).rejects.toThrow(/forbidden/);
     await expect(summary()).rejects.toThrow(/forbidden/);
+    await expect(lastRun()).rejects.toThrow(/forbidden/);
   });
 
   it('grants: anon cannot call the admin RPCs; authenticated cannot call the service-role ones', async () => {
@@ -177,6 +194,7 @@ describe('074 publish_runs', () => {
         if (role === 'anon') {
           await expect(db.query(`select public.begin_publish()`)).rejects.toThrow(/permission denied/);
           await expect(db.query(`select public.unpublished_summary()`)).rejects.toThrow(/permission denied/);
+          await expect(db.query(`select public.last_publish_run()`)).rejects.toThrow(/permission denied/);
         }
       } finally {
         await db.exec(`reset role`);

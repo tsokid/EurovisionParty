@@ -23,6 +23,9 @@
 --   years whose contest row or any entry has updated_at after since (every
 --   year when since is null). Deleted entries leave no updated_at behind
 --   and are not detected.
+-- * last_publish_run() (super admin): the newest publish_runs row as jsonb
+--   (id, started_at, finished_at, status, commit_sha, files_changed,
+--   error), null before the first run. Feeds the admin PublishBar.
 -- * RLS on publish_runs: super admins read; writes only through the RPCs.
 --
 -- Idempotent: safe to run twice.
@@ -195,5 +198,33 @@ $fn$;
 
 revoke execute on function public.unpublished_summary() from public, anon;
 grant execute on function public.unpublished_summary() to authenticated;
+
+-- ── last_publish_run ────────────────────────────────────────
+create or replace function public.last_publish_run()
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = public
+as $fn$
+begin
+  if not public.is_super_admin() then
+    raise exception 'forbidden';
+  end if;
+
+  return (
+    select jsonb_build_object(
+             'id', r.id, 'started_at', r.started_at, 'finished_at', r.finished_at,
+             'status', r.status, 'commit_sha', r.commit_sha,
+             'files_changed', r.files_changed, 'error', r.error)
+      from public.publish_runs r
+     order by r.id desc
+     limit 1
+  );
+end;
+$fn$;
+
+revoke execute on function public.last_publish_run() from public, anon;
+grant execute on function public.last_publish_run() to authenticated;
 
 commit;
