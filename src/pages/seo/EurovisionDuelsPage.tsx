@@ -9,6 +9,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/duelsCopy';
 
 export default function EurovisionDuelsPage() {
@@ -37,7 +38,7 @@ export default function EurovisionDuelsPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/duels' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('eurovision-duels', locale) },
   };
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -73,7 +74,7 @@ export default function EurovisionDuelsPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

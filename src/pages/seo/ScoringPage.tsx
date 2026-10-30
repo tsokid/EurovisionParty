@@ -9,6 +9,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/scoringCopy';
 
 interface RowSpec {
@@ -57,7 +58,7 @@ export default function ScoringPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/scoring' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('scoring', locale) },
   };
 
   return (
@@ -72,7 +73,7 @@ export default function ScoringPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

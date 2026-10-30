@@ -6,6 +6,7 @@ import Section from '../../components/seo/Section';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/termsCopy';
 
 export default function TermsPage() {
@@ -34,14 +35,14 @@ export default function TermsPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/terms' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('terms', locale) },
   };
 
   const webPage = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: c.meta.title,
-    url: 'https://eurovision.games/terms',
+    url: pageUrl('terms', locale),
     description: c.meta.webPageDescription,
     dateModified: MODIFIED,
     mainEntity: {
@@ -63,7 +64,7 @@ export default function TermsPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, webPage, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, webPage, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

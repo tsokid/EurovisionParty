@@ -1,10 +1,8 @@
 import SchemaHead from './SchemaHead';
-import { getPage, type PageId } from '../../lib/seo/registry';
+import { absoluteUrl, getPage, pageUrl, type PageId } from '../../lib/seo/registry';
 import { buildHreflangLinks } from '../../lib/seo/hreflang';
-import { localizePath, type Locale } from '../../lib/seo/locale';
+import type { Locale } from '../../lib/seo/locale';
 import type { HeadInput } from '../../lib/seo/headTags';
-
-const SITE = 'https://eurovision.games';
 
 // canonical, hreflang and og:locale(s) are derived from the registry + locale;
 // everything else passes straight through to SchemaHead.
@@ -19,11 +17,9 @@ export default function PageSeo({ pageId, locale, ...rest }: Props) {
     if (import.meta.env.DEV) console.warn(`PageSeo: unknown pageId "${pageId}"`);
     return null;
   }
-  const enPath = localizePath('en', page.slugByLocale.en);
-  const elPath = localizePath('el', page.slugByLocale.el);
-  const enUrl = page.greekExclusive ? undefined : `${SITE}${enPath}`;
-  const elUrl = page.englishExclusive ? undefined : `${SITE}${elPath}`;
-  const canonical = locale === 'en' ? (enUrl ?? elUrl!) : (elUrl ?? enUrl!);
+  const enUrl = page.greekExclusive ? undefined : absoluteUrl('en', page.slugByLocale.en);
+  const elUrl = page.englishExclusive ? undefined : absoluteUrl('el', page.slugByLocale.el);
+  const canonical = pageUrl(pageId, locale);
   const hreflang = buildHreflangLinks({ enUrl, elUrl });
   return (
     <SchemaHead

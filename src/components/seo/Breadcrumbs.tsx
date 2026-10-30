@@ -1,4 +1,6 @@
 import LocaleLink from './LocaleLink';
+import { absoluteUrl } from '../../lib/seo/registry';
+import type { Locale } from '../../lib/seo/locale';
 
 export interface Crumb {
   label: string;
@@ -38,8 +40,9 @@ export default function Breadcrumbs({ items }: Props) {
   );
 }
 
-// Helper: build BreadcrumbList JSON-LD for a given crumb trail.
-export function breadcrumbJsonLd(items: Crumb[]) {
+// Helper: build BreadcrumbList JSON-LD for a given crumb trail. Crumb hrefs are
+// unprefixed (LocaleLink style); items are emitted as `locale`-prefixed URLs.
+export function breadcrumbJsonLd(items: Crumb[], locale: Locale) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -47,7 +50,7 @@ export function breadcrumbJsonLd(items: Crumb[]) {
       '@type': 'ListItem',
       position: i + 1,
       name: c.label,
-      item: c.href.startsWith('http') ? c.href : `https://eurovision.games${c.href}`,
+      item: c.href.startsWith('http') ? c.href : absoluteUrl(locale, c.href),
     })),
   };
 }

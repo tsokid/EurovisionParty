@@ -55,3 +55,13 @@ describe('page registry', () => {
     expect(urls).toContainEqual({ locale: 'en', path: localizePath('en', '/en-only') });
   });
 });
+
+describe('pageUrl', () => {
+  it('returns the locale-prefixed canonical URL of a page', async () => {
+    const { pageUrl } = await import('@/lib/seo/registry');
+    expect(pageUrl('faq', 'en')).toBe('https://eurovision.games/en/faq');
+    expect(pageUrl('faq', 'el')).toBe('https://eurovision.games/el/faq');
+    expect(pageUrl('home', 'el')).toBe('https://eurovision.games/el');
+    expect(pageUrl('eurovision-duels', 'en')).toBe('https://eurovision.games/en/duels');
+  });
+});

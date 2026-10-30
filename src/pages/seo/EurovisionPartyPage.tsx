@@ -9,6 +9,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/eurovisionPartyCopy';
 
 export default function EurovisionPartyPage() {
@@ -37,7 +38,7 @@ export default function EurovisionPartyPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/eurovision-party' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('eurovision-party', locale) },
   };
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -80,7 +81,7 @@ export default function EurovisionPartyPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, faqJsonLd, event, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, faqJsonLd, event, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

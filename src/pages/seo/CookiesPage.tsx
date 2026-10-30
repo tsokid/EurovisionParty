@@ -7,6 +7,7 @@ import DataTable from '../../components/seo/DataTable';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/cookiesCopy';
 
 export default function CookiesPage() {
@@ -35,14 +36,14 @@ export default function CookiesPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/cookies' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('cookies', locale) },
   };
 
   const webPage = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: c.meta.title,
-    url: 'https://eurovision.games/cookies',
+    url: pageUrl('cookies', locale),
     description: c.meta.webPageDescription,
     dateModified: MODIFIED,
     mainEntity: {
@@ -64,7 +65,7 @@ export default function CookiesPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, webPage, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, webPage, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

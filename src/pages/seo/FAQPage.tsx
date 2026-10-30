@@ -8,6 +8,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/faqCopy';
 
 export default function FAQPage() {
@@ -48,7 +49,7 @@ export default function FAQPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/faq' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('faq', locale) },
   };
 
   const createA = c.anchored.find((a) => a.id === 'create')!;
@@ -67,7 +68,7 @@ export default function FAQPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, faqSchema, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, faqSchema, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

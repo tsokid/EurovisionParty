@@ -8,6 +8,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/eurovisionNightCopy';
 
 export default function EurovisionNightPage() {
@@ -36,7 +37,7 @@ export default function EurovisionNightPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/eurovision-night' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('eurovision-night', locale) },
   };
   const howTo = {
     '@context': 'https://schema.org',
@@ -66,7 +67,7 @@ export default function EurovisionNightPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

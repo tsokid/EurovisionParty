@@ -7,6 +7,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/aboutCopy';
 
 export default function AboutPage() {
@@ -32,7 +33,7 @@ export default function AboutPage() {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
     name: c.meta.title,
-    url: 'https://eurovision.games/about',
+    url: pageUrl('about', locale),
     description: c.meta.aboutPageDescription,
     mainEntity: {
       '@type': 'Organization',
@@ -51,7 +52,7 @@ export default function AboutPage() {
         ogType="website"
         ogImage="https://eurovision.games/logo.png"
         keywords={c.meta.keywords}
-        jsonLd={[organization, aboutPage, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[organization, aboutPage, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

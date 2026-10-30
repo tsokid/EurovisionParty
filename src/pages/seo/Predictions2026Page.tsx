@@ -11,6 +11,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { COUNTRIES_2026 as CANON } from '../../lib/countries2026';
 import { getLocalizedCountryName } from '../../lib/countryLocale';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/predictionsCopy';
 
 export default function Predictions2026Page() {
@@ -49,7 +50,7 @@ export default function Predictions2026Page() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/eurovision-2026-predictions' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('eurovision-2026-predictions', locale) },
   };
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -73,7 +74,7 @@ export default function Predictions2026Page() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

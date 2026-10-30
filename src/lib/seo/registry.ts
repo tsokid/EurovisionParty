@@ -74,3 +74,22 @@ export function allPageUrls(registry: PageEntry[] = PAGE_REGISTRY): { locale: Lo
   }
   return urls;
 }
+
+export const SITE_ORIGIN = 'https://eurovision.games';
+
+/** Absolute, locale-prefixed URL for an unprefixed site path (`/faq` → `https://eurovision.games/el/faq`). */
+export function absoluteUrl(locale: Locale, path: string): string {
+  return SITE_ORIGIN + localizePath(locale, path);
+}
+
+/**
+ * Absolute URL of a registry page in `locale` — the page's canonical. Falls back
+ * to the other locale for locale-exclusive pages. Throws on an unknown id.
+ */
+export function pageUrl(id: PageId, locale: Locale): string {
+  const page = getPage(id);
+  if (!page) throw new Error(`pageUrl: unknown pageId "${id}"`);
+  const en = page.greekExclusive ? undefined : absoluteUrl('en', page.slugByLocale.en);
+  const el = page.englishExclusive ? undefined : absoluteUrl('el', page.slugByLocale.el);
+  return locale === 'en' ? (en ?? el!) : (el ?? en!);
+}

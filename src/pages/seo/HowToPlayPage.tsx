@@ -7,6 +7,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll } from './content/howToPlayCopy';
 
 export default function HowToPlayPage() {
@@ -35,7 +36,7 @@ export default function HowToPlayPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/how-to-play' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('how-to-play', locale) },
   };
 
   const howTo = {
@@ -59,7 +60,7 @@ export default function HowToPlayPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, howTo, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, howTo, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

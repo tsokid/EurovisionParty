@@ -9,6 +9,7 @@ import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
+import { pageUrl } from '../../lib/seo/registry';
 import { copy as copyAll, recentWinners, leaderboard } from './content/winnersCopy';
 
 export default function WinnersPage() {
@@ -40,7 +41,7 @@ export default function WinnersPage() {
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://eurovision.games/winners' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl('winners', locale) },
   };
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -64,7 +65,7 @@ export default function WinnersPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs)]}
+        jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

@@ -31,7 +31,7 @@ export function NotFoundPage() {
         ogLocale={locale === 'el' ? 'el_GR' : 'en_US'}
         ogLocaleAlternate={[locale === 'el' ? 'en_US' : 'el_GR']}
         keywords={c.meta.keywords}
-        jsonLd={[breadcrumbJsonLd(crumbs)]}
+        jsonLd={[breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <PageHero

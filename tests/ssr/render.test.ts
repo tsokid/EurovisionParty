@@ -31,6 +31,39 @@ describe('entry-server render', () => {
     }
   }, 60_000);
 
+  it('JSON-LD page URLs (@id / url / item) are locale-prefixed like the canonical', async () => {
+    const ORIGIN = 'https://eurovision.games';
+    const bad: string[] = [];
+    function walk(node: unknown, path: string, locale: string): void {
+      if (Array.isArray(node)) return node.forEach((n) => walk(n, path, locale));
+      if (!node || typeof node !== 'object') return;
+      for (const [k, v] of Object.entries(node)) {
+        if ((k === '@id' || k === 'url' || k === 'item') && typeof v === 'string' && v.startsWith(ORIGIN)) {
+          // Site-level identity (Organization url) and static assets (logo.png) are not pages.
+          if (v === ORIGIN || /\.[a-z0-9]+$/i.test(v)) continue;
+          if (!new RegExp(`^${ORIGIN}/${locale}(/|$)`).test(v)) bad.push(`${path} ${k}=${v}`);
+        } else {
+          walk(v, path, locale);
+        }
+      }
+    }
+    for (const { locale, path } of allPageUrls()) {
+      const r = await render(path);
+      walk(r.head?.jsonLd, path, locale);
+    }
+    expect(bad).toEqual([]);
+  }, 60_000);
+
+  it('breadcrumb items point at the current locale', async () => {
+    const r = await render('/el/faq');
+    const blocks = [r.head?.jsonLd].flat() as Array<Record<string, unknown>>;
+    const crumbs = blocks.find((b) => b['@type'] === 'BreadcrumbList') as { itemListElement: { item: string }[] };
+    expect(crumbs.itemListElement.map((i) => i.item)).toEqual([
+      'https://eurovision.games/el',
+      'https://eurovision.games/el/faq',
+    ]);
+  });
+
   it('renders el after en without leaking language', async () => {
     await render('/en/faq');
     const el = await render('/el/faq');
