@@ -20,8 +20,7 @@ export type PageId =
   | 'dashboard'
   | 'cookies'
   // Phase 4 — programmatic hubs (programmatic spokes are dynamic; not in registry)
-  | 'winners'
-  | 'countries';
+  | 'winners';
 
 export interface PageEntry {
   id: PageId;
