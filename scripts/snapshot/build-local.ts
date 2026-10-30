@@ -1,6 +1,6 @@
 // Builds the initial content/ snapshot without a database.
 //
-//   tsx scripts/snapshot/build-local.ts
+//   tsx scripts/snapshot/build-local.ts [--force]
 //
 // * 1956-2025: data/history/*.json (the same records migration 073 imports).
 // * 2026: data/history/2026.json (imported with
@@ -12,10 +12,18 @@
 //
 // generated_at is fixed so rebuilding gives byte-identical files. The first
 // production Publish replaces everything, 2026 included, with database data.
+// From then on this script must not run: it would overwrite production 2026
+// with the Wikipedia copy. It refuses when content/site.json carries a
+// Publish's generated_at (anything but LOCAL_GENERATED_AT), unless --force.
+//
+// vercel.json gets the generated contest-year redirects through the same
+// mergeVercelRedirects(generatedRedirects(contests)) as Publish, so the
+// repo matches what Publish would write for this snapshot.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSnapshotFiles } from '../../supabase/functions/publish-content/snapshot';
+import { generatedRedirects, mergeVercelRedirects } from '../../supabase/functions/publish-content/redirects';
 import type { ContestRow, EntryRow } from '../../src/content/contests/types';
 import { DATA_DIR, loadRecords, slugify } from '../history/import';
 import type { ContestRecord } from '../history/parseContest';
@@ -131,14 +139,36 @@ export function localInput() {
   return { contests, countries: readCountriesSeed(), entries, generated_at: LOCAL_GENERATED_AT };
 }
 
+/**
+ * Throws unless `siteJson` (content/site.json text, or null when absent) is a
+ * local build: after the first Publish, rebuilding locally would replace
+ * production data. `force` skips the check.
+ */
+export function assertLocalSnapshot(siteJson: string | null, force: boolean): void {
+  if (force || siteJson === null) return;
+  const generatedAt = (JSON.parse(siteJson) as { generated_at?: string }).generated_at;
+  if (generatedAt !== LOCAL_GENERATED_AT) {
+    throw new Error(
+      `content/site.json was written by Publish (generated_at ${generatedAt}); build-local would overwrite ` +
+        'production data with the Wikipedia copy. Refusing. Pass --force only if you mean it.',
+    );
+  }
+}
+
 function main() {
-  const files = buildSnapshotFiles(localInput());
+  const siteFile = path.join(ROOT, 'content/site.json');
+  assertLocalSnapshot(existsSync(siteFile) ? readFileSync(siteFile, 'utf8') : null, process.argv.includes('--force'));
+  const input = localInput();
+  const files = buildSnapshotFiles(input);
   for (const [rel, text] of Object.entries(files)) {
     const file = path.join(ROOT, rel);
     mkdirSync(path.dirname(file), { recursive: true });
     writeFileSync(file, text, 'utf8');
   }
-  console.log(`wrote ${Object.keys(files).length} files under content/`);
+  const vercelFile = path.join(ROOT, 'vercel.json');
+  const vercel = readFileSync(vercelFile, 'utf8').replace(/\r\n/g, '\n');
+  writeFileSync(vercelFile, mergeVercelRedirects(vercel, generatedRedirects(input.contests)), 'utf8');
+  console.log(`wrote ${Object.keys(files).length} files under content/ and vercel.json`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -188,8 +188,10 @@ describe.skipIf(!hasDist)('every historical URL resolves to a built page', () =>
       ['/en/eurovision-2026/songs', 1],
       ['/en/eurovision-2026/schedule', 1],
       ['/eurovision-2026', 1],
-      ['/en/eurovision-2026-songs', 2],
-      ['/en/eurovision-2026-semifinals', 2],
+      // M2: static redirects into the hub are repointed, so legacy flat slugs stay one hop.
+      ['/en/eurovision-2026-songs', 1],
+      ['/en/eurovision-2026-semifinals', 1],
+      ['/eurovision-2026-schedule', 1],
     ] as const)('%s → the archive page in %i hop(s)', (url, hops) => {
       expect(resolveUrl(url, archived, builtArchived)).toEqual({ final: page, hops, status: 200, via: 'file' });
     });
@@ -200,14 +202,14 @@ describe.skipIf(!hasDist)('every historical URL resolves to a built page', () =>
       );
       expect(resolveUrl('/el/eurovision-2026-programma', archived, builtArchived)).toMatchObject({
         final: '/el/past-contests/eurovision-2026-vienna',
-        hops: 2,
+        hops: 1,
       });
     });
 
-    it.each(urls)('%s still resolves to a built page within 2 hops', (url) => {
+    it.each(urls)('%s still resolves to a built page in at most one hop', (url) => {
       const r = resolveUrl(url, archived, builtArchived);
       expect(r, JSON.stringify(r)).toMatchObject({ status: 200, via: 'file' });
-      expect(r.hops).toBeLessThanOrEqual(2);
+      expect(r.hops).toBeLessThanOrEqual(1);
     });
   });
 });

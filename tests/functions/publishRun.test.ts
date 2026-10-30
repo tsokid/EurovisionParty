@@ -65,10 +65,15 @@ describe('runPublish', () => {
     expect(Object.keys(transforms)).toEqual(['vercel.json']);
     expect(() => transforms['vercel.json'](null)).toThrow(/missing/);
     const merged = transforms['vercel.json'](vercelJson);
-    const sources = JSON.parse(merged).redirects.map((r: { source: string }) => r.source);
+    const redirects = JSON.parse(merged).redirects as Array<{ source: string; destination: string }>;
+    const sources = redirects.map((r) => r.source);
     expect(sources).toContain('/eurovision-2026');
     expect(sources).toContain('/eurovision-2025');
-    expect(sources).not.toContain('/eurovision-2027');
+    // 2027 is live: only its locale-detect hub redirects, no archive redirect.
+    expect(redirects.filter((r) => r.source === '/eurovision-2027').map((r) => r.destination)).toEqual([
+      '/el/eurovision-2027',
+      '/en/eurovision-2027',
+    ]);
   });
 
   it('noop: nothing changed, the run ends noop with no sha', async () => {

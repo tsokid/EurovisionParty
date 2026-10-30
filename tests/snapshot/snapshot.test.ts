@@ -13,7 +13,7 @@ import type {
   CountryIndex,
 } from '../../src/content/contests/types';
 import { parseCountriesSeed, readCountriesSeed } from '../../scripts/snapshot/countriesSeed';
-import { load2026, localInput } from '../../scripts/snapshot/build-local';
+import { assertLocalSnapshot, load2026, localInput } from '../../scripts/snapshot/build-local';
 import { COUNTRIES_2026 } from '../../src/lib/countries2026';
 import { isCountryIndexable } from '../../src/lib/seo/dynamicPages';
 import { readFileSync } from 'node:fs';
@@ -359,6 +359,14 @@ describe('build-local', () => {
         finalist_count: 25,
       },
     });
+  });
+
+  it('refuses to run over a published snapshot unless forced', () => {
+    const site = (generated_at: string) => JSON.stringify({ generated_at });
+    expect(() => assertLocalSnapshot(site('1970-01-01T00:00:00Z'), false)).not.toThrow();
+    expect(() => assertLocalSnapshot(null, false)).not.toThrow();
+    expect(() => assertLocalSnapshot(site('2026-11-02T10:00:00.123Z'), false)).toThrow(/written by Publish.*Refusing/);
+    expect(() => assertLocalSnapshot(site('2026-11-02T10:00:00.123Z'), true)).not.toThrow();
   });
 
   it('the committed content/ matches a fresh build byte for byte', () => {

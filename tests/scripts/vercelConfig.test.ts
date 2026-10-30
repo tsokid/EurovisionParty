@@ -41,6 +41,12 @@ describe('vercel.json', () => {
     }
   })
 
+  it('keeps /content/ JSON out of search indexes (M5)', () => {
+    const content = cfg.headers.find((h: any) => h.source === '/content/(.*)')
+    expect(content, 'headers entry for /content/(.*)').toBeDefined()
+    expect(content.headers).toEqual([{ key: 'X-Robots-Tag', value: 'noindex' }])
+  })
+
   it('SPA rewrite falls back outside locale prefixes only', () => {
     expect(cfg.rewrites).toHaveLength(1)
     const rw = cfg.rewrites[0]
