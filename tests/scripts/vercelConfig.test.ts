@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { PAGE_REGISTRY } from '../../src/lib/seo/registry'
 
 const cfg = JSON.parse(readFileSync(resolve(process.cwd(), 'vercel.json'), 'utf8'))
 
@@ -56,5 +57,93 @@ describe('vercel.json', () => {
     for (const p of ['/en', '/el']) {
       expect(re.test(p), p).toBe(true)
     }
+  })
+
+  describe('legacy unprefixed URLs (I1) and home (I2)', () => {
+    type Redirect = {
+      source: string
+      destination: string
+      permanent: boolean
+      has?: Array<{ type: string; key: string; value: string }>
+    }
+    const redirects: Redirect[] = cfg.redirects
+
+    // Minimal path-to-regexp for the forms used here: `/:name(alt|alt)` and literals.
+    function match(source: string, path: string): Record<string, string> | null {
+      const names: string[] = []
+      const re = new RegExp(
+        '^' + source.replace(/:(\w+)\(([^)]*)\)/g, (_m, name, alt) => {
+          names.push(name)
+          return `(${alt})`
+        }) + '$',
+      )
+      const m = re.exec(path)
+      if (!m) return null
+      return Object.fromEntries(names.map((n, i) => [n, m[i + 1]]))
+    }
+
+    // `has` values are full-match regexes (anchored), as on Vercel/Next.js.
+    /** First redirect that applies to (path, accept-language), resolved; null if none. */
+    function resolveRedirect(path: string, acceptLanguage: string): { to: string; r: Redirect; index: number } | null {
+      for (const [index, r] of redirects.entries()) {
+        const params = match(r.source, path)
+        if (!params) continue
+        const hasOk = (r.has ?? []).every(
+          (h) => h.type === 'header' && h.key === 'accept-language' && new RegExp('^' + h.value + '$').test(acceptLanguage),
+        )
+        if (!hasOk) continue
+        const to = r.destination.replace(/:(\w+)/g, (_m, n) => params[n] ?? `:${n}`)
+        return { to, r, index }
+      }
+      return null
+    }
+
+    const slugs = PAGE_REGISTRY.filter((p) => p.id !== 'home').map((p) => p.slugByLocale.en)
+
+    it('covers all 16 non-home registry pages', () => {
+      expect(slugs).toHaveLength(16)
+    })
+
+    it.each(slugs)('%s 308s to /en<slug>, or /el<slug> for Greek browsers', (slug) => {
+      const en = resolveRedirect(slug, 'en-GB,en;q=0.9')
+      expect(en?.to).toBe(`/en${slug}`)
+      expect(en?.r.permanent).toBe(true)
+      expect(en?.r.has).toBeUndefined()
+
+      for (const al of ['el', 'el-GR,el;q=0.9,en;q=0.8', 'en-US,en;q=0.9,el;q=0.8']) {
+        const el = resolveRedirect(slug, al)
+        expect(el?.to, al).toBe(`/el${slug}`)
+        expect(el?.r.permanent).toBe(true)
+        expect(el!.index).toBeLessThan(en!.index)
+      }
+    })
+
+    it('does not treat look-alike language tags as Greek', () => {
+      expect(resolveRedirect('/faq', 'de-DE,de;q=0.9')?.to).toBe('/en/faq')
+      expect(resolveRedirect('/faq', '')?.to).toBe('/en/faq')
+    })
+
+    it.each(['/online-games', '/mobile-games'])('%s 308s to /en/eurovision-games', (p) => {
+      const r = resolveRedirect(p, 'el-GR')
+      expect(r?.to).toBe('/en/eurovision-games')
+      expect(r?.r.permanent).toBe(true)
+    })
+
+    it('home 308s to /en, or /el for Greek browsers (el variant first)', () => {
+      const en = resolveRedirect('/', 'en-US')
+      expect(en?.to).toBe('/en')
+      expect(en?.r.permanent).toBe(true)
+      expect(en?.r.has).toBeUndefined()
+      const el = resolveRedirect('/', 'el-GR,el;q=0.9')
+      expect(el?.to).toBe('/el')
+      expect(el?.r.permanent).toBe(true)
+      expect(el!.index).toBeLessThan(en!.index)
+    })
+
+    it('does not redirect app routes or locale pages', () => {
+      for (const p of ['/room/ABCD', '/admin', '/en', '/el', '/en/faq', '/el/how-to-play', '/sitemap.xml']) {
+        expect(resolveRedirect(p, 'el-GR'), p).toBeNull()
+      }
+    })
   })
 })

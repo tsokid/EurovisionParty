@@ -6,7 +6,12 @@
     { "source": "/:locale(en|el)/eurovision-quiz", "destination": "/:locale/eurovision-trivia", "permanent": true },
     { "source": "/:locale(en|el)/host-eurovision-party", "destination": "/:locale/eurovision-party", "permanent": true },
     { "source": "/eurovision-quiz", "destination": "/en/eurovision-trivia", "permanent": true },
-    { "source": "/host-eurovision-party", "destination": "/en/eurovision-party", "permanent": true }
+    { "source": "/host-eurovision-party", "destination": "/en/eurovision-party", "permanent": true },
+    { "source": "/", "has": [{ "type": "header", "key": "accept-language", "value": "(?<l>.*\\bel\\b.*)" }], "destination": "/el", "permanent": true },
+    { "source": "/", "destination": "/en", "permanent": true },
+    { "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)", "has": [{ "type": "header", "key": "accept-language", "value": "(?<l>.*\\bel\\b.*)" }], "destination": "/el/:slug", "permanent": true },
+    { "source": "/:slug(how-to-play|eurovision-night|eurovision-games|eurovision-party|eurovision-trivia|eurovision-2026-predictions|faq|rules|scoring|about|privacy|terms|duels|dashboard|cookies|winners)", "destination": "/en/:slug", "permanent": true },
+    { "source": "/:slug(online-games|mobile-games)", "destination": "/en/eurovision-games", "permanent": true }
   ],
   "rewrites": [
     { "source": "/((?!en/|el/).*)", "destination": "/" }
