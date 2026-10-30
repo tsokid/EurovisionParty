@@ -32,6 +32,15 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
     }
   });
 
+  // Regression guard (final review M4): the main chunk was 1,731,226 bytes
+  // raw after sub-project 2b. Raise the budget deliberately, never silently.
+  const MAIN_CHUNK_BUDGET = 1_760_000;
+
+  it(`the main chunk stays within ${MAIN_CHUNK_BUDGET} bytes raw`, () => {
+    const main = [...jsFiles].sort((a, b) => b.size - a.size)[0];
+    expect(main.size, `${main.f} is ${main.size} bytes`).toBeLessThanOrEqual(MAIN_CHUNK_BUDGET);
+  });
+
   it('the snapshot is published as static JSON under dist/content', () => {
     const site = JSON.parse(readFileSync(resolve(DIST, 'content/site.json'), 'utf8'));
     expect(site.current_year).toBeTypeOf('number');
