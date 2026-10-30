@@ -5,17 +5,23 @@
 // no Deno or Node APIs; the only import is type-only.
 //
 // Output: { 'content/site.json', 'content/contests/{year}.json',
-// 'content/countries/{iso}.json' } → file text. JSON is deterministic: keys
+// 'content/countries/{iso}.json', 'content/contests/index.json',
+// 'content/countries/index.json' } → file text. The index files are small
+// summaries (keyed by year / by slug) so list pages and slug lookups never
+// need the whole snapshot on the client. JSON is deterministic: keys
 // sorted at every level, 2-space indent, trailing newline; contests by year,
 // entries by ISO, participations by year. Input row order does not matter.
 import type {
+  ContestIndex,
   ContestRow,
+  CountryIndex,
   ContestSnapshot,
   CountryParticipation,
   CountryRow,
   CountrySnapshot,
   EntryRow,
   EntrySnapshot,
+  IndexWinner,
   SiteSnapshot,
 } from '../../../src/content/contests/types.ts';
 
@@ -39,6 +45,9 @@ export function stableJson(value: unknown): string {
   };
   return JSON.stringify(sort(value), null, 2) + '\n';
 }
+
+/** A country page is indexable from this many non-cancelled participations (mirrors src/lib/seo/dynamicPages.ts, which Deno cannot import). */
+export const COUNTRY_INDEXABLE_MIN = 3;
 
 const byIso = (a: { iso: string }, b: { iso: string }) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0);
 
@@ -81,6 +90,8 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
   }
 
   const files: Record<string, string> = {};
+  const contestIndex: ContestIndex = {};
+  const countryIndex: CountryIndex = {};
 
   for (const c of [...contests.values()].sort((a, b) => a.year - b.year)) {
     const entries: EntrySnapshot[] = [...(entriesByYear.get(c.year) ?? [])].sort(byIso).map((e) => {
@@ -99,7 +110,30 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
       entries,
     };
     files[`content/contests/${c.year}.json`] = stableJson(snapshot);
+
+    const first: IndexWinner[] = c.cancelled
+      ? []
+      : entries.filter((e) => e.final_place === 1).map((e) => ({
+          iso: e.iso,
+          name_en: e.name_en,
+          name_el: e.name_el,
+          artist: e.artist,
+          song: e.song,
+          points: e.total_points,
+        }));
+    contestIndex[String(c.year)] = {
+      city: c.city,
+      city_slug: c.city_slug,
+      host_iso: c.host_iso,
+      stage: c.stage,
+      indexable: c.indexable,
+      cancelled: c.cancelled,
+      final_date: c.final_date,
+      winner: first[0] ?? null,
+      co_winners: first.slice(1),
+    };
   }
+  files['content/contests/index.json'] = stableJson(contestIndex);
 
   for (const co of [...countries.values()].sort(byIso)) {
     const participations: CountryParticipation[] = [...(entriesByIso.get(co.iso) ?? [])]
@@ -126,7 +160,22 @@ export function buildSnapshotFiles(input: SnapshotInput): Record<string, string>
       participations,
     };
     files[`content/countries/${co.iso}.json`] = stableJson(snapshot);
+
+    if (participations.length > 0) {
+      const counted = participations.filter((p) => !p.cancelled);
+      const places = counted.map((p) => p.final_place).filter((n): n is number => n !== null);
+      countryIndex[co.slug] = {
+        iso: co.iso,
+        name_en: co.name_en,
+        name_el: co.name_el,
+        participations: counted.length,
+        wins: places.filter((n) => n === 1).length,
+        best_place: places.length ? Math.min(...places) : null,
+        indexable: counted.length >= COUNTRY_INDEXABLE_MIN,
+      };
+    }
   }
+  files['content/countries/index.json'] = stableJson(countryIndex);
 
   files['content/site.json'] = stableJson(siteSnapshot(input.contests, input.generated_at));
   return files;

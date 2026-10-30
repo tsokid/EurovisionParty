@@ -9,10 +9,15 @@ import type {
   ContestSnapshot,
   CountrySnapshot,
   SiteSnapshot,
+  ContestIndex,
+  CountryIndex,
 } from '../../src/content/contests/types';
 import { parseCountriesSeed, readCountriesSeed } from '../../scripts/snapshot/countriesSeed';
 import { load2026, localInput } from '../../scripts/snapshot/build-local';
 import { COUNTRIES_2026 } from '../../src/lib/countries2026';
+import { isCountryIndexable } from '../../src/lib/seo/dynamicPages';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const GENERATED_AT = '2026-11-01T12:00:00Z';
 
@@ -102,10 +107,12 @@ describe('buildSnapshotFiles', () => {
       'content/contests/2024.json',
       'content/contests/2025.json',
       'content/contests/2026.json',
+      'content/contests/index.json',
       'content/countries/AT.json',
       'content/countries/GR.json',
       'content/countries/MA.json',
       'content/countries/SE.json',
+      'content/countries/index.json',
       'content/site.json',
     ]);
     // Sorted keys, 2-space indent, trailing newline.
@@ -182,6 +189,53 @@ describe('buildSnapshotFiles', () => {
     expect(c.entries.map((e) => e.iso)).toEqual(['AT', 'GR']);
   });
 
+  it('contests/index.json: one row per year with the winner', () => {
+    const files = buildSnapshotFiles(input());
+    const index = JSON.parse(files['content/contests/index.json']) as ContestIndex;
+    expect(Object.keys(index)).toEqual(['2020', '2024', '2025', '2026']);
+    expect(index['2025']).toEqual({
+      city: 'Basel',
+      city_slug: 'basel',
+      host_iso: 'AT',
+      stage: 'archived',
+      indexable: false,
+      cancelled: false,
+      final_date: '2025-05-14',
+      winner: { iso: 'AT', name_en: 'Austria', name_el: 'Αυστρία', artist: 'AT artist 2025', song: 'AT song 2025', points: 436 },
+      co_winners: [],
+    });
+    // Cancelled: no winner. No place 1 yet: no winner.
+    expect(index['2020']).toMatchObject({ cancelled: true, winner: null, co_winners: [] });
+    expect(index['2024'].winner).toBeNull();
+  });
+
+  it('contests/index.json: a shared first place (1969) keeps every winner', () => {
+    const files = buildSnapshotFiles({
+      ...input(),
+      entries: [
+        ...entries,
+        entry(2024, 'AT', { final_place: 1, total_points: 200 }),
+        entry(2024, 'MA', { final_place: 1, total_points: 200 }),
+      ],
+    });
+    const index = JSON.parse(files['content/contests/index.json']) as ContestIndex;
+    expect(index['2024'].winner?.iso).toBe('AT');
+    expect(index['2024'].co_winners.map((w) => w.iso)).toEqual(['MA']);
+  });
+
+  it('countries/index.json: keyed by slug, counts and indexability', () => {
+    const files = buildSnapshotFiles(input());
+    const index = JSON.parse(files['content/countries/index.json']) as CountryIndex;
+    // Countries with no participation have no page, so no index row.
+    expect(Object.keys(index)).toEqual(['austria', 'greece', 'sweden']);
+    // 2020 was cancelled: it is not counted.
+    expect(index.greece).toEqual({
+      iso: 'GR', name_en: 'Greece', name_el: 'Ελλάδα', participations: 3, wins: 0, best_place: 6, indexable: true,
+    });
+    expect(index.austria).toMatchObject({ participations: 2, wins: 1, best_place: 1, indexable: false });
+    expect(index.sweden).toMatchObject({ participations: 2, wins: 0, best_place: 4 });
+  });
+
   it('rejects an entry whose country or year is unknown', () => {
     expect(() => buildSnapshotFiles({ ...input(), entries: [entry(2025, 'XX')] })).toThrow(/XX/);
     expect(() => buildSnapshotFiles({ ...input(), entries: [entry(1999, 'GR')] })).toThrow(/1999/);
@@ -241,12 +295,32 @@ describe('build-local', () => {
   it('builds a snapshot with 71 contests and every seeded country', () => {
     const files = buildSnapshotFiles(localInput());
     const paths = Object.keys(files);
-    expect(paths.filter((p) => p.startsWith('content/contests/'))).toHaveLength(71);
-    expect(paths.filter((p) => p.startsWith('content/countries/'))).toHaveLength(52);
+    expect(paths.filter((p) => /^content\/contests\/\d{4}\.json$/.test(p))).toHaveLength(71);
+    expect(paths.filter((p) => /^content\/countries\/[A-Z]{2}\.json$/.test(p))).toHaveLength(52);
+    expect(paths).toContain('content/contests/index.json');
+    expect(paths).toContain('content/countries/index.json');
     expect(JSON.parse(files['content/site.json'])).toEqual({
       current_year: 2026,
       live_stage: 'finalized',
       generated_at: '1970-01-01T00:00:00Z',
     });
+  });
+
+  it('the committed content/ matches a fresh build byte for byte', () => {
+    const files = buildSnapshotFiles(localInput());
+    for (const [rel, text] of Object.entries(files)) {
+      expect(readFileSync(resolve(process.cwd(), rel), 'utf8'), rel).toBe(text);
+    }
+  });
+
+  it('countries/index.json agrees with dynamicPageUrls (pages and indexability)', () => {
+    const files = buildSnapshotFiles(localInput());
+    const index = JSON.parse(files['content/countries/index.json']) as CountryIndex;
+    const countries = Object.entries(files)
+      .filter(([p]) => /^content\/countries\/[A-Z]{2}\.json$/.test(p))
+      .map(([, t]) => JSON.parse(t) as CountrySnapshot)
+      .filter((c) => c.participations.length > 0);
+    expect(Object.keys(index).sort()).toEqual(countries.map((c) => c.slug).sort());
+    for (const c of countries) expect(index[c.slug].indexable, c.slug).toBe(isCountryIndexable(c));
   });
 });

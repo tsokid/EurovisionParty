@@ -23,11 +23,11 @@ const files = new Map<string, unknown>(
 
 const site = files.get('site.json') as SiteSnapshot;
 const contests: ContestSnapshot[] = [...files]
-  .filter(([path]) => path.startsWith('contests/'))
+  .filter(([path]) => /^contests\/\d{4}\.json$/.test(path))
   .map(([, data]) => data as ContestSnapshot)
   .sort((a, b) => a.year - b.year);
 const countries: CountrySnapshot[] = [...files]
-  .filter(([path]) => path.startsWith('countries/'))
+  .filter(([path]) => /^countries\/[A-Z]{2}\.json$/.test(path))
   .map(([, data]) => data as CountrySnapshot)
   .sort((a, b) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0));
 const contestByYear = new Map(contests.map((c) => [c.year, c]));

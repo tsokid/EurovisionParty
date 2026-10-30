@@ -1,0 +1,1298 @@
+{
+  "1956": {
+    "cancelled": false,
+    "city": "Lugano",
+    "city_slug": "lugano",
+    "co_winners": [],
+    "final_date": "1956-05-24",
+    "host_iso": "CH",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Lys Assia",
+      "iso": "CH",
+      "name_el": "Ελβετία",
+      "name_en": "Switzerland",
+      "points": null,
+      "song": "Refrain"
+    }
+  },
+  "1957": {
+    "cancelled": false,
+    "city": "Frankfurt",
+    "city_slug": "frankfurt",
+    "co_winners": [],
+    "final_date": "1957-03-03",
+    "host_iso": "DE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Corry Brokken",
+      "iso": "NL",
+      "name_el": "Ολλανδία",
+      "name_en": "Netherlands",
+      "points": 31,
+      "song": "Net als toen"
+    }
+  },
+  "1958": {
+    "cancelled": false,
+    "city": "Hilversum",
+    "city_slug": "hilversum",
+    "co_winners": [],
+    "final_date": "1958-03-12",
+    "host_iso": "NL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "André Claveau",
+      "iso": "FR",
+      "name_el": "Γαλλία",
+      "name_en": "France",
+      "points": 27,
+      "song": "Dors mon amour"
+    }
+  },
+  "1959": {
+    "cancelled": false,
+    "city": "Cannes",
+    "city_slug": "cannes",
+    "co_winners": [],
+    "final_date": "1959-03-11",
+    "host_iso": "FR",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Teddy Scholten",
+      "iso": "NL",
+      "name_el": "Ολλανδία",
+      "name_en": "Netherlands",
+      "points": 21,
+      "song": "Een beetje"
+    }
+  },
+  "1960": {
+    "cancelled": false,
+    "city": "London",
+    "city_slug": "london",
+    "co_winners": [],
+    "final_date": "1960-03-29",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Jacqueline Boyer",
+      "iso": "FR",
+      "name_el": "Γαλλία",
+      "name_en": "France",
+      "points": 32,
+      "song": "Tom Pillibi"
+    }
+  },
+  "1961": {
+    "cancelled": false,
+    "city": "Cannes",
+    "city_slug": "cannes",
+    "co_winners": [],
+    "final_date": "1961-03-18",
+    "host_iso": "FR",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Jean-Claude Pascal",
+      "iso": "LU",
+      "name_el": "Λουξεμβούργο",
+      "name_en": "Luxembourg",
+      "points": 31,
+      "song": "Nous les amoureux"
+    }
+  },
+  "1962": {
+    "cancelled": false,
+    "city": "Luxembourg City",
+    "city_slug": "luxembourg-city",
+    "co_winners": [],
+    "final_date": "1962-03-18",
+    "host_iso": "LU",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Isabelle Aubret",
+      "iso": "FR",
+      "name_el": "Γαλλία",
+      "name_en": "France",
+      "points": 26,
+      "song": "Un premier amour"
+    }
+  },
+  "1963": {
+    "cancelled": false,
+    "city": "London",
+    "city_slug": "london",
+    "co_winners": [],
+    "final_date": "1963-03-23",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Grethe and Jørgen Ingmann",
+      "iso": "DK",
+      "name_el": "Δανία",
+      "name_en": "Denmark",
+      "points": 42,
+      "song": "Dansevise"
+    }
+  },
+  "1964": {
+    "cancelled": false,
+    "city": "Copenhagen",
+    "city_slug": "copenhagen",
+    "co_winners": [],
+    "final_date": "1964-03-21",
+    "host_iso": "DK",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Gigliola Cinquetti",
+      "iso": "IT",
+      "name_el": "Ιταλία",
+      "name_en": "Italy",
+      "points": 49,
+      "song": "Non ho l'età"
+    }
+  },
+  "1965": {
+    "cancelled": false,
+    "city": "Naples",
+    "city_slug": "naples",
+    "co_winners": [],
+    "final_date": "1965-03-20",
+    "host_iso": "IT",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "France Gall",
+      "iso": "LU",
+      "name_el": "Λουξεμβούργο",
+      "name_en": "Luxembourg",
+      "points": 32,
+      "song": "Poupée de cire, poupée de son"
+    }
+  },
+  "1966": {
+    "cancelled": false,
+    "city": "Luxembourg City",
+    "city_slug": "luxembourg-city",
+    "co_winners": [],
+    "final_date": "1966-03-05",
+    "host_iso": "LU",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Udo Jürgens",
+      "iso": "AT",
+      "name_el": "Αυστρία",
+      "name_en": "Austria",
+      "points": 31,
+      "song": "Merci, Chérie"
+    }
+  },
+  "1967": {
+    "cancelled": false,
+    "city": "Vienna",
+    "city_slug": "vienna",
+    "co_winners": [],
+    "final_date": "1967-04-08",
+    "host_iso": "AT",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Sandie Shaw",
+      "iso": "GB",
+      "name_el": "Ηνωμένο Βασίλειο",
+      "name_en": "United Kingdom",
+      "points": 47,
+      "song": "Puppet on a String"
+    }
+  },
+  "1968": {
+    "cancelled": false,
+    "city": "London",
+    "city_slug": "london",
+    "co_winners": [],
+    "final_date": "1968-04-06",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Massiel",
+      "iso": "ES",
+      "name_el": "Ισπανία",
+      "name_en": "Spain",
+      "points": 29,
+      "song": "La La La"
+    }
+  },
+  "1969": {
+    "cancelled": false,
+    "city": "Madrid",
+    "city_slug": "madrid",
+    "co_winners": [
+      {
+        "artist": "Frida Boccara",
+        "iso": "FR",
+        "name_el": "Γαλλία",
+        "name_en": "France",
+        "points": 18,
+        "song": "Un jour, un enfant"
+      },
+      {
+        "artist": "Lulu",
+        "iso": "GB",
+        "name_el": "Ηνωμένο Βασίλειο",
+        "name_en": "United Kingdom",
+        "points": 18,
+        "song": "Boom Bang-a-Bang"
+      },
+      {
+        "artist": "Lenny Kuhr",
+        "iso": "NL",
+        "name_el": "Ολλανδία",
+        "name_en": "Netherlands",
+        "points": 18,
+        "song": "De troubadour"
+      }
+    ],
+    "final_date": "1969-03-29",
+    "host_iso": "ES",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Salomé",
+      "iso": "ES",
+      "name_el": "Ισπανία",
+      "name_en": "Spain",
+      "points": 18,
+      "song": "Vivo cantando"
+    }
+  },
+  "1970": {
+    "cancelled": false,
+    "city": "Amsterdam",
+    "city_slug": "amsterdam",
+    "co_winners": [],
+    "final_date": "1970-03-21",
+    "host_iso": "NL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Dana",
+      "iso": "IE",
+      "name_el": "Ιρλανδία",
+      "name_en": "Ireland",
+      "points": 32,
+      "song": "All Kinds of Everything"
+    }
+  },
+  "1971": {
+    "cancelled": false,
+    "city": "Dublin",
+    "city_slug": "dublin",
+    "co_winners": [],
+    "final_date": "1971-04-03",
+    "host_iso": "IE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Séverine",
+      "iso": "MC",
+      "name_el": "Μονακό",
+      "name_en": "Monaco",
+      "points": 128,
+      "song": "Un banc, un arbre, une rue"
+    }
+  },
+  "1972": {
+    "cancelled": false,
+    "city": "Edinburgh",
+    "city_slug": "edinburgh",
+    "co_winners": [],
+    "final_date": "1972-03-25",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Vicky Leandros",
+      "iso": "LU",
+      "name_el": "Λουξεμβούργο",
+      "name_en": "Luxembourg",
+      "points": 128,
+      "song": "Après toi"
+    }
+  },
+  "1973": {
+    "cancelled": false,
+    "city": "Luxembourg City",
+    "city_slug": "luxembourg-city",
+    "co_winners": [],
+    "final_date": "1973-04-07",
+    "host_iso": "LU",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Anne-Marie David",
+      "iso": "LU",
+      "name_el": "Λουξεμβούργο",
+      "name_en": "Luxembourg",
+      "points": 129,
+      "song": "Tu te reconnaîtras"
+    }
+  },
+  "1974": {
+    "cancelled": false,
+    "city": "Brighton",
+    "city_slug": "brighton",
+    "co_winners": [],
+    "final_date": "1974-04-06",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "ABBA",
+      "iso": "SE",
+      "name_el": "Σουηδία",
+      "name_en": "Sweden",
+      "points": 24,
+      "song": "Waterloo"
+    }
+  },
+  "1975": {
+    "cancelled": false,
+    "city": "Stockholm",
+    "city_slug": "stockholm",
+    "co_winners": [],
+    "final_date": "1975-03-22",
+    "host_iso": "SE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Teach-In",
+      "iso": "NL",
+      "name_el": "Ολλανδία",
+      "name_en": "Netherlands",
+      "points": 152,
+      "song": "Ding-a-dong"
+    }
+  },
+  "1976": {
+    "cancelled": false,
+    "city": "The Hague",
+    "city_slug": "the-hague",
+    "co_winners": [],
+    "final_date": "1976-04-03",
+    "host_iso": "NL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Brotherhood of Man",
+      "iso": "GB",
+      "name_el": "Ηνωμένο Βασίλειο",
+      "name_en": "United Kingdom",
+      "points": 164,
+      "song": "Save Your Kisses for Me"
+    }
+  },
+  "1977": {
+    "cancelled": false,
+    "city": "London",
+    "city_slug": "london",
+    "co_winners": [],
+    "final_date": "1977-05-07",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Marie Myriam",
+      "iso": "FR",
+      "name_el": "Γαλλία",
+      "name_en": "France",
+      "points": 136,
+      "song": "L'Oiseau et l'Enfant"
+    }
+  },
+  "1978": {
+    "cancelled": false,
+    "city": "Paris",
+    "city_slug": "paris",
+    "co_winners": [],
+    "final_date": "1978-04-22",
+    "host_iso": "FR",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Izhar Cohen and the Alphabeta",
+      "iso": "IL",
+      "name_el": "Ισραήλ",
+      "name_en": "Israel",
+      "points": 157,
+      "song": "A-Ba-Ni-Bi"
+    }
+  },
+  "1979": {
+    "cancelled": false,
+    "city": "Jerusalem",
+    "city_slug": "jerusalem",
+    "co_winners": [],
+    "final_date": "1979-03-31",
+    "host_iso": "IL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Milk and Honey",
+      "iso": "IL",
+      "name_el": "Ισραήλ",
+      "name_en": "Israel",
+      "points": 125,
+      "song": "Hallelujah"
+    }
+  },
+  "1980": {
+    "cancelled": false,
+    "city": "The Hague",
+    "city_slug": "the-hague",
+    "co_winners": [],
+    "final_date": "1980-04-19",
+    "host_iso": "NL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Johnny Logan",
+      "iso": "IE",
+      "name_el": "Ιρλανδία",
+      "name_en": "Ireland",
+      "points": 143,
+      "song": "What's Another Year"
+    }
+  },
+  "1981": {
+    "cancelled": false,
+    "city": "Dublin",
+    "city_slug": "dublin",
+    "co_winners": [],
+    "final_date": "1981-04-04",
+    "host_iso": "IE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Bucks Fizz",
+      "iso": "GB",
+      "name_el": "Ηνωμένο Βασίλειο",
+      "name_en": "United Kingdom",
+      "points": 136,
+      "song": "Making Your Mind Up"
+    }
+  },
+  "1982": {
+    "cancelled": false,
+    "city": "Harrogate",
+    "city_slug": "harrogate",
+    "co_winners": [],
+    "final_date": "1982-04-24",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Nicole",
+      "iso": "DE",
+      "name_el": "Γερμανία",
+      "name_en": "Germany",
+      "points": 161,
+      "song": "Ein bißchen Frieden"
+    }
+  },
+  "1983": {
+    "cancelled": false,
+    "city": "Munich",
+    "city_slug": "munich",
+    "co_winners": [],
+    "final_date": "1983-04-23",
+    "host_iso": "DE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Corinne Hermès",
+      "iso": "LU",
+      "name_el": "Λουξεμβούργο",
+      "name_en": "Luxembourg",
+      "points": 142,
+      "song": "Si la vie est cadeau"
+    }
+  },
+  "1984": {
+    "cancelled": false,
+    "city": "Luxembourg City",
+    "city_slug": "luxembourg-city",
+    "co_winners": [],
+    "final_date": "1984-05-05",
+    "host_iso": "LU",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Herreys",
+      "iso": "SE",
+      "name_el": "Σουηδία",
+      "name_en": "Sweden",
+      "points": 145,
+      "song": "Diggi-Loo Diggi-Ley"
+    }
+  },
+  "1985": {
+    "cancelled": false,
+    "city": "Gothenburg",
+    "city_slug": "gothenburg",
+    "co_winners": [],
+    "final_date": "1985-05-04",
+    "host_iso": "SE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Bobbysocks",
+      "iso": "NO",
+      "name_el": "Νορβηγία",
+      "name_en": "Norway",
+      "points": 123,
+      "song": "La det swinge"
+    }
+  },
+  "1986": {
+    "cancelled": false,
+    "city": "Bergen",
+    "city_slug": "bergen",
+    "co_winners": [],
+    "final_date": "1986-05-03",
+    "host_iso": "NO",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Sandra Kim",
+      "iso": "BE",
+      "name_el": "Βέλγιο",
+      "name_en": "Belgium",
+      "points": 176,
+      "song": "J'aime la vie"
+    }
+  },
+  "1987": {
+    "cancelled": false,
+    "city": "Brussels",
+    "city_slug": "brussels",
+    "co_winners": [],
+    "final_date": "1987-05-09",
+    "host_iso": "BE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Johnny Logan",
+      "iso": "IE",
+      "name_el": "Ιρλανδία",
+      "name_en": "Ireland",
+      "points": 172,
+      "song": "Hold Me Now"
+    }
+  },
+  "1988": {
+    "cancelled": false,
+    "city": "Dublin",
+    "city_slug": "dublin",
+    "co_winners": [],
+    "final_date": "1988-04-30",
+    "host_iso": "IE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Céline Dion",
+      "iso": "CH",
+      "name_el": "Ελβετία",
+      "name_en": "Switzerland",
+      "points": 137,
+      "song": "Ne partez pas sans moi"
+    }
+  },
+  "1989": {
+    "cancelled": false,
+    "city": "Lausanne",
+    "city_slug": "lausanne",
+    "co_winners": [],
+    "final_date": "1989-05-06",
+    "host_iso": "CH",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Riva",
+      "iso": "YU",
+      "name_el": "Γιουγκοσλαβία",
+      "name_en": "Yugoslavia",
+      "points": 137,
+      "song": "Rock Me"
+    }
+  },
+  "1990": {
+    "cancelled": false,
+    "city": "Zagreb",
+    "city_slug": "zagreb",
+    "co_winners": [],
+    "final_date": "1990-05-05",
+    "host_iso": "YU",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Toto Cutugno",
+      "iso": "IT",
+      "name_el": "Ιταλία",
+      "name_en": "Italy",
+      "points": 149,
+      "song": "Insieme: 1992"
+    }
+  },
+  "1991": {
+    "cancelled": false,
+    "city": "Rome",
+    "city_slug": "rome",
+    "co_winners": [],
+    "final_date": "1991-05-04",
+    "host_iso": "IT",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Carola",
+      "iso": "SE",
+      "name_el": "Σουηδία",
+      "name_en": "Sweden",
+      "points": 146,
+      "song": "Fångad av en stormvind"
+    }
+  },
+  "1992": {
+    "cancelled": false,
+    "city": "Malmö",
+    "city_slug": "malmo",
+    "co_winners": [],
+    "final_date": "1992-05-09",
+    "host_iso": "SE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Linda Martin",
+      "iso": "IE",
+      "name_el": "Ιρλανδία",
+      "name_en": "Ireland",
+      "points": 155,
+      "song": "Why Me"
+    }
+  },
+  "1993": {
+    "cancelled": false,
+    "city": "Millstreet",
+    "city_slug": "millstreet",
+    "co_winners": [],
+    "final_date": "1993-05-15",
+    "host_iso": "IE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Niamh Kavanagh",
+      "iso": "IE",
+      "name_el": "Ιρλανδία",
+      "name_en": "Ireland",
+      "points": 187,
+      "song": "In Your Eyes"
+    }
+  },
+  "1994": {
+    "cancelled": false,
+    "city": "Dublin",
+    "city_slug": "dublin",
+    "co_winners": [],
+    "final_date": "1994-04-30",
+    "host_iso": "IE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Paul Harrington and Charlie McGettigan",
+      "iso": "IE",
+      "name_el": "Ιρλανδία",
+      "name_en": "Ireland",
+      "points": 226,
+      "song": "Rock 'n' Roll Kids"
+    }
+  },
+  "1995": {
+    "cancelled": false,
+    "city": "Dublin",
+    "city_slug": "dublin",
+    "co_winners": [],
+    "final_date": "1995-05-13",
+    "host_iso": "IE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Secret Garden",
+      "iso": "NO",
+      "name_el": "Νορβηγία",
+      "name_en": "Norway",
+      "points": 148,
+      "song": "Nocturne"
+    }
+  },
+  "1996": {
+    "cancelled": false,
+    "city": "Oslo",
+    "city_slug": "oslo",
+    "co_winners": [],
+    "final_date": "1996-05-18",
+    "host_iso": "NO",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Eimear Quinn",
+      "iso": "IE",
+      "name_el": "Ιρλανδία",
+      "name_en": "Ireland",
+      "points": 162,
+      "song": "The Voice"
+    }
+  },
+  "1997": {
+    "cancelled": false,
+    "city": "Dublin",
+    "city_slug": "dublin",
+    "co_winners": [],
+    "final_date": "1997-05-03",
+    "host_iso": "IE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Katrina and the Waves",
+      "iso": "GB",
+      "name_el": "Ηνωμένο Βασίλειο",
+      "name_en": "United Kingdom",
+      "points": 227,
+      "song": "Love Shine a Light"
+    }
+  },
+  "1998": {
+    "cancelled": false,
+    "city": "Birmingham",
+    "city_slug": "birmingham",
+    "co_winners": [],
+    "final_date": "1998-05-09",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Dana International",
+      "iso": "IL",
+      "name_el": "Ισραήλ",
+      "name_en": "Israel",
+      "points": 172,
+      "song": "Diva"
+    }
+  },
+  "1999": {
+    "cancelled": false,
+    "city": "Jerusalem",
+    "city_slug": "jerusalem",
+    "co_winners": [],
+    "final_date": "1999-05-29",
+    "host_iso": "IL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Charlotte Nilsson",
+      "iso": "SE",
+      "name_el": "Σουηδία",
+      "name_en": "Sweden",
+      "points": 163,
+      "song": "Take Me to Your Heaven"
+    }
+  },
+  "2000": {
+    "cancelled": false,
+    "city": "Stockholm",
+    "city_slug": "stockholm",
+    "co_winners": [],
+    "final_date": "2000-05-13",
+    "host_iso": "SE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Olsen Brothers",
+      "iso": "DK",
+      "name_el": "Δανία",
+      "name_en": "Denmark",
+      "points": 195,
+      "song": "Fly on the Wings of Love"
+    }
+  },
+  "2001": {
+    "cancelled": false,
+    "city": "Copenhagen",
+    "city_slug": "copenhagen",
+    "co_winners": [],
+    "final_date": "2001-05-12",
+    "host_iso": "DK",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Tanel Padar, Dave Benton and 2XL",
+      "iso": "EE",
+      "name_el": "Εσθονία",
+      "name_en": "Estonia",
+      "points": 198,
+      "song": "Everybody"
+    }
+  },
+  "2002": {
+    "cancelled": false,
+    "city": "Tallinn",
+    "city_slug": "tallinn",
+    "co_winners": [],
+    "final_date": "2002-05-25",
+    "host_iso": "EE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Marie N",
+      "iso": "LV",
+      "name_el": "Λετονία",
+      "name_en": "Latvia",
+      "points": 176,
+      "song": "I Wanna"
+    }
+  },
+  "2003": {
+    "cancelled": false,
+    "city": "Riga",
+    "city_slug": "riga",
+    "co_winners": [],
+    "final_date": "2003-05-24",
+    "host_iso": "LV",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Sertab Erener",
+      "iso": "TR",
+      "name_el": "Τουρκία",
+      "name_en": "Turkey",
+      "points": 167,
+      "song": "Everyway That I Can"
+    }
+  },
+  "2004": {
+    "cancelled": false,
+    "city": "Istanbul",
+    "city_slug": "istanbul",
+    "co_winners": [],
+    "final_date": "2004-05-15",
+    "host_iso": "TR",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Ruslana",
+      "iso": "UA",
+      "name_el": "Ουκρανία",
+      "name_en": "Ukraine",
+      "points": 280,
+      "song": "Wild Dances"
+    }
+  },
+  "2005": {
+    "cancelled": false,
+    "city": "Kyiv",
+    "city_slug": "kyiv",
+    "co_winners": [],
+    "final_date": "2005-05-21",
+    "host_iso": "UA",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Helena Paparizou",
+      "iso": "GR",
+      "name_el": "Ελλάδα",
+      "name_en": "Greece",
+      "points": 230,
+      "song": "My Number One"
+    }
+  },
+  "2006": {
+    "cancelled": false,
+    "city": "Athens",
+    "city_slug": "athens",
+    "co_winners": [],
+    "final_date": "2006-05-20",
+    "host_iso": "GR",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Lordi",
+      "iso": "FI",
+      "name_el": "Φινλανδία",
+      "name_en": "Finland",
+      "points": 292,
+      "song": "Hard Rock Hallelujah"
+    }
+  },
+  "2007": {
+    "cancelled": false,
+    "city": "Helsinki",
+    "city_slug": "helsinki",
+    "co_winners": [],
+    "final_date": "2007-05-12",
+    "host_iso": "FI",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Marija Šerifović",
+      "iso": "RS",
+      "name_el": "Σερβία",
+      "name_en": "Serbia",
+      "points": 268,
+      "song": "Molitva"
+    }
+  },
+  "2008": {
+    "cancelled": false,
+    "city": "Belgrade",
+    "city_slug": "belgrade",
+    "co_winners": [],
+    "final_date": "2008-05-24",
+    "host_iso": "RS",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Dima Bilan",
+      "iso": "RU",
+      "name_el": "Ρωσία",
+      "name_en": "Russia",
+      "points": 272,
+      "song": "Believe"
+    }
+  },
+  "2009": {
+    "cancelled": false,
+    "city": "Moscow",
+    "city_slug": "moscow",
+    "co_winners": [],
+    "final_date": "2009-05-16",
+    "host_iso": "RU",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Alexander Rybak",
+      "iso": "NO",
+      "name_el": "Νορβηγία",
+      "name_en": "Norway",
+      "points": 387,
+      "song": "Fairytale"
+    }
+  },
+  "2010": {
+    "cancelled": false,
+    "city": "Oslo",
+    "city_slug": "oslo",
+    "co_winners": [],
+    "final_date": "2010-05-29",
+    "host_iso": "NO",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Lena",
+      "iso": "DE",
+      "name_el": "Γερμανία",
+      "name_en": "Germany",
+      "points": 246,
+      "song": "Satellite"
+    }
+  },
+  "2011": {
+    "cancelled": false,
+    "city": "Düsseldorf",
+    "city_slug": "dusseldorf",
+    "co_winners": [],
+    "final_date": "2011-05-14",
+    "host_iso": "DE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Ell and Nikki",
+      "iso": "AZ",
+      "name_el": "Αζερμπαϊτζάν",
+      "name_en": "Azerbaijan",
+      "points": 221,
+      "song": "Running Scared"
+    }
+  },
+  "2012": {
+    "cancelled": false,
+    "city": "Baku",
+    "city_slug": "baku",
+    "co_winners": [],
+    "final_date": "2012-05-26",
+    "host_iso": "AZ",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Loreen",
+      "iso": "SE",
+      "name_el": "Σουηδία",
+      "name_en": "Sweden",
+      "points": 372,
+      "song": "Euphoria"
+    }
+  },
+  "2013": {
+    "cancelled": false,
+    "city": "Malmö",
+    "city_slug": "malmo",
+    "co_winners": [],
+    "final_date": "2013-05-18",
+    "host_iso": "SE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Emmelie de Forest",
+      "iso": "DK",
+      "name_el": "Δανία",
+      "name_en": "Denmark",
+      "points": 281,
+      "song": "Only Teardrops"
+    }
+  },
+  "2014": {
+    "cancelled": false,
+    "city": "Copenhagen",
+    "city_slug": "copenhagen",
+    "co_winners": [],
+    "final_date": "2014-05-10",
+    "host_iso": "DK",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Conchita Wurst",
+      "iso": "AT",
+      "name_el": "Αυστρία",
+      "name_en": "Austria",
+      "points": 290,
+      "song": "Rise Like a Phoenix"
+    }
+  },
+  "2015": {
+    "cancelled": false,
+    "city": "Vienna",
+    "city_slug": "vienna",
+    "co_winners": [],
+    "final_date": "2015-05-23",
+    "host_iso": "AT",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Måns Zelmerlöw",
+      "iso": "SE",
+      "name_el": "Σουηδία",
+      "name_en": "Sweden",
+      "points": 365,
+      "song": "Heroes"
+    }
+  },
+  "2016": {
+    "cancelled": false,
+    "city": "Stockholm",
+    "city_slug": "stockholm",
+    "co_winners": [],
+    "final_date": "2016-05-14",
+    "host_iso": "SE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Jamala",
+      "iso": "UA",
+      "name_el": "Ουκρανία",
+      "name_en": "Ukraine",
+      "points": 534,
+      "song": "1944"
+    }
+  },
+  "2017": {
+    "cancelled": false,
+    "city": "Kyiv",
+    "city_slug": "kyiv",
+    "co_winners": [],
+    "final_date": "2017-05-13",
+    "host_iso": "UA",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Salvador Sobral",
+      "iso": "PT",
+      "name_el": "Πορτογαλία",
+      "name_en": "Portugal",
+      "points": 758,
+      "song": "Amar pelos dois"
+    }
+  },
+  "2018": {
+    "cancelled": false,
+    "city": "Lisbon",
+    "city_slug": "lisbon",
+    "co_winners": [],
+    "final_date": "2018-05-12",
+    "host_iso": "PT",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Netta",
+      "iso": "IL",
+      "name_el": "Ισραήλ",
+      "name_en": "Israel",
+      "points": 529,
+      "song": "Toy"
+    }
+  },
+  "2019": {
+    "cancelled": false,
+    "city": "Tel Aviv",
+    "city_slug": "tel-aviv",
+    "co_winners": [],
+    "final_date": "2019-05-18",
+    "host_iso": "IL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Duncan Laurence",
+      "iso": "NL",
+      "name_el": "Ολλανδία",
+      "name_en": "Netherlands",
+      "points": 498,
+      "song": "Arcade"
+    }
+  },
+  "2020": {
+    "cancelled": true,
+    "city": "Rotterdam",
+    "city_slug": "rotterdam",
+    "co_winners": [],
+    "final_date": "2020-05-16",
+    "host_iso": "NL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": null
+  },
+  "2021": {
+    "cancelled": false,
+    "city": "Rotterdam",
+    "city_slug": "rotterdam",
+    "co_winners": [],
+    "final_date": "2021-05-22",
+    "host_iso": "NL",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Måneskin",
+      "iso": "IT",
+      "name_el": "Ιταλία",
+      "name_en": "Italy",
+      "points": 524,
+      "song": "Zitti e buoni"
+    }
+  },
+  "2022": {
+    "cancelled": false,
+    "city": "Turin",
+    "city_slug": "turin",
+    "co_winners": [],
+    "final_date": "2022-05-14",
+    "host_iso": "IT",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Kalush Orchestra",
+      "iso": "UA",
+      "name_el": "Ουκρανία",
+      "name_en": "Ukraine",
+      "points": 631,
+      "song": "Stefania"
+    }
+  },
+  "2023": {
+    "cancelled": false,
+    "city": "Liverpool",
+    "city_slug": "liverpool",
+    "co_winners": [],
+    "final_date": "2023-05-13",
+    "host_iso": "GB",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Loreen",
+      "iso": "SE",
+      "name_el": "Σουηδία",
+      "name_en": "Sweden",
+      "points": 583,
+      "song": "Tattoo"
+    }
+  },
+  "2024": {
+    "cancelled": false,
+    "city": "Malmö",
+    "city_slug": "malmo",
+    "co_winners": [],
+    "final_date": "2024-05-11",
+    "host_iso": "SE",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "Nemo",
+      "iso": "CH",
+      "name_el": "Ελβετία",
+      "name_en": "Switzerland",
+      "points": 591,
+      "song": "The Code"
+    }
+  },
+  "2025": {
+    "cancelled": false,
+    "city": "Basel",
+    "city_slug": "basel",
+    "co_winners": [],
+    "final_date": "2025-05-17",
+    "host_iso": "CH",
+    "indexable": false,
+    "stage": "archived",
+    "winner": {
+      "artist": "JJ",
+      "iso": "AT",
+      "name_el": "Αυστρία",
+      "name_en": "Austria",
+      "points": 436,
+      "song": "Wasted Love"
+    }
+  },
+  "2026": {
+    "cancelled": false,
+    "city": "Vienna",
+    "city_slug": "vienna",
+    "co_winners": [],
+    "final_date": "2026-05-16",
+    "host_iso": "AT",
+    "indexable": false,
+    "stage": "finalized",
+    "winner": {
+      "artist": "Dara",
+      "iso": "BG",
+      "name_el": "Βουλγαρία",
+      "name_en": "Bulgaria",
+      "points": 516,
+      "song": "Bangaranga"
+    }
+  }
+}

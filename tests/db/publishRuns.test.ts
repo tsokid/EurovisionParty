@@ -224,7 +224,7 @@ describe('074 publish_runs', () => {
     expect(input.contests.find((c) => c.year === 2020)!.cancelled).toBe(true);
 
     const files = buildSnapshotFiles(input);
-    const contestFiles = Object.keys(files).filter((f) => f.startsWith('content/contests/'));
+    const contestFiles = Object.keys(files).filter((f) => /^content\/contests\/\d{4}\.json$/.test(f));
     expect(contestFiles).toHaveLength(input.contests.length);
     expect(files['content/site.json']).toContain('"generated_at": "' + input.generated_at + '"');
     const c2025 = JSON.parse(files['content/contests/2025.json']);

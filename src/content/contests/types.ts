@@ -109,3 +109,47 @@ export type SiteSnapshot = {
   live_stage: ContestStage;
   generated_at: string;
 };
+
+/** A contest winner as listed in content/contests/index.json. */
+export type IndexWinner = {
+  iso: string;
+  name_en: string;
+  name_el: string;
+  artist: string | null;
+  song: string | null;
+  /** Grand-final total; null where the result was never published (1956). */
+  points: number | null;
+};
+
+/** One row of content/contests/index.json. */
+export type ContestIndexEntry = {
+  city: string;
+  city_slug: string;
+  host_iso: string | null;
+  stage: ContestStage;
+  indexable: boolean;
+  cancelled: boolean;
+  final_date: string | null;
+  /** First place (lowest ISO on a shared first place); null when cancelled or not decided. */
+  winner: IndexWinner | null;
+  /** The other countries sharing first place (1969), by ISO; usually empty. */
+  co_winners: IndexWinner[];
+};
+
+/** content/contests/index.json, keyed by year. */
+export type ContestIndex = Record<string, ContestIndexEntry>;
+
+/** One row of content/countries/index.json. Counts skip cancelled contests (2020). */
+export type CountryIndexEntry = {
+  iso: string;
+  name_en: string;
+  name_el: string;
+  participations: number;
+  wins: number;
+  best_place: number | null;
+  /** Same rule as dynamicPages.isCountryIndexable. */
+  indexable: boolean;
+};
+
+/** content/countries/index.json, keyed by slug; only countries with a page (≥ 1 participation). */
+export type CountryIndex = Record<string, CountryIndexEntry>;
