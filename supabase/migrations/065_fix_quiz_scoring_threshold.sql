@@ -6,6 +6,7 @@
 -- Fix: drop the ≤15 upper bound — any correct answer slower than 7s gets 4pts.
 -- The clamp (v_response_secs capped at 16) still prevents absurd values.
 
+-- 2026-10-30: removed duplicate trailing options (invalid SQL as committed); definition unchanged.
 CREATE OR REPLACE FUNCTION public.submit_quiz_answer(
   p_room_id            UUID,
   p_player_id          UUID,
@@ -75,4 +76,4 @@ BEGIN
     'is_correct',       v_is_correct
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+$$;
