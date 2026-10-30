@@ -23,7 +23,7 @@ import type {
   EntrySnapshot,
   IndexWinner,
   SiteSnapshot,
-} from '../../../src/content/contests/types.ts';
+} from '../_shared/contestTypes.ts';
 
 export type SnapshotInput = {
   contests: ContestRow[];

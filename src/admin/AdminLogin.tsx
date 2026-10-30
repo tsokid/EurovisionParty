@@ -140,7 +140,7 @@ export default function AdminLogin({ auth }: Props) {
                   <span className="text-white font-semibold">{email}</span>.
                 </p>
                 <p className="text-xs text-white/40 mt-1">
-                  Enter the code below, or tap the magic-link button in the email. Both expire in 60 minutes.
+                  Enter the code below, or tap the magic-link button in the email. Both expire in 10 minutes.
                 </p>
               </div>
 

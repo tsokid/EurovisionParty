@@ -4,7 +4,7 @@
 //
 // Pure and Deno-free: imported by the publish-content edge function and by
 // vitest. The only import is type-only.
-import type { ContestRow } from '../../../src/content/contests/types.ts';
+import type { ContestRow } from '../_shared/contestTypes.ts';
 
 export type VercelRedirect = {
   source: string;
