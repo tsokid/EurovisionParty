@@ -1,0 +1,138 @@
+{
+  "/en": {
+    "title": "Eurovision Games 2026 · Free Party Game — Predictions, Trivia & Live Scoring",
+    "description": "Free Eurovision 2026 party game for watch nights. Predict results live, battle friends in trivia duels, and score points as you watch the Grand Final. No sign-up needed."
+  },
+  "/el": {
+    "title": "Eurovision Games 2026 · Free Party Game — Predictions, Trivia & Live Scoring",
+    "description": "Free Eurovision 2026 party game for watch nights. Predict results live, battle friends in trivia duels, and score points as you watch the Grand Final. No sign-up needed."
+  },
+  "/en/how-to-play": {
+    "title": "How to Play Eurovision Games — 2-Minute Setup Guide",
+    "description": "Quick guide to running a Eurovision watch party with predictions, trivia duels, and live scoring. Setup takes 60 seconds, supports 2-20 players, no app install."
+  },
+  "/el/how-to-play": {
+    "title": "Πώς Παίζεται το Eurovision Games — Οδηγός 2 λεπτών",
+    "description": "Σύντομος οδηγός για να στήσεις ένα Eurovision watch party με προβλέψεις, μονομαχίες trivia και live βαθμολογία. Η εγκατάσταση παίρνει 60 δευτερόλεπτα, για 2-20 παίκτες, χωρίς εφαρμογή."
+  },
+  "/en/eurovision-night": {
+    "title": "Eurovision Night — Host the Perfect Watch Party (2026 Guide)",
+    "description": "A practical guide to hosting Eurovision night: setup, food, drinks, predictions, trivia, voting, and live scoring with friends. Free to play."
+  },
+  "/el/eurovision-night": {
+    "title": "Βραδιά Eurovision — Διοργάνωσε το τέλειο watch party (Οδηγός 2026)",
+    "description": "Πρακτικός οδηγός διοργάνωσης βραδιάς Eurovision: εκκίνηση, φαγητό, ποτό, προβλέψεις, trivia, ψηφοφορία και ζωντανή βαθμολογία με την παρέα σου. Δωρεάν."
+  },
+  "/en/eurovision-games": {
+    "title": "Eurovision Games — Free Multiplayer Party Game for Eurovision 2026",
+    "description": "The free, browser-based Eurovision party game: Top 5 and Worst 5 predictions, trivia duels, quiz rounds, a live dashboard, and five trophies. 2–20 players, no install."
+  },
+  "/el/eurovision-games": {
+    "title": "Eurovision Games — Δωρεάν multiplayer party game για τη Eurovision 2026",
+    "description": "Το δωρεάν party game της Eurovision μέσα στον browser: προβλέψεις Top 5 και Worst 5, μονομαχίες trivia, γύροι quiz, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια. 2–20 παίκτες, χωρίς install."
+  },
+  "/en/eurovision-party": {
+    "title": "Eurovision Party — The Complete Hosting Playbook for 2026",
+    "description": "Throw a Eurovision party in 2026: headcount, venue, theme, country-themed buffet, four-hour run-of-show, and the free scoring games that keep every song competitive."
+  },
+  "/el/eurovision-party": {
+    "title": "Πάρτι Eurovision — Ο πλήρης οδηγός διοργάνωσης για το 2026",
+    "description": "Διοργάνωσε πάρτι Eurovision το 2026: αριθμός καλεσμένων, χώρος, θέμα, μπουφές με πιάτα ανά χώρα, σειρά εμφάνισης τεσσάρων ωρών και τα δωρεάν παιχνίδια βαθμολογίας που κρατούν κάθε τραγούδι ανταγωνιστικό."
+  },
+  "/en/eurovision-trivia": {
+    "title": "Eurovision Trivia — 10 Sample Questions + How to Play Live",
+    "description": "A 10-question Eurovision trivia sampler with answers, plus how to run head-to-head trivia duels live during the broadcast."
+  },
+  "/el/eurovision-trivia": {
+    "title": "Eurovision Trivia — 10 Δείγματα Ερωτήσεων + Πώς να Παίξεις Ζωντανά",
+    "description": "Ένα δείγμα 10 ερωτήσεων Eurovision trivia με απαντήσεις, καθώς και πώς να τρέξεις head-to-head trivia μονομαχίες ζωντανά κατά τη διάρκεια της εκπομπής."
+  },
+  "/en/eurovision-2026-predictions": {
+    "title": "Eurovision 2026 Predictions — Top 5 / Worst 5 Format & Strategy",
+    "description": "A complete predictions guide for Eurovision 2026 in Vienna: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips."
+  },
+  "/el/eurovision-2026-predictions": {
+    "title": "Προβλέψεις Eurovision 2026 — Φόρμα Top 5 / Worst 5 και Στρατηγική",
+    "description": "Ένας πλήρης οδηγός προβλέψεων για την Eurovision 2026 στη Βιέννη: οι συμμετέχουσες χώρες, η φόρμα Top 5 / Worst 5, μαθηματικά βαθμολογίας και συμβουλές στρατηγικής."
+  },
+  "/en/faq": {
+    "title": "Eurovision Games FAQ — Setup, Rules, Scoring & Troubleshooting",
+    "description": "Frequently asked questions about Eurovision Games: setup, players, scoring, duels, sudden death, mobile install, troubleshooting, and privacy."
+  },
+  "/el/faq": {
+    "title": "Συχνές Ερωτήσεις Eurovision Games — Εγκατάσταση, Κανόνες, Βαθμολογία και Επίλυση Προβλημάτων",
+    "description": "Συχνές ερωτήσεις για το Eurovision Games: εγκατάσταση, παίκτες, βαθμολογία, μονομαχίες, sudden death, εγκατάσταση σε κινητό, επίλυση προβλημάτων και απόρρητο."
+  },
+  "/en/rules": {
+    "title": "Eurovision Games Rules — Full Rule Book (2026)",
+    "description": "The complete rules of Eurovision Games: phases, prediction lists, trivia duels, scoring, winner categories, sudden-death tiebreak, and dispute resolution."
+  },
+  "/el/rules": {
+    "title": "Κανόνες Eurovision Games — Πλήρης Κανονισμός (2026)",
+    "description": "Οι πλήρεις κανόνες του Eurovision Games: φάσεις, λίστες προβλέψεων, μονομαχίες trivia, βαθμολογία, κατηγορίες νικητών, sudden death και επίλυση διαφωνιών."
+  },
+  "/en/scoring": {
+    "title": "Eurovision Games Scoring — Exact Formulas for Predictions, Quiz & Duels",
+    "description": "The exact scoring formulas Eurovision Games uses for Top-5 and Worst-5 predictions, quiz response-time tiers, duel point math, Steal vs Double, and edge cases."
+  },
+  "/el/scoring": {
+    "title": "Βαθμολογία Eurovision Games — Ακριβείς Φόρμουλες για Προβλέψεις, Quiz και Μονομαχίες",
+    "description": "Οι ακριβείς φόρμουλες βαθμολογίας του Eurovision Games για προβλέψεις Top-5 και Worst-5, κλίμακες χρόνου απάντησης quiz, μαθηματικά μονομαχιών, Κλοπή vs Διπλασιασμό και ακραίες περιπτώσεις."
+  },
+  "/en/about": {
+    "title": "About Eurovision Games — Free Eurovision Party Game",
+    "description": "Eurovision Games is a free, fan-built browser party game for the Eurovision Song Contest. Predictions, trivia, duels, trophies. No ads, no accounts for guests, no install."
+  },
+  "/el/about": {
+    "title": "Σχετικά με το Eurovision Games — Δωρεάν Eurovision Party Game",
+    "description": "Το Eurovision Games είναι ένα δωρεάν, fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Προβλέψεις, trivia, μονομαχίες, τρόπαια. Καμία διαφήμιση, κανένας λογαριασμός για guests, καμία εγκατάσταση."
+  },
+  "/en/privacy": {
+    "title": "Privacy Policy — Eurovision Games",
+    "description": "What data Eurovision Games collects, why, and how to delete it. GDPR-compliant; no ads, no third-party tracking, no data sales."
+  },
+  "/el/privacy": {
+    "title": "Πολιτική Απορρήτου — Eurovision Games",
+    "description": "Τι δεδομένα συλλέγει το Eurovision Games, γιατί, και πώς να τα διαγράψεις. Συμμόρφωση με GDPR· καμία διαφήμιση, καμία παρακολούθηση από τρίτους, καμία πώληση δεδομένων."
+  },
+  "/en/terms": {
+    "title": "Terms of Use — Eurovision Games",
+    "description": "The agreement you accept when you use Eurovision Games. Free fan project, no affiliation with the EBU, player conduct rules and liability disclaimers."
+  },
+  "/el/terms": {
+    "title": "Όροι Χρήσης — Eurovision Games",
+    "description": "Η συμφωνία που αποδέχεσαι όταν χρησιμοποιείς το Eurovision Games. Δωρεάν fan project, καμία σχέση με την EBU, κανόνες συμπεριφοράς παικτών και αποποιήσεις ευθύνης."
+  },
+  "/en/duels": {
+    "title": "Eurovision Duels — Head-to-Head Trivia for the Live Show",
+    "description": "Challenge friends to 3-question Eurovision trivia duels during the live show. Steal their points or double your own. Full rules, scoring, and strategy."
+  },
+  "/el/duels": {
+    "title": "Eurovision Μονομαχίες — Head-to-Head Trivia για τη Ζωντανή Εκπομπή",
+    "description": "Πρόκαλεσε φίλους σε μονομαχίες Eurovision trivia 3 ερωτήσεων κατά τη ζωντανή εκπομπή. Κλέψε τους πόντους τους ή διπλασίασε τους δικούς σου. Πλήρεις κανόνες, βαθμολογία και στρατηγική."
+  },
+  "/en/dashboard": {
+    "title": "Dashboard — Live Leaderboard for Eurovision Games",
+    "description": "The Dashboard is the live leaderboard for your Eurovision Games room. Push-updated as predictions resolve, quiz answers land, and duels finish — no refresh."
+  },
+  "/el/dashboard": {
+    "title": "Dashboard — ζωντανός πίνακας βαθμολογίας για το Eurovision Games",
+    "description": "Το Dashboard είναι ο ζωντανός πίνακας βαθμολογίας του δωματίου σου στο Eurovision Games. Ενημερώνεται αυτόματα όταν λύνονται προβλέψεις, μπαίνουν απαντήσεις στο quiz και τελειώνουν μονομαχίες — χωρίς refresh."
+  },
+  "/en/cookies": {
+    "title": "Cookies & Consent — Eurovision Games",
+    "description": "What cookies Eurovision Games uses, why, and how to change your consent. Strictly necessary only by default; analytics is opt-in."
+  },
+  "/el/cookies": {
+    "title": "Cookies & Συναίνεση — Eurovision Games",
+    "description": "Ποια cookies χρησιμοποιεί το Eurovision Games, γιατί, και πώς αλλάζεις τη συναίνεσή σου. Από προεπιλογή μόνο τα απολύτως απαραίτητα· τα στατιστικά είναι opt-in."
+  },
+  "/en/winners": {
+    "title": "Eurovision Winners — Every Champion 1956 to Today · Eurovision Games",
+    "description": "Complete list of Eurovision Song Contest winners from 1956 to 2026. Recent champions, all-time leaderboard, record-holders, and notable moments."
+  },
+  "/el/winners": {
+    "title": "Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα · Eurovision Games",
+    "description": "Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το 2026. Πρόσφατοι πρωταθλητές, αιώνιο πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές."
+  }
+}
