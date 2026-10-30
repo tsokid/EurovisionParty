@@ -53,4 +53,18 @@ describe('headTagsHtml', () => {
     expect(html).toContain('property="article:published_time"');
     expect(html).toContain('property="article:modified_time"');
   });
+
+  it('emits a robots meta when given (M4)', () => {
+    const html = headTagsHtml({ ...base, robots: 'noindex' });
+    expect(html).toContain('<meta name="robots" content="noindex">');
+    expect(headTagsHtml(base)).not.toContain('name="robots"');
+  });
+
+  it('omits canonical and og:url when no canonical is given (404)', () => {
+    const html = headTagsHtml({ title: 'Not found', description: 'D', robots: 'noindex' });
+    expect(html).not.toContain('rel="canonical"');
+    expect(html).not.toContain('og:url');
+    expect(html).toContain('<meta name="robots" content="noindex">');
+  });
 });
+

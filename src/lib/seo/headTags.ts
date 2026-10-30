@@ -3,7 +3,10 @@ import type { HreflangLink } from './hreflang';
 export interface HeadInput {
   title: string;
   description: string;
-  canonical: string;
+  /** Omit for pages that must not be canonicalised (404). Also drives og:url. */
+  canonical?: string;
+  /** e.g. 'noindex' for the 404 page. */
+  robots?: string;
   jsonLd?: object | object[];
   hreflang?: HreflangLink[];
   ogLocale?: 'en_US' | 'el_GR';
@@ -46,7 +49,7 @@ const ssrProp = (prop: string, content: string) => `<meta property="${prop}" con
 /** HTML string for every head tag SchemaHead writes client-side in its effect. */
 export function headTagsHtml(input: HeadInput): string {
   const {
-    title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+    title, description, canonical, robots, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
     ogType, ogImage, twitterTitle, twitterDescription,
     articlePublishedTime, articleModifiedTime, keywords,
   } = input;
@@ -56,7 +59,6 @@ export function headTagsHtml(input: HeadInput): string {
     metaName('description', description),
     metaProp('og:title', title),
     metaProp('og:description', description),
-    metaProp('og:url', canonical),
     metaProp('og:type', ogType ?? 'website'),
     metaProp('og:image', image),
     metaName('twitter:image', image),
@@ -64,6 +66,8 @@ export function headTagsHtml(input: HeadInput): string {
     metaName('twitter:title', twitterTitle ?? title),
     metaName('twitter:description', twitterDescription ?? description),
   ];
+  if (canonical) out.push(metaProp('og:url', canonical));
+  if (robots) out.push(metaName('robots', robots));
   if (ogLocale) out.push(metaProp('og:locale', ogLocale));
   for (const loc of ogLocaleAlternate ?? []) out.push(ssrProp('og:locale:alternate', loc));
   if (keywords && keywords.length) out.push(metaName('keywords', keywords.join(', ')));
@@ -71,7 +75,7 @@ export function headTagsHtml(input: HeadInput): string {
     if (articlePublishedTime) out.push(ssrProp('article:published_time', articlePublishedTime));
     if (articleModifiedTime) out.push(ssrProp('article:modified_time', articleModifiedTime));
   }
-  out.push(`<link rel="canonical" href="${esc(canonical)}">`);
+  if (canonical) out.push(`<link rel="canonical" href="${esc(canonical)}">`);
   for (const h of hreflang ?? []) {
     out.push(`<link rel="alternate" hreflang="${esc(h.hreflang)}" href="${esc(h.href)}" ${SSR_ATTR}>`);
   }

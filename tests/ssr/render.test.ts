@@ -87,6 +87,15 @@ describe('entry-server render', () => {
     expect(r.status).toBe(404);
   });
 
+  it('404 page is noindex with no canonical (M4)', async () => {
+    for (const url of ['/en/__404', '/el/__404']) {
+      const r = await render(url);
+      expect(r.status, url).toBe(404);
+      expect(r.head?.robots, url).toBe('noindex');
+      expect(r.head?.canonical, url).toBeUndefined();
+    }
+  });
+
   it('does not touch the network', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });

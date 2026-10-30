@@ -25,7 +25,7 @@ export function NotFoundPage() {
       <SchemaHead
         title={c.meta.title}
         description={c.meta.description}
-        canonical="https://eurovision.games/404"
+        robots="noindex"
         ogType="website"
         ogImage="https://eurovision.games/logo.png"
         ogLocale={locale === 'el' ? 'el_GR' : 'en_US'}

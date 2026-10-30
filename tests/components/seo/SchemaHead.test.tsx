@@ -99,3 +99,19 @@ describe('SchemaHead adopts server-rendered head tags (C1)', () => {
     expect(document.head.querySelector('script[type="application/ld+json"]')!.textContent).toContain('"B"');
   });
 });
+
+describe('SchemaHead robots / no canonical (M4)', () => {
+  beforeEach(() => {
+    cleanup();
+    document.head.innerHTML = '<link rel="canonical" href="https://eurovision.games/en/faq">';
+  });
+
+  it('sets robots noindex and removes the canonical while mounted, restoring on unmount', () => {
+    const { unmount } = render(<SchemaHead title="404" description="D" robots="noindex" />);
+    expect(document.head.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex');
+    expect(document.head.querySelector('link[rel="canonical"]')).toBeNull();
+    unmount();
+    expect(document.head.querySelector('meta[name="robots"]')).toBeNull();
+    expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://eurovision.games/en/faq');
+  });
+});

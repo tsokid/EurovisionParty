@@ -6,12 +6,12 @@ type Props = HeadInput;
 
 
 export default function SchemaHead({
-  title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+  title, description, canonical, robots, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
   ogType, ogImage, twitterTitle, twitterDescription,
   articlePublishedTime, articleModifiedTime, keywords,
 }: Props) {
   useHeadCollector()?.setHead({
-    title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+    title, description, canonical, robots, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
     ogType, ogImage, twitterTitle, twitterDescription,
     articlePublishedTime, articleModifiedTime, keywords,
   });
@@ -32,13 +32,15 @@ export default function SchemaHead({
     const prevTwDesc = readMeta('twitter:description');
     const prevTwImage = readMeta('twitter:image');
     const prevKeywords = readMeta('keywords');
+    const prevRobots = readMeta('robots');
     const prevCanonical = (document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null)?.href ?? null;
 
     document.title = title;
     setMeta('description', description);
     setMeta('og:title', title, true);
     setMeta('og:description', description, true);
-    setMeta('og:url', canonical, true);
+    if (canonical) setMeta('og:url', canonical, true);
+    if (robots) setMeta('robots', robots);
     if (ogLocale) setMeta('og:locale', ogLocale, true);
     if (ogType) setMeta('og:type', ogType, true);
     if (ogImage) {
@@ -51,13 +53,23 @@ export default function SchemaHead({
 
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     let createdCanonical = false;
-    if (!link) {
-      link = document.createElement('link');
-      link.rel = 'canonical';
-      document.head.appendChild(link);
-      createdCanonical = true;
+    let removedCanonical: HTMLLinkElement | null = null;
+    if (!canonical) {
+      // No canonical (404): drop any inherited one while this page is shown.
+      if (link) {
+        link.remove();
+        removedCanonical = link;
+        link = null;
+      }
+    } else {
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'canonical';
+        document.head.appendChild(link);
+        createdCanonical = true;
+      }
+      link.href = canonical;
     }
-    link.href = canonical;
 
     // hreflang links
     const hreflangTags: HTMLLinkElement[] = (hreflang ?? []).map((h) => {
@@ -127,13 +139,17 @@ export default function SchemaHead({
       if (prevTwDesc !== null) setMeta('twitter:description', prevTwDesc);
       if (prevTwImage !== null) setMeta('twitter:image', prevTwImage);
       if (prevKeywords !== null) setMeta('keywords', prevKeywords);
-      if (createdCanonical) {
+      if (prevRobots !== null) setMeta('robots', prevRobots);
+      else if (robots) document.head.querySelector('meta[name="robots"]')?.remove();
+      if (removedCanonical) {
+        document.head.appendChild(removedCanonical);
+      } else if (createdCanonical) {
         link?.remove();
       } else if (link && prevCanonical !== null) {
         link.href = prevCanonical;
       }
     };
-  }, [title, description, canonical, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+  }, [title, description, canonical, robots, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
       ogType, ogImage, twitterTitle, twitterDescription,
       articlePublishedTime, articleModifiedTime, keywords]);
   return null;
