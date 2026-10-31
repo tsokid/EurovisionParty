@@ -7,8 +7,10 @@
 //   2. Each reference must resolve to a cms_media row of the field's kind
 //      (not an 800 w variant), and an image must have its variant row: else
 //      the publish is refused (MediaError), before anything is downloaded.
-//   3. Each row's object is downloaded from Storage (injected) and its
-//      sha256 checked against the row.
+//   3. The bytes to download (the rows' `bytes`, variants included) must not
+//      exceed MEDIA_MAX_NEW_BYTES, checked before any download so an edge
+//      function never holds more than that in memory. Each row's object is
+//      then downloaded from Storage (injected) and its sha256 checked.
 //   4. The file goes to public/media/<sha12>.<ext>, sha12 being the first 12
 //      hex of its sha256; an image's variant goes beside it as
 //      public/media/<sha12 of the image>-800.webp (the public CmsImage
@@ -16,9 +18,11 @@
 //   5. The references are rewritten to /media/<sha12>.<ext>; an image group
 //      gets the image row's width and height, a video group its poster's.
 // The rows to mark published (media_mark_published) are returned; the caller
-// marks them only after the commit succeeded. A row already published (its
-// published_path set, the file and any variant already in the branch head) is
-// not downloaded again: its reference is rewritten to that path.
+// marks them only after the commit succeeded. A row whose file and any
+// variant are already in the branch head under its content name is not
+// downloaded again (nor counted): its reference is rewritten to that path,
+// and it is marked when its published_path is not set yet. The branch is read
+// only when a referenced row is published or the downloads exceed the cap.
 //
 // An image or video group that already holds a /media/ reference must carry
 // its width and height (publish cannot recompute them without the row).
@@ -33,6 +37,7 @@ import { CMS_DOC_TYPES, docTypeFor } from '../_shared/cms/registry.ts';
 import { walkSchema, type Segment } from '../_shared/cms/walk.ts';
 import type { MediaKind } from '../_shared/cms/fields.ts';
 import type { CmsDocumentRow, MediaRow } from './snapshot.ts';
+import { tooMuchNewMedia } from './github.ts';
 
 export type { MediaRow };
 
@@ -134,12 +139,6 @@ export type PublishedMedia = {
   marks: Array<{ id: string; path: string }>;
 };
 
-/**
- * Resolves, downloads, verifies and names the media the drafts reference,
- * and rewrites the drafts to the published references. Throws MediaError
- * listing every problem; reference problems are found before any download.
- * `drafts` is not modified.
- */
 const isDim = (n: unknown) => typeof n === 'number' && Number.isInteger(n) && n > 0;
 
 /** `doc_id path` of each image / video group whose published (/media/) source lacks width or height. */
@@ -160,12 +159,22 @@ function groupsWithoutDimensions(drafts: readonly CmsDocumentRow[]): string[] {
   return [...out];
 }
 
+/** /media/<sha12>.<ext>: the name a row's file is published under (sha12 = the first 12 hex of its sha256). */
+const contentName = (row: MediaRow) => `/media/${row.sha256.toLowerCase().slice(0, 12)}.${EXT[row.kind]}`;
+
 /** The /media/<sha12>.<ext> a row was published under, if it matches its own sha (else null: publish it again). */
 function publishedName(row: MediaRow): string | null {
-  const want = `/media/${row.sha256.toLowerCase().slice(0, 12)}.${EXT[row.kind]}`;
+  const want = contentName(row);
   return row.published_path === want ? want : null;
 }
 
+/**
+ * Resolves, downloads, verifies and names the media the drafts reference,
+ * and rewrites the drafts to the published references. Throws MediaError
+ * listing every problem; reference problems, and more than
+ * MEDIA_MAX_NEW_BYTES to download, are found before any download.
+ * `drafts` is not modified.
+ */
 export async function publishMedia(
   drafts: readonly CmsDocumentRow[],
   rows: readonly MediaRow[],
@@ -225,25 +234,47 @@ export async function publishMedia(
     files[`public${name}`] = bytes;
     marks.push({ id: row.id, path: name });
   };
-  const anyPublished = [...used.values()].some((r) => publishedName(r));
-  const inTree = anyPublished ? await publishedPaths() : new Set<string>();
+  // A row whose file (and an image's variant) is already in the branch under
+  // its content name is reused: no download. The branch is read when a row
+  // is published, or when the downloads would pass the cap (a file committed
+  // by a run whose media_mark_published failed still counts as in the branch).
+  const variantName = (name: string) => name.replace(/\.webp$/, '-800.webp');
+  let inTree: ReadonlySet<string> | null = null;
+  const inBranch = (row: MediaRow) => {
+    const name = contentName(row);
+    return !!inTree?.has(`public${name}`) && (row.kind !== 'image' || inTree.has(`public${variantName(name)}`));
+  };
+  const toDownload = () => [...used.values()].filter((r) => !inBranch(r));
+  const downloadBytes = (list: MediaRow[]) =>
+    list.reduce((n, r) => n + r.bytes + (r.kind === 'image' ? variantOf.get(r.id.toLowerCase())!.bytes : 0), 0);
+  if ([...used.values()].some((r) => publishedName(r))) inTree = await publishedPaths();
+  let pending = toDownload();
+  if (downloadBytes(pending) > MEDIA_MAX_NEW_BYTES && inTree === null) {
+    inTree = await publishedPaths();
+    pending = toDownload();
+  }
+  const added = downloadBytes(pending);
+  if (added > MEDIA_MAX_NEW_BYTES) throw new MediaError([tooMuchNewMedia(added, MEDIA_MAX_NEW_BYTES)]);
+
   for (const [id, row] of used) {
-    // Already published and still in the branch (with its variant): reuse it, no download.
-    const prior = publishedName(row);
-    if (prior && inTree.has(`public${prior}`) && (row.kind !== 'image' || inTree.has(`public${prior.replace(/\.webp$/, '-800.webp')}`))) {
-      published.set(id, prior);
+    const name = contentName(row);
+    const variant = row.kind === 'image' ? variantOf.get(id)! : undefined;
+    if (inBranch(row)) {
+      published.set(id, name);
+      // Not yet marked (a failed media_mark_published): mark it now, nothing to commit.
+      if (row.published_path !== name) {
+        marks.push({ id: row.id, path: name });
+        if (variant) marks.push({ id: variant.id, path: variantName(name) });
+      }
       continue;
     }
     const bytes = await fetchVerified(row);
     if (!bytes) continue;
-    const sha12 = row.sha256.toLowerCase().slice(0, 12);
-    const name = `/media/${sha12}.${EXT[row.kind]}`;
     write(row, name, bytes);
     published.set(id, name);
-    const variant = row.kind === 'image' ? variantOf.get(id)! : undefined;
     if (variant) {
       const vbytes = await fetchVerified(variant);
-      if (vbytes) write(variant, `/media/${sha12}-800.webp`, vbytes);
+      if (vbytes) write(variant, variantName(name), vbytes);
     }
   }
   if (errors.length) throw new MediaError(errors);

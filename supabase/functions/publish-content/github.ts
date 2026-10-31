@@ -43,6 +43,10 @@ export type CommitFilesOpts = GitHubOpts & {
   maxNewBinaryBytes?: number;
 };
 
+/** The refusal when a publish would add more new media than allowed (also checked before downloading). */
+export const tooMuchNewMedia = (added: number, max: number) =>
+  `Publish would add ${added} bytes of new media (max ${max}); publish fewer media at a time`;
+
 export type FileTransforms = Record<string, (current: string | null) => string>;
 
 export type CommitResult = {
@@ -159,7 +163,7 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   if (opts.maxNewBinaryBytes !== undefined) {
     const added = changed.reduce((n, f) => n + (typeof f.content === 'string' ? 0 : f.content.byteLength), 0);
     if (added > opts.maxNewBinaryBytes) {
-      throw new Error(`Publish would add ${added} bytes of new media (max ${opts.maxNewBinaryBytes}); publish fewer media at a time`);
+      throw new Error(tooMuchNewMedia(added, opts.maxNewBinaryBytes));
     }
   }
 

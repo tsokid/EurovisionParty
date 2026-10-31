@@ -296,6 +296,48 @@ describe('publishMedia', () => {
     ]);
   });
 
+  describe('new-media cap (memory: nothing over MEDIA_MAX_NEW_BYTES is downloaded)', () => {
+    const TOO_BIG = /^Publish would add (\d+) bytes of new media \(max 52428800\); publish fewer media at a time$/;
+    const bigVideo = (extra: Partial<MediaRow> = {}) =>
+      rows.map((r) => (r.id === VID ? { ...r, bytes: MEDIA_MAX_NEW_BYTES, ...extra } : r));
+
+    it('refuses from the row sizes (variants included) before any download', async () => {
+      const dl = vi.fn(async (p: string) => download(p));
+      const e = await thrown(publishMedia([draft()], bigVideo(), dl));
+      expect(e.errors).toHaveLength(1);
+      const added = Number(TOO_BIG.exec(e.errors[0])![1]);
+      const want = rows.filter((r) => r.id !== VID).reduce((n, r) => n + r.bytes, MEDIA_MAX_NEW_BYTES);
+      expect(added).toBe(want);
+      expect(dl).not.toHaveBeenCalled();
+    });
+
+    it('exactly at the cap is allowed', async () => {
+      const rest = rows.filter((r) => r.id !== VID).reduce((n, r) => n + r.bytes, 0);
+      const out = await publishMedia([draft()], bigVideo({ bytes: MEDIA_MAX_NEW_BYTES - rest }), download);
+      expect(out.files[`public/media/${VID_SHA}.mp4`]).toBeDefined();
+    });
+
+    it('a reused (published, in the branch) row does not count and is not downloaded', async () => {
+      const tree = new Set([`public/media/${VID_SHA}.mp4`]);
+      const dl = vi.fn(async (p: string) => download(p));
+      await publishMedia([draft()], bigVideo({ published_path: `/media/${VID_SHA}.mp4` }), dl, async () => tree);
+      expect(dl.mock.calls.map((c) => c[0])).not.toContain(`${VID}.mp4`);
+    });
+
+    it('over the cap, a file already in the branch under its content name is not downloaded and does not count; it is marked published', async () => {
+      const tree = new Set([`public/media/${VID_SHA}.mp4`]);
+      const dl = vi.fn(async (p: string) => download(p));
+      const publishedPaths = vi.fn(async () => tree);
+      const out = await publishMedia([draft()], bigVideo(), dl, publishedPaths);
+      expect(publishedPaths).toHaveBeenCalledTimes(1);
+      expect(dl.mock.calls.map((c) => c[0])).not.toContain(`${VID}.mp4`);
+      expect(Object.keys(out.files)).not.toContain(`public/media/${VID_SHA}.mp4`);
+      expect(out.marks).toContainEqual({ id: VID, path: `/media/${VID_SHA}.mp4` });
+      const data = out.drafts[0].data as { en: ReturnType<typeof locale> };
+      expect((data.en.zone[1] as unknown as { video: { media: string } }).video.media).toBe(`/media/${VID_SHA}.mp4`);
+    });
+  });
+
   it('a failed download refuses the publish', async () => {
     const e = await thrown(publishMedia([draft()], rows.map((r) => (r.id === VTT ? { ...r, storage_path: `${MISSING}.vtt` } : r)), download));
     expect(e.message).toContain(`media ${VTT} (${MISSING}.vtt): download failed: Object not found: ${MISSING}.vtt`);
@@ -556,20 +598,27 @@ describe('runPublish with media', () => {
     it('new media over 50 MB is refused before anything is written; already-committed media does not count', async () => {
       const big = new Uint8Array(MEDIA_MAX_NEW_BYTES - 5);
       const bigRows = rows.map((r) => (r.id === VID ? { ...r, sha256: sha256(big), bytes: big.byteLength } : r));
-      const dl = async (p: string) => (p === `${VID}.mp4` ? big : download(p));
+      const dl = vi.fn(async (p: string) => (p === `${VID}.mp4` ? big : download(p)));
       // Nothing in the tree yet: big video + images > 50 MB.
       const empty = await github({ 'vercel.json': vercelMerged });
       const a = deps({ ...withDraft, media: bigRows }, empty.commit);
       a.d.media.download = dl;
       const refused = await runPublish(a.d);
-      expect(refused).toMatchObject({ status: 'error', error: expect.stringMatching(/^Publish would add \d+ bytes of new media \(max 52428800\)/) });
+      // Refused by publishMedia from the row sizes, before any download (commitFiles keeps the same guard).
+      expect(refused).toMatchObject({ status: 'error', error: expect.stringMatching(/\nPublish would add \d+ bytes of new media \(max 52428800\)/) });
+      expect(dl).not.toHaveBeenCalled();
       expect(empty.calls.filter((c) => !c.startsWith('GET'))).toEqual([]);
       // The big video already committed: only the small files are new, so it passes.
       const bigSha = sha256(big).slice(0, 12);
       const present = await github({ 'vercel.json': vercelMerged, [`public/media/${bigSha}.mp4`]: big });
       const b = deps({ ...withDraft, media: bigRows }, present.commit);
       b.d.media.download = dl;
+      b.media.publishedPaths.mockResolvedValue(present.paths);
+      dl.mockClear();
       expect(await runPublish(b.d)).toMatchObject({ status: 'ok', sha: 'c1' });
+      // The committed video is not downloaded again; its row is marked published.
+      expect(dl.mock.calls.map((c) => c[0])).not.toContain(`${VID}.mp4`);
+      expect(b.media.markPublished).toHaveBeenCalledWith(VID, `/media/${bigSha}.mp4`);
       expect(present.calls.filter((c) => c === `POST /repos/${REPO}/git/blobs`)).toHaveLength(5);
     }, 30_000);
   });
