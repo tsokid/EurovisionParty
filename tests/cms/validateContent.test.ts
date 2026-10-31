@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { text, group, list } from '../../supabase/functions/_shared/cms/fields';
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
 import { liveContestFacts, validateContentDir } from '../../scripts/cms/validate-content';
+import { cityName } from '../../src/pages/contest/content/hubCopy';
 
 describe('validateContentDir', () => {
   let dir: string;
@@ -66,7 +67,7 @@ describe('hardcoded live-contest year/city (warning, never an error)', () => {
     delete CMS_DOC_TYPES['__vc-facts'];
   });
 
-  it('warns at doc:locale:path for each string naming the live year or city', () => {
+  it('warns at file [locale] path for each string naming the live year or city', () => {
     writeFileSync(join(dir, '__vc-facts.json'), JSON.stringify({
       en: { title: 'Eurovision 2031', steps: [{ body: 'Plan ahead' }, { body: 'Off to Turin' }], note: 'In {year}' },
       el: { title: 'Eurovision', steps: [{ body: 'Σχέδιο' }, { body: 'Στο Τορίνο το 20310' }], note: 'Το {year}' },
@@ -74,9 +75,9 @@ describe('hardcoded live-contest year/city (warning, never an error)', () => {
     const r = validateContentDir(dir, FACTS);
     expect(r.errors).toEqual([]);
     expect(r.warnings).toEqual([
-      'possible hardcoded year/city at __vc-facts:en:title',
-      'possible hardcoded year/city at __vc-facts:en:steps.1.body',
-      'possible hardcoded year/city at __vc-facts:el:steps.1.body',
+      '__vc-facts.json: [en] title: Possible hardcoded year/city: use the contest placeholders',
+      '__vc-facts.json: [en] steps.1.body: Possible hardcoded year/city: use the contest placeholders',
+      '__vc-facts.json: [el] steps.1.body: Possible hardcoded year/city: use the contest placeholders',
     ]);
   });
 
@@ -90,12 +91,32 @@ describe('hardcoded live-contest year/city (warning, never an error)', () => {
 
   it('defaults to the live contest in content/site.json, not a pinned year', () => {
     const site = JSON.parse(readFileSync(join(__dirname, '../../content/site.json'), 'utf8')) as {
-      current: { year: number; city: string };
+      current: { year: number; city: string; city_slug: string };
     };
     const facts = liveContestFacts();
     expect(facts.year).toBe(site.current.year);
     expect(facts.cities).toContain(site.current.city);
-    expect(facts.cities.length).toBe(2); // en and el names
+    // en and el names (one when the city has no Greek form): not tied to a CITY_EL entry.
+    const { city, city_slug } = site.current;
+    expect(facts.cities).toEqual([...new Set([city, cityName('el', city_slug, city).name])]);
+  });
+
+  it('works for a host city with no Greek form (one name)', () => {
+    mkdirSync(join(dir, 'site'));
+    const site = join(dir, 'site', 'site.json');
+    writeFileSync(site, JSON.stringify({ current: { year: 2040, city: 'Nowhereville', city_slug: 'nowhereville' } }));
+    expect(liveContestFacts(site)).toEqual({ year: 2040, cities: ['Nowhereville'] });
+  });
+
+  it('reports every validateDocument warning (soft length too), never as an error', () => {
+    CMS_DOC_TYPES['__vc-soft'] = { schema: group({ title: text({ softMaxLength: 5 }) }), label: 'T', group: 'site' };
+    const soft = join(dir, 'soft');
+    mkdirSync(soft);
+    writeFileSync(join(soft, '__vc-soft.json'), JSON.stringify({ en: { title: 'Too long' }, el: { title: 'Ok' } }));
+    const r = validateContentDir(soft, FACTS);
+    delete CMS_DOC_TYPES['__vc-soft'];
+    expect(r.errors).toEqual([]);
+    expect(r.warnings).toEqual(['__vc-soft.json: [en] title: Longer than recommended: 8 characters, recommended max 5']);
   });
 });
 

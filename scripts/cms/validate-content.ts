@@ -3,49 +3,31 @@
  * (supabase/functions/_shared/cms). Prints each error and exits 1 on failure.
  * A missing or empty content/pages/ passes with "0 documents".
  *
- * Also warns (never fails) for any string naming the live contest's year or
- * host city (content/site.json): copy should say {year} / use the contest
- * facts, so it stays right when the next contest goes live. A dated past fact
- * (a policy date, a trivia answer) is a legitimate hit: review, then ignore.
+ * Also prints validateDocument's warnings (never a failure): a string over its
+ * field's recommended length (SEO title 60, meta description 160), an optional
+ * field filled in one locale only, and any string naming the live contest's
+ * year or host city (content/site.json): copy should say {year} / use the
+ * contest facts, so it stays right when the next contest goes live. A dated
+ * past fact (a policy date, a trivia answer) is a legitimate hit: review, then
+ * ignore.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docTypeFor } from '../../supabase/functions/_shared/cms/registry';
-import { validateDocument } from '../../supabase/functions/_shared/cms/validate';
+import { validateDocument, type ValidationContext } from '../../supabase/functions/_shared/cms/validate';
 import { cityName } from '../../src/pages/contest/content/hubCopy';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 export const PAGES_DIR = resolve(ROOT, 'content/pages');
 
 /** The live contest's year and host city names (en, el), from content/site.json. */
-export interface LiveContestFacts { year: number; cities: string[] }
+export type LiveContestFacts = ValidationContext;
 
 export function liveContestFacts(sitePath = resolve(ROOT, 'content/site.json')): LiveContestFacts {
   const site = JSON.parse(readFileSync(sitePath, 'utf8')) as { current: { year: number; city: string; city_slug: string } };
   const { year, city, city_slug } = site.current;
   return { year, cities: [...new Set([city, cityName('el', city_slug, city).name])] };
-}
-
-const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-/** `docId:locale:path` (list indices as numbers) of every string naming the live year or city. */
-export function hardcodedFacts(docId: string, data: unknown, facts: LiveContestFacts): string[] {
-  const re = new RegExp([`(?<!\\d)${facts.year}(?!\\d)`, ...facts.cities.map(escapeRe)].join('|'));
-  const hits: string[] = [];
-  const walk = (v: unknown, at: string): void => {
-    if (typeof v === 'string') {
-      if (re.test(v)) hits.push(at);
-    } else if (Array.isArray(v)) v.forEach((x, i) => walk(x, `${at}.${i}`));
-    else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(x, `${at}.${k}`);
-  };
-  if (data && typeof data === 'object' && !Array.isArray(data)) {
-    for (const locale of ['en', 'el']) {
-      const slice = (data as Record<string, unknown>)[locale];
-      if (slice && typeof slice === 'object') for (const [k, x] of Object.entries(slice)) walk(x, `${docId}:${locale}:${k}`);
-    }
-  }
-  return hits;
 }
 
 export function validateContentDir(
@@ -65,11 +47,10 @@ export function validateContentDir(
       errors.push(`${file}: invalid JSON: ${(e as Error).message}`);
       continue;
     }
-    const r = validateDocument(docTypeFor(docId), data);
-    if (!r.ok) {
-      for (const e of r.errors) errors.push(`${file}: [${e.locale ?? 'doc'}] ${e.path || '(root)'}: ${e.message}`);
-    }
-    for (const at of hardcodedFacts(docId, data, facts)) warnings.push(`possible hardcoded year/city at ${at}`);
+    const r = validateDocument(docTypeFor(docId), data, facts);
+    const line = (e: { locale: string | null; path: string; message: string }) => `${file}: [${e.locale ?? 'doc'}] ${e.path || '(root)'}: ${e.message}`;
+    errors.push(...r.errors.map(line));
+    warnings.push(...r.warnings.map(line));
   }
   return { count: files.length, errors, warnings };
 }
