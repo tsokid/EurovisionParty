@@ -144,7 +144,7 @@ describe('editorialPages', () => {
     expect(validateDocument('archive-editorial', doc).ok).toBe(true);
   });
 
-  it('level: text is a non-empty intro or a block; image is a set image', () => {
+  it('level: text is a non-empty intro or a text block; image is a set hero image', () => {
     expect(editorialLevel(null)).toBe('none');
     expect(editorialLevel({ en: editorial(), el: editorial() })).toBe('none');
     expect(editorialLevel({ en: editorial({ intro: '  ' }), el: editorial() })).toBe('none');
@@ -153,6 +153,20 @@ describe('editorialPages', () => {
     expect(editorialLevel({ en: editorial({ image: IMG }), el: editorial({ image: IMG }) })).toBe('image');
     expect(editorialLevel({ en: editorial({ intro: 'Hi', image: IMG }), el: editorial() })).toBe('text + image');
     expect(editorialLevel({ en: editorial({ intro: 'Hi', image: { ...IMG, media: '' } }), el: editorial() })).toBe('text');
+  });
+
+  it('level counts blocks by type: image/video blocks are image, text/callout/faq/cta blocks are text', () => {
+    const only = (...blocks: unknown[]) => editorialLevel({ en: editorial({ blocks }), el: editorial() });
+    const img = { type: 'image', image: IMG };
+    const vid = { type: 'video', video: { media: `cms-media/${'2'.repeat(8)}-5a4d-4c2e-9f10-1234567890ab`, poster: IMG.media, autoplay: false } };
+    expect(only(img)).toBe('image');
+    expect(only(vid)).toBe('image');
+    expect(only({ type: 'text', body: 'x' })).toBe('text');
+    expect(only({ type: 'callout', tone: 'info', body: 'x' })).toBe('text');
+    expect(only({ type: 'faq', items: [{ q: 'q', a: 'a' }] })).toBe('text');
+    expect(only({ type: 'cta', title: 't', body: 'b', label: 'l', href: '/faq' })).toBe('text');
+    expect(only(img, { type: 'cta', title: 't', body: 'b', label: 'l', href: '/faq' })).toBe('text + image');
+    expect(editorialLevel({ en: editorial({ intro: 'Hi', blocks: [vid] }), el: editorial() })).toBe('text + image');
   });
 });
 

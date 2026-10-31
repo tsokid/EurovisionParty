@@ -109,17 +109,28 @@ export function emptyEditorialDoc(): DocValue {
   return { en: emptyValue(schema), el: emptyValue(schema) };
 }
 
-/** What an editorial doc holds, for the Contests indicator: text (an intro or a block) and/or an image. */
+/**
+ * What an editorial doc holds, for the Contests indicator. Image: a hero
+ * image, or an image or video block. Text: a non-empty intro, or a text,
+ * callout, faq or cta block.
+ */
 export type EditorialLevel = 'none' | 'text' | 'image' | 'text + image';
+
+const IMAGE_BLOCKS = new Set(['image', 'video']);
+const TEXT_BLOCKS = new Set(['text', 'callout', 'faq', 'cta']);
 
 export function editorialLevel(doc: unknown): EditorialLevel {
   const locales = doc && typeof doc === 'object' ? Object.values(doc as Record<string, unknown>) : [];
   const slices = locales.filter((v): v is Record<string, unknown> => !!v && typeof v === 'object');
-  const text = slices.some((s) => (typeof s.intro === 'string' && s.intro.trim() !== '') || (Array.isArray(s.blocks) && s.blocks.length > 0));
-  const image = slices.some((s) => {
+  const blockTypes = slices.flatMap((s) => (Array.isArray(s.blocks) ? s.blocks : []))
+    .map((b) => (b && typeof b === 'object' ? (b as { type?: unknown }).type : undefined));
+  const hasBlock = (types: ReadonlySet<string>) => blockTypes.some((t) => typeof t === 'string' && types.has(t));
+  const text = slices.some((s) => typeof s.intro === 'string' && s.intro.trim() !== '') || hasBlock(TEXT_BLOCKS);
+  const hero = slices.some((s) => {
     const img = s.image as { media?: unknown } | undefined;
     return !!img && typeof img.media === 'string' && img.media.trim() !== '';
   });
+  const image = hero || hasBlock(IMAGE_BLOCKS);
   return text && image ? 'text + image' : text ? 'text' : image ? 'image' : 'none';
 }
 
