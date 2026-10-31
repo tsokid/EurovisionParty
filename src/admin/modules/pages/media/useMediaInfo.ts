@@ -2,7 +2,7 @@
 // form widgets (thumbnails, file names) and the preview resolver.
 import { useEffect, useMemo, useState } from 'react';
 import { formatError } from '../../../lib/formatError';
-import { libraryRows, signedUrls, type MediaRow } from './mediaApi';
+import { libraryRows, SIGNED_URL_REFRESH_MS, signedUrls, type MediaRow } from './mediaApi';
 
 export type MediaInfo = {
   /** Every library row by id (variants included). */
@@ -28,15 +28,22 @@ export function indexRows(list: readonly MediaRow[]): Pick<MediaInfo, 'rows' | '
   return { rows, variants };
 }
 
-/** Rows and signed URLs of `ids` (draft media ids); refetches the library once if one is not in it yet. */
+/**
+ * Rows and signed URLs of `ids` (draft media ids); refetches the library once
+ * if one is not in it yet. While mounted, the URLs are re-signed shortly
+ * before they expire (SIGNED_URL_REFRESH_MS after they were loaded).
+ */
 export function useMediaInfo(ids: readonly string[]): MediaInfo {
   const key = [...ids].sort().join(',');
   // The info and the ids it was loaded for: while new ids load, the old rows stay but are not ready.
   const [state, setState] = useState<{ key: string; info: MediaInfo }>({ key: '', info: EMPTY });
+  /** Bumped to re-sign the URLs (the cached ones are stale by then). */
+  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
     if (!key) return;
     let live = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const setInfo = (info: MediaInfo) => setState({ key, info });
     const want = key.split(',');
     (async () => {
@@ -46,14 +53,17 @@ export function useMediaInfo(ids: readonly string[]): MediaInfo {
       const paths = want.flatMap((id) => [index.rows.get(id)?.storage_path, index.variants.get(id)?.storage_path])
         .filter((p): p is string => !!p);
       const urls = paths.length ? await signedUrls(paths) : {};
-      if (live) setInfo({ ...index, urls, error: null, ready: true });
+      if (!live) return;
+      setInfo({ ...index, urls, error: null, ready: true });
+      if (paths.length) timer = setTimeout(() => setRefresh((n) => n + 1), SIGNED_URL_REFRESH_MS);
     })().catch((e) => {
       if (live) setInfo({ ...EMPTY, error: formatError(e), ready: true });
     });
     return () => {
       live = false;
+      clearTimeout(timer);
     };
-  }, [key]);
+  }, [key, refresh]);
 
   return useMemo(() => {
     if (!key) return EMPTY;

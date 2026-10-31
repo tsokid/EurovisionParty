@@ -3,8 +3,9 @@
 //
 // Two caches, shared by the picker, the form widgets and the preview:
 // - the library (media_list), refetched on demand (the picker opens, an
-//   upload finished, a reference is not in it yet);
-// - signed URLs, reused while they have more than SIGNED_URL_MIN_LEFT_S left.
+//   upload or a delete finished, a reference is not in it yet);
+// - signed URLs, reused while they have more than SIGNED_URL_MIN_LEFT_S left
+//   (useMediaInfo re-signs them then, while a form or preview stays open).
 import { supabase } from '../../../../lib/supabase';
 import { formatError } from '../../../lib/formatError';
 import type { MediaKind } from '../../../../../supabase/functions/_shared/cms/fields';
@@ -115,6 +116,8 @@ export function invalidateLibrary(): void {
 
 export const SIGNED_URL_TTL_S = 3600;
 const SIGNED_URL_MIN_LEFT_S = 300;
+/** After this long a signed URL is due for re-signing (signedUrls then fetches a new one). */
+export const SIGNED_URL_REFRESH_MS = (SIGNED_URL_TTL_S - SIGNED_URL_MIN_LEFT_S) * 1000;
 
 const signed = new Map<string, { url: string; expires: number }>();
 
