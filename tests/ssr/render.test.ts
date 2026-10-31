@@ -6,9 +6,8 @@ import { allPageUrls, PAGE_REGISTRY } from '@/lib/seo/registry';
 import { localizePath } from '@/lib/seo/locale';
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
 import faqCopy from '../../content/pages/faq.json';
-import { copy as homeCopy } from '@/pages/content/homeCopy';
-import enJson from '@/i18n/locales/en.json';
-import elJson from '@/i18n/locales/el.json';
+import homeDoc from '../../content/pages/home.json';
+import { interpolate } from '../../supabase/functions/_shared/cms/placeholders';
 import { createElement as h } from 'react';
 import { renderToString } from 'react-dom/server';
 import ContentProvider from '@/lib/seo/ContentProvider';
@@ -112,10 +111,10 @@ describe('entry-server render', () => {
 
   it('home prerenders its static content while auth is loading', async () => {
     const en = await render('/en');
-    expect(en.html).toContain(enJson.homeSeo.headline);
-    expect(en.head?.title).toBe(homeCopy(2026).en.meta.title);
+    expect(en.html).toContain(homeDoc.en.seo.headline);
+    expect(en.head?.title).toBe(interpolate(homeDoc.en.meta.title, { year: 2026 }));
     const el = await render('/el');
-    expect(el.html).toContain(elJson.homeSeo.headline);
+    expect(el.html).toContain(homeDoc.el.seo.headline);
   });
 
   it('unknown locale path is 404', async () => {

@@ -206,8 +206,8 @@ describe('history data: per-year invariants', () => {
   });
 });
 
-// Hand-checked reference list (formerly hardcoded in winnersCopy.ts, which now
-// renders from the snapshot): an independent cross-check of the import.
+// Hand-checked reference list (formerly hardcoded in the winners page copy,
+// which now renders from the snapshot): an independent cross-check of the import.
 const KNOWN_WINNERS = [
   ['2025', 'Austria', 'JJ', 'Wasted Love', '436'],
   ['2024', 'Switzerland', 'Nemo', 'The Code', '591'],

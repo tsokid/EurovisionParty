@@ -17,7 +17,7 @@
  * deleted and the JSON is the source of truth: the mapping stays as a record,
  * and running the script for it reports "skipped".
  */
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import type { z } from 'zod';
@@ -99,6 +99,114 @@ const plain = (docId: string, file: string): CopyMapping => ({
 const NIGHT_VARS = ['year', 'city', 'cityFrom', 'finalDay'];
 const PARTY_VARS = ['year', 'finalDayShort'];
 
+const LOCALES = ['en', 'el'] as const;
+type Fn = (...args: unknown[]) => unknown;
+const fn = (v: unknown): Fn => v as Fn;
+const deepCopy = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
+
+/**
+ * home: the meta of the former homeCopy.ts (a function of the year) plus the
+ * HomeSeoBlock text of the former i18n `homeSeo` keys, whose `{{year}}`
+ * i18next rendered unescaped (escapeValue: false).
+ */
+function buildHome(mod: Record<string, unknown>, vars: Vars): Doc {
+  const meta = fn(mod.copy)(vars.year) as Record<Locale, { meta: unknown }>;
+  const out = {} as Doc;
+  for (const l of LOCALES) {
+    const i18n = JSON.parse(readFileSync(resolve(ROOT, `src/i18n/locales/${l}.json`), 'utf8')) as { homeSeo: Record<string, unknown> };
+    const seo = deepCopy(i18n.homeSeo);
+    seo.leadRest = String(seo.leadRest).split('{{year}}').join(String(vars.year));
+    out[l] = { meta: meta[l].meta, seo };
+  }
+  return out;
+}
+
+/** The two forms of the predictions hero lede's verb (checked against the module in buildPredictions). */
+const PREDICTIONS_VERB: Record<Locale, { upcoming: string; decided: string }> = {
+  en: { upcoming: 'takes place', decided: 'took place' },
+  el: { upcoming: 'διεξάγεται', decided: 'διεξήχθη' },
+};
+
+/**
+ * eurovision-predictions: copy(contestTexts) with {count} for the line-up
+ * size. The hero lede branched on `decided` and `host`; it is rendered in each
+ * branch and split into a template ({verb}, {hostPart}) and its pieces
+ * (ledeVerb, ledeHost with {hostName}), throwing unless the branches differ
+ * exactly there.
+ */
+function buildPredictions(mod: Record<string, unknown>, vars: Vars): Doc {
+  const render = (decided: boolean, host: string) => {
+    const ct = contestTextsFor({ year: vars.year, cityIn: vars.cityIn, finalDay: vars.finalDay, lineup: vars.count, host });
+    for (const l of LOCALES) ct[l].decided = decided;
+    return fn(mod.copy)(ct) as Record<Locale, { hero: { lede: string } }>;
+  };
+  const base = render(false, '');
+  const decided = render(true, '');
+  const hosted = render(false, String(vars.hostName));
+  const out = {} as Doc;
+  for (const l of LOCALES) {
+    const lede = base[l].hero.lede;
+    const verb = PREDICTIONS_VERB[l];
+    const once = (s: string, part: string) => s.indexOf(part) !== -1 && s.indexOf(part) === s.lastIndexOf(part);
+    if (!once(lede, verb.upcoming) || !once(decided[l].hero.lede, verb.decided)
+      || lede.replace(verb.upcoming, '\0') !== decided[l].hero.lede.replace(verb.decided, '\0')) {
+      throw new Error(`extract: eurovision-predictions ${l} hero.lede: decided branch differs other than in the verb`);
+    }
+    // The host part follows the city.
+    const cityIn = String(vars.cityIn);
+    if (!once(lede, cityIn)) throw new Error(`extract: eurovision-predictions ${l} hero.lede: city not found once`);
+    const at = lede.indexOf(cityIn) + cityIn.length;
+    const h = hosted[l].hero.lede;
+    if (!h.startsWith(lede.slice(0, at)) || !h.endsWith(lede.slice(at)) || h.length <= lede.length) {
+      throw new Error(`extract: eurovision-predictions ${l} hero.lede: host branch differs other than after the city`);
+    }
+    const ledeHost = h.slice(at, h.length - (lede.length - at));
+    const copy = deepCopy(base[l]) as { hero: Record<string, unknown> };
+    copy.hero.lede = `${lede.slice(0, at)}${vars.hostPart}${lede.slice(at)}`.replace(verb.upcoming, () => String(vars.verb));
+    copy.hero.ledeVerb = { ...verb };
+    copy.hero.ledeHost = ledeHost;
+    out[l] = copy;
+  }
+  return out;
+}
+
+/**
+ * winners: the former copy's template functions called with the vars. The
+ * recent intro appended a sentence only when a cancelled year fell in the
+ * table: `intro` is its form without one, `introCancelled` the appended part.
+ */
+function buildWinners(mod: Record<string, unknown>, vars: Vars): Doc {
+  const all = mod.copy as Record<Locale, Record<string, Record<string, unknown>>>;
+  const out = {} as Doc;
+  for (const l of LOCALES) {
+    const c = all[l];
+    const sections = c.sections as Record<string, Record<string, unknown>>;
+    const intro = fn(sections.recent.intro)(vars.from, null) as string;
+    const withGap = fn(sections.recent.intro)(vars.from, vars.cancelled) as string;
+    if (!withGap.startsWith(intro) || withGap === intro) {
+      throw new Error(`extract: winners ${l} sections.recent.intro: the cancelled form does not extend the plain one`);
+    }
+    out[l] = {
+      ...c,
+      meta: { ...c.meta, description: fn(c.meta.description)(vars.last), keywords: fn(c.meta.keywords)(vars.last) },
+      sections: {
+        ...sections,
+        recent: {
+          ...sections.recent,
+          title: fn(sections.recent.title)(vars.from, vars.to),
+          intro,
+          introCancelled: withGap.slice(intro.length),
+        },
+        all: { ...sections.all, title: fn(sections.all.title)(vars.from) },
+      },
+    };
+  }
+  return out;
+}
+
+const PREDICTIONS_VARS = ['year', 'cityIn', 'finalDay', 'count', 'verb', 'hostPart', 'hostName'];
+const WINNERS_VARS = ['last', 'from', 'to', 'cancelled'];
+
 /** Per-file mapping. Tasks 5-6 append their pages here. */
 export const COPY_MAPPINGS: CopyMapping[] = [
   plain('about', 'aboutCopy'),
@@ -122,6 +230,36 @@ export const COPY_MAPPINGS: CopyMapping[] = [
   contestCopy('eurovision-party', 'eurovisionPartyCopy', PARTY_VARS, samplesFor(PARTY_VARS)),
   plain('eurovision-trivia', 'triviaCopy'),
   plain('eurovision-duels', 'duelsCopy'),
+  // Task 6: data-mixed pages.
+  {
+    docId: 'home',
+    module: 'src/pages/content/homeCopy.ts',
+    placeholders: ['year'],
+    build: buildHome,
+    samples: [{ year: 2031 }, { year: 1999 }],
+  },
+  { docId: 'not-found', module: 'src/pages/content/notFoundCopy.ts', placeholders: [], build: plainCopy, samples: [] },
+  {
+    docId: 'eurovision-predictions',
+    module: 'src/pages/seo/content/predictionsCopy.ts',
+    placeholders: PREDICTIONS_VARS,
+    build: buildPredictions,
+    samples: [
+      { year: 2031, cityIn: 'in Lisbon', finalDay: 'Saturday 17 May 2031', count: 37, verb: 'takes place', hostPart: ', Portugal', hostName: 'Portugal' },
+      { year: 2032, cityIn: 'στη Λισαβόνα', finalDay: 'Σάββατο 15 Μαΐου 2032', count: 0, verb: 'διεξήχθη', hostPart: '', hostName: 'Πορτογαλία' },
+      { year: 1999, cityIn: '{city}', finalDay: '{{x}} $& }', count: 1, verb: '$1 {{', hostPart: ' ({hostName})', hostName: '}} $&' },
+    ],
+  },
+  {
+    docId: 'winners',
+    module: 'src/pages/seo/content/winnersCopy.ts',
+    placeholders: WINNERS_VARS,
+    build: buildWinners,
+    samples: [
+      { last: 2025, from: 2011, to: 2025, cancelled: 2020 },
+      { last: 1999, from: 1985, to: 1999, cancelled: 1990 },
+    ],
+  },
 ];
 
 // ---- schema walk ---------------------------------------------------------

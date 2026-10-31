@@ -12,13 +12,17 @@ import { eurovisionDuelsSchema } from './schemas/eurovision-duels.ts';
 import { eurovisionGamesSchema } from './schemas/eurovision-games.ts';
 import { eurovisionNightSchema } from './schemas/eurovision-night.ts';
 import { eurovisionPartySchema } from './schemas/eurovision-party.ts';
+import { eurovisionPredictionsSchema } from './schemas/eurovision-predictions.ts';
 import { eurovisionTriviaSchema } from './schemas/eurovision-trivia.ts';
 import { faqSchema } from './schemas/faq.ts';
+import { homeSchema } from './schemas/home.ts';
 import { howToPlaySchema } from './schemas/how-to-play.ts';
+import { notFoundSchema } from './schemas/not-found.ts';
 import { privacySchema } from './schemas/privacy.ts';
 import { rulesSchema } from './schemas/rules.ts';
 import { scoringSchema } from './schemas/scoring.ts';
 import { termsSchema } from './schemas/terms.ts';
+import { winnersSchema } from './schemas/winners.ts';
 
 export type DocTypeGroup = 'site' | 'contest' | 'country';
 
@@ -44,6 +48,10 @@ export const CMS_DOC_TYPES: Record<string, DocTypeDef> = {
   'eurovision-party': { schema: eurovisionPartySchema, label: 'Eurovision party', group: 'site' },
   'eurovision-trivia': { schema: eurovisionTriviaSchema, label: 'Eurovision trivia', group: 'site' },
   'eurovision-duels': { schema: eurovisionDuelsSchema, label: 'Duels', group: 'site' },
+  home: { schema: homeSchema, label: 'Home page (SEO copy)', group: 'site' },
+  'not-found': { schema: notFoundSchema, label: 'Page not found (404)', group: 'site' },
+  'eurovision-predictions': { schema: eurovisionPredictionsSchema, label: 'Predictions game', group: 'site' },
+  winners: { schema: winnersSchema, label: 'Winners', group: 'site' },
 };
 
 const FAMILIES = ['archive', 'country', 'hub'] as const;

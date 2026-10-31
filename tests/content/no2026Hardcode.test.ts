@@ -30,7 +30,7 @@ const FILES = [
 describe('no hardcoded live-contest year or city', () => {
   it('covers the guide copy files', () => {
     const names = FILES.map((f) => path.basename(f));
-    for (const n of ['EurovisionNightPage.tsx', 'predictionsCopy.ts', 'homeCopy.ts', 'PredictionsPage.tsx', 'HomePage.tsx', 'en.json', 'el.json']) {
+    for (const n of ['EurovisionNightPage.tsx', 'PredictionsPage.tsx', 'WinnersPage.tsx', 'NotFoundPage.tsx', 'HomePage.tsx', 'en.json', 'el.json']) {
       expect(names).toContain(n);
     }
   });

@@ -1,0 +1,312 @@
+{
+  "el": {
+    "crumbs": {
+      "home": "Αρχική",
+      "predictions": "Προβλέψεις"
+    },
+    "cta": {
+      "body": "Δημιούργησε ένα δωμάτιο και κάλεσε έως 19 φίλους να προβλέψουν.",
+      "primary": "Δημιουργία",
+      "secondary": "Πώς να παίξεις",
+      "title": "Κλείδωσε το Top 5 σου πριν την έναρξη"
+    },
+    "faq": [
+      {
+        "a": "Μέχρι ο οικοδεσπότης να προχωρήσει τη φάση. Μετά, κλειδώνει.",
+        "q": "Μπορώ να αλλάξω τη λίστα μου;"
+      },
+      {
+        "a": "Το Eurovision Games βαθμολογεί με βάση το αποτέλεσμα του μεγάλου τελικού. Χώρες που δεν προκρίνονται μετράνε ως «εκτός Top 5» — μηδέν πόντοι αν τις διάλεξες.",
+        "q": "Τι γίνεται με τις χώρες που αποκλείονται στους ημιτελικούς;"
+      },
+      {
+        "a": "Ο οικοδεσπότης εισάγει τα αποτελέσματα κριτικής επιτροπής και televote ζωντανά κατά τη διάρκεια της εκπομπής· ή ενημερώνονται αυτόματα από την επίσημη πηγή.",
+        "q": "Πώς ξέρει η εφαρμογή τα αποτελέσματα;"
+      }
+    ],
+    "hero": {
+      "chip": "Παιχνίδι προβλέψεων",
+      "lede": "Η Eurovision {year} {verb} {cityIn}{hostPart}, με τον μεγάλο τελικό το {finalDay}. Στο Eurovision Games κάθε παίκτης φτιάχνει δύο λίστες προβλέψεων — Top 5 και Worst 5 — πριν ξεκινήσει η εκπομπή, και τις βλέπει να βαθμολογούνται αυτόματα σε πραγματικό χρόνο με βάση τα επίσημα αποτελέσματα κριτικής επιτροπής και televote.",
+      "ledeHost": " ({hostName})",
+      "ledeVerb": {
+        "decided": "διεξήχθη",
+        "upcoming": "διεξάγεται"
+      },
+      "title": "Παιχνίδι προβλέψεων Eurovision — Φόρμα Top 5 και Worst 5"
+    },
+    "meta": {
+      "description": "Ένας πλήρης οδηγός προβλέψεων για την Eurovision {year} {cityIn}: οι συμμετέχουσες χώρες, η φόρμα Top 5 / Worst 5, μαθηματικά βαθμολογίας και συμβουλές στρατηγικής.",
+      "keywords": [
+        "προβλέψεις eurovision {year}",
+        "eurovision {year} top 5",
+        "eurovision {year} worst 5",
+        "παιχνίδι προβλέψεων eurovision",
+        "λίστα χωρών eurovision {year}"
+      ],
+      "schemaDescription": "Ένας πλήρης οδηγός προβλέψεων για την Eurovision {year} {cityIn}: οι συμμετέχουσες χώρες, η φόρμα Top 5 / Worst 5, μαθηματικά βαθμολογίας και συμβουλές στρατηγικής.",
+      "schemaTitle": "Παιχνίδι Προβλέψεων Eurovision: Φόρμα Top 5 / Worst 5",
+      "title": "Παιχνίδι Προβλέψεων Eurovision: Φόρμα Top 5 / Worst 5 και Στρατηγική"
+    },
+    "related": {
+      "duels": {
+        "blurb": "Head-to-head μονομαχίες 3 ερωτήσεων κατά τη ζωντανή εκπομπή.",
+        "title": "Eurovision μονομαχίες"
+      },
+      "faq": {
+        "blurb": "Απαντήσεις σε συνηθισμένες ερωτήσεις για hosting, join και βαθμολογία.",
+        "title": "FAQ"
+      },
+      "howToPlay": {
+        "blurb": "Ο οδηγός 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι τα τρόπαια.",
+        "title": "Πώς να παίξεις"
+      },
+      "night": {
+        "blurb": "Το playbook 10 βημάτων για να φιλοξενήσεις ένα watch party.",
+        "title": "Βραδιά Eurovision"
+      },
+      "scoring": {
+        "blurb": "Πού τροφοδοτούν προβλέψεις, μονομαχίες και quiz τον Πρωταθλητή.",
+        "title": "Μαθηματικά βαθμολογίας"
+      },
+      "trivia": {
+        "blurb": "10 δείγματα ερωτήσεων και πώς δουλεύει η ζωντανή τράπεζα.",
+        "title": "Eurovision trivia"
+      }
+    },
+    "sections": {
+      "faqTitle": "Συχνές ερωτήσεις",
+      "format": {
+        "intro": "Κάθε παίκτης φτιάχνει δύο λίστες πριν ο οικοδεσπότης προχωρήσει τη φάση lobby:",
+        "orderedEm": "ταξινομημένες",
+        "orderedPost": ": ένα #1 pick που νικά βαθμολογείται περισσότερο από ένα #5 pick που νικά. Δεν μπορείς να βάλεις την ίδια χώρα και στις δύο λίστες. Οι λίστες κλειδώνουν όταν ο οικοδεσπότης πατήσει Advance to Predictions Locked.",
+        "orderedPre": "Οι λίστες είναι ",
+        "title": "Φόρμα προβλέψεων",
+        "top5Body": "πέντε χώρες που πιστεύεις ότι θα τερματίσουν ψηλότερα στον συνδυασμό κριτικής επιτροπής + televote.",
+        "top5Label": "Top 5",
+        "worst5Body": "πέντε χώρες που πιστεύεις ότι θα τερματίσουν χαμηλότερα.",
+        "worst5Label": "Worst 5"
+      },
+      "lineup": {
+        "empty": "Οι συμμετοχές της Eurovision {year} δεν έχουν επιβεβαιωθεί ακόμη· η σελίδα τις δείχνει μόλις ανακοινωθούν.",
+        "hostSuffix": " (οικοδεσπότης)",
+        "hubLink": "Όλα για τη Eurovision {year}: αποτελέσματα, ημιτελικοί, πρόγραμμα και τραγούδια",
+        "intro": "{count} χώρες έχουν επιβεβαιωθεί για την Eurovision {year} σε δύο ημιτελικούς και τον μεγάλο τελικό:",
+        "notInFinal": "Ημιτελικός",
+        "resultsIntro": "Η Eurovision {year} κρίθηκε. Αυτή είναι η τελική κατάταξη, μαζί με τις χώρες που αποκλείστηκαν στους ημιτελικούς, για να ελέγξεις το Top 5 και το Worst 5 σου:",
+        "resultsTitle": "Η τελική κατάταξη της Eurovision {year}",
+        "runningOrder": "Η σειρά εμφάνισης του μεγάλου τελικού οριστικοποιείται μετά τον δεύτερο ημιτελικό· η σελίδα ενημερώνεται με ζωντανές συμμετοχές μόλις επιβεβαιωθούν.",
+        "title": "Οι συμμετοχές της Eurovision {year}"
+      },
+      "scoringTop5": {
+        "headers": {
+          "points": "Πόντοι",
+          "result": "Αποτέλεσμα"
+        },
+        "intro": "Για κάθε Top-5 pick, βαθμολογείσαι σε σχέση με την επίσημη συνδυασμένη κατάταξη κριτικής επιτροπής + televote:",
+        "max": {
+          "post": "250",
+          "pre": "Μέγιστοι πόντοι Top-5: 5 ακριβείς θέσεις × 50 = "
+        },
+        "rows": {
+          "exact": "Χώρα στην ακριβή θέση που προέβλεψες",
+          "inListWrong": "Χώρα στο επίσημο Top 5 αλλά σε διαφορετική θέση",
+          "outside": "Χώρα εκτός Top 5"
+        },
+        "title": "Βαθμολογία — Top 5"
+      },
+      "scoringWorst5": {
+        "headers": {
+          "points": "Πόντοι",
+          "result": "Αποτέλεσμα"
+        },
+        "intro": "Το Worst-5 είναι συμμετρικό — η τελευταία θέση μετράει ως θέση 1 στη λίστα σου:",
+        "max": {
+          "cap": "500",
+          "pre": "Μέγιστοι πόντοι Worst-5: 250. Συνολικό cap προβλέψεων: "
+        },
+        "rows": {
+          "exact": "Χώρα στην ακριβή θέση πάτου που προέβλεψες",
+          "inListWrong": "Χώρα στο επίσημο Worst 5 αλλά σε διαφορετική θέση",
+          "outside": "Χώρα εκτός Worst 5"
+        },
+        "title": "Βαθμολογία — Worst 5"
+      },
+      "strategy": {
+        "tips": [
+          {
+            "rest": " Τα top-3 φαβορί συνήθως ανταποκρίνονται, αλλά το εύρος #4-#10 είναι εκεί όπου οι κατατάξεις ανακατεύονται έντονα ανάμεσα σε κριτική επιτροπή και televote.",
+            "strong": "Εμπιστεύσου τις αγορές στοιχημάτων, αλλά μην τις αντιγράφεις."
+          },
+          {
+            "rest": " Οι περισσότεροι παίκτες σκέφτονται υπερβολικά την κορυφή και αγνοούν τον πάτο. Τρία σωστά Worst-5 picks = 30 δωρεάν πόντοι.",
+            "strong": "Το Worst 5 είναι εκεί που κερδίζονται τα παιχνίδια."
+          },
+          {
+            "rest": " Οι όψιμες θέσεις στον δεύτερο ημιτελικό συχνά κερδίζουν θέσεις στον τελικό που δεν αξίζουν — μένουν φρέσκες στη μνήμη της κριτικής επιτροπής.",
+            "strong": "Πρόσεχε τη σειρά εμφάνισης στους ημιτελικούς."
+          },
+          {
+            "rest": " Οι χώρες-οικοδεσπότες σπάνια κερδίζουν, αλλά σπάνια τερματίζουν και τελευταίες.",
+            "strong": "Μην ποντάρεις εναντίον του οικοδεσπότη."
+          }
+        ],
+        "title": "Συμβουλές στρατηγικής"
+      }
+    }
+  },
+  "en": {
+    "crumbs": {
+      "home": "Home",
+      "predictions": "Predictions"
+    },
+    "cta": {
+      "body": "Create a room and invite up to 19 friends to predict.",
+      "primary": "Create",
+      "secondary": "How to play",
+      "title": "Lock your Top 5 before kick-off"
+    },
+    "faq": [
+      {
+        "a": "Up until the host advances the phase. After that, locked.",
+        "q": "Can I change my list?"
+      },
+      {
+        "a": "Eurovision Games scores against the grand-final result. Countries that don’t qualify count as \"outside Top 5\" — zero points if you picked them.",
+        "q": "What about semi-final exits?"
+      },
+      {
+        "a": "The host enters jury and televote results live during the show; or they update automatically from the official source.",
+        "q": "How does the app know the results?"
+      }
+    ],
+    "hero": {
+      "chip": "Predictions game",
+      "lede": "Eurovision {year} {verb} {cityIn}{hostPart}, with the grand final on {finalDay}. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before the show starts, then watches them auto-score against the official jury and televote results in real time.",
+      "ledeHost": ", {hostName}",
+      "ledeVerb": {
+        "decided": "took place",
+        "upcoming": "takes place"
+      },
+      "title": "Eurovision predictions game — Top 5 and Worst 5 format"
+    },
+    "meta": {
+      "description": "A complete predictions guide for Eurovision {year} {cityIn}: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips.",
+      "keywords": [
+        "eurovision {year} predictions",
+        "eurovision {year} top 5",
+        "eurovision {year} worst 5",
+        "eurovision predictions game",
+        "eurovision {year} lineup"
+      ],
+      "schemaDescription": "A complete predictions guide for Eurovision {year} {cityIn}: the competing countries, the Top 5 / Worst 5 format, scoring formulas, and strategy tips.",
+      "schemaTitle": "Eurovision Predictions Game: Top 5 / Worst 5 Format",
+      "title": "Eurovision Predictions Game: Top 5 / Worst 5 Format & Strategy"
+    },
+    "related": {
+      "duels": {
+        "blurb": "Head-to-head 3-question duels during the live show.",
+        "title": "Eurovision duels"
+      },
+      "faq": {
+        "blurb": "Answers to common questions about hosting, joining, and scoring.",
+        "title": "FAQ"
+      },
+      "howToPlay": {
+        "blurb": "The 60-second walkthrough from create-room to trophy reveal.",
+        "title": "How to play"
+      },
+      "night": {
+        "blurb": "The 10-step playbook for hosting a watch party.",
+        "title": "Eurovision night"
+      },
+      "scoring": {
+        "blurb": "Where predictions, duels, and quiz feed into the Champion total.",
+        "title": "Scoring formulas"
+      },
+      "trivia": {
+        "blurb": "10 sample questions and how the live bank works.",
+        "title": "Eurovision trivia"
+      }
+    },
+    "sections": {
+      "faqTitle": "Frequently asked questions",
+      "format": {
+        "intro": "Each player builds two lists before the host advances the lobby phase:",
+        "orderedEm": "ordered",
+        "orderedPost": ": a #1 pick that wins scores more than a #5 pick that wins. You cannot put the same country in both lists. Lists lock when the host clicks Advance to Predictions Locked.",
+        "orderedPre": "Lists are ",
+        "title": "Prediction format",
+        "top5Body": "five countries you think will finish highest in the combined jury + televote.",
+        "top5Label": "Top 5",
+        "worst5Body": "five countries you think will finish lowest.",
+        "worst5Label": "Worst 5"
+      },
+      "lineup": {
+        "empty": "The Eurovision {year} line-up is not confirmed yet; this page lists the entries as soon as it is.",
+        "hostSuffix": " (host)",
+        "hubLink": "Everything about Eurovision {year}: results, semi-finals, schedule and songs",
+        "intro": "{count} countries are confirmed for Eurovision {year} across two semi-finals and the grand final:",
+        "notInFinal": "Semi-final",
+        "resultsIntro": "Eurovision {year} is decided. Here is the final ranking, plus the countries out in the semi-finals, so you can check your Top 5 and Worst 5:",
+        "resultsTitle": "Eurovision {year} final ranking",
+        "runningOrder": "The grand-final running order is fixed after the second semi-final; this page updates with live entries as they are confirmed.",
+        "title": "The Eurovision {year} line-up"
+      },
+      "scoringTop5": {
+        "headers": {
+          "points": "Points",
+          "result": "Result"
+        },
+        "intro": "For each Top-5 pick, you score against the official combined jury + televote ranking:",
+        "max": {
+          "post": "250",
+          "pre": "Maximum Top-5 points: 5 exact positions × 50 = "
+        },
+        "rows": {
+          "exact": "Country at the exact position you predicted",
+          "inListWrong": "Country in the official Top 5 but at a different position",
+          "outside": "Country outside the Top 5"
+        },
+        "title": "Scoring — Top 5"
+      },
+      "scoringWorst5": {
+        "headers": {
+          "points": "Points",
+          "result": "Result"
+        },
+        "intro": "Worst-5 is symmetrical — last place counts as position 1 in your list:",
+        "max": {
+          "cap": "500",
+          "pre": "Maximum Worst-5 points: 250. Combined predictions cap: "
+        },
+        "rows": {
+          "exact": "Country at the exact bottom position you predicted",
+          "inListWrong": "Country in the official Worst 5 but at a different position",
+          "outside": "Country outside the Worst 5"
+        },
+        "title": "Scoring — Worst 5"
+      },
+      "strategy": {
+        "tips": [
+          {
+            "rest": " Top-3 favourites usually deliver, but the #4-#10 range is where rankings re-shuffle wildly between jury and televote.",
+            "strong": "Trust the betting markets, but don’t copy them."
+          },
+          {
+            "rest": " Most players over-think the top and ignore the bottom. Three correct Worst-5 picks = 30 free points.",
+            "strong": "Worst 5 is where games are won."
+          },
+          {
+            "rest": " Late slots in the second semi tend to make grand-final spots they don’t deserve — they’re fresh in jury memory.",
+            "strong": "Watch the semi-final running order."
+          },
+          {
+            "rest": " Host countries rarely win, but they rarely finish last either.",
+            "strong": "Don’t bet against the host."
+          }
+        ],
+        "title": "Strategy tips"
+      }
+    }
+  }
+}

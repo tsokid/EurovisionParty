@@ -1,0 +1,60 @@
+{
+  "el": {
+    "meta": {
+      "description": "Free Eurovision {year} party game for watch nights. Predict results live, battle friends in trivia duels, and score points as you watch the Grand Final. No sign-up needed.",
+      "title": "Eurovision Games {year} · Free Party Game — Predictions, Trivia & Live Scoring"
+    },
+    "seo": {
+      "cards": {
+        "gamesDesc": "Τι κάνει το παιχνίδι και γιατί αξίζει να παίξεις.",
+        "gamesTitle": "Παιχνίδια Eurovision",
+        "howDesc": "Οδηγός εκκίνησης σε 2 λεπτά.",
+        "howTitle": "Πώς παίζεται",
+        "nightDesc": "Οδηγός διοργάνωσης για το watch party.",
+        "nightTitle": "Βραδιά Eurovision",
+        "partyDesc": "Πλήρης οδηγός διοργάνωσης με ροή της βραδιάς.",
+        "partyTitle": "Πάρτι Eurovision",
+        "predictionsDesc": "Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.",
+        "predictionsTitle": "Παιχνίδι προβλέψεων",
+        "triviaDesc": "10 ενδεικτικές ερωτήσεις και πώς λειτουργούν οι μονομαχίες.",
+        "triviaTitle": "Trivia Eurovision"
+      },
+      "headline": "Eurovision Games — διοργάνωσε την τέλεια βραδιά Eurovision",
+      "leadRest": " όπου 2-20 φίλοι προβλέπουν το Top 5 και το Worst 5 της Eurovision {year}, μονομαχούν σε trivia και στέφουν πέντε νικητές — Πρωταθλητή, Κλέφτη, Μονομάχο, Μάντη, Γκουρού. Χωρίς εγκατάσταση, χωρίς λογαριασμό.",
+      "leadStrong": "Το Eurovision Games είναι ένα δωρεάν παιχνίδι πάρτι μέσα στο browser",
+      "primaryHeading": "Σχεδίασε τη βραδιά Eurovision σου",
+      "secondaryHeading": "Γνώρισε το παιχνίδι",
+      "tail": "Καινούργιος εδώ;",
+      "tailLink": "Διάβασε τον οδηγό εκκίνησης σε 60 δευτερόλεπτα"
+    }
+  },
+  "en": {
+    "meta": {
+      "description": "Free Eurovision {year} party game for watch nights. Predict results live, battle friends in trivia duels, and score points as you watch the Grand Final. No sign-up needed.",
+      "title": "Eurovision Games {year} · Free Party Game — Predictions, Trivia & Live Scoring"
+    },
+    "seo": {
+      "cards": {
+        "gamesDesc": "What the game does and why play.",
+        "gamesTitle": "Eurovision games",
+        "howDesc": "2-minute setup guide.",
+        "howTitle": "How to play",
+        "nightDesc": "Hosting playbook for the watch party.",
+        "nightTitle": "Eurovision night",
+        "partyDesc": "Full hosting playbook with run-of-show.",
+        "partyTitle": "Eurovision party",
+        "predictionsDesc": "Top 5 / Worst 5 format and this year's line-up.",
+        "predictionsTitle": "Predictions game",
+        "triviaDesc": "10 sample questions and how duels work.",
+        "triviaTitle": "Eurovision trivia"
+      },
+      "headline": "Eurovision Games — host the perfect Eurovision night",
+      "leadRest": " where 2-20 friends predict the Eurovision {year} Top 5 and Worst 5, battle in trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No download, no account.",
+      "leadStrong": "Eurovision Games is a free, browser-based party game",
+      "primaryHeading": "Plan your Eurovision night",
+      "secondaryHeading": "Get to know the game",
+      "tail": "New here?",
+      "tailLink": "Read the 60-second setup guide"
+    }
+  }
+}

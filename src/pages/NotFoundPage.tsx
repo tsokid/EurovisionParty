@@ -7,13 +7,39 @@ import CtaBanner from '../components/seo/CtaBanner';
 import { breadcrumbJsonLd, type Crumb } from '../components/seo/Breadcrumbs';
 import { useLocale } from '../lib/seo/LocaleContext';
 import { useHeadCollector } from '../lib/seo/HeadContext';
-import { copy as copyAll } from './content/notFoundCopy';
+import { usePageContent } from '../lib/cms/usePageContent';
+import type { NotFoundContent } from '../../supabase/functions/_shared/cms/schemas/not-found';
+import LocaleLink from '../components/seo/LocaleLink';
+import type { Locale } from '../lib/seo/locale';
+
+const FALLBACK: Record<Locale, { title: string; home: string }> = {
+  en: { title: 'Page not found', home: 'Home' },
+  el: { title: 'Η σελίδα δεν βρέθηκε', home: 'Αρχική' },
+};
+
+/**
+ * While content/pages/not-found.json is loading (or missing) on the client.
+ * Hardcoded on purpose: PageContentFallback renders NotFoundPage for a
+ * missing doc, so this page must never fall back to it for its own doc.
+ */
+function MinimalNotFound({ locale }: { locale: Locale }) {
+  const f = FALLBACK[locale];
+  return (
+    <main className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4">
+      <h1 className="text-white text-2xl font-bold">{f.title}</h1>
+      <LocaleLink to="/" className="text-euro-pink-light hover:underline">{f.home}</LocaleLink>
+    </main>
+  );
+}
 
 export function NotFoundPage() {
   const locale = useLocale();
-  const c = copyAll[locale];
   // Prerender: mark this response as a real 404 (no-op in the browser).
   useHeadCollector()?.setStatus(404);
+  // The server render throws if the doc is missing, so the build fails.
+  const content = usePageContent<NotFoundContent>('not-found');
+  if (content.status !== 'ready') return <MinimalNotFound locale={locale} />;
+  const c = content.data;
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },

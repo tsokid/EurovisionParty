@@ -11,6 +11,10 @@ import {
   COPY_MAPPINGS, extractDocument, extractMapping, interpolateDocument, sentinel, templatedPaths,
 } from '../../scripts/cms/extract-copy';
 import { stableJson } from '../../scripts/history/import';
+import type { EurovisionPredictionsContent } from '../../supabase/functions/_shared/cms/schemas/eurovision-predictions';
+import type { WinnersContent } from '../../supabase/functions/_shared/cms/schemas/winners';
+import type { ContestText } from '../../src/pages/seo/content/contestText';
+import { predictionsText } from '../../src/pages/seo/predictionsText';
 
 const ROOT = resolve(__dirname, '../..');
 const readDoc = (docId: string) =>
@@ -222,5 +226,106 @@ describe('extraction matches the committed JSON while the copy module exists', (
     for (const m of COPY_MAPPINGS.filter((x) => !live.includes(x))) {
       expect(existsSync(resolve(ROOT, `content/pages/${m.docId}.json`))).toBe(true);
     }
+  });
+});
+
+describe('content/pages (Task 6 group: data-mixed pages)', () => {
+  const TASK6 = ['home', 'not-found', 'eurovision-predictions', 'winners'];
+  const sha = (s: string) => createHash('sha256').update(s).digest('hex');
+  const L = ['en', 'el'] as const;
+
+  it.each(TASK6)('%s.json exists, has a mapping, and validates', (docId) => {
+    expect(COPY_MAPPINGS.some((m) => m.docId === docId)).toBe(true);
+    expect(Object.keys(CMS_DOC_TYPES)).toContain(docTypeFor(docId));
+    const r = validateDocument(docTypeFor(docId), readDoc(docId));
+    expect(r.ok ? [] : r.errors).toEqual([]);
+  });
+
+  it('templates exactly these fields', () => {
+    const paths = Object.fromEntries(TASK6.map((id) => [id, templatedPaths(CMS_DOC_TYPES[id].schema)]));
+    expect(paths).toEqual({
+      home: ['meta.title', 'meta.description', 'seo.leadRest'],
+      'not-found': [],
+      'eurovision-predictions': [
+        'meta.description', 'meta.schemaDescription', 'meta.keywords.*', 'hero.lede', 'hero.ledeHost',
+        'sections.lineup.title', 'sections.lineup.intro', 'sections.lineup.resultsTitle', 'sections.lineup.resultsIntro',
+        'sections.lineup.empty', 'sections.lineup.hubLink',
+      ],
+      winners: [
+        'meta.description', 'meta.keywords.*', 'sections.recent.title', 'sections.recent.intro', 'sections.recent.introCancelled',
+        'sections.all.title',
+      ],
+    });
+  });
+
+  // The FORMER hashes below were taken from the former copy modules (and, for
+  // home, the former i18n homeSeo keys) before they were deleted, rendered with
+  // the same values: stableJson of everything each module produced, in both
+  // locales. The JSON side renders the way the pages now do.
+
+  it('home renders exactly as the former homeCopy meta and i18n homeSeo text', () => {
+    const doc = interpolateDocument(CMS_DOC_TYPES.home.schema, readDoc('home'), { year: 2033 });
+    expect(sha(stableJson(doc))).toBe('2a634f5e393315909b6f00f9fe8eda078d2c8fe2454eae1c5697def28fdf9b9a');
+    expect((doc as Record<'en', { seo: { leadRest: string } }>).en.seo.leadRest).toBe(
+      ' where 2-20 friends predict the Eurovision 2033 Top 5 and Worst 5, battle in trivia duels, and crown five winners — Champion, Thief, Duelist, Oracle, Guru. No download, no account.',
+    );
+  });
+
+  it('not-found is exactly the former copy', () => {
+    expect(sha(stableJson(readDoc('not-found')))).toBe('49cff2552e9b9a5eea5dcb9d44816ef91d09ad0bb012e015d0b0dc5b35cf43ff');
+  });
+
+  // Every branch of the former hero lede (decided or not, host known or not),
+  // with values that look like template syntax.
+  const P = { year: 2033, cityIn: 'στη Ζ{x}', finalDay: 'Day {{ 1', lineup: 37 };
+  const ct = (decided: boolean, host: string): ContestText => ({
+    ...P, city: 'X', cityFrom: 'X', host, finalDayShort: 'X', finalMonth: 'X', flag: 'X', decided,
+  });
+  const CONFIGS = [[false, ''], [true, ''], [false, 'Host $& }}'], [true, 'Χώρα {hostName}']] as const;
+
+  it('eurovision-predictions renders exactly as the former copy, in every branch', () => {
+    const doc = readDoc('eurovision-predictions') as Record<'en' | 'el', EurovisionPredictionsContent>;
+    const rendered = CONFIGS.map(([d, h]) => Object.fromEntries(L.map((l) => [l, predictionsText(doc[l], ct(d, h))])));
+    expect(sha(stableJson(rendered))).toBe('f9fd30c5b569982b972f96ceb0b560a4d1461eee22cabb96f2c7ebb7a877dd5c');
+    expect(rendered[3].en.hero.lede.startsWith('Eurovision 2033 took place στη Ζ{x}, Χώρα {hostName}, with the grand final on Day {{ 1. In')).toBe(true);
+    expect(rendered[2].el.hero.lede.startsWith('Η Eurovision 2033 διεξάγεται στη Ζ{x} (Host $& }}), με τον μεγάλο τελικό το Day {{ 1.')).toBe(true);
+    expect(rendered[0].en.sections.lineup.intro).toBe('37 countries are confirmed for Eurovision 2033 across two semi-finals and the grand final:');
+  });
+
+  it('winners renders exactly as the former template functions', () => {
+    type W = WinnersContent;
+    const doc = readDoc('winners') as Record<'en' | 'el', W>;
+    const ARGS = [
+      { last: 2032, from: 2018, to: 2032, first: 1956, cancelled: 2020 },
+      { last: 2031, from: 2017, to: 2031, first: 1957, cancelled: null },
+    ];
+    const rendered = ARGS.map((a) => Object.fromEntries(L.map((l) => {
+      const { introCancelled, ...recent } = doc[l].sections.recent;
+      return [l, {
+        ...doc[l],
+        meta: {
+          ...doc[l].meta,
+          description: interpolate(doc[l].meta.description, { last: a.last }),
+          keywords: doc[l].meta.keywords.map((k) => interpolate(k, { last: a.last })),
+        },
+        sections: {
+          ...doc[l].sections,
+          recent: {
+            ...recent,
+            title: interpolate(recent.title, { from: a.from, to: a.to }),
+            // As WinnersPage renders it.
+            intro: interpolate(recent.intro, { from: a.from }) + (a.cancelled !== null ? interpolate(introCancelled, { cancelled: a.cancelled }) : ''),
+          },
+          all: { ...doc[l].sections.all, title: interpolate(doc[l].sections.all.title, { from: a.first }) },
+        },
+      }];
+    })));
+    expect(sha(stableJson(rendered))).toBe('053ffd85572ddb1c84751a7a96e2b151cfe93b365fed50b428a3a94c99c7ea29');
+    expect(rendered[0].en.sections.recent.intro).toBe(
+      'Winners since 2018, with the song, performing artist, and the combined jury + televote points from the grand final. (No 2020 — the contest was cancelled due to COVID.)',
+    );
+    expect(rendered[1].el.sections.recent.intro).toBe(
+      'Νικητές από το 2017, με το τραγούδι, τον καλλιτέχνη, και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό.',
+    );
   });
 });

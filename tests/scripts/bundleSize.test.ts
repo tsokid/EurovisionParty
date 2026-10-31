@@ -11,7 +11,8 @@ const ASSETS = resolve(DIST, 'assets');
 const built = existsSync(ASSETS);
 
 // Strings that exist only in content/contests/1956.json and 1957.json (not in
-// src/: "Lys Assia" is also in winnersCopy.ts, so it cannot be the marker).
+// src/ or the CMS page docs: "Lys Assia" is also in content/pages/winners.json,
+// so it cannot be the marker).
 const SNAPSHOT_MARKERS = ['Fud Leclerc', 'Messieurs les noyés de la Seine', 'Bobbejaan Schoepen'];
 
 if (!built) {

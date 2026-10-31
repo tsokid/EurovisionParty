@@ -327,7 +327,7 @@ describe('/winners from data (SSR)', () => {
     expect(r.html).toContain('Recent winners (2011–2026)');
     const crumbs = jsonLd(r).find((b) => b['@type'] === 'BreadcrumbList') as { itemListElement: { item: string }[] };
     expect(crumbs.itemListElement.map((i) => i.item)).toContain(`${ORIGIN}/en/past-contests`);
-    expect(Object.keys(r.content).sort()).toEqual(['contests/index.json', 'site.json']);
+    expect(Object.keys(r.content).sort()).toEqual(['contests/index.json', 'pages/winners.json', 'site.json']);
   });
 
   it('the recent table has the last 15 champions', async () => {

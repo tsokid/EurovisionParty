@@ -6,7 +6,9 @@ import HomeSeoBlock from '../components/seo/HomeSeoBlock';
 import SiteFooter from '../components/seo/SiteFooter';
 import PageSeo from '../components/seo/PageSeo';
 import { useLocale } from '../lib/seo/LocaleContext';
-import { copy as homeCopy } from './content/homeCopy';
+import { usePageContent } from '../lib/cms/usePageContent';
+import type { HomeContent } from '../../supabase/functions/_shared/cms/schemas/home';
+import { interpolate } from '../../supabase/functions/_shared/cms/placeholders';
 import { useCurrentYear } from '../lib/currentContest';
 import { useAuth } from '../hooks/useAuth';
 import { useRoom } from '../hooks/useRoom';
@@ -23,20 +25,25 @@ export function HomePage() {
   const { createRoom, joinRoom, isLoading, error } = useRoom();
   const navigate = useNavigate();
   const locale = useLocale();
-  const meta = homeCopy(useCurrentYear())[locale].meta;
+  const year = useCurrentYear();
+  // The SEO copy (head tags and HomeSeoBlock) is a CMS doc. Only those wait
+  // for it on client navigation: the game UI never does.
+  const content = usePageContent<HomeContent>('home');
+  const doc = content.status === 'ready' ? content.data : null;
 
   // Rendered in every state so the prerendered (auth-loading) HTML carries
   // the home page's head tags too.
-  const seo = (
+  const seo = doc && (
     <PageSeo
       pageId="home"
       locale={locale}
-      title={meta.title}
-      description={meta.description}
+      title={interpolate(doc.meta.title, { year })}
+      description={interpolate(doc.meta.description, { year })}
       ogType="website"
       ogImage="https://eurovision.games/logo.png"
     />
   );
+  const seoBlock = doc && <HomeSeoBlock copy={doc.seo} />;
 
   // ?join=CODE prefills join mode; ?action=create|join opens the matching screen
   useEffect(() => {
@@ -57,7 +64,7 @@ export function HomePage() {
             <p className="text-white/60">Loading...</p>
           </div>
         </div>
-        <HomeSeoBlock />
+        {seoBlock}
         <SiteFooter />
       </>
     );
@@ -71,7 +78,7 @@ export function HomePage() {
           onCreateRoom={() => setMode('create')}
           onJoinRoom={() => setMode('join')}
         />
-        <HomeSeoBlock />
+        {seoBlock}
         <SiteFooter />
       </>
     );

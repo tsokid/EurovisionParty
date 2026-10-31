@@ -24,13 +24,13 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10);
 // Using the registry as the single source of truth means adding a new page
 // only requires updating PAGE_REGISTRY + this map.
 const PAGE_FILES: Record<PageId, string[]> = {
-  'home': ['src/pages/HomePage.tsx', 'src/components/seo/HomeSeoBlock.tsx'],
+  'home': ['src/pages/HomePage.tsx', 'src/components/seo/HomeSeoBlock.tsx', 'content/pages/home.json'],
   'how-to-play': ['src/pages/seo/HowToPlayPage.tsx', 'content/pages/how-to-play.json'],
   'eurovision-night': ['src/pages/seo/EurovisionNightPage.tsx', 'content/pages/eurovision-night.json'],
   'eurovision-games': ['src/pages/seo/EurovisionGamesPage.tsx', 'content/pages/eurovision-games.json'],
   'eurovision-party': ['src/pages/seo/EurovisionPartyPage.tsx', 'content/pages/eurovision-party.json'],
   'eurovision-trivia': ['src/pages/seo/EurovisionTriviaPage.tsx', 'content/pages/eurovision-trivia.json'],
-  'eurovision-predictions': ['src/pages/seo/PredictionsPage.tsx', 'src/pages/seo/content/predictionsCopy.ts'],
+  'eurovision-predictions': ['src/pages/seo/PredictionsPage.tsx', 'content/pages/eurovision-predictions.json'],
   'faq': ['src/pages/seo/FAQPage.tsx', 'content/pages/faq.json'],
   'rules': ['src/pages/seo/RulesPage.tsx', 'content/pages/rules.json'],
   'scoring': ['src/pages/seo/ScoringPage.tsx', 'content/pages/scoring.json'],

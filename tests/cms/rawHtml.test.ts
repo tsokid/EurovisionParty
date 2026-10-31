@@ -57,8 +57,11 @@ const NOT_CMS: Record<string, string> = {
   'components/seo/ContentRenderer.tsx': 'renders the legacy src/content PageContent type, not a CMS document',
 };
 
-/** Directories scanned for raw-HTML renders (non-recursive; .tsx only). */
-const SCANNED = ['pages', 'pages/seo', 'pages/content', 'components/seo'];
+/**
+ * Directories scanned for raw-HTML renders (non-recursive; .tsx only).
+ * src/pages/content held homeCopy/notFoundCopy and is gone since Task 6.
+ */
+const SCANNED = ['pages', 'pages/seo', 'components/seo'];
 
 const read = (file: string) => readFileSync(resolve(SRC, file), 'utf8');
 

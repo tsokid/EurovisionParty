@@ -1,11 +1,15 @@
-import { useTranslation } from 'react-i18next';
 import LocaleLink from './LocaleLink';
 import { useCurrentYear } from '../../lib/currentContest';
+import type { HomeContent } from '../../../supabase/functions/_shared/cms/schemas/home';
+import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
+
+type SeoCopy = HomeContent['seo'];
+type CardKey = keyof SeoCopy['cards'];
 
 interface CardDef {
   href: string;
-  titleKey: string;
-  descKey: string;
+  titleKey: CardKey;
+  descKey: CardKey;
   icon: string;
 }
 
@@ -21,7 +25,7 @@ const SECONDARY_CARDS: CardDef[] = [
   { href: '/how-to-play', titleKey: 'howTitle', descKey: 'howDesc', icon: '📘' },
 ];
 
-function Card({ card, t }: { card: CardDef; t: (k: string) => string }) {
+function Card({ card, cards }: { card: CardDef; cards: SeoCopy['cards'] }) {
   return (
     <LocaleLink
       to={card.href}
@@ -31,7 +35,7 @@ function Card({ card, t }: { card: CardDef; t: (k: string) => string }) {
         <div className="flex items-center gap-2.5">
           <span className="text-xl" aria-hidden>{card.icon}</span>
           <h3 className="font-bold text-white group-hover:text-euro-pink-light transition">
-            {t(`homeSeo.cards.${card.titleKey}`)}
+            {cards[card.titleKey]}
           </h3>
         </div>
         <svg
@@ -43,7 +47,7 @@ function Card({ card, t }: { card: CardDef; t: (k: string) => string }) {
         </svg>
       </div>
       <p className="mt-2 text-sm text-white/65 leading-relaxed">
-        {t(`homeSeo.cards.${card.descKey}`)}
+        {cards[card.descKey]}
       </p>
     </LocaleLink>
   );
@@ -51,9 +55,9 @@ function Card({ card, t }: { card: CardDef; t: (k: string) => string }) {
 
 // SEO + GEO content block on the homepage. Mirrors the polished kit pattern
 // used across all SEO supporting pages: H1 + lede + sectioned content,
-// kit-style "Keep reading" cards, soft secondary CTA.
-export default function HomeSeoBlock() {
-  const { t } = useTranslation();
+// kit-style "Keep reading" cards, soft secondary CTA. The text is the home
+// page's CMS doc (content/pages/home.json, `seo`), passed in by HomePage.
+export default function HomeSeoBlock({ copy: c }: { copy: SeoCopy }) {
   const year = useCurrentYear();
 
   return (
@@ -62,39 +66,39 @@ export default function HomeSeoBlock() {
         {/* Headline + lede */}
         <header className="text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.1] text-white">
-            {t('homeSeo.headline')}
+            {c.headline}
           </h1>
           <p className="mt-5 text-lg text-white/75 max-w-2xl mx-auto leading-relaxed">
-            <strong className="text-white">{t('homeSeo.leadStrong')}</strong>
-            {t('homeSeo.leadRest', { year })}
+            <strong className="text-white">{c.leadStrong}</strong>
+            {interpolate(c.leadRest, { year })}
           </p>
         </header>
 
         {/* Primary cards — 3 across the most important destinations */}
         <div>
           <h2 className="text-xl font-bold text-white mb-5">
-            {t('homeSeo.primaryHeading', { defaultValue: 'Plan your Eurovision night' })}
+            {c.primaryHeading}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {PRIMARY_CARDS.map((c) => <Card key={c.href} card={c} t={t} />)}
+            {PRIMARY_CARDS.map((card) => <Card key={card.href} card={card} cards={c.cards} />)}
           </div>
         </div>
 
         {/* Secondary cards — 3 across deeper pages */}
         <div>
           <h2 className="text-xl font-bold text-white mb-5">
-            {t('homeSeo.secondaryHeading', { defaultValue: 'Get to know the game' })}
+            {c.secondaryHeading}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {SECONDARY_CARDS.map((c) => <Card key={c.href} card={c} t={t} />)}
+            {SECONDARY_CARDS.map((card) => <Card key={card.href} card={card} cards={c.cards} />)}
           </div>
         </div>
 
         {/* Soft CTA — points to the most-used informational page */}
         <p className="text-center text-sm text-white/55">
-          {t('homeSeo.tail', { defaultValue: 'New here?' })}{' '}
+          {c.tail}{' '}
           <LocaleLink to="/how-to-play" className="text-euro-pink-light hover:text-white underline underline-offset-2">
-            {t('homeSeo.tailLink', { defaultValue: 'Read the 60-second setup guide' })}
+            {c.tailLink}
           </LocaleLink>
           .
         </p>

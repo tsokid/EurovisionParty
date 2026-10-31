@@ -1,0 +1,122 @@
+{
+  "el": {
+    "crumbs": {
+      "home": "Αρχική",
+      "notFound": "404 — Δεν βρέθηκε"
+    },
+    "cta": {
+      "body": "Στήσε ένα δωμάτιο Eurovision ή πήγαινε στους πιο δημοφιλείς οδηγούς παρακάτω.",
+      "primary": "Άνοιξε την αρχική",
+      "secondary": "Πώς να παίξεις",
+      "title": "Επιστροφή στη βραδιά"
+    },
+    "hero": {
+      "chip": "404",
+      "lede": "Η σελίδα που προσπάθησες να ανοίξεις δεν υπάρχει στο Eurovision Games. Πιθανό typo, ίσως ένας παλιός σύνδεσμος — εδώ είναι οι πιο δημοφιλείς προορισμοί.",
+      "title": "Δεν βρέθηκε η σελίδα"
+    },
+    "meta": {
+      "description": "Αυτή η σελίδα δεν υπάρχει στο Eurovision Games. Επίστρεψε στην αρχική ή δες τους δημοφιλείς οδηγούς παρακάτω.",
+      "keywords": [
+        "eurovision games 404",
+        "δεν βρέθηκε η σελίδα"
+      ],
+      "title": "404 — Δεν βρέθηκε η σελίδα · Eurovision Games"
+    },
+    "related": {
+      "dashboard": {
+        "blurb": "Πώς ενημερώνεται ο ζωντανός πίνακας βαθμολογίας καθώς παίζεις.",
+        "title": "Dashboard"
+      },
+      "duels": {
+        "blurb": "Κανόνες head-to-head trivia κατά τη ζωντανή εκπομπή.",
+        "title": "Μονομαχίες"
+      },
+      "faq": {
+        "blurb": "Απαντήσεις σε συνηθισμένες ερωτήσεις στησίματος και βαθμολογίας.",
+        "title": "FAQ"
+      },
+      "heading": "Δημοφιλείς προορισμοί",
+      "howToPlay": {
+        "blurb": "Οδηγός στησίματος 60 δευτερολέπτων.",
+        "title": "Πώς να παίξεις"
+      },
+      "night": {
+        "blurb": "Playbook 10 βημάτων για τη φιλοξενία του watch party.",
+        "title": "Βραδιά Eurovision"
+      },
+      "predictions": {
+        "blurb": "Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.",
+        "title": "Παιχνίδι προβλέψεων"
+      },
+      "scoring": {
+        "blurb": "Ακριβείς πόντοι ανά Top-5, quiz και μονομαχία.",
+        "title": "Μαθηματικά βαθμολογίας"
+      },
+      "trivia": {
+        "blurb": "10 δείγματα ερωτήσεων και πώς δουλεύουν οι μονομαχίες.",
+        "title": "Eurovision trivia"
+      }
+    }
+  },
+  "en": {
+    "crumbs": {
+      "home": "Home",
+      "notFound": "404 — Not Found"
+    },
+    "cta": {
+      "body": "Spin up a Eurovision room or jump to the most-visited guides below.",
+      "primary": "Open the home page",
+      "secondary": "How to play",
+      "title": "Get back to the show"
+    },
+    "hero": {
+      "chip": "404",
+      "lede": "The page you tried to open is not part of Eurovision Games. Maybe a typo, maybe a stale link from somewhere — either way, here are the most popular destinations to land on instead.",
+      "title": "This stage does not exist"
+    },
+    "meta": {
+      "description": "That page does not exist on Eurovision Games. Head back to the home page or browse the popular guides below.",
+      "keywords": [
+        "eurovision games 404",
+        "page not found"
+      ],
+      "title": "404 — Page Not Found · Eurovision Games"
+    },
+    "related": {
+      "dashboard": {
+        "blurb": "How the live leaderboard updates as you play.",
+        "title": "Dashboard"
+      },
+      "duels": {
+        "blurb": "Head-to-head trivia rules during the live show.",
+        "title": "Duels"
+      },
+      "faq": {
+        "blurb": "Answers to common setup and scoring questions.",
+        "title": "FAQ"
+      },
+      "heading": "Popular destinations",
+      "howToPlay": {
+        "blurb": "60-second setup walkthrough.",
+        "title": "How to play"
+      },
+      "night": {
+        "blurb": "10-step playbook for hosting the watch party.",
+        "title": "Eurovision night"
+      },
+      "predictions": {
+        "blurb": "Top 5 / Worst 5 format and this year's line-up.",
+        "title": "Predictions game"
+      },
+      "scoring": {
+        "blurb": "Exact points per Top-5, quiz, and duel.",
+        "title": "Scoring formulas"
+      },
+      "trivia": {
+        "blurb": "10 sample questions and how duels work.",
+        "title": "Eurovision trivia"
+      }
+    }
+  }
+}

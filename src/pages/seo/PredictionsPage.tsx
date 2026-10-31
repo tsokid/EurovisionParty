@@ -21,8 +21,11 @@ import { byCountry, countryCell, numCell, songCell } from '../contest/hub';
 import { visibleTable } from '../contest/table';
 import LocaleLink from '../../components/seo/LocaleLink';
 import { hubPath } from '../../lib/seo/dynamicPages';
-import { copy as copyFor } from './content/predictionsCopy';
 import { contestTexts } from './content/contestText';
+import { usePageContent } from '../../lib/cms/usePageContent';
+import type { EurovisionPredictionsContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-predictions';
+import { PageContentFallback } from './PageContentFallback';
+import { predictionsText, type PredictionsText } from './predictionsText';
 
 // fact: date the page was first published
 const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
@@ -37,8 +40,7 @@ const reload = () => window.location.reload();
  * navigation). Loading shows a placeholder; a missing file shows the
  * error/retry state, which the prerender check rejects.
  */
-function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
-  const c = copyFor(contestTexts(cc))[locale].sections.lineup;
+function Lineup({ cc, locale, c }: { cc: CurrentContest; locale: Locale; c: PredictionsText['sections']['lineup'] }) {
   const h = hubCopy[locale].headers;
   const file = useContent<ContestSnapshot>(contestPath(cc.year));
   // Crawlable link to the live hub, in every state of the block.
@@ -107,7 +109,9 @@ function Lineup({ cc, locale }: { cc: CurrentContest; locale: Locale }) {
 export default function PredictionsPage() {
   const locale = useLocale();
   const cc = useCurrentContest();
-  const c = copyFor(contestTexts(cc))[locale];
+  const content = usePageContent<EurovisionPredictionsContent>('eurovision-predictions');
+  if (content.status !== 'ready') return <PageContentFallback state={content} />;
+  const c = predictionsText(content.data, contestTexts(cc)[locale]);
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -164,7 +168,7 @@ export default function PredictionsPage() {
       />
 
       <ContentLayout>
-        <Lineup cc={cc} locale={locale} />
+        <Lineup cc={cc} locale={locale} c={c.sections.lineup} />
 
         <Section title={c.sections.format.title}>
           <p>{c.sections.format.intro}</p>

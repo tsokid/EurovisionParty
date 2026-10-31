@@ -32,13 +32,20 @@ function inlined(html: string): Record<string, unknown> {
 }
 
 describe.skipIf(!built)('prerendered pages inline their own CMS doc', () => {
-  it('covers the Task 4 and Task 5 pages at least', () => {
+  it('covers the Task 4, 5 and 6 pages at least', () => {
     expect(migrated.map((p) => p.id)).toEqual(
       expect.arrayContaining([
         'about', 'privacy', 'terms', 'cookies', 'dashboard', 'scoring', 'rules', 'faq',
         'how-to-play', 'eurovision-night', 'eurovision-games', 'eurovision-party', 'eurovision-trivia', 'eurovision-duels',
+        'home', 'eurovision-predictions', 'winners',
       ]),
     );
+  });
+
+  // The 404 page is not a registry page: its doc is not-found.
+  it('404 → dist/404.html inlines pages/not-found.json', () => {
+    const content = inlined(readFileSync(resolve(DIST, '404.html'), 'utf8'));
+    expect(content['pages/not-found.json']).toEqual(JSON.parse(readFileSync(resolve(ROOT, 'content/pages/not-found.json'), 'utf8')));
   });
 
   it.each(cases)('%s (%s) → dist/%s', (docId, _locale, file) => {

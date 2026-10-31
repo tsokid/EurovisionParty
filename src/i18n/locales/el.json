@@ -575,29 +575,6 @@
     "body": "Το Eurovision Games βρίσκεται σε ενεργή ανάπτυξη. Περίμενε γρήγορες αλλαγές.",
     "dismiss": "Κλείσιμο μηνύματος beta"
   },
-  "homeSeo": {
-    "headline": "Eurovision Games — διοργάνωσε την τέλεια βραδιά Eurovision",
-    "leadStrong": "Το Eurovision Games είναι ένα δωρεάν παιχνίδι πάρτι μέσα στο browser",
-    "leadRest": " όπου 2-20 φίλοι προβλέπουν το Top 5 και το Worst 5 της Eurovision {{year}}, μονομαχούν σε trivia και στέφουν πέντε νικητές — Πρωταθλητή, Κλέφτη, Μονομάχο, Μάντη, Γκουρού. Χωρίς εγκατάσταση, χωρίς λογαριασμό.",
-    "primaryHeading": "Σχεδίασε τη βραδιά Eurovision σου",
-    "secondaryHeading": "Γνώρισε το παιχνίδι",
-    "tail": "Καινούργιος εδώ;",
-    "tailLink": "Διάβασε τον οδηγό εκκίνησης σε 60 δευτερόλεπτα",
-    "cards": {
-      "nightTitle": "Βραδιά Eurovision",
-      "nightDesc": "Οδηγός διοργάνωσης για το watch party.",
-      "predictionsTitle": "Παιχνίδι προβλέψεων",
-      "predictionsDesc": "Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.",
-      "triviaTitle": "Trivia Eurovision",
-      "triviaDesc": "10 ενδεικτικές ερωτήσεις και πώς λειτουργούν οι μονομαχίες.",
-      "partyTitle": "Πάρτι Eurovision",
-      "partyDesc": "Πλήρης οδηγός διοργάνωσης με ροή της βραδιάς.",
-      "gamesTitle": "Παιχνίδια Eurovision",
-      "gamesDesc": "Τι κάνει το παιχνίδι και γιατί αξίζει να παίξεις.",
-      "howTitle": "Πώς παίζεται",
-      "howDesc": "Οδηγός εκκίνησης σε 2 λεπτά."
-    }
-  },
   "siteFooter": {
     "about": "Σχετικά",
     "howToPlay": "Πώς Παίζεται",
