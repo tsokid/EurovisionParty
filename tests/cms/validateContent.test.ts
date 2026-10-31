@@ -169,3 +169,62 @@ describe('npm run build', () => {
     expect(steps.filter((s) => s.includes('validate-content'))).toHaveLength(1);
   });
 });
+
+describe('content/pages/index.json (editorial index) is consistent with the files', () => {
+  let dir: string;
+  const editorial = JSON.stringify({ en: { intro: 'Kyiv.', blocks: [] }, el: { intro: 'Κίεβο.', blocks: [] } });
+  const write = (name: string, files: Record<string, string>) => {
+    const d = join(dir, name);
+    mkdirSync(d);
+    for (const [f, text] of Object.entries(files)) writeFileSync(join(d, f), text);
+    return d;
+  };
+  beforeAll(() => { dir = mkdtempSync(join(tmpdir(), 'cms-index-')); });
+  afterAll(() => rmSync(dir, { recursive: true, force: true }));
+
+  it('the index is not a document; listing exactly the editorial docs passes', () => {
+    const d = write('ok', {
+      'archive-2005.json': editorial,
+      'country-gr.json': editorial,
+      'index.json': '{\n  "editorial": [\n    "archive-2005",\n    "country-gr"\n  ]\n}\n',
+    });
+    expect(validateContentDir(d)).toEqual({ count: 2, errors: [], warnings: [] });
+  });
+
+  it('an empty index with no editorial docs passes; no index and no editorial docs passes', () => {
+    expect(validateContentDir(write('empty-index', { 'index.json': '{"editorial":[]}' })).errors).toEqual([]);
+    expect(validateContentDir(write('no-index', {})).errors).toEqual([]);
+  });
+
+  it('an editorial doc missing from the index, or an index id without a file, is an error', () => {
+    const d = write('drift', { 'archive-2005.json': editorial, 'index.json': '{"editorial":["hub-2026"]}' });
+    expect(validateContentDir(d).errors).toEqual([
+      'index.json: lists "hub-2026", but content/pages/hub-2026.json does not exist',
+      'index.json: does not list "archive-2005" (content/pages/archive-2005.json exists)',
+    ]);
+  });
+
+  it('an editorial doc without an index is an error', () => {
+    expect(validateContentDir(write('missing', { 'hub-2026.json': editorial })).errors).toEqual([
+      'index.json: missing, but editorial documents exist (hub-2026): publish writes it',
+    ]);
+  });
+
+  it('a malformed, unsorted or non-editorial index is an error', () => {
+    expect(validateContentDir(write('bad', { 'index.json': '{"editorial":"x"}' })).errors).toEqual([
+      'index.json: must be { "editorial": [doc ids] }',
+    ]);
+    expect(validateContentDir(write('broken', { 'index.json': '{oops' })).errors[0]).toMatch(/^index\.json: invalid JSON/);
+    const d = write('unsorted', {
+      'archive-2005.json': editorial, 'country-gr.json': editorial, 'index.json': '{"editorial":["country-gr","archive-2005","faq"]}',
+    });
+    expect(validateContentDir(d).errors).toEqual([
+      'index.json: lists "faq", which is not an editorial doc id',
+      'index.json: ids must be sorted and unique',
+    ]);
+  });
+
+  it('the committed content/pages passes (its index matches its files)', () => {
+    expect(validateContentDir(join(CONTENT_DIR, 'pages')).errors).toEqual([]);
+  });
+});

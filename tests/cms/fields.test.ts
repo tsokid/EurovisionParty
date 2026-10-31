@@ -231,7 +231,7 @@ describe('labels and length presets', () => {
 
   it('every meta title/description and schemaTitle/schemaDescription uses the presets', () => {
     for (const [docId, def] of Object.entries(CMS_DOC_TYPES)) {
-      if (docId.startsWith('__')) continue;
+      if (docId.startsWith('__') || def.group !== 'site') continue; // editorial: metaDescription, checked in editorial.test
       const soft = (p: string) => fieldMeta(fieldAt(def.schema, p)!).softMaxLength;
       expect(soft('meta.title'), `${docId} meta.title`).toBe(60);
       expect(soft('meta.description'), `${docId} meta.description`).toBe(160);

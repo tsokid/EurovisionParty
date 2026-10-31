@@ -9,7 +9,8 @@ import { CMS_DOC_TYPES, docTypeFor } from '../../supabase/functions/_shared/cms/
 import { validateDocument } from '../../supabase/functions/_shared/cms/validate';
 
 const DIR = resolve(__dirname, '../../content/pages');
-const files = readdirSync(DIR).filter((f) => f.endsWith('.json')).sort();
+// index.json is the editorial index (pagesIndex.ts), not a document.
+const files = readdirSync(DIR).filter((f) => f.endsWith('.json') && f !== 'index.json').sort();
 const docIds = files.map((f) => f.slice(0, -'.json'.length));
 const staticIds = [...PAGE_REGISTRY.map((p) => p.id), 'not-found'];
 
@@ -30,6 +31,6 @@ describe('content/pages completeness', () => {
   });
 
   it('every registered static doc type has a document', () => {
-    expect(Object.keys(CMS_DOC_TYPES).filter((t) => !t.startsWith('__') && !docIds.includes(t))).toEqual([]);
+    expect(Object.entries(CMS_DOC_TYPES).filter(([t, d]) => !t.startsWith('__') && d.group === 'site' && !docIds.includes(t))).toEqual([]);
   });
 });

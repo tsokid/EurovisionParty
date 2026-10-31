@@ -11,6 +11,9 @@
  *   so NotFoundPage's setStatus(404) is a no-op.
  * - Routing: the page gets its own MemoryRouter at its public path, with the
  *   admin's router contexts reset so nothing reaches the admin's router.
+ *   An editorial doc (archive-*, country-*, hub-*) previews its data page at
+ *   `path` (from the Pages module), matched by the page's own route so it
+ *   reads its :slug; the page loads its contest data as on the site.
  *   Link clicks and form submits inside the pane are swallowed.
  * - Locale: a local LocaleProvider plus a cloned i18next instance, so the
  *   EN/EL toggle never changes the global language or <html lang>.
@@ -24,6 +27,7 @@
  *   (interpolate throws) shows "Preview error: …" inside the pane only.
  */
 import { Component, useMemo, useState, type ReactNode, type SyntheticEvent } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '../../../i18n';
 import { routes } from '../../../routeConfig';
@@ -34,6 +38,7 @@ import { LocaleProvider } from '../../../lib/seo/LocaleContext';
 import { PreviewModeContext } from '../../../lib/seo/PreviewMode';
 import { PageContentOverrideProvider } from '../../../lib/cms/PageContentOverride';
 import { docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
+import { editorialFamily, type EditorialFamily } from '../../../../supabase/functions/_shared/cms/pagesIndex';
 import { sanitizePreviewDoc } from './sanitizePreview';
 import { MediaResolverContext } from '../../../components/cms/MediaResolver';
 import { usePreviewMediaResolver } from './media/previewResolver';
@@ -53,6 +58,32 @@ function previewTarget(docId: string, locale: Locale): Target | null {
   const children = routes.find((r) => r.path === '/:locale')?.children ?? [];
   const route = slug === '/' ? children.find((r) => r.index) : children.find((r) => r.path === slug.slice(1));
   return route?.element ? { element: route.element, path: slug } : null;
+}
+
+/** The data page route of each editorial family, under /:locale. */
+const EDITORIAL_ROUTE: Record<EditorialFamily, string> = {
+  archive: 'past-contests/:slug',
+  country: 'countries/:slug',
+  hub: ':slug',
+};
+
+/** The page component of an editorial family (the hub page is the index child of its :slug route). */
+function editorialElement(family: EditorialFamily): ReactNode {
+  const children = routes.find((r) => r.path === '/:locale')?.children ?? [];
+  const route = children.find((r) => r.path === EDITORIAL_ROUTE[family]);
+  return family === 'hub' ? route?.children?.find((r) => r.index)?.element : route?.element;
+}
+
+function EditorialPreviewPage({ family, path, locale }: { family: EditorialFamily; path: string; locale: Locale }) {
+  const element = editorialElement(family);
+  if (!element) throw new Error(`no page to preview for ${family} editorial`);
+  return (
+    <DetachedMemoryRouter key={`${path}:${locale}`} path={localizePath(locale, path)}>
+      <Routes>
+        <Route path={`/:locale/${EDITORIAL_ROUTE[family]}`} element={element} />
+      </Routes>
+    </DetachedMemoryRouter>
+  );
 }
 
 type BoundaryProps = { resetKeys: unknown[]; children: ReactNode };
@@ -83,7 +114,12 @@ class PreviewErrorBoundary extends Component<BoundaryProps, { error: Error | nul
   }
 }
 
-function PreviewPage({ docId, locale }: { docId: string; locale: Locale }) {
+function PreviewPage({ docId, locale, path }: { docId: string; locale: Locale; path?: string }) {
+  const family = editorialFamily(docId);
+  if (family) {
+    if (!path) throw new Error(`no page to preview for "${docId}" (its year or country is not listed)`);
+    return <EditorialPreviewPage family={family} path={path} locale={locale} />;
+  }
   const target = previewTarget(docId, locale);
   if (!target) throw new Error(`no page to preview for "${docId}"`);
   return (
@@ -102,10 +138,12 @@ function swallowSubmit(e: SyntheticEvent) {
   e.stopPropagation();
 }
 
-export default function PreviewPane({ docId, doc, initialLocale = 'en' }: {
+export default function PreviewPane({ docId, doc, path, initialLocale = 'en' }: {
   docId: string;
   /** The draft document `{ en, el }`, as edited (not necessarily valid). */
   doc: unknown;
+  /** Editorial docs: the unprefixed public path of the data page to show. */
+  path?: string;
   initialLocale?: Locale;
 }) {
   const [locale, setLocale] = useState<Locale>(initialLocale);
@@ -140,13 +178,13 @@ export default function PreviewPane({ docId, doc, initialLocale = 'en' }: {
         onClickCapture={swallowLinkClick}
         onSubmitCapture={swallowSubmit}
       >
-        <PreviewErrorBoundary resetKeys={[docId, doc, locale]}>
+        <PreviewErrorBoundary resetKeys={[docId, doc, locale, path]}>
           <PreviewModeContext.Provider value={true}>
             <I18nextProvider i18n={localI18n}>
               <LocaleProvider locale={locale}>
                 <PageContentOverrideProvider docId={docId} doc={safeDoc}>
                   <MediaResolverContext.Provider value={media}>
-                    <PreviewPage docId={docId} locale={locale} />
+                    <PreviewPage docId={docId} locale={locale} path={path} />
                   </MediaResolverContext.Provider>
                 </PageContentOverrideProvider>
               </LocaleProvider>

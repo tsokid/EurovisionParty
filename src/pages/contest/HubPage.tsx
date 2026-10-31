@@ -11,6 +11,9 @@ import { absoluteUrl } from '../../lib/seo/registry';
 import { formatDate, showsResults } from './content/hubCopy';
 import { visibleTable } from './table';
 import { HubGate } from './HubFrame';
+import { EditorialBlocks, EditorialTop } from './EditorialLayer';
+import { editorialDescription, editorialJsonLd, useEditorial } from './editorialContent';
+import { editorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 import { byCountry, contestEventJsonLd, countryCell, hubCrumbs, hubRelated, numCell, songCell, type Hub } from './hub';
 
 function HubBody({ hub }: { hub: Hub }) {
@@ -18,6 +21,7 @@ function HubBody({ hub }: { hub: Hub }) {
   const crumbs = hubCrumbs(hub);
   const results = showsResults(f);
   const description = c.hub.description(f);
+  const editorial = useEditorial(editorialDocId('hub', contest.year));
 
   const event = contestEventJsonLd(contest, f.city, description, absoluteUrl(locale, base));
 
@@ -63,14 +67,15 @@ function HubBody({ hub }: { hub: Hub }) {
         path={base}
         locale={locale}
         title={c.hub.title(f)}
-        description={description}
+        description={editorialDescription(editorial, description)}
         ogType="website"
-        jsonLd={[...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={[...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale), ...editorialJsonLd(editorial)]}
       />
 
       <PageHero crumbs={crumbs} chip={c.chip[contest.stage]} chipTone="gold" title={c.hub.h1(f)} lede={c.hub.lede(f)} />
 
       <ContentLayout wide>
+        <EditorialTop editorial={editorial} />
         {results && winnerEntry ? (
           <Section id="results" title={c.hub.results}>
             <div className="rounded-2xl border border-euro-gold/40 bg-euro-gold/10 px-5 py-4">
@@ -124,6 +129,8 @@ function HubBody({ hub }: { hub: Hub }) {
         {results && (
           <p><LocaleLink to={`${base}/songs`} className="text-euro-pink-light hover:underline">{c.hub.songsLink} →</LocaleLink></p>
         )}
+
+        <EditorialBlocks editorial={editorial} />
 
         <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub)} />
       </ContentLayout>

@@ -1,9 +1,9 @@
 // CMS document types (spec §3 "Files", "Schemas").
 //
 // Static pages use their SEO-registry pageId as both docId and doc type
-// (faq -> faq). Editorial layers (3b) are families keyed by prefix:
-// archive-{year} -> archive, country-{ISO} -> country, hub-{year} -> hub.
-// Schemas are registered here as Tasks 4-6 migrate each page.
+// (faq -> faq). Editorial layers (3c) are families keyed by prefix, all with
+// one schema: archive-{year} -> archive-editorial, country-{iso} ->
+// country-editorial, hub-{year} -> hub-editorial (pagesIndex.ts).
 import type { z } from 'zod';
 import { aboutSchema } from './schemas/about.ts';
 import { cookiesSchema } from './schemas/cookies.ts';
@@ -23,8 +23,10 @@ import { rulesSchema } from './schemas/rules.ts';
 import { scoringSchema } from './schemas/scoring.ts';
 import { termsSchema } from './schemas/terms.ts';
 import { winnersSchema } from './schemas/winners.ts';
+import { editorialSchema } from './schemas/editorial.ts';
+import { editorialFamily } from './pagesIndex.ts';
 
-export type DocTypeGroup = 'site' | 'contest' | 'country';
+export type DocTypeGroup = 'site' | 'contest' | 'country' | 'hub';
 
 export type DocTypeDef = {
   /** Schema of one locale's content (the document is { en: T, el: T }). */
@@ -52,14 +54,13 @@ export const CMS_DOC_TYPES: Record<string, DocTypeDef> = {
   'not-found': { schema: notFoundSchema, label: 'Page not found (404)', group: 'site' },
   'eurovision-predictions': { schema: eurovisionPredictionsSchema, label: 'Predictions game', group: 'site' },
   winners: { schema: winnersSchema, label: 'Winners', group: 'site' },
+  'archive-editorial': { schema: editorialSchema, label: 'Contest year editorial', group: 'contest' },
+  'country-editorial': { schema: editorialSchema, label: 'Country editorial', group: 'country' },
+  'hub-editorial': { schema: editorialSchema, label: 'Live hub editorial', group: 'hub' },
 };
 
-const FAMILIES = ['archive', 'country', 'hub'] as const;
-
-/** Doc type of a document id. */
+/** Doc type of a document id: {family}-editorial for an editorial id, else the id itself. */
 export function docTypeFor(docId: string): string {
-  for (const family of FAMILIES) {
-    if (docId.startsWith(`${family}-`) && docId.length > family.length + 1) return family;
-  }
-  return docId;
+  const family = editorialFamily(docId);
+  return family ? `${family}-editorial` : docId;
 }

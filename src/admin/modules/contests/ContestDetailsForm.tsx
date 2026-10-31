@@ -1,7 +1,8 @@
 // src/admin/modules/contests/ContestDetailsForm.tsx
 // Details of one contest year: city, city slug, host, the three show
 // dates and the indexable switch. Saved through update_contest with only
-// the changed fields; a change goes live with the next Publish.
+// the changed fields; a change goes live with the next Publish. Next to
+// indexable, the year's editorial (EditorialIndicator) with a link to it.
 // city_slug is checked here with the same pattern as the contests check
 // constraint of migration 070; the SQL stays authoritative. It is locked
 // once the year is archived (part of the archive URL; update_contest
@@ -10,6 +11,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
+import { EditorialIndicator } from './EditorialIndicator';
 
 /** contests.city_slug check of migration 070. */
 export const CITY_SLUG_RE = /^[a-z]+(-[a-z]+)*$/;
@@ -203,6 +205,7 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
           Indexable
         </label>
         <span className="text-xs text-white/50">Turn on after you've added your own text or image for this year.</span>
+        <EditorialIndicator year={year} />
       </div>
 
       <button

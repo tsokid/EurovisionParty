@@ -3,6 +3,7 @@
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
 import type { DocValue } from './form/SchemaForm';
+import { PAGES_INDEX_PATH, readPagesIndex } from '../../../../supabase/functions/_shared/cms/pagesIndex';
 
 /** A row of cms_list(): a saved draft and whether the last publish included it. */
 export type CmsListRow = { doc_id: string; doc_type: string; updated_at: string; published: boolean };
@@ -81,4 +82,19 @@ export async function fetchPublishedPages(docIds: readonly string[]): Promise<Re
     return [id, await p] as const;
   }));
   return Object.fromEntries(entries.filter((e): e is readonly [string, DocValue] => e[1] !== null));
+}
+
+/**
+ * The editorial doc ids that are published (content/pages/index.json),
+ * bypassing the HTTP cache. Throws when the index cannot be read: callers
+ * must not mistake "unknown" for "none" (creating a draft over a published
+ * editorial doc would replace it at the next Publish).
+ */
+export async function fetchPublishedEditorialIds(): Promise<string[]> {
+  const res = await fetch(`/content/${PAGES_INDEX_PATH}`, { cache: 'no-store' });
+  const json = (res.headers.get('content-type') ?? '').includes('json');
+  if (!res.ok || !json) throw new Error(`Could not load the editorial index (HTTP ${res.status}${res.ok ? ', not JSON' : ''})`);
+  const ids = readPagesIndex(await res.json());
+  if (!ids) throw new Error('The editorial index is malformed');
+  return ids;
 }

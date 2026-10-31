@@ -11,6 +11,10 @@
  * past fact (a policy date, a trivia answer) is a legitimate hit: review, then
  * ignore.
  *
+ * content/pages/index.json is not a document: it lists the editorial docs
+ * (archive-*, country-*, hub-*) and must match the files exactly, sorted. It
+ * may be absent only while there are none.
+ *
  * Also fails on a draft media reference (cms-media/<uuid>) in any file under
  * content/: published content must only hold /media/<sha12>.<ext> (publish
  * rewrites the references and commits the files).
@@ -20,6 +24,7 @@ import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationContext } from '../../supabase/functions/_shared/cms/validate';
+import { isEditorialDocId, readPagesIndex } from '../../supabase/functions/_shared/cms/pagesIndex';
 import { cityName } from '../../src/pages/contest/content/hubCopy';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -53,13 +58,41 @@ export function liveContestFacts(sitePath = resolve(ROOT, 'content/site.json')):
   return { year, cities: [...new Set([city, cityName('el', city_slug, city).name])] };
 }
 
+const INDEX_FILE = 'index.json';
+
+/** Errors of content/pages/index.json against the editorial docs present (`docIds`). */
+export function pagesIndexErrors(dir: string, docIds: readonly string[]): string[] {
+  const present = docIds.filter(isEditorialDocId).sort();
+  const at = join(dir, INDEX_FILE);
+  if (!existsSync(at)) {
+    return present.length ? [`${INDEX_FILE}: missing, but editorial documents exist (${present.join(', ')}): publish writes it`] : [];
+  }
+  let ids: string[] | null;
+  try {
+    ids = readPagesIndex(JSON.parse(readFileSync(at, 'utf8')));
+  } catch (e) {
+    return [`${INDEX_FILE}: invalid JSON: ${(e as Error).message}`];
+  }
+  if (!ids) return [`${INDEX_FILE}: must be { "editorial": [doc ids] }`];
+  const errors: string[] = [];
+  for (const id of ids) {
+    if (!isEditorialDocId(id)) errors.push(`${INDEX_FILE}: lists "${id}", which is not an editorial doc id`);
+    else if (!present.includes(id)) errors.push(`${INDEX_FILE}: lists "${id}", but content/pages/${id}.json does not exist`);
+  }
+  for (const id of present) {
+    if (!ids.includes(id)) errors.push(`${INDEX_FILE}: does not list "${id}" (content/pages/${id}.json exists)`);
+  }
+  if (ids.some((id, i) => i > 0 && ids![i - 1] >= id)) errors.push(`${INDEX_FILE}: ids must be sorted and unique`);
+  return errors;
+}
+
 export function validateContentDir(
   dir: string,
   facts: LiveContestFacts = liveContestFacts(),
 ): { count: number; errors: string[]; warnings: string[] } {
   if (!existsSync(dir)) return { count: 0, errors: [], warnings: [] };
-  const files = readdirSync(dir).filter((f) => f.endsWith('.json')).sort();
-  const errors: string[] = [];
+  const files = readdirSync(dir).filter((f) => f.endsWith('.json') && f !== INDEX_FILE).sort();
+  const errors: string[] = [...pagesIndexErrors(dir, files.map((f) => f.slice(0, -'.json'.length)))];
   const warnings: string[] = [];
   for (const file of files) {
     const docId = file.slice(0, -'.json'.length);

@@ -20,6 +20,9 @@ import { formatDate, hubCopy } from './content/hubCopy';
 import { byCountry, contestEventJsonLd, numCell, songCell, songsItemList } from './hub';
 import { ARCHIVE_YEARS, countryLinkCell, linkClass, parseArchiveSlug } from './archive';
 import { visibleTable } from './table';
+import { EditorialBlocks, EditorialTop } from './EditorialLayer';
+import { editorialDescription, editorialJsonLd, useEditorial } from './editorialContent';
+import { editorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 
 const LAST = Number.MAX_SAFE_INTEGER;
 
@@ -88,6 +91,7 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Loca
   const f = archiveFacts(contest, locale);
   const path = archivePath(contest.year, contest.city_slug);
   const description = a.year.description(f);
+  const editorial = useEditorial(editorialDocId('archive', contest.year));
 
   const crumbs: Crumb[] = [
     { label: a.crumbs.home, href: '/' },
@@ -132,13 +136,14 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Loca
         path={path}
         locale={locale}
         title={a.year.title(f)}
-        description={description}
+        description={editorialDescription(editorial, description)}
         robots={contest.indexable ? undefined : 'noindex'}
         ogType="website"
         jsonLd={[
           ...(event ? [event] : []),
           songsItemList(ranking, contest.cancelled ? a.year.entriesListName(contest.year) : a.year.listName(contest.year)),
           breadcrumbJsonLd(crumbs, locale),
+          ...editorialJsonLd(editorial),
         ]}
       />
 
@@ -151,6 +156,7 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Loca
       />
 
       <ContentLayout wide>
+        <EditorialTop editorial={editorial} />
         {contest.cancelled ? (
           <Section id="cancelled" title={a.year.cancelledTitle}>
             <p>{a.year.cancelledNote(f)}</p>
@@ -189,6 +195,8 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Loca
             ))}
           </>
         )}
+
+        <EditorialBlocks editorial={editorial} />
 
         <nav aria-label={a.year.navTitle} className="space-y-3">
           <h2 className="text-xl font-bold text-white">{a.year.navTitle}</h2>

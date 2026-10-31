@@ -7,19 +7,23 @@
 // published pages overlaid with the draft being edited.
 //
 // The fields are found from their metadata (seoTitle() / metaDescription()
-// mark seo: 'title' / 'description'), so the paths live in one place.
+// mark seo: 'title' / 'description'), so the paths live in one place. A doc's
+// type comes from docTypeFor, so editorial docs (archive-2005 ->
+// archive-editorial) are checked too: their optional metaDescription override
+// must differ from every other page's description. (The templated
+// descriptions of the data pages are not CMS docs: check-prerender covers them.)
 // Values are compared as stored (templates, trimmed): two equal templates
 // always render equal.
 //
 // Pure and Deno-free.
-import { CMS_DOC_TYPES } from './registry.ts';
+import { CMS_DOC_TYPES, docTypeFor } from './registry.ts';
 import { walkSchema } from './walk.ts';
 import type { Locale } from './validate.ts';
 
 export type SeoKind = 'title' | 'description';
 
-/** Dotted paths of a doc type's SEO title and meta description. */
-export type SeoPaths = Record<SeoKind, string>;
+/** Dotted paths of a doc type's SEO title and meta description (an editorial type has only a description). */
+export type SeoPaths = Partial<Record<SeoKind, string>>;
 
 export type SeoIssue = { doc_id: string; locale: Locale; path: string; message: string };
 
@@ -28,8 +32,8 @@ const LOCALES: readonly Locale[] = ['en', 'el'];
 const cache = new Map<string, SeoPaths | null>();
 
 /**
- * The paths of `docType`'s title and description, or null when the type is
- * unknown or lacks either. Throws if a schema marks two fields of one kind
+ * The paths of `docType`'s title and description (either may be absent), or
+ * null when the type is unknown or marks neither. Throws if a schema marks two fields of one kind
  * (or one inside a list): the page has a single <title>.
  */
 export function seoFields(docType: string): SeoPaths | null {
@@ -46,7 +50,7 @@ export function seoFields(docType: string): SeoPaths | null {
       }
       found[kind] = n.path;
     });
-    out = found.title !== undefined && found.description !== undefined ? { title: found.title, description: found.description } : null;
+    out = found.title !== undefined || found.description !== undefined ? found : null;
   }
   cache.set(docType, out);
   return out;
@@ -76,7 +80,7 @@ export function seoDuplicates(docs: Record<string, unknown>, changed: Iterable<s
       const byValue = new Map<string, string[]>();
       const paths = new Map<string, string>();
       for (const id of ids) {
-        const path = seoFields(id)?.[kind];
+        const path = seoFields(docTypeFor(id))?.[kind];
         if (path === undefined) continue;
         const doc = docs[id];
         const raw = doc && typeof doc === 'object' ? valueAt((doc as Record<string, unknown>)[locale], path) : undefined;

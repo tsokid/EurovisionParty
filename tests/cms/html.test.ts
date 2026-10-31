@@ -78,7 +78,7 @@ describe('rawHtml fields are checked by validation', () => {
   it('every rawHtml value in every committed content/pages doc passes', () => {
     const dir = resolve(__dirname, '../../content/pages');
     let checked = 0;
-    for (const file of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
+    for (const file of readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json')) {
       const docId = file.slice(0, -5);
       const def = CMS_DOC_TYPES[docTypeFor(docId)];
       const doc = JSON.parse(readFileSync(resolve(dir, file), 'utf8')) as Record<'en' | 'el', unknown>;

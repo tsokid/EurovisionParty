@@ -2,11 +2,14 @@
 // draft, side by side from 1280px (Edit / Preview tabs below that).
 //
 // - Load: the saved draft (cms_get), else the published file as the base
-//   (expected_updated_at null: the first save creates the draft).
+//   (expected_updated_at null: the first save creates the draft). An
+//   editorial doc that is neither saved nor published (content/pages/
+//   index.json) starts from the schema's empty value.
 // - Validate: live, 300 ms after the last edit, with the live contest as
 //   context, plus the cross-page check: the SEO title and meta description
-//   must differ from every other published page's (seo.ts; the build fails
-//   on a duplicate). Errors block Save; warnings never do. Save re-validates what it
+//   must differ from every other published page's, the editorial docs'
+//   metaDescription overrides included (seo.ts; the build fails on a
+//   duplicate). Errors block Save; warnings never do. Save re-validates what it
 //   sends: inside the 300 ms window an invalid draft shows SAVE_BLOCKED_TEXT.
 // - Save: cms_save against the updated_at of what was loaded or last saved.
 //   A save over someone else's newer save is refused: the banner offers a
@@ -21,7 +24,9 @@ import { seoDuplicates } from '../../../../supabase/functions/_shared/cms/seo';
 import { formatError } from '../../lib/formatError';
 import { useUnsavedGuard } from '../../unsavedGuard';
 import { formatRunTime } from '../contests/publish';
-import { cmsDiscard, cmsGet, cmsSave, fetchPublished, fetchPublishedPages, isConflict } from './cmsApi';
+import { cmsDiscard, cmsGet, cmsSave, fetchPublished, fetchPublishedEditorialIds, fetchPublishedPages, isConflict } from './cmsApi';
+import { isEditorialDocId } from '../../../../supabase/functions/_shared/cms/pagesIndex';
+import { emptyEditorialDoc } from './editorialPages';
 import { SITE_PAGES } from './sitePages';
 import { useContestContext } from './contestContext';
 import { SchemaForm, type DocValue } from './form/SchemaForm';
@@ -34,8 +39,8 @@ export const RELOAD_CONFIRM = 'Discard your edits and load the latest?';
 /** Save clicked before the debounced errors show, on an invalid draft. */
 export const SAVE_BLOCKED_TEXT = 'Fix the errors below before saving';
 
-/** Where the editor's base came from: a saved draft, or the published file. */
-type Base = { source: 'draft' | 'published'; updatedAt: string | null };
+/** Where the editor's base came from: a saved draft, the published file, or nothing yet (a new editorial doc). */
+type Base = { source: 'draft' | 'published' | 'new'; updatedAt: string | null };
 
 /** The edited document; `fromLoad` (not a keystroke) skips the debounce. */
 type Draft = { value: DocValue; fromLoad: boolean };
@@ -58,11 +63,16 @@ const BUTTON = 'px-3 py-1.5 rounded font-bold text-sm disabled:opacity-40 cursor
 interface Props {
   docId: string;
   label: string;
+  /** Editorial docs: the unprefixed public path of the page the preview shows. */
+  previewPath?: string;
   /** A draft was saved or discarded: refresh the list and the publish count. */
   onChanged: () => void;
 }
 
-export function PageEditor({ docId, label, onChanged }: Props) {
+/** The published editorial ids; [] when the index cannot be read (the SEO check then skips them; Publish checks again). */
+const editorialIdsOrNone = () => fetchPublishedEditorialIds().catch(() => [] as string[]);
+
+export function PageEditor({ docId, label, previewPath, onChanged }: Props) {
   const docType = docTypeFor(docId);
   const schema = CMS_DOC_TYPES[docType]?.schema;
   const { vars, context } = useContestContext();
@@ -84,9 +94,11 @@ export function PageEditor({ docId, label, onChanged }: Props) {
   useEffect(() => {
     let live = true;
     setOthers(null);
-    fetchPublishedPages(SITE_PAGES.map((p) => p.docId).filter((id) => id !== docId)).then((pages) => {
-      if (live) setOthers(pages);
-    });
+    editorialIdsOrNone()
+      .then((editorial) => fetchPublishedPages([...SITE_PAGES.map((p) => p.docId), ...editorial].filter((id) => id !== docId)))
+      .then((pages) => {
+        if (live) setOthers(pages);
+      });
     return () => { live = false; };
   }, [docId]);
 
@@ -96,9 +108,10 @@ export function PageEditor({ docId, label, onChanged }: Props) {
     setErr(null);
     try {
       const row = await cmsGet(docId);
-      const value = row ? row.data : await fetchPublished(docId);
+      const fresh = !row && isEditorialDocId(docId) && !(await fetchPublishedEditorialIds()).includes(docId);
+      const value = row ? row.data : fresh ? emptyEditorialDoc() : await fetchPublished(docId);
       if (seq !== loadSeq.current) return;
-      setBase(row ? { source: 'draft', updatedAt: row.updated_at } : { source: 'published', updatedAt: null });
+      setBase(row ? { source: 'draft', updatedAt: row.updated_at } : { source: fresh ? 'new' : 'published', updatedAt: null });
       setDraft({ value, fromLoad: true });
       setBlocked(false);
       setSaved(value);
@@ -205,7 +218,9 @@ export function PageEditor({ docId, label, onChanged }: Props) {
 
   const hasErrors = errors.length > 0;
   const saveDisabled = !dirty || hasErrors || conflict || busy !== null;
-  const source = base.source === 'draft' && base.updatedAt ? `Draft saved ${formatRunTime(base.updatedAt)}` : 'Published version';
+  const source = base.source === 'draft' && base.updatedAt
+    ? `Draft saved ${formatRunTime(base.updatedAt)}`
+    : base.source === 'new' ? 'New: not saved yet' : 'Published version';
 
   return (
     <section className="space-y-3">
@@ -265,7 +280,7 @@ export function PageEditor({ docId, label, onChanged }: Props) {
           data-testid="preview-panel"
           className={`${tab === 'preview' ? 'block' : 'hidden'} xl:block min-w-0 xl:sticky xl:top-28 xl:max-h-[calc(100dvh-8rem)] xl:overflow-auto`}
         >
-          <PreviewPane docId={docId} doc={shown} />
+          <PreviewPane docId={docId} doc={shown} path={previewPath} />
         </div>
       </div>
     </section>

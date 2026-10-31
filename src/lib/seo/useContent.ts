@@ -50,7 +50,9 @@ function fetchContent(path: string): Promise<void> {
   return p;
 }
 
-const peek = (path: string): unknown => getCachedContent(path) ?? bundledContent(path);
+/** The cached (or, server side, bundled) file, partial or whole, without fetching. */
+export const peekContent = (path: string): unknown => getCachedContent(path) ?? bundledContent(path);
+const peek = peekContent;
 
 const hasKey = (data: unknown, key: string): boolean =>
   !!data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, key);

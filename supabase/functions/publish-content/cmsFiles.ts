@@ -12,12 +12,19 @@
 // drafts shipped) is checked, and a draft that collides is an error naming
 // the other page (_shared/cms/seo.ts).
 //
+// Editorial docs (archive-{year}, country-{iso}, hub-{year}) are optional, so
+// content/pages/index.json lists the ones that exist (pagesIndex.ts). It is
+// rewritten whenever an editorial draft ships: the committed editorial ids
+// plus the shipped ones. Only an editorial draft can add an id (nothing
+// deletes a page doc), so other publishes leave it untouched.
+//
 // Pure and Deno-free. The bare 'zod' import inside _shared/cms resolves via
 // this function's deno.json import map (pinned to package.json's version,
 // tests/functions/zodPin.test.ts).
 import { docTypeFor } from '../_shared/cms/registry.ts';
 import { validateDocument, type Locale } from '../_shared/cms/validate.ts';
 import { seoDuplicates } from '../_shared/cms/seo.ts';
+import { isEditorialDocId, PAGES_INDEX_FILE, pagesIndex } from '../_shared/cms/pagesIndex.ts';
 import { stableJson } from '../_shared/stableJson.ts';
 import type { CmsDocumentRow } from './snapshot.ts';
 
@@ -82,21 +89,23 @@ const byDocId = (a: CmsDocumentRow, b: CmsDocumentRow) => (a.doc_id < b.doc_id ?
 
 const PAGE_FILE = /^content\/pages\/([a-z0-9-]+)\.json$/;
 
-/** content/pages/{doc_id}.json texts (other paths ignored) as { doc_id: parsed document }. */
+/** content/pages/{doc_id}.json texts (other paths and the index ignored) as { doc_id: parsed document }. */
 export function pagesFromFiles(files: Record<string, string>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [path, text] of Object.entries(files)) {
     const m = PAGE_FILE.exec(path);
-    if (m) out[m[1]] = JSON.parse(text);
+    if (m && path !== PAGES_INDEX_FILE) out[m[1]] = JSON.parse(text);
   }
   return out;
 }
 
 /**
  * Validates every draft and serializes each to content/pages/{doc_id}.json
- * (keys sorted, 2-space indent, trailing newline: the 3a file format).
+ * (keys sorted, 2-space indent, trailing newline: the 3a file format), plus
+ * content/pages/index.json when an editorial draft is among them.
  * `committed` (doc_id -> document, the pages in the commit's parent) is what
- * the drafts overlay for the cross-page title/description check.
+ * the drafts overlay for the cross-page title/description check and the
+ * index.
  * Throws CmsValidationError listing every error when any draft is invalid.
  */
 export function cmsFiles(
@@ -140,5 +149,8 @@ export function cmsFiles(
   for (const issue of seoDuplicates({ ...committed, ...valid }, Object.keys(valid))) errors.push(issue);
 
   if (errors.length) throw new CmsValidationError(errors, warnings);
+  if (Object.keys(valid).some(isEditorialDocId)) {
+    files[PAGES_INDEX_FILE] = stableJson(pagesIndex([...Object.keys(committed), ...Object.keys(valid)]));
+  }
   return { files, warnings };
 }

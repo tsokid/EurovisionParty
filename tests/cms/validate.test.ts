@@ -304,9 +304,12 @@ describe('docTypeFor', () => {
     expect(docTypeFor('faq')).toBe('faq');
     expect(docTypeFor('how-to-play')).toBe('how-to-play');
     expect(docTypeFor('not-found')).toBe('not-found');
-    expect(docTypeFor('archive-1956')).toBe('archive');
-    expect(docTypeFor('country-GR')).toBe('country');
-    expect(docTypeFor('hub-2026')).toBe('hub');
+    expect(docTypeFor('archive-1956')).toBe('archive-editorial');
+    expect(docTypeFor('archive-2005')).toBe('archive-editorial');
+    expect(docTypeFor('country-GR')).toBe('country-editorial');
+    expect(docTypeFor('country-gr')).toBe('country-editorial');
+    expect(docTypeFor('hub-2026')).toBe('hub-editorial');
+    expect(docTypeFor('archive-')).toBe('archive-');
   });
 });
 
@@ -384,7 +387,7 @@ describe('validateDocument warnings (never errors)', () => {
   });
 
   it('every committed content/pages doc validates (warnings allowed)', () => {
-    for (const docId of Object.keys(CMS_DOC_TYPES).filter((id) => !id.startsWith('__'))) {
+    for (const docId of Object.keys(CMS_DOC_TYPES).filter((id) => !id.startsWith('__') && CMS_DOC_TYPES[id].group === 'site')) {
       const doc = JSON.parse(readFileSync(resolve(ROOT, `content/pages/${docId}.json`), 'utf8'));
       const r = validateDocument(docId, doc);
       expect(r.errors, docId).toEqual([]);

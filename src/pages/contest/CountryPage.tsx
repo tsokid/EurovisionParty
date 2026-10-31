@@ -20,6 +20,9 @@ import { cityName } from './content/hubCopy';
 import { numCell, songCell } from './hub';
 import { completedContests, CONTEST_INDEX, COUNTRY_INDEX, linkClass, yearCell, yearPath } from './archive';
 import { visibleTable } from './table';
+import { EditorialBlocks, EditorialTop } from './EditorialLayer';
+import { editorialDescription, editorialJsonLd, useEditorial } from './editorialContent';
+import { editorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 
 interface CountryData {
   slug: string;
@@ -56,6 +59,7 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
   const completed = new Set(completedContests(contests).map((c) => c.year));
   const f = countryFacts(country, locale, completed);
   const path = countryPath(slug);
+  const editorial = useEditorial(editorialDocId('country', country.iso));
   const name = (x: { name_en: string; name_el: string }) => (locale === 'el' ? x.name_el : x.name_en);
 
   const crumbs: Crumb[] = [
@@ -98,15 +102,16 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
         path={path}
         locale={locale}
         title={k.title(f)}
-        description={k.description(f)}
+        description={editorialDescription(editorial, k.description(f))}
         robots={indexable ? undefined : 'noindex'}
         ogType="website"
-        jsonLd={[breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={[breadcrumbJsonLd(crumbs, locale), ...editorialJsonLd(editorial)]}
       />
 
       <PageHero crumbs={crumbs} chip={c.chip} chipTone="gold" title={k.h1(f)} lede={k.lede(f)} />
 
       <ContentLayout wide>
+        <EditorialTop editorial={editorial} />
         <Section id="summary" title={k.summaryTitle}>
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
             {summary.map(([label, value]) => (
@@ -131,6 +136,8 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
         <Section id="history" title={k.historyTitle}>
           <DataTable {...visibleTable(country.participations, columns)} />
         </Section>
+
+        <EditorialBlocks editorial={editorial} />
 
         {related.length > 0 && (
           <Section id="see-also" title={k.seeAlsoTitle}>

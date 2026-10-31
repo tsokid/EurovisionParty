@@ -83,7 +83,7 @@ describe('cmsFiles', () => {
   });
 
   it('every committed page, published unchanged as a draft, round-trips byte for byte', () => {
-    const ids = readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+    const ids = readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => f.slice(0, -5));
     expect(ids.length).toBeGreaterThan(10);
     const { files } = cmsFiles(ids.map((id) => row(id)));
     for (const id of ids) expect(files[`content/pages/${id}.json`]).toBe(pageText(id));
@@ -123,7 +123,7 @@ describe('cmsFiles', () => {
 
   it('a doc_id not registered in CMS_DOC_TYPES is an error', () => {
     expect(thrown(() => cmsFiles([row('archive-2025', { en: {}, el: {} }, 'archive')])).message).toMatch(
-      /^archive-2025 \[doc\] \(root\): Unknown doc type "archive"$/m,
+      /^archive-2025 \[doc\] \(root\): doc_type "archive" does not match doc_id "archive-2025" \(expected "archive-editorial"\)$/m,
     );
     expect(thrown(() => cmsFiles([row('nope', { en: {}, el: {} })])).message).toMatch(
       /^nope \[doc\] \(root\): Unknown doc type "nope"$/m,
@@ -195,7 +195,7 @@ describe('cmsFiles', () => {
 
 describe('cmsFiles: titles and descriptions unique across pages (I2)', () => {
   const committedPages = () =>
-    Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json')).map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))]));
+    Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))]));
 
   it('a draft whose title duplicates a committed page is refused, naming both doc ids', () => {
     const data = edited('not-found', (d) => { d.en.meta.title = pageDoc('faq').en.meta.title; });
@@ -233,12 +233,63 @@ describe('cmsFiles: titles and descriptions unique across pages (I2)', () => {
     ]);
   });
 
-  it('pagesFromFiles maps content/pages/{id}.json texts to { id: data }, ignoring other paths', () => {
+  it('pagesFromFiles maps content/pages/{id}.json texts to { id: data }, ignoring other paths and the index', () => {
     expect(pagesFromFiles({
       'content/pages/faq.json': '{"en":{"a":1},"el":{"a":2}}\n',
+      'content/pages/index.json': '{"editorial":[]}\n',
       'content/pages/sub/x.json': '{}',
       'content/site.json': '{}',
     })).toEqual({ faq: { en: { a: 1 }, el: { a: 2 } } });
+  });
+});
+
+describe('cmsFiles: editorial docs and content/pages/index.json (3c)', () => {
+  const editorial = (extra: Record<string, unknown> = {}) => ({ intro: 'Kyiv, **2005**.', blocks: [], ...extra });
+  const committedPages = () =>
+    Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))]));
+
+  it('an editorial draft is written with the index: the committed editorial ids plus the shipped ones, sorted', () => {
+    const committed = { ...committedPages(), 'hub-2026': { en: editorial(), el: editorial() } };
+    const { files } = cmsFiles([
+      row('country-gr', { en: editorial(), el: editorial() }, 'country-editorial'),
+      row('archive-2005', { en: editorial(), el: editorial() }, 'archive-editorial'),
+    ], committed);
+    expect(Object.keys(files).sort()).toEqual([
+      'content/pages/archive-2005.json', 'content/pages/country-gr.json', 'content/pages/index.json',
+    ]);
+    expect(files['content/pages/index.json']).toBe(stableJson({ editorial: ['archive-2005', 'country-gr', 'hub-2026'] }));
+    expect(files['content/pages/index.json']).toBe('{\n  "editorial": [\n    "archive-2005",\n    "country-gr",\n    "hub-2026"\n  ]\n}\n');
+  });
+
+  it('site page drafts alone leave the index alone (it only changes when an editorial doc is shipped)', () => {
+    expect(Object.keys(cmsFiles([row('faq')], committedPages()).files)).toEqual(['content/pages/faq.json']);
+  });
+
+  it('an invalid editorial draft refuses the publish, index included', () => {
+    const e = thrown(() => cmsFiles([row('archive-2005', { en: editorial({ intro: '[a](javascript:x)' }), el: editorial() }, 'archive-editorial')]));
+    expect(e.errors.map((x) => `${x.doc_id} ${x.locale} ${x.path}`)).toEqual(['archive-2005 en intro']);
+  });
+
+  it('I2: an editorial metaDescription equal to a site page description is refused, naming the page', () => {
+    const faq = pageDoc('faq');
+    const data = { en: editorial({ metaDescription: faq.en.meta.description }), el: editorial() };
+    const e = thrown(() => cmsFiles([row('archive-2005', data, 'archive-editorial')], committedPages()));
+    expect(e.errors).toEqual([
+      { doc_id: 'archive-2005', locale: 'en', path: 'metaDescription', message: expect.stringContaining('"faq"') },
+    ]);
+  });
+
+  it('I2: two editorial docs with the same metaDescription each get an error; distinct ones pass', () => {
+    const same = { en: editorial({ metaDescription: 'Same snippet' }), el: editorial() };
+    const e = thrown(() => cmsFiles([
+      row('archive-2005', same, 'archive-editorial'),
+      row('country-gr', same, 'country-editorial'),
+    ], committedPages()));
+    expect(e.errors.map((x) => [x.doc_id, x.path])).toEqual([['archive-2005', 'metaDescription'], ['country-gr', 'metaDescription']]);
+    expect(Object.keys(cmsFiles([
+      row('archive-2005', { en: editorial({ metaDescription: 'One' }), el: editorial() }, 'archive-editorial'),
+      row('country-gr', { en: editorial({ metaDescription: 'Two' }), el: editorial() }, 'country-editorial'),
+    ], committedPages()).files)).toHaveLength(3);
   });
 });
 
@@ -267,7 +318,7 @@ function deps(input: SnapshotInput) {
     return { sha: 'c1', changed: Object.keys(files).length, paths: Object.keys(files) };
   });
   const readCommittedPages = vi.fn(async () =>
-    Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json')).map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))])),
+    Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))])),
   );
   const beginPublish = vi.fn<(cms: boolean) => Promise<number>>(async () => 9);
   const d: PublishDeps = {
