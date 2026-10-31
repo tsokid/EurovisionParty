@@ -93,7 +93,9 @@ export default defineConfig(({ isSsrBuild }) => ({
         // answers navigations (including /en/** and /el/**) with the cached
         // index.html SPA shell; prerendered HTML reaches crawlers and first
         // visits, not SW-controlled navigations.
-        globIgnores: ['en.html', 'el.html', 'en/**', 'el/**', '404.html', 'content/**'],
+        // The lazy admin chunk loads on /admin only: not precached for
+        // every visitor (tests/scripts/swPrecache.test.ts).
+        globIgnores: ['en.html', 'el.html', 'en/**', 'el/**', '404.html', 'content/**', 'assets/AdminRoute-*.js'],
       },
       manifest: {
         name: 'Eurovision Games',
