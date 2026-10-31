@@ -176,6 +176,8 @@ describe('entry-server render', () => {
       if (path.endsWith('/eurovision-predictions')) expect(files, path).toEqual([...own, 'contests/2026.json', 'site.json'].sort());
       else if (path.endsWith('/winners')) expect(files, path).toEqual([...own, 'contests/index.json', 'site.json'].sort());
       else expect(files, path).toEqual([...own, 'site.json'].sort());
+      // Only the active locale's slice of the page doc is inlined.
+      if (own.length) expect(Object.keys(r.content[own[0]] as object), path).toEqual([path.slice(1, 3)]);
       expect(r.html, path).not.toContain('data-content-state');
     }
   }, 60_000);
@@ -200,7 +202,9 @@ describe('entry-server render', () => {
     const shell = '<html lang="en"><head><!--seo:start--><!--seo:end--></head><body><div id="root"><!--app:start--><!--app:end--></div></body></html>';
     const out = injectPage(shell, { html: el.html, headHtml: '', lang: 'el', content: el.content });
     const inlined = /<script type="application\/json" id="__content__">(.*?)<\/script>/.exec(out)?.[1];
-    expect(JSON.parse(inlined ?? '{}')).toEqual({ 'pages/__fixture.json': FIXTURE_DOC });
+    // Only the rendered locale's slice: the other one is fetched on a locale switch.
+    expect(JSON.parse(inlined ?? '{}')).toEqual({ 'pages/__fixture.json': { el: FIXTURE_DOC.el } });
+    expect(ssrPage('__fixture', 'en').content).toEqual({ 'pages/__fixture.json': { en: FIXTURE_DOC.en } });
     expect(ssrPage('__fixture', 'en').html).toContain('Fixture title');
   });
 

@@ -61,10 +61,33 @@ describe('usePageContent (client)', () => {
     await waitFor(() => expect(screen.getByText('missing')).toBeInTheDocument());
   });
 
-  it('returns missing when the document lacks the active locale', () => {
+  // The prerender inlines only the page's own locale, so a seeded doc may be a
+  // partial: a locale it lacks is fetched (the full file), not reported missing.
+  it('fetches the full doc once when a seeded partial lacks the new locale (en → el), then is ready', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValue(jsonResponse({ en: { title: 'Rules' }, el: { title: 'Κανόνες' } }));
+    seedContent({ 'pages/__partial.json': { en: { title: 'Rules' } } });
+    const { rerender } = render(at('en', '__partial'));
+    expect(screen.getByText('ready Rules')).toBeInTheDocument();
+    expect(fetchSpy).not.toHaveBeenCalled();
+    rerender(at('el', '__partial'));
+    expect(screen.getByText('loading')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('ready Κανόνες')).toBeInTheDocument());
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledWith('/content/pages/__partial.json');
+    // The full doc replaced the partial: back to en is synchronous, no refetch.
+    rerender(at('en', '__partial'));
+    expect(screen.getByText('ready Rules')).toBeInTheDocument();
+    expect(getCachedContent('pages/__partial.json')).toEqual({ en: { title: 'Rules' }, el: { title: 'Κανόνες' } });
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns missing when the full (fetched) document lacks the active locale', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({ en: { title: 'Only' } }));
     seedContent({ 'pages/__enonly.json': { en: { title: 'Only' } } });
     render(at('el', '__enonly'));
-    expect(screen.getByText('missing')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('missing')).toBeInTheDocument());
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it('returns error (with retry) on other failures', async () => {

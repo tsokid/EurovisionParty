@@ -43,15 +43,21 @@ describe.skipIf(!built)('prerendered pages inline their own CMS doc', () => {
   });
 
   // The 404 page is not a registry page: its doc is not-found.
-  it('404 → dist/404.html inlines pages/not-found.json', () => {
+  // Only the page's own locale is inlined (the client fetches the full doc on a
+  // locale switch): exactly one locale key, equal to that slice of the doc.
+  const ownSlice = (key: string, locale: Locale) =>
+    ({ [locale]: (JSON.parse(readFileSync(resolve(ROOT, 'content', key), 'utf8')) as Record<Locale, unknown>)[locale] });
+
+  it('404 → dist/404.html inlines the en slice of pages/not-found.json', () => {
     const content = inlined(readFileSync(resolve(DIST, '404.html'), 'utf8'));
-    expect(content['pages/not-found.json']).toEqual(JSON.parse(readFileSync(resolve(ROOT, 'content/pages/not-found.json'), 'utf8')));
+    expect(content['pages/not-found.json']).toEqual(ownSlice('pages/not-found.json', 'en'));
   });
 
-  it.each(cases)('%s (%s) → dist/%s', (docId, _locale, file) => {
+  it.each(cases)('%s (%s) → dist/%s', (docId, locale, file) => {
     const content = inlined(readFileSync(resolve(DIST, file), 'utf8'));
     const key = `pages/${docId}.json`;
     expect(Object.keys(content)).toContain(key);
-    expect(content[key]).toEqual(JSON.parse(readFileSync(resolve(ROOT, 'content', key), 'utf8')));
+    expect(Object.keys(content[key] as object)).toEqual([locale]);
+    expect(content[key]).toEqual(ownSlice(key, locale));
   });
 });
