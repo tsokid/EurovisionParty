@@ -107,6 +107,16 @@ afterEach(() => {
   __resetPublishGuardForTests();
 });
 
+// Per-file timeout: these tests render whole page forms and time out at the 5 s default under full-suite load.
+vi.setConfig({ testTimeout: 15_000 });
+
+describe('Pages module: test setup', () => {
+  // Each editor test renders a full page form (~1 s alone); under full-suite load that can pass 5 s.
+  it('gives every test in this file 15 s', ({ task }) => {
+    expect(task.timeout).toBe(15_000);
+  });
+});
+
 describe('Pages module: list', () => {
   it('lists every site page with its state badge', async () => {
     h.list = [
