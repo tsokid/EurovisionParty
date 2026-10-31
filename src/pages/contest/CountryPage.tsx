@@ -21,7 +21,8 @@ import { numCell, songCell } from './hub';
 import { completedContests, CONTEST_INDEX, COUNTRY_INDEX, linkClass, yearCell, yearPath } from './archive';
 import { visibleTable } from './table';
 import { EditorialBlocks, EditorialTop } from './EditorialLayer';
-import { editorialDescription, editorialJsonLd, useEditorial } from './editorialContent';
+import { editorialDescription, useEditorial } from './editorialContent';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import { editorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 
 interface CountryData {
@@ -105,7 +106,7 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
         description={editorialDescription(editorial, k.description(f))}
         robots={indexable ? undefined : 'noindex'}
         ogType="website"
-        jsonLd={[breadcrumbJsonLd(crumbs, locale), ...editorialJsonLd(editorial)]}
+        jsonLd={mergeFaqJsonLd<object>([breadcrumbJsonLd(crumbs, locale)], editorial?.blocks)}
       />
 
       <PageHero crumbs={crumbs} chip={c.chip} chipTone="gold" title={k.h1(f)} lede={k.lede(f)} />

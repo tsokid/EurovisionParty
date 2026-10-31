@@ -86,6 +86,14 @@ describe('archive year page', () => {
     expect(faq).toContain('Greece, with My Number One.');
   });
 
+  it('JSON-LD order matches the static pages (mergeFaqJsonLd): FAQPage before the trailing BreadcrumbList', async () => {
+    expect(ldTypes(await render(URL))).toEqual(['Event', 'ItemList', 'FAQPage', 'BreadcrumbList']);
+    expect(ldTypes(await render('/en/countries/greece'))).toEqual(['FAQPage', 'BreadcrumbList']);
+    expect(ldTypes(await render('/en/eurovision-2026'))).toEqual(['Event', 'FAQPage', 'BreadcrumbList']);
+    // Without FAQ blocks nothing changes.
+    expect(ldTypes(await render('/en/past-contests/eurovision-2004-istanbul'))).toEqual(['Event', 'ItemList', 'BreadcrumbList']);
+  });
+
   it('inlines its own locale of the doc for hydration, nothing else new', async () => {
     const r = await render('/el/past-contests/eurovision-2005-kyiv');
     expect(r.content['pages/archive-2005.json']).toEqual({ el: editorial('el') });

@@ -1,10 +1,9 @@
-// Data side of the editorial layer (see EditorialLayer.tsx): the doc, the
-// description override and the FAQ JSON-LD. Kept apart from the components
-// (react-refresh).
-import { faqEntries } from '../../components/cms/faqEntries';
+// Data side of the editorial layer (see EditorialLayer.tsx): the doc and the
+// description override. Its FAQ blocks reach the page's JSON-LD through
+// mergeFaqJsonLd (components/cms/extraFaq.ts), as the static pages' do.
+// Kept apart from the components (react-refresh).
 import type { CmsBlock, CmsImageValue } from '../../components/cms/mediaTypes';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import { buildFaqPage } from '../../lib/seo/schema';
 
 /** One locale of an editorial doc as published (schemas/editorial.ts). */
 export interface Editorial {
@@ -24,10 +23,4 @@ export function useEditorial(docId: string): Editorial | null {
 export function editorialDescription(e: Editorial | null, templated: string): string {
   const own = typeof e?.metaDescription === 'string' ? e.metaDescription.trim() : '';
   return own || templated;
-}
-
-/** FAQPage JSON-LD of the editorial's FAQ blocks: none, or one block to append to the page's jsonLd. */
-export function editorialJsonLd(e: Editorial | null): object[] {
-  const entries = faqEntries(e?.blocks);
-  return entries.length ? [buildFaqPage(entries)] : [];
 }

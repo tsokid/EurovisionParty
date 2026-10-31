@@ -21,7 +21,8 @@ import { byCountry, contestEventJsonLd, numCell, songCell, songsItemList } from 
 import { ARCHIVE_YEARS, countryLinkCell, linkClass, parseArchiveSlug } from './archive';
 import { visibleTable } from './table';
 import { EditorialBlocks, EditorialTop } from './EditorialLayer';
-import { editorialDescription, editorialJsonLd, useEditorial } from './editorialContent';
+import { editorialDescription, useEditorial } from './editorialContent';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import { editorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 
 const LAST = Number.MAX_SAFE_INTEGER;
@@ -139,12 +140,11 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Loca
         description={editorialDescription(editorial, description)}
         robots={contest.indexable ? undefined : 'noindex'}
         ogType="website"
-        jsonLd={[
+        jsonLd={mergeFaqJsonLd<object>([
           ...(event ? [event] : []),
           songsItemList(ranking, contest.cancelled ? a.year.entriesListName(contest.year) : a.year.listName(contest.year)),
           breadcrumbJsonLd(crumbs, locale),
-          ...editorialJsonLd(editorial),
-        ]}
+        ], editorial?.blocks)}
       />
 
       <PageHero

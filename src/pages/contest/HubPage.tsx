@@ -12,7 +12,8 @@ import { formatDate, showsResults } from './content/hubCopy';
 import { visibleTable } from './table';
 import { HubGate } from './HubFrame';
 import { EditorialBlocks, EditorialTop } from './EditorialLayer';
-import { editorialDescription, editorialJsonLd, useEditorial } from './editorialContent';
+import { editorialDescription, useEditorial } from './editorialContent';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import { editorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 import { byCountry, contestEventJsonLd, countryCell, hubCrumbs, hubRelated, numCell, songCell, type Hub } from './hub';
 
@@ -69,7 +70,7 @@ function HubBody({ hub }: { hub: Hub }) {
         title={c.hub.title(f)}
         description={editorialDescription(editorial, description)}
         ogType="website"
-        jsonLd={[...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale), ...editorialJsonLd(editorial)]}
+        jsonLd={mergeFaqJsonLd<object>([...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale)], editorial?.blocks)}
       />
 
       <PageHero crumbs={crumbs} chip={c.chip[contest.stage]} chipTone="gold" title={c.hub.h1(f)} lede={c.hub.lede(f)} />
