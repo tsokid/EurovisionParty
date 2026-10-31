@@ -9,6 +9,7 @@ import { publishOptions, runPublish, type PublishDeps } from '../../supabase/fun
 import type { FileTransforms } from '../../supabase/functions/publish-content/github';
 import { buildSnapshotFiles, type CmsDocumentRow, type SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
 import { stableJson as scriptStableJson } from '../../scripts/history/import';
+import { stableJson } from '../../supabase/functions/_shared/stableJson';
 import type { ContestRow } from '../../src/content/contests/types';
 
 const root = process.cwd();
@@ -54,8 +55,31 @@ describe('cmsFiles', () => {
     // Byte-identical to the committed files: sorted keys, 2-space indent, trailing newline.
     expect(files['content/pages/not-found.json']).toBe(pageText('not-found'));
     expect(files['content/pages/faq.json']).toBe(pageText('faq'));
-    expect(files['content/pages/faq.json']).toBe(scriptStableJson(pageDoc('faq')));
     expect(warnings.filter((w) => w.doc_id === 'not-found')).toEqual([]);
+  });
+
+  it('the serializer itself, against golden bytes: sorted keys at every depth, 2-space indent, raw Greek, trailing newline', () => {
+    const value = { z: 'Ελλάδα', a: { y: [2, { d: null, c: true }], b: 'ö' }, m: [] };
+    const golden = [
+      '{',
+      '  "a": {',
+      '    "b": "ö",',
+      '    "y": [',
+      '      2,',
+      '      {',
+      '        "c": true,',
+      '        "d": null',
+      '      }',
+      '    ]',
+      '  },',
+      '  "m": [],',
+      '  "z": "Ελλάδα"',
+      '}',
+      '',
+    ].join('\n');
+    expect(stableJson(value)).toBe(golden);
+    // The script copy is the same function (scripts/history/import.ts re-exports it).
+    expect(scriptStableJson).toBe(stableJson);
   });
 
   it('every committed page, published unchanged as a draft, round-trips byte for byte', () => {
