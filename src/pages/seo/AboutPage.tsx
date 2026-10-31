@@ -8,11 +8,15 @@ import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
-import { copy as copyAll } from './content/aboutCopy';
+import { usePageContent } from '../../lib/cms/usePageContent';
+import type { AboutContent } from '../../../supabase/functions/_shared/cms/schemas/about';
+import { PageContentFallback } from './PageContentFallback';
 
 export default function AboutPage() {
   const locale = useLocale();
-  const c = copyAll[locale];
+  const content = usePageContent<AboutContent>('about');
+  if (content.status !== 'ready') return <PageContentFallback state={content} />;
+  const c = content.data;
 
   const crumbs: Crumb[] = [
     { label: c.breadcrumbs.home, href: '/' },

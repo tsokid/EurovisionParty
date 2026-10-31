@@ -16,7 +16,7 @@
 import { z } from 'zod';
 import { placeholdersIn } from './placeholders.ts';
 
-export type FieldKind = 'text' | 'multiline' | 'richText' | 'list' | 'group';
+export type FieldKind = 'text' | 'multiline' | 'richText' | 'list' | 'group' | 'tuple' | 'choice' | 'flag';
 
 export type FieldMeta = {
   kind: FieldKind;
@@ -28,6 +28,8 @@ export type FieldMeta = {
   placeholders?: string[];
   /** String kinds only: must be non-empty (after trim) in every locale. Default true. */
   required?: boolean;
+  /** choice only: the allowed values, in display order. */
+  options?: string[];
 };
 
 export type StringFieldOptions = {
@@ -99,9 +101,33 @@ export function group<S extends Record<string, z.ZodType>>(shape: S, opts: Conta
   return schema;
 }
 
+/** Fixed-length list with one schema per position (e.g. a table's column headers). */
+export function tuple<const T extends readonly [z.ZodType, ...z.ZodType[]]>(items: T, opts: ContainerFieldOptions = {}) {
+  const schema = z.tuple(items);
+  schema.register(cmsFields, { kind: 'tuple', ...opts });
+  return schema;
+}
+
+/**
+ * One of a fixed set of string values (a presentation switch such as a table
+ * cell's tone, or a stable anchor id). Not translated text: editors pick a value.
+ */
+export function choice<const V extends readonly [string, ...string[]]>(values: V, opts: ContainerFieldOptions = {}) {
+  const schema = z.enum(values);
+  schema.register(cmsFields, { kind: 'choice', ...opts, options: [...values] });
+  return schema;
+}
+
+/** A true/false switch. */
+export function flag(opts: ContainerFieldOptions = {}) {
+  const schema = z.boolean();
+  schema.register(cmsFields, { kind: 'flag', ...opts });
+  return schema;
+}
+
 /** Metadata of a schema built by one of the constructors above. */
 export function fieldMeta(schema: z.ZodType): FieldMeta {
   const meta = cmsFields.get(schema);
-  if (!meta) throw new Error('fieldMeta: schema is not a CMS field (build it with text/multiline/richText/list/group)');
+  if (!meta) throw new Error('fieldMeta: schema is not a CMS field (build it with text/multiline/richText/list/group/tuple/choice/flag)');
   return meta;
 }

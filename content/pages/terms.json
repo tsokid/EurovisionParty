@@ -1,0 +1,308 @@
+{
+  "el": {
+    "account": {
+      "deletionItem": {
+        "bold": "Διαγραφή λογαριασμού.",
+        "lead": " Οι οικοδεσπότες μπορούν να διαγράψουν τον λογαριασμό τους ανά πάσα στιγμή. Δες την ",
+        "linkLabel": "Πολιτική Απορρήτου",
+        "mid": " — δες την ",
+        "tail": " για λεπτομέρειες διατήρησης."
+      },
+      "intro": "Οι οικοδεσπότες αυθεντικοποιούνται μέσω email one-time code. Ο οικοδεσπότης κατέχει το δωμάτιο: μπορεί να αλλάξει ρυθμίσεις, να προχωρήσει τη φάση του παιχνιδιού και να διαγράψει το δωμάτιο. Οι guests μπαίνουν με όνομα εμφάνισης ορατό μόνο στους άλλους παίκτες του ίδιου δωματίου.",
+      "items": [
+        {
+          "bold": "Ευθύνες οικοδεσπότη.",
+          "rest": " Ο οικοδεσπότης είναι υπεύθυνος για τη διαμοίραση του κωδικού εισόδου στα σωστά πρόσωπα και για την αφαίρεση όποιου παραβιάζει τους κανόνες συμπεριφοράς."
+        },
+        {
+          "bold": "Το RLS προστατεύει τα δεδομένα.",
+          "rest": " Οι πολιτικές row-level security στη βάση δεδομένων εμποδίζουν την πρόσβαση μεταξύ δωματίων· οι παίκτες βλέπουν μόνο το δικό τους δωμάτιο."
+        }
+      ],
+      "title": "Λογαριασμός & δωμάτια"
+    },
+    "breadcrumbs": {
+      "home": "Αρχική",
+      "terms": "Όροι"
+    },
+    "changes": {
+      "body": "Μπορούμε να επικαιροποιήσουμε αυτούς τους όρους ανά πάσα στιγμή. Ουσιώδεις αλλαγές θα ανακοινώνονται στο FAQ και θα αντικατοπτρίζονται στην ημερομηνία «Τελευταία ενημέρωση» στο hero παραπάνω. Η συνεχιζόμενη χρήση της Υπηρεσίας μετά από ουσιώδη αλλαγή συνιστά αποδοχή των επικαιροποιημένων όρων.",
+      "title": "Αλλαγές σε αυτούς τους όρους"
+    },
+    "conduct": {
+      "closer": "Μπορούμε να αναστείλουμε ή να αφαιρέσουμε την πρόσβαση για παραβιάσεις — ιδίως παρενόχληση ή κατάχρηση μεγάλης κλίμακας — χωρίς προειδοποίηση.",
+      "intro": "Χρησιμοποιώντας την Υπηρεσία, συμφωνείς να μην:",
+      "items": [
+        {
+          "bold": "Παρενοχλείς, απειλείς ή βλάπτεις",
+          "rest": " άλλους παίκτες, σε ονόματα εμφάνισης, σε πεδία τύπου chat ή οπουδήποτε αλλού."
+        },
+        {
+          "bold": "Εξαπατάς ή εκμεταλλεύεσαι.",
+          "rest": " Καμία χρήση αυτοματοποιημένων εργαλείων, scripts, scrapers ή προσπαθειών χειραγώγησης της βαθμολογίας πέραν των κανόνων του παιχνιδιού."
+        },
+        {
+          "bold": "Υποδύεσαι",
+          "rest": " άλλο πρόσωπο, ραδιοτηλεοπτικό φορέα, καλλιτέχνη ή την ίδια την Υπηρεσία."
+        },
+        {
+          "bold": "Αποκτάς πρόσβαση σε δωμάτια",
+          "rest": " στα οποία δεν έχεις προσκληθεί, ούτε προσπαθείς να παρακάμψεις το row-level security ή να κάνεις reverse-engineer την Υπηρεσία."
+        },
+        {
+          "bold": "Χρησιμοποιείς την Υπηρεσία για ρητορική μίσους",
+          "rest": ", παράνομο περιεχόμενο ή παρενόχληση οποιασδήποτε ομάδας."
+        }
+      ],
+      "title": "Συμπεριφορά παικτών"
+    },
+    "contact": {
+      "helloEmail": "hello@eurovision.games",
+      "lead": "Γενική επικοινωνία και αναφορές bugs: ",
+      "legalEmail": "legal@eurovision.games",
+      "mid1": ". Ερωτήσεις απορρήτου και αιτήματα δεδομένων: ",
+      "mid2": ". Ειδοποιήσεις DMCA / πνευματικών δικαιωμάτων: ",
+      "privacyEmail": "privacy@eurovision.games",
+      "tail": ".",
+      "title": "Επικοινωνία"
+    },
+    "ebu": {
+      "body": "Το Eurovision Games είναι ένα ανεξάρτητο fan project. ",
+      "bodyBold": "Δεν έχουμε καμία σχέση με, ούτε υποστηριζόμαστε ή χρηματοδοτούμαστε από την European Broadcasting Union, τον Διαγωνισμό Τραγουδιού Eurovision, τον φιλοξενούντα ραδιοτηλεοπτικό φορέα ή οποιονδήποτε συμμετέχοντα φορέα.",
+      "bodyTail": " Το εμπορικό σήμα «Eurovision» και η επίσημη επωνυμία του Διαγωνισμού Τραγουδιού Eurovision ανήκουν στην EBU. Χρησιμοποιούμε τη λέξη «Eurovision» περιγραφικά μόνο — για να υποδείξουμε τη μετάδοση που το παιχνίδι αυτό έχει σχεδιαστεί να συνοδεύει. Ονόματα χωρών, τίτλοι τραγουδιών, ονόματα καλλιτεχνών και σχετικά σήματα παραμένουν ιδιοκτησία των αντίστοιχων κατόχων τους.",
+      "cardTitle": "Καμία σχέση με την EBU",
+      "title": "Αποποίηση Διαγωνισμού Τραγουδιού Eurovision"
+    },
+    "free": {
+      "intro": "Η Υπηρεσία είναι δωρεάν. Δεν υπάρχει συνδρομή, δεν υπάρχει in-app αγορά, δεν υπάρχει επί πληρωμή επίπεδο και καμία διαφήμιση. Μπορείς να τη χρησιμοποιήσεις για ιδιωτικές βραδιές Eurovision χωρίς κόστος. Εμπορική χρήση — επί πληρωμή εκδηλώσεις Eurovision, μεταδόσεις, sponsored play — απαιτεί έγγραφη άδεια από τους maintainers.",
+      "items": [
+        {
+          "bold": "Καμία χρέωση.",
+          "rest": " Δεν χρεώνουμε για να φτιάξεις ή να μπεις σε δωμάτιο."
+        },
+        {
+          "bold": "Κανένας λογαριασμός για guests.",
+          "rest": " Οι οικοδεσπότες αυθεντικοποιούνται μέσω email OTP· οι guests μπαίνουν με όνομα εμφάνισης."
+        },
+        {
+          "bold": "Κανένα download.",
+          "rest": " Όλα τρέχουν μέσα στον browser σου."
+        }
+      ],
+      "title": "Δωρεάν χρήση"
+    },
+    "hero": {
+      "chip": "Όροι χρήσης",
+      "lede": "Χρησιμοποιώντας το Eurovision Games αποδέχεσαι αυτούς τους όρους. Σύντομη εκδοχή: είναι ένα δωρεάν fan project, παίξε ωραία και δεν έχουμε καμία σχέση με την European Broadcasting Union. Τελευταία ενημέρωση: 30 Απριλίου 2026.",
+      "title": "Όροι χρήσης"
+    },
+    "liability": {
+      "body": "Στο μέγιστο βαθμό που επιτρέπεται από τον νόμο, το Eurovision Games και οι maintainers του δεν ευθύνονται για έμμεσες, παρεπόμενες, επακόλουθες ή τιμωρητικές ζημίες που προκύπτουν από τη χρήση της Υπηρεσίας — συμπεριλαμβανομένων (ενδεικτικά) χαμένων προβλέψεων, χαμένων πόντων trivia, χαλασμένων βραδιών ή διακοπών μετάδοσης. Η Υπηρεσία είναι δωρεάν· η συνολική σωρευτική ευθύνη περιορίζεται στα τέλη που πλήρωσες για να τη χρησιμοποιήσεις (που είναι μηδέν).",
+      "title": "Περιορισμός ευθύνης"
+    },
+    "meta": {
+      "description": "Η συμφωνία που αποδέχεσαι όταν χρησιμοποιείς το Eurovision Games. Δωρεάν fan project, καμία σχέση με την EBU, κανόνες συμπεριφοράς παικτών και αποποιήσεις ευθύνης.",
+      "keywords": [
+        "όροι eurovision games",
+        "όροι χρήσης",
+        "όροι eurovision party game",
+        "αποποίηση eurovision games",
+        "όροι fan game"
+      ],
+      "schemaDescription": "Όροι χρήσης του Eurovision Games: ποιοι είμαστε, κανόνες δωρεάν χρήσης, συμπεριφορά παικτών, λογαριασμός & δωμάτια, αποποίηση εγγυήσεων, περιορισμός ευθύνης και αποποίηση εμπορικού σήματος EBU.",
+      "title": "Όροι Χρήσης — Eurovision Games",
+      "webPageDescription": "Όροι που διέπουν τη χρήση του Eurovision Games browser party game. Δωρεάν, fan-made, χωρίς σχέση με την European Broadcasting Union.",
+      "webPageMainEntityAbout": "Συμφωνία χρήστη για το browser game του eurovision.games",
+      "webPageMainEntityName": "Όροι χρήσης Eurovision Games"
+    },
+    "related": [
+      {
+        "blurb": "Τι δεδομένα συλλέγουμε, διατήρηση, τα δικαιώματά σου βάσει GDPR και πώς να διαγράψεις τα δεδομένα σου.",
+        "href": "/privacy",
+        "title": "Πολιτική απορρήτου"
+      },
+      {
+        "blurb": "Τι αποθηκεύουμε, πώς να απενεργοποιήσεις τα στατιστικά και πού ζουν τα δεδομένα.",
+        "href": "/cookies",
+        "title": "Cookies & συναίνεση"
+      },
+      {
+        "blurb": "Γιατί υπάρχει, ποιος το έφτιαξε και η φιλοσοφία χωρίς διαφημίσεις και χωρίς λογαριασμούς.",
+        "href": "/about",
+        "title": "Σχετικά με το Eurovision Games"
+      }
+    ],
+    "userContent": {
+      "lead": "Ονόματα, προβλέψεις, απαντήσεις trivia και παρόμοιο περιεχόμενο που εισάγεις παραμένουν δικά σου. Εισάγοντάς τα, παραχωρείς στην Υπηρεσία μη αποκλειστική, δωρεάν άδεια να τα εμφανίζει σε άλλους παίκτες του ίδιου δωματίου και να τα αποθηκεύει για τις περιόδους διατήρησης που αναφέρονται στην ",
+      "linkLabel": "Πολιτική Απορρήτου",
+      "tail": ". Είσαι υπεύθυνος/η να διασφαλίζεις ότι έχεις δικαίωμα χρήσης σε οποιοδήποτε όνομα, ψευδώνυμο ή είσοδο που παρέχεις.",
+      "title": "Περιεχόμενο χρήστη"
+    },
+    "warranties": {
+      "asAvailable": "«όπως είναι διαθέσιμη»",
+      "asIs": "«ως έχει»",
+      "lead": "Η Υπηρεσία παρέχεται ",
+      "mid": " και ",
+      "tail": ", χωρίς εγγυήσεις οποιουδήποτε είδους, ρητές ή σιωπηρές. Στοχεύουμε σε υψηλό uptime — ιδίως κατά την εβδομάδα της Eurovision — αλλά δεν εγγυώμαστε αδιάλειπτη, χωρίς σφάλματα ή χωρίς bugs λειτουργία. Προγραμματισμένη συντήρηση, αιχμές φορτίου την ημέρα της μετάδοσης ή διακοπές παρόχων μπορεί να επηρεάσουν στιγμιαία το παιχνίδι.",
+      "title": "Αποποίηση εγγυήσεων"
+    },
+    "whoWeAre": {
+      "contactTail": ".",
+      "lead": "Το Eurovision Games («η Υπηρεσία», «εμείς», «μας») είναι ένα ανεξάρτητο fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Η Υπηρεσία λειτουργεί από τους maintainers του Eurovision Games και δεν αποτελεί εγγεγραμμένη εταιρεία, ραδιοτηλεοπτικό φορέα ή εμπορικό προϊόν.",
+      "title": "Ποιοι είμαστε"
+    }
+  },
+  "en": {
+    "account": {
+      "deletionItem": {
+        "bold": "Account deletion.",
+        "lead": " Hosts can delete their account at any time. See the ",
+        "linkLabel": "Privacy Policy",
+        "mid": " — see the ",
+        "tail": " for retention details."
+      },
+      "intro": "Hosts authenticate via email one-time code. The host owns the room: they can change settings, advance the game phase, and delete the room. Guests join with a display name visible only to other players in the same room.",
+      "items": [
+        {
+          "bold": "Host responsibilities.",
+          "rest": " The host is responsible for sharing the room code with the right people and removing anyone who breaks player conduct rules."
+        },
+        {
+          "bold": "RLS protects data.",
+          "rest": " Row-level security policies in the database prevent cross-room data access; players only see their own room."
+        }
+      ],
+      "title": "Account & rooms"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "terms": "Terms"
+    },
+    "changes": {
+      "body": "We can update these terms at any time. Material changes will be announced in the FAQ and reflected in the \"Last updated\" date in the hero above. Continued use of the Service after a material change constitutes acceptance of the updated terms.",
+      "title": "Changes to these terms"
+    },
+    "conduct": {
+      "closer": "We can suspend or remove access for violations — especially harassment or scale abuse — without notice.",
+      "intro": "By using the Service, you agree not to:",
+      "items": [
+        {
+          "bold": "Harass, threaten, or harm",
+          "rest": " other players, in display names, in chat-like fields, or anywhere else."
+        },
+        {
+          "bold": "Cheat or exploit.",
+          "rest": " No automated tools, scripts, scrapers, or attempts to manipulate scoring beyond the in-game rules."
+        },
+        {
+          "bold": "Impersonate",
+          "rest": " another person, broadcaster, artist, or the Service itself."
+        },
+        {
+          "bold": "Access rooms",
+          "rest": " you have not been invited to, attempt to bypass row-level security, or reverse-engineer the Service."
+        },
+        {
+          "bold": "Use the Service for hate speech",
+          "rest": ", illegal content, or harassment of any group."
+        }
+      ],
+      "title": "Player conduct"
+    },
+    "contact": {
+      "helloEmail": "hello@eurovision.games",
+      "lead": "General contact and bug reports: ",
+      "legalEmail": "legal@eurovision.games",
+      "mid1": ". Privacy and data requests: ",
+      "mid2": ". DMCA / copyright notices: ",
+      "privacyEmail": "privacy@eurovision.games",
+      "tail": ".",
+      "title": "Contact"
+    },
+    "ebu": {
+      "body": "Eurovision Games is an independent fan project. ",
+      "bodyBold": "We are not affiliated with, endorsed by, or sponsored by the European Broadcasting Union, the Eurovision Song Contest, the host broadcaster, or any participating broadcaster.",
+      "bodyTail": " The trademark \"Eurovision\" and the official Eurovision Song Contest branding belong to the EBU. We use \"Eurovision\" descriptively only — to indicate the broadcast this game is designed to accompany. Country names, song titles, artist names, and related marks remain the property of their respective owners.",
+      "cardTitle": "Not affiliated with the EBU",
+      "title": "Eurovision Song Contest disclaimer"
+    },
+    "free": {
+      "intro": "The Service is free. There is no subscription, no in-app purchase, no paid tier, and no advertising. You may use it for private Eurovision watch parties at no cost. Commercial use — paid Eurovision events, broadcast use, sponsored play — requires written permission from the maintainers.",
+      "items": [
+        {
+          "bold": "No fees.",
+          "rest": " We do not charge to host or join a room."
+        },
+        {
+          "bold": "No accounts for guests.",
+          "rest": " Hosts authenticate via email OTP; guests join with a display name."
+        },
+        {
+          "bold": "No download.",
+          "rest": " Everything runs in your browser."
+        }
+      ],
+      "title": "Free to use"
+    },
+    "hero": {
+      "chip": "Terms of use",
+      "lede": "By using Eurovision Games you agree to these terms. The short version: it's a free fan project, play nicely, and we're not affiliated with the European Broadcasting Union. Last updated 30 April 2026.",
+      "title": "Terms of use"
+    },
+    "liability": {
+      "body": "To the maximum extent permitted by law, Eurovision Games and its maintainers are not liable for indirect, incidental, consequential, or punitive damages arising from use of the Service — including (without limitation) lost predictions, missed trivia points, ruined parties, or interrupted broadcasts. The Service is free; total aggregate liability is limited to the fees you paid to use it (which is zero).",
+      "title": "Limitation of liability"
+    },
+    "meta": {
+      "description": "The agreement you accept when you use Eurovision Games. Free fan project, no affiliation with the EBU, player conduct rules and liability disclaimers.",
+      "keywords": [
+        "eurovision games terms",
+        "terms of use",
+        "eurovision party game terms",
+        "eurovision games disclaimer",
+        "fan game terms"
+      ],
+      "schemaDescription": "Terms of use for Eurovision Games: who we are, free-to-use rules, player conduct, account & rooms, disclaimer of warranties, limitation of liability, and the EBU trademark disclaimer.",
+      "title": "Terms of Use — Eurovision Games",
+      "webPageDescription": "Terms governing use of the Eurovision Games browser party game. Free, fan-made, not affiliated with the European Broadcasting Union.",
+      "webPageMainEntityAbout": "User agreement for the eurovision.games browser game",
+      "webPageMainEntityName": "Eurovision Games terms of use"
+    },
+    "related": [
+      {
+        "blurb": "Data we collect, retention, your GDPR rights, and how to delete your data.",
+        "href": "/privacy",
+        "title": "Privacy policy"
+      },
+      {
+        "blurb": "What we store, how to flip analytics off, and where the data lives.",
+        "href": "/cookies",
+        "title": "Cookies & consent"
+      },
+      {
+        "blurb": "Why this exists, who built it, and the no-ads, no-accounts philosophy.",
+        "href": "/about",
+        "title": "About Eurovision Games"
+      }
+    ],
+    "userContent": {
+      "lead": "Names, predictions, trivia answers, and similar content you enter remain your own. By entering them you grant the Service a non-exclusive, free licence to display them to other players in the same room and to store them for the retention periods listed in the ",
+      "linkLabel": "Privacy Policy",
+      "tail": ". You are responsible for ensuring you have the right to use any name, nickname, or input you provide.",
+      "title": "User content"
+    },
+    "warranties": {
+      "asAvailable": "\"as available\"",
+      "asIs": "\"as is\"",
+      "lead": "The Service is provided ",
+      "mid": " and ",
+      "tail": ", without warranties of any kind, express or implied. We aim for high uptime — especially during Eurovision week — but we do not guarantee uninterrupted, error-free, or bug-free operation. Scheduled maintenance, broadcast-day load spikes, or upstream provider outages may briefly affect play.",
+      "title": "Disclaimer of warranties"
+    },
+    "whoWeAre": {
+      "contactTail": ".",
+      "lead": "Eurovision Games (\"the Service\", \"we\", \"us\") is an independent fan-built browser party game for the Eurovision Song Contest. The Service is operated by the Eurovision Games maintainers and is not a registered company, broadcaster, or commercial product.",
+      "title": "Who we are"
+    }
+  }
+}

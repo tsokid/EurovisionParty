@@ -1,0 +1,298 @@
+{
+  "el": {
+    "breadcrumbs": {
+      "about": "Σχετικά",
+      "home": "Αρχική"
+    },
+    "builtBy": {
+      "helloEmail": "hello@eurovision.games",
+      "lead": "Φτιαγμένο από μια μικρή ομάδα fans της Eurovision που κουράστηκαν να κάνουν τα μαθηματικά των προβλέψεων με το χέρι.",
+      "mid": ". Ερωτήματα Τύπου και συνεργασιών: ",
+      "pressEmail": "press@eurovision.games",
+      "tail": ". Στόχος μας είναι να απαντάμε εντός 3 εργάσιμων ημερών· κατά την εβδομάδα της Eurovision (Μάιος), εντός 24 ωρών.",
+      "title": "Φτιαγμένο από"
+    },
+    "cta": {
+      "body": "Στήσε μια βραδιά Eurovision σε 60 δευτερόλεπτα. Φτιάξε ιδιωτικό δωμάτιο, μοιράσου τον κωδικό και κλείδωσε τους φίλους σου πριν από το πρώτο postcard.",
+      "primaryLabel": "Δημιουργία δωματίου",
+      "secondaryLabel": "Πώς να παίξεις",
+      "title": "Δοκίμασε το Eurovision Games απόψε"
+    },
+    "ebu": {
+      "body": "Το Eurovision Games είναι ένα ανεξάρτητο fan project. Δεν έχουμε καμία σχέση με, ούτε υποστηριζόμαστε ή χρηματοδοτούμαστε από την European Broadcasting Union, τον Διαγωνισμό Τραγουδιού Eurovision, τον φιλοξενούντα ραδιοτηλεοπτικό φορέα ή οποιονδήποτε συμμετέχοντα φορέα. Η λέξη «Eurovision» είναι εμπορικό σήμα της EBU· τη χρησιμοποιούμε περιγραφικά μόνο για να υποδείξουμε τη μετάδοση που το παιχνίδι αυτό έχει σχεδιαστεί να συνοδεύει. Ονόματα χωρών, τίτλοι τραγουδιών, ονόματα καλλιτεχνών και σχετικά σήματα παραμένουν ιδιοκτησία των αντίστοιχων κατόχων τους.",
+      "cardTitle": "Ανεξάρτητο fan project",
+      "title": "Καμία σχέση με την EBU"
+    },
+    "freeNoAccount": {
+      "body": "Το Eurovision Games είναι δωρεάν για ιδιωτικές βραδιές Eurovision. Δεν υπάρχει συνδρομή, δεν υπάρχει in-app αγορά και καμία διαφήμιση — πουθενά στο site. Οι οικοδεσπότες αυθεντικοποιούνται μία φορά με email one-time code· οι guests μπαίνουν μόνο με όνομα εμφάνισης και κωδικό εισόδου. Τίποτα να κατεβάσεις, τίποτα να εγκαταστήσεις. Όλο τρέχει μέσα στον browser σε κινητό, tablet ή laptop.",
+      "title": "Δωρεάν, χωρίς λογαριασμό, χωρίς εγκατάσταση"
+    },
+    "hero": {
+      "chip": "Σχετικά",
+      "lede": "Ένα δωρεάν, fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Ξεκίνησε ως ένα spreadsheet ανάμεσα σε φίλους και εξελίχθηκε σε μια real-time multiplayer εφαρμογή για κάθε παρέα που στήνει βραδιά Eurovision — με αυτόματη βαθμολογία ώστε ο οικοδεσπότης να μη χάνει την εκπομπή.",
+      "title": "Σχετικά με το Eurovision Games"
+    },
+    "meta": {
+      "aboutPageDescription": "Το Eurovision Games είναι ένα δωρεάν, fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Προέλευση, φιλοσοφία, τι περιλαμβάνει το παιχνίδι και επικοινωνία.",
+      "description": "Το Eurovision Games είναι ένα δωρεάν, fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Προβλέψεις, trivia, μονομαχίες, τρόπαια. Καμία διαφήμιση, κανένας λογαριασμός για guests, καμία εγκατάσταση.",
+      "keywords": [
+        "σχετικά με eurovision games",
+        "eurovision party game",
+        "δωρεάν eurovision game",
+        "παιχνίδι eurovision song contest",
+        "fan-built eurovision game",
+        "βραδιά eurovision"
+      ],
+      "organizationDescription": "Ένα δωρεάν, fan-built browser party game για τον Διαγωνισμό Τραγουδιού Eurovision. Ζωντανές προβλέψεις, trivia, μονομαχίες και τρόπαια για κάθε παρέα που στήνει βραδιά Eurovision.",
+      "title": "Σχετικά με το Eurovision Games — Δωρεάν Eurovision Party Game"
+    },
+    "related": [
+      {
+        "blurb": "Οδηγός στησίματος από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίου.",
+        "href": "/how-to-play",
+        "title": "Πώς να παίξεις σε 60 δευτερόλεπτα"
+      },
+      {
+        "blurb": "Run-of-show, ιδέες για σνακ και πώς το παιχνίδι ταιριάζει με τη μετάδοση.",
+        "href": "/eurovision-night",
+        "title": "Φιλοξενώντας μια βραδιά Eurovision"
+      },
+      {
+        "blurb": "Κλείδωσε το Top 5 και το Worst 5 σου πριν την εκπομπή — οι πόντοι στοιβάζονται με τις μονομαχίες.",
+        "href": "/eurovision-predictions",
+        "title": "Παιχνίδι προβλέψεων"
+      },
+      {
+        "blurb": "Φιλοξενία, βαθμολογία, αποχώρηση από δωμάτια και άλλες συνηθισμένες ερωτήσεις.",
+        "href": "/faq",
+        "title": "FAQ"
+      },
+      {
+        "blurb": "Τι δεδομένα συλλέγουμε, διατήρηση και πώς να διαγράψεις τον λογαριασμό σου.",
+        "href": "/privacy",
+        "title": "Πολιτική απορρήτου"
+      },
+      {
+        "blurb": "Συμπεριφορά παικτών, ευθύνες οικοδεσπότη και η αποποίηση EBU.",
+        "href": "/terms",
+        "title": "Όροι χρήσης"
+      }
+    ],
+    "whatIs": {
+      "parts": {
+        "lead": "Το Eurovision Games είναι ένα δωρεάν, browser-based party game που παίζεται παράλληλα με τη μετάδοση του Διαγωνισμού Τραγουδιού Eurovision. Οι οικοδεσπότες στήνουν ιδιωτικό δωμάτιο σε 60 δευτερόλεπτα και μοιράζονται τον κωδικό· οι guests μπαίνουν μόνο με όνομα εμφάνισης. Το παιχνίδι περνά από τρεις ζωντανές φάσεις: ",
+        "mid1": " πριν την εκπομπή (κλείδωσε το Top 5 και το Worst 5 σου), ",
+        "mid2": " κατά τη διάρκεια της εκπομπής (head-to-head γύροι 12 δευτερολέπτων στις διαφημίσεις) και ",
+        "predictionsBold": "προβλέψεις",
+        "tail": " μετά την ανακοίνωση του νικητή (Πρωταθλητής, Μάντης, Quizmaster, Μονομάχος, Κλέφτης). Όλα βαθμολογούνται αυτόματα.",
+        "triviaBold": "trivia και μονομαχίες",
+        "trophiesBold": "τρόπαια"
+      },
+      "title": "Τι είναι το Eurovision Games;"
+    },
+    "whatsIn": {
+      "items": [
+        {
+          "bold": "Προβλέψεις",
+          "lead": " — κλείδωσε το Top 5 και το Worst 5 σου πριν την εκπομπή. Οι πόντοι στοιβάζονται καθώς εξελίσσεται η μετάδοση. Δες ",
+          "linkHref": "/eurovision-predictions",
+          "linkLabel": "τη φετινή σελίδα προβλέψεων",
+          "tail": "."
+        },
+        {
+          "bold": "Quiz",
+          "lead": " — open-room Eurovision trivia στη φάση Pre-show. Κλειδώνει μόλις ξεκινήσει η ζωντανή εκπομπή.",
+          "tail": ""
+        },
+        {
+          "bold": "Μονομαχίες",
+          "lead": " — head-to-head μάχες trivia 3 ερωτήσεων κατά τη διάρκεια της ζωντανής εκπομπής. Κλέψε πόντους ή διπλασίασε τους δικούς σου. ",
+          "linkHref": "/duels",
+          "linkLabel": "Πλήρεις κανόνες μονομαχίας",
+          "tail": "."
+        },
+        {
+          "bold": "Τρόπαια",
+          "lead": " — πέντε κατηγορίες τέλους βραδιάς (Πρωταθλητής, Μάντης, Quizmaster, Μονομάχος, Κλέφτης). Sudden-death tiebreak αν δύο παίκτες ισοβαθμήσουν.",
+          "tail": ""
+        }
+      ],
+      "title": "Τι περιλαμβάνει το παιχνίδι"
+    },
+    "why": {
+      "body": "Το να βλέπεις Eurovision είναι ωραίο. Το να βλέπεις Eurovision με στοιχήματα είναι καλύτερο. Οι υπάρχουσες επιλογές — εκτυπωμένα bingo cards, επί πληρωμή πακέτα quiz, custom Google Sheets — σπάνε όλες με τον ίδιο τρόπο: κάποιος πρέπει να κάνει τη βαθμολογία και αυτός ο κάποιος χάνει τη μισή εκπομπή. Θέλαμε ζωντανή, αυτόματη βαθμολογία που δεν θα κόστιζε τίποτα και δεν θα απαιτούσε εγκατάσταση. Αυτό είναι όλο το προϊόν.",
+      "cardTitle": "Πέντε αρχές, καμία εξαίρεση",
+      "items": [
+        {
+          "bold": "Δωρεάν, πάντα.",
+          "rest": " Καμία συνδρομή, καμία διαφήμιση, κανένα premium επίπεδο."
+        },
+        {
+          "bold": "Καμία εγκατάσταση.",
+          "rest": " Αν δεν ανοίγει στον browser, δεν είναι η εμπειρία Eurovision."
+        },
+        {
+          "bold": "Κανένας λογαριασμός για guests.",
+          "rest": " Οι οικοδεσπότες συνδέονται μία φορά· οι guests μπαίνουν με ένα όνομα."
+        },
+        {
+          "bold": "Mobile-first.",
+          "rest": " Οι περισσότεροι παίζουν από τον καναπέ με το κινητό στο χέρι."
+        },
+        {
+          "bold": "Πραγματική διασκέδαση, όχι gamified.",
+          "rest": " Πέντε κατηγορίες νικητή, sudden death, αληθινά bragging rights — χωρίς streaks, χωρίς daily challenges."
+        }
+      ],
+      "title": "Γιατί το φτιάξαμε"
+    }
+  },
+  "en": {
+    "breadcrumbs": {
+      "about": "About",
+      "home": "Home"
+    },
+    "builtBy": {
+      "helloEmail": "hello@eurovision.games",
+      "lead": "Built by a small team of Eurovision fans who got tired of doing prediction maths by hand.",
+      "mid": ". Press and partnership enquiries: ",
+      "pressEmail": "press@eurovision.games",
+      "tail": ". We aim to reply within 3 business days; during Eurovision week (May), within 24 hours.",
+      "title": "Built by"
+    },
+    "cta": {
+      "body": "Set up a watch party in 60 seconds. Spin up a private room, share the code, and have your friends locked in before the first postcard.",
+      "primaryLabel": "Create room",
+      "secondaryLabel": "How to play",
+      "title": "Try Eurovision Games tonight"
+    },
+    "ebu": {
+      "body": "Eurovision Games is an independent fan project. We are not affiliated with, endorsed by, or sponsored by the European Broadcasting Union, the Eurovision Song Contest, the host broadcaster, or any participating broadcaster. \"Eurovision\" is a trademark of the EBU; we use it descriptively only to indicate the broadcast this game is designed to accompany. Country names, song titles, artist names, and related marks remain the property of their respective owners.",
+      "cardTitle": "Independent fan project",
+      "title": "Not affiliated with the EBU"
+    },
+    "freeNoAccount": {
+      "body": "Eurovision Games is free for personal Eurovision watch parties. There is no subscription, no in-app purchase, and no advertising — anywhere on the site. Hosts authenticate once with an email one-time code; guests join with just a display name and a room code. Nothing to download, nothing to install. The whole thing runs in your browser on phone, tablet, or laptop.",
+      "title": "Free, no account, no install"
+    },
+    "hero": {
+      "chip": "About",
+      "lede": "A free, fan-built browser party game for the Eurovision Song Contest. It started as a spreadsheet between friends and grew into a real-time multiplayer app for any group hosting a Eurovision night — with automatic scoring so the host doesn't have to miss the show.",
+      "title": "About Eurovision Games"
+    },
+    "meta": {
+      "aboutPageDescription": "Eurovision Games is a free, fan-built browser party game for the Eurovision Song Contest. Origin, philosophy, what is in the game, and contact.",
+      "description": "Eurovision Games is a free, fan-built browser party game for the Eurovision Song Contest. Predictions, trivia, duels, trophies. No ads, no accounts for guests, no install.",
+      "keywords": [
+        "about eurovision games",
+        "eurovision party game",
+        "free eurovision game",
+        "eurovision song contest game",
+        "fan-built eurovision game",
+        "eurovision watch party"
+      ],
+      "organizationDescription": "A free, fan-built browser party game for the Eurovision Song Contest. Live predictions, trivia, duels, and trophies for any group hosting a Eurovision night.",
+      "title": "About Eurovision Games — Free Eurovision Party Game"
+    },
+    "related": [
+      {
+        "blurb": "Setup walkthrough from create-room to trophy reveal.",
+        "href": "/how-to-play",
+        "title": "How to play in 60 seconds"
+      },
+      {
+        "blurb": "Run-of-show, snack ideas, and how the game fits the broadcast.",
+        "href": "/eurovision-night",
+        "title": "Hosting a Eurovision night"
+      },
+      {
+        "blurb": "Lock your Top 5 and Worst 5 before the show — points stack with duels.",
+        "href": "/eurovision-predictions",
+        "title": "Predictions game"
+      },
+      {
+        "blurb": "Hosting, scoring, leaving rooms, and other common questions.",
+        "href": "/faq",
+        "title": "FAQ"
+      },
+      {
+        "blurb": "Data we collect, retention, and how to delete your account.",
+        "href": "/privacy",
+        "title": "Privacy policy"
+      },
+      {
+        "blurb": "Player conduct, host responsibilities, and the EBU disclaimer.",
+        "href": "/terms",
+        "title": "Terms of use"
+      }
+    ],
+    "whatIs": {
+      "parts": {
+        "lead": "Eurovision Games is a free, browser-based party game played alongside the Eurovision Song Contest broadcast. Hosts spin up a private room in 60 seconds and share the code; guests join with just a display name. The game runs through three live phases: ",
+        "mid1": " before the show (lock your Top 5 and Worst 5), ",
+        "mid2": " during the show (head-to-head 12-second rounds during ad breaks), and ",
+        "predictionsBold": "predictions",
+        "tail": " after the winner is announced (Champion, Oracle, Quizmaster, Duelist, Thief). Everything scores automatically.",
+        "triviaBold": "trivia and duels",
+        "trophiesBold": "trophies"
+      },
+      "title": "What is Eurovision Games?"
+    },
+    "whatsIn": {
+      "items": [
+        {
+          "bold": "Predictions",
+          "lead": " — lock your Top 5 and Worst 5 before the show. Points stack as the broadcast plays out. See ",
+          "linkHref": "/eurovision-predictions",
+          "linkLabel": "this year's predictions page",
+          "tail": "."
+        },
+        {
+          "bold": "Quiz",
+          "lead": " — open-room Eurovision trivia in the Preshow phase. Locks when the live show starts.",
+          "tail": ""
+        },
+        {
+          "bold": "Duels",
+          "lead": " — 3-question head-to-head trivia battles during the live show. Steal points or double your own. ",
+          "linkHref": "/duels",
+          "linkLabel": "Full duel rules",
+          "tail": "."
+        },
+        {
+          "bold": "Trophies",
+          "lead": " — five end-of-night categories (Champion, Oracle, Quizmaster, Duelist, Thief). Sudden-death tiebreaks if two players tie.",
+          "tail": ""
+        }
+      ],
+      "title": "What's in the game"
+    },
+    "why": {
+      "body": "Watching Eurovision is great. Watching Eurovision with stakes is better. The existing options — printed bingo cards, paid quiz packs, custom Google Sheets — all break in the same way: someone has to do the scoring, and that someone misses half the show. We wanted live, automatic scoring that didn't cost anything and didn't require an install. That's the entire product.",
+      "cardTitle": "Five principles, no exceptions",
+      "items": [
+        {
+          "bold": "Free, always.",
+          "rest": " No subscriptions, no ads, no premium tier."
+        },
+        {
+          "bold": "No download.",
+          "rest": " If it can't open in a browser, it's not the Eurovision experience."
+        },
+        {
+          "bold": "No accounts for guests.",
+          "rest": " Hosts sign in once; guests join with a name."
+        },
+        {
+          "bold": "Mobile-first.",
+          "rest": " Most people host from a sofa with a phone in hand."
+        },
+        {
+          "bold": "Real fun, not gamified.",
+          "rest": " Five winner categories, sudden death, real bragging rights — no streaks, no daily challenges."
+        }
+      ],
+      "title": "Why we built it"
+    }
+  }
+}

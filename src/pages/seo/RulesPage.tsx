@@ -9,14 +9,20 @@ import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
-import { copy as copyAll } from './content/rulesCopy';
-import { contestTexts } from './content/contestText';
+import { usePageContent } from '../../lib/cms/usePageContent';
+import type { RulesContent } from '../../../supabase/functions/_shared/cms/schemas/rules';
+import { PageContentFallback } from './PageContentFallback';
+import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
 import { useCurrentContest } from '../../lib/currentContest';
 
 export default function RulesPage() {
   const locale = useLocale();
   const cc = useCurrentContest();
-  const c = copyAll(contestTexts(cc))[locale];
+  const content = usePageContent<RulesContent>('rules');
+  if (content.status !== 'ready') return <PageContentFallback state={content} />;
+  const c = content.data;
+  const vars = { year: cc.year };
+  const relatedItems = c.related.items.map((it) => ({ ...it, blurb: interpolate(it.blurb, vars) }));
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -29,7 +35,7 @@ export default function RulesPage() {
   const article = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: c.schema.articleHeadline,
+    headline: interpolate(c.schema.articleHeadline, vars),
     description: c.schema.articleDescription,
     image: 'https://eurovision.games/logo.png',
     author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
@@ -48,7 +54,7 @@ export default function RulesPage() {
       <PageSeo
         pageId="rules"
         locale={locale}
-        title={c.meta.title}
+        title={interpolate(c.meta.title, vars)}
         description={c.meta.description}
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
@@ -164,7 +170,7 @@ export default function RulesPage() {
           secondary={{ label: c.cta.secondary, href: '/scoring' }}
         />
 
-        <RelatedCards items={c.related.items} />
+        <RelatedCards items={relatedItems} />
       </ContentLayout>
       <SiteFooter />
     </>

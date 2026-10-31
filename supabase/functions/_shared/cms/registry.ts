@@ -5,6 +5,14 @@
 // archive-{year} -> archive, country-{ISO} -> country, hub-{year} -> hub.
 // Schemas are registered here as Tasks 4-6 migrate each page.
 import type { z } from 'zod';
+import { aboutSchema } from './schemas/about.ts';
+import { cookiesSchema } from './schemas/cookies.ts';
+import { dashboardSchema } from './schemas/dashboard.ts';
+import { faqSchema } from './schemas/faq.ts';
+import { privacySchema } from './schemas/privacy.ts';
+import { rulesSchema } from './schemas/rules.ts';
+import { scoringSchema } from './schemas/scoring.ts';
+import { termsSchema } from './schemas/terms.ts';
 
 export type DocTypeGroup = 'site' | 'contest' | 'country';
 
@@ -15,7 +23,16 @@ export type DocTypeDef = {
   group: DocTypeGroup;
 };
 
-export const CMS_DOC_TYPES: Record<string, DocTypeDef> = {};
+export const CMS_DOC_TYPES: Record<string, DocTypeDef> = {
+  about: { schema: aboutSchema, label: 'About', group: 'site' },
+  privacy: { schema: privacySchema, label: 'Privacy policy', group: 'site' },
+  terms: { schema: termsSchema, label: 'Terms of use', group: 'site' },
+  cookies: { schema: cookiesSchema, label: 'Cookies & consent', group: 'site' },
+  dashboard: { schema: dashboardSchema, label: 'Dashboard guide', group: 'site' },
+  scoring: { schema: scoringSchema, label: 'Scoring', group: 'site' },
+  rules: { schema: rulesSchema, label: 'Rules', group: 'site' },
+  faq: { schema: faqSchema, label: 'FAQ', group: 'site' },
+};
 
 const FAMILIES = ['archive', 'country', 'hub'] as const;
 

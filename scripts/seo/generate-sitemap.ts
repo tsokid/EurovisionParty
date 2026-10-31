@@ -19,7 +19,8 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10);
 // Map each pageId to the file paths that determine its `lastmod`. The newest
 // commit across these paths becomes the URL's lastmod. We track:
 //   - the page TSX (layout changes)
-//   - the locale-specific copy bundle if it exists (content changes)
+//   - the page copy (content changes): content/pages/{docId}.json once the
+//     page reads it through the CMS, the former *Copy.ts module until then
 // Using the registry as the single source of truth means adding a new page
 // only requires updating PAGE_REGISTRY + this map.
 const PAGE_FILES: Record<PageId, string[]> = {
@@ -30,15 +31,15 @@ const PAGE_FILES: Record<PageId, string[]> = {
   'eurovision-party': ['src/pages/seo/EurovisionPartyPage.tsx', 'src/pages/seo/content/eurovisionPartyCopy.ts'],
   'eurovision-trivia': ['src/pages/seo/EurovisionTriviaPage.tsx', 'src/pages/seo/content/triviaCopy.ts'],
   'eurovision-predictions': ['src/pages/seo/PredictionsPage.tsx', 'src/pages/seo/content/predictionsCopy.ts'],
-  'faq': ['src/pages/seo/FAQPage.tsx', 'src/pages/seo/content/faqCopy.ts'],
-  'rules': ['src/pages/seo/RulesPage.tsx', 'src/pages/seo/content/rulesCopy.ts'],
-  'scoring': ['src/pages/seo/ScoringPage.tsx', 'src/pages/seo/content/scoringCopy.ts'],
-  'about': ['src/pages/seo/AboutPage.tsx', 'src/pages/seo/content/aboutCopy.ts'],
-  'privacy': ['src/pages/seo/PrivacyPage.tsx', 'src/pages/seo/content/privacyCopy.ts'],
-  'terms': ['src/pages/seo/TermsPage.tsx', 'src/pages/seo/content/termsCopy.ts'],
+  'faq': ['src/pages/seo/FAQPage.tsx', 'content/pages/faq.json'],
+  'rules': ['src/pages/seo/RulesPage.tsx', 'content/pages/rules.json'],
+  'scoring': ['src/pages/seo/ScoringPage.tsx', 'content/pages/scoring.json'],
+  'about': ['src/pages/seo/AboutPage.tsx', 'content/pages/about.json'],
+  'privacy': ['src/pages/seo/PrivacyPage.tsx', 'content/pages/privacy.json'],
+  'terms': ['src/pages/seo/TermsPage.tsx', 'content/pages/terms.json'],
   'eurovision-duels': ['src/pages/seo/EurovisionDuelsPage.tsx', 'src/pages/seo/content/duelsCopy.ts'],
-  'dashboard': ['src/pages/seo/DashboardPage.tsx', 'src/pages/seo/content/dashboardCopy.ts'],
-  'cookies': ['src/pages/seo/CookiesPage.tsx', 'src/pages/seo/content/cookiesCopy.ts'],
+  'dashboard': ['src/pages/seo/DashboardPage.tsx', 'content/pages/dashboard.json'],
+  'cookies': ['src/pages/seo/CookiesPage.tsx', 'content/pages/cookies.json'],
   // Pages from the registry that don't ship as standalone TSX yet — fall back
   // to BUILD_DATE. These will get real `lastmod` once their TSX/copy ships.
   'winners': [],

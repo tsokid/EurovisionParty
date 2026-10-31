@@ -1,0 +1,266 @@
+{
+  "el": {
+    "banner": {
+      "intro": {
+        "accept": "Αποδοχή όλων",
+        "lead": "Στην πρώτη επίσκεψη βλέπεις ένα μικρό banner στο κάτω μέρος της σελίδας με τρία κουμπιά: ",
+        "manage": "Διαχείριση προτιμήσεων",
+        "mid1": ", ",
+        "mid2": " (στατιστικά off) και ",
+        "reject": "Απόρριψη όλων",
+        "tail": ". Το Reject απαιτεί τα ίδια κλικ με το Accept — δεν σε σπρώχνουμε με dark patterns σε αποδοχή. Το banner εμφανίζεται ξανά αν καθαρίσεις το browser storage ή ανακαλέσεις την επιλογή σου από αυτή τη σελίδα."
+      },
+      "title": "Banner συναίνεσης cookies"
+    },
+    "breadcrumbs": {
+      "cookies": "Cookies",
+      "home": "Αρχική"
+    },
+    "changeConsent": {
+      "buttonLabel": "Διαχείριση προτιμήσεων cookies",
+      "cardBody": "Ανοίγει το παράθυρο προτιμήσεων όπου μπορείς να επανεξετάσεις την επιλογή σου. Η επιλογή σου διατηρείται μεταξύ επισκέψεων σε αυτή τη συσκευή μέχρι να καθαριστεί.",
+      "cardTitle": "Άνοιξε τις προτιμήσεις cookies",
+      "intro": {
+        "emphasis": "Cookies & Συναίνεση",
+        "lead": "Άνοιξε το παράθυρο προτιμήσεων παρακάτω ή κάνε κλικ στην επιλογή ",
+        "tail": " στο footer οποιασδήποτε σελίδας. Μπορείς να ενεργοποιήσεις ή να απενεργοποιήσεις τα Στατιστικά χωρίς να επηρεάσεις την κατηγορία απολύτως απαραίτητων."
+      },
+      "title": "Άλλαξε τη συναίνεσή σου"
+    },
+    "hero": {
+      "chip": "Cookies & συναίνεση",
+      "lede": "Στο Eurovision Games κρατάμε τα cookies στο ελάχιστο: μία κατηγορία απολύτως απαραίτητων που κρατά το παιχνίδι σε λειτουργία, και μία προαιρετική κατηγορία στατιστικών που μπορείς να ενεργοποιήσεις ή να απενεργοποιήσεις όποτε θέλεις. Καμία διαφήμιση, καμία διασταυρούμενη παρακολούθηση, κανένα dark pattern.",
+      "title": "Cookies & συναίνεση"
+    },
+    "meta": {
+      "description": "Ποια cookies χρησιμοποιεί το Eurovision Games, γιατί, και πώς αλλάζεις τη συναίνεσή σου. Από προεπιλογή μόνο τα απολύτως απαραίτητα· τα στατιστικά είναι opt-in.",
+      "keywords": [
+        "eurovision games cookies",
+        "συναίνεση cookies",
+        "πολιτική cookies gdpr",
+        "απόρρητο eurovision games",
+        "analytics opt-in"
+      ],
+      "schemaDescription": "Ποια cookies χρησιμοποιεί το Eurovision Games, γιατί, και πώς αλλάζεις τη συναίνεσή σου. Από προεπιλογή μόνο τα απολύτως απαραίτητα· τα στατιστικά είναι opt-in.",
+      "title": "Cookies & Συναίνεση — Eurovision Games",
+      "webPageDescription": "Πολιτική cookies του Eurovision Games. Τα απολύτως απαραίτητα cookies είναι πάντα ενεργά· τα στατιστικά είναι ανενεργά από προεπιλογή και opt-in.",
+      "webPageMainEntityAbout": "Cookies, συναίνεση και πρακτικές παρακολούθησης στο eurovision.games",
+      "webPageMainEntityName": "Πολιτική cookies του Eurovision Games"
+    },
+    "notUsed": {
+      "items": [
+        {
+          "bold": "Καμία διαφήμιση μέσω cookies.",
+          "rest": " Το Eurovision Games δεν προβάλλει διαφημίσεις."
+        },
+        {
+          "bold": "Κανένα social tracking pixel.",
+          "rest": " Χωρίς Meta Pixel, χωρίς LinkedIn Insight tag, χωρίς TikTok pixel."
+        },
+        {
+          "bold": "Κανένα third-party retargeting.",
+          "rest": " Τίποτα που να σε ακολουθεί εκτός site."
+        },
+        {
+          "bold": "Καμία βιβλιοθήκη fingerprinting.",
+          "rest": " Χωρίς device hashing ή behavioural ID."
+        }
+      ],
+      "title": "Τι ΔΕΝ χρησιμοποιούμε"
+    },
+    "related": [
+      {
+        "blurb": "Τι δεδομένα συλλέγουμε, διατήρηση, τα δικαιώματά σου βάσει GDPR και πώς να διαγράψεις τα δεδομένα σου.",
+        "href": "/privacy",
+        "title": "Πολιτική απορρήτου"
+      },
+      {
+        "blurb": "Συμπεριφορά παικτών, ευθύνες οικοδεσπότη και η αποποίηση εμπορικού σήματος EBU.",
+        "href": "/terms",
+        "title": "Όροι χρήσης"
+      },
+      {
+        "blurb": "Γιατί υπάρχει, ποιος το έφτιαξε και η φιλοσοφία χωρίς διαφημίσεις και χωρίς λογαριασμούς.",
+        "href": "/about",
+        "title": "Σχετικά με το Eurovision Games"
+      }
+    ],
+    "whatWeUse": {
+      "headers": [
+        "Κατηγορία",
+        "Σκοπός",
+        "Προεπιλογή"
+      ],
+      "intro": "Δύο κατηγορίες — τη μία μπορείς να την κλείσεις χωρίς να σπάσει τίποτα ορατό. Το Reject απαιτεί τα ίδια κλικ με το Accept — δεν κρύβουμε τον διακόπτη.",
+      "rows": [
+        {
+          "category": "Απολύτως απαραίτητα",
+          "defaultText": "Πάντα ενεργά — απαραίτητα για να δουλέψει το παιχνίδι.",
+          "defaultTone": "muted",
+          "purpose": "Σε κρατά συνδεδεμένο στο δωμάτιό σου (player ID, κωδικός εισόδου, όνομα), θυμάται τη γλώσσα σου και αποθηκεύει την ίδια την επιλογή συναίνεσης."
+        },
+        {
+          "category": "Στατιστικά",
+          "defaultText": "Ανενεργά μέχρι να συναινέσεις.",
+          "defaultTone": "pink",
+          "purpose": "Ανώνυμα, συγκεντρωτικά νούμερα προβολών σελίδων ώστε να βλέπουμε ποιοι οδηγοί και σελίδες χρησιμοποιούνται πραγματικά. Χωρίς προσωπικά αναγνωριστικά, χωρίς διασταυρούμενη παρακολούθηση."
+        }
+      ],
+      "title": "Τι χρησιμοποιούμε"
+    },
+    "whereDataLives": {
+      "intro": {
+        "lead": "Η κατάσταση των απολύτως απαραίτητων ζει στο local storage του browser σου και σε standard cookies — τίποτα δεν φεύγει από τη συσκευή σου μέχρι να μπεις ενεργά σε δωμάτιο. Η κατάσταση παιχνιδιού (δωμάτιο, παίκτες, προβλέψεις, βαθμολογία) ζει στη βάση δεδομένων μας όσο το δωμάτιο είναι ενεργό και διαγράφεται σύμφωνα με την πολιτική διατήρησης στην ",
+        "linkLabel": "Πολιτική Απορρήτου",
+        "tail": " μας."
+      },
+      "items": [
+        {
+          "bold": "Browser storage",
+          "rest": " — γλώσσα, κωδικός εισόδου, όνομα παίκτη, επιλογή συναίνεσης."
+        },
+        {
+          "bold": "Server (Supabase Postgres)",
+          "rest": " — δεδομένα δωματίου και παιχνιδιού συνδεδεμένα με room ID, όχι με αναγνωριστικά δεδομένα για guests."
+        },
+        {
+          "bold": "Hosting (Vercel)",
+          "rest": " — request logs που διατηρούνται για 14 ημέρες για ασφάλεια και πρόληψη κατάχρησης."
+        }
+      ],
+      "title": "Πού ζουν τα δεδομένα"
+    }
+  },
+  "en": {
+    "banner": {
+      "intro": {
+        "accept": "Accept all",
+        "lead": "On first visit you see a small banner at the bottom of the page with three buttons: ",
+        "manage": "Manage preferences",
+        "mid1": ", ",
+        "mid2": " (analytics off), and ",
+        "reject": "Reject all",
+        "tail": ". Reject is the same number of clicks as Accept — we don't dark-pattern you into agreeing. The banner reappears if you clear browser storage or revoke your choice from this page."
+      },
+      "title": "Cookie consent banner"
+    },
+    "breadcrumbs": {
+      "cookies": "Cookies",
+      "home": "Home"
+    },
+    "changeConsent": {
+      "buttonLabel": "Manage cookie preferences",
+      "cardBody": "Launches the preferences modal where you can revisit your choice. Your selection is remembered across visits on this device until cleared.",
+      "cardTitle": "Open cookie preferences",
+      "intro": {
+        "emphasis": "Cookies & Consent",
+        "lead": "Open the preferences modal below or click the ",
+        "tail": " entry in the footer of any page. You can flip Analytics on or off without affecting the strictly-necessary category."
+      },
+      "title": "Change your consent"
+    },
+    "hero": {
+      "chip": "Cookies & consent",
+      "lede": "Eurovision Games keeps cookies to the bare minimum: one strictly-necessary category that keeps the game working, and one optional analytics category you can flip on or off any time. No advertising, no cross-site tracking, no dark patterns.",
+      "title": "Cookies & consent"
+    },
+    "meta": {
+      "description": "What cookies Eurovision Games uses, why, and how to change your consent. Strictly necessary only by default; analytics is opt-in.",
+      "keywords": [
+        "eurovision games cookies",
+        "cookie consent",
+        "gdpr cookie policy",
+        "eurovision games privacy",
+        "analytics opt-in"
+      ],
+      "schemaDescription": "What cookies Eurovision Games uses, why, and how to change your consent. Strict necessary only by default; analytics is opt-in.",
+      "title": "Cookies & Consent — Eurovision Games",
+      "webPageDescription": "Cookie policy for Eurovision Games. Strictly necessary cookies are always on; analytics is off by default and opt-in.",
+      "webPageMainEntityAbout": "Cookies, consent, and tracking practices on eurovision.games",
+      "webPageMainEntityName": "Eurovision Games cookie policy"
+    },
+    "notUsed": {
+      "items": [
+        {
+          "bold": "No advertising cookies.",
+          "rest": " Eurovision Games doesn't run ads."
+        },
+        {
+          "bold": "No social tracking pixels.",
+          "rest": " No Meta Pixel, no LinkedIn Insight tag, no TikTok pixel."
+        },
+        {
+          "bold": "No third-party retargeting.",
+          "rest": " Nothing that follows you off the site."
+        },
+        {
+          "bold": "No fingerprinting libraries.",
+          "rest": " No device hashing or behavioural ID."
+        }
+      ],
+      "title": "What we do NOT use"
+    },
+    "related": [
+      {
+        "blurb": "Data we collect, retention, your GDPR rights, and how to delete your data.",
+        "href": "/privacy",
+        "title": "Privacy policy"
+      },
+      {
+        "blurb": "Player conduct, host responsibilities, and the EBU trademark disclaimer.",
+        "href": "/terms",
+        "title": "Terms of use"
+      },
+      {
+        "blurb": "Why this exists, who built it, and the no-ads, no-accounts philosophy.",
+        "href": "/about",
+        "title": "About Eurovision Games"
+      }
+    ],
+    "whatWeUse": {
+      "headers": [
+        "Category",
+        "Purpose",
+        "Default"
+      ],
+      "intro": "Two categories, one of which you can switch off without breaking anything you can see. Reject is the same number of clicks as Accept — we don't bury the off switch.",
+      "rows": [
+        {
+          "category": "Strictly necessary",
+          "defaultText": "Always on — required for the game to work.",
+          "defaultTone": "muted",
+          "purpose": "Keeps you signed into your room (player ID, room code, name), remembers your language preference, and stores the consent choice itself."
+        },
+        {
+          "category": "Analytics",
+          "defaultText": "Off until you opt in.",
+          "defaultTone": "pink",
+          "purpose": "Anonymous, aggregated page-view counts so we can see which guides and pages people actually use. No personal identifiers, no cross-site tracking."
+        }
+      ],
+      "title": "What we use"
+    },
+    "whereDataLives": {
+      "intro": {
+        "lead": "The strictly-necessary state lives in your browser's local storage and standard cookies — nothing leaves your device until you actively join a room. Game state (room, players, predictions, scores) lives in our database while the room is active and is purged according to the retention policy in our ",
+        "linkLabel": "Privacy Policy",
+        "tail": "."
+      },
+      "items": [
+        {
+          "bold": "Browser storage",
+          "rest": " — language, room code, player name, consent choice."
+        },
+        {
+          "bold": "Server (Supabase Postgres)",
+          "rest": " — room and game data tied to a room ID, not to identifying data for guests."
+        },
+        {
+          "bold": "Hosting (Vercel)",
+          "rest": " — request logs retained 14 days for security and abuse prevention."
+        }
+      ],
+      "title": "Where data lives"
+    }
+  }
+}

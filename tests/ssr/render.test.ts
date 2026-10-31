@@ -2,8 +2,10 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import type { MockInstance } from 'vitest';
 import { render } from '@/entry-server';
-import { allPageUrls } from '@/lib/seo/registry';
-import { copy as faqCopy } from '@/pages/seo/content/faqCopy';
+import { allPageUrls, PAGE_REGISTRY } from '@/lib/seo/registry';
+import { localizePath } from '@/lib/seo/locale';
+import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
+import faqCopy from '../../content/pages/faq.json';
 import { copy as homeCopy } from '@/pages/content/homeCopy';
 import enJson from '@/i18n/locales/en.json';
 import elJson from '@/i18n/locales/el.json';
@@ -15,9 +17,9 @@ import { LocaleProvider } from '@/lib/seo/LocaleContext';
 import { usePageContent } from '@/lib/cms/usePageContent';
 import { injectPage } from '../../scripts/prerender/injectPage';
 
-// A test-only page document, injected into the SSR content map. No real
-// content/pages/*.json exists yet, and none may be committed as a fixture
-// (validate-content checks every file there and the build publishes them).
+// A test-only page document, injected into the SSR content map. None may be
+// committed under content/pages as a fixture (validate-content checks every
+// file there and the build publishes them).
 const { FIXTURE_DOC } = vi.hoisted(() => ({
   FIXTURE_DOC: { en: { title: 'Fixture title' }, el: { title: 'Τίτλος δοκιμής' } },
 }));
@@ -161,13 +163,20 @@ describe('entry-server render', () => {
     expect((await render('/en/eurovision-2026-predictions')).status).toBe(404);
   });
 
-  it('guide pages inline only site.json (predictions adds the contest file; winners its index)', async () => {
+  it('guide pages inline only site.json and their own CMS doc (predictions adds the contest file; winners its index)', async () => {
+    // Static pages migrated to content/pages (their pageId is a CMS doc type) also inline that doc.
+    const ownDoc = new Map<string, string>();
+    for (const page of PAGE_REGISTRY) {
+      if (!Object.prototype.hasOwnProperty.call(CMS_DOC_TYPES, page.id)) continue;
+      for (const locale of ['en', 'el'] as const) ownDoc.set(localizePath(locale, page.slugByLocale[locale]), `pages/${page.id}.json`);
+    }
     for (const { path } of allPageUrls()) {
       const r = await render(path);
       const files = Object.keys(r.content).sort();
-      if (path.endsWith('/eurovision-predictions')) expect(files, path).toEqual(['contests/2026.json', 'site.json']);
-      else if (path.endsWith('/winners')) expect(files, path).toEqual(['contests/index.json', 'site.json']);
-      else expect(files, path).toEqual(['site.json']);
+      const own = ownDoc.has(path) ? [ownDoc.get(path)!] : [];
+      if (path.endsWith('/eurovision-predictions')) expect(files, path).toEqual([...own, 'contests/2026.json', 'site.json'].sort());
+      else if (path.endsWith('/winners')) expect(files, path).toEqual([...own, 'contests/index.json', 'site.json'].sort());
+      else expect(files, path).toEqual([...own, 'site.json'].sort());
       expect(r.html, path).not.toContain('data-content-state');
     }
   }, 60_000);

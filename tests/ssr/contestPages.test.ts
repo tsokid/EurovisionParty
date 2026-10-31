@@ -122,8 +122,9 @@ describe('contest hub pages (SSR)', () => {
     expect(Object.keys(r.content).sort()).toEqual(['contests/2026.json', 'site.json']);
     expect((r.content['contests/2026.json'] as { year: number }).year).toBe(2026);
     const faq = await render('/en/faq');
-    // The header reads site.json (the nav's "Eurovision {year}" link) on every page.
-    expect(faq.content).toEqual({ 'site.json': expect.anything() });
+    // The header reads site.json (the nav's "Eurovision {year}" link) on every
+    // page; a static page also reads its own CMS doc.
+    expect(faq.content).toEqual({ 'site.json': expect.anything(), 'pages/faq.json': expect.anything() });
   });
 
   it.each([

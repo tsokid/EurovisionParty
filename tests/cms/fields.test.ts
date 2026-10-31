@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import {
-  text, multiline, list, group, richText, fieldMeta,
+  text, multiline, list, group, richText, tuple, choice, flag, fieldMeta,
 } from '../../supabase/functions/_shared/cms/fields';
 import { interpolate, placeholdersIn } from '../../supabase/functions/_shared/cms/placeholders';
 
@@ -18,6 +18,24 @@ describe('field metadata', () => {
     expect(fieldMeta(richText({ help: 'Markdown' }))).toMatchObject({ kind: 'richText', help: 'Markdown', required: true });
     expect(fieldMeta(list(text(), { label: 'Items' }))).toMatchObject({ kind: 'list', label: 'Items' });
     expect(fieldMeta(group({ a: text() }, { label: 'Hero' }))).toMatchObject({ kind: 'group', label: 'Hero' });
+  });
+
+  it('round-trips tuple, choice and flag', () => {
+    expect(fieldMeta(tuple([text(), text()], { label: 'Headers' }))).toEqual({ kind: 'tuple', label: 'Headers' });
+    expect(fieldMeta(choice(['muted', 'pink'], { label: 'Tone' }))).toEqual({ kind: 'choice', label: 'Tone', options: ['muted', 'pink'] });
+    expect(fieldMeta(flag({ help: 'Open cap' }))).toEqual({ kind: 'flag', help: 'Open cap' });
+  });
+
+  it('tuple fixes the length; choice and flag accept only their values', () => {
+    const t = tuple([text(), text()]);
+    expect(t.safeParse(['a', 'b']).success).toBe(true);
+    expect(t.safeParse(['a']).success).toBe(false);
+    expect(t.safeParse(['a', 'b', 'c']).success).toBe(false);
+    const c = choice(['muted', 'pink']);
+    expect(c.safeParse('pink').success).toBe(true);
+    expect(c.safeParse('blue').success).toBe(false);
+    expect(flag().safeParse(true).success).toBe(true);
+    expect(flag().safeParse('true').success).toBe(false);
   });
 
   it('defaults placeholders to none', () => {

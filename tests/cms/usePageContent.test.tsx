@@ -34,6 +34,17 @@ describe('usePageContent (client)', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it('switches to the other locale slice when the LocaleProvider changes (en → el)', () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    seedContent({ 'pages/__switch.json': { en: { title: 'Rules' }, el: { title: 'Κανόνες' } } });
+    const { rerender } = render(at('en', '__switch'));
+    expect(screen.getByText('ready Rules')).toBeInTheDocument();
+    rerender(at('el', '__switch'));
+    expect(screen.getByText('ready Κανόνες')).toBeInTheDocument();
+    expect(screen.queryByText('ready Rules')).not.toBeInTheDocument();
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   it('fetches /content/pages/{docId}.json on a cache miss and becomes ready', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch')
       .mockResolvedValue(jsonResponse({ en: { title: 'Fetched' }, el: { title: 'Φορτώθηκε' } }));
