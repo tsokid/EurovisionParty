@@ -95,6 +95,7 @@
         "shared": "ισοβαθμία",
         "title": "Όλοι οι νικητές από το {from}"
       },
+      "faqTitle": "Συχνές ερωτήσεις",
       "leaderboard": {
         "headers": {
           "country": "Χώρα",
@@ -241,6 +242,7 @@
         "shared": "shared",
         "title": "Every winner since {from}"
       },
+      "faqTitle": "Frequently asked questions",
       "leaderboard": {
         "headers": {
           "country": "Country",

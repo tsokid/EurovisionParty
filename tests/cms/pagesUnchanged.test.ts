@@ -1,16 +1,16 @@
 // @vitest-environment node
-import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { describe, it, expect, vi, afterAll } from 'vitest';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   capturePage, captureUrls, fixtureName, writeFixtures, FIXTURE_DIR,
 } from '../../scripts/cms/capturePages';
 
 describe('static pages are unchanged from the Task 1 capture', () => {
-  beforeAll(() => {
-    vi.spyOn(globalThis, 'fetch');
-  });
+  // Rendering reads the eager content snapshot: it must never hit the network.
+  const fetchSpy = vi.spyOn(globalThis, 'fetch');
   afterAll(() => {
+    expect(fetchSpy).not.toHaveBeenCalled();
     vi.restoreAllMocks();
   });
 
@@ -24,6 +24,14 @@ describe('static pages are unchanged from the Task 1 capture', () => {
     expect(urls).toContain('/en/__404');
     expect(urls).toContain('/en');
     expect(new Set(urls.map((u) => fixtureName(u).file)).size).toBe(urls.length);
+  });
+
+  it.skipIf(!!process.env.CAPTURE_PAGES)('the fixtures are exactly the captured URLs: none missing, no orphans', () => {
+    const onDisk = ['en', 'el'].flatMap((locale) =>
+      readdirSync(resolve(FIXTURE_DIR, locale)).map((f) => `${locale}/${f}`),
+    ).sort();
+    expect(onDisk).toEqual(captureUrls().map((u) => fixtureName(u).file).sort());
+    expect(readdirSync(FIXTURE_DIR).sort()).toEqual(['el', 'en']);
   });
 
   it.skipIf(!!process.env.CAPTURE_PAGES)('every page matches its fixture (head, main, title, JSON-LD)', async () => {

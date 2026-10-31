@@ -15,6 +15,7 @@ import type { EurovisionPredictionsContent } from '../../supabase/functions/_sha
 import type { WinnersContent } from '../../supabase/functions/_shared/cms/schemas/winners';
 import type { ContestText } from '../../src/pages/seo/content/contestText';
 import { predictionsText } from '../../src/pages/seo/predictionsText';
+import { winnersText } from '../../src/pages/seo/winnersText';
 
 const ROOT = resolve(__dirname, '../..');
 const readDoc = (docId: string) =>
@@ -292,33 +293,28 @@ describe('content/pages (Task 6 group: data-mixed pages)', () => {
     expect(rendered[0].en.sections.lineup.intro).toBe('37 countries are confirmed for Eurovision 2033 across two semi-finals and the grand final:');
   });
 
+  it('winnersText falls back to the hero chip and an empty intro while the index is not loaded', () => {
+    const doc = readDoc('winners') as Record<'en' | 'el', WinnersContent>;
+    const none = { last: null, from: null, to: null, first: null, cancelled: null };
+    const t = winnersText(doc.en, none);
+    expect(t.sections.recent.title).toBe(doc.en.hero.chip);
+    expect(t.sections.recent.intro).toBe('');
+    expect('introCancelled' in t.sections.recent).toBe(false);
+  });
+
   it('winners renders exactly as the former template functions', () => {
-    type W = WinnersContent;
-    const doc = readDoc('winners') as Record<'en' | 'el', W>;
+    const doc = readDoc('winners') as Record<'en' | 'el', WinnersContent>;
     const ARGS = [
       { last: 2032, from: 2018, to: 2032, first: 1956, cancelled: 2020 },
       { last: 2031, from: 2017, to: 2031, first: 1957, cancelled: null },
     ];
+    // faqTitle was added after the pin was taken (the heading used to live in
+    // WinnersPage), so the pin covers everything the former module produced.
     const rendered = ARGS.map((a) => Object.fromEntries(L.map((l) => {
-      const { introCancelled, ...recent } = doc[l].sections.recent;
-      return [l, {
-        ...doc[l],
-        meta: {
-          ...doc[l].meta,
-          description: interpolate(doc[l].meta.description, { last: a.last }),
-          keywords: doc[l].meta.keywords.map((k) => interpolate(k, { last: a.last })),
-        },
-        sections: {
-          ...doc[l].sections,
-          recent: {
-            ...recent,
-            title: interpolate(recent.title, { from: a.from, to: a.to }),
-            // As WinnersPage renders it.
-            intro: interpolate(recent.intro, { from: a.from }) + (a.cancelled !== null ? interpolate(introCancelled, { cancelled: a.cancelled }) : ''),
-          },
-          all: { ...doc[l].sections.all, title: interpolate(doc[l].sections.all.title, { from: a.first }) },
-        },
-      }];
+      const text = winnersText(doc[l], a);
+      const { faqTitle, ...sections } = text.sections;
+      expect(faqTitle).toBe(l === 'el' ? 'Συχνές ερωτήσεις' : 'Frequently asked questions');
+      return [l, { ...text, sections }];
     })));
     expect(sha(stableJson(rendered))).toBe('053ffd85572ddb1c84751a7a96e2b151cfe93b365fed50b428a3a94c99c7ea29');
     expect(rendered[0].en.sections.recent.intro).toBe(

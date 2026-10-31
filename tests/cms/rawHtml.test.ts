@@ -57,11 +57,14 @@ const NOT_CMS: Record<string, string> = {
   'components/seo/ContentRenderer.tsx': 'renders the legacy src/content PageContent type, not a CMS document',
 };
 
-/**
- * Directories scanned for raw-HTML renders (non-recursive; .tsx only).
- * src/pages/content held homeCopy/notFoundCopy and is gone since Task 6.
- */
-const SCANNED = ['pages', 'pages/seo', 'components/seo'];
+/** Every .tsx file under src/, recursively (paths relative to src/). */
+function tsxFiles(dir: string): string[] {
+  return readdirSync(resolve(SRC, dir), { withFileTypes: true }).flatMap((e) => {
+    const rel = dir ? `${dir}/${e.name}` : e.name;
+    if (e.isDirectory()) return tsxFiles(rel);
+    return e.isFile() && e.name.endsWith('.tsx') ? [rel] : [];
+  });
+}
 
 const read = (file: string) => readFileSync(resolve(SRC, file), 'utf8');
 
@@ -70,11 +73,7 @@ function bindings(src: string): { expr: string; at: number }[] {
   return [...src.matchAll(/__html:\s*([^}]+?)\s*\}/g)].map((m) => ({ expr: m[1], at: m.index! }));
 }
 
-const scannedFiles = SCANNED.flatMap((dir) =>
-  readdirSync(resolve(SRC, dir), { withFileTypes: true })
-    .filter((e) => e.isFile() && e.name.endsWith('.tsx'))
-    .map((e) => `${dir}/${e.name}`),
-);
+const scannedFiles = tsxFiles('');
 
 describe('raw-HTML fields carry rawHtml', () => {
   it.each(Object.entries(RAW_HTML))('%s: every listed field is rawHtml', (docId, { raw }) => {
@@ -115,9 +114,9 @@ describe('raw-HTML fields carry rawHtml', () => {
     }
   });
 
-  it('scans the page and SEO component directories', () => {
+  it('scans src/ recursively', () => {
     expect(scannedFiles).toEqual(expect.arrayContaining([
-      'pages/HomePage.tsx', 'pages/NotFoundPage.tsx', 'pages/seo/FAQPage.tsx', 'components/seo/HomeSeoBlock.tsx',
+      'pages/HomePage.tsx', 'pages/NotFoundPage.tsx', 'pages/seo/FAQPage.tsx', 'components/seo/HomeSeoBlock.tsx', 'main.tsx',
     ]));
   });
 

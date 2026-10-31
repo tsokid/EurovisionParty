@@ -36,6 +36,7 @@ export const winnersSchema = group({
     }),
     all: group({ title: text({ placeholders: ['from'] }), intro: text(), cancelled: text(), shared: text() }),
     notable: group({ title: text(), intro: text(), bullets: list(strongRest) }),
+    faqTitle: text(),
   }),
   faq: list(qa),
   cta,

@@ -18,7 +18,7 @@ import { cancelledWithin, winnersData, type WinnerYear } from '../contest/winner
 import { ContentPending } from '../contest/ContentPending';
 import { usePageContent } from '../../lib/cms/usePageContent';
 import type { WinnersContent } from '../../../supabase/functions/_shared/cms/schemas/winners';
-import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
+import { winnersText } from './winnersText';
 import { PageContentFallback } from './PageContentFallback';
 
 /** How many champions the "recent winners" table shows (the copy says "the last 15 champions"). */
@@ -29,7 +29,6 @@ export default function WinnersPage() {
   const content = usePageContent<WinnersContent>('winners');
   const index = useContent<ContestIndex>(CONTEST_INDEX);
   if (content.status !== 'ready') return <PageContentFallback state={content} />;
-  const c = content.data;
   const data = index.status === 'ready' ? winnersData(index.data, locale) : null;
   const recent = data ? data.years.slice(0, RECENT) : [];
   const recentFrom = recent.length ? recent[recent.length - 1].year : null;
@@ -39,10 +38,7 @@ export default function WinnersPage() {
   const lastYear = data?.years[0]?.year ?? null;
   // A cancelled year inside the recent window gets the "(No 2020 …)" note.
   const gap = data && recentFrom !== null && recentTo !== null ? cancelledWithin(data.all, recentFrom, recentTo) : null;
-  // One string, as before: the cancelled-year note is appended only when one falls in the window.
-  const recentIntro = recentFrom === null ? null
-    : interpolate(c.sections.recent.intro, { from: recentFrom })
-      + (gap !== null ? interpolate(c.sections.recent.introCancelled, { cancelled: gap }) : '');
+  const c = winnersText(content.data, { last: lastYear, from: recentFrom, to: recentTo, first, cancelled: gap });
   const pending = data ? null : (
     <ContentPending inline locale={locale} retry={index.status === 'error' ? index.retry : undefined} />
   );
@@ -117,12 +113,12 @@ export default function WinnersPage() {
           pageId="winners"
           locale={locale}
           title={c.meta.title}
-          description={interpolate(c.meta.description, { last: lastYear })}
+          description={c.meta.description}
           ogType="article"
           ogImage="https://eurovision.games/logo.png"
           articlePublishedTime={PUBLISHED}
           articleModifiedTime={MODIFIED}
-          keywords={c.meta.keywords.map((k) => interpolate(k, { last: lastYear }))}
+          keywords={c.meta.keywords}
           jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
         />
       )}
@@ -136,8 +132,8 @@ export default function WinnersPage() {
       />
 
       <ContentLayout>
-        <Section id="recent" title={recentFrom !== null && recentTo !== null ? interpolate(c.sections.recent.title, { from: recentFrom, to: recentTo }) : c.hero.chip}>
-          {recentFrom !== null && <p>{recentIntro}</p>}
+        <Section id="recent" title={c.sections.recent.title}>
+          {recentFrom !== null && <p>{c.sections.recent.intro}</p>}
           {pending ?? <DataTable headers={winnerHeaders} align={winnerAlign} rows={recent.map(winnerRow)} />}
         </Section>
 
@@ -161,7 +157,7 @@ export default function WinnersPage() {
         </Section>
 
         {data && first !== null && (
-          <Section id="all" title={interpolate(c.sections.all.title, { from: first })}>
+          <Section id="all" title={c.sections.all.title}>
             <p>{c.sections.all.intro}</p>
             <DataTable headers={winnerHeaders} align={winnerAlign} rows={data.all.map(winnerRow)} />
           </Section>
@@ -179,7 +175,7 @@ export default function WinnersPage() {
           </ul>
         </Section>
 
-        <Section title={locale === 'el' ? 'Συχνές ερωτήσεις' : 'Frequently asked questions'}>
+        <Section title={c.sections.faqTitle}>
           <FaqAccordion items={c.faq} />
         </Section>
 

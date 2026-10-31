@@ -198,6 +198,8 @@ function buildWinners(mod: Record<string, unknown>, vars: Vars): Doc {
           introCancelled: withGap.slice(intro.length),
         },
         all: { ...sections.all, title: fn(sections.all.title)(vars.from) },
+        // Not in the former module: WinnersPage hardcoded the FAQ heading.
+        faqTitle: l === 'el' ? 'Συχνές ερωτήσεις' : 'Frequently asked questions',
       },
     };
   }
