@@ -35,6 +35,7 @@ export function LeafField({ schema, segments, path, name, label, en, el, hasEn, 
       {isShared ? (
         <LocaleControl
           meta={meta}
+          locale={hasEn ? 'en' : 'el'}
           name={`${name} (EN + EL)`}
           tag="EN + EL"
           value={hasEn ? en : el}
@@ -49,6 +50,7 @@ export function LeafField({ schema, segments, path, name, label, en, el, hasEn, 
               <LocaleControl
                 key={l}
                 meta={meta}
+                locale={l}
                 name={`${name} (${l.toUpperCase()})`}
                 tag={l.toUpperCase()}
                 value={l === 'en' ? en : el}
@@ -67,6 +69,8 @@ export function LeafField({ schema, segments, path, name, label, en, el, hasEn, 
 
 type ControlProps = {
   meta: FieldMeta;
+  /** The locale whose live-contest vars the counter uses (EN for a shared field). */
+  locale: Locale;
   /** Accessible name: full path and locale, e.g. "FAQ › Item 1 › Question (EL)". */
   name: string;
   tag: string;
@@ -76,9 +80,9 @@ type ControlProps = {
   onValue: (v: unknown) => void;
 };
 
-function LocaleControl({ meta, name, tag, value, issues, withLocale, onValue }: ControlProps) {
+function LocaleControl({ meta, locale, name, tag, value, issues, withLocale, onValue }: ControlProps) {
   const id = useId();
-  const vars = useContext(VarsContext);
+  const vars = useContext(VarsContext)?.[locale];
   const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
   const pendingCaret = useRef<number | null>(null);
   const text = typeof value === 'string' ? value : '';

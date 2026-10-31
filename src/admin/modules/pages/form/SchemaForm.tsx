@@ -7,9 +7,8 @@
 // typing re-renders only the edited field and its ancestors.
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { z } from 'zod';
-import type { Vars } from '../../../../../supabase/functions/_shared/cms/interpolateDocument';
 import type { ValidationError, ValidationWarning } from '../../../../../supabase/functions/_shared/cms/validate';
-import { FormApiContext, VarsContext, type FormApi } from './context';
+import { FormApiContext, VarsContext, type FormApi, type LocaleVars } from './context';
 import { IssueStore, type DocValue } from './formModel';
 import { Field } from './fields/Field';
 
@@ -22,8 +21,8 @@ export type SchemaFormProps = {
   onChange: (next: DocValue) => void;
   errors: readonly ValidationError[];
   warnings: readonly ValidationWarning[];
-  /** Live-contest placeholder values: counters then count the interpolated text. */
-  vars?: Vars;
+  /** Live-contest placeholder values per locale: each counter counts its locale's interpolated text. */
+  vars?: LocaleVars;
   /** Test hook: called with a field's path each time that field renders. */
   onFieldRender?: (path: string) => void;
 };
@@ -64,7 +63,7 @@ export function SchemaForm({ schema, value, onChange, errors, warnings, vars, on
 
   // A new vars object with the same values must not re-render every counter.
   const varsKey = vars ? JSON.stringify(vars) : '';
-  const stableVars = useMemo<Vars | undefined>(() => (varsKey ? (JSON.parse(varsKey) as Vars) : undefined), [varsKey]);
+  const stableVars = useMemo<LocaleVars | undefined>(() => (varsKey ? (JSON.parse(varsKey) as LocaleVars) : undefined), [varsKey]);
 
   const docErrors = errors.filter((e) => e.locale === null);
   const docWarnings = warnings.filter((w) => w.locale === null);

@@ -50,6 +50,7 @@ vi.mock('../../src/lib/supabase', () => ({
 import Pages from '../../src/admin/modules/Pages';
 import { __resetPublishGuardForTests } from '../../src/admin/modules/contests/publish';
 import { UNSAVED_TEXT } from '../../src/admin/unsavedGuard';
+import { SAVE_BLOCKED_TEXT } from '../../src/admin/modules/pages/PageEditor';
 
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 const published = (docId: string) => clone(bundledContent(`pages/${docId}.json`) as Doc);
@@ -166,6 +167,22 @@ describe('Pages module: editor', () => {
     expect(screen.getByText(/Fix the errors to save/)).toBeTruthy();
     fireEvent.change(homeBreadcrumbEn(), { target: { value: `${original}!` } });
     await waitFor(() => expect(save.disabled).toBe(false));
+  });
+
+  it('Save inside the validation delay re-validates: an invalid draft is not sent, and the notice shows at once', async () => {
+    await openEditor('About');
+    const save = screen.getByRole('button', { name: 'Save draft' }) as HTMLButtonElement;
+    fireEvent.change(homeBreadcrumbEn(), { target: { value: '' } });
+    // Before the debounced errors: Save is still enabled.
+    expect(save.disabled).toBe(false);
+    expect(homeBreadcrumbEn().getAttribute('aria-invalid')).toBeNull();
+    fireEvent.click(save);
+    expect(screen.getByText(SAVE_BLOCKED_TEXT)).toBeTruthy();
+    expect(rpcCalls('cms_save')).toHaveLength(0);
+    await waitFor(() => expect(homeBreadcrumbEn().getAttribute('aria-invalid')).toBe('true'));
+    // Editing clears the notice.
+    fireEvent.change(homeBreadcrumbEn(), { target: { value: 'Home' } });
+    expect(screen.queryByText(SAVE_BLOCKED_TEXT)).toBeNull();
   });
 
   it('Save sends the draft with the expected timestamp, then saves against the new one', async () => {

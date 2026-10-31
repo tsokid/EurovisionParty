@@ -8,7 +8,9 @@ import {
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
 import type { ValidationError } from '../../supabase/functions/_shared/cms/validate';
 import { SchemaForm, type DocValue } from '../../src/admin/modules/pages/form/SchemaForm';
-import { bundledContent } from '../../src/lib/seo/contentData';
+import { bundledContent, getSite } from '../../src/lib/seo/contentData';
+import { contestVars } from '../../src/admin/modules/pages/contestContext';
+import { toCurrentContest } from '../../src/lib/currentContest';
 
 const deepFreeze = <T,>(v: T): T => {
   if (v && typeof v === 'object') {
@@ -23,7 +25,7 @@ type Props = {
   initial: DocValue;
   errors?: ValidationError[];
   warnings?: ValidationError[];
-  vars?: Record<string, string | number>;
+  vars?: { en: Record<string, string | number>; el: Record<string, string | number> };
   onFieldRender?: (path: string) => void;
 };
 
@@ -283,9 +285,20 @@ describe('SchemaForm: counters', () => {
   });
 
   it('counts the interpolated value when live-contest vars are given', () => {
-    setup({ schema: s, initial: { en: { title: 'Final {year}' }, el: { title: '{year}' } }, vars: { year: 2026 } });
+    setup({ schema: s, initial: { en: { title: 'Final {year}' }, el: { title: '{year}' } }, vars: { en: { year: 2026 }, el: { year: 2026 } } });
     expect(screen.getByText('10 / 10')).toBeInTheDocument(); // "Final 2026", not "Final {year}" (12)
     expect(screen.getByText('4 / 10')).toBeInTheDocument();
+  });
+
+  it('each locale counts with its own vars: a Greek field counts the Greek city', () => {
+    // The live contest (snapshot: Vienna 2026), as the Pages editor builds it.
+    const vars = contestVars(toCurrentContest(getSite().current));
+    expect(vars.en.cityIn).toBe('in Vienna');
+    expect(vars.el.cityIn).toBe('στη Βιέννη');
+    const c = group({ title: text({ label: 'SEO title', softMaxLength: 30, placeholders: ['cityIn'] }) });
+    setup({ schema: c, initial: { en: { title: 'Party {cityIn}' }, el: { title: 'Πάρτι {cityIn}' } }, vars });
+    expect(screen.getByText('15 / 30')).toBeInTheDocument(); // "Party in Vienna"
+    expect(screen.getByText('16 / 30')).toBeInTheDocument(); // "Πάρτι στη Βιέννη", not "Πάρτι in Vienna" (15)
   });
 
   it('counts the raw value without vars', () => {

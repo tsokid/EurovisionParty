@@ -2,7 +2,9 @@
 // changes identity, so reading it does not make a field re-render.
 import { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
 import type { Vars } from '../../../../../supabase/functions/_shared/cms/interpolateDocument';
-import type { DocValue, Issue, IssueStore } from './formModel';
+import type { DocValue, Issue, IssueStore, Locale } from './formModel';
+
+export type LocaleVars = Record<Locale, Vars>;
 
 export type FormApi = {
   /** Replaces the document with `fn(current)`; `fn` must not mutate. */
@@ -14,8 +16,8 @@ export type FormApi = {
 
 export const FormApiContext = createContext<FormApi | null>(null);
 
-/** Live-contest placeholder values: counters count the interpolated text. */
-export const VarsContext = createContext<Vars | undefined>(undefined);
+/** Live-contest placeholder values per locale: counters count the interpolated text. */
+export const VarsContext = createContext<LocaleVars | undefined>(undefined);
 
 export function useFormApi(): FormApi {
   const api = useContext(FormApiContext);

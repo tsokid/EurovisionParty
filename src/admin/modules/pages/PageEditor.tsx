@@ -4,7 +4,8 @@
 // - Load: the saved draft (cms_get), else the published file as the base
 //   (expected_updated_at null: the first save creates the draft).
 // - Validate: live, 300 ms after the last edit, with the live contest as
-//   context. Errors block Save; warnings never do.
+//   context. Errors block Save; warnings never do. Save re-validates what it
+//   sends: inside the 300 ms window an invalid draft shows SAVE_BLOCKED_TEXT.
 // - Save: cms_save against the updated_at of what was loaded or last saved.
 //   A save over someone else's newer save is refused: the banner offers a
 //   reload, and the user's edits stay in the form until they take it.
@@ -26,6 +27,8 @@ import { useDebounced } from './useDebounced';
 export const VALIDATE_DELAY_MS = 300;
 export const CONFLICT_TEXT = 'Someone else changed this page — Reload';
 export const RELOAD_CONFIRM = 'Discard your edits and load the latest?';
+/** Save clicked before the debounced errors show, on an invalid draft. */
+export const SAVE_BLOCKED_TEXT = 'Fix the errors below before saving';
 
 /** Where the editor's base came from: a saved draft, or the published file. */
 type Base = { source: 'draft' | 'published'; updatedAt: string | null };
@@ -61,6 +64,7 @@ export function PageEditor({ docId, label, onChanged }: Props) {
   const [busy, setBusy] = useState<'load' | 'save' | 'discard' | null>('load');
   const [conflict, setConflict] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [blocked, setBlocked] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>('edit');
   const loadSeq = useRef(0);
@@ -75,6 +79,7 @@ export function PageEditor({ docId, label, onChanged }: Props) {
       if (seq !== loadSeq.current) return;
       setBase(row ? { source: 'draft', updatedAt: row.updated_at } : { source: 'published', updatedAt: null });
       setDraft({ value, fromLoad: true });
+      setBlocked(false);
       setSaved(value);
       setConflict(false);
     } catch (e) {
@@ -100,13 +105,19 @@ export function PageEditor({ docId, label, onChanged }: Props) {
   const onChange = useCallback((next: DocValue) => {
     setDraft({ value: next, fromLoad: false });
     setNotice(null);
+    setBlocked(false);
   }, []);
 
   const save = async () => {
     if (!draft || !base) return;
     const value = draft.value;
     // The debounced result may be up to 300 ms old: check what is being saved.
-    if (!validateDocument(docType, value, context).ok) return;
+    if (!validateDocument(docType, value, context).ok) {
+      setNotice(null);
+      setBlocked(true);
+      return;
+    }
+    setBlocked(false);
     setBusy('save');
     setErr(null);
     setNotice(null);
@@ -189,6 +200,7 @@ export function PageEditor({ docId, label, onChanged }: Props) {
             </button>
           </div>
         </div>
+        {blocked && !hasErrors && <p role="alert" className="text-xs text-red-300">{SAVE_BLOCKED_TEXT}</p>}
         {hasErrors && <p className="text-xs text-red-300">{plural(errors.length, 'error')}. Fix the errors to save.</p>}
         {!hasErrors && warnings.length > 0 && (
           <p className="text-xs text-amber-300">{plural(warnings.length, 'warning')}: saving is allowed.</p>
