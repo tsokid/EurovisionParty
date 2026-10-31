@@ -230,7 +230,15 @@ describe('cutover runbook coverage', () => {
     for (const t of [
       "select id, public, file_size_limit from storage.buckets where id = 'cms-media'",
       'from pg_policies',
-      "schemaname = 'storage' and tablename = 'objects' and policyname ilike '%cms%'",
+      "policyname in ('cms_media_admin_select', 'cms_media_admin_insert', 'cms_media_admin_update', 'cms_media_admin_delete')",
+      '**Exactly 4 rows**',
+      // Fallback when the migration role does not own storage.objects: re-applying 077 as is would fail again.
+      'fails the same way', 'Public bucket off', 'Storage → Policies',
+      '| `cms_media_admin_select` | SELECT |', '| `cms_media_admin_insert` | INSERT |',
+      '| `cms_media_admin_update` | UPDATE |', '| `cms_media_admin_delete` | DELETE |',
+      "bucket_id = 'cms-media' and public.is_super_admin()",
+      'Apply 077 without its Storage block', '-- ── Storage bucket and policies (Supabase only)', 'do $storage$', 'final `commit;`',
+      'lock table public.cms_documents', 'comes from 018',
       '`public` must be `false`',
       'cms_media_admin_select | SELECT', 'cms_media_admin_insert | INSERT',
       'cms_media_admin_update | UPDATE', 'cms_media_admin_delete | DELETE',
@@ -242,6 +250,12 @@ describe('cutover runbook coverage', () => {
     const sql = readFileSync(path.join(root, 'supabase/migrations/077_cms_media.sql'), 'utf8');
     for (const n of ['select', 'insert', 'update', 'delete']) expect(sql).toContain(`create policy cms_media_admin_${n} on storage.objects`);
     expect(sql).toContain("values ('cms-media', 'cms-media', false)");
+    // The manual fallback copies these expressions and cuts the migration at this marker.
+    expect(sql).toContain("bucket_id = 'cms-media' and public.is_super_admin()");
+    expect(sql).toContain('-- ── Storage bucket and policies (Supabase only)');
+    expect(sql).toContain('lock table public.cms_documents');
+    expect(sql.indexOf('-- ── Storage bucket and policies')).toBeLessThan(sql.indexOf('do $storage$'));
+    expect(sql.trimEnd().endsWith('commit;')).toBe(true);
   });
 
   it('a media smoke test follows the CMS smoke test, before 072, with a revert', () => {
@@ -255,7 +269,7 @@ describe('cutover runbook coverage', () => {
       'Add editorial for', '2005', 'alt text', 'EN and EL', 'Publish',
       '/el/past-contests/eurovision-2005-kyiv', '/media/<sha12>.webp', '/media/<sha12>-800.webp',
       '`width` and `height`', 'Cache-Control: public, max-age=31536000, immutable',
-      'Revert', 'revert the Publish commit on GitHub', 'edit the editorial back to empty',
+      'Revert', 'revert the Publish commit on GitHub', 'full revert', 'does **not** restore the original page byte for byte',
     ]) expect(section, `9.3 is missing "${t}"`).toContain(t);
     expect(runbook.split(/\r?\n/).find((l) => l.startsWith('| 9 |'))).toContain('media smoke test');
   });

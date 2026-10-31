@@ -37,7 +37,7 @@ function variantName(option: z.ZodType, discriminator: string): string | undefin
  */
 export function blockVariants(schema: z.ZodType): Record<string, z.ZodType> {
   let def = defOf(schema);
-  if (def.type === 'optional') def = defOf(def.innerType!); // optional(blocks())
+  while (def.type === 'optional') def = defOf(def.innerType!); // optional(blocks())
   const union = def.type === 'array' ? defOf(def.element!) : def;
   if (union.type !== 'union') throw new Error('blockVariants: not a blocks() field');
   return Object.fromEntries(union.options!.map((o) => [variantName(o, union.discriminator!)!, o]));

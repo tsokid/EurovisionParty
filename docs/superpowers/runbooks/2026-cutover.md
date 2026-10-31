@@ -352,7 +352,7 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
 - **If it fails:** "relation cms_documents does not exist" → 076 was not applied; apply it now. "function … does not exist" → re-run the file it belongs to (074 or 076; both idempotent). A privilege row → re-run that file.
 
 ### 5.3 Apply 077: media library and the private `cms-media` bucket (Εφαρμογή 077 — βιβλιοθήκη πολυμέσων)
-077 follows 076 (it uses `public.is_super_admin()` and extends 074's `publish_input()`). It creates the table `cms_media`, its four RPCs, **and** the Storage bucket `cms-media` (**private**, 20 MiB, `image/webp`, `video/mp4`, `text/vtt`) with select / insert / update / delete policies on `storage.objects` for super admins on that bucket only. The bucket and policy steps are guarded: they are skipped when the `storage` schema is absent (PGlite, tests) and run on Supabase. Do **not** create the bucket by hand first and never make it public: published files are served from `/media/…` in the repo, never from Storage.
+077 follows 076: `media_delete` takes `lock table public.cms_documents` (076's table), and 074's `publish_input()` reads `cms_media` only when it exists. `public.is_super_admin()` comes from 018, long applied. It creates the table `cms_media`, its four RPCs, **and** the Storage bucket `cms-media` (**private**, 20 MiB, `image/webp`, `video/mp4`, `text/vtt`) with select / insert / update / delete policies on `storage.objects` for super admins on that bucket only. The bucket and policy steps are guarded: they are skipped when the `storage` schema is absent (PGlite, tests) and run on Supabase. Do **not** create the bucket by hand first and never make it public: published files are served from `/media/…` in the repo, never from Storage.
 - **Do:** SQL Editor → paste all of `supabase/migrations/077_cms_media.sql` → Run. Idempotent (`on conflict do nothing`, `drop policy if exists`); one `begin … commit`, so any error rolls back the whole file.
 - **Run:**
   ```sql
@@ -361,9 +361,10 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
   -- The bucket exists and is private.
   select id, public, file_size_limit from storage.buckets where id = 'cms-media';
 
-  -- Four policies, one per command.
+  -- Four policies, one per command: exactly 4 rows.
   select policyname, cmd from pg_policies
-   where schemaname = 'storage' and tablename = 'objects' and policyname ilike '%cms%'
+   where schemaname = 'storage' and tablename = 'objects'
+     and policyname in ('cms_media_admin_select', 'cms_media_admin_insert', 'cms_media_admin_update', 'cms_media_admin_delete')
    order by policyname;
 
   -- 074 still works and now sees the media list.
@@ -391,11 +392,21 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
 - **Expect:**
   - `cms_media | 0`.
   - Bucket row `cms-media | false | 20971520`: **`public` must be `false`**. If it shows `true`, stop: run `update storage.buckets set public = false where id = 'cms-media';` and re-run the check.
-  - Exactly four policies: `cms_media_admin_delete | DELETE`, `cms_media_admin_insert | INSERT`, `cms_media_admin_select | SELECT`, `cms_media_admin_update | UPDATE`.
+  - **Exactly 4 rows**: `cms_media_admin_delete | DELETE`, `cms_media_admin_insert | INSERT`, `cms_media_admin_select | SELECT`, `cms_media_admin_update | UPDATE`.
   - `media_in_publish` = 0 (no drafts reference media yet); table-privilege query **0 rows**; function-privilege query **0 rows**.
 - **If it fails:**
-  - "must be owner of table objects" (or any error on the policy step: the migration role does not own `storage.objects`) → the **whole** migration rolled back, so `cms_media` does not exist either. Take 077's last block (`-- ── Storage bucket and policies (Supabase only)`, the `do $storage$ … $storage$` statement), run **only that block** in Dashboard → SQL Editor, then re-apply the whole of 077 and repeat the checks above. If the editor refuses too, create the bucket in Dashboard → **Storage → New bucket** (name `cms-media`, **Public bucket off**), add the four policies under Storage → Policies with the expressions from 077 (role `authenticated`, `bucket_id = 'cms-media' and public.is_super_admin()`), then re-apply 077.
-  - "function public.is_super_admin() does not exist" → an earlier admin migration is missing; stop and compare with the migrations applied so far.
+  - "must be owner of table objects" (or any error on the policy step: the migration role does not own `storage.objects`) → the **whole** migration rolled back, so `cms_media` does not exist either. **Re-applying 077 as it is fails the same way** (`drop policy if exists … on storage.objects` also needs ownership), so do the Storage part by hand and apply the rest:
+    1. **Bucket.** Dashboard → **Storage → New bucket**: name `cms-media`, **Public bucket off**, file size limit 20 MB, allowed MIME types `image/webp, video/mp4, text/vtt`.
+    2. **Policies.** Dashboard → **Storage → Policies** → `cms-media` → New policy → "For full customization". Create four, each with target role `authenticated`, names and expressions exactly as in 077:
+       | Name | Operation | USING | WITH CHECK |
+       |---|---|---|---|
+       | `cms_media_admin_select` | SELECT | `bucket_id = 'cms-media' and public.is_super_admin()` | none |
+       | `cms_media_admin_insert` | INSERT | none | `bucket_id = 'cms-media' and public.is_super_admin()` |
+       | `cms_media_admin_update` | UPDATE | `bucket_id = 'cms-media' and public.is_super_admin()` | `bucket_id = 'cms-media' and public.is_super_admin()` |
+       | `cms_media_admin_delete` | DELETE | `bucket_id = 'cms-media' and public.is_super_admin()` | none |
+    3. **Apply 077 without its Storage block.** In the SQL Editor paste `077_cms_media.sql` from its first line down to the line before `-- ── Storage bucket and policies (Supabase only)`, then add a final `commit;`. Leave out everything between that comment and `commit;` (the `do $storage$ … $storage$;` block). Run.
+    4. **Verify** with the §5.3 checks above. In this path `file_size_limit` is whatever you set in step 1 (20 MB = `20971520`), and the four policy rows must still be exactly 4.
+  - "function public.is_super_admin() does not exist" → 018 (super admins) is missing; stop and compare with the migrations applied so far.
   - The bucket check returns no row → the `storage` schema was absent when 077 ran (the guarded skip). Confirm you ran it on the production project, then run it again.
 
 ---
@@ -637,7 +648,7 @@ Proves the path upload → private bucket → draft → Publish (binary commit t
   - Every other page is unchanged. The build's validate-content step passed (a `/media/` reference without its file fails the build).
 - **Revert (Επαναφορά):**
   - **Before Publish:** **Discard draft**. The uploaded files stay in the private bucket and the Media library (delete them there if you like).
-  - **After Publish:** either edit the editorial back to empty (remove the block, **Save draft**, **Publish**: the page renders as before, and the two image files stay in `public/media/`, which validate-content only reports as a warning), or revert the Publish commit on GitHub (GitHub → the commit → **Revert** → merge the PR; Vercel rebuilds without the editorial and the images).
+  - **After Publish:** emptying the editorial (remove the block, **Save draft**, **Publish**) removes the image and the text from the page, but it does **not** restore the original page byte for byte: an editorial doc still exists and `content/pages/index.json` still lists it. The two image files stay in `public/media/`, which validate-content only reports as a warning. For a **full revert**, revert the Publish commit on GitHub (GitHub → the commit → **Revert** → merge the PR; Vercel rebuilds without the editorial, the index entry and the images).
 - **If it fails:**
   - Upload refused → the image is over 15 MB or not an image, or the bucket policies from 5.3 are missing: repeat 5.3.
   - Publish error naming a media reference → the draft references a deleted or missing media row; remove the block or upload again. Nothing was committed.

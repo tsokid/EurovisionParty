@@ -227,6 +227,20 @@ describe('Pages module: editor', () => {
     expect(screen.queryByText(SAVE_BLOCKED_TEXT)).toBeNull();
   });
 
+  it('Extra blocks: + Add, a FAQ block, Save draft keeps extraBlocks in both languages', async () => {
+    await openEditor('About');
+    fireEvent.click(screen.getByRole('button', { name: 'Add Extra blocks' }));
+    fireEvent.change(screen.getByRole('combobox', { name: 'Block type for Extra blocks' }), { target: { value: 'faq' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Add block to Extra blocks' }));
+    const save = screen.getByRole('button', { name: 'Save draft' }) as HTMLButtonElement;
+    await waitFor(() => expect(save.disabled).toBe(false));
+    fireEvent.click(save);
+    expect(await screen.findByText('Saved')).toBeTruthy();
+    const data = (rpcCalls('cms_save')[0][1] as { p_data: Doc }).p_data;
+    expect(data.en.extraBlocks).toEqual([{ type: 'faq', items: [] }]);
+    expect(data.el.extraBlocks).toEqual([{ type: 'faq', items: [] }]);
+  });
+
   it('Save sends the draft with the expected timestamp, then saves against the new one', async () => {
     const doc = published('about');
     h.drafts.about = { doc_id: 'about', doc_type: 'about', data: doc, updated_at: DRAFT_TIME };

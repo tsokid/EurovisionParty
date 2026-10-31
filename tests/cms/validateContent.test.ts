@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { text, group, list } from '../../supabase/functions/_shared/cms/fields';
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
-import { CONTENT_DIR, draftMediaRefs, liveContestFacts, mediaRefReport, PUBLIC_MEDIA_DIR, validateContentDir } from '../../scripts/cms/validate-content';
+import { CONTENT_DIR, draftMediaRefs, liveContestFacts, mediaRefReport, PUBLIC_MEDIA_DIR, validateAll, validateContentDir } from '../../scripts/cms/validate-content';
 import { cityName } from '../../src/pages/contest/content/hubCopy';
 
 describe('validateContentDir', () => {
@@ -305,6 +305,29 @@ describe('published media references (/media/…) against public/media', () => {
     write(content, 'contests/2027.json', JSON.stringify({ poster: '/media/0123456789ab.webp' }));
     write(media, '0123456789ab.webp', 'x');
     expect(mediaRefReport(content, media)).toEqual({ errors: [], warnings: [] });
+  });
+
+  it('files that are not media names (.gitkeep, folders, odd names) are neither orphans nor references', () => {
+    write(media, '.gitkeep', '');
+    write(media, 'notes.txt', 'x');
+    write(media, 'sub/0123456789ab.webp', 'x');
+    expect(mediaRefReport(content, media)).toEqual({ errors: [], warnings: [] });
+  });
+
+  it('validateAll (what the build runs, exit 1 on any error) fails on a missing /media/ file with file and reference', () => {
+    write(content, 'pages/archive-2005.json', JSON.stringify({ en: { intro: 'x' } }));
+    write(content, 'site.json', JSON.stringify({ img: '/media/0123456789ab.webp' }));
+    const dirs = { content, pages: join(content, 'pages'), media };
+    const facts = { year: 2031, cities: [] };
+    const bad = validateAll(dirs, facts);
+    expect(bad.errors).toContain('site.json: /media/0123456789ab.webp is referenced but public/media/0123456789ab.webp does not exist');
+    write(media, '0123456789ab.webp', 'x');
+    expect(validateAll(dirs, facts).errors.filter((e) => e.includes('/media/'))).toEqual([]);
+  });
+
+  it('a draft cms-media/ reference fails validateAll too', () => {
+    write(content, 'site.json', JSON.stringify({ img: 'cms-media/0b7c1f3e-5a4d-4c2e-9f10-1234567890ab' }));
+    expect(validateAll({ content, pages: join(content, 'pages'), media }, { year: 2031, cities: [] }).errors.join("\n")).toMatch(/site\.json: draft media reference/);
   });
 
   it('the committed repo passes (public/media may not exist yet)', () => {

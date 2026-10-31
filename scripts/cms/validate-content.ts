@@ -71,6 +71,7 @@ function* jsonStrings(v: unknown): Generator<{ text: string; image: boolean }> {
 
 // A reference starts a string or follows a character that cannot continue a
 // path or URL, so cms-media/…, https://host/media/… and /medias/… do not count.
+const MEDIA_FILE = /^[0-9a-f]{12}(-800)?\.(webp|mp4|vtt)$/;
 const MEDIA_REF = /(?<![\w./:-])\/media\/([\w-]+(?:\.[\w-]+)*)/g;
 
 /**
@@ -82,7 +83,12 @@ const MEDIA_REF = /(?<![\w./:-])\/media\/([\w-]+(?:\.[\w-]+)*)/g;
 export function mediaRefReport(contentDir: string, mediaDir: string): { errors: string[]; warnings: string[] } {
   const errors: string[] = [];
   const referenced = new Set<string>();
-  const onDisk = new Set(existsSync(mediaDir) ? readdirSync(mediaDir) : []);
+  // Real media files only (<sha12>[-800].<ext>): a .gitkeep or a folder is neither referenced nor an orphan.
+  const onDisk = new Set(
+    existsSync(mediaDir)
+      ? readdirSync(mediaDir, { withFileTypes: true }).filter((e) => e.isFile() && MEDIA_FILE.test(e.name)).map((e) => e.name)
+      : [],
+  );
   if (existsSync(contentDir)) {
     for (const file of filesUnder(contentDir).filter((f) => f.endsWith('.json'))) {
       let data: unknown;
@@ -176,11 +182,23 @@ export function validateContentDir(
   return { count: files.length, errors, warnings };
 }
 
+/** Everything the build gate checks: documents, draft media references, media files. */
+export function validateAll(
+  dirs: { content: string; pages: string; media: string } = { content: CONTENT_DIR, pages: PAGES_DIR, media: PUBLIC_MEDIA_DIR },
+  facts?: LiveContestFacts,
+): { count: number; errors: string[]; warnings: string[] } {
+  const { count, errors: docErrors, warnings } = validateContentDir(dirs.pages, facts);
+  const media = mediaRefReport(dirs.content, dirs.media);
+  return {
+    count,
+    errors: [...docErrors, ...draftMediaRefs(dirs.content), ...media.errors],
+    warnings: [...warnings, ...media.warnings],
+  };
+}
+
 function main(): void {
-  const { count, errors: docErrors, warnings } = validateContentDir(PAGES_DIR);
-  const media = mediaRefReport(CONTENT_DIR, PUBLIC_MEDIA_DIR);
-  const errors = [...docErrors, ...draftMediaRefs(CONTENT_DIR), ...media.errors];
-  for (const w of [...warnings, ...media.warnings]) console.warn(`validate-content: warning: ${w}`);
+  const { count, errors, warnings } = validateAll();
+  for (const w of warnings) console.warn(`validate-content: warning: ${w}`);
   if (errors.length) {
     for (const e of errors) console.error(`validate-content: ${e}`);
     console.error(`validate-content: ${errors.length} error(s) in ${count} documents`);
