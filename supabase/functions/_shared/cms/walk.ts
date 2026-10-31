@@ -5,8 +5,9 @@
 // through walkSchema, so the tree shape is interpreted in exactly one place.
 //
 // Node types are zod's own def types for the kinds the field constructors
-// build: object (group), array (list), tuple, optional, and the leaves string
-// (text/multiline/richText/href), enum (choice) and boolean (flag).
+// build: object (group, image, video), array (list, blocks), tuple, optional,
+// union (the items of blocks), and the leaves string
+// (text/multiline/richText/href/mediaRef), enum (choice) and boolean (flag).
 import type { z } from 'zod';
 import { fieldMeta, type FieldMeta } from './fields.ts';
 
@@ -16,16 +17,35 @@ type Def = {
   element?: z.ZodType;
   items?: z.ZodType[];
   innerType?: z.ZodType;
+  options?: z.ZodType[];
+  discriminator?: string;
 };
 
 const defOf = (schema: z.ZodType): Def => (schema as unknown as { _zod: { def: Def } })._zod.def;
 
 export type Segment = string | number;
 
+/** The variant name of a union option: the single value of its discriminator choice. */
+function variantName(option: z.ZodType, discriminator: string): string | undefined {
+  const key = defOf(option).shape?.[discriminator];
+  return key ? fieldMeta(key).options?.[0] : undefined;
+}
+
+/**
+ * The schema of each block type of a blocks() field (or of its union), by
+ * type name, in display order. `emptyValue(variants[name])` is a new block.
+ */
+export function blockVariants(schema: z.ZodType): Record<string, z.ZodType> {
+  const def = defOf(schema);
+  const union = def.type === 'array' ? defOf(def.element!) : def;
+  if (union.type !== 'union') throw new Error('blockVariants: not a blocks() field');
+  return Object.fromEntries(union.options!.map((o) => [variantName(o, union.discriminator!)!, o]));
+}
+
 export type WalkNode = {
   schema: z.ZodType;
   meta: FieldMeta;
-  /** zod def type: object, array, tuple, optional, string, enum, boolean. */
+  /** zod def type: object, array, tuple, optional, union, string, enum, boolean. */
   type: string;
   /** Path from the root. A list item is `*` in a schema-only walk, its index when walking values. */
   segments: Segment[];
@@ -42,6 +62,9 @@ const isRecord = (v: unknown): v is Record<string, unknown> => !!v && typeof v =
  * keys in schema order. `visit` returning false skips the node's children.
  *
  * An optional() wrapper is visited, then its inner field at the same path.
+ * A union (a block) is visited, then its variants at the same path; with
+ * values, only the variant named by the discriminator of every value (the
+ * walk stops there if the values name different variants or none).
  *
  * With `values` (e.g. `[en, el]`), each node gets the matching value from each
  * one, and the walk only goes where every value does: into an object's keys if
@@ -79,6 +102,16 @@ export function walkSchema(schema: z.ZodType, visit: (node: WalkNode) => boolean
       case 'optional':
         if (withValues && vals.some((v) => v === undefined)) return;
         return step(def.innerType!, segments, vals);
+      case 'union': {
+        if (!withValues) {
+          for (const option of def.options!) step(option, segments, vals);
+          return;
+        }
+        const names = vals.map((v) => (isRecord(v) ? v[def.discriminator!] : undefined));
+        const option = def.options!.find((o) => variantName(o, def.discriminator!) === names[0]);
+        if (option && names.every((name) => name === names[0])) step(option, segments, vals);
+        return;
+      }
       default:
     }
   };
@@ -88,16 +121,18 @@ export function walkSchema(schema: z.ZodType, visit: (node: WalkNode) => boolean
 /**
  * Dotted paths (`*` for any list index) of the fields whose metadata matches
  * `pred`, outermost first: a matching field's children are not searched. An
- * optional() wrapper is tested (and reported) at its own path, once.
+ * optional() wrapper is tested (and reported) at its own path, once. A
+ * blocks() field lists a path of several variants once.
  */
 export function fieldPaths(schema: z.ZodType, pred: (meta: FieldMeta) => boolean): string[] {
-  const out: string[] = [];
+  const out = new Set<string>();
   walkSchema(schema, (n) => {
     if (!pred(n.meta)) return true;
-    out.push(n.path);
+    out.add(n.path);
     return false;
   });
-  return out;
+  // A path under a union is listed once, however many variants have it.
+  return [...out];
 }
 
 /** The field at a dotted `path` (`*` or a number for a list index), or undefined. */

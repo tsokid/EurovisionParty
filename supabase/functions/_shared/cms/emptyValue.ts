@@ -4,14 +4,16 @@
 //   text/multiline/richText/href  ''
 //   flag                          false
 //   choice                        its first option
-//   list                          []
+//   list, blocks                  []
+//   image, video                  like a group
+//   union                         its first variant's empty value
 //   group                         { each non-optional key: its empty value }
 //   tuple                         [ each position's empty value ]
 //   optional                      absent (undefined; the key is left out)
 //
 // Every call returns a fresh value (no shared containers).
 import type { z } from 'zod';
-import { walkSchema, type Segment } from './walk.ts';
+import { blockVariants, walkSchema, type Segment } from './walk.ts';
 
 export function emptyValue(schema: z.ZodType): unknown {
   let root: unknown;
@@ -29,13 +31,19 @@ export function emptyValue(schema: z.ZodType): unknown {
     if (m.optional) return false;
     switch (m.kind) {
       case 'group':
+      case 'image':
+      case 'video':
         put(n.segments, {});
         return true;
       case 'tuple':
         put(n.segments, []);
         return true;
       case 'list':
+      case 'blocks':
         put(n.segments, []);
+        return false;
+      case 'union':
+        put(n.segments, emptyValue(Object.values(blockVariants(n.schema))[0]));
         return false;
       case 'choice':
         put(n.segments, m.options?.[0] ?? '');

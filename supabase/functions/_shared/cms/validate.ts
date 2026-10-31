@@ -76,6 +76,12 @@ export function sharedMismatches(schema: z.ZodType, en: unknown, el: unknown): S
   const out: SharedMismatch[] = [];
   walkSchema(schema, (n) => {
     const [a, b] = n.values;
+    if (n.type === 'union' && isRecord(a) && isRecord(b)) {
+      // Blocks line up by index; the walk only goes into a block both locales have the same type of.
+      const key = n.meta.discriminator!;
+      if (a[key] !== b[key]) out.push({ path: `${n.path}.${key}`, message: SHARED_MESSAGE });
+      return;
+    }
     if (n.meta.shared) {
       if (!sameJson(a, b)) out.push({ path: n.path, message: SHARED_MESSAGE });
       return false;

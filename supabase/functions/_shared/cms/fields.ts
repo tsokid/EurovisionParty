@@ -18,12 +18,22 @@
 import { z } from 'zod';
 import { placeholdersIn } from './placeholders.ts';
 import { htmlErrors, isSafeHref } from './html.ts';
+import { richTextErrors } from './richText.ts';
 
-export { fieldAt, fieldPaths } from './walk.ts';
+export { blockVariants, fieldAt, fieldPaths } from './walk.ts';
 
-export type FieldKind = 'text' | 'multiline' | 'richText' | 'href' | 'list' | 'group' | 'tuple' | 'choice' | 'flag';
+export type FieldKind =
+  | 'text' | 'multiline' | 'richText' | 'href' | 'mediaRef'
+  | 'list' | 'group' | 'tuple' | 'choice' | 'flag'
+  // image() and video() are groups (zod objects) that the admin draws as media pickers.
+  | 'image' | 'video'
+  // blocks() is a list whose items are a union of groups told apart by `discriminator`.
+  | 'blocks' | 'union';
 
-type StringKind = 'text' | 'multiline' | 'richText' | 'href';
+/** What a mediaRef() points at; its published extension is webp, mp4 or vtt. */
+export type MediaKind = 'image' | 'video' | 'captions';
+
+type StringKind = 'text' | 'multiline' | 'richText' | 'href' | 'mediaRef';
 
 export type FieldMeta = {
   kind: FieldKind;
@@ -54,6 +64,12 @@ export type FieldMeta = {
   rawHtml?: boolean;
   /** group only: keys that go together; in each pair both are set or neither is. */
   pairs?: [string, string][];
+  /** mediaRef only: the kind of upload it accepts. */
+  mediaKind?: MediaKind;
+  /** blocks and union only: the key that tells the variants apart (its value is the variant name). */
+  discriminator?: string;
+  /** blocks and union only: the variant names, in display order (blockVariants() gives their schemas). */
+  variants?: string[];
   /** Set by optional(): the key may be absent. The rest of the metadata is the inner field's. */
   optional?: boolean;
   /**
@@ -110,7 +126,17 @@ function placeholderHelpFor(placeholders: string[], overrides: Record<string, st
   }));
 }
 
-function stringField(kind: StringKind, opts: StringFieldOptions = {}) {
+const MEDIA_EXT: Record<MediaKind, string> = { image: 'webp', video: 'mp4', captions: 'vtt' };
+
+/**
+ * A reference to an upload: `cms-media/<uuid>` in a draft (the cms_media row
+ * id), `/media/<sha12>.<ext>` once published. Always lowercase. The extension
+ * must be the one of `kind`.
+ */
+export const mediaRefPattern = (kind: MediaKind) =>
+  new RegExp(`^(cms-media/[0-9a-f-]{36}|/media/[0-9a-f]{12}\\.${MEDIA_EXT[kind]})$`);
+
+function stringField(kind: StringKind, opts: StringFieldOptions = {}, mediaKind?: MediaKind) {
   const placeholders = [...(opts.placeholders ?? [])];
   const meta: FieldMeta = {
     kind,
@@ -121,8 +147,9 @@ function stringField(kind: StringKind, opts: StringFieldOptions = {}) {
     placeholders,
     ...(placeholders.length && { placeholderHelp: placeholderHelpFor(placeholders, opts.placeholderHelp) }),
     required: opts.required ?? true,
-    // href is shared unless it opts out (and records the opt-out); other kinds opt in.
-    ...(kind === 'href' ? { shared: opts.shared ?? true } : opts.shared && { shared: true }),
+    // href and mediaRef are shared unless they opt out (and record the opt-out); other kinds opt in.
+    ...(kind === 'href' || kind === 'mediaRef' ? { shared: opts.shared ?? true } : opts.shared && { shared: true }),
+    ...(mediaKind && { mediaKind }),
     ...(opts.rawHtml && { rawHtml: true }),
     ...(opts.seo && { seo: opts.seo }),
   };
@@ -153,6 +180,12 @@ function stringField(kind: StringKind, opts: StringFieldOptions = {}) {
     if (kind === 'href' && value !== '' && !isSafeHref(value)) {
       ctx.addIssue({ code: 'custom', message: 'Must start with / (a page on this site) or https://' });
     }
+    if (kind === 'mediaRef' && value !== '' && !mediaRefPattern(mediaKind!).test(value)) {
+      ctx.addIssue({ code: 'custom', message: `Not a valid ${mediaKind} reference: pick an uploaded file` });
+    }
+    if (kind === 'richText') {
+      for (const e of richTextErrors(value)) ctx.addIssue({ code: 'custom', message: `Line ${e.line}: ${e.message}` });
+    }
   });
   schema.register(cmsFields, meta);
   return schema;
@@ -164,7 +197,10 @@ export const text = (opts?: StringFieldOptions) => stringField('text', opts);
 /** Multi-line plain string. */
 export const multiline = (opts?: StringFieldOptions) => stringField('multiline', opts);
 
-/** Limited Markdown, stored as a string; rendered in 3b. */
+/**
+ * Limited Markdown, stored as a string (syntax and errors: richText.ts;
+ * rendered by src/components/cms/RichText.tsx).
+ */
 export const richText = (opts?: StringFieldOptions) => stringField('richText', opts);
 
 /**
@@ -191,6 +227,10 @@ const isSet = (v: unknown) => v !== undefined && !(typeof v === 'string' && v.tr
  * neither is; the error is reported at the missing key.
  */
 export function group<S extends Record<string, z.ZodType>>(shape: S, opts: GroupFieldOptions = {}) {
+  return groupOfKind('group', shape, opts);
+}
+
+function groupOfKind<S extends Record<string, z.ZodType>>(kind: 'group' | 'image' | 'video', shape: S, opts: GroupFieldOptions = {}) {
   const pairs = opts.pairs?.map(([a, b]) => [a, b] as [string, string]);
   for (const key of pairs?.flat() ?? []) {
     if (!Object.prototype.hasOwnProperty.call(shape, key)) throw new Error(`group: pair key "${key}" is not a field of the group`);
@@ -206,7 +246,7 @@ export function group<S extends Record<string, z.ZodType>>(shape: S, opts: Group
     });
   }
   schema.register(cmsFields, {
-    kind: 'group',
+    kind,
     ...(opts.label !== undefined && { label: opts.label }),
     ...(opts.help !== undefined && { help: opts.help }),
     ...(opts.shared !== undefined && { shared: opts.shared }),
@@ -232,10 +272,71 @@ export function choice<const V extends readonly [string, ...string[]]>(values: V
   return schema;
 }
 
+/**
+ * A reference to an uploaded file of `kind`, picked in the media library.
+ * Locale-shared by default (one file for both languages).
+ */
+export const mediaRef = (kind: MediaKind, opts: Pick<StringFieldOptions, 'label' | 'help' | 'shared'> = {}) =>
+  stringField('mediaRef', opts, kind);
+
+/** An image with its alt text: the file is shared by both locales, the alt text is translated. */
+export function image(opts: GroupFieldOptions = {}) {
+  return groupOfKind('image', {
+    media: mediaRef('image', { label: 'Image' }),
+    alt: text({ label: 'Alt text', help: 'Describes the image for people who cannot see it' }),
+  }, opts);
+}
+
+/** A video with its poster image, optional captions file and an autoplay switch. */
+export function video(opts: GroupFieldOptions = {}) {
+  return groupOfKind('video', {
+    media: mediaRef('video', { label: 'Video' }),
+    poster: mediaRef('image', { label: 'Poster image' }),
+    captions: optional(mediaRef('captions', { label: 'Captions' })),
+    autoplay: flag({ label: 'Autoplay' }),
+  }, opts);
+}
+
 /** A true/false switch. */
 export function flag(opts: ContainerFieldOptions = {}) {
   const schema = z.boolean();
   schema.register(cmsFields, { kind: 'flag', ...opts, shared: opts.shared ?? true });
+  return schema;
+}
+
+const BLOCK_DISCRIMINATOR = 'type';
+
+/** A block: a group whose first key is its shared `type`. */
+function variant<const T extends string, S extends Record<string, z.ZodType>>(type: T, shape: S) {
+  return group({ type: choice([type] as [T]), ...shape });
+}
+
+/**
+ * The flexible zone of a page: an ordered list of blocks, each a group of one
+ * of six `type`s (text, image, video, callout, faq, cta). The `type` is shared,
+ * so both locales hold the same blocks in the same order; their translatable
+ * text differs. Walk it with walkSchema (the `union` node, then the variant that
+ * matches each value's type) and get one variant's schema from blockVariants().
+ */
+export function blocks(opts: ContainerFieldOptions = {}) {
+  const options = [
+    variant('text', { body: richText({ label: 'Text' }) }),
+    variant('image', { image: image(), caption: optional(text({ label: 'Caption' })) }),
+    variant('video', { video: video(), caption: optional(text({ label: 'Caption' })) }),
+    variant('callout', { tone: choice(['info', 'warn'], { label: 'Tone' }), body: richText({ label: 'Text' }) }),
+    variant('faq', { items: list(group({ q: text({ label: 'Question' }), a: richText({ label: 'Answer' }) }), { label: 'Questions' }) }),
+    variant('cta', {
+      title: text({ label: 'Title' }),
+      body: multiline({ label: 'Text' }),
+      label: text({ label: 'Button label' }),
+      href: href({ label: 'Button link' }),
+    }),
+  ] as const;
+  const names = options.map((o) => fieldMeta(o.shape.type).options![0]);
+  const union = z.discriminatedUnion(BLOCK_DISCRIMINATOR, options);
+  union.register(cmsFields, { kind: 'union', discriminator: BLOCK_DISCRIMINATOR, variants: names });
+  const schema = z.array(union);
+  schema.register(cmsFields, { kind: 'blocks', ...opts, discriminator: BLOCK_DISCRIMINATOR, variants: names });
   return schema;
 }
 
@@ -253,7 +354,7 @@ export function optional<T extends z.ZodType>(inner: T) {
 /** Metadata of a schema built by one of the constructors above. */
 export function fieldMeta(schema: z.ZodType): FieldMeta {
   const meta = cmsFields.get(schema);
-  if (!meta) throw new Error('fieldMeta: schema is not a CMS field (build it with text/multiline/richText/href/list/group/tuple/choice/flag/optional)');
+  if (!meta) throw new Error('fieldMeta: schema is not a CMS field (build it with text/multiline/richText/href/mediaRef/image/video/list/group/tuple/choice/flag/blocks/optional)');
   // zod's registry types tuples in metadata as arrays (pairs); the value is ours.
   return meta as FieldMeta;
 }
