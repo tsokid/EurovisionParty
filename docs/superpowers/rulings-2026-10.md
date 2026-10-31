@@ -80,3 +80,16 @@
 - Ruling: I3 refinement accepted — publish_runs.cms flag + separate CMS 'since' (cms-including runs only), so cms:false auto-publish can't mark unshipped drafts published
 - Task final: parked — seoFields called with doc id (not docTypeFor) — Ruling: fine for site docs; revisit when 3c adds editorial families — cost: editorial docs skipped by uniqueness check
 - Task final: parked — swPrecache test skips silently without manifest — Ruling: can wait — cost: silent skip locally
+
+## 2026-10-31-cms-3c-media-editorial
+
+- Ruling: T1 — cms_media row id = the uuid in storage_path (client generates it, uploads `<uuid>.webp`, calls media_register(p_id=uuid)); the 800 w variant is `<parent>-800.webp` with a generated id (p_id null); a leading `cms-media/` is stripped; reference matching is case-insensitive — one id per file — cost: none known
+- Ruling: T2 — ship 6 block types (text, callout, image, video, faq, cta); spec §3 steps/table deferred — spec §2 lists exactly these six — cost: additive later
+- Ruling: T3/T5 — published image `{media, alt, width, height}`, variant `<sha12-of-main>-800.webp`, srcset only when width > 800; published video gets width/height from its poster — no CLS
+- Ruling: T4 — preview resolves drafts through an optional MediaResolverContext (public build has no provider, so drafts never render publicly); resize never upscales; both files always registered
+- Ruling: T5 — storage sweep deletes only unregistered objects older than 24 h (registered media removed via the picker Delete); keyset paging with an exact-count check, sweep skipped on mismatch; 50 MB new-media cap checked before any download; publish refuses any `cms-media/` left in content/ — irreversible deletes kept conservative
+- Ruling: T6 — hub/archive/country share one editorial schema; editorial renders H1 → intro → hero image → data → blocks → related; FAQ JSON-LD merged through mergeFaqJsonLd (one FAQPage); sitemap lastmod includes editorial files; the 3b parked seoFields/docTypeFor item is closed
+- Ruling: T7 — runbook §5.3 fallback corrected (my first version looped: DROP POLICY needs table ownership) → Storage UI bucket + policies, then 077 without its `do $storage$` block
+- Owner decision: all 70 archived years (1956–2025) indexable — set in the 073 generator (DB is the source the first Publish regenerates from) and in content/; sitemap 146 → 286 URLs; 2026 flips when archived
+- Parked: client-navigation layout shift when editorial loads; no "remove editorial" action; video original filename not stored; H.264 not verified client-side; 2020 (cancelled) page is thin — first candidate to noindex if Search Console flags it
+- Lesson: never mutate tracked files while an implementer runs in the same worktree (controller swapped Blocks.tsx mid-T4; implementer restored it)
