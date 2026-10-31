@@ -121,7 +121,7 @@ export default function VideoPlayer({ value }: { value: CmsVideoValue }) {
             setTime(Number(e.target.value));
           }}
         />
-        <button type="button" className={btn} onClick={() => setMuted((m) => !m)} aria-label={muted ? t.unmute : t.mute} aria-pressed={muted}>
+        <button type="button" className={btn} onClick={() => setMuted((m) => !m)} aria-label={muted ? t.unmute : t.mute}>
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
             <path d="M3 9v6h4l5 5V4L7 9z" />
             {muted

@@ -3,7 +3,7 @@
 // FAQ blocks feed FAQPage JSON-LD. Effects do not run under SSR, so a page that
 // needs the entries in the prerendered HTML calls faqEntries(value) while
 // rendering; `onFaq` reports the same list from an effect for client-only use.
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 import LocaleLink from '../seo/LocaleLink';
 import { isSafeHref } from '../../../supabase/functions/_shared/cms/html';
 import type { FaqEntry } from '../../lib/seo/schema';
@@ -69,10 +69,10 @@ function renderBlock(b: CmsBlock): ReactNode {
     case 'faq':
       return (
         <div className="space-y-4">
-          {(Array.isArray(b.items) ? b.items : []).map((it, i) => (
+          {(Array.isArray(b.items) ? b.items : []).filter((it) => it && typeof it.q === 'string').map((it, i) => (
             <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
               <h3 className="text-lg font-bold text-white">{it.q}</h3>
-              <RichText source={it.a ?? ''} className="mt-2 space-y-3 text-white/80 leading-relaxed" />
+              <RichText source={typeof it.a === 'string' ? it.a : ''} className="mt-2 space-y-3 text-white/80 leading-relaxed" />
             </div>
           ))}
         </div>
@@ -87,9 +87,17 @@ function renderBlock(b: CmsBlock): ReactNode {
 export default function Blocks({ value, onFaq }: { value: readonly CmsBlock[]; onFaq?: (entries: FaqEntry[]) => void }) {
   const list = Array.isArray(value) ? value : [];
   const entries = useMemo(() => faqEntries(value), [value]);
+  // onFaq lives in a ref and the effect keys on the entries' content, so an
+  // inline callback (that may set state) cannot retrigger it.
+  // For SSR use faqEntries(value) in the page: effects do not run on the server.
+  const onFaqRef = useRef(onFaq);
   useEffect(() => {
-    if (onFaq && entries.length) onFaq(entries);
-  }, [entries, onFaq]);
+    onFaqRef.current = onFaq;
+  });
+  const key = JSON.stringify(entries);
+  useEffect(() => {
+    if (key !== '[]') onFaqRef.current?.(JSON.parse(key));
+  }, [key]);
 
   const rendered = list.map((b, i) => ({ i, node: renderBlock(b) })).filter((x) => x.node !== null);
   if (!rendered.length) return null;

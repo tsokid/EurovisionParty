@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import CmsImage from '@/components/cms/CmsImage';
 import VideoPlayer from '@/components/cms/VideoPlayer';
 import Blocks from '@/components/cms/Blocks';
@@ -35,6 +35,19 @@ describe('CmsImage', () => {
     expect(img).toHaveAttribute('loading', 'lazy');
     expect(img).toHaveAttribute('decoding', 'async');
     expect(img).not.toHaveAttribute('fetchpriority');
+  });
+
+  it('narrow sources get a single candidate (no duplicate descriptors)', () => {
+    for (const width of [500, 800]) {
+      const { container } = render(<CmsImage value={{ ...IMG, width }} />);
+      const img = container.querySelector('img')!;
+      expect(img).not.toHaveAttribute('srcset');
+      expect(img).not.toHaveAttribute('sizes');
+      expect(img).toHaveAttribute('src', '/media/0123456789ab.webp');
+      cleanup();
+    }
+    const { container } = render(<CmsImage value={{ ...IMG, width: 801 }} />);
+    expect(container.querySelector('img')).toHaveAttribute('srcset', '/media/0123456789ab-800.webp 800w, /media/0123456789ab.webp 801w');
   });
 
   it('hero is eager with high fetch priority', () => {
@@ -157,6 +170,17 @@ describe('VideoPlayer', () => {
     }
   });
 
+  it('renders nothing without width or height; a bad captions ref renders without a track', () => {
+    for (const bad of [{ ...VID, width: undefined }, { ...VID, height: 0 }]) {
+      expect(render(at(<VideoPlayer value={bad as never} />)).container).toBeEmptyDOMElement();
+      cleanup();
+    }
+    const { container } = render(at(<VideoPlayer value={{ ...VID, captions: 'cms-media/x' }} />));
+    fireEvent.click(screen.getByRole('button', { name: 'Play' }));
+    expect(video(container)).toBeTruthy();
+    expect(container.querySelector('track')).toBeNull();
+  });
+
   it('renders on the server (no window, no IntersectionObserver needed)', () => {
     const html = renderToString(at(<VideoPlayer value={{ ...VID, autoplay: true }} />));
     expect(html).toContain('preload="none"');
@@ -216,6 +240,23 @@ describe('Blocks', () => {
     const onFaq = vi.fn();
     render(at(<Blocks value={BLOCKS} onFaq={onFaq} />));
     expect(onFaq).toHaveBeenCalledWith([{ q: 'Why?', a: 'Because rules and more. one two' }]);
+  });
+
+  it('an inline onFaq that sets state does not loop', () => {
+    let renders = 0;
+    function Host() {
+      const [, setN] = useState(0);
+      renders++;
+      return <Blocks value={BLOCKS} onFaq={(e) => setN(e.length)} />;
+    }
+    render(at(<Host />));
+    expect(renders).toBeLessThan(5);
+  });
+
+  it('tolerates null and non-string faq items', () => {
+    const bad = { type: 'faq', items: [null, { q: 5, a: 'x' }, { q: 'ok', a: null }] } as unknown as CmsBlock;
+    expect(() => render(at(<Blocks value={[bad]} />))).not.toThrow();
+    expect(screen.getByText('ok')).toBeInTheDocument();
   });
 
   it('faqEntries is the pure SSR-safe form and skips empty pairs', () => {
