@@ -111,6 +111,16 @@ const BRIEF_TOKENS = [
   'bundleSize.test.ts',
   'historicalUrls.test.ts',
   'eurovision-2026-vienna | grep -c',
+  // CMS 3b (Task 8): 076 with 074, zod through deno.json, the CMS smoke test.
+  '076_cms_documents.sql',
+  'cms_documents',
+  'public.cms_save(text,text,jsonb,timestamptz)',
+  'deno.json',
+  'npm:zod@4.3.6',
+  'BOOT_ERROR',
+  'Save draft',
+  'Discard draft',
+  '(CMS check)',
 ];
 
 const runbook = readFileSync(RUNBOOK, 'utf8');
@@ -164,6 +174,49 @@ describe('cutover runbook coverage', () => {
     expect(runbook).not.toContain('until rollback or 072');
     expect(runbook).not.toMatch(/\b5 finalists\b/);
     expect(runbook).not.toContain('git switch -c rollback-main');
+  });
+
+  it('076 is applied in the same step as 074 (5.2), before the edge functions; every order line says so', () => {
+    const step5 = runbook.indexOf('## 5.');
+    const s52 = runbook.indexOf('### 5.2 Apply 074 and 076 together');
+    const step6 = runbook.indexOf('## 6.');
+    expect(step5).toBeGreaterThanOrEqual(0);
+    expect(s52).toBeGreaterThan(step5);
+    expect(step6).toBeGreaterThan(s52);
+    const section = runbook.slice(s52, step6);
+    expect(section).toContain('074_publish_runs.sql');
+    expect(section).toContain('076_cms_documents.sql');
+    for (const fn of ['public.cms_list()', 'public.cms_get(text)', 'public.cms_save(text,text,jsonb,timestamptz)', 'public.cms_discard(text)', 'public.publish_input()']) {
+      expect(section, `5.2 privilege list is missing ${fn}`).toContain(fn);
+    }
+    const lines = runbook.split(/\r?\n/);
+    expect(lines.find((l) => l.startsWith('Order:'))).toContain('074 + 076 (same step)');
+    expect(lines.find((l) => l.includes('**Apply at cutover**'))).toContain('074 + 076');
+    expect(lines.find((l) => l.startsWith('| 5 |'))).toContain('**076**');
+  });
+
+  it('the deploy rehearsal checks that publish-content resolves zod through its deno.json', () => {
+    const s62 = runbook.indexOf('### 6.2 Deploy both functions');
+    const s63 = runbook.indexOf('### 6.3');
+    expect(s62).toBeGreaterThanOrEqual(0);
+    const section = runbook.slice(s62, s63);
+    expect(section).toContain('supabase/functions/publish-content/deno.json');
+    expect(section).toContain('npm:zod@4.3.6');
+    expect(section).toContain('rehearsal');
+    expect(section).toContain('--import-map');
+  });
+
+  it('a CMS smoke test follows the first Publish, with a revert that works after Publish', () => {
+    const s91 = runbook.indexOf('### 9.1 Publish');
+    const s92 = runbook.indexOf('### 9.2 CMS smoke test');
+    const step10 = runbook.indexOf('## 10. Apply 072');
+    expect(s91).toBeGreaterThanOrEqual(0);
+    expect(s92).toBeGreaterThan(s91);
+    expect(step10).toBeGreaterThan(s92);
+    const section = runbook.slice(s92, step10);
+    for (const t of ['Pages', 'FAQ', 'Save draft', 'Publish', '/en/faq', 'Discard draft', 'original answer']) {
+      expect(section, `9.2 is missing "${t}"`).toContain(t);
+    }
   });
 
   it('backup and restore commands keep privileges (no --no-privileges in any code block)', () => {

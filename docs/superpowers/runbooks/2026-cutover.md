@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| **Scope** | Sub-projects 1 (prerender/SEO), 2a (contests data layer) and 2b (archive pages + Publish) go live together. |
+| **Scope** | Sub-projects 1 (prerender/SEO), 2a (contests data layer), 2b (archive pages + Publish) and the CMS (3a page documents, 3b Pages editor) go live together. |
 | **Branch** | `feat/foundation-prerender` (worktree `C:/Users/User/EurovisionParty-foundation`). Merge to `main` = Vercel production deploy. |
 | **Supabase** | Project ref `ameneqrrfdhntfzvchnn`, free tier. Migrations are applied by hand in **Dashboard → SQL Editor** (paste the whole file, Run). Already applied: up to **069**. |
-| **Apply at cutover** | 070, 071, 073, 074; 075 after the merge, before the first Publish (8.4); then 072 **last**. |
+| **Apply at cutover** | 070, 071, 073, **074 + 076 in the same step** (5.2); 075 after the merge, before the first Publish (8.4); then 072 **last**. |
 | **Edge functions** | `eurovision-parse` (changed), `publish-content` (new). `admin-otp` unchanged, do not redeploy. |
 | **Time** | ~2 hours for steps 0–11. Do not start late in the day: step 10 (072) must wait until steps 7–9 pass. |
 | **Old admin** | From step 4 until 072, the **old** admin's Parser and Results controls stay unused (they would hit 071's functions or write the old tables). |
@@ -18,9 +18,10 @@
 - The **new frontend** calls RPCs and views that exist only after **070/071** (`live_contest_year`, `current_participants`, `entries_with_names`, `contest_summaries` …). Merging before 071 breaks the game and the admin.
 - The **old frontend** (live until the merge) reads `eurovision_2026_participants` / `eurovision_2026_results`. Those tables survive until **072**, so the old site keeps working between 070 and the merge.
 - **072 drops the old tables.** It is the only step that cannot be undone by a Vercel rollback, so it runs last, after the new site is verified.
+- **076 goes with 074, never later.** 074's `publish_input()` and `unpublished_summary()` read `cms_documents`, which 076 creates. They are plpgsql, so 074 applies on its own, but every call fails ("relation cms_documents does not exist") until 076 is in: the admin's publish bar errors and the contest **Publish** breaks.
 - **Publish** commits to `main`. It must run **after** the merge, or the bot commit lands on `main` while the branch is unmerged and the merge conflicts on `content/**` and `vercel.json`.
 
-Order: **068/069 (done) → 070 → 071 → 073 → 074 → edge functions + secrets → merge to main → verify site, admin and game → 075 (2026 semis) → first Publish → verify → 072**.
+Order: **068/069 (done) → 070 → 071 → 073 → 074 + 076 (same step) → edge functions + secrets → merge to main → verify site, admin and game → 075 (2026 semis) → first Publish → verify → 072**.
 
 **Before the merge** (on the branch, local): run `npm run build`, then `npx vitest run tests/scripts/historicalUrls.test.ts tests/scripts/bundleSize.test.ts`. Both **skip silently without `dist/`**, so they only prove something right after a build. Expect: all pass (85 historical URLs in one hop; main chunk within its budget).
 
@@ -36,11 +37,11 @@ Order: **068/069 (done) → 070 → 071 → 073 → 074 → edge functions + sec
 | 2 | Pre-070 data checks (participants count, ISOs, `source_url`) | SQL Editor | n/a (read-only) | ☐ |
 | 3 | Apply **070** + reconcile (`in_final` = old participants, `final_place` = old results) | SQL Editor | yes (old tables untouched) | ☐ |
 | 4 | Apply **071** + privilege checks; **freeze 2026 edits until step 10** | SQL Editor | yes | ☐ |
-| 5 | Apply **073** (history 1956–2025) and **074** (publish_runs) | SQL Editor | yes | ☐ |
-| 6 | Deploy `eurovision-parse` + `publish-content`; set `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | terminal / Dashboard | yes (redeploy old) | ☐ |
+| 5 | Apply **073** (history 1956–2025), then **074** (publish_runs) and **076** (cms_documents) together, one right after the other | SQL Editor | yes | ☐ |
+| 6 | Deploy `eurovision-parse` + `publish-content` (its `deno.json` resolves `npm:zod@4.3.6`); set `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | terminal / Dashboard | yes (redeploy old) | ☐ |
 | 7 | Record `<OLD_MAIN_SHA>`; merge `feat/foundation-prerender` → `main`; verify production (SP1 checklist + 10 historical URLs + CLS) | git, Vercel, curl | yes (Instant Rollback) | ☐ |
 | 8 | Admin smoke test (OTP login, Contests 1956–2026) and game reads (lobby lineup = 2026 finalists, `PredictionsResultsScreen`); then apply **075** (2026 semi-final data) and check 30 semi rows, before Publish | /admin, site, SQL | yes (Instant Rollback; 075 only fills semi columns) | ☐ |
-| 9 | First **Publish**; verify commit, Vercel build, `/en/eurovision-2026` | /admin, GitHub, Vercel | yes (git revert to `<OLD_MAIN_SHA>`; **not** Instant Rollback) | ☐ |
+| 9 | First **Publish**; verify commit, Vercel build, `/en/eurovision-2026`; then the CMS smoke test (Pages: edit one FAQ answer, Save draft, Publish, check the live page, revert) | /admin, GitHub, Vercel, site | yes (git revert to `<OLD_MAIN_SHA>`; **not** Instant Rollback) | ☐ |
 | 10 | Apply **072** (drops old 2026 tables, guarded) | SQL Editor | **no: restore from backup** | ☐ |
 | 11 | Post-deploy: Search Console sitemap + URL Inspection, watch Pages 3 weeks; semis cross-check (optional); indexable switches | GSC, /admin | n/a | ☐ |
 | 12 | Before May 2027: create 2027 (Burgas), lineup, Archive 2026, re-enable parser-tick (047) | /admin, SQL Editor | see step | ☐ |
@@ -52,7 +53,7 @@ Step format below: **Do** · **Run** · **Expect** · **If it fails**.
 ## P. Pre-cutover code fixes (Διορθώσεις κώδικα πριν τη μετάβαση)
 
 1. **Done in this branch: AdminLogin copy.** `src/admin/AdminLogin.tsx` said "Both expire in 60 minutes" while the Magic Link email (`supabase/templates/magic-link.html`) and the OTP expiry (600 s) say 10. It now reads "Both expire in 10 minutes." Verified in 8.1.
-2. **Done in this branch: edge-function imports.** `publish-content` imported its row/snapshot types from `src/content/contests/types.ts`, outside `supabase/functions/`, which the deploy bundler cannot see. The types now live in `supabase/functions/_shared/contestTypes.ts`; `src/content/contests/types.ts` re-exports them; `tests/functions/importBoundary.test.ts` fails if any function module imports from `src/` or from outside `supabase/functions/`. **Still rehearse** step 6.2 for `publish-content` before cutover day (harmless: nothing calls it until the new admin is live). The rehearsal is the verification.
+2. **Done in this branch: edge-function imports.** `publish-content` imported its row/snapshot types from `src/content/contests/types.ts`, outside `supabase/functions/`, which the deploy bundler cannot see. The types now live in `supabase/functions/_shared/contestTypes.ts`; `src/content/contests/types.ts` re-exports them; `tests/functions/importBoundary.test.ts` fails if any function module imports from `src/` or from outside `supabase/functions/`. **Still rehearse** step 6.2 for `publish-content` before cutover day (harmless: nothing calls it until the new admin is live). The rehearsal is the verification, including that the bare `zod` import in `_shared/cms/` resolves to `npm:zod@4.3.6` through `supabase/functions/publish-content/deno.json` (6.2 **Expect**).
 3. **Do not run `deploy-functions.mjs`.** See step 6 for why.
 4. **Open 2a T5 minors (recommended, not blocking; needed before May 2027):**
 
@@ -281,7 +282,7 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
 
 ---
 
-## 5. Apply 073 (history 1956–2025) and 074 (publish_runs) (Εφαρμογή 073 και 074)
+## 5. Apply 073 (history 1956–2025), then 074 + 076 (publish_runs, cms_documents) (Εφαρμογή 073, 074 και 076)
 
 ### 5.1 Apply 073
 - **Do:** SQL Editor → paste all of `supabase/migrations/073_history_import.sql` (≈ 230 KB, generated) → Run. Idempotent (`on conflict do nothing`); never touches 2026.
@@ -310,18 +311,33 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
   ```
   Any error rolls back the whole file (single `begin … commit`); fix and re-run.
 
-### 5.2 Apply 074
-- **Do:** SQL Editor → paste all of `supabase/migrations/074_publish_runs.sql` → Run. Idempotent.
+### 5.2 Apply 074 and 076 together (Εφαρμογή 074 και 076 μαζί)
+076 belongs to this step, not a later one: 074's `publish_input()` and `unpublished_summary()` read `cms_documents` (076). Without 076 the publish bar and the contest **Publish** fail.
+- **Do:** SQL Editor → paste all of `supabase/migrations/074_publish_runs.sql` → Run. Then, in a new query, paste all of `supabase/migrations/076_cms_documents.sql` → Run. Both idempotent.
 - **Run:**
   ```sql
   select to_regclass('public.publish_runs') as tbl, (select count(*) from public.publish_runs) as runs;
+  select to_regclass('public.cms_documents') as cms_tbl, (select count(*) from public.cms_documents) as drafts;
+
+  -- 074 now finds 076's table (raises "relation … does not exist" without 076).
+  -- unpublished_summary() reads it too, but is super-admin only: 8.2 covers it (the publish bar loads).
+  select jsonb_array_length(public.publish_input() -> 'cms_documents') as cms_docs;
+
+  -- Drafts are reachable only through the RPCs (RLS on, no table grants).
+  select r as role, p as privilege
+    from unnest(array['anon', 'authenticated']) r, unnest(array['select', 'insert', 'update', 'delete']) p
+   where has_table_privilege(r, 'public.cms_documents', p);
 
   with fns(sig, kind) as (values
     ('public.begin_publish()',                                'admin'),
     ('public.unpublished_summary()',                          'admin'),
     ('public.last_publish_run()',                             'admin'),
     ('public.end_publish(bigint,text,text,integer,text)',     'service'),
-    ('public.publish_input()',                                'service')
+    ('public.publish_input()',                                'service'),
+    ('public.cms_list()',                                     'admin'),
+    ('public.cms_get(text)',                                  'admin'),
+    ('public.cms_save(text,text,jsonb,timestamptz)',          'admin'),
+    ('public.cms_discard(text)',                              'admin')
   ),
   expected(sig, role, ok) as (
     select sig, 'anon',          false                 from fns union all
@@ -331,8 +347,8 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
   select sig, role, ok as expected, has_function_privilege(role, sig, 'execute') as actual
     from expected where has_function_privilege(role, sig, 'execute') <> ok;
   ```
-- **Expect:** `publish_runs | 0`; privilege query **0 rows**.
-- **If it fails:** re-run 074 (idempotent).
+- **Expect:** `publish_runs | 0`; `cms_documents | 0`; `cms_docs` = 0; table-privilege query **0 rows**; function-privilege query **0 rows**.
+- **If it fails:** "relation cms_documents does not exist" → 076 was not applied; apply it now. "function … does not exist" → re-run the file it belongs to (074 or 076; both idempotent). A privilege row → re-run that file.
 
 ---
 
@@ -341,7 +357,7 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
 ### Why not `deploy-functions.mjs` (Γιατί όχι το deploy-functions.mjs)
 The repo script **cannot** deploy these functions and is unsafe to run:
 - It reads `supabase/functions/send-email/index.bundled.ts` and `supabase/functions/eurovision-parse/index.bundled.ts`; neither file exists, so it crashes on start.
-- It uploads one file per function. `eurovision-parse` is 5 modules (`index.ts`, `parse.ts`, `parseResults.ts`, `parseSemis.ts`, `rows.ts`), `publish-content` is 5 (`index.ts`, `github.ts`, `run.ts`, `snapshot.ts`, `redirects.ts`).
+- It uploads one file per function. `eurovision-parse` is 5 modules (`index.ts`, `parse.ts`, `parseResults.ts`, `parseSemis.ts`, `rows.ts`), `publish-content` is 6 (`index.ts`, `cmsFiles.ts`, `github.ts`, `run.ts`, `snapshot.ts`, `redirects.ts`) plus its `deno.json` import map and the shared modules under `supabase/functions/_shared/` (`contestTypes.ts`, `stableJson.ts`, `cms/**`).
 - It does not know `publish-content`.
 - Side effects: it rewrites the `app.settings.service_role_key` DB setting and **re-runs migrations 018–022** against production, which would put old function bodies back.
 
@@ -359,6 +375,7 @@ Use the Supabase CLI through `npx` (no install, no Docker) or the Dashboard.
   npx supabase@2.122.0 functions deploy publish-content  --project-ref ameneqrrfdhntfzvchnn --workdir . --no-verify-jwt --use-api
   unset SUPABASE_ACCESS_TOKEN
   ```
+  The CLI picks up `supabase/functions/publish-content/deno.json` on its own: it maps the bare `zod` import used by `_shared/cms/` (validation of CMS drafts) to `npm:zod@4.3.6`, the version in `package.json` (`tests/functions/zodPin.test.ts`). Watch the deploy output for `publish-content`: it must bundle with no import error.
   `--no-verify-jwt` is required: the parser cron authenticates with `PARSER_CRON_SECRET`, which is not a JWT, and both functions check the caller themselves (super-admin JWT). `--use-api` bundles on Supabase's side, so Docker is not needed. The CLI version is pinned to 2.122.0 (the latest stable on npm when this was written) so the flags above stay valid.
 - **Verify:**
   ```bash
@@ -366,12 +383,13 @@ Use the Supabase CLI through `npx` (no install, no Docker) or the Dashboard.
   curl -s -X POST https://ameneqrrfdhntfzvchnn.supabase.co/functions/v1/publish-content
   curl -s -o /dev/null -w "%{http_code}\n" -X OPTIONS https://ameneqrrfdhntfzvchnn.supabase.co/functions/v1/eurovision-parse
   ```
-- **Expect:** `204`; `{"error":"forbidden"}` (403: the function runs and refuses an anonymous caller); `204`. Dashboard → Edge Functions lists both with today's deploy time and "Verify JWT" **off**.
+- **Expect:** `204`; `{"error":"forbidden"}` (403: the function runs and refuses an anonymous caller); `204`. The 403 also proves `zod` resolved: `_shared/cms/` imports it at module load, so an unresolved import fails the boot (500 / `BOOT_ERROR`) before any request is handled. **This is the rehearsal's zod check: do it on the rehearsal, not first on cutover day.** Dashboard → Edge Functions lists both with today's deploy time and "Verify JWT" **off**.
 - **If it fails:**
   - `401 Missing authorization header` → deployed with JWT verification on. Redeploy with `--no-verify-jwt`, or Dashboard → function → Details → toggle "Enforce JWT verification" off.
+  - `Relative import path "zod" not prefixed with / or ../ or ./`, `Import "zod" not a dependency`, or a 500 / `BOOT_ERROR` instead of the 403 → the `deno.json` import map was not used. Check that `supabase/functions/publish-content/deno.json` exists in the checkout, then redeploy with `--import-map supabase/functions/publish-content/deno.json` added to the `publish-content` command. Logs: Dashboard → Edge Functions → `publish-content` → Logs.
   - "Module not found …" for a path outside `supabase/functions/` → should not happen after P.2 (`tests/functions/importBoundary.test.ts` guards it). Stop, fix in the repo, redeploy. Nothing user-facing depends on it yet.
   - "open supabase/config.toml: no such file or directory" (or "Cannot find project ref") → the repo has no `supabase/config.toml`. Keep `--project-ref` and `--workdir .` as above and run from the repo root. Still failing → `npx supabase@2.122.0 init` (answer **N** to the editor-settings prompts) to create `supabase/config.toml`, deploy again, then delete what `init` generated: `supabase/config.toml` **and** `supabase/.gitignore` (do not commit either; `git status --short` must be clean again).
-  - CLI unusable → Dashboard fallback: Edge Functions → `eurovision-parse` → **Code** → replace each of the 5 files with the repo version (same names), **Deploy**. For `publish-content`: Edge Functions → **Deploy a new function → Via editor**, name `publish-content`, create the 5 files with the repo contents, Deploy, then turn JWT verification off in Details. The editor only has the files you add, so also create `_shared/contestTypes.ts` with the contents of `supabase/functions/_shared/contestTypes.ts`, to match the `../_shared/contestTypes.ts` import.
+  - CLI unusable → Dashboard fallback: Edge Functions → `eurovision-parse` → **Code** → replace each of the 5 files with the repo version (same names), **Deploy**. For `publish-content`: Edge Functions → **Deploy a new function → Via editor**, name `publish-content`, create the 6 files and `deno.json` with the repo contents, Deploy, then turn JWT verification off in Details. The editor only has the files you add, so also create every shared module it imports, at the same relative paths: `_shared/contestTypes.ts`, `_shared/stableJson.ts`, and all of `_shared/cms/` (including `cms/schemas/*.ts`). That is about 30 files: prefer fixing the CLI.
 - **Then:** revoke the access token (account/tokens → Revoke).
 
 ### 6.3 publish-content secrets
@@ -458,7 +476,7 @@ None of these reads depend on Publish. The admin and the game read Supabase (`co
 
 ### 8.2 Contests module
 - **Do:** Admin → **Contests**.
-- **Expect:** 71 rows, **1956–2026**; 2026 `finalized`, 1956–2025 `archived`, 2020 marked cancelled. The Publish bar shows "never published" / all years unpublished.
+- **Expect:** 71 rows, **1956–2026**; 2026 `finalized`, 1956–2025 `archived`, 2020 marked cancelled. The Publish bar shows "never published" / all years unpublished. The bar reads `unpublished_summary()`, which needs 076: an error there means 076 is missing (5.2). Admin → **Pages** lists the 18 site pages, all "Never edited".
 
 ### 8.3 Game reads (Έλεγχος παιχνιδιού)
 
@@ -523,6 +541,29 @@ After this step, Vercel's Instant Rollback (Hobby: previous deployment only) wou
   - Busy (409) → a run is in flight; wait. A row stuck `running` > 10 min is closed as error by the next `begin_publish`.
   - Publish failure does not affect the live site; fix and press Publish again.
 - **After this step:** local clones must `git pull` before their next push (the bot commits to `main`).
+
+### 9.2 CMS smoke test: one FAQ answer (Έλεγχος CMS: μία απάντηση στο FAQ)
+Proves the path Pages editor → draft → Publish → live page end to end, on a low-risk page. Do it right after 9.1 passes.
+- **Do:**
+  1. Admin → **Pages** → the **FAQ** row → **Edit**. Pick the first answer in the EN column. **Copy its exact current text** into a scratch note first: you need it to revert.
+  2. Append ` (CMS check)` to that EN answer. Wait for the preview pane to show it; the form shows no errors.
+  3. **Save draft**. Expect "Saved"; the list shows FAQ as **Draft (unpublished)**; the publish bar counts 1 changed page.
+  4. **Publish** (the publish bar). Wait (up to ~90 s).
+- **Run:**
+  ```sql
+  select id, status, commit_sha, files_changed, error from public.publish_runs order by id desc limit 1;
+  select doc_id, updated_at from public.cms_documents;
+  ```
+- **Expect:**
+  - Newest run `ok`, `files_changed` = 1; the GitHub commit changes only `content/pages/faq.json` (the one answer). `cms_documents` holds one row, `faq`. The Pages list shows FAQ as **Published**.
+  - Once the Vercel production build of that commit is Ready: `https://eurovision.games/en/faq` (hard reload) shows the answer ending in "(CMS check)", and `curl -s https://eurovision.games/en/faq | grep -c "(CMS check)"` prints 1 or more (the prerendered HTML has it, not only the client). `/el/faq` is unchanged.
+- **Revert (Επαναφορά):**
+  - **Before Publish** (step 4 not done): **Discard draft** in the editor. Nothing reached the site; the editor shows the published text again.
+  - **After Publish** (the normal case here): **Discard draft** then **Publish** does **not** revert the live page. Publish writes each draft over its page file, so the committed `content/pages/faq.json` now holds the edit; discarding only drops the draft row (the editor then loads that committed file, edit included), and the next Publish has nothing to change. Instead: Pages → FAQ → **Edit** → paste back the exact original answer from your note → **Save draft** → **Publish**. Expect a run `ok`, `files_changed` = 1, and `/en/faq` without "(CMS check)" after the Vercel build. Then **Discard draft** if you like: the committed file now holds the original, so the site and the editor agree with no draft left, and a further **Publish** is a no-op (`noop`).
+- **If it fails:**
+  - Save refused with a validation error on a field you did not touch → the existing FAQ content trips a rule. Undo your edit, **Discard draft** if one was saved, and note the message (the site is unaffected).
+  - Publish error starting "CMS validation failed" → the server refused the draft (same rules as the editor). Nothing was committed. **Discard draft** and Publish again to confirm a clean run.
+  - Run `ok` but the live page lacks the edit → check the Vercel build of that commit (as in 9.1), then hard-reload.
 
 ---
 
@@ -643,8 +684,8 @@ In every case below the **old admin's Parser and Results controls stay unused** 
 
 | Point reached | How to roll back | Data loss |
 |---|---|---|
-| Steps 3–6 (before merge) | Nothing to do for users: the old site still reads the old tables. Leave 070/071/073/074 in place. To undo the parser deploy, redeploy `eurovision-parse` with the 6.2 command from a checkout of `<OLD_MAIN_SHA>`. | none |
-| Steps 7–8 (merged, **no Publish yet**) | Vercel → Deployments → the previous Production deployment (commit `<OLD_MAIN_SHA>`) → **Instant Rollback**. Leave 070–074 in place; the old tables still exist. After a rollback Vercel stops auto-promoting new `main` builds until you **Undo Rollback** / Promote; that is fine, because `main` still holds the new code. Fix forward on the branch, then undo the rollback. | none (2026 edits are frozen) |
+| Steps 3–6 (before merge) | Nothing to do for users: the old site still reads the old tables. Leave 070/071/073/074/076 in place. To undo the parser deploy, redeploy `eurovision-parse` with the 6.2 command from a checkout of `<OLD_MAIN_SHA>`. | none |
+| Steps 7–8 (merged, **no Publish yet**) | Vercel → Deployments → the previous Production deployment (commit `<OLD_MAIN_SHA>`) → **Instant Rollback**. Leave 070–074 and 076 in place; the old tables still exist. After a rollback Vercel stops auto-promoting new `main` builds until you **Undo Rollback** / Promote; that is fine, because `main` still holds the new code. Fix forward on the branch, then undo the rollback. | none (2026 edits are frozen) |
 | Step 9 onwards (**after the first Publish**), 072 not applied | Instant Rollback no longer reaches the old site on Hobby: the previous deployment is the new frontend's pre-Publish build. Use **Git revert to the old tree** (below). Alternative, if that deployment's ⋯ menu in the Deployments list offers it: the deployment noted in 7.1 (commit `<OLD_MAIN_SHA>`) → **Promote to Production**. Do not Publish while rolled back; it would commit to `main` again. | none |
 | After 072 | 1. **Restore the old 2026 tables** (below). 2. Then **Git revert to the old tree**. | full restore loses all changes since 0.4 |
 
