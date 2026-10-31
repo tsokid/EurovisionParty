@@ -10,7 +10,9 @@ import { loadContent } from './loadContent';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const SITE = 'https://eurovision.games';
-const OUT = resolve(__dirname, '../../public/sitemap.xml');
+// The build writes public/sitemap.xml; a path argument writes there instead
+// (tests/scripts/sitemap.test.ts, so it never touches the tracked file).
+const OUT = process.argv[2] ? resolve(process.argv[2]) : resolve(__dirname, '../../public/sitemap.xml');
 const REPO_ROOT = resolve(__dirname, '../..');
 
 // Build date — fallback when no per-file git history is available
