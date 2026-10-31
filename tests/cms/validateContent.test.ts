@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { text, group } from '../../supabase/functions/_shared/cms/fields';
@@ -47,5 +47,20 @@ describe('validateContentDir', () => {
     expect(r2.errors).toContain('orphan.json: [doc] (root): Unknown doc type "orphan"');
     expect(lines).toMatch(/__vc-ok\.json: \[el\] title: /);
     expect(lines).toMatch(/broken\.json.*JSON/);
+  });
+});
+
+describe('npm run build', () => {
+  // Invalid content must fail the build before any bundling or prerendering.
+  it('runs validate-content right after typecheck:shared, before vite build', () => {
+    const pkg = JSON.parse(readFileSync(join(__dirname, '../../package.json'), 'utf8')) as { scripts: Record<string, string> };
+    const steps = pkg.scripts.build.split('&&').map((s) => s.trim());
+    const at = (step: string) => steps.findIndex((s) => s === step);
+    const typecheck = at('npm run typecheck:shared');
+    const validate = at('tsx scripts/cms/validate-content.ts');
+    expect(typecheck).toBeGreaterThanOrEqual(0);
+    expect(validate).toBe(typecheck + 1);
+    expect(validate).toBeLessThan(steps.findIndex((s) => s.startsWith('vite build')));
+    expect(steps.filter((s) => s.includes('validate-content'))).toHaveLength(1);
   });
 });
