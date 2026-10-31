@@ -274,6 +274,13 @@ function deps(input: SnapshotInput) {
     rpc: { beginPublish, publishInput: async () => input, endPublish },
     commitFiles,
     readCommittedPages,
+    media: {
+      download: vi.fn(async () => { throw new Error('no media in this test'); }),
+      markPublished: vi.fn(async () => {}),
+      listObjects: vi.fn(async () => []),
+      registeredPaths: vi.fn(async () => []),
+      removeObjects: vi.fn(async () => {}),
+    },
   };
   return { d, endPublish, commitFiles, readCommittedPages, beginPublish };
 }

@@ -44,10 +44,34 @@ export type SnapshotInput = {
    * buildSnapshotFiles.
    */
   cms_documents?: CmsDocumentRow[];
+  /**
+   * cms_media rows (077) referenced by those drafts, plus their 800 w
+   * variants. Optional like cms_documents; read by publishMedia (media.ts),
+   * never by buildSnapshotFiles.
+   */
+  media?: MediaRow[];
 };
 
 /** One publish_input().cms_documents row. */
 export type CmsDocumentRow = { doc_id: string; doc_type: string; data: { en: unknown; el: unknown } };
+
+/**
+ * One publish_input().media row. storage_path is the bare object name in the
+ * cms-media bucket (<uuid>.webp, <uuid>-800.webp, <uuid>.mp4, <uuid>.vtt);
+ * a variant has variant_of = its image's id.
+ */
+export type MediaRow = {
+  id: string;
+  kind: 'image' | 'video' | 'captions';
+  storage_path: string;
+  mime: string;
+  bytes: number;
+  sha256: string;
+  published_path: string | null;
+  variant_of: string | null;
+  width: number | null;
+  height: number | null;
+};
 
 /** A country page is indexable from this many non-cancelled participations (mirrors src/lib/seo/dynamicPages.ts, which Deno cannot import). */
 export const COUNTRY_INDEXABLE_MIN = 3;

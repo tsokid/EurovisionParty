@@ -10,16 +10,40 @@
  * contest facts, so it stays right when the next contest goes live. A dated
  * past fact (a policy date, a trivia answer) is a legitimate hit: review, then
  * ignore.
+ *
+ * Also fails on a draft media reference (cms-media/<uuid>) in any file under
+ * content/: published content must only hold /media/<sha12>.<ext> (publish
+ * rewrites the references and commits the files).
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { resolve, dirname, join } from 'node:path';
+import { resolve, dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationContext } from '../../supabase/functions/_shared/cms/validate';
 import { cityName } from '../../src/pages/contest/content/hubCopy';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-export const PAGES_DIR = resolve(ROOT, 'content/pages');
+export const CONTENT_DIR = resolve(ROOT, 'content');
+export const PAGES_DIR = resolve(CONTENT_DIR, 'pages');
+
+/** Every file under `dir`, recursively, as paths relative to it with / separators, sorted. */
+function filesUnder(dir: string): string[] {
+  return readdirSync(dir, { recursive: true, withFileTypes: true })
+    .filter((e) => e.isFile())
+    .map((e) => relative(dir, join(e.parentPath, e.name)).split(sep).join('/'))
+    .sort();
+}
+
+/**
+ * One error per file under `dir` (content/) holding a draft media reference
+ * (cms-media/, any case). A missing folder has none.
+ */
+export function draftMediaRefs(dir: string): string[] {
+  if (!existsSync(dir)) return [];
+  return filesUnder(dir)
+    .filter((f) => /cms-media\//i.test(readFileSync(join(dir, f), 'utf8')))
+    .map((f) => `${f}: draft media reference (cms-media/) in published content: publish it through the CMS`);
+}
 
 /** The live contest's year and host city names (en, el), from content/site.json. */
 export type LiveContestFacts = ValidationContext;
@@ -56,7 +80,8 @@ export function validateContentDir(
 }
 
 function main(): void {
-  const { count, errors, warnings } = validateContentDir(PAGES_DIR);
+  const { count, errors: docErrors, warnings } = validateContentDir(PAGES_DIR);
+  const errors = [...docErrors, ...draftMediaRefs(CONTENT_DIR)];
   for (const w of warnings) console.warn(`validate-content: warning: ${w}`);
   if (errors.length) {
     for (const e of errors) console.error(`validate-content: ${e}`);

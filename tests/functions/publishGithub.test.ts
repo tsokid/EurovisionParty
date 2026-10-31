@@ -1,6 +1,8 @@
 // @vitest-environment node
 // publish-content/github.ts: one commit via the Git Data API, fetch mocked.
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { commitFiles, gitBlobSha, readFiles } from '../../supabase/functions/publish-content/github';
 
 type Call = { method: string; url: string; body: unknown; headers: Record<string, string> };
@@ -42,7 +44,7 @@ async function baseRoutes(files: Record<string, string>): Promise<Route[]> {
   ];
 }
 
-const opts = (fetch: typeof globalThis.fetch, files: Record<string, string>) => ({
+const opts = (fetch: typeof globalThis.fetch, files: Record<string, string | Uint8Array>) => ({
   token: 'tkn',
   repo: REPO,
   branch: 'main',
@@ -262,5 +264,100 @@ describe('readFiles (I2: the committed content/pages the SEO check reads)', () =
     routes[2] = { ...routes[2], body: { sha: 'tree0', truncated: true, tree: [] } };
     const { fetch } = mockFetch(routes);
     await expect(readFiles({ token: 'tkn', repo: REPO, branch: 'main', fetch, match: () => true })).rejects.toThrow(/truncated/);
+  });
+});
+
+describe('binary files (CMS media)', () => {
+  const fixture = (name: string) => new Uint8Array(readFileSync(resolve(process.cwd(), 'tests/functions/fixtures', name)));
+  const png = fixture('pixel.png');
+  const webp = fixture('pixel.webp');
+  // `git hash-object tests/functions/fixtures/pixel.{png,webp}`: an oracle independent of gitBlobSha.
+  const PNG_BLOB = '08cd6f2bfd1b53ec5a4db72bed55f40907e8bdfa';
+  const WEBP_BLOB = '5e2d3e068991c8bf84b6952d9041b3891e73fe1e';
+
+  function commitRoutes(routes: Route[]): Route[] {
+    return [
+      ...routes,
+      { method: 'POST', path: `/repos/${REPO}/git/blobs`, status: 201, body: { sha: 'blobX' } },
+      { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
+      { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
+      { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, body: {} },
+    ];
+  }
+
+  it('gitBlobSha over bytes matches git hash-object for a known PNG and WebP', async () => {
+    expect(await gitBlobSha(png)).toBe(PNG_BLOB);
+    expect(await gitBlobSha(webp)).toBe(WEBP_BLOB);
+  });
+
+  it('sends each Uint8Array as a base64 blob whose bytes round-trip exactly, then references it by sha in the tree; text stays inline', async () => {
+    const { fetch, calls } = mockFetch(commitRoutes(await baseRoutes({})));
+    const out = await commitFiles(opts(fetch, {
+      'public/media/aaaaaaaaaaaa.webp': webp,
+      'public/media/bbbbbbbbbbbb.png': png,
+      'content/pages/x.json': 'x\n',
+    }));
+    expect(out).toEqual({
+      sha: 'commit1', changed: 3,
+      paths: ['content/pages/x.json', 'public/media/aaaaaaaaaaaa.webp', 'public/media/bbbbbbbbbbbb.png'],
+    });
+    const blobs = calls.filter((c) => c.method === 'POST' && c.url.endsWith('/git/blobs'));
+    expect(blobs).toHaveLength(2);
+    const sent = blobs.map((c) => c.body as { content: string; encoding: string });
+    for (const b of sent) expect(b.encoding).toBe('base64');
+    const decoded = sent.map((b) => new Uint8Array(Buffer.from(b.content, 'base64')));
+    expect(decoded[0]).toEqual(webp);
+    expect(decoded[1]).toEqual(png);
+    // The bytes GitHub receives hash to the same blob id git computes.
+    expect(await gitBlobSha(decoded[0])).toBe(WEBP_BLOB);
+    expect(await gitBlobSha(decoded[1])).toBe(PNG_BLOB);
+    const tree = calls.find((c) => c.method === 'POST' && c.url.endsWith('/git/trees'))!.body;
+    expect(tree).toEqual({
+      base_tree: 'tree0',
+      tree: [
+        { path: 'content/pages/x.json', mode: '100644', type: 'blob', content: 'x\n' },
+        { path: 'public/media/aaaaaaaaaaaa.webp', mode: '100644', type: 'blob', sha: 'blobX' },
+        { path: 'public/media/bbbbbbbbbbbb.png', mode: '100644', type: 'blob', sha: 'blobX' },
+      ],
+    });
+  });
+
+  it('base64-encodes a large file in chunks, byte for byte', async () => {
+    const big = new Uint8Array(3 * 1024 * 1024 + 7);
+    for (let i = 0; i < big.length; i++) big[i] = (i * 31 + (i >> 9)) & 0xff;
+    const { fetch, calls } = mockFetch(commitRoutes(await baseRoutes({})));
+    await commitFiles(opts(fetch, { 'public/media/cccccccccccc.mp4': big }));
+    const blob = calls.find((c) => c.url.endsWith('/git/blobs'))!.body as { content: string };
+    expect(blob.content).toBe(Buffer.from(big).toString('base64'));
+  });
+
+  it('skips a binary file whose blob sha is already in the tree (no blob upload, no commit)', async () => {
+    const routes = await baseRoutes({});
+    (routes[2].body as { tree: unknown[] }).tree.push({ path: 'public/media/aaaaaaaaaaaa.webp', mode: '100644', type: 'blob', sha: WEBP_BLOB });
+    const { fetch, calls } = mockFetch(routes);
+    expect(await commitFiles(opts(fetch, { 'public/media/aaaaaaaaaaaa.webp': webp }))).toEqual({ sha: null, changed: 0, paths: [] });
+    expect(calls.every((c) => c.method === 'GET')).toBe(true);
+  });
+
+  describe('maxNewBinaryBytes (the publish size guard)', () => {
+    it('refuses before writing anything when the new binary files total more than the limit', async () => {
+      const { fetch, calls } = mockFetch(commitRoutes(await baseRoutes({})));
+      await expect(commitFiles({
+        ...opts(fetch, { 'public/media/a.mp4': new Uint8Array(60), 'public/media/b.mp4': new Uint8Array(41) }),
+        maxNewBinaryBytes: 100,
+      })).rejects.toThrow('Publish would add 101 bytes of new media (max 100); publish fewer media at a time');
+      expect(calls.every((c) => c.method === 'GET')).toBe(true);
+    });
+
+    it('counts only binaries new to the tree: files already present (same blob) do not count; text never counts', async () => {
+      const routes = await baseRoutes({});
+      (routes[2].body as { tree: unknown[] }).tree.push({ path: 'public/media/aaaaaaaaaaaa.webp', mode: '100644', type: 'blob', sha: WEBP_BLOB });
+      const { fetch } = mockFetch(commitRoutes(routes));
+      const out = await commitFiles({
+        ...opts(fetch, { 'public/media/aaaaaaaaaaaa.webp': webp, 'public/media/new.mp4': new Uint8Array(100), 'a.json': 'x'.repeat(500) }),
+        maxNewBinaryBytes: 100,
+      });
+      expect(out.paths).toEqual(['a.json', 'public/media/new.mp4']);
+    });
   });
 });

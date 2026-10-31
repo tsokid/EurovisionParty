@@ -131,6 +131,17 @@ describe('image widget', () => {
     expect((form.value().el.hero as { media: string }).media).toBe('');
   });
 
+  it('does not draw the width and height publish writes in (derived): a published doc edits like a draft', async () => {
+    const published = { media: '/media/0123456789ab.webp', alt: 'Stage', width: 1600, height: 900 };
+    const form = setup(schema, { en: { hero: published }, el: { hero: { ...published, alt: 'Σκηνή' } } });
+    expect(screen.getByLabelText('Hero › Alt text (EN)')).toHaveValue('Stage');
+    expect(screen.queryByText('Width')).toBeNull();
+    expect(screen.queryByText('Height')).toBeNull();
+    expect(screen.queryByRole('button', { name: /Add Hero › (Width|Height)/ })).toBeNull();
+    fireEvent.change(screen.getByLabelText('Hero › Alt text (EN)'), { target: { value: 'Arena' } });
+    expect(form.value().en.hero).toEqual({ ...published, alt: 'Arena' });
+  });
+
   it('a reference missing from the library says so', async () => {
     setup(schema, doc('cms-media/ffffffff-5a4d-4c2e-9f10-1234567890ab'));
     expect(await screen.findByText(/not in the media library/)).toBeInTheDocument();

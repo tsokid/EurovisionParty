@@ -4,7 +4,10 @@
 // which Deno and Node both provide. Imported by the publish-content edge
 // function and by vitest.
 //
-// Files are only added or updated, never deleted.
+// Files are only added or updated, never deleted. A text file goes inline
+// in the tree; a binary file (Uint8Array, the CMS media) is uploaded first as
+// a base64 blob and referenced by its sha. Either way an unchanged file (same
+// git blob sha as the parent tree's) is skipped.
 
 type Fetch = typeof fetch;
 
@@ -21,8 +24,8 @@ type GitHubOpts = {
 };
 
 export type CommitFilesOpts = GitHubOpts & {
-  /** Repo path → UTF-8 file text. */
-  files: Record<string, string>;
+  /** Repo path → UTF-8 file text, or the bytes of a binary file. */
+  files: Record<string, string | Uint8Array>;
   /** Commit message, or a function of the changed paths (sorted). */
   message: string | ((changedPaths: string[]) => string);
   /**
@@ -32,6 +35,12 @@ export type CommitFilesOpts = GitHubOpts & {
    * cannot be reverted (the ref update is fast-forward only).
    */
   transforms?: FileTransforms;
+  /**
+   * Refuse (before writing anything) when the binary files that are new or
+   * changed against the parent tree total more than this many bytes. Files
+   * already in the tree with the same content do not count; text never does.
+   */
+  maxNewBinaryBytes?: number;
 };
 
 export type FileTransforms = Record<string, (current: string | null) => string>;
@@ -44,9 +53,9 @@ export type CommitResult = {
   paths: string[];
 };
 
-/** git's blob id: sha1("blob <byte length>\0" + content), over UTF-8 bytes. */
-export async function gitBlobSha(content: string): Promise<string> {
-  const body = new TextEncoder().encode(content);
+/** git's blob id: sha1("blob <byte length>\0" + content), over the UTF-8 bytes of a string. */
+export async function gitBlobSha(content: string | Uint8Array): Promise<string> {
+  const body = typeof content === 'string' ? new TextEncoder().encode(content) : content;
   const header = new TextEncoder().encode(`blob ${body.byteLength}\0`);
   const bytes = new Uint8Array(header.byteLength + body.byteLength);
   bytes.set(header, 0);
@@ -132,7 +141,7 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
     files[path] = transform(prev ? await readBlob(call, repo, prev.sha) : null);
   }
 
-  const changed: Array<{ path: string; content: string; mode: string }> = [];
+  const changed: Array<{ path: string; content: string | Uint8Array; mode: string }> = [];
   for (const path of Object.keys(files).sort()) {
     const content = files[path];
     const prev = existing.get(path);
@@ -141,9 +150,26 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   }
   if (changed.length === 0) return { sha: null, changed: 0, paths: [] };
 
-  // File text goes inline in the tree entries: GitHub creates the blobs, so
-  // the whole commit is one tree request however many files changed.
-  const entries = changed.map((f) => ({ path: f.path, mode: f.mode, type: 'blob', content: f.content }));
+  if (opts.maxNewBinaryBytes !== undefined) {
+    const added = changed.reduce((n, f) => n + (typeof f.content === 'string' ? 0 : f.content.byteLength), 0);
+    if (added > opts.maxNewBinaryBytes) {
+      throw new Error(`Publish would add ${added} bytes of new media (max ${opts.maxNewBinaryBytes}); publish fewer media at a time`);
+    }
+  }
+
+  // File text goes inline in the tree entries (GitHub creates those blobs),
+  // so text alone is one tree request however many files changed. Binary
+  // content cannot go inline: each binary file is uploaded as a base64 blob
+  // first and its tree entry points at the blob's sha.
+  const entries: Array<{ path: string; mode: string; type: 'blob'; content?: string; sha?: string }> = [];
+  for (const f of changed) {
+    if (typeof f.content === 'string') {
+      entries.push({ path: f.path, mode: f.mode, type: 'blob', content: f.content });
+    } else {
+      const blob = await call<{ sha: string }>('POST', `${repo}/git/blobs`, { content: toBase64(f.content), encoding: 'base64' });
+      entries.push({ path: f.path, mode: f.mode, type: 'blob', sha: blob.sha });
+    }
+  }
   const newTree = await call<{ sha: string }>('POST', `${repo}/git/trees`, { base_tree: baseTree, tree: entries });
   // An identical tree means there is nothing to commit.
   if (newTree.sha === baseTree) return { sha: null, changed: 0, paths: [] };
@@ -165,4 +191,23 @@ async function readBlob(call: Call, repo: string, sha: string): Promise<string> 
   if (res.encoding !== 'base64') throw new Error(`GitHub blob ${sha}: unexpected encoding ${res.encoding}`);
   const bin = atob(res.content.replace(/\s/g, ''));
   return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
+}
+
+/** A multiple of 3 bytes, so each chunk encodes to base64 without padding and the pieces concatenate. */
+const BASE64_CHUNK = 3 * 8192;
+
+/**
+ * Base64 of `bytes`, encoded chunk by chunk: no binary string of the whole
+ * file is ever built (a 20 MB video would otherwise need a 20 M-character
+ * intermediate on top of the result), and no spread or apply over it.
+ */
+export function toBase64(bytes: Uint8Array): string {
+  const parts: string[] = [];
+  for (let i = 0; i < bytes.length; i += BASE64_CHUNK) {
+    const chunk = bytes.subarray(i, i + BASE64_CHUNK);
+    let bin = '';
+    for (let j = 0; j < chunk.length; j++) bin += String.fromCharCode(chunk[j]);
+    parts.push(btoa(bin));
+  }
+  return parts.join('');
 }

@@ -28,7 +28,9 @@ export type FieldKind =
   // image() and video() are groups (zod objects) that the admin draws as media pickers.
   | 'image' | 'video'
   // blocks() is a list whose items are a union of groups told apart by `discriminator`.
-  | 'blocks' | 'union';
+  | 'blocks' | 'union'
+  // A pixel size inside image() / video(), written by publish from the media rows.
+  | 'dimension';
 
 /** What a mediaRef() points at; its published extension is webp, mp4 or vtt. */
 export type MediaKind = 'image' | 'video' | 'captions';
@@ -77,6 +79,11 @@ export type FieldMeta = {
    * metaDescription()). Unique per locale across the site pages (seo.ts).
    */
   seo?: 'title' | 'description';
+  /**
+   * Computed, not edited: publish writes it (an image's or video poster's
+   * width and height, from the media rows). The admin form does not draw it.
+   */
+  derived?: boolean;
 };
 
 export type StringFieldOptions = {
@@ -284,21 +291,44 @@ export function choice<const V extends readonly [string, ...string[]]>(values: V
 export const mediaRef = (kind: MediaKind, opts: Pick<StringFieldOptions, 'label' | 'help' | 'shared'> = {}) =>
   stringField('mediaRef', opts, kind);
 
-/** An image with its alt text: the file is shared by both locales, the alt text is translated. */
+/**
+ * A pixel size (positive integer) that publish writes from the media row.
+ * Derived and locale-shared; optional in image() and video() so a draft
+ * need not carry it, while a published document (which does) still
+ * validates when it is loaded back as the editor's base.
+ */
+function dimension(label: string) {
+  const schema = z.number().int().positive();
+  schema.register(cmsFields, { kind: 'dimension', label, shared: true, derived: true });
+  return optional(schema);
+}
+
+/**
+ * An image with its alt text: the file is shared by both locales, the alt
+ * text is translated. width and height are written by publish (from the
+ * media row); drafts may omit them.
+ */
 export function image(opts: GroupFieldOptions = {}) {
   return groupOfKind('image', {
     media: mediaRef('image', { label: 'Image' }),
     alt: text({ label: 'Alt text', help: 'Describes the image for people who cannot see it' }),
+    width: dimension('Width'),
+    height: dimension('Height'),
   }, opts);
 }
 
-/** A video with its poster image, optional captions file and an autoplay switch. */
+/**
+ * A video with its poster image, optional captions file and an autoplay
+ * switch. width and height are the poster's, written by publish.
+ */
 export function video(opts: GroupFieldOptions = {}) {
   return groupOfKind('video', {
     media: mediaRef('video', { label: 'Video' }),
     poster: mediaRef('image', { label: 'Poster image' }),
     captions: optional(mediaRef('captions', { label: 'Captions' })),
     autoplay: flag({ label: 'Autoplay' }),
+    width: dimension('Width'),
+    height: dimension('Height'),
   }, opts);
 }
 

@@ -2,6 +2,8 @@
 // named by its label or humanised key. The root group is drawn without one.
 // image() and video() are groups too: their media fields draw as pickers
 // (MediaRefField); a video with no poster is reminded that one is required.
+// Derived fields (an image's width and height, written by publish) are not
+// drawn: they are kept as they are and recomputed at publish.
 import { useIssues } from '../context';
 import { childLabel, joinName, joinPath, schemaInfo } from '../formModel';
 import { Field, type FieldProps } from './Field';
@@ -25,7 +27,7 @@ export function GroupField({ schema, segments, path, name, label, en, el, hasEn,
         <p className="text-xs text-amber-300">{POSTER_REQUIRED_TEXT}</p>
       )}
       <IssueList issues={issues} withLocale />
-      {children.map(({ key, schema: child }) => {
+      {children.filter(({ schema: child }) => !schemaInfo(child).meta.derived).map(({ key, schema: child }) => {
         const l = childLabel(key, child);
         return (
           <Field

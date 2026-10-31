@@ -56,7 +56,28 @@ describe('image()', () => {
     expect(ok(f, { ...img(), extra: 1 })).toBe(false);
     const metas: Record<string, unknown> = {};
     walkSchema(f, (n) => { metas[n.path] = [n.meta.kind, !!n.meta.shared]; });
-    expect(metas).toEqual({ '': ['image', false], media: ['mediaRef', true], alt: ['text', false] });
+    expect(metas).toEqual({
+      '': ['image', false], media: ['mediaRef', true], alt: ['text', false],
+      width: ['dimension', true], height: ['dimension', true],
+    });
+  });
+
+  it('accepts the width and height publish writes in (positive integers, optional), so a published doc validates as an editor base', () => {
+    const f = image();
+    expect(ok(f, { ...img(`${PUBLISHED}.webp`), width: 1600, height: 900 })).toBe(true);
+    expect(ok(f, { ...img(), width: 1600 })).toBe(true);
+    for (const bad of [0, -1, 1.5, '1600', null]) {
+      expect(ok(f, { ...img(), width: bad }), String(bad)).toBe(false);
+      expect(ok(f, { ...img(), height: bad }), String(bad)).toBe(false);
+    }
+  });
+
+  it('marks width and height as derived (set by publish, not edited) and locale-shared', () => {
+    const metas: Record<string, unknown> = {};
+    // The optional() wrapper is visited first, then its inner field at the same path: keep the wrapper.
+    walkSchema(image(), (n) => { metas[n.path] ??= n.meta; });
+    expect(metas.width).toMatchObject({ kind: 'dimension', derived: true, shared: true, optional: true });
+    expect(metas.height).toMatchObject({ kind: 'dimension', derived: true, shared: true, optional: true });
   });
 
   it('empties to blank strings', () => {
@@ -73,6 +94,18 @@ describe('video()', () => {
     expect(ok(f, { ...v, captions: `${PUBLISHED}.vtt` })).toBe(true);
     expect(ok(f, { ...v, captions: `${PUBLISHED}.webp` })).toBe(false);
     expect(ok(f, { media: v.media, autoplay: false })).toBe(false);
+  });
+
+  it('refuses an empty poster (the poster is required, also at publish)', () => {
+    const r = video().safeParse({ ...v, poster: '' });
+    expect(r.success).toBe(false);
+    if (!r.success) expect(r.error.issues.map((i) => i.path)).toEqual([['poster']]);
+    expect(ok(video(), { ...v, poster: '   ' })).toBe(false);
+  });
+
+  it('accepts the poster dimensions publish writes in', () => {
+    expect(ok(video(), { ...v, width: 1280, height: 720 })).toBe(true);
+    expect(ok(video(), { ...v, width: 0, height: 720 })).toBe(false);
   });
 
   it('empties without captions', () => {

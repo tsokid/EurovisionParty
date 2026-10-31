@@ -4,9 +4,13 @@
 // writes each unpublished CMS draft (cms_documents) to
 // content/pages/{doc_id}.json (skipped with body { cms: false }: the contest
 // lifecycle auto-publish ships contests only),
+// commits the media those drafts reference (Storage bucket cms-media) to
+// public/media/<sha12>.<ext> with the references rewritten to /media/...,
 // regenerates the archived-year redirects in vercel.json, and commits it all
 // to GITHUB_BRANCH of GITHUB_REPO as one commit (Git Data API). Files are
-// added or updated, never deleted.
+// added or updated, never deleted. After a successful CMS publish the media
+// rows are marked published and cms-media objects with no cms_media row,
+// older than a day, are deleted from Storage.
 //
 // Response: { status: 'ok' | 'noop' | 'error' | 'busy', sha, files_changed,
 // run_id, error?, warnings? }. warnings: CMS validation advice per doc
@@ -65,6 +69,33 @@ async function isSuperAdmin(authorization: string): Promise<boolean> {
   return !!data;
 }
 
+const BUCKET = "cms-media";
+/** Page size of the Storage listing and of the cms_media read. */
+const PAGE = 1000;
+
+/** Every file object of the cms-media bucket (its root: uploads are not in folders). */
+async function listBucket(service: ReturnType<typeof serviceClient>) {
+  const out: Array<{ name: string; created_at: string | null }> = [];
+  for (let offset = 0; ; offset += PAGE) {
+    const { data, error } = await service.storage.from(BUCKET).list("", { limit: PAGE, offset, sortBy: { column: "name", order: "asc" } });
+    if (error) throw new Error(`storage list: ${error.message}`);
+    // A folder entry has no id.
+    for (const o of data ?? []) if (o.id) out.push({ name: o.name, created_at: o.created_at ?? null });
+    if (!data || data.length < PAGE) return out;
+  }
+}
+
+/** Every cms_media.storage_path (service role; RLS has no policies). */
+async function registeredPaths(service: ReturnType<typeof serviceClient>) {
+  const out: string[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await service.from("cms_media").select("storage_path").order("storage_path").range(from, from + PAGE - 1);
+    if (error) throw new Error(`cms_media: ${error.message}`);
+    for (const r of data ?? []) out.push(r.storage_path as string);
+    if (!data || data.length < PAGE) return out;
+  }
+}
+
 const HTTP_STATUS: Record<PublishResult["status"], number> = { ok: 200, noop: 200, busy: 409, error: 500 };
 
 Deno.serve(async (req) => {
@@ -102,7 +133,24 @@ Deno.serve(async (req) => {
       },
       readCommittedPages: async () =>
         pagesFromFiles(await readFiles({ ...github, match: (path) => path.startsWith("content/pages/") })),
-      commitFiles: (files, message, transforms) => commitFiles({ ...github, files, message, transforms }),
+      commitFiles: (files, message, transforms, limits) => commitFiles({ ...github, files, message, transforms, ...limits }),
+      media: {
+        async download(storagePath) {
+          const { data, error } = await service.storage.from(BUCKET).download(storagePath);
+          if (error || !data) throw new Error(error?.message ?? "no data");
+          return new Uint8Array(await data.arrayBuffer());
+        },
+        async markPublished(id, path) {
+          const { error } = await service.rpc("media_mark_published", { p_id: id, p_path: path });
+          if (error) throw new Error(error.message);
+        },
+        listObjects: () => listBucket(service),
+        registeredPaths: () => registeredPaths(service),
+        async removeObjects(names) {
+          const { error } = await service.storage.from(BUCKET).remove(names);
+          if (error) throw new Error(`storage remove: ${error.message}`);
+        },
+      },
     }, options);
     return jsonResponse(result, HTTP_STATUS[result.status]);
   } catch (e) {

@@ -41,6 +41,13 @@ describe('vercel.json', () => {
     }
   })
 
+  it('caches /media/ (content-addressed CMS media) as immutable for a year', () => {
+    const headers = cfg.headers as Array<{ source: string; headers: Array<{ key: string; value: string }> }>
+    const media = headers.find((h) => h.source === '/media/(.*)')
+    expect(media, 'headers entry for /media/(.*)').toBeDefined()
+    expect(media!.headers).toEqual([{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }])
+  })
+
   it('keeps /content/ JSON out of search indexes (M5)', () => {
     const headers = cfg.headers as Array<{ source: string; headers: Array<{ key: string; value: string }> }>
     const content = headers.find((h) => h.source === '/content/(.*)')
@@ -63,6 +70,14 @@ describe('vercel.json', () => {
     // so useContent sees `missing` rather than HTML.
     for (const p of ['/content/contests/1066.json', '/content/countries/index.json', '/content/site.json']) {
       expect(re.test(p), p).toBe(false)
+    }
+    // CMS media (content-addressed files in public/media) 404 when missing
+    // instead of serving the SPA shell as an image or video.
+    for (const p of ['/media/0123456789ab.webp', '/media/0123456789ab-800.webp', '/media/0123456789ab.mp4']) {
+      expect(re.test(p), p).toBe(false)
+    }
+    for (const p of ['/mediakit', '/media']) {
+      expect(re.test(p), p).toBe(true)
     }
     // Exact /en and /el match the rewrite, which is fine: Vercel checks the
     // filesystem before rewrites, so the prerendered en.html / el.html wins.

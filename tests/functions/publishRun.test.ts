@@ -50,6 +50,13 @@ function deps(over: Partial<{
     },
     commitFiles,
     readCommittedPages: vi.fn(async () => ({})),
+    media: {
+      download: vi.fn(async () => { throw new Error('no media in this test'); }),
+      markPublished: vi.fn(async () => {}),
+      listObjects: vi.fn(async () => []),
+      registeredPaths: vi.fn(async () => []),
+      removeObjects: vi.fn(async () => {}),
+    },
   };
   return { d, log, endPublish, commitFiles };
 }

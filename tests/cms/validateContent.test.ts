@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { text, group, list } from '../../supabase/functions/_shared/cms/fields';
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
-import { liveContestFacts, validateContentDir } from '../../scripts/cms/validate-content';
+import { CONTENT_DIR, draftMediaRefs, liveContestFacts, validateContentDir } from '../../scripts/cms/validate-content';
 import { cityName } from '../../src/pages/contest/content/hubCopy';
 
 describe('validateContentDir', () => {
@@ -117,6 +117,41 @@ describe('hardcoded live-contest year/city (warning, never an error)', () => {
     delete CMS_DOC_TYPES['__vc-soft'];
     expect(r.errors).toEqual([]);
     expect(r.warnings).toEqual(['__vc-soft.json: [en] title: Longer than recommended: 8 characters, recommended max 5']);
+  });
+});
+
+describe('draft media references (cms-media/) in published content', () => {
+  let dir: string;
+  beforeAll(() => {
+    dir = mkdtempSync(join(tmpdir(), 'cms-media-refs-'));
+  });
+  afterAll(() => {
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it('finds a cms-media/ reference in any file at any depth under content/, case-insensitively', () => {
+    mkdirSync(join(dir, 'pages'));
+    mkdirSync(join(dir, 'contests'));
+    writeFileSync(join(dir, 'pages', 'about.json'), JSON.stringify({ en: { hero: { media: 'cms-media/0b7c1f3e-5a4d-4c2e-9f10-1234567890ab' } } }));
+    writeFileSync(join(dir, 'contests', '2027.json'), '{"x": "CMS-MEDIA/abc"}');
+    writeFileSync(join(dir, 'site.json'), JSON.stringify({ img: '/media/0123456789ab.webp' }));
+    expect(draftMediaRefs(dir)).toEqual([
+      'contests/2027.json: draft media reference (cms-media/) in published content: publish it through the CMS',
+      'pages/about.json: draft media reference (cms-media/) in published content: publish it through the CMS',
+    ]);
+  });
+
+  it('a published /media/ reference and a missing folder pass', () => {
+    expect(draftMediaRefs(join(dir, 'nope'))).toEqual([]);
+    const ok = join(dir, 'ok');
+    mkdirSync(ok);
+    writeFileSync(join(ok, 'a.json'), JSON.stringify({ img: '/media/0123456789ab.webp' }));
+    expect(draftMediaRefs(ok)).toEqual([]);
+  });
+
+  it('the committed content/ holds none', () => {
+    expect(CONTENT_DIR).toBe(join(__dirname, '../../content'));
+    expect(draftMediaRefs(CONTENT_DIR)).toEqual([]);
   });
 });
 
