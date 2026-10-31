@@ -112,7 +112,97 @@ describe('content/pages (Task 4 group)', () => {
     expect(templated).toEqual(['rules']);
     expect(templatedPaths(CMS_DOC_TYPES.rules.schema)).toEqual(['meta.title', 'schema.articleHeadline', 'related.items.*.blurb']);
   });
+});
 
+describe('content/pages (Task 5 group: guides)', () => {
+  const TASK5 = ['how-to-play', 'eurovision-night', 'eurovision-games', 'eurovision-party', 'eurovision-trivia', 'eurovision-duels'];
+
+  it.each(TASK5)('%s.json exists, has a mapping, and validates', (docId) => {
+    expect(COPY_MAPPINGS.some((m) => m.docId === docId)).toBe(true);
+    expect(Object.keys(CMS_DOC_TYPES)).toContain(docTypeFor(docId));
+    const r = validateDocument(docTypeFor(docId), readDoc(docId));
+    expect(r.ok ? [] : r.errors).toEqual([]);
+  });
+
+  it('templates exactly these fields', () => {
+    const paths = Object.fromEntries(TASK5.map((id) => [id, templatedPaths(CMS_DOC_TYPES[id].schema)]));
+    expect(paths).toEqual({
+      'how-to-play': [],
+      'eurovision-night': [
+        'meta.title', 'meta.keywords.*', 'sections.what.bodyBefore', 'sections.what.bodyDate', 'sections.what.bodyAfter',
+        'sections.playbook.steps.*.rest', 'faq.*.q', 'faq.*.a', 'related.items.*.blurb',
+      ],
+      'eurovision-games': ['meta.title', 'meta.headline', 'sections.predictions.p1'],
+      'eurovision-party': ['meta.title', 'meta.description', 'meta.headline', 'meta.articleDescription', 'meta.eventName', 'meta.eventDescription'],
+      'eurovision-trivia': [],
+      'eurovision-duels': [],
+    });
+  });
+});
+
+// While a copy module still exists (Tasks 5-6 before their switch), the
+// committed JSON must be exactly what extraction produces from it, and every
+// template must round-trip for each sample.
+describe('extraction matches the committed JSON while the copy module exists', () => {
+  const live = COPY_MAPPINGS.filter((m) => existsSync(resolve(ROOT, m.module)));
+  it.each(live.map((m) => [m.docId, m] as const))('%s', async (_id, m) => {
+    const { json } = await extractMapping(m);
+    expect(json).toBe(readFileSync(resolve(ROOT, `content/pages/${m.docId}.json`), 'utf8'));
+  });
+  it('lists every mapping whose module was deleted as migrated', () => {
+    for (const m of COPY_MAPPINGS.filter((x) => !live.includes(x))) {
+      expect(existsSync(resolve(ROOT, `content/pages/${m.docId}.json`))).toBe(true);
+    }
+  });
+});
+
+describe('content/pages (Task 6 group: data-mixed pages)', () => {
+  const TASK6 = ['home', 'not-found', 'eurovision-predictions', 'winners'];
+
+  it.each(TASK6)('%s.json exists, has a mapping, and validates', (docId) => {
+    expect(COPY_MAPPINGS.some((m) => m.docId === docId)).toBe(true);
+    expect(Object.keys(CMS_DOC_TYPES)).toContain(docTypeFor(docId));
+    const r = validateDocument(docTypeFor(docId), readDoc(docId));
+    expect(r.ok ? [] : r.errors).toEqual([]);
+  });
+
+  it('templates exactly these fields', () => {
+    const paths = Object.fromEntries(TASK6.map((id) => [id, templatedPaths(CMS_DOC_TYPES[id].schema)]));
+    expect(paths).toEqual({
+      home: ['meta.title', 'meta.description', 'seo.leadRest'],
+      'not-found': [],
+      'eurovision-predictions': [
+        'meta.description', 'meta.schemaDescription', 'meta.keywords.*', 'hero.lede', 'hero.ledeHost',
+        'sections.lineup.title', 'sections.lineup.intro', 'sections.lineup.resultsTitle', 'sections.lineup.resultsIntro',
+        'sections.lineup.empty', 'sections.lineup.hubLink',
+      ],
+      winners: [
+        'meta.description', 'meta.keywords.*', 'sections.recent.title', 'sections.recent.intro', 'sections.recent.introCancelled',
+        'sections.all.title',
+      ],
+    });
+  });
+
+  it('winnersText falls back to the hero chip and an empty intro while the index is not loaded', () => {
+    const doc = readDoc('winners') as Record<'en' | 'el', WinnersContent>; // not a pin: compares the doc with itself
+    const none = { last: null, from: null, to: null, first: null, cancelled: null };
+    const t = winnersText(doc.en, none);
+    expect(t.sections.recent.title).toBe(doc.en.hero.chip);
+    expect(t.sections.recent.intro).toBe('');
+    expect('introCancelled' in t.sections.recent).toBe(false);
+  });
+});
+
+// 3a migration proof (one-time gate, kept runnable on demand): the committed
+// content/pages docs render exactly as the former copy modules did. These pin
+// the copy as it was at the migration, so the first owner edit would fail them:
+// they only run with CMS_MIGRATION_PROOF=1 (tests/cms/migrationProof.test.ts
+// keeps every pin in this block).
+describe.skipIf(!process.env.CMS_MIGRATION_PROOF)('3a migration proof: content/pages render as the former copy modules', () => {
+  const sha = (s: string) => createHash('sha256').update(s).digest('hex');
+  const L = ['en', 'el'] as const;
+
+  // Task 4 group
   // Pinned from the former rulesCopy.copy(contestTexts) with year 2031, before
   // the copy module was deleted. Byte-identical after interpolation.
   it('rules: every templated field renders exactly as the former template function', () => {
@@ -146,34 +236,9 @@ describe('content/pages (Task 4 group)', () => {
       ],
     ]);
   });
-});
 
-describe('content/pages (Task 5 group: guides)', () => {
+  // Task 5 group: guides
   const TASK5 = ['how-to-play', 'eurovision-night', 'eurovision-games', 'eurovision-party', 'eurovision-trivia', 'eurovision-duels'];
-  const sha = (s: string) => createHash('sha256').update(s).digest('hex');
-
-  it.each(TASK5)('%s.json exists, has a mapping, and validates', (docId) => {
-    expect(COPY_MAPPINGS.some((m) => m.docId === docId)).toBe(true);
-    expect(Object.keys(CMS_DOC_TYPES)).toContain(docTypeFor(docId));
-    const r = validateDocument(docTypeFor(docId), readDoc(docId));
-    expect(r.ok ? [] : r.errors).toEqual([]);
-  });
-
-  it('templates exactly these fields', () => {
-    const paths = Object.fromEntries(TASK5.map((id) => [id, templatedPaths(CMS_DOC_TYPES[id].schema)]));
-    expect(paths).toEqual({
-      'how-to-play': [],
-      'eurovision-night': [
-        'meta.title', 'meta.keywords.*', 'sections.what.bodyBefore', 'sections.what.bodyDate', 'sections.what.bodyAfter',
-        'sections.playbook.steps.*.rest', 'faq.*.q', 'faq.*.a', 'related.items.*.blurb',
-      ],
-      'eurovision-games': ['meta.title', 'meta.headline', 'sections.predictions.p1'],
-      'eurovision-party': ['meta.title', 'meta.description', 'meta.headline', 'meta.articleDescription', 'meta.eventName', 'meta.eventDescription'],
-      'eurovision-trivia': [],
-      'eurovision-duels': [],
-    });
-  });
-
   // Hashes of stableJson(former copy module rendered with PIN), taken before the
   // modules were deleted. Covers every field (templated or not) in both locales.
   const PIN = { year: 2033, city: 'Ζ{x}', cityFrom: 'from $& Ζ', finalDay: 'Day {{ 1', finalDayShort: 'Short }}' };
@@ -212,53 +277,8 @@ describe('content/pages (Task 5 group: guides)', () => {
       'Διοργάνωσε βραδιά Eurovision για τον μεγάλο τελικό του 2033, Short }}. Φαγητό ανά χώρα, κοστούμια και μια δωρεάν εφαρμογή βαθμολογίας για προβλέψεις, quiz και μονομαχίες.',
     );
   });
-});
 
-// While a copy module still exists (Tasks 5-6 before their switch), the
-// committed JSON must be exactly what extraction produces from it, and every
-// template must round-trip for each sample.
-describe('extraction matches the committed JSON while the copy module exists', () => {
-  const live = COPY_MAPPINGS.filter((m) => existsSync(resolve(ROOT, m.module)));
-  it.each(live.map((m) => [m.docId, m] as const))('%s', async (_id, m) => {
-    const { json } = await extractMapping(m);
-    expect(json).toBe(readFileSync(resolve(ROOT, `content/pages/${m.docId}.json`), 'utf8'));
-  });
-  it('lists every mapping whose module was deleted as migrated', () => {
-    for (const m of COPY_MAPPINGS.filter((x) => !live.includes(x))) {
-      expect(existsSync(resolve(ROOT, `content/pages/${m.docId}.json`))).toBe(true);
-    }
-  });
-});
-
-describe('content/pages (Task 6 group: data-mixed pages)', () => {
-  const TASK6 = ['home', 'not-found', 'eurovision-predictions', 'winners'];
-  const sha = (s: string) => createHash('sha256').update(s).digest('hex');
-  const L = ['en', 'el'] as const;
-
-  it.each(TASK6)('%s.json exists, has a mapping, and validates', (docId) => {
-    expect(COPY_MAPPINGS.some((m) => m.docId === docId)).toBe(true);
-    expect(Object.keys(CMS_DOC_TYPES)).toContain(docTypeFor(docId));
-    const r = validateDocument(docTypeFor(docId), readDoc(docId));
-    expect(r.ok ? [] : r.errors).toEqual([]);
-  });
-
-  it('templates exactly these fields', () => {
-    const paths = Object.fromEntries(TASK6.map((id) => [id, templatedPaths(CMS_DOC_TYPES[id].schema)]));
-    expect(paths).toEqual({
-      home: ['meta.title', 'meta.description', 'seo.leadRest'],
-      'not-found': [],
-      'eurovision-predictions': [
-        'meta.description', 'meta.schemaDescription', 'meta.keywords.*', 'hero.lede', 'hero.ledeHost',
-        'sections.lineup.title', 'sections.lineup.intro', 'sections.lineup.resultsTitle', 'sections.lineup.resultsIntro',
-        'sections.lineup.empty', 'sections.lineup.hubLink',
-      ],
-      winners: [
-        'meta.description', 'meta.keywords.*', 'sections.recent.title', 'sections.recent.intro', 'sections.recent.introCancelled',
-        'sections.all.title',
-      ],
-    });
-  });
-
+  // Task 6 group: data-mixed pages
   // The FORMER hashes below were taken from the former copy modules (and, for
   // home, the former i18n homeSeo keys) before they were deleted, rendered with
   // the same values: stableJson of everything each module produced, in both
@@ -291,15 +311,6 @@ describe('content/pages (Task 6 group: data-mixed pages)', () => {
     expect(rendered[3].en.hero.lede.startsWith('Eurovision 2033 took place στη Ζ{x}, Χώρα {hostName}, with the grand final on Day {{ 1. In')).toBe(true);
     expect(rendered[2].el.hero.lede.startsWith('Η Eurovision 2033 διεξάγεται στη Ζ{x} (Host $& }}), με τον μεγάλο τελικό το Day {{ 1.')).toBe(true);
     expect(rendered[0].en.sections.lineup.intro).toBe('37 countries are confirmed for Eurovision 2033 across two semi-finals and the grand final:');
-  });
-
-  it('winnersText falls back to the hero chip and an empty intro while the index is not loaded', () => {
-    const doc = readDoc('winners') as Record<'en' | 'el', WinnersContent>;
-    const none = { last: null, from: null, to: null, first: null, cancelled: null };
-    const t = winnersText(doc.en, none);
-    expect(t.sections.recent.title).toBe(doc.en.hero.chip);
-    expect(t.sections.recent.intro).toBe('');
-    expect('introCancelled' in t.sections.recent).toBe(false);
   });
 
   it('winners renders exactly as the former template functions', () => {

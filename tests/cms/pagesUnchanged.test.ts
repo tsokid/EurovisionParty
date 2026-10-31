@@ -6,7 +6,12 @@ import {
   capturePage, captureUrls, fixtureName, writeFixtures, FIXTURE_DIR,
 } from '../../scripts/cms/capturePages';
 
-describe('static pages are unchanged from the Task 1 capture', () => {
+// 3a migration gate (one-time proof, kept runnable on demand): with the copy
+// modules moved into content/pages, every static page must render exactly as
+// the Task 1 capture (tests/fixtures/pages-before). It pins the copy as it was
+// then, so the first owner edit in content/pages would fail it: it only runs
+// with CMS_MIGRATION_PROOF=1. Never regenerate the fixtures to make it pass.
+describe.skipIf(!process.env.CMS_MIGRATION_PROOF)('static pages are unchanged from the Task 1 capture', () => {
   // Rendering reads the eager content snapshot: it must never hit the network.
   const fetchSpy = vi.spyOn(globalThis, 'fetch');
   afterAll(() => {
