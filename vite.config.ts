@@ -109,6 +109,9 @@ export default defineConfig(({ isSsrBuild }) => ({
       },
     }),
   ],
+  // dist/.vite/manifest.json lets tests/scripts/bundleSize.test.ts tell public
+  // chunks from the lazy admin chunk.
+  build: { manifest: !isSsrBuild },
   resolve: {
     alias: {
       '@': '/src',

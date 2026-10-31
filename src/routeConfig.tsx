@@ -5,7 +5,8 @@ import { RoomPage } from './pages/RoomPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 // NotFoundPage is rendered only inside LocaleRoot (locale child `*` route)
 // so its LocaleLink usage is safe. Unprefixed unknown paths redirect.
-import AdminRoute from './admin/AdminRoute';
+// The admin loads as its own chunk (see LazyAdminRoute).
+import LazyAdminRoute from './admin/LazyAdminRoute';
 import LocaleRoot from './components/seo/LocaleRoot';
 import LocaleRedirect from './components/seo/LocaleRedirect';
 import HowToPlayPage from './pages/seo/HowToPlayPage';
@@ -39,7 +40,10 @@ export const DYNAMIC_ROUTE_PATHS = [':slug', 'past-contests', 'past-contests/:sl
 export const routes: RouteObject[] = [
   // Game + admin own their own chrome
   { path: '/room/:roomCode', element: <RoomPage /> },
-  { path: '/admin', element: <AdminRoute /> },
+  {
+    path: '/admin',
+    element: <LazyAdminRoute />,
+  },
 
   // Locale-prefixed public surface
   {
