@@ -110,7 +110,7 @@ describe('archive year page', () => {
     expect(r.html).not.toContain('/media/');
   });
 
-  it('editorial renders on a noindex page too (2005 is not indexable): indexable stays the owner\'s switch', async () => {
+  it('editorial renders on an indexable archive page (every archived year is indexable)', async () => {
     const r = await render(URL);
     expect(r.head!.robots).toBeUndefined();
     expect(r.html).toContain('Kyiv hosted <strong');

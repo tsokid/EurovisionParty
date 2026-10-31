@@ -37,6 +37,76 @@ Eurovision Games is an unofficial fan-made party game. It is not affiliated with
 - [eurovision-2026/semifinals](https://eurovision.games/en/eurovision-2026/semifinals): Eurovision 2026 semi-finals: running order and qualifiers.
 - [eurovision-2026/songs](https://eurovision.games/en/eurovision-2026/songs): Every song and artist at Eurovision 2026.
 - [past-contests](https://eurovision.games/en/past-contests): Every Eurovision Song Contest since 1956: host city, winner and results per year.
+- [past-contests/eurovision-2025-basel](https://eurovision.games/en/past-contests/eurovision-2025-basel): Eurovision 2025 in Basel: final ranking, points and semi-finals.
+- [past-contests/eurovision-2024-malmo](https://eurovision.games/en/past-contests/eurovision-2024-malmo): Eurovision 2024 in Malmö: final ranking, points and semi-finals.
+- [past-contests/eurovision-2023-liverpool](https://eurovision.games/en/past-contests/eurovision-2023-liverpool): Eurovision 2023 in Liverpool: final ranking, points and semi-finals.
+- [past-contests/eurovision-2022-turin](https://eurovision.games/en/past-contests/eurovision-2022-turin): Eurovision 2022 in Turin: final ranking, points and semi-finals.
+- [past-contests/eurovision-2021-rotterdam](https://eurovision.games/en/past-contests/eurovision-2021-rotterdam): Eurovision 2021 in Rotterdam: final ranking, points and semi-finals.
+- [past-contests/eurovision-2020-rotterdam](https://eurovision.games/en/past-contests/eurovision-2020-rotterdam): Eurovision 2020 in Rotterdam: final ranking, points and semi-finals.
+- [past-contests/eurovision-2019-tel-aviv](https://eurovision.games/en/past-contests/eurovision-2019-tel-aviv): Eurovision 2019 in Tel Aviv: final ranking, points and semi-finals.
+- [past-contests/eurovision-2018-lisbon](https://eurovision.games/en/past-contests/eurovision-2018-lisbon): Eurovision 2018 in Lisbon: final ranking, points and semi-finals.
+- [past-contests/eurovision-2017-kyiv](https://eurovision.games/en/past-contests/eurovision-2017-kyiv): Eurovision 2017 in Kyiv: final ranking, points and semi-finals.
+- [past-contests/eurovision-2016-stockholm](https://eurovision.games/en/past-contests/eurovision-2016-stockholm): Eurovision 2016 in Stockholm: final ranking, points and semi-finals.
+- [past-contests/eurovision-2015-vienna](https://eurovision.games/en/past-contests/eurovision-2015-vienna): Eurovision 2015 in Vienna: final ranking, points and semi-finals.
+- [past-contests/eurovision-2014-copenhagen](https://eurovision.games/en/past-contests/eurovision-2014-copenhagen): Eurovision 2014 in Copenhagen: final ranking, points and semi-finals.
+- [past-contests/eurovision-2013-malmo](https://eurovision.games/en/past-contests/eurovision-2013-malmo): Eurovision 2013 in Malmö: final ranking, points and semi-finals.
+- [past-contests/eurovision-2012-baku](https://eurovision.games/en/past-contests/eurovision-2012-baku): Eurovision 2012 in Baku: final ranking, points and semi-finals.
+- [past-contests/eurovision-2011-dusseldorf](https://eurovision.games/en/past-contests/eurovision-2011-dusseldorf): Eurovision 2011 in Düsseldorf: final ranking, points and semi-finals.
+- [past-contests/eurovision-2010-oslo](https://eurovision.games/en/past-contests/eurovision-2010-oslo): Eurovision 2010 in Oslo: final ranking, points and semi-finals.
+- [past-contests/eurovision-2009-moscow](https://eurovision.games/en/past-contests/eurovision-2009-moscow): Eurovision 2009 in Moscow: final ranking, points and semi-finals.
+- [past-contests/eurovision-2008-belgrade](https://eurovision.games/en/past-contests/eurovision-2008-belgrade): Eurovision 2008 in Belgrade: final ranking, points and semi-finals.
+- [past-contests/eurovision-2007-helsinki](https://eurovision.games/en/past-contests/eurovision-2007-helsinki): Eurovision 2007 in Helsinki: final ranking, points and semi-finals.
+- [past-contests/eurovision-2006-athens](https://eurovision.games/en/past-contests/eurovision-2006-athens): Eurovision 2006 in Athens: final ranking, points and semi-finals.
+- [past-contests/eurovision-2005-kyiv](https://eurovision.games/en/past-contests/eurovision-2005-kyiv): Eurovision 2005 in Kyiv: final ranking, points and semi-finals.
+- [past-contests/eurovision-2004-istanbul](https://eurovision.games/en/past-contests/eurovision-2004-istanbul): Eurovision 2004 in Istanbul: final ranking, points and semi-finals.
+- [past-contests/eurovision-2003-riga](https://eurovision.games/en/past-contests/eurovision-2003-riga): Eurovision 2003 in Riga: final ranking, points and semi-finals.
+- [past-contests/eurovision-2002-tallinn](https://eurovision.games/en/past-contests/eurovision-2002-tallinn): Eurovision 2002 in Tallinn: final ranking, points and semi-finals.
+- [past-contests/eurovision-2001-copenhagen](https://eurovision.games/en/past-contests/eurovision-2001-copenhagen): Eurovision 2001 in Copenhagen: final ranking, points and semi-finals.
+- [past-contests/eurovision-2000-stockholm](https://eurovision.games/en/past-contests/eurovision-2000-stockholm): Eurovision 2000 in Stockholm: final ranking, points and semi-finals.
+- [past-contests/eurovision-1999-jerusalem](https://eurovision.games/en/past-contests/eurovision-1999-jerusalem): Eurovision 1999 in Jerusalem: final ranking, points and semi-finals.
+- [past-contests/eurovision-1998-birmingham](https://eurovision.games/en/past-contests/eurovision-1998-birmingham): Eurovision 1998 in Birmingham: final ranking, points and semi-finals.
+- [past-contests/eurovision-1997-dublin](https://eurovision.games/en/past-contests/eurovision-1997-dublin): Eurovision 1997 in Dublin: final ranking, points and semi-finals.
+- [past-contests/eurovision-1996-oslo](https://eurovision.games/en/past-contests/eurovision-1996-oslo): Eurovision 1996 in Oslo: final ranking, points and semi-finals.
+- [past-contests/eurovision-1995-dublin](https://eurovision.games/en/past-contests/eurovision-1995-dublin): Eurovision 1995 in Dublin: final ranking, points and semi-finals.
+- [past-contests/eurovision-1994-dublin](https://eurovision.games/en/past-contests/eurovision-1994-dublin): Eurovision 1994 in Dublin: final ranking, points and semi-finals.
+- [past-contests/eurovision-1993-millstreet](https://eurovision.games/en/past-contests/eurovision-1993-millstreet): Eurovision 1993 in Millstreet: final ranking, points and semi-finals.
+- [past-contests/eurovision-1992-malmo](https://eurovision.games/en/past-contests/eurovision-1992-malmo): Eurovision 1992 in Malmö: final ranking, points and semi-finals.
+- [past-contests/eurovision-1991-rome](https://eurovision.games/en/past-contests/eurovision-1991-rome): Eurovision 1991 in Rome: final ranking, points and semi-finals.
+- [past-contests/eurovision-1990-zagreb](https://eurovision.games/en/past-contests/eurovision-1990-zagreb): Eurovision 1990 in Zagreb: final ranking, points and semi-finals.
+- [past-contests/eurovision-1989-lausanne](https://eurovision.games/en/past-contests/eurovision-1989-lausanne): Eurovision 1989 in Lausanne: final ranking, points and semi-finals.
+- [past-contests/eurovision-1988-dublin](https://eurovision.games/en/past-contests/eurovision-1988-dublin): Eurovision 1988 in Dublin: final ranking, points and semi-finals.
+- [past-contests/eurovision-1987-brussels](https://eurovision.games/en/past-contests/eurovision-1987-brussels): Eurovision 1987 in Brussels: final ranking, points and semi-finals.
+- [past-contests/eurovision-1986-bergen](https://eurovision.games/en/past-contests/eurovision-1986-bergen): Eurovision 1986 in Bergen: final ranking, points and semi-finals.
+- [past-contests/eurovision-1985-gothenburg](https://eurovision.games/en/past-contests/eurovision-1985-gothenburg): Eurovision 1985 in Gothenburg: final ranking, points and semi-finals.
+- [past-contests/eurovision-1984-luxembourg-city](https://eurovision.games/en/past-contests/eurovision-1984-luxembourg-city): Eurovision 1984 in Luxembourg City: final ranking, points and semi-finals.
+- [past-contests/eurovision-1983-munich](https://eurovision.games/en/past-contests/eurovision-1983-munich): Eurovision 1983 in Munich: final ranking, points and semi-finals.
+- [past-contests/eurovision-1982-harrogate](https://eurovision.games/en/past-contests/eurovision-1982-harrogate): Eurovision 1982 in Harrogate: final ranking, points and semi-finals.
+- [past-contests/eurovision-1981-dublin](https://eurovision.games/en/past-contests/eurovision-1981-dublin): Eurovision 1981 in Dublin: final ranking, points and semi-finals.
+- [past-contests/eurovision-1980-the-hague](https://eurovision.games/en/past-contests/eurovision-1980-the-hague): Eurovision 1980 in The Hague: final ranking, points and semi-finals.
+- [past-contests/eurovision-1979-jerusalem](https://eurovision.games/en/past-contests/eurovision-1979-jerusalem): Eurovision 1979 in Jerusalem: final ranking, points and semi-finals.
+- [past-contests/eurovision-1978-paris](https://eurovision.games/en/past-contests/eurovision-1978-paris): Eurovision 1978 in Paris: final ranking, points and semi-finals.
+- [past-contests/eurovision-1977-london](https://eurovision.games/en/past-contests/eurovision-1977-london): Eurovision 1977 in London: final ranking, points and semi-finals.
+- [past-contests/eurovision-1976-the-hague](https://eurovision.games/en/past-contests/eurovision-1976-the-hague): Eurovision 1976 in The Hague: final ranking, points and semi-finals.
+- [past-contests/eurovision-1975-stockholm](https://eurovision.games/en/past-contests/eurovision-1975-stockholm): Eurovision 1975 in Stockholm: final ranking, points and semi-finals.
+- [past-contests/eurovision-1974-brighton](https://eurovision.games/en/past-contests/eurovision-1974-brighton): Eurovision 1974 in Brighton: final ranking, points and semi-finals.
+- [past-contests/eurovision-1973-luxembourg-city](https://eurovision.games/en/past-contests/eurovision-1973-luxembourg-city): Eurovision 1973 in Luxembourg City: final ranking, points and semi-finals.
+- [past-contests/eurovision-1972-edinburgh](https://eurovision.games/en/past-contests/eurovision-1972-edinburgh): Eurovision 1972 in Edinburgh: final ranking, points and semi-finals.
+- [past-contests/eurovision-1971-dublin](https://eurovision.games/en/past-contests/eurovision-1971-dublin): Eurovision 1971 in Dublin: final ranking, points and semi-finals.
+- [past-contests/eurovision-1970-amsterdam](https://eurovision.games/en/past-contests/eurovision-1970-amsterdam): Eurovision 1970 in Amsterdam: final ranking, points and semi-finals.
+- [past-contests/eurovision-1969-madrid](https://eurovision.games/en/past-contests/eurovision-1969-madrid): Eurovision 1969 in Madrid: final ranking, points and semi-finals.
+- [past-contests/eurovision-1968-london](https://eurovision.games/en/past-contests/eurovision-1968-london): Eurovision 1968 in London: final ranking, points and semi-finals.
+- [past-contests/eurovision-1967-vienna](https://eurovision.games/en/past-contests/eurovision-1967-vienna): Eurovision 1967 in Vienna: final ranking, points and semi-finals.
+- [past-contests/eurovision-1966-luxembourg-city](https://eurovision.games/en/past-contests/eurovision-1966-luxembourg-city): Eurovision 1966 in Luxembourg City: final ranking, points and semi-finals.
+- [past-contests/eurovision-1965-naples](https://eurovision.games/en/past-contests/eurovision-1965-naples): Eurovision 1965 in Naples: final ranking, points and semi-finals.
+- [past-contests/eurovision-1964-copenhagen](https://eurovision.games/en/past-contests/eurovision-1964-copenhagen): Eurovision 1964 in Copenhagen: final ranking, points and semi-finals.
+- [past-contests/eurovision-1963-london](https://eurovision.games/en/past-contests/eurovision-1963-london): Eurovision 1963 in London: final ranking, points and semi-finals.
+- [past-contests/eurovision-1962-luxembourg-city](https://eurovision.games/en/past-contests/eurovision-1962-luxembourg-city): Eurovision 1962 in Luxembourg City: final ranking, points and semi-finals.
+- [past-contests/eurovision-1961-cannes](https://eurovision.games/en/past-contests/eurovision-1961-cannes): Eurovision 1961 in Cannes: final ranking, points and semi-finals.
+- [past-contests/eurovision-1960-london](https://eurovision.games/en/past-contests/eurovision-1960-london): Eurovision 1960 in London: final ranking, points and semi-finals.
+- [past-contests/eurovision-1959-cannes](https://eurovision.games/en/past-contests/eurovision-1959-cannes): Eurovision 1959 in Cannes: final ranking, points and semi-finals.
+- [past-contests/eurovision-1958-hilversum](https://eurovision.games/en/past-contests/eurovision-1958-hilversum): Eurovision 1958 in Hilversum: final ranking, points and semi-finals.
+- [past-contests/eurovision-1957-frankfurt](https://eurovision.games/en/past-contests/eurovision-1957-frankfurt): Eurovision 1957 in Frankfurt: final ranking, points and semi-finals.
+- [past-contests/eurovision-1956-lugano](https://eurovision.games/en/past-contests/eurovision-1956-lugano): Eurovision 1956 in Lugano: final ranking, points and semi-finals.
 - [countries](https://eurovision.games/en/countries): Every country that has competed at Eurovision, with participations and best results.
 - [countries/andorra](https://eurovision.games/en/countries/andorra): Andorra at Eurovision: 6 participations, results by year.
 - [countries/albania](https://eurovision.games/en/countries/albania): Albania at Eurovision: 22 participations, results by year.
