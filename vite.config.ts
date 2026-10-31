@@ -6,6 +6,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
+import { isModuleRequest } from './scripts/devContentRequest'
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url))
 const CONTENT_DIR = path.join(ROOT, 'content')
@@ -40,6 +41,8 @@ function contentPlugin(isSsrBuild: boolean): Plugin {
     },
     configureServer(server) {
       server.middlewares.use('/content', (req, res, next) => {
+        // Module requests (`?import`, Sec-Fetch-Dest: script) belong to Vite, not raw JSON.
+        if (isModuleRequest(req.url ?? '', req.headers)) return next()
         const rel = decodeURIComponent((req.url ?? '').split('?')[0]).replace(/^\/+/, '')
         const file = path.resolve(CONTENT_DIR, rel)
         if (!rel.endsWith('.json') || !file.startsWith(CONTENT_DIR + path.sep) || !existsSync(file) || !statSync(file).isFile()) {
