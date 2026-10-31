@@ -3,18 +3,18 @@
 // now placeholders, filled from contestTexts() by the page.
 import type { z } from 'zod';
 import { group, list, optional, text } from '../fields.ts';
-import { crumbs, cta, hero, href, howToStep, strongRest, titleBody } from './common.ts';
+import { crumbs, cta, hero, href, howToStep, META_LABEL, metaDescription, seoTitle, strongRest, titleBody } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
 export const eurovisionNightSchema = group({
   meta: group({
-    title: text(YEAR),
-    description: text(),
+    title: seoTitle(YEAR),
+    description: metaDescription(),
     headline: text(),
     articleDescription: text(),
     keywords: list(text(YEAR)),
-  }),
+  }, META_LABEL),
   crumbs,
   hero,
   sections: group({
@@ -34,7 +34,7 @@ export const eurovisionNightSchema = group({
           href: optional(href()),
           linkLabel: optional(text()),
           restAfter: optional(text()),
-        }),
+        }, { pairs: [['href', 'linkLabel']] }),
       ),
     }),
     food: titleBody,

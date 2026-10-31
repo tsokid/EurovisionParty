@@ -2,14 +2,14 @@
 // the live contest's texts and used only the year: now the {year} placeholder.
 import type { z } from 'zod';
 import { group, list, text, tuple } from '../fields.ts';
-import { crumbs, cta, headers3, href, hero, strongRest, strongRestHtml } from './common.ts';
+import { crumbs, cta, headers3, href, hero, META_LABEL, metaDescription, seoTitle, strongRest, strongRestHtml } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
 const bullets = group({ title: text(), items: list(strongRest) });
 
 export const rulesSchema = group({
-  meta: group({ title: text(YEAR), description: text(), keywords: list(text()) }),
+  meta: group({ title: seoTitle(YEAR), description: metaDescription(), keywords: list(text()) }, META_LABEL),
   schema: group({ articleHeadline: text(YEAR), articleDescription: text() }),
   hero,
   hostLimits: bullets,

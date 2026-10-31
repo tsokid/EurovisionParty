@@ -2,20 +2,20 @@
 // live contest's year and final date are placeholders.
 import type { z } from 'zod';
 import { group, list, optional, text, tuple } from '../fields.ts';
-import { crumbs, cta, headers3, hero, href, qa, relatedItem, strongRest, titleBody } from './common.ts';
+import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
 export const eurovisionPartySchema = group({
   meta: group({
-    title: text(YEAR),
-    description: text(YEAR),
+    title: seoTitle(YEAR),
+    description: metaDescription(YEAR),
     headline: text(YEAR),
     articleDescription: text(YEAR),
     eventName: text(YEAR),
     eventDescription: text({ placeholders: ['year', 'finalDayShort'] }),
     keywords: list(text()),
-  }),
+  }, META_LABEL),
   crumbs,
   hero,
   sections: group({

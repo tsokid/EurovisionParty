@@ -9,7 +9,7 @@
 //             {hostPart} = ledeHost with {hostName} filled, or "" when the host is unknown.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, qa, strongRest, titleBlurb } from './common.ts';
+import { cta, HERO_LABEL, META_LABEL, metaDescription, qa, seoTitle, strongRest, titleBlurb } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 const YEAR_CITY = { placeholders: ['year', 'cityIn'] };
@@ -19,27 +19,33 @@ const resultPoints = group({ result: text(), points: text() });
 
 export const eurovisionPredictionsSchema = group({
   meta: group({
-    title: text(),
-    description: text(YEAR_CITY),
-    schemaTitle: text(),
-    schemaDescription: text(YEAR_CITY),
+    title: seoTitle(),
+    description: metaDescription(YEAR_CITY),
+    schemaTitle: seoTitle({ label: 'Schema title' }),
+    schemaDescription: metaDescription({ label: 'Schema description', ...YEAR_CITY }),
     keywords: list(text(YEAR)),
-  }),
+  }, META_LABEL),
   crumbs: group({ home: text(), predictions: text() }),
   hero: group({
     chip: text(),
     title: text(),
-    lede: text({ placeholders: ['year', 'verb', 'cityIn', 'hostPart', 'finalDay'] }),
+    lede: text({
+      placeholders: ['year', 'verb', 'cityIn', 'hostPart', 'finalDay'],
+      placeholderHelp: {
+        verb: 'ledeVerb.upcoming before the final is decided, ledeVerb.decided after it',
+        hostPart: 'ledeHost with the host country filled in, or nothing while the host is unknown',
+      },
+    }),
     ledeVerb: group({
       upcoming: text({ help: 'Fills {verb} before the final is decided' }),
       decided: text({ help: 'Fills {verb} once the final is decided' }),
     }),
     ledeHost: text({ placeholders: ['hostName'], help: 'Fills {hostPart} when the host country is known' }),
-  }),
+  }, HERO_LABEL),
   sections: group({
     lineup: group({
       title: text(YEAR),
-      intro: text({ placeholders: ['count', 'year'] }),
+      intro: text({ placeholders: ['count', 'year'], placeholderHelp: { count: 'How many countries are in the line-up' } }),
       hostSuffix: text(),
       runningOrder: text(),
       resultsTitle: text(YEAR),

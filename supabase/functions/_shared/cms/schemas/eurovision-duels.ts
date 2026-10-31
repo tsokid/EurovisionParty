@@ -1,18 +1,18 @@
 // /duels (pageId eurovision-duels). Mirrors the former DuelsCopy interface.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, hero, howToStep, qa, strongRest, titleBlurb } from './common.ts';
+import { cta, hero, howToStep, META_LABEL, metaDescription, qa, seoTitle, strongRest, titleBlurb } from './common.ts';
 
 export const eurovisionDuelsSchema = group({
   meta: group({
-    title: text(),
-    description: text(),
-    schemaTitle: text(),
-    schemaDescription: text(),
+    title: seoTitle(),
+    description: metaDescription(),
+    schemaTitle: seoTitle({ label: 'Schema title' }),
+    schemaDescription: metaDescription({ label: 'Schema description' }),
     howToName: text(),
     howToDescription: text(),
     keywords: list(text()),
-  }),
+  }, META_LABEL),
   crumbs: group({ home: text(), duels: text() }),
   hero,
   sections: group({

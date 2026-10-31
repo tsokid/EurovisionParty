@@ -2,7 +2,7 @@
 // live contest's year is the {year} placeholder.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { crumbs, cta, headers3, hero, href, qa, relatedItem, strongRest } from './common.ts';
+import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
@@ -11,12 +11,12 @@ const linkedSection = (p1 = text()) => group({ title: text(), p1, p2Before: text
 
 export const eurovisionGamesSchema = group({
   meta: group({
-    title: text(YEAR),
-    description: text(),
+    title: seoTitle(YEAR),
+    description: metaDescription(),
     headline: text(YEAR),
     articleDescription: text(),
     keywords: list(text()),
-  }),
+  }, META_LABEL),
   crumbs,
   hero,
   sections: group({

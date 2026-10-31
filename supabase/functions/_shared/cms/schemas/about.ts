@@ -1,16 +1,16 @@
 // /about. Mirrors the former AboutCopy interface.
 import type { z } from 'zod';
 import { group, list, optional, text } from '../fields.ts';
-import { boldRest, hero, relatedItem, titleBody } from './common.ts';
+import { boldRest, CTA_LABEL, hero, href, META_LABEL, metaDescription, relatedItem, seoTitle, titleBody } from './common.ts';
 
 export const aboutSchema = group({
   meta: group({
-    title: text(),
-    description: text(),
+    title: seoTitle(),
+    description: metaDescription(),
     organizationDescription: text(),
     aboutPageDescription: text(),
     keywords: list(text()),
-  }),
+  }, META_LABEL),
   hero,
   breadcrumbs: group({ home: text(), about: text() }),
   whatIs: group({
@@ -34,9 +34,9 @@ export const aboutSchema = group({
         lead: text(),
         // A link rendered between lead and tail; both or neither.
         linkLabel: optional(text()),
-        linkHref: optional(text({ shared: true })),
+        linkHref: optional(href()),
         tail: text({ required: false }),
-      }),
+      }, { pairs: [['linkLabel', 'linkHref']] }),
     ),
   }),
   freeNoAccount: titleBody,
@@ -49,7 +49,7 @@ export const aboutSchema = group({
     pressEmail: text(),
     tail: text(),
   }),
-  cta: group({ title: text(), body: text(), primaryLabel: text(), secondaryLabel: text() }),
+  cta: group({ title: text(), body: text(), primaryLabel: text(), secondaryLabel: text() }, CTA_LABEL),
   related: list(relatedItem),
 });
 

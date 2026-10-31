@@ -1,16 +1,16 @@
 // /dashboard. Mirrors the former DashboardCopy interface.
 import type { z } from 'zod';
 import { flag, group, list, text } from '../fields.ts';
-import { crumbs, cta, headers3, hero, qa, relatedItem, strongRest, titleBody } from './common.ts';
+import { crumbs, cta, headers3, hero, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody } from './common.ts';
 
 export const dashboardSchema = group({
   meta: group({
-    title: text(),
-    description: text(),
+    title: seoTitle(),
+    description: metaDescription(),
     headline: text(),
     articleDescription: text(),
     keywords: list(text()),
-  }),
+  }, META_LABEL),
   crumbs,
   hero,
   sections: group({

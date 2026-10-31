@@ -2,18 +2,18 @@
 // questions are the page's own editorial sampler, not the game's question bank.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, hero, qa, titleBlurb, titleBody } from './common.ts';
+import { cta, hero, META_LABEL, metaDescription, qa, seoTitle, titleBlurb, titleBody } from './common.ts';
 
 export const eurovisionTriviaSchema = group({
   meta: group({
-    title: text(),
-    description: text(),
-    schemaTitle: text(),
-    schemaDescription: text(),
+    title: seoTitle(),
+    description: metaDescription(),
+    schemaTitle: seoTitle({ label: 'Schema title' }),
+    schemaDescription: metaDescription({ label: 'Schema description' }),
     quizName: text(),
     quizAbout: text(),
     keywords: list(text()),
-  }),
+  }, META_LABEL),
   crumbs: group({ home: text(), trivia: text() }),
   hero,
   sections: group({

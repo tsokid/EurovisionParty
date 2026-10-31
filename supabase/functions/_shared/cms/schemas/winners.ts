@@ -8,25 +8,32 @@
 //               appended to intro only then
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, qa, relatedItem, strongRest } from './common.ts';
+import { cta, HERO_LABEL, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest } from './common.ts';
 
-const LAST = { placeholders: ['last'] };
+const HELP = {
+  last: 'The latest contest year with a winner, e.g. 2025',
+  from: 'The oldest year in the recent-winners table',
+  to: 'The newest year in the recent-winners table',
+  cancelled: 'The cancelled contest year inside the recent-winners table, e.g. 2020',
+};
+
+const LAST = { placeholders: ['last'], placeholderHelp: { last: HELP.last } };
 
 export const winnersSchema = group({
   meta: group({
-    title: text(),
-    description: text(LAST),
+    title: seoTitle(),
+    description: metaDescription(LAST),
     keywords: list(text(LAST)),
-    schemaTitle: text(),
-    schemaDescription: text(),
-  }),
+    schemaTitle: seoTitle({ label: 'Schema title' }),
+    schemaDescription: metaDescription({ label: 'Schema description' }),
+  }, META_LABEL),
   crumbs: group({ home: text(), history: text(), winners: text() }),
-  hero: group({ chip: text(), title: text(), lede: text() }),
+  hero: group({ chip: text(), title: text(), lede: text() }, HERO_LABEL),
   sections: group({
     recent: group({
-      title: text({ placeholders: ['from', 'to'] }),
-      intro: text({ placeholders: ['from'] }),
-      introCancelled: text({ placeholders: ['cancelled'], help: 'Appended to intro when a cancelled year falls in the table' }),
+      title: text({ placeholders: ['from', 'to'], placeholderHelp: { from: HELP.from, to: HELP.to } }),
+      intro: text({ placeholders: ['from'], placeholderHelp: { from: HELP.from } }),
+      introCancelled: text({ placeholders: ['cancelled'], placeholderHelp: { cancelled: HELP.cancelled }, help: 'Appended to intro when a cancelled year falls in the table' }),
       headers: group({ year: text(), country: text(), artist: text(), song: text(), points: text() }),
     }),
     leaderboard: group({
@@ -34,7 +41,7 @@ export const winnersSchema = group({
       intro: text(),
       headers: group({ country: text(), wins: text(), mostRecent: text() }),
     }),
-    all: group({ title: text({ placeholders: ['from'] }), intro: text(), cancelled: text(), shared: text() }),
+    all: group({ title: text({ placeholders: ['from'], placeholderHelp: { from: 'The first contest year, 1956' } }), intro: text(), cancelled: text(), shared: text() }),
     notable: group({ title: text(), intro: text(), bullets: list(strongRest) }),
     faqTitle: text(),
   }),

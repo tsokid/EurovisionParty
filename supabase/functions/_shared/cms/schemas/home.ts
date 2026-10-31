@@ -3,11 +3,12 @@
 // in i18n. The live contest's year is a placeholder.
 import type { z } from 'zod';
 import { group, text } from '../fields.ts';
+import { META_LABEL, metaDescription, seoTitle } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
 export const homeSchema = group({
-  meta: group({ title: text(YEAR), description: text(YEAR) }),
+  meta: group({ title: seoTitle(YEAR), description: metaDescription(YEAR) }, META_LABEL),
   seo: group({
     headline: text(),
     leadStrong: text(),
