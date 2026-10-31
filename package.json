@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts && tsx scripts/seo/check-prerender.ts",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts && tsx scripts/cms/validate-content.ts && tsx scripts/seo/check-prerender.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "cards:build": "tsx scripts/optimize-cards.ts",
@@ -32,6 +32,7 @@
     "react-i18next": "^16.6.6",
     "react-router-dom": "^7.13.1",
     "vanilla-cookieconsent": "^3.1.0",
+    "zod": "4.3.6",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

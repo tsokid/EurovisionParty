@@ -32,6 +32,15 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
     }
   });
 
+  // CMS 3a: schemas are imported by components as types only (z.infer); zod
+  // itself must never reach the client. "ZodError" is a class-name string zod
+  // keeps even when minified.
+  it('no JS asset contains zod', () => {
+    for (const { f } of jsFiles) {
+      expect(readFileSync(resolve(ASSETS, f), 'utf8').includes('ZodError'), `ZodError in ${f}`).toBe(false);
+    }
+  });
+
   // Regression guard (final review M4): the main chunk was 1,731,226 bytes
   // raw after sub-project 2b. Raise the budget deliberately, never silently.
   const MAIN_CHUNK_BUDGET = 1_760_000;
