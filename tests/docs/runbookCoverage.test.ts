@@ -136,6 +136,13 @@ const BRIEF_TOKENS = [
   'eurovision-2005-kyiv',
   'public, max-age=31536000, immutable',
   '-800.webp',
+  // CMS 3c final fix wave: the near-limit video publish (edge duration and logs) and the picker delete.
+  '### 9.3b Media load test',
+  'Edge Functions** → **publish-content** → **Logs**',
+  'eurovision-2004-istanbul',
+  'WORKER_LIMIT',
+  'finished_at - started_at as duration',
+  'media in use by',
 ];
 
 const runbook = readFileSync(RUNBOOK, 'utf8');
@@ -163,6 +170,15 @@ describe('cutover runbook coverage', () => {
     const at = order.map((h) => runbook.indexOf(h));
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);
+  });
+
+  it('the media load test (9.3b) follows the media smoke test (9.3), before 072', () => {
+    const smoke = runbook.indexOf('### 9.3 Media smoke test');
+    const load = runbook.indexOf('### 9.3b Media load test');
+    const drop = runbook.indexOf('## 10. Apply 072');
+    expect(smoke).toBeGreaterThanOrEqual(0);
+    expect(load).toBeGreaterThan(smoke);
+    expect(drop).toBeGreaterThan(load);
   });
 
   it('game reads come before the first Publish, and 072 after both', () => {

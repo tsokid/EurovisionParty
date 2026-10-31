@@ -42,7 +42,7 @@ Order: **068/069 (done) → 070 → 071 → 073 → 074 + 076 (same step) → 07
 | 6 | Deploy `eurovision-parse` + `publish-content` (its `deno.json` resolves `npm:zod@4.3.6`); set `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | terminal / Dashboard | yes (redeploy old) | ☐ |
 | 7 | Record `<OLD_MAIN_SHA>`; merge `feat/foundation-prerender` → `main`; verify production (SP1 checklist + 10 historical URLs + CLS) | git, Vercel, curl | yes (Instant Rollback) | ☐ |
 | 8 | Admin smoke test (OTP login, Contests 1956–2026) and game reads (lobby lineup = 2026 finalists, `PredictionsResultsScreen`); then apply **075** (2026 semi-final data) and check 30 semi rows, before Publish | /admin, site, SQL | yes (Instant Rollback; 075 only fills semi columns) | ☐ |
-| 9 | First **Publish**; verify commit, Vercel build, `/en/eurovision-2026`; then the CMS smoke test (Pages: edit one FAQ answer, Save draft, Publish, check the live page, revert); then the media smoke test (upload an image with EN and EL alt text into the 2005 editorial, Publish, check `/el/past-contests/eurovision-2005-kyiv`) | /admin, GitHub, Vercel, site | yes (git revert to `<OLD_MAIN_SHA>`; **not** Instant Rollback) | ☐ |
+| 9 | First **Publish**; verify commit, Vercel build, `/en/eurovision-2026`; then the CMS smoke test (Pages: edit one FAQ answer, Save draft, Publish, check the live page, revert); then the media smoke test (upload an image with EN and EL alt text into the 2005 editorial, Publish, check `/el/past-contests/eurovision-2005-kyiv`); then the media load test (one 15–20 MB video on a throwaway 2004 editorial: run duration and edge logs, then revert) | /admin, GitHub, Vercel, site | yes (git revert to `<OLD_MAIN_SHA>`; **not** Instant Rollback) | ☐ |
 | 10 | Apply **072** (drops old 2026 tables, guarded) | SQL Editor | **no: restore from backup** | ☐ |
 | 11 | Post-deploy: Search Console sitemap + URL Inspection, watch Pages 3 weeks; semis cross-check (optional); indexable switches | GSC, /admin | n/a | ☐ |
 | 12 | Before May 2027: create 2027 (Burgas), lineup, Archive 2026, re-enable parser-tick (047) | /admin, SQL Editor | see step | ☐ |
@@ -647,7 +647,7 @@ Proves the path upload → private bucket → draft → Publish (binary commit t
   - Newest run `ok`. The GitHub commit adds `content/pages/archive-2005.json`, updates `content/pages/index.json` (lists `archive-2005`) and adds `public/media/<sha12>.webp` and `public/media/<sha12>-800.webp`. The page JSON holds `/media/<sha12>.webp`, never `cms-media/`. The `cms_media` rows show their `published_path`.
   - Every other page is unchanged. The build's validate-content step passed (a `/media/` reference without its file fails the build).
 - **Revert (Επαναφορά):**
-  - **Before Publish:** **Discard draft**. The uploaded files stay in the private bucket and the Media library (delete them there if you like).
+  - **Before Publish:** **Discard draft**. The uploaded image stays in the private bucket and the media library until you delete it: open any image field's **Choose…**, press **Delete** under the file, then **Delete** again to confirm (the 800 w copy goes with it). Discard first: the picker refuses a file a draft still uses and names that draft ("media in use by …").
   - **After Publish:** emptying the editorial (remove the block, **Save draft**, **Publish**) removes the image and the text from the page, but it does **not** restore the original page byte for byte: an editorial doc still exists and `content/pages/index.json` still lists it. The two image files stay in `public/media/`, which validate-content only reports as a warning. For a **full revert**, revert the Publish commit on GitHub (GitHub → the commit → **Revert** → merge the PR; Vercel rebuilds without the editorial, the index entry and the images).
 - **If it fails:**
   - Upload refused → the image is over 15 MB or not an image, or the bucket policies from 5.3 are missing: repeat 5.3.
@@ -655,6 +655,35 @@ Proves the path upload → private bucket → draft → Publish (binary commit t
   - Publish error about more than 50 MB of new media → Publish refuses to add that much in one run; remove the large items and publish again.
   - Run `ok` but the page lacks the image → check the Vercel build of that commit (as in 9.1), then hard-reload. A build that fails in validate-content names the content file and the missing `/media/<name>`.
   - `Cache-Control` differs → the `/media/(.*)` rule in `vercel.json` was not deployed; check the deployed commit.
+
+### 9.3b Media load test: one 15–20 MB video (Έλεγχος φόρτου: ένα βίντεο 15–20 MB)
+Proves that `publish-content` can download, hash and commit a near-limit video within the edge function's memory and CPU limits. The whole file sits in memory, is hashed, then base64-encoded for the GitHub blob. Do it right after 9.3, on a **throwaway** editorial (**2004**, Istanbul) that you revert afterwards. You need an MP4 (H.264) of **15–20 MB** (uploads over 20 MB are refused) and a poster image.
+- **Do:**
+  1. Admin → **Pages** → **Add editorial for …** → pick **2004** (Istanbul).
+  2. Add a **Video** block. **Choose…** → **Upload new video** → the MP4. The dialog stays open until the upload finishes, then closes itself. Upload the **poster** image the same way.
+  3. **Save draft**, then **Publish** from the publish bar. Note the time. Wait for the run (allow up to ~3 minutes) and for the Vercel production build to be Ready.
+- **Run** (replace `<sha12>` with the 12 hex characters of the video name in the first command's output):
+  ```bash
+  curl -s https://eurovision.games/en/past-contests/eurovision-2004-istanbul | grep -o '/media/[0-9a-f]\{12\}\.mp4' | head -1
+  curl -sI https://eurovision.games/media/<sha12>.mp4 | grep -iE '^(HTTP|content-type|content-length|cache-control)'
+  ```
+  ```sql
+  select id, status, files_changed, error, finished_at - started_at as duration
+    from public.publish_runs order by id desc limit 1;
+  ```
+  Then Dashboard → **Edge Functions** → **publish-content** → **Logs** (and **Invocations**): open the entries from the time you noted.
+- **Expect:**
+  - Newest run `ok`, `files_changed` = 5: `content/pages/archive-2004.json`, `content/pages/index.json`, the `.mp4`, and the poster `.webp` and its `-800.webp`.
+  - `duration` well under the edge function's 150 s wall-clock limit. Write the figure in the cutover notes: it is the baseline for the largest video.
+  - Logs and Invocations for that call: status `200`, and **no** `WORKER_LIMIT`, "Memory limit exceeded", "CPU time" or early-termination (`shutdown`) lines.
+  - The `.mp4` response is `200`, `content-type: video/mp4`, `content-length` equal to the file's size, and the immutable `Cache-Control` from 9.3. The page plays the video with its poster.
+- **Revert (Επαναφορά):**
+  - **After Publish** (the normal case): revert the Publish commit on GitHub (GitHub → the commit → **Revert** → merge the PR; Vercel rebuilds without the 2004 editorial and its three files). Then Pages → the 2004 editorial → **Discard draft**. Then delete the video and the poster in the picker (**Choose…** → **Delete** → **Delete**), so they leave the private bucket.
+  - **Before Publish:** **Discard draft**, then delete the two files in the picker as above.
+- **If it fails:**
+  - Run `error` or stuck `running`, with `WORKER_LIMIT`, memory or CPU lines in the logs → this plan's edge function cannot publish a video this large. Revert as above (a run killed mid-way leaves the row `running`; the next Publish closes it as `error` after 10 minutes, and nothing was committed). Retry with a smaller video to find the size that passes, write it down, and keep editorial videos under it until the limit in `upload.ts` and 077's `media_register` is lowered to match.
+  - Publish error about more than 50 MB of new media → other unpublished media are in the same Publish. Publish them separately.
+  - Upload refused → the file is over 20 MB or not MP4 (H.264).
 
 ---
 
@@ -829,3 +858,4 @@ Full disaster only: `pg_restore --dbname="$PGURL" --no-owner --clean --if-exists
 | Brief: publish-content imports outside `supabase/functions` (done) | P.2, 6.2 |
 | 3c T7: apply 077 after 076; private `cms-media` bucket and Storage policies, verified with SQL | 5.3 |
 | 3c T7: media smoke test (upload, 2005 editorial, Publish, dimensions, cache header) | 9.3 |
+| 3c final review: publish of a near-limit video (15–20 MB MP4 with poster) within edge memory and CPU limits; picker delete | 9.3b, 9.3 |
