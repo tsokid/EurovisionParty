@@ -67,3 +67,16 @@
 - Ruling: lists that contain any shared field must have equal length across locales (else shared check is incomplete) — carry into T6
 - Task final: parked — N1 validateContent test cities.length===2 depends on CITY_EL entry for live city — Ruling: harden in 3b task 1 — cost: red test if site.json city lacks Greek name
 - Task final: parked — locale switch always shows pending (switcher doesn't prefetch other locale) — Ruling: prefetch other-locale doc when switcher opens, in 3b — cost: brief pending on locale switch
+
+## 2026-10-31-cms-3b-editor
+- Ruling: I4 rawHtml -> option (b) allowlist validator (rendering identical) — cost: editor edits HTML-ish strings
+- Ruling: M7 dateModified stays build/commit date (publish commit bumps it) — cost: dateModified approximate
+- Ruling: editor base = DB draft else published /content/pages json; publish writes only drafts present in DB — cost: developer repo edits to a doc are overwritten by an older DB draft on next publish (documented)
+- Ruling: T1 — interpolateDocument(schema, doc, vars) signature accepted; href/rawHtml reject protocol-relative //host (stricter, safer) accepted
+- Ruling: SW must not precache the admin chunk (106KB for every visitor) — add AdminRoute-*.js to workbox globIgnores + error boundary with reload for chunk-load failure — carry into T7
+- Ruling: T5 — keep UNSAFE_* router-context reset (necessary; portal doesn't help; separate root costlier) + comment pinning react-router version — cost: coupling to RR internals, guarded by mutation-checked tests
+- Ruling: T8 — runbook revert after Publish = paste original back, Save, Publish (discard only works pre-publish) — implementer correct — accepted
+- Ruling: I3 — (1) publish ships only drafts with updated_at > since (unpublished ones); already-published drafts are neither re-validated nor re-written; (2) contest lifecycle auto-publish (Finalize/Archive/Un-archive) runs with cms:false — CMS drafts ship only from an explicit Publish click; draft rows retained (badges intact). Rejected option (a) delete-after-publish: editor would load stale live file during ~2min Vercel rebuild and could overwrite fresh content — cost if wrong: editor base for an already-published doc is the draft row (stale only if a developer edited the repo file since)
+- Ruling: I3 refinement accepted — publish_runs.cms flag + separate CMS 'since' (cms-including runs only), so cms:false auto-publish can't mark unshipped drafts published
+- Task final: parked — seoFields called with doc id (not docTypeFor) — Ruling: fine for site docs; revisit when 3c adds editorial families — cost: editorial docs skipped by uniqueness check
+- Task final: parked — swPrecache test skips silently without manifest — Ruling: can wait — cost: silent skip locally
