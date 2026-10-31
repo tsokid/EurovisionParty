@@ -171,6 +171,17 @@ describe('blocks()', () => {
     expect(ok(b, v)).toBe(false);
   });
 
+  it('a cta href written with the locale (/en/..., /el/..., /en, /el) is refused: LocaleLink adds it', () => {
+    const cta = (href: string) => [{ type: 'cta', title: 'a', body: 'b', label: 'c', href }];
+    const msg = 'Write the path without /en or /el — the language is added automatically';
+    for (const href of ['/en/faq', '/el/faq', '/en', '/el', '/el?x=1', '/en#top']) {
+      const r = b.safeParse(cta(href));
+      expect(r.success, href).toBe(false);
+      expect(r.error!.issues.map((i) => i.message), href).toContain(msg);
+    }
+    for (const href of ['/faq', '/english', '/elements', 'https://example.com/en/x']) expect(ok(b, cta(href)), href).toBe(true);
+  });
+
   it('reports errors at the block path', () => {
     const r = b.safeParse([{ type: 'text', body: 'ok' }, { type: 'callout', tone: 'info', body: '<i>' }]);
     expect(r.success).toBe(false);

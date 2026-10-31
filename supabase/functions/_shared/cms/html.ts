@@ -29,6 +29,15 @@ function decodeEntities(s: string): string {
 }
 
 /**
+ * A site path that already starts with a locale (/en, /el, /en/…, /el?…):
+ * links rendered through LocaleLink get the active locale added, so such a
+ * path would be prefixed twice. isSafeHref allows it (raw <a> needs it).
+ */
+export const isLocalePrefixedPath = (href: string): boolean => /^\/(?:en|el)(?:[/?#]|$)/.test(href);
+
+export const LOCALE_PREFIX_MESSAGE = 'Write the path without /en or /el — the language is added automatically';
+
+/**
  * A link target the CMS allows: a path on this site ("/faq", not the
  * protocol-relative "//host") or an https:// URL, with no whitespace or
  * control characters.

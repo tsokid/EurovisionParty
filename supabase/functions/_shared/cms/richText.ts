@@ -2,7 +2,8 @@
 //
 // Allowed: paragraphs (separated by a blank line), `**bold**`, `*italic*`,
 // `[label](address)`, bullet lists (`- item`), numbered lists (`1. item`) and
-// `### ` headings. Addresses are a page on this site (`/faq`) or `https://`.
+// `### ` headings. Addresses are a page on this site (`/faq`, without /en or
+// /el: links get the active locale added) or `https://`.
 // Everything else is an error, never silently kept: raw `<`, images, code,
 // quotes, other heading levels, unclosed markers, unsafe or nested links.
 // A literal `\ * [ ] ( ) < > # -` is written with a backslash in front.
@@ -16,7 +17,7 @@
 //
 // Inline markers do not span lines: a paragraph's lines are parsed one by one
 // and joined with a space. List items are one line each.
-import { isSafeHref } from './html.ts';
+import { isLocalePrefixedPath, isSafeHref, LOCALE_PREFIX_MESSAGE } from './html.ts';
 
 export type RichInline =
   | { type: 'text'; value: string }
@@ -114,22 +115,25 @@ function parseLine(src: string, line: number, errors: RichTextError[]): RichInli
           if (close < 0) {
             err('Unclosed ( (link address)');
             i = src.length;
-            out.push(...children);
+            pushMerged(out, children);
           } else {
             const href = src.slice(i + 1, close);
             i = close + 1;
             if (href.includes('(')) {
               err('A link address cannot contain ( (use %28)');
-              out.push(...children);
+              pushMerged(out, children);
+            } else if (isSafeHref(href) && isLocalePrefixedPath(href)) {
+              err(LOCALE_PREFIX_MESSAGE);
+              pushMerged(out, children);
             } else if (isSafeHref(href)) out.push({ type: 'link', href, children });
             else {
               err(`Unsafe link address "${href}" (must start with / or https://)`);
-              out.push(...children);
+              pushMerged(out, children);
             }
           }
         } else {
           err('A link needs an address: [label](/page) or [label](https://...)');
-          out.push(...children);
+          pushMerged(out, children);
         }
       } else {
         buf += c;
@@ -196,7 +200,8 @@ function parse(source: string): { blocks: RichBlock[]; errors: RichTextError[] }
     const inline = parseLine(text.trim(), line, errors);
     if (inPara) {
       const p = blocks[blocks.length - 1] as Extract<RichBlock, { type: 'paragraph' }>;
-      pushMerged(p.children, [{ type: 'text', value: ' ' }, ...inline]);
+      pushMerged(p.children, [{ type: 'text', value: ' ' }]);
+      pushMerged(p.children, inline);
     } else {
       blocks.push({ type: 'paragraph', children: inline });
       inPara = true;

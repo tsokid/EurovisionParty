@@ -113,6 +113,16 @@ describe('hardening', () => {
     expect(ms).toBeLessThan(2000);
   });
 
+  it('an unclosed link label holding ~1M chars of children does not overflow the stack (no spread push)', () => {
+    const src = '[' + '*a*'.repeat(300_000);
+    expect(() => parseRichText(src)).not.toThrow();
+    const errors = richTextErrors(src);
+    expect(errors.some((e) => /Unclosed \[/.test(e.message))).toBe(true);
+    const p = parseRichText(src)[0] as { children: Array<{ type: string }> };
+    expect(p.children).toHaveLength(300_000);
+    expect(p.children.every((c) => c.type === 'em')).toBe(true);
+  });
+
   it('treats a [ inside a link label as literal text, with a nested-link error', () => {
     expect(richTextErrors('[a [b](/x)](/y)').some((e) => /nested/.test(e.message))).toBe(true);
   });
@@ -122,6 +132,17 @@ describe('hardening', () => {
     expect(richTextErrors(ok)).toEqual([]);
     const deep = '**a *b '.repeat(5);
     expect(richTextErrors(deep).some((e) => /deeply nested/.test(e.message))).toBe(true);
+  });
+
+  it('rejects a locale-prefixed site path (LocaleLink adds the locale) and renders its label as text', () => {
+    const msg = 'Write the path without /en or /el — the language is added automatically';
+    for (const href of ['/en/faq', '/el/faq', '/en', '/el', '/el#x']) {
+      expect(richTextErrors(`[x](${href})`).map((e) => e.message), href).toEqual([msg]);
+      expect(parseRichText(`[x](${href})`), href).toEqual([{ type: 'paragraph', children: [{ type: 'text', value: 'x' }] }]);
+    }
+    for (const href of ['/faq', '/english', '/elsewhere', 'https://eurovision.games/en/faq']) {
+      expect(richTextErrors(`[x](${href})`), href).toEqual([]);
+    }
   });
 
   it('rejects an address with ( in it', () => {

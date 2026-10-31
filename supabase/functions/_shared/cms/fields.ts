@@ -17,7 +17,7 @@
 // deno.json import map.
 import { z } from 'zod';
 import { placeholdersIn } from './placeholders.ts';
-import { htmlErrors, isSafeHref } from './html.ts';
+import { htmlErrors, isLocalePrefixedPath, isSafeHref, LOCALE_PREFIX_MESSAGE } from './html.ts';
 import { richTextErrors } from './richText.ts';
 
 export { blockVariants, fieldAt, fieldPaths } from './walk.ts';
@@ -80,6 +80,11 @@ export type FieldMeta = {
    */
   seo?: 'title' | 'description';
   /**
+   * href only: rendered through LocaleLink, which adds the active locale, so
+   * a path starting with /en or /el is refused.
+   */
+  localeLink?: boolean;
+  /**
    * Computed, not edited: publish writes it (an image's or video poster's
    * width and height, from the media rows). The admin form does not draw it.
    */
@@ -99,6 +104,8 @@ export type StringFieldOptions = {
   rawHtml?: boolean;
   /** See FieldMeta.seo; false opts a seoTitle()/metaDescription() look-alike (a JSON-LD copy) out. */
   seo?: 'title' | 'description' | false;
+  /** See FieldMeta.localeLink (href only). */
+  localeLink?: boolean;
 };
 
 export type ContainerFieldOptions = { label?: string; help?: string; shared?: boolean };
@@ -162,6 +169,7 @@ function stringField(kind: StringKind, opts: StringFieldOptions = {}, mediaKind?
     ...(mediaKind && { mediaKind }),
     ...(opts.rawHtml && { rawHtml: true }),
     ...(opts.seo && { seo: opts.seo }),
+    ...(kind === 'href' && opts.localeLink && { localeLink: true }),
   };
   if (!placeholders.length && opts.placeholderHelp) placeholderHelpFor(placeholders, opts.placeholderHelp);
   const allowed = new Set(placeholders);
@@ -189,6 +197,8 @@ function stringField(kind: StringKind, opts: StringFieldOptions = {}, mediaKind?
     }
     if (kind === 'href' && value !== '' && !isSafeHref(value)) {
       ctx.addIssue({ code: 'custom', message: 'Must start with / (a page on this site) or https://' });
+    } else if (kind === 'href' && meta.localeLink && isLocalePrefixedPath(value)) {
+      ctx.addIssue({ code: 'custom', message: LOCALE_PREFIX_MESSAGE });
     }
     if (kind === 'mediaRef' && value !== '' && !mediaRefPattern(mediaKind!).test(value)) {
       ctx.addIssue({ code: 'custom', message: `Not a valid ${mediaKind} reference: pick an uploaded file` });
@@ -364,7 +374,7 @@ export function blocks(opts: ContainerFieldOptions = {}) {
       title: text({ label: 'Title' }),
       body: multiline({ label: 'Text' }),
       label: text({ label: 'Button label' }),
-      href: href({ label: 'Button link' }),
+      href: href({ label: 'Button link', localeLink: true }),
     }),
   ] as const;
   const names = options.map((o) => fieldMeta(o.shape.type).options![0]);
