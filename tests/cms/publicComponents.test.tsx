@@ -29,7 +29,8 @@ describe('CmsImage', () => {
     const img = screen.getByRole('img', { name: 'A stage' });
     expect(img).toHaveAttribute('src', '/media/0123456789ab.webp');
     expect(img).toHaveAttribute('srcset', '/media/0123456789ab-800.webp 800w, /media/0123456789ab.webp 1600w');
-    expect(img).toHaveAttribute('sizes');
+    // ContentLayout's widest column: max-w-4xl (896px) less sm:px-6 gutters (2 × 24px) = 848px.
+    expect(img).toHaveAttribute('sizes', '(min-width: 848px) 848px, 100vw');
     expect(img).toHaveAttribute('width', '1600');
     expect(img).toHaveAttribute('height', '900');
     expect(img).toHaveAttribute('loading', 'lazy');

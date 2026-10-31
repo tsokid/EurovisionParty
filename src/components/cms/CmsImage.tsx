@@ -6,6 +6,15 @@ import { useContext } from 'react';
 import { isDim, isPublishedMedia, type CmsImageValue } from './mediaTypes';
 import { isDraftMedia, MediaResolverContext, type ResolvedImage } from './MediaResolver';
 
+/**
+ * The widest content column a CmsImage renders in: ContentLayout `wide`
+ * (the data pages: max-w-4xl, 896px) less its sm:px-6 gutters (2 × 24px),
+ * between 896px and 1024px of viewport; 832px above (lg:px-8). The narrow
+ * ContentLayout and HomeSeoBlock (max-w-3xl) are at most 720px.
+ */
+const CONTENT_MAX_PX = 848;
+const SIZES = `(min-width: ${CONTENT_MAX_PX}px) ${CONTENT_MAX_PX}px, 100vw`;
+
 export default function CmsImage({ value, hero = false, className }: { value: CmsImageValue; hero?: boolean; className?: string }) {
   const resolver = useContext(MediaResolverContext);
   let img: ResolvedImage | null = null;
@@ -23,7 +32,7 @@ export default function CmsImage({ value, hero = false, className }: { value: Cm
     <img
       src={img.src}
       srcSet={srcSet}
-      sizes={srcSet ? '(min-width: 800px) 800px, 100vw' : undefined}
+      sizes={srcSet ? SIZES : undefined}
       alt={value.alt ?? ''}
       width={img.width}
       height={img.height}
