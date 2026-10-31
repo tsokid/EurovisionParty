@@ -60,13 +60,19 @@ describe('076 cms_documents', () => {
   const discard = (id: string) => db.query(`select public.cms_discard($1)`, [id]);
   const summary = async () =>
     (await db.query<{ s: Summary }>(`select public.unpublished_summary() as s`)).rows[0].s;
+  // cms_save stamps updated_at rounded UP to the next millisecond, so a publish
+  // begun in the same millisecond as the save would start "before" it. A real
+  // publish never follows a save that closely; wait past the rounding.
+  const tick = () => new Promise((r) => setTimeout(r, 3));
   const publishOk = async (status: 'ok' | 'noop' = 'ok') => {
-    const id = (await db.query<{ id: string }>(`select public.begin_publish() as id`)).rows[0].id;
+    await tick();
+    const id =(await db.query<{ id: string }>(`select public.begin_publish() as id`)).rows[0].id;
     await asService(() => db.query(`select public.end_publish($1, $2, null, 0, null)`, [id, status]));
   };
   /** A contest lifecycle auto-publish: begin_publish(false) ships no CMS drafts. */
   const publishContestsOnly = async () => {
-    const id = (await db.query<{ id: string }>(`select public.begin_publish(false) as id`)).rows[0].id;
+    await tick();
+    const id =(await db.query<{ id: string }>(`select public.begin_publish(false) as id`)).rows[0].id;
     await asService(() => db.query(`select public.end_publish($1, 'ok', null, 0, null)`, [id]));
   };
   const inputDocs = async () =>

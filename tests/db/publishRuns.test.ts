@@ -3,7 +3,7 @@
 // unpublished_summary.
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import type { PGlite } from '@electric-sql/pglite';
-import { createDb, asUser, makeAdmin } from './harness';
+import { createDb, asUser, makeAdmin, applyMigration } from './harness';
 import { buildSnapshotFiles, type SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
 
 const ADMIN = '00000000-0000-4000-8000-000000000001';
@@ -264,5 +264,68 @@ describe('074 publish_runs', () => {
     );
     const a = await read();
     expect(await read()).toBe(a);
+  });
+});
+
+// A database where an earlier 074 already ran: publish_runs without cms and
+// the 0-arg begin_publish(). Re-applying the current 074 must add the column
+// and replace the function (no overload, so begin_publish() stays unambiguous).
+describe('074 re-applied over the old 074', () => {
+  let db: PGlite;
+
+  beforeAll(async () => {
+    db = await createDb();
+    await makeAdmin(db, ADMIN, 'admin@example.test');
+    await db.exec(`
+      drop function public.begin_publish(boolean);
+      alter table public.publish_runs drop column cms;
+      create function public.begin_publish() returns bigint language plpgsql security definer
+        set search_path = public as $fn$
+      declare v_id bigint;
+      begin
+        insert into public.publish_runs (status, started_by) values ('running', auth.uid()) returning id into v_id;
+        return v_id;
+      end; $fn$;
+      grant execute on function public.begin_publish() to authenticated;
+    `);
+    await applyMigration(db, '074');
+  }, 120_000);
+
+  afterAll(async () => {
+    await db?.close();
+  });
+
+  it('adds publish_runs.cms (not null, default true)', async () => {
+    const col = (await db.query<{ is_nullable: string; column_default: string }>(
+      `select is_nullable, column_default from information_schema.columns
+        where table_schema = 'public' and table_name = 'publish_runs' and column_name = 'cms'`,
+    )).rows;
+    expect(col).toEqual([{ is_nullable: 'NO', column_default: 'true' }]);
+  });
+
+  it('leaves exactly one begin_publish, begin_publish(boolean), with the 074 grants', async () => {
+    const fns = (await db.query<{ args: string }>(
+      `select pg_get_function_identity_arguments(p.oid) as args from pg_proc p
+        where p.proname = 'begin_publish' and p.pronamespace = 'public'::regnamespace`,
+    )).rows;
+    expect(fns).toEqual([{ args: 'p_cms boolean' }]);
+    for (const [role, ok] of [['anon', false], ['authenticated', true]] as const) {
+      const r = (await db.query<{ ok: boolean }>(
+        `select has_function_privilege($1, 'public.begin_publish(boolean)', 'execute') as ok`, [role],
+      )).rows[0];
+      expect(r.ok, role).toBe(ok);
+    }
+  });
+
+  it('begin_publish() still resolves through the default (cms = true); begin_publish(false) records false', async () => {
+    await asUser(db, ADMIN);
+    const id = (await db.query<{ id: string }>(`select public.begin_publish() as id`)).rows[0].id;
+    expect((await db.query<{ cms: boolean }>(`select cms from public.publish_runs where id = $1`, [id])).rows[0].cms).toBe(true);
+    await db.exec(`set role service_role`);
+    await db.query(`select public.end_publish($1, 'ok', null, 0, null)`, [id]);
+    await db.exec(`reset role`);
+    await asUser(db, ADMIN);
+    const id2 = (await db.query<{ id: string }>(`select public.begin_publish(false) as id`)).rows[0].id;
+    expect((await db.query<{ cms: boolean }>(`select cms from public.publish_runs where id = $1`, [id2])).rows[0].cms).toBe(false);
   });
 });

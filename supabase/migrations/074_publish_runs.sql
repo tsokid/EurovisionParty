@@ -60,6 +60,9 @@ create table if not exists public.publish_runs (
   cms           boolean not null default true
 );
 
+-- A database where an earlier 074 ran has the table without cms.
+alter table public.publish_runs add column if not exists cms boolean not null default true;
+
 create index if not exists publish_runs_status_idx on public.publish_runs (status, finished_at desc);
 
 alter table public.publish_runs enable row level security;
@@ -72,6 +75,9 @@ grant select on public.publish_runs to authenticated;
 grant select on public.publish_runs to service_role;
 
 -- ── begin_publish ───────────────────────────────────────────
+-- The earlier 074's 0-arg begin_publish() would otherwise stay as an
+-- overload and make begin_publish() ambiguous.
+drop function if exists public.begin_publish();
 create or replace function public.begin_publish(p_cms boolean default true)
 returns bigint
 language plpgsql
