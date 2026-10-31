@@ -126,6 +126,31 @@ describe('076 cms_documents', () => {
     ).rejects.toThrow(/en.*el/);
   });
 
+  it('cms_save rejects a document of 1 MiB or more (pg_column_size) and keeps the old one', async () => {
+    const t = await save('home', 'home', doc('A'), null);
+    const big = { en: { title: 'x'.repeat(1_100_000) }, el: { title: 'y' } };
+    await expect(save('home', 'home', big, t)).rejects.toThrow(/document too large/);
+    await expect(save('about', 'about', big, null)).rejects.toThrow(/document too large/);
+    expect((await get('home'))!.data).toEqual(doc('A'));
+    expect(await get('about')).toBeNull();
+    // Just under the limit is fine.
+    const ok = { en: { title: 'x'.repeat(900_000) }, el: { title: 'y' } };
+    await expect(save('home', 'home', ok, t)).resolves.toBeInstanceOf(Date);
+  });
+
+  it('cms_save reads its timestamp after taking the row lock (a waiting save is never stamped before the lock holder)', async () => {
+    const src = (await db.query<{ src: string }>(
+      `select prosrc as src from pg_proc where proname = 'cms_save' and pronamespace = 'public'::regnamespace`,
+    )).rows[0].src.toLowerCase();
+    // No stamp in the declare section; in the update branch, clock_timestamp() only after "for update".
+    const declare = src.slice(0, src.indexOf('begin'));
+    expect(declare).not.toContain('clock_timestamp');
+    const lock = src.indexOf('for update');
+    expect(lock).toBeGreaterThan(0);
+    const updateBranch = src.slice(src.indexOf('else', src.indexOf('p_expected_updated_at is null')));
+    expect(updateBranch.indexOf('clock_timestamp')).toBeGreaterThan(updateBranch.indexOf('for update'));
+  });
+
   it('cms_save rejects a bad doc_id, an empty doc_type, and a doc_type change', async () => {
     await expect(save('Home Page', 'home', doc('A'), null)).rejects.toThrow(/doc_id/);
     await expect(save('home', '', doc('A'), null)).rejects.toThrow(/doc_type/);

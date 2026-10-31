@@ -14,6 +14,9 @@
  *   Link clicks and form submits inside the pane are swallowed.
  * - Locale: a local LocaleProvider plus a cloned i18next instance, so the
  *   EN/EL toggle never changes the global language or <html lang>.
+ * - Safety: the draft may not validate yet, so the page gets a sanitized
+ *   copy (sanitizePreview.ts): rawHtml outside the allowlist is shown as
+ *   escaped text and an unsafe href becomes "#".
  * - Errors: a malformed draft or a placeholder the page does not supply
  *   (interpolate throws) shows "Preview error: …" inside the pane only.
  */
@@ -34,6 +37,8 @@ import { localizePath, type Locale } from '../../../lib/seo/locale';
 import { LocaleProvider } from '../../../lib/seo/LocaleContext';
 import { PreviewModeContext } from '../../../lib/seo/PreviewMode';
 import { PageContentOverrideProvider } from '../../../lib/cms/PageContentOverride';
+import { docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
+import { sanitizePreviewDoc } from './sanitizePreview';
 
 const LOCALES: Locale[] = ['en', 'el'];
 const NOT_FOUND_PATH = '/page-not-found';
@@ -124,6 +129,8 @@ export default function PreviewPane({ docId, doc, initialLocale = 'en' }: {
   const [locale, setLocale] = useState<Locale>(initialLocale);
   // A private i18next instance for the page's own UI strings (footer etc.).
   const localI18n = useMemo(() => i18n.cloneInstance({ lng: locale }), [locale]);
+  // Never render the draft itself: rawHtml and hrefs are made safe on a copy.
+  const safeDoc = useMemo(() => sanitizePreviewDoc(docTypeFor(docId), doc), [docId, doc]);
 
   return (
     <section className="flex flex-col rounded-xl border border-white/10 bg-black/20">
@@ -154,7 +161,7 @@ export default function PreviewPane({ docId, doc, initialLocale = 'en' }: {
           <PreviewModeContext.Provider value={true}>
             <I18nextProvider i18n={localI18n}>
               <LocaleProvider locale={locale}>
-                <PageContentOverrideProvider docId={docId} doc={doc}>
+                <PageContentOverrideProvider docId={docId} doc={safeDoc}>
                   <PreviewPage docId={docId} locale={locale} />
                 </PageContentOverrideProvider>
               </LocaleProvider>

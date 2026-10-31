@@ -19,7 +19,8 @@
 --   precision (rounded up, and always > the previous value), so a client
 --   holding it as a JS Date or an ISO string round-trips it exactly, and
 --   rounding up never marks an edit made after a run started as published.
---   doc_type cannot change on update.
+--   doc_type cannot change on update. data must be under 1 MiB
+--   (pg_column_size), else 'document too large'.
 -- * cms_discard(doc_id) (super admin): deletes the draft, reverting the
 --   document to the published file.
 -- * 074's publish_input() and unpublished_summary() read this table
@@ -106,7 +107,9 @@ set search_path = public
 as $fn$
 declare
   -- Rounded up to the millisecond: never earlier than the real write time.
-  v_now  timestamptz := date_trunc('milliseconds', clock_timestamp()) + interval '1 millisecond';
+  -- Read only once the write can proceed (after the row lock on update), so
+  -- a save that waited on the lock is never stamped before the holder.
+  v_now  timestamptz;
   v_type text;
   v_at   timestamptz;
 begin
@@ -124,8 +127,12 @@ begin
      or not (p_data ? 'en') or not (p_data ? 'el') then
     raise exception 'data must be an object with keys en and el';
   end if;
+  if pg_column_size(p_data) >= 1048576 then
+    raise exception 'document too large';
+  end if;
 
   if p_expected_updated_at is null then
+    v_now := date_trunc('milliseconds', clock_timestamp()) + interval '1 millisecond';
     insert into public.cms_documents (doc_id, doc_type, data, updated_at, updated_by)
     values (p_doc_id, p_doc_type, p_data, v_now, auth.uid())
     on conflict (doc_id) do nothing
@@ -138,6 +145,7 @@ begin
     if found and v_type <> p_doc_type then
       raise exception 'doc_type mismatch: % is a %, not a %', p_doc_id, v_type, p_doc_type;
     end if;
+    v_now := date_trunc('milliseconds', clock_timestamp()) + interval '1 millisecond';
 
     update public.cms_documents d
        set data = p_data,
