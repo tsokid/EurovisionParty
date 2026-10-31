@@ -9,7 +9,7 @@ import { buildSnapshotFiles, type SnapshotInput } from '../../supabase/functions
 const ADMIN = '00000000-0000-4000-8000-000000000001';
 const STRANGER = '00000000-0000-4000-8000-0000000000ff';
 
-type Summary = { changed_years: number[]; since: string | null };
+type Summary = { changed_years: number[]; changed_docs: string[]; since: string | null };
 
 describe('074 publish_runs', () => {
   let db: PGlite;
@@ -224,7 +224,7 @@ describe('074 publish_runs', () => {
     const input = await asService(async () =>
       (await db.query<{ i: SnapshotInput }>(`select public.publish_input() as i`)).rows[0].i,
     );
-    expect(Object.keys(input).sort()).toEqual(['contests', 'countries', 'entries', 'generated_at']);
+    expect(Object.keys(input).sort()).toEqual(['cms_documents', 'contests', 'countries', 'entries', 'generated_at']);
     expect(Object.keys(input.contests[0]).sort()).toEqual(
       ['cancelled', 'city', 'city_slug', 'final_date', 'host_iso', 'indexable', 'semi1_date', 'semi2_date', 'stage', 'year'],
     );

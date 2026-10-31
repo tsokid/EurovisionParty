@@ -34,7 +34,12 @@ export type PublishOutcome = {
   error?: string;
 };
 
-export type UnpublishedSummary = { changed_years: number[]; since: string | null };
+export type UnpublishedSummary = {
+  changed_years: number[];
+  /** cms_documents doc_ids edited since the last publish (076). */
+  changed_docs?: string[];
+  since: string | null;
+};
 
 export type PublishRun = {
   id: number;

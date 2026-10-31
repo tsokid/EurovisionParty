@@ -33,7 +33,17 @@ export type SnapshotInput = {
   entries: EntryRow[];
   /** ISO timestamp written to site.json; passed in so output is reproducible. */
   generated_at: string;
+  /**
+   * CMS drafts from cms_documents (076), by doc_id; data is the {en, el}
+   * document, unvalidated. publish_input() always sends it; optional so
+   * contest-only callers and fixtures need not. Not read by
+   * buildSnapshotFiles.
+   */
+  cms_documents?: CmsDocumentRow[];
 };
+
+/** One publish_input().cms_documents row. */
+export type CmsDocumentRow = { doc_id: string; doc_type: string; data: { en: unknown; el: unknown } };
 
 /** JSON with object keys sorted at every level, 2-space indent, trailing newline. */
 export function stableJson(value: unknown): string {

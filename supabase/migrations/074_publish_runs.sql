@@ -11,18 +11,24 @@
 --   running row. ok and noop stamp contests.published_at (every contest
 --   is in the snapshot, so every contest is published).
 -- * publish_input() (service_role): the buildSnapshotFiles input,
---   { contests, countries, entries, generated_at }, with exactly the
---   columns of ContestRow / CountryRow / EntryRow
+--   { contests, countries, entries, generated_at, cms_documents }, with
+--   exactly the columns of ContestRow / CountryRow / EntryRow
 --   (src/content/contests/types.ts). generated_at is the latest
 --   updated_at of contests and contest_entries, so unchanged data gives a
---   byte-identical site.json and Publish can be a no-op.
--- * unpublished_summary() (super admin): { changed_years, since }. since
---   is started_at of the last successful (ok or noop) run, null before the
+--   byte-identical site.json and Publish can be a no-op. cms_documents is
+--   [{doc_id, doc_type, data}] from 076's draft table, by doc_id.
+-- * unpublished_summary() (super admin): { changed_years, changed_docs,
+--   since }. since is started_at of the last successful (ok or noop) run, null before the
 --   first. started_at precedes the run's publish_input read, so an edit
 --   made while a run is in flight stays unpublished. changed_years are the
 --   years whose contest row or any entry has updated_at after since (every
 --   year when since is null). Deleted entries leave no updated_at behind
---   and are not detected.
+--   and are not detected. changed_docs are the cms_documents doc_ids with
+--   updated_at after since (every draft when since is null); a discarded
+--   draft is not listed.
+-- * publish_input() and unpublished_summary() read cms_documents, which
+--   076 creates. Both are plpgsql (bodies resolved at call time), so this
+--   file applies before 076; neither is called before 076 is in place.
 -- * last_publish_run() (super admin): the newest publish_runs row as jsonb
 --   (id, started_at, finished_at, status, commit_sha, files_changed,
 --   error), null before the first run. Feeds the admin PublishBar.
@@ -122,14 +128,16 @@ revoke execute on function public.end_publish(bigint, text, text, int, text) fro
 grant execute on function public.end_publish(bigint, text, text, int, text) to service_role;
 
 -- ── publish_input ───────────────────────────────────────────
+-- plpgsql, not sql: a sql body would resolve cms_documents (076) now.
 create or replace function public.publish_input()
 returns jsonb
-language sql
+language plpgsql
 stable
 security definer
 set search_path = public
 as $fn$
-  select jsonb_build_object(
+begin
+  return jsonb_build_object(
     'contests', coalesce((
       select jsonb_agg(jsonb_build_object(
                'year', c.year, 'host_iso', c.host_iso, 'city', c.city, 'city_slug', c.city_slug,
@@ -157,8 +165,13 @@ as $fn$
       coalesce(greatest((select max(updated_at) from public.contests),
                         (select max(updated_at) from public.contest_entries)),
                'epoch'::timestamptz) at time zone 'UTC',
-      'YYYY-MM-DD"T"HH24:MI:SS"Z"')
+      'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+    'cms_documents', coalesce((
+      select jsonb_agg(jsonb_build_object('doc_id', d.doc_id, 'doc_type', d.doc_type, 'data', d.data)
+             order by d.doc_id)
+        from public.cms_documents d), '[]'::jsonb)
   );
+end;
 $fn$;
 
 revoke execute on function public.publish_input() from public, anon, authenticated;
@@ -175,6 +188,7 @@ as $fn$
 declare
   v_since timestamptz;
   v_years int[];
+  v_docs  text[];
 begin
   if not public.is_super_admin() then
     raise exception 'forbidden';
@@ -192,7 +206,15 @@ begin
       or exists (select 1 from public.contest_entries e
                   where e.year = c.year and e.updated_at > v_since);
 
-  return jsonb_build_object('changed_years', to_jsonb(v_years), 'since', v_since);
+  select coalesce(array_agg(d.doc_id order by d.doc_id), '{}')
+    into v_docs
+    from public.cms_documents d
+   where v_since is null
+      or d.updated_at > v_since;
+
+  return jsonb_build_object('changed_years', to_jsonb(v_years),
+                            'changed_docs', to_jsonb(v_docs),
+                            'since', v_since);
 end;
 $fn$;
 
