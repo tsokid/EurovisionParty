@@ -15,6 +15,11 @@
  *   Pages render ContentPending for the body while not ready, never hiding
  *   PageSeo behind it. LocaleLink prefetches the doc on hover/focus.
  *
+ * Admin preview: inside PageContentOverrideProvider for this docId, the draft's
+ * slice is returned synchronously; the cache, collector and network are never
+ * consulted for that doc (useContent gets a null path). A draft lacking the
+ * active locale throws, for the preview's error boundary.
+ *
  * T comes from the doc type's schema via `import type` (z.infer), so zod
  * stays out of the client bundle.
  */
@@ -22,6 +27,7 @@ import { useContext } from 'react';
 import { useContent, type ContentState } from '../seo/useContent';
 import { ContentCollectorContext } from '../seo/contentContext';
 import { useLocale } from '../seo/LocaleContext';
+import { usePageContentOverride } from './pageContentOverrideContext';
 
 export const pageContentPath = (docId: string): string => `pages/${docId}.json`;
 
@@ -29,7 +35,16 @@ export function usePageContent<T>(docId: string): ContentState<T> {
   const path = pageContentPath(docId);
   const locale = useLocale();
   const isServer = useContext(ContentCollectorContext) !== null;
-  const state = useContent<Partial<Record<typeof locale, T>>>(path, locale);
+  const override = usePageContentOverride();
+  const draft = override !== null && override.docId === docId ? override : null;
+  const state = useContent<Partial<Record<typeof locale, T>>>(draft ? null : path, locale);
+
+  if (draft) {
+    const doc = draft.doc;
+    const data = doc && typeof doc === 'object' ? (doc as Partial<Record<typeof locale, T>>)[locale] : undefined;
+    if (data === undefined) throw new Error(`the draft of ${docId} has no "${locale}" content`);
+    return { status: 'ready', data };
+  }
 
   if (state.status === 'ready') {
     const data = state.data[locale];

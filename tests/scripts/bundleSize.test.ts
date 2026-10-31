@@ -44,6 +44,8 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
   const publicNames = [...publicFiles].map((f) => f.replace(/^assets\//, ''));
   // Only the admin UI contains this (src/admin/AdminLogin.tsx).
   const ADMIN_MARKER = 'Admin access';
+  // The page preview (src/admin/modules/pages/PreviewPane.tsx) is admin-only too.
+  const PREVIEW_MARKER = 'Preview — links are disabled';
   const mainFile = entry ? entry.file.replace(/^assets\//, '') : '';
   const mainSize = jsFiles.find((j) => j.f === mainFile)?.size ?? 0;
 
@@ -69,6 +71,7 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
       const src = read(f);
       expect(src.includes('ZodError'), `ZodError in public chunk ${f}`).toBe(false);
       expect(src.includes(ADMIN_MARKER), `admin UI in public chunk ${f}`).toBe(false);
+      expect(src.includes(PREVIEW_MARKER), `admin preview in public chunk ${f}`).toBe(false);
     }
   });
 

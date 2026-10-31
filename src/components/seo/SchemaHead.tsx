@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { SSR_ATTR, type HeadInput } from '../../lib/seo/headTags';
 import { useHeadCollector } from '../../lib/seo/HeadContext';
+import { usePreviewMode } from '../../lib/seo/PreviewMode';
 
 type Props = HeadInput;
 
@@ -10,12 +11,16 @@ export default function SchemaHead({
   ogType, ogImage, twitterTitle, twitterDescription,
   articlePublishedTime, articleModifiedTime, keywords,
 }: Props) {
-  useHeadCollector()?.setHead({
+  // Admin preview: the page renders, but the admin's document head is never touched.
+  const preview = usePreviewMode();
+  const collector = useHeadCollector();
+  if (!preview) collector?.setHead({
     title, description, canonical, robots, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
     ogType, ogImage, twitterTitle, twitterDescription,
     articlePublishedTime, articleModifiedTime, keywords,
   });
   useEffect(() => {
+    if (preview) return;
     // Drop the prerendered copies of the tags appended below (JSON-LD,
     // hreflang, og:locale:alternate, article:*); this effect owns them now.
     document.head.querySelectorAll(`[${SSR_ATTR}]`).forEach((el) => el.remove());
@@ -149,7 +154,7 @@ export default function SchemaHead({
         link.href = prevCanonical;
       }
     };
-  }, [title, description, canonical, robots, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
+  }, [preview, title, description, canonical, robots, jsonLd, hreflang, ogLocale, ogLocaleAlternate,
       ogType, ogImage, twitterTitle, twitterDescription,
       articlePublishedTime, articleModifiedTime, keywords]);
   return null;
