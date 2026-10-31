@@ -6,6 +6,7 @@
  */
 import type { ContestSnapshot, CountrySnapshot, SiteSnapshot } from '../../content/contests/types';
 import { LOCALES, localizePath, type Locale } from './locale';
+import { editorialDocId, type EditorialFamily } from '../../../supabase/functions/_shared/cms/pagesIndex';
 
 export interface ContentData {
   site: SiteSnapshot;
@@ -49,6 +50,11 @@ export const COUNTRY_INDEX_PATH = '/countries';
 
 const contestFile = (year: number) => `content/contests/${year}.json`;
 const countryFile = (iso: string) => `content/countries/${iso}.json`;
+/**
+ * A page's optional editorial doc (CMS 3c). Listed whether or not it exists:
+ * the sitemap's lastmod skips missing files, so without one nothing changes.
+ */
+const editorialFile = (family: EditorialFamily, key: string | number) => `content/pages/${editorialDocId(family, key)}.json`;
 
 /** Participations that actually performed (2020 was cancelled). */
 export function countedParticipations(country: CountrySnapshot): number {
@@ -75,17 +81,18 @@ export function dynamicPageUrls(data: ContentData): DynamicPage[] {
   const live = data.contests.find((c) => c.year === data.site.current_year);
   if (live && live.stage !== 'archived') {
     const files = [contestFile(live.year)];
-    add(hubPath(live.year), 'hub', true, files);
+    // Only the hub page itself renders the hub editorial; its subpages do not.
+    add(hubPath(live.year), 'hub', true, [...files, editorialFile('hub', live.year)]);
     for (const sub of HUB_SUBPAGES) add(`${hubPath(live.year)}/${sub}`, 'hub', true, files);
   }
 
   const archived = data.contests.filter((c) => c.stage === 'archived');
   add(ARCHIVE_INDEX_PATH, 'archive-index', true, archived.map((c) => contestFile(c.year)));
-  for (const c of archived) add(archivePath(c.year, c.city_slug), 'archive', c.indexable, [contestFile(c.year)]);
+  for (const c of archived) add(archivePath(c.year, c.city_slug), 'archive', c.indexable, [contestFile(c.year), editorialFile('archive', c.year)]);
 
   const countries = data.countries.filter((c) => c.participations.length > 0);
   add(COUNTRY_INDEX_PATH, 'country-index', true, countries.map((c) => countryFile(c.iso)));
-  for (const c of countries) add(countryPath(c.slug), 'country', isCountryIndexable(c), [countryFile(c.iso)]);
+  for (const c of countries) add(countryPath(c.slug), 'country', isCountryIndexable(c), [countryFile(c.iso), editorialFile('country', c.iso)]);
 
   return out;
 }

@@ -205,7 +205,7 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
           Indexable
         </label>
         <span className="text-xs text-white/50">Turn on after you've added your own text or image for this year.</span>
-        <EditorialIndicator year={year} />
+        <EditorialIndicator year={year} archived={archived} />
       </div>
 
       <button

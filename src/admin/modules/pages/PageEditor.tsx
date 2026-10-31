@@ -63,8 +63,8 @@ const BUTTON = 'px-3 py-1.5 rounded font-bold text-sm disabled:opacity-40 cursor
 interface Props {
   docId: string;
   label: string;
-  /** Editorial docs: the unprefixed public path of the page the preview shows. */
-  previewPath?: string;
+  /** Editorial docs: the unprefixed public path of the page the preview shows; null while it is being looked up. */
+  previewPath?: string | null;
   /** A draft was saved or discarded: refresh the list and the publish count. */
   onChanged: () => void;
 }

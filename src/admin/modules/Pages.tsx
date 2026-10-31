@@ -20,7 +20,7 @@ import { cmsList, cmsSave, fetchPublishedEditorialIds, resetPublishedPages, type
 import { PageList, type EditorialListing } from './pages/PageList';
 import { PUBLISH_PAGES_TEXT, SITE_PAGES } from './pages/sitePages';
 import { PageEditor } from './pages/PageEditor';
-import { editorialTargets, editorialTitle, emptyEditorialDoc, loadEditorialSources, type EditorialTarget } from './pages/editorialPages';
+import { editorialPreviewPath, editorialTargets, editorialTitle, emptyEditorialDoc, loadEditorialSources, type EditorialTarget } from './pages/editorialPages';
 import { docTypeFor } from '../../../supabase/functions/_shared/cms/registry';
 import { isEditorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 
@@ -96,10 +96,12 @@ export default function Pages() {
   };
 
   const site = SITE_PAGES.find((p) => p.docId === selected);
+  // Label and the hub's path come from the id alone; an archive year's or a
+  // country's path waits for the targets (the preview says so meanwhile).
   const page = site ?? (selected && isEditorialDocId(selected)
-    ? { docId: selected, label: editorialTitle(selected, editorial?.targets ?? []) }
+    ? { docId: selected, label: editorialTitle(selected, editorial?.targets) }
     : null);
-  const previewPath = page && !site ? editorial?.targets.find((t) => t.docId === page.docId)?.path : undefined;
+  const previewPath = page && !site ? editorialPreviewPath(page.docId, editorial?.targets ?? null) : undefined;
 
   return (
     <div className="p-4 space-y-4">

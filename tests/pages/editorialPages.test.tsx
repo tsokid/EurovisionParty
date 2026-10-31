@@ -36,7 +36,7 @@ beforeAll(async () => {
   docs.set('pages/country-gr.json', doc({ metaDescription: undefined }));
   docs.set('pages/country-ma.json', doc({ metaDescription: 'Morocco at Eurovision: one entry, 1980.' }));
   docs.set('pages/hub-2026.json', doc({ metaDescription: 'Eurovision 2026 in Vienna: our own guide to the week.' }));
-});
+}, 60_000); // the first entry-server import is slow under full-suite load
 
 const ldTypes = (r: RenderResult) =>
   [...headTagsHtml(r.head!).matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]

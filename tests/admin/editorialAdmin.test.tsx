@@ -72,7 +72,7 @@ import { AdminNavContext, type AdminNav } from '../../src/admin/adminNav';
 import { __resetPublishedPagesForTests } from '../../src/admin/modules/pages/cmsApi';
 import { __resetPublishGuardForTests } from '../../src/admin/modules/contests/publish';
 import {
-  editorialLevel, editorialTargets, editorialTitle, emptyEditorialDoc,
+  editorialLevel, editorialPreviewPath, editorialRef, editorialTargets, editorialTitle, emptyEditorialDoc,
 } from '../../src/admin/modules/pages/editorialPages';
 
 vi.setConfig({ testTimeout: 15_000 });
@@ -119,7 +119,23 @@ describe('editorialPages', () => {
     ]);
     expect(editorialTitle('archive-2005', t)).toBe('Contest year 2005 · Kyiv');
     expect(editorialTitle('country-gr', t)).toBe('Country Greece');
-    expect(editorialTitle('hub-2031', t)).toBe('Live hub hub-2031');
+    expect(editorialTitle('hub-2031', t)).toBe('Live hub 2031');
+  });
+
+  it('the id alone gives the kind, key, heading and (for the hub) the path: the editor is right before the targets load', () => {
+    expect(editorialRef('archive-2005')).toEqual({ family: 'archive', key: '2005', title: 'Contest year 2005' });
+    expect(editorialRef('country-gr')).toEqual({ family: 'country', key: 'gr', title: 'Country GR' });
+    expect(editorialRef('hub-2026')).toEqual({ family: 'hub', key: '2026', title: 'Live hub 2026', path: '/eurovision-2026' });
+    expect(editorialRef('faq')).toBeNull();
+    expect(editorialTitle('archive-2005')).toBe('Contest year 2005');
+    expect(editorialTitle('country-gr')).toBe('Country GR');
+    // Paths: the hub's from the id; archive and country wait for the targets (null), then resolve or are unlisted.
+    const t = editorialTargets({ contests: CONTESTS, countries: COUNTRIES });
+    expect(editorialPreviewPath('hub-2026', null)).toBe('/eurovision-2026');
+    expect(editorialPreviewPath('archive-2005', null)).toBeNull();
+    expect(editorialPreviewPath('archive-2005', t)).toBe('/past-contests/eurovision-2005-kyiv');
+    expect(editorialPreviewPath('country-gr', t)).toBe('/countries/greece');
+    expect(editorialPreviewPath('country-zz', t)).toBeUndefined();
   });
 
   it('a new editorial doc (empty intro, no blocks, both locales) validates', () => {
@@ -185,6 +201,29 @@ describe('Pages module: editorial groups', () => {
     expect(await screen.findByRole('heading', { name: 'Contest year 2004 · Istanbul' })).toBeTruthy();
   });
 
+  it('first paint, before the targets load: the heading comes from the id, the preview waits for the path', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((r) => { release = r; });
+    const realFetch = fetchSpy.getMockImplementation()!;
+    fetchSpy.mockImplementation(async (input, init) => {
+      if (String(input) === '/content/pages/index.json') await gate; // holds the targets (and the editor's load)
+      return realFetch(input, init);
+    });
+    h.drafts['archive-2005'] = { doc_id: 'archive-2005', doc_type: 'archive-editorial', data: { en: editorial({ intro: 'Hi' }), el: editorial() }, updated_at: '2026-10-30T09:15:00Z' };
+    const nav: AdminNav = { openDoc: vi.fn(), pendingDoc: 'archive-2005', clearPendingDoc: vi.fn() };
+    render(<AdminNavContext.Provider value={nav}><Pages /></AdminNavContext.Provider>);
+    expect(await screen.findByRole('heading', { name: 'Contest year 2005' })).toBeTruthy();
+    release();
+    expect(await screen.findByRole('heading', { name: 'Contest year 2005 · Kyiv' })).toBeTruthy();
+  });
+
+  it('the preview shows a wait message, not an error, while the path is looked up', () => {
+    const router = createMemoryRouter([{ path: '/admin', element: <PreviewPane docId="archive-2005" doc={{ en: editorial(), el: editorial() }} path={null} /> }], { initialEntries: ['/admin'] });
+    render(<RouterProvider router={router} />);
+    expect(screen.getByText('Finding the page to preview…')).toBeTruthy();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
   it('the editor checks an editorial metaDescription against the published pages (I2)', async () => {
     const faq = bundledContent('pages/faq.json') as { en: { meta: { description: string } } };
     h.drafts['archive-2005'] = {
@@ -230,6 +269,30 @@ describe('ContestDetailsForm: editorial indicator', () => {
     render(<AdminNavContext.Provider value={nav}><ContestDetailsForm year={2005} /></AdminNavContext.Provider>);
     return nav;
   };
+
+  for (const stage of ['current', 'upcoming'] as const) {
+    it(`a ${stage} year reports on and links to its live hub editorial (hub-{year})`, async () => {
+      h.contest = { year: 2026, city: 'Vienna', city_slug: 'vienna', host_iso: 'AT', semi1_date: null, semi2_date: null, final_date: null, indexable: true, stage };
+      h.index = { editorial: ['hub-2026'] };
+      h.published['hub-2026'] = { en: editorial({ intro: 'Hub text' }), el: editorial() };
+      const nav = NAV();
+      render(<AdminNavContext.Provider value={nav}><ContestDetailsForm year={2026} /></AdminNavContext.Provider>);
+      await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Live hub editorial: text'));
+      fireEvent.click(screen.getByRole('button', { name: /Edit live hub editorial/ }));
+      expect(nav.openDoc).toHaveBeenCalledWith('hub-2026');
+      expect(fetchSpy.mock.calls.map(([u]) => String(u))).not.toContain('/content/pages/archive-2026.json');
+      expect(h.rpc.mock.calls.filter(([n, a]) => n === 'cms_get' && (a as { p_doc_id: string }).p_doc_id === 'archive-2026')).toEqual([]);
+    });
+  }
+
+  it('an archived year keeps archive-{year}, labelled "Editorial"', async () => {
+    h.index = { editorial: ['archive-2005', 'hub-2005'] };
+    h.published['archive-2005'] = { en: editorial({ intro: 'Archive text' }), el: editorial() };
+    const nav = show();
+    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Editorial: text'));
+    fireEvent.click(screen.getByRole('button', { name: /Edit editorial/ }));
+    expect(nav.openDoc).toHaveBeenCalledWith('archive-2005');
+  });
 
   it('none: no draft and not published; the link opens archive-{year}', async () => {
     const nav = show();

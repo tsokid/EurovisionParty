@@ -1,5 +1,7 @@
 // "Editorial: none / text / text + image" for a contest year, next to the
-// indexable switch (spec §5): what archive-{year} holds, from its draft when
+// indexable switch (spec §5). An archived year's page is its archive page
+// (archive-{year}); a current or upcoming year's is the live hub (hub-{year},
+// labelled "Live hub editorial"). What that doc holds, from its draft when
 // there is one, else from the published doc (content/pages/index.json says
 // whether there is one). It only informs: `indexable` stays the owner's
 // switch. The link opens the doc's editor in the Pages module.
@@ -12,9 +14,10 @@ import { editorialDocId } from '../../../../supabase/functions/_shared/cms/pages
 /** The answer for one doc id (a year switch shows "…" until its own answer arrives). */
 type Loaded = { docId: string; level: EditorialLevel | null; err: string | null };
 
-export function EditorialIndicator({ year }: { year: number }) {
+export function EditorialIndicator({ year, archived }: { year: number; archived: boolean }) {
   const nav = useAdminNav();
-  const docId = editorialDocId('archive', year);
+  const docId = editorialDocId(archived ? 'archive' : 'hub', year);
+  const name = archived ? 'Editorial' : 'Live hub editorial';
   const [loaded, setLoaded] = useState<Loaded | null>(null);
 
   useEffect(() => {
@@ -38,11 +41,11 @@ export function EditorialIndicator({ year }: { year: number }) {
         title={err ?? undefined}
         className={`rounded-full border px-2 py-0.5 ${level && level !== 'none' ? 'border-emerald-400/30 bg-emerald-500/20 text-emerald-200' : 'border-white/20 bg-white/10 text-white/70'}`}
       >
-        Editorial: {text}
+        {name}: {text}
       </span>
       {nav && (
         <button type="button" onClick={() => nav.openDoc(docId)} className="text-sky-300 hover:underline cursor-pointer">
-          {level === 'none' ? 'Add editorial' : 'Edit editorial'} →
+          {level === 'none' ? `Add ${name.toLowerCase()}` : `Edit ${name.toLowerCase()}`} →
         </button>
       )}
     </span>

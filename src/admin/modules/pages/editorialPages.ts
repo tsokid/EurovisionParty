@@ -7,7 +7,7 @@
 // Years and countries come from the same admin data as the Contests module
 // (contest_summaries, the countries table).
 import { supabase } from '../../../lib/supabase';
-import { CMS_DOC_TYPES } from '../../../../supabase/functions/_shared/cms/registry';
+import { CMS_DOC_TYPES, docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
 import { emptyValue } from '../../../../supabase/functions/_shared/cms/emptyValue';
 import { editorialDocId, editorialFamily, type EditorialFamily } from '../../../../supabase/functions/_shared/cms/pagesIndex';
 import { archivePath, countryPath, hubPath } from '../../../lib/seo/dynamicPages';
@@ -61,12 +61,46 @@ export async function loadEditorialSources(): Promise<EditorialSources> {
   return { contests: (c.data ?? []) as ContestSource[], countries: (co.data ?? []) as CountrySource[] };
 }
 
-/** The editor heading of an editorial doc: "Contest year 2005 · Kyiv", "Country Greece", "Live hub 2026 · Vienna". */
-export function editorialTitle(docId: string, targets: readonly EditorialTarget[]): string {
+/**
+ * What a doc id alone says about an editorial doc (no data needed, so the
+ * editor's first paint is right): its kind, key (year or ISO) and heading,
+ * and, for the live hub, its public path. Archive and country URLs embed the
+ * city or country slug, which only the targets know.
+ */
+export function editorialRef(docId: string): { family: EditorialFamily; key: string; title: string; path?: string } | null {
+  const type = docTypeFor(docId);
   const family = editorialFamily(docId);
-  const label = targets.find((t) => t.docId === docId)?.label ?? docId;
-  const kind = family === 'archive' ? 'Contest year' : family === 'country' ? 'Country' : 'Live hub';
-  return `${kind} ${label}`;
+  if (!family || type !== `${family}-editorial`) return null;
+  const key = docId.slice(family.length + 1);
+  const year = /^\d{4}$/.test(key) ? Number(key) : null;
+  if (family === 'archive') return { family, key, title: `Contest year ${key}` };
+  if (family === 'country') return { family, key, title: `Country ${key.toUpperCase()}` };
+  return { family, key, title: `Live hub ${key}`, ...(year !== null && { path: hubPath(year) }) };
+}
+
+const KIND: Record<EditorialFamily, string> = { archive: 'Contest year', country: 'Country', hub: 'Live hub' };
+
+/**
+ * The editor heading: from the id alone ("Contest year 2005", "Country GR"),
+ * with the target's label once the targets are loaded ("Contest year 2005 · Kyiv").
+ */
+export function editorialTitle(docId: string, targets: readonly EditorialTarget[] = []): string {
+  const ref = editorialRef(docId);
+  const target = targets.find((t) => t.docId === docId);
+  if (!ref) return docId;
+  return target ? `${KIND[ref.family]} ${target.label}` : ref.title;
+}
+
+/**
+ * The public path the preview shows: the hub's from the id, an archive year's
+ * or a country's from the targets. null while the targets load; undefined
+ * when the doc's year or country is not listed.
+ */
+export function editorialPreviewPath(docId: string, targets: readonly EditorialTarget[] | null): string | null | undefined {
+  const ref = editorialRef(docId);
+  if (ref?.path) return ref.path;
+  if (!targets) return null;
+  return targets.find((t) => t.docId === docId)?.path;
 }
 
 /** A new editorial document: the schema's empty value in both locales (empty intro, no blocks). */

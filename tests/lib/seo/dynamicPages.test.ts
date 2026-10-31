@@ -75,10 +75,19 @@ describe('dynamicPageUrls against the committed snapshot', () => {
     expect(new Set(pages.map((p) => p.path)).size).toBe(pages.length);
   });
 
-  it('every page lists the content files it is built from', () => {
-    expect(find('/en/past-contests/eurovision-1975-stockholm')?.files).toEqual(['content/contests/1975.json']);
-    expect(find('/en/countries/greece')?.files).toEqual(['content/countries/GR.json']);
-    expect(find('/en/eurovision-2026')?.files).toEqual(['content/contests/2026.json']);
+  // The editorial doc (CMS 3c) is listed whether or not it exists: the sitemap's
+  // lastmod skips missing files, so a page without editorial keeps its date.
+  it('every page lists the content files it is built from, its editorial doc included', () => {
+    expect(find('/en/past-contests/eurovision-1975-stockholm')?.files)
+      .toEqual(['content/contests/1975.json', 'content/pages/archive-1975.json']);
+    expect(find('/en/countries/greece')?.files).toEqual(['content/countries/GR.json', 'content/pages/country-gr.json']);
+    expect(find('/en/eurovision-2026')?.files).toEqual(['content/contests/2026.json', 'content/pages/hub-2026.json']);
+  });
+
+  it('the hub subpages take no editorial: their files are the contest only', () => {
+    for (const sub of ['schedule', 'semifinals', 'songs']) {
+      expect(find(`/en/eurovision-2026/${sub}`)?.files, sub).toEqual(['content/contests/2026.json']);
+    }
   });
 });
 

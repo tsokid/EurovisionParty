@@ -114,9 +114,10 @@ class PreviewErrorBoundary extends Component<BoundaryProps, { error: Error | nul
   }
 }
 
-function PreviewPage({ docId, locale, path }: { docId: string; locale: Locale; path?: string }) {
+function PreviewPage({ docId, locale, path }: { docId: string; locale: Locale; path?: string | null }) {
   const family = editorialFamily(docId);
   if (family) {
+    if (path === null) return <p className="m-4 text-sm text-white/60">Finding the page to preview…</p>;
     if (!path) throw new Error(`no page to preview for "${docId}" (its year or country is not listed)`);
     return <EditorialPreviewPage family={family} path={path} locale={locale} />;
   }
@@ -142,8 +143,8 @@ export default function PreviewPane({ docId, doc, path, initialLocale = 'en' }: 
   docId: string;
   /** The draft document `{ en, el }`, as edited (not necessarily valid). */
   doc: unknown;
-  /** Editorial docs: the unprefixed public path of the data page to show. */
-  path?: string;
+  /** Editorial docs: the unprefixed public path of the data page to show; null while it is being looked up. */
+  path?: string | null;
   initialLocale?: Locale;
 }) {
   const [locale, setLocale] = useState<Locale>(initialLocale);
