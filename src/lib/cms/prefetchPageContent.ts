@@ -5,17 +5,22 @@
  * doc (tests/cms/contentPagesComplete.test.ts), keyed by its pageId.
  */
 import { PAGE_REGISTRY } from '../seo/registry';
-import { localeFromPath, localizePath, type Locale } from '../seo/locale';
+import { localeFromPath, localizePath, oppositeLocale, type Locale } from '../seo/locale';
 import { prefetchContent } from '../seo/useContent';
 import { pageContentPath } from './usePageContent';
+
+const hasLocale = (p: (typeof PAGE_REGISTRY)[number], l: Locale) =>
+  !(l === 'en' && p.greekExclusive) && !(l === 'el' && p.englishExclusive);
 
 const DOC_BY_PATH = new Map<string, string>(
   PAGE_REGISTRY.flatMap((p) =>
     (['en', 'el'] as const)
-      .filter((l) => !(l === 'en' && p.greekExclusive) && !(l === 'el' && p.englishExclusive))
+      .filter((l) => hasLocale(p, l))
       .map((l) => [localizePath(l, p.slugByLocale[l]), p.id] as const),
   ),
 );
+
+const PAGE_BY_ID = new Map<string, (typeof PAGE_REGISTRY)[number]>(PAGE_REGISTRY.map((p) => [p.id, p] as const));
 
 /** The page doc behind a localized app path (`/en/faq#x` → faq, en), or null. */
 export function pageDocIdForPath(path: string): { docId: string; locale: Locale } | null {
@@ -30,4 +35,18 @@ export function pageDocIdForPath(path: string): { docId: string; locale: Locale 
 export function prefetchPageContent(path: string): void {
   const target = pageDocIdForPath(path);
   if (target) prefetchContent(pageContentPath(target.docId), target.locale);
+}
+
+/**
+ * Language-switcher prefetch: warm the other locale's slice of the page at
+ * `path` (the current one), so switching language renders it at once. The doc
+ * file holds both locales; keyed on the other locale, a file already cached
+ * with it is not refetched. No-op off the registry or for a one-locale page.
+ */
+export function prefetchOtherLocaleContent(path: string): void {
+  const here = pageDocIdForPath(path);
+  if (!here) return;
+  const other = oppositeLocale(here.locale);
+  const page = PAGE_BY_ID.get(here.docId);
+  if (page && hasLocale(page, other)) prefetchContent(pageContentPath(here.docId), other);
 }

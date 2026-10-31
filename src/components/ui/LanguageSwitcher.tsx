@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { localizePath, stripLocaleFromPath, type Locale } from '../../lib/seo/locale';
+import { prefetchOtherLocaleContent } from '../../lib/cms/prefetchPageContent';
+import { usePreviewMode } from '../../lib/seo/PreviewMode';
 import i18n from '../../i18n';
 
 interface Lang {
@@ -30,6 +32,7 @@ export default function LanguageSwitcher({ placement = 'bottom' }: LanguageSwitc
   const locale = useLocale();
   const { pathname, search, hash } = useLocation();
   const navigate = useNavigate();
+  const preview = usePreviewMode();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -48,6 +51,12 @@ export default function LanguageSwitcher({ placement = 'bottom' }: LanguageSwitc
       window.removeEventListener('click', onClick);
     };
   }, [open]);
+
+  // Warm the other locale's CMS doc for this page on hover, focus or open,
+  // so the switch renders at once. Not in the admin preview (no navigation).
+  const prefetch = () => {
+    if (!preview) prefetchOtherLocaleContent(pathname);
+  };
 
   const select = (code: Locale) => {
     setOpen(false);
@@ -73,7 +82,9 @@ export default function LanguageSwitcher({ placement = 'bottom' }: LanguageSwitc
     <div ref={wrapperRef} className="relative">
       <button
         type="button"
-        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
+        onClick={(e) => { e.stopPropagation(); prefetch(); setOpen((v) => !v); }}
+        onMouseEnter={prefetch}
+        onFocus={prefetch}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label="Change language"
