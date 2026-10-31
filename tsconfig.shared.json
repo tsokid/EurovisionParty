@@ -1,0 +1,12 @@
+{
+  // Typechecks code outside tsc -b's projects: the Deno-free shared modules
+  // under supabase/functions/_shared, the CMS scripts and their tests.
+  // Extends the app config because scripts/cms/capturePages.ts renders src/.
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": null,
+    "noEmit": true,
+    "types": ["vite/client", "node"]
+  },
+  "include": ["supabase/functions/_shared/**/*.ts", "scripts/cms/**/*.ts", "tests/cms/**/*.ts"]
+}

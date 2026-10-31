@@ -59,6 +59,12 @@ function stringField(kind: 'text' | 'multiline' | 'richText', opts: StringFieldO
     if (meta.maxLength !== undefined && value.length > meta.maxLength) {
       ctx.addIssue({ code: 'custom', message: `Too long: ${value.length} characters, max ${meta.maxLength}` });
     }
+    // A templated field renders through interpolate(), which unescapes {{ and }}.
+    // A field without placeholders may be rendered raw, so escapes there are
+    // almost certainly an extraction mistake.
+    if (allowed.size === 0 && (value.includes('{{') || value.includes('}}'))) {
+      ctx.addIssue({ code: 'custom', message: 'escaped braces in a field without placeholders' });
+    }
     for (const name of placeholdersIn(value)) {
       if (!allowed.has(name)) {
         const list = meta.placeholders!.length ? meta.placeholders!.map((p) => `{${p}}`).join(', ') : 'none';

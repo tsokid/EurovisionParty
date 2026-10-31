@@ -52,8 +52,20 @@ describe('validateDocument', () => {
     expect(!r.ok && r.errors).toEqual([{ path: 'title', locale: 'en', message: expect.stringContaining('{city}') }]);
   });
 
-  it('accepts escaped braces in a field with no placeholders', () => {
-    expect(validateDocument(TYPE, { en: page({ note: '{{year}}' }), el: page() }).ok).toBe(true);
+  it('reports a bad placeholder inside a nested list item with its exact path and locale', () => {
+    const r = validateDocument(TYPE, { en: page(), el: page({ faq: [{ q: 'Q?', a: 'A.' }, { q: 'In {city}?', a: 'A.' }] }) });
+    expect(!r.ok && r.errors).toEqual([{ path: 'faq.1.q', locale: 'el', message: expect.stringContaining('{city}') }]);
+  });
+
+  it('flags escaped braces in a field that declares no placeholders', () => {
+    for (const note of ['{{year}}', 'a }} b']) {
+      const r = validateDocument(TYPE, { en: page({ note }), el: page() });
+      expect(!r.ok && r.errors).toEqual([{ path: 'note', locale: 'en', message: 'escaped braces in a field without placeholders' }]);
+    }
+  });
+
+  it('accepts escaped braces in a field that declares placeholders', () => {
+    expect(validateDocument(TYPE, { en: page({ title: '{{x}} {year}' }), el: page() }).ok).toBe(true);
   });
 
   it('enforces maxLength', () => {
@@ -83,8 +95,9 @@ describe('validateDocument', () => {
   });
 
   it('reports wrong types and missing fields', () => {
-    const { faq: _faq, ...noFaq } = page();
-    const r = validateDocument(TYPE, { en: { ...noFaq }, el: page({ title: 5 }) });
+    const noFaq: Record<string, unknown> = page();
+    delete noFaq.faq;
+    const r = validateDocument(TYPE, { en: noFaq, el: page({ title: 5 }) });
     expect(r.ok).toBe(false);
     if (r.ok) return;
     expect(r.errors.map((e) => `${e.locale}:${e.path}`).sort()).toEqual(['el:title', 'en:faq']);
