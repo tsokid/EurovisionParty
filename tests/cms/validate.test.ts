@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { text, multiline, list, group, choice, flag, optional } from '../../supabase/functions/_shared/cms/fields';
-import { validateDocument } from '../../supabase/functions/_shared/cms/validate';
+import { text, multiline, list, group, choice, flag, optional, tuple } from '../../supabase/functions/_shared/cms/fields';
+import { sharedMismatches, validateDocument } from '../../supabase/functions/_shared/cms/validate';
 import { CMS_DOC_TYPES, docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 
 const schema = group({
@@ -154,9 +154,71 @@ describe('locale-shared fields', () => {
     expect(!r.ok && r.errors).toEqual([{ path: 'rows.1.id', locale: 'el', message: MSG }]);
   });
 
-  it('only compares the indices both locales have', () => {
+  const LEN = 'must have the same number of items as en (list holds locale-shared fields)';
+
+  it('requires a list holding shared fields to have as many items in el as in en', () => {
     const r = validateDocument(SHARED, { en: loc(), el: loc({ rows: [{ id: 'x', text: 'Ένα' }] }) });
-    expect(r.ok ? [] : r.errors).toEqual([]);
+    expect(!r.ok && r.errors).toEqual([{ path: 'rows', locale: 'el', message: LEN }]);
+    const more = validateDocument(SHARED, {
+      en: loc(),
+      el: loc({ rows: [{ id: 'x', text: 'Ένα' }, { id: 'y', text: 'Δύο' }, { id: 'z', text: 'Τρία' }] }),
+    });
+    expect(!more.ok && more.errors).toEqual([{ path: 'rows', locale: 'el', message: LEN }]);
+  });
+
+  it('still compares the shared fields of the indices both locales have', () => {
+    const r = validateDocument(SHARED, { en: loc(), el: loc({ rows: [{ id: 'z', text: 'Ένα' }] }) });
+    expect(!r.ok && r.errors).toEqual([
+      { path: 'rows', locale: 'el', message: LEN },
+      { path: 'rows.0.id', locale: 'el', message: MSG },
+    ]);
+  });
+
+  describe('list length rule', () => {
+    const NESTED = '__test-shared-nested';
+    const nestedSchema = group({
+      // Shared field two levels down, through an optional wrapper and a group.
+      deep: list(group({ label: text(), more: optional(group({ link: text({ shared: true }) })) })),
+      // Shared field inside a nested list.
+      outer: list(group({ inner: list(group({ tone: choice(['a', 'b']) })) })),
+      // No shared field anywhere: lengths may differ.
+      free: list(group({ q: text(), a: text() })),
+      // A plain list of strings.
+      cells: list(text()),
+    });
+    CMS_DOC_TYPES[NESTED] = { schema: nestedSchema, label: 'Nested', group: 'site' };
+    const base = (): Record<string, unknown> => ({
+      deep: [{ label: 'A' }, { label: 'B', more: { link: '/x' } }],
+      outer: [{ inner: [{ tone: 'a' }, { tone: 'b' }] }],
+      free: [{ q: 'Q', a: 'A' }],
+      cells: ['a'],
+    });
+
+    it('applies through optional wrappers and nested groups', () => {
+      const el = base();
+      el.deep = [{ label: 'Α' }];
+      const r = validateDocument(NESTED, { en: base(), el });
+      expect(!r.ok && r.errors).toEqual([{ path: 'deep', locale: 'el', message: LEN }]);
+    });
+
+    it('applies to a nested list, at its own path', () => {
+      const el = base();
+      el.outer = [{ inner: [{ tone: 'a' }] }];
+      const r = validateDocument(NESTED, { en: base(), el });
+      expect(!r.ok && r.errors).toEqual([{ path: 'outer.0.inner', locale: 'el', message: LEN }]);
+    });
+
+    it('does not apply to a list without shared fields', () => {
+      const el = base();
+      el.free = [{ q: 'Ε', a: 'Α' }, { q: 'Ε2', a: 'Α2' }];
+      el.cells = [];
+      expect(validateDocument(NESTED, { en: base(), el }).ok).toBe(true);
+    });
+
+    it('exempts tuples', () => {
+      const t = tuple([text({ shared: true }), text()]);
+      expect(sharedMismatches(t, ['/a', 'x'], ['/a'])).toEqual([]);
+    });
   });
 
   it('treats an optional shared field present in one locale only as different', () => {

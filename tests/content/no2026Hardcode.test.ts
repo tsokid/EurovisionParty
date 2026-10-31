@@ -66,9 +66,10 @@ describe('no hardcoded live-contest year or city', () => {
     'eurovision-trivia:el:questions.5.answer': "Austria's 2014 winning song",
   };
 
-  it('no CMS page document names the live year, city, host, date, venue or broadcaster outside a listed fact', () => {
+  /** Every string of every CMS page document, keyed `docId:locale:path`. */
+  function jsonStrings(): Map<string, string> {
     const dir = path.join(root, 'content/pages');
-    const hits: string[] = [];
+    const out = new Map<string, string>();
     const walkJson = (v: unknown, at: string, push: (p: string, s: string) => void): void => {
       if (typeof v === 'string') push(at, v);
       else if (Array.isArray(v)) v.forEach((x, i) => walkJson(x, at ? `${at}.${i}` : String(i), push));
@@ -79,12 +80,26 @@ describe('no hardcoded live-contest year or city', () => {
     for (const file of docs) {
       const doc = JSON.parse(readFileSync(path.join(dir, file), 'utf8')) as Record<string, unknown>;
       for (const locale of ['en', 'el']) {
-        walkJson(doc[locale], '', (at, s) => {
-          const key = `${file.replace(/\.json$/, '')}:${locale}:${at}`;
-          if (PATTERN.test(s) && !JSON_FACTS[key]) hits.push(`${key}: ${s.slice(0, 100)}`);
-        });
+        walkJson(doc[locale], '', (at, s) => out.set(`${file.replace(/\.json$/, '')}:${locale}:${at}`, s));
       }
     }
+    return out;
+  }
+
+  it('no CMS page document names the live year, city, host, date, venue or broadcaster outside a listed fact', () => {
+    const hits: string[] = [];
+    for (const [key, s] of jsonStrings()) {
+      if (PATTERN.test(s) && !JSON_FACTS[key]) hits.push(`${key}: ${s.slice(0, 100)}`);
+    }
     expect(hits).toEqual([]);
+  });
+
+  it('every listed fact still exists and still matches the pattern', () => {
+    const strings = jsonStrings();
+    const stale = Object.keys(JSON_FACTS).filter((key) => {
+      const s = strings.get(key);
+      return s === undefined || !PATTERN.test(s);
+    });
+    expect(stale.map((key) => `stale allowlist entry: ${key}`)).toEqual([]);
   });
 });

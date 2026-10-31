@@ -8,7 +8,8 @@
 //
 // Locale-shared fields (fieldMeta().shared: choices, flags, hrefs...) are not
 // translated: their el value must equal the en value at the same path. Inside
-// lists they are compared by index, for the indices both locales have.
+// lists they are compared by index, so a list holding any shared field must
+// also have the same length in both locales.
 import { z } from 'zod';
 import { fieldMeta, schemaDef } from './fields.ts';
 import { CMS_DOC_TYPES } from './registry.ts';
@@ -35,6 +36,7 @@ function toError(issue: z.core.$ZodIssue): ValidationError {
 }
 
 const SHARED_MESSAGE = 'must equal the en value (locale-shared field)';
+const LENGTH_MESSAGE = 'must have the same number of items as en (list holds locale-shared fields)';
 
 /** Structural equality of JSON values (object key order ignored). */
 function sameJson(a: unknown, b: unknown): boolean {
@@ -52,9 +54,34 @@ function sameJson(a: unknown, b: unknown): boolean {
 
 const isRecord = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 
-/** Paths where a locale-shared field's el value differs from its en value. */
-export function sharedMismatches(schema: z.ZodType, en: unknown, el: unknown, path = ''): string[] {
-  if (fieldMeta(schema).shared) return sameJson(en, el) ? [] : [path];
+/** Whether `schema` is, or holds at any depth, a locale-shared field. */
+export function holdsShared(schema: z.ZodType): boolean {
+  if (fieldMeta(schema).shared) return true;
+  const def = schemaDef(schema);
+  switch (def.type) {
+    case 'object':
+      return Object.values(def.shape!).some(holdsShared);
+    case 'array':
+      return holdsShared(def.element!);
+    case 'tuple':
+      return def.items!.some(holdsShared);
+    case 'optional':
+      return holdsShared(def.innerType!);
+    default:
+      return false;
+  }
+}
+
+export type SharedMismatch = { path: string; message: string };
+
+/**
+ * Where el breaks a locale-shared rule: a shared field whose el value differs
+ * from en, or a list holding shared fields whose el length differs from en
+ * (its items line up by index). Tuples are fixed-length, so exempt. Shared
+ * fields are still compared for the indices both locales have.
+ */
+export function sharedMismatches(schema: z.ZodType, en: unknown, el: unknown, path = ''): SharedMismatch[] {
+  if (fieldMeta(schema).shared) return sameJson(en, el) ? [] : [{ path, message: SHARED_MESSAGE }];
   const def = schemaDef(schema);
   const at = (k: string | number) => (path ? `${path}.${k}` : String(k));
   switch (def.type) {
@@ -64,8 +91,11 @@ export function sharedMismatches(schema: z.ZodType, en: unknown, el: unknown, pa
     case 'array':
     case 'tuple': {
       if (!Array.isArray(en) || !Array.isArray(el)) return [];
+      const out: SharedMismatch[] = [];
+      if (def.type === 'array' && en.length !== el.length && holdsShared(def.element!)) {
+        out.push({ path, message: LENGTH_MESSAGE });
+      }
       const n = Math.min(en.length, el.length);
-      const out: string[] = [];
       for (let i = 0; i < n; i++) {
         const item = def.type === 'array' ? def.element! : def.items![i];
         if (item) out.push(...sharedMismatches(item, en[i], el[i], at(i)));
@@ -85,8 +115,8 @@ export function validateDocument(docType: string, data: unknown): ValidationResu
   const parsed = documentSchema(def.schema).safeParse(data);
   const errors = parsed.success ? [] : parsed.error.issues.map(toError);
   if (isRecord(data)) {
-    for (const path of sharedMismatches(def.schema, data.en, data.el)) {
-      errors.push({ path, locale: 'el', message: SHARED_MESSAGE });
+    for (const { path, message } of sharedMismatches(def.schema, data.en, data.el)) {
+      errors.push({ path, locale: 'el', message });
     }
   }
   if (parsed.success && !errors.length) return { ok: true, value: parsed.data as { en: unknown; el: unknown } };
