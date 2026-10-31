@@ -27,9 +27,10 @@
 -- * media_list(kind default null) (super admin): rows, newest first.
 -- * media_delete(id) (super admin) → the storage_paths of the deleted rows
 --   (the row and, for an image, its variant). Deletes the rows only: the
---   client removes those Storage objects after the RPC succeeds. Refuses
+--   client removes those Storage objects after the RPC succeeds. Refuses a
+--   variant id ('delete the image, not its 800 w variant'). Refuses
 --   with 'media in use by <doc_ids>' while any cms_documents draft
---   (published or not) contains cms-media/<id> of the row, its parent or
+--   (published or not) contains cms-media/<id> of the row or
 --   its variant. LIMITATION: the published files in the repo (content/)
 --   are outside the database's view, so a reference there is not checked.
 --   Published files hold /media/<sha12>.<ext> copies committed to the
@@ -220,12 +221,16 @@ begin
     raise exception 'media % not found', p_id;
   end if;
 
-  -- The row, its parent (if a variant) and its variants: a reference to any
-  -- of them keeps the row in use.
+  -- An image and its 800 w variant are one unit: deleting the variant alone
+  -- would leave an image that publish refuses ("incomplete upload").
+  if v_row.variant_of is not null then
+    raise exception 'delete the image, not its 800 w variant';
+  end if;
+
+  -- The row and its variants: a reference to any of them keeps the row in use.
   select array_agg(distinct x) into v_ids
     from (
       select p_id as x
-      union all select v_row.variant_of where v_row.variant_of is not null
       union all select m.id from public.cms_media m where m.variant_of = p_id
     ) s;
 

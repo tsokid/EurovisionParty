@@ -313,12 +313,11 @@ describe('077 cms_media', () => {
     expect((await list()).map((r) => r.id)).toEqual([other]);
   });
 
-  it('media_delete of a variant removes only the variant', async () => {
+  it('media_delete refuses a variant id: the image goes with its variant, never alone', async () => {
     const parent = await image();
-    const vPath = `${parent}-800.webp`;
     const v = await variant(parent);
-    expect(await del(v)).toEqual([vPath]);
-    expect((await list()).map((r) => r.id)).toEqual([parent]);
+    await expect(del(v)).rejects.toThrow('delete the image, not its 800 w variant');
+    expect((await list()).map((r) => r.id).sort()).toEqual([parent, v].sort());
   });
 
   it('media_delete raises for a missing id', async () => {
@@ -332,8 +331,8 @@ describe('077 cms_media', () => {
     await save('home', docRef(parent));
     await save('about', docRef(unrelated, parent));
     await expect(del(parent)).rejects.toThrow('media in use by about, home');
-    // The variant goes with a referenced parent, so it is in use too.
-    await expect(del(v)).rejects.toThrow('media in use by about, home');
+    // A variant id is refused outright, whether or not its parent is in use.
+    await expect(del(v)).rejects.toThrow('delete the image, not its 800 w variant');
     expect(await list()).toHaveLength(3);
   });
 

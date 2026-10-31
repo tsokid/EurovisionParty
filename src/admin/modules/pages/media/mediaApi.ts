@@ -6,6 +6,7 @@
 //   upload finished, a reference is not in it yet);
 // - signed URLs, reused while they have more than SIGNED_URL_MIN_LEFT_S left.
 import { supabase } from '../../../../lib/supabase';
+import { formatError } from '../../../lib/formatError';
 import type { MediaKind } from '../../../../../supabase/functions/_shared/cms/fields';
 
 export const BUCKET = 'cms-media';
@@ -61,6 +62,28 @@ export async function mediaRegister(a: RegisterArgs): Promise<string> {
 export async function uploadObject(path: string, body: Blob, contentType: string): Promise<void> {
   const { error } = await supabase.storage.from(BUCKET).upload(path, body, { contentType, upsert: false });
   if (error) throw error;
+}
+
+/**
+ * Deletes a library file (never a variant id: media_delete refuses one) and,
+ * for an image, its 800 w variant: media_delete removes the rows, refusing
+ * with 'media in use by <doc_ids>' while a draft references them, and
+ * returns their Storage paths, which are then removed from the bucket.
+ */
+export async function mediaDelete(id: string): Promise<void> {
+  const { data, error } = await supabase.rpc('media_delete', { p_id: id });
+  if (error) throw error;
+  invalidateLibrary();
+  const paths = (data ?? []) as string[];
+  for (const p of paths) signed.delete(p);
+  if (!paths.length) return;
+  const { error: removeError } = await supabase.storage.from(BUCKET).remove(paths);
+  if (removeError) {
+    // The rows are gone, so the publish sweep removes the orphaned objects later.
+    throw new Error(
+      `The file was deleted from the library, but Storage could not remove it yet (${formatError(removeError)}); the next publish cleans it up`,
+    );
+  }
 }
 
 // ---- Library ---------------------------------------------------------------
