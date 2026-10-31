@@ -1,7 +1,7 @@
 // /how-to-play. Mirrors the former HowToPlayCopy interface.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { basicMeta, crumbs, cta, hero, howToStep, relatedItem, strongRest, strongRestHtml, titleBody } from './common.ts';
+import { basicMeta, crumbs, cta, hero, howToStep, relatedItem, strongRest, strongRestHtml, titleBody, extraBlocks } from './common.ts';
 
 export const howToPlaySchema = group({
   meta: basicMeta,
@@ -29,6 +29,7 @@ export const howToPlaySchema = group({
   cta,
   related: group({ items: list(relatedItem) }),
   crumbs,
+  extraBlocks,
 });
 
 export type HowToPlayContent = z.infer<typeof howToPlaySchema>;

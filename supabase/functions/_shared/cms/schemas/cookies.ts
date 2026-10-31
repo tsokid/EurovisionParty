@@ -1,7 +1,7 @@
 // /cookies. Mirrors the former CookiesCopy interface.
 import type { z } from 'zod';
 import { choice, group, list, optional, text, tuple } from '../fields.ts';
-import { boldRest, headers3, hero, legalMeta, relatedItem } from './common.ts';
+import { boldRest, headers3, hero, legalMeta, relatedItem, extraBlocks } from './common.ts';
 
 const tableRow = group({
   category: text(),
@@ -46,6 +46,7 @@ export const cookiesSchema = group({
     }),
   }),
   related: list(relatedItem),
+  extraBlocks,
 });
 
 export type CookiesContent = z.infer<typeof cookiesSchema>;

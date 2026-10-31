@@ -9,7 +9,7 @@
 //             {hostPart} = ledeHost with {hostName} filled, or "" when the host is unknown.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, HERO_LABEL, META_LABEL, metaDescription, qa, seoTitle, strongRest, titleBlurb } from './common.ts';
+import { cta, HERO_LABEL, META_LABEL, metaDescription, qa, seoTitle, strongRest, titleBlurb, extraBlocks } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 const YEAR_CITY = { placeholders: ['year', 'cityIn'] };
@@ -92,6 +92,7 @@ export const eurovisionPredictionsSchema = group({
     faq: titleBlurb,
   }),
   faq: list(qa),
+  extraBlocks,
 });
 
 export type EurovisionPredictionsContent = z.infer<typeof eurovisionPredictionsSchema>;

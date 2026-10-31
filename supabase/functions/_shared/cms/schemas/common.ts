@@ -1,6 +1,6 @@
 // Building blocks shared by the static-page schemas. Each mirrors a small
 // interface that the former src/pages/seo/content/*Copy.ts files repeated.
-import { group, href as hrefField, list, text, tuple, type GroupFieldOptions, type StringFieldOptions } from '../fields.ts';
+import { blocks, group, href as hrefField, list, optional, text, tuple, type GroupFieldOptions, type StringFieldOptions } from '../fields.ts';
 
 /** An internal path such as `/faq`: the same in every locale. */
 export const href = () => hrefField({ help: 'Internal path (/faq) or https:// URL (same in both languages)' });
@@ -23,6 +23,16 @@ export const seoTitle = (opts: StringFieldOptions = {}) =>
  */
 export const metaDescription = (opts: StringFieldOptions = {}) =>
   text({ label: 'Meta description', help: 'The search-result snippet; about 160 characters at most', softMaxLength: 160, seo: 'description', ...opts });
+
+/**
+ * Extra blocks an editor can add to any static page, rendered before the page's
+ * related links or call to action. Optional and absent from the committed docs,
+ * so a page without them renders exactly as it always did.
+ */
+export const extraBlocks = optional(blocks({
+  label: 'Extra blocks',
+  help: 'Shown near the end of the page, before the related links. Leave empty for none.',
+}));
 
 /** A related-page card: internal path, card title and one-line blurb. */
 export const relatedItem = group({ href: href(), title: text(), blurb: text() });

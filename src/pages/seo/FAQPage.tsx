@@ -10,6 +10,8 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
+import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { FaqContent } from '../../../supabase/functions/_shared/cms/schemas/faq';
 import { PageContentFallback } from './PageContentFallback';
 
@@ -72,7 +74,7 @@ export default function FAQPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, faqSchema, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={mergeFaqJsonLd([article, faqSchema, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
       <PageHero
@@ -125,6 +127,8 @@ export default function FAQPage() {
         <Section title={c.moreTitle}>
           <FaqAccordion items={c.more} />
         </Section>
+
+        <ExtraBlocks value={c.extraBlocks} />
 
         <CtaBanner
           title={c.cta.title}

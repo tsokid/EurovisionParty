@@ -1,7 +1,7 @@
 // /terms. Mirrors the former TermsCopy interface.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { boldRest, hero, legalMeta, relatedItem, titleBody } from './common.ts';
+import { boldRest, hero, legalMeta, relatedItem, titleBody, extraBlocks } from './common.ts';
 
 export const termsSchema = group({
   meta: legalMeta,
@@ -39,6 +39,7 @@ export const termsSchema = group({
     tail: text(),
   }),
   related: list(relatedItem),
+  extraBlocks,
 });
 
 export type TermsContent = z.infer<typeof termsSchema>;

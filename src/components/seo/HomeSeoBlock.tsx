@@ -1,4 +1,5 @@
 import LocaleLink from './LocaleLink';
+import ExtraBlocks from '../cms/ExtraBlocks';
 import { useCurrentYear } from '../../lib/currentContest';
 import type { HomeContent } from '../../../supabase/functions/_shared/cms/schemas/home';
 import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
@@ -57,7 +58,7 @@ function Card({ card, cards }: { card: CardDef; cards: SeoCopy['cards'] }) {
 // used across all SEO supporting pages: H1 + lede + sectioned content,
 // kit-style "Keep reading" cards, soft secondary CTA. The text is the home
 // page's CMS doc (content/pages/home.json, `seo`), passed in by HomePage.
-export default function HomeSeoBlock({ copy: c }: { copy: SeoCopy }) {
+export default function HomeSeoBlock({ copy: c, extraBlocks }: { copy: SeoCopy; extraBlocks?: unknown }) {
   const year = useCurrentYear();
 
   return (
@@ -93,6 +94,8 @@ export default function HomeSeoBlock({ copy: c }: { copy: SeoCopy }) {
             {SECONDARY_CARDS.map((card) => <Card key={card.href} card={card} cards={c.cards} />)}
           </div>
         </div>
+
+        <ExtraBlocks value={extraBlocks} />
 
         {/* Soft CTA — points to the most-used informational page */}
         <p className="text-center text-sm text-white/55">

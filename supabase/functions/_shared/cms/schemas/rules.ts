@@ -2,7 +2,7 @@
 // the live contest's texts and used only the year: now the {year} placeholder.
 import type { z } from 'zod';
 import { group, list, text, tuple } from '../fields.ts';
-import { crumbs, cta, headers3, href, hero, META_LABEL, metaDescription, seoTitle, strongRest, strongRestHtml } from './common.ts';
+import { crumbs, cta, headers3, href, hero, META_LABEL, metaDescription, seoTitle, strongRest, strongRestHtml, extraBlocks } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
@@ -29,6 +29,7 @@ export const rulesSchema = group({
   cta,
   related: group({ items: list(group({ href: href(), title: text(), blurb: text(YEAR) })) }),
   crumbs,
+  extraBlocks,
 });
 
 export type RulesContent = z.infer<typeof rulesSchema>;

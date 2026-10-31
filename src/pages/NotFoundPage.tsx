@@ -8,6 +8,8 @@ import { breadcrumbJsonLd, type Crumb } from '../components/seo/Breadcrumbs';
 import { useLocale } from '../lib/seo/LocaleContext';
 import { useHeadCollector } from '../lib/seo/HeadContext';
 import { usePageContent } from '../lib/cms/usePageContent';
+import ExtraBlocks from '../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../components/cms/extraFaq';
 import type { NotFoundContent } from '../../supabase/functions/_shared/cms/schemas/not-found';
 import LocaleLink from '../components/seo/LocaleLink';
 import type { Locale } from '../lib/seo/locale';
@@ -60,7 +62,7 @@ export function NotFoundPage() {
         ogLocale={locale === 'el' ? 'el_GR' : 'en_US'}
         ogLocaleAlternate={[locale === 'el' ? 'en_US' : 'el_GR']}
         keywords={c.meta.keywords}
-        jsonLd={[breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={mergeFaqJsonLd([breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
       <PageHero
@@ -72,6 +74,8 @@ export function NotFoundPage() {
       />
 
       <ContentLayout>
+        <ExtraBlocks value={c.extraBlocks} />
+
         <CtaBanner
           title={c.cta.title}
           body={c.cta.body}

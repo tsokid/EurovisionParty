@@ -7,6 +7,7 @@ import SiteFooter from '../components/seo/SiteFooter';
 import PageSeo from '../components/seo/PageSeo';
 import { useLocale } from '../lib/seo/LocaleContext';
 import { usePageContent } from '../lib/cms/usePageContent';
+import { mergeFaqJsonLd } from '../components/cms/extraFaq';
 import type { HomeContent } from '../../supabase/functions/_shared/cms/schemas/home';
 import { interpolate } from '../../supabase/functions/_shared/cms/placeholders';
 import { useCurrentYear } from '../lib/currentContest';
@@ -33,6 +34,9 @@ export function HomePage() {
 
   // Rendered in every state so the prerendered (auth-loading) HTML carries
   // the home page's head tags too.
+  // Only the FAQ blocks of extraBlocks add JSON-LD; without them there is none, as before.
+  const faqLd = doc ? mergeFaqJsonLd([], doc.extraBlocks) : [];
+  const homeJsonLd = faqLd.length ? faqLd : undefined;
   const seo = doc && (
     <PageSeo
       pageId="home"
@@ -41,9 +45,10 @@ export function HomePage() {
       description={interpolate(doc.meta.description, { year })}
       ogType="website"
       ogImage="https://eurovision.games/logo.png"
+      jsonLd={homeJsonLd}
     />
   );
-  const seoBlock = doc && <HomeSeoBlock copy={doc.seo} />;
+  const seoBlock = doc && <HomeSeoBlock copy={doc.seo} extraBlocks={doc.extraBlocks} />;
 
   // ?join=CODE prefills join mode; ?action=create|join opens the matching screen
   useEffect(() => {

@@ -8,6 +8,8 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
+import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { TermsContent } from '../../../supabase/functions/_shared/cms/schemas/terms';
 import { PageContentFallback } from './PageContentFallback';
 
@@ -68,7 +70,7 @@ export default function TermsPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, webPage, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
       <PageHero
@@ -164,6 +166,8 @@ export default function TermsPage() {
         <Section title={c.changes.title}>
           <p>{c.changes.body}</p>
         </Section>
+
+        <ExtraBlocks value={c.extraBlocks} />
 
         <RelatedCards items={c.related} />
       </ContentLayout>

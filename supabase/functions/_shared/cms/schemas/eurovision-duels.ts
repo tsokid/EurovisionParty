@@ -1,7 +1,7 @@
 // /duels (pageId eurovision-duels). Mirrors the former DuelsCopy interface.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, hero, howToStep, META_LABEL, metaDescription, qa, seoTitle, strongRest, titleBlurb } from './common.ts';
+import { cta, hero, howToStep, META_LABEL, metaDescription, qa, seoTitle, strongRest, titleBlurb, extraBlocks } from './common.ts';
 
 export const eurovisionDuelsSchema = group({
   meta: group({
@@ -79,6 +79,7 @@ export const eurovisionDuelsSchema = group({
   }),
   howToSteps: list(howToStep),
   faq: list(qa),
+  extraBlocks,
 });
 
 export type EurovisionDuelsContent = z.infer<typeof eurovisionDuelsSchema>;

@@ -1,7 +1,7 @@
 // /faq. Mirrors the former FaqCopy interface.
 import type { z } from 'zod';
 import { choice, group, list, text } from '../fields.ts';
-import { articleSchema, basicMeta, crumbs, cta, hero, qa, relatedItem, strongRest, strongRestHtml } from './common.ts';
+import { articleSchema, basicMeta, crumbs, cta, hero, qa, relatedItem, strongRest, strongRestHtml, extraBlocks } from './common.ts';
 
 /** In sorted order, so a sorted list of ids compares position by position. */
 const ANCHOR_IDS = ['create', 'join', 'leave'] as const;
@@ -34,6 +34,7 @@ export const faqSchema = group({
   cta,
   related: group({ items: list(relatedItem) }),
   crumbs,
+  extraBlocks,
 });
 
 export type FaqContent = z.infer<typeof faqSchema>;

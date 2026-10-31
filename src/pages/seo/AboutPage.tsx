@@ -9,6 +9,8 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
+import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { AboutContent } from '../../../supabase/functions/_shared/cms/schemas/about';
 import { PageContentFallback } from './PageContentFallback';
 
@@ -56,7 +58,7 @@ export default function AboutPage() {
         ogType="website"
         ogImage="https://eurovision.games/logo.png"
         keywords={c.meta.keywords}
-        jsonLd={[organization, aboutPage, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={mergeFaqJsonLd([organization, aboutPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
       <PageHero
@@ -128,6 +130,8 @@ export default function AboutPage() {
         <Section title={c.builtBy.title}>
           <p>{c.builtBy.lead}</p>
         </Section>
+
+        <ExtraBlocks value={c.extraBlocks} />
 
         <CtaBanner
           title={c.cta.title}

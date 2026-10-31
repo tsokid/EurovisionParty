@@ -17,6 +17,8 @@ import { CONTEST_INDEX, yearCell, yearPath } from '../contest/archive';
 import { cancelledWithin, winnersData, type WinnerYear } from '../contest/winners';
 import { ContentPending } from '../contest/ContentPending';
 import { usePageContent } from '../../lib/cms/usePageContent';
+import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { WinnersContent } from '../../../supabase/functions/_shared/cms/schemas/winners';
 import { winnersText } from './winnersText';
 import { PageContentFallback } from './PageContentFallback';
@@ -119,7 +121,7 @@ export default function WinnersPage() {
           articlePublishedTime={PUBLISHED}
           articleModifiedTime={MODIFIED}
           keywords={c.meta.keywords}
-          jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
+          jsonLd={mergeFaqJsonLd([article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], content.data.extraBlocks)}
         />
       )}
 
@@ -178,6 +180,8 @@ export default function WinnersPage() {
         <Section title={c.sections.faqTitle}>
           <FaqAccordion items={c.faq} />
         </Section>
+
+        <ExtraBlocks value={content.data.extraBlocks} />
 
         <CtaBanner
           title={c.cta.title}

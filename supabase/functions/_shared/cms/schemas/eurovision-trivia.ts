@@ -2,7 +2,7 @@
 // questions are the page's own editorial sampler, not the game's question bank.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, hero, META_LABEL, metaDescription, qa, seoTitle, titleBlurb, titleBody } from './common.ts';
+import { cta, hero, META_LABEL, metaDescription, qa, seoTitle, titleBlurb, titleBody, extraBlocks } from './common.ts';
 
 export const eurovisionTriviaSchema = group({
   meta: group({
@@ -52,6 +52,7 @@ export const eurovisionTriviaSchema = group({
   }),
   questions: list(group({ q: text(), options: list(text()), answer: text() })),
   faq: list(qa),
+  extraBlocks,
 });
 
 export type EurovisionTriviaContent = z.infer<typeof eurovisionTriviaSchema>;

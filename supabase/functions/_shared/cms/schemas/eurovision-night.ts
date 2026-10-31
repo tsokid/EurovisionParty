@@ -3,7 +3,7 @@
 // now placeholders, filled from contestTexts() by the page.
 import type { z } from 'zod';
 import { group, list, optional, text } from '../fields.ts';
-import { crumbs, cta, hero, href, howToStep, META_LABEL, metaDescription, seoTitle, strongRest, titleBody } from './common.ts';
+import { crumbs, cta, hero, href, howToStep, META_LABEL, metaDescription, seoTitle, strongRest, titleBody, extraBlocks } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
@@ -49,6 +49,7 @@ export const eurovisionNightSchema = group({
     heading: text(),
     items: list(group({ href: href(), title: text(), blurb: text({ placeholders: ['city'] }) })),
   }),
+  extraBlocks,
 });
 
 export type EurovisionNightContent = z.infer<typeof eurovisionNightSchema>;

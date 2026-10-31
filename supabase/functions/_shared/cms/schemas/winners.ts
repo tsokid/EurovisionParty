@@ -8,7 +8,7 @@
 //               appended to intro only then
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { cta, HERO_LABEL, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest } from './common.ts';
+import { cta, HERO_LABEL, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, extraBlocks } from './common.ts';
 
 const HELP = {
   last: 'The latest contest year with a winner, e.g. 2025',
@@ -48,6 +48,7 @@ export const winnersSchema = group({
   faq: list(qa),
   cta,
   related: group({ heading: text(), items: list(relatedItem) }),
+  extraBlocks,
 });
 
 export type WinnersContent = z.infer<typeof winnersSchema>;

@@ -1,7 +1,7 @@
 // /scoring. Mirrors the former ScoringCopy interface.
 import type { z } from 'zod';
 import { choice, group, list, text } from '../fields.ts';
-import { articleSchema, basicMeta, crumbs, cta, headers2, hero, relatedItem, strongRestHtml } from './common.ts';
+import { articleSchema, basicMeta, crumbs, cta, headers2, hero, relatedItem, strongRestHtml, extraBlocks } from './common.ts';
 
 const scoreRow = group({
   label: text(),
@@ -45,6 +45,7 @@ export const scoringSchema = group({
   cta,
   related: group({ items: list(relatedItem) }),
   crumbs,
+  extraBlocks,
 });
 
 export type ScoringContent = z.infer<typeof scoringSchema>;

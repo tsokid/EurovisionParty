@@ -11,6 +11,8 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
+import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { EurovisionDuelsContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-duels';
 import { PageContentFallback } from './PageContentFallback';
 
@@ -78,7 +80,7 @@ export default function EurovisionDuelsPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={mergeFaqJsonLd([article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
       <PageHero
@@ -192,6 +194,8 @@ export default function EurovisionDuelsPage() {
         <Section title={c.sections.faqTitle}>
           <FaqAccordion items={c.faq} />
         </Section>
+
+        <ExtraBlocks value={c.extraBlocks} />
 
         <CtaBanner
           title={c.cta.title}

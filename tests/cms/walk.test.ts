@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
-import { choice, group, list, optional, text, tuple } from '../../supabase/functions/_shared/cms/fields';
-import { mapStrings, walkSchema, type WalkNode } from '../../supabase/functions/_shared/cms/walk';
+import { blocks, choice, group, list, optional, text, tuple } from '../../supabase/functions/_shared/cms/fields';
+import { blockVariants, mapStrings, walkSchema, type WalkNode } from '../../supabase/functions/_shared/cms/walk';
 import { interpolateDocument } from '../../supabase/functions/_shared/cms/interpolateDocument';
 import * as extractCopy from '../../scripts/cms/extract-copy';
 
@@ -85,5 +85,13 @@ describe('one schema walker', () => {
     ];
     const walkers = files.filter((f) => /\bdef\.type\b|\.innerType\b|\bdef\.shape\b/.test(readFileSync(resolve(root, f), 'utf8')));
     expect(walkers).toEqual(['supabase/functions/_shared/cms/walk.ts']);
+  });
+});
+
+describe('blockVariants of an optional blocks() field (extraBlocks)', () => {
+  it('reads the variants through the optional wrapper, like the plain field', () => {
+    const plain = Object.keys(blockVariants(blocks()));
+    expect(plain).toEqual(['text', 'image', 'video', 'callout', 'faq', 'cta']);
+    expect(Object.keys(blockVariants(optional(blocks())))).toEqual(plain);
   });
 });

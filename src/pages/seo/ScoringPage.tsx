@@ -11,6 +11,8 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
+import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { ScoringContent } from '../../../supabase/functions/_shared/cms/schemas/scoring';
 import { PageContentFallback } from './PageContentFallback';
 
@@ -77,7 +79,7 @@ export default function ScoringPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={mergeFaqJsonLd([article, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
       <PageHero
@@ -187,6 +189,8 @@ export default function ScoringPage() {
             ))}
           </ul>
         </Section>
+
+        <ExtraBlocks value={c.extraBlocks} />
 
         <CtaBanner
           title={c.cta.title}

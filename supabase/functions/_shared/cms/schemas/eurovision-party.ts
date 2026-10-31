@@ -2,7 +2,7 @@
 // live contest's year and final date are placeholders.
 import type { z } from 'zod';
 import { group, list, optional, text, tuple } from '../fields.ts';
-import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody } from './common.ts';
+import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody, extraBlocks } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
@@ -61,6 +61,7 @@ export const eurovisionPartySchema = group({
   faq: list(qa),
   cta,
   related: group({ heading: text(), items: list(relatedItem) }),
+  extraBlocks,
 });
 
 export type EurovisionPartyContent = z.infer<typeof eurovisionPartySchema>;

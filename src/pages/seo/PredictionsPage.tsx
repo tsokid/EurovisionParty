@@ -23,6 +23,8 @@ import LocaleLink from '../../components/seo/LocaleLink';
 import { hubPath } from '../../lib/seo/dynamicPages';
 import { contestTexts } from './content/contestText';
 import { usePageContent } from '../../lib/cms/usePageContent';
+import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { EurovisionPredictionsContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-predictions';
 import { PageContentFallback } from './PageContentFallback';
 import { predictionsText, type PredictionsText } from './predictionsText';
@@ -156,7 +158,7 @@ export default function PredictionsPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={[article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={mergeFaqJsonLd([article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], content.data.extraBlocks)}
       />
 
       <PageHero
@@ -230,6 +232,8 @@ export default function PredictionsPage() {
         <Section title={c.sections.faqTitle}>
           <FaqAccordion items={c.faq} />
         </Section>
+
+        <ExtraBlocks value={content.data.extraBlocks} />
 
         <CtaBanner
           title={c.cta.title}
