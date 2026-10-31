@@ -3,7 +3,7 @@
 import { group, href as hrefField, list, text, tuple, type GroupFieldOptions, type StringFieldOptions } from '../fields.ts';
 
 /** An internal path such as `/faq`: the same in every locale. */
-export const href = () => hrefField({ help: 'Internal path, e.g. /faq (same in both languages)' });
+export const href = () => hrefField({ help: 'Internal path (/faq) or https:// URL (same in both languages)' });
 
 /** Labels of the groups every page has; the form humanises other keys. */
 export const META_LABEL = { label: 'Page meta (SEO)' } as const satisfies GroupFieldOptions;

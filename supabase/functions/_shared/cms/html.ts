@@ -24,7 +24,7 @@ function decodeEntities(s: string): string {
       const code = body[1] === 'x' || body[1] === 'X' ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
       return Number.isFinite(code) && code >= 0 && code <= 0x10ffff ? String.fromCodePoint(code) : whole;
     }
-    return NAMED_ENTITIES[body.toLowerCase()] ?? whole;
+    return Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, body.toLowerCase()) ? NAMED_ENTITIES[body.toLowerCase()] : whole;
   });
 }
 
@@ -40,7 +40,12 @@ export function isSafeHref(href: string): boolean {
   return href.startsWith('/') && !href.startsWith('//');
 }
 
-type Attr = { name: string; value: string };
+/** Named entities in `s` (with or without ";") that decodeEntities does not know. */
+function unknownEntities(s: string): string[] {
+  return [...s.matchAll(/&([a-z][a-z0-9]*);?/gi)].map((m) => m[1]).filter((name) => !Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, name.toLowerCase()));
+}
+
+type Attr = { name: string; value: string; raw: string };
 
 /** Parses `name="v" name='v' name=v name` up to the end of `src`; null on a malformed attribute list. */
 function parseAttrs(src: string): Attr[] | null {
@@ -52,7 +57,8 @@ function parseAttrs(src: string): Attr[] | null {
     re.lastIndex = i;
     const m = re.exec(src);
     if (!m) return null;
-    attrs.push({ name: m[1].toLowerCase(), value: decodeEntities(m[2] ?? m[3] ?? m[4] ?? '') });
+    const raw = m[2] ?? m[3] ?? m[4] ?? '';
+    attrs.push({ name: m[1].toLowerCase(), value: decodeEntities(raw), raw });
     i = re.lastIndex;
   }
   return attrs;
@@ -132,7 +138,7 @@ export function htmlErrors(html: string): string[] {
       continue;
     }
     const seen = new Set<string>();
-    for (const { name: attr, value } of attrs) {
+    for (const { name: attr, value, raw } of attrs) {
       if (seen.has(attr)) {
         errors.push(`duplicate attribute ${attr} on <${name}>`);
         continue;
@@ -140,6 +146,9 @@ export function htmlErrors(html: string): string[] {
       seen.add(attr);
       if (name !== 'a' || !A_ATTRS.has(attr)) {
         errors.push(`disallowed attribute ${attr} on <${name}>`);
+      } else if (attr === 'href' && unknownEntities(raw).length) {
+        // A browser decodes entities we do not (&sol; is "/"): never guess, reject.
+        for (const e of unknownEntities(raw)) errors.push(`unknown entity &${e}; in href`);
       } else if (attr === 'href' && !isSafeHref(value)) {
         errors.push(`disallowed href "${value}" (must start with / or https://)`);
       } else if (attr === 'target' && value !== '_blank') {

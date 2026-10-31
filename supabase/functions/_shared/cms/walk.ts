@@ -49,6 +49,7 @@ const isRecord = (v: unknown): v is Record<string, unknown> => !!v && typeof v =
  * (indices as numbers), an optional's inner field if no value is undefined. Without values
  * a list's item schema is visited once, at `*`.
  */
+// Never call a walker from module top level (fields.ts ↔ walk.ts import cycle).
 export function walkSchema(schema: z.ZodType, visit: (node: WalkNode) => boolean | void, values: unknown[] = []): void {
   const withValues = values.length > 0;
   const step = (node: z.ZodType, segments: Segment[], vals: unknown[]): void => {
