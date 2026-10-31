@@ -186,6 +186,49 @@ describe('PublishBar', () => {
     expect(await screen.findByText('Warning: end_publish failed: timeout')).toBeTruthy();
   });
 
+  it('counts changed CMS pages with the years', async () => {
+    h.summary = { changed_years: [2024, 2025], changed_docs: ['about', 'faq', 'rules'], since: '2026-10-29T10:00:00Z' } as typeof h.summary;
+    render(<Harness />);
+    expect(await screen.findByText('5 unpublished changes: 2 years (2024-2025), 3 pages (about, faq, rules)')).toBeTruthy();
+  });
+
+  it('pages alone count as unpublished changes, in the singular too', async () => {
+    h.summary = { changed_years: [], changed_docs: ['about'], since: '2026-10-29T10:00:00Z' } as typeof h.summary;
+    render(<Harness />);
+    expect(await screen.findByText('1 unpublished change: 1 page (about)')).toBeTruthy();
+  });
+
+  it('lists the content warnings of a publish in a collapsible list', async () => {
+    h.invoke.mockResolvedValue({
+      data: {
+        status: 'ok', run_id: 8, sha: 'fff0000aaa', files_changed: 1,
+        warnings: [
+          { doc_id: 'about', locale: 'en', path: 'meta.title', message: 'Longer than recommended: 70 characters, recommended max 60' },
+          { doc_id: 'faq', locale: null, path: '', message: 'Doc-level note' },
+        ],
+      },
+      error: null,
+    });
+    render(<Harness />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Publish' }));
+    const summary = await screen.findByText('2 content warnings');
+    expect(summary.tagName).toBe('SUMMARY');
+    expect(summary.closest('details')?.open).toBe(false);
+    expect(screen.getByText('about [en] meta.title: Longer than recommended: 70 characters, recommended max 60')).toBeTruthy();
+    expect(screen.getByText('faq: Doc-level note')).toBeTruthy();
+  });
+
+  it('a refused publish still lists its warnings', async () => {
+    h.invoke.mockResolvedValue(httpError({
+      status: 'error', run_id: 3, sha: null, files_changed: 0, error: 'CMS validation failed: 1 error in 1 document',
+      warnings: [{ doc_id: 'rules', locale: 'el', path: 'meta.description', message: 'Possible hardcoded year/city: use the contest placeholders' }],
+    }));
+    render(<Harness />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Publish' }));
+    expect(await screen.findByText('1 content warning')).toBeTruthy();
+    expect(screen.getByText('rules [el] meta.description: Possible hardcoded year/city: use the contest placeholders')).toBeTruthy();
+  });
+
   it('a failed last run shows its error', async () => {
     h.lastRun = { id: 7, status: 'error', commit_sha: null, finished_at: FINISHED, error: 'vercel.json is missing from the branch' };
     render(<Harness />);

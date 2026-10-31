@@ -26,12 +26,22 @@ export const BUSY_TEXT = 'Another publish is running — try again in a minute';
 export const PUBLISH_TIMEOUT_MS = 90_000;
 export const TIMEOUT_TEXT = 'Publish timed out — check the last run below and try again';
 
+/** Advice from validating the CMS drafts at publish; never blocks it. */
+export type ContentWarning = {
+  doc_id: string;
+  locale: 'en' | 'el' | null;
+  path: string;
+  message: string;
+};
+
 export type PublishOutcome = {
   status: 'ok' | 'noop' | 'error' | 'busy';
   sha?: string | null;
   files_changed?: number;
   warning?: string;
   error?: string;
+  /** CMS content warnings (on ok, noop and a refused publish alike). */
+  warnings?: ContentWarning[];
 };
 
 export type UnpublishedSummary = {
@@ -166,6 +176,12 @@ export function yearRanges(years: number[]): string {
     i = j + 1;
   }
   return parts.join(', ');
+}
+
+/** One content warning as "about [en] meta.title: message" ("doc: message" for a document-level one). */
+export function warningText(w: ContentWarning): string {
+  const where = w.locale ? `${w.doc_id} [${w.locale}]${w.path ? ` ${w.path}` : ''}` : `${w.doc_id}${w.path ? ` ${w.path}` : ''}`;
+  return `${where}: ${w.message}`;
 }
 
 /** One line for the result of a publish. */

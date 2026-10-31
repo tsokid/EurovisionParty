@@ -1,17 +1,32 @@
 // src/admin/modules/contests/PublishBar.tsx
-// Top of the Contests module: how many years changed since the last
-// successful publish, the last run (status, commit, time), the Publish
-// button and the outcome of the latest publish. State lives in
-// usePublisher (publish.ts) so the module's auto-publish shares it.
+// Top of the Contests and Pages modules: how many years and CMS pages
+// changed since the last successful publish, the last run (status, commit,
+// time), the Publish button, the outcome of the latest publish and its
+// content warnings. State lives in usePublisher (publish.ts) so a module's
+// auto-publish shares it.
 
-import { COMMIT_URL, formatRunTime, outcomeText, yearRanges, type Publisher } from './publish';
+import { COMMIT_URL, formatRunTime, outcomeText, warningText, yearRanges, type Publisher } from './publish';
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+function changeCount(p: Publisher): number {
+  return p.summary ? p.summary.changed_years.length + (p.summary.changed_docs?.length ?? 0) : 0;
+}
 
 function unpublishedText(p: Publisher): string | null {
   if (!p.summary) return null;
   if (p.summary.since === null) return 'Never published';
-  const n = p.summary.changed_years.length;
+  const years = p.summary.changed_years;
+  const docs = p.summary.changed_docs ?? [];
+  const n = years.length + docs.length;
   if (n === 0) return 'No unpublished changes';
-  return `${n} unpublished change${n === 1 ? '' : 's'} (year${n === 1 ? '' : 's'} ${yearRanges(p.summary.changed_years)})`;
+  const head = `${n} unpublished change${n === 1 ? '' : 's'}`;
+  if (docs.length === 0) return `${head} (year${n === 1 ? '' : 's'} ${yearRanges(years)})`;
+  const parts = [
+    years.length > 0 && `${plural(years.length, 'year')} (${yearRanges(years)})`,
+    `${plural(docs.length, 'page')} (${docs.join(', ')})`,
+  ].filter(Boolean);
+  return `${head}: ${parts.join(', ')}`;
 }
 
 const OUTCOME_STYLE = {
@@ -24,7 +39,8 @@ const OUTCOME_STYLE = {
 export function PublishBar({ publisher: p }: { publisher: Publisher }) {
   const pending = unpublishedText(p);
   const run = p.lastRun;
-  const hasChanges = !!p.summary && (p.summary.since === null || p.summary.changed_years.length > 0);
+  const hasChanges = !!p.summary && (p.summary.since === null || changeCount(p) > 0);
+  const warnings = p.outcome?.warnings ?? [];
 
   return (
     <section className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-2">
@@ -83,6 +99,16 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
         </p>
       )}
       {p.outcome?.warning && <p className="text-xs text-amber-300 break-all">Warning: {p.outcome.warning}</p>}
+      {warnings.length > 0 && (
+        <details className="text-xs text-amber-200">
+          <summary className="cursor-pointer font-semibold">{plural(warnings.length, 'content warning')}</summary>
+          <ul className="mt-1 space-y-0.5 pl-4 list-disc break-words">
+            {warnings.map((w, i) => (
+              <li key={i}>{warningText(w)}</li>
+            ))}
+          </ul>
+        </details>
+      )}
       {p.loadError && <p className="text-xs text-red-300">{p.loadError}</p>}
 
       <p className="text-xs text-white/40">The site updates about 2 minutes after a successful publish.</p>
