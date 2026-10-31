@@ -4,7 +4,7 @@
 // Two caches, shared by the picker, the form widgets and the preview:
 // - the library (media_list), refetched on demand (the picker opens, an
 //   upload or a delete finished, a reference is not in it yet);
-// - signed URLs, reused while they have more than SIGNED_URL_MIN_LEFT_S left
+// - signed URLs, reused while they have more than SIGNED_URL_MIN_LEFT_MS left
 //   (useMediaInfo re-signs them then, while a form or preview stays open).
 import { supabase } from '../../../../lib/supabase';
 import { formatError } from '../../../lib/formatError';
@@ -115,33 +115,46 @@ export function invalidateLibrary(): void {
 // ---- Signed URLs -----------------------------------------------------------
 
 export const SIGNED_URL_TTL_S = 3600;
-const SIGNED_URL_MIN_LEFT_S = 300;
-/** After this long a signed URL is due for re-signing (signedUrls then fetches a new one). */
-export const SIGNED_URL_REFRESH_MS = (SIGNED_URL_TTL_S - SIGNED_URL_MIN_LEFT_S) * 1000;
+/** A cached URL with less than this left is signed again. */
+export const SIGNED_URL_MIN_LEFT_MS = 300 * 1000;
 
 const signed = new Map<string, { url: string; expires: number }>();
 
-/** Signed URLs of `paths` (bucket object names), { path: url }; a path Storage refuses is left out. */
-export async function signedUrls(paths: readonly string[]): Promise<Record<string, string>> {
+/**
+ * Signed URLs of `paths` (bucket object names), { path: url }, and the
+ * earliest expiry (ms epoch) among them, null when none. A URL reused from
+ * the cache keeps its own expiry. A path Storage refuses is left out.
+ */
+export async function signedUrlsWithExpiry(paths: readonly string[]): Promise<{ urls: Record<string, string>; expires: number | null }> {
   const now = Date.now();
   const fresh = (p: string) => {
     const s = signed.get(p);
-    return !!s && s.expires - now > SIGNED_URL_MIN_LEFT_S * 1000;
+    return !!s && s.expires - now > SIGNED_URL_MIN_LEFT_MS;
   };
   const missing = [...new Set(paths)].filter((p) => !fresh(p));
   if (missing.length) {
+    // A stale entry Storage refuses to re-sign is dropped, never returned (its expiry would schedule an immediate refresh).
+    for (const p of missing) signed.delete(p);
     const { data, error } = await supabase.storage.from(BUCKET).createSignedUrls(missing, SIGNED_URL_TTL_S);
     if (error) throw error;
     for (const d of data ?? []) {
       if (d.path && d.signedUrl && !d.error) signed.set(d.path, { url: d.signedUrl, expires: now + SIGNED_URL_TTL_S * 1000 });
     }
   }
-  const out: Record<string, string> = {};
+  const urls: Record<string, string> = {};
+  let expires: number | null = null;
   for (const p of paths) {
     const s = signed.get(p);
-    if (s) out[p] = s.url;
+    if (!s) continue;
+    urls[p] = s.url;
+    expires = expires === null ? s.expires : Math.min(expires, s.expires);
   }
-  return out;
+  return { urls, expires };
+}
+
+/** Signed URLs of `paths` (bucket object names), { path: url }; a path Storage refuses is left out. */
+export async function signedUrls(paths: readonly string[]): Promise<Record<string, string>> {
+  return (await signedUrlsWithExpiry(paths)).urls;
 }
 
 /** Test-only: forget the library and the signed URLs. */

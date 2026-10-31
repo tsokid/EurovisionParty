@@ -2,7 +2,7 @@
 // form widgets (thumbnails, file names) and the preview resolver.
 import { useEffect, useMemo, useState } from 'react';
 import { formatError } from '../../../lib/formatError';
-import { libraryRows, SIGNED_URL_REFRESH_MS, signedUrls, type MediaRow } from './mediaApi';
+import { libraryRows, SIGNED_URL_MIN_LEFT_MS, signedUrlsWithExpiry, type MediaRow } from './mediaApi';
 
 export type MediaInfo = {
   /** Every library row by id (variants included). */
@@ -31,7 +31,8 @@ export function indexRows(list: readonly MediaRow[]): Pick<MediaInfo, 'rows' | '
 /**
  * Rows and signed URLs of `ids` (draft media ids); refetches the library once
  * if one is not in it yet. While mounted, the URLs are re-signed shortly
- * before they expire (SIGNED_URL_REFRESH_MS after they were loaded).
+ * before the earliest of them expires (a URL reused from the cache keeps its
+ * own expiry), SIGNED_URL_MIN_LEFT_MS ahead of it.
  */
 export function useMediaInfo(ids: readonly string[]): MediaInfo {
   const key = [...ids].sort().join(',');
@@ -52,10 +53,12 @@ export function useMediaInfo(ids: readonly string[]): MediaInfo {
       const index = indexRows(list);
       const paths = want.flatMap((id) => [index.rows.get(id)?.storage_path, index.variants.get(id)?.storage_path])
         .filter((p): p is string => !!p);
-      const urls = paths.length ? await signedUrls(paths) : {};
+      const { urls, expires } = paths.length ? await signedUrlsWithExpiry(paths) : { urls: {}, expires: null };
       if (!live) return;
       setInfo({ ...index, urls, error: null, ready: true });
-      if (paths.length) timer = setTimeout(() => setRefresh((n) => n + 1), SIGNED_URL_REFRESH_MS);
+      if (expires !== null) {
+        timer = setTimeout(() => setRefresh((n) => n + 1), Math.max(0, expires - SIGNED_URL_MIN_LEFT_MS - Date.now()));
+      }
     })().catch((e) => {
       if (live) setInfo({ ...EMPTY, error: formatError(e), ready: true });
     });
