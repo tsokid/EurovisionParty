@@ -52,14 +52,13 @@ function fetchContent(path: string): Promise<void> {
 
 /** The cached (or, server side, bundled) file, partial or whole, without fetching. */
 export const peekContent = (path: string): unknown => getCachedContent(path) ?? bundledContent(path);
-const peek = peekContent;
 
 const hasKey = (data: unknown, key: string): boolean =>
   !!data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, key);
 
 /** The cached file, or undefined when absent or a seeded partial lacking `key`. */
 function usable(path: string, key: string | undefined): unknown {
-  const data = peek(path);
+  const data = peekContent(path);
   if (data === undefined || key === undefined || hasKey(data, key) || !isSeededContent(path)) return data;
   return undefined;
 }
