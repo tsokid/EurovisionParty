@@ -11,7 +11,7 @@ import { PublishBar } from './contests/PublishBar';
 import { usePublisher } from './contests/publish';
 import { cmsList, resetPublishedPages, type CmsListRow } from './pages/cmsApi';
 import { PageList } from './pages/PageList';
-import { SITE_PAGES } from './pages/sitePages';
+import { PUBLISH_PAGES_TEXT, SITE_PAGES } from './pages/sitePages';
 import { PageEditor } from './pages/PageEditor';
 
 export default function Pages() {
@@ -61,6 +61,7 @@ export default function Pages() {
       </header>
 
       <PublishBar publisher={publisher} />
+      <p className="text-xs text-white/50 max-w-2xl">{PUBLISH_PAGES_TEXT}</p>
 
       {err && <p className="text-sm text-red-300">{err}</p>}
 

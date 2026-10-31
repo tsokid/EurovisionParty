@@ -48,6 +48,7 @@ vi.mock('../../src/lib/supabase', () => ({
 }));
 
 import Pages from '../../src/admin/modules/Pages';
+import { PUBLISH_PAGES_TEXT } from '../../src/admin/modules/pages/sitePages';
 import { __resetPublishGuardForTests } from '../../src/admin/modules/contests/publish';
 import { UNSAVED_TEXT } from '../../src/admin/unsavedGuard';
 import { SAVE_BLOCKED_TEXT } from '../../src/admin/modules/pages/PageEditor';
@@ -119,6 +120,13 @@ describe('Pages module: list', () => {
     expect(within(screen.getByRole('row', { name: /^Rules/ })).getByText('Never edited')).toBeTruthy();
     // All 18 site docs, one row each (plus the header row).
     expect(screen.getAllByRole('row')).toHaveLength(18 + 1);
+  });
+
+  it('explains what Publish does with the drafts (I3)', async () => {
+    render(<Pages />);
+    expect(await screen.findByText(PUBLISH_PAGES_TEXT)).toBeTruthy();
+    expect(PUBLISH_PAGES_TEXT).toMatch(/about 2 minutes/);
+    expect(PUBLISH_PAGES_TEXT).toMatch(/draft stays/);
   });
 
   it('the publish bar counts changed pages', async () => {

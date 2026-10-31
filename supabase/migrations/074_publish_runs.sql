@@ -3,10 +3,13 @@
 -- ------------------------------------------------------------
 -- * publish_runs: one row per Publish. status running → ok | noop | error,
 --   with the commit SHA, the number of files changed and the error text.
--- * begin_publish() (super admin): serializes publishes. Raises
---   'publish already running' while a run younger than 10 minutes is
---   running; an older running row is closed as error ('timed out') and
---   does not block. Inserts and returns a running row.
+-- * begin_publish(p_cms default true) (super admin): serializes publishes.
+--   Raises 'publish already running' while a run younger than 10 minutes
+--   is running; an older running row is closed as error ('timed out') and
+--   does not block. Inserts and returns a running row. p_cms (stored as
+--   publish_runs.cms) says whether the run ships CMS drafts: false for the
+--   contest lifecycle auto-publish (Finalize / Archive / Un-archive), which
+--   ships contests only, so it never counts as publishing the drafts.
 -- * end_publish(id, status, sha, files, error) (service_role): closes a
 --   running row. ok and noop stamp contests.published_at (every contest
 --   is in the snapshot, so every contest is published).
@@ -16,7 +19,10 @@
 --   (src/content/contests/types.ts). generated_at is the latest
 --   updated_at of contests and contest_entries, so unchanged data gives a
 --   byte-identical site.json and Publish can be a no-op. cms_documents is
---   [{doc_id, doc_type, data}] from 076's draft table, by doc_id.
+--   [{doc_id, doc_type, data}] from 076's draft table, by doc_id: only the
+--   drafts saved after the CMS since (below), every draft before the first
+--   CMS publish. An already-published draft is neither re-validated nor
+--   re-written (a schema change can never make it block a publish).
 -- * unpublished_summary() (super admin): { changed_years, changed_docs,
 --   since }. since is started_at of the last successful (ok or noop) run, null before the
 --   first. started_at precedes the run's publish_input read, so an edit
@@ -24,8 +30,9 @@
 --   years whose contest row or any entry has updated_at after since (every
 --   year when since is null). Deleted entries leave no updated_at behind
 --   and are not detected. changed_docs are the cms_documents doc_ids with
---   updated_at after since (every draft when since is null); a discarded
---   draft is not listed.
+--   updated_at after the CMS since: started_at of the last ok/noop run with
+--   cms = true (every draft before the first). A contests-only run moves
+--   since but not the CMS since. A discarded draft is not listed.
 -- * publish_input() and unpublished_summary() read cms_documents, which
 --   076 creates. Both are plpgsql (bodies resolved at call time), so this
 --   file applies before 076; neither is called before 076 is in place.
@@ -48,7 +55,9 @@ create table if not exists public.publish_runs (
   commit_sha    text,
   files_changed int,
   error         text,
-  started_by    uuid
+  started_by    uuid,
+  -- Whether the run ships CMS drafts (begin_publish(p_cms)).
+  cms           boolean not null default true
 );
 
 create index if not exists publish_runs_status_idx on public.publish_runs (status, finished_at desc);
@@ -63,7 +72,7 @@ grant select on public.publish_runs to authenticated;
 grant select on public.publish_runs to service_role;
 
 -- ── begin_publish ───────────────────────────────────────────
-create or replace function public.begin_publish()
+create or replace function public.begin_publish(p_cms boolean default true)
 returns bigint
 language plpgsql
 security definer
@@ -88,15 +97,15 @@ begin
     raise exception 'publish already running';
   end if;
 
-  insert into public.publish_runs (status, started_by)
-  values ('running', auth.uid())
+  insert into public.publish_runs (status, started_by, cms)
+  values ('running', auth.uid(), coalesce(p_cms, true))
   returning id into v_id;
   return v_id;
 end;
 $fn$;
 
-revoke execute on function public.begin_publish() from public, anon;
-grant execute on function public.begin_publish() to authenticated;
+revoke execute on function public.begin_publish(boolean) from public, anon;
+grant execute on function public.begin_publish(boolean) to authenticated;
 
 -- ── end_publish ─────────────────────────────────────────────
 create or replace function public.end_publish(p_id bigint, p_status text, p_sha text, p_files int, p_error text)
@@ -136,7 +145,13 @@ stable
 security definer
 set search_path = public
 as $fn$
+declare
+  v_cms_since timestamptz;
 begin
+  select max(r.started_at) into v_cms_since
+    from public.publish_runs r
+   where r.status in ('ok', 'noop') and r.cms;
+
   return jsonb_build_object(
     'contests', coalesce((
       select jsonb_agg(jsonb_build_object(
@@ -169,7 +184,8 @@ begin
     'cms_documents', coalesce((
       select jsonb_agg(jsonb_build_object('doc_id', d.doc_id, 'doc_type', d.doc_type, 'data', d.data)
              order by d.doc_id)
-        from public.cms_documents d), '[]'::jsonb)
+        from public.cms_documents d
+       where v_cms_since is null or d.updated_at > v_cms_since), '[]'::jsonb)
   );
 end;
 $fn$;
@@ -187,6 +203,7 @@ set search_path = public
 as $fn$
 declare
   v_since timestamptz;
+  v_cms_since timestamptz;
   v_years int[];
   v_docs  text[];
 begin
@@ -197,6 +214,10 @@ begin
   select max(started_at) into v_since
     from public.publish_runs
    where status in ('ok', 'noop');
+
+  select max(started_at) into v_cms_since
+    from public.publish_runs
+   where status in ('ok', 'noop') and cms;
 
   select coalesce(array_agg(c.year order by c.year), '{}')
     into v_years
@@ -209,8 +230,8 @@ begin
   select coalesce(array_agg(d.doc_id order by d.doc_id), '{}')
     into v_docs
     from public.cms_documents d
-   where v_since is null
-      or d.updated_at > v_since;
+   where v_cms_since is null
+      or d.updated_at > v_cms_since;
 
   return jsonb_build_object('changed_years', to_jsonb(v_years),
                             'changed_docs', to_jsonb(v_docs),

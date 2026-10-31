@@ -219,6 +219,18 @@ describe('cutover runbook coverage', () => {
     }
   });
 
+  it('I3: 9.2 says the site takes ~2 min after a page Publish, the draft stays as the editor base, and auto-publish ships contests only', () => {
+    const section = runbook.slice(runbook.indexOf('### 9.2 CMS smoke test'), runbook.indexOf('## 10. Apply 072'));
+    for (const t of ['about 2 minutes', "editor's base", 'contests only']) {
+      expect(section, `9.2 is missing "${t}"`).toContain(t);
+    }
+  });
+
+  it('I3: the 5.2 privilege check names begin_publish with its p_cms argument', () => {
+    expect(runbook).toContain("('public.begin_publish(boolean)',");
+    expect(runbook).not.toContain("('public.begin_publish()',");
+  });
+
   it('backup and restore commands keep privileges (no --no-privileges in any code block)', () => {
     const code = [...runbook.matchAll(/```[a-z]*\r?\n([\s\S]*?)```/g)].map((m) => m[1]).join('\n');
     expect(code).toContain('pg_dump');

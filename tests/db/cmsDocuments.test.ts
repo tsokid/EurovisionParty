@@ -64,6 +64,15 @@ describe('076 cms_documents', () => {
     const id = (await db.query<{ id: string }>(`select public.begin_publish() as id`)).rows[0].id;
     await asService(() => db.query(`select public.end_publish($1, $2, null, 0, null)`, [id, status]));
   };
+  /** A contest lifecycle auto-publish: begin_publish(false) ships no CMS drafts. */
+  const publishContestsOnly = async () => {
+    const id = (await db.query<{ id: string }>(`select public.begin_publish(false) as id`)).rows[0].id;
+    await asService(() => db.query(`select public.end_publish($1, 'ok', null, 0, null)`, [id]));
+  };
+  const inputDocs = async () =>
+    asService(async () =>
+      ((await db.query<{ i: { cms_documents: Array<{ doc_id: string }> } }>(`select public.publish_input() as i`)).rows[0].i
+        .cms_documents.map((d) => d.doc_id)));
 
   it('cms_save inserts a new document and cms_get returns it', async () => {
     const t = await save('home', 'home', doc('Hello'), null);
@@ -232,6 +241,45 @@ describe('076 cms_documents', () => {
       { doc_id: 'about', doc_type: 'about', data: doc('A') },
       { doc_id: 'home', doc_type: 'home', data: doc('H') },
     ]);
+  });
+
+  it('I3: publish_input ships only drafts saved after the last CMS publish; an old published draft is left out', async () => {
+    // "home" was published long ago and its schema has since changed: it would no longer validate.
+    await save('home', 'home', { en: { stale: true }, el: { stale: true } }, null);
+    await publishOk();
+    expect(await inputDocs()).toEqual([]);
+    // A new, unpublished draft is shipped; the old published one is neither validated nor re-written.
+    const ta = await save('about', 'about', doc('A'), null);
+    expect(await inputDocs()).toEqual(['about']);
+    await publishOk('noop');
+    expect(await inputDocs()).toEqual([]);
+    await save('about', 'about', doc('A2'), ta);
+    expect(await inputDocs()).toEqual(['about']);
+  });
+
+  it('I3: a contests-only publish (begin_publish(false)) does not count as publishing the drafts', async () => {
+    await save('about', 'about', doc('A'), null);
+    await publishOk();
+    const t = (await get('about'))!.updated_at;
+    await save('about', 'about', doc('A2'), t);
+    await publishContestsOnly();
+    // Still unpublished everywhere: the list badge, the summary, and the next Publish ships it.
+    expect((await list()).map((r) => [r.doc_id, r.published])).toEqual([['about', false]]);
+    const s = await summary();
+    expect(s.changed_docs).toEqual(['about']);
+    expect(s.changed_years).toEqual([]);
+    expect(await inputDocs()).toEqual(['about']);
+    await publishOk();
+    expect(await inputDocs()).toEqual([]);
+    expect((await list())[0].published).toBe(true);
+  });
+
+  it('I3: before any CMS publish, every draft ships (a contests-only run does not change that)', async () => {
+    await save('about', 'about', doc('A'), null);
+    await publishContestsOnly();
+    expect(await inputDocs()).toEqual(['about']);
+    expect((await summary()).changed_docs).toEqual(['about']);
+    expect((await list())[0].published).toBe(false);
   });
 
   it('non-admins are forbidden from every cms RPC', async () => {

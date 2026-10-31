@@ -9,6 +9,12 @@ import { COMMIT_URL, formatRunTime, outcomeText, warningText, yearRanges, type P
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
+/** "Publish", or "Publish (contests + N page drafts)" when the manual Publish will ship page drafts too. */
+function publishLabel(p: Publisher): string {
+  const docs = p.summary?.changed_docs?.length ?? 0;
+  return docs ? `Publish (contests + ${plural(docs, 'page draft')})` : 'Publish';
+}
+
 function changeCount(p: Publisher): number {
   return p.summary ? p.summary.changed_years.length + (p.summary.changed_docs?.length ?? 0) : 0;
 }
@@ -51,7 +57,7 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
           disabled={p.publishing}
           className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
         >
-          {p.publishing ? 'Publishing…' : 'Publish'}
+          {p.publishing ? 'Publishing…' : publishLabel(p)}
         </button>
         {pending && (
           <span className={`text-sm font-semibold ${hasChanges ? 'text-amber-200' : 'text-white/60'}`}>{pending}</span>

@@ -112,7 +112,8 @@ export default function Contests() {
       setBusy(false);
     }
     // Outcome (including failure) shows in the PublishBar; the move stands either way.
-    if (AUTO_PUBLISH.has(action)) await publish();
+    // Contests only: CMS page drafts ship only from an explicit Publish click (I3).
+    if (AUTO_PUBLISH.has(action)) await publish({ cms: false });
     else refreshPublish();
   };
 

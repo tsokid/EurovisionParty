@@ -13,6 +13,11 @@
 // of callers during a run cost exactly one more invoke. A run that does
 // not settle within PUBLISH_TIMEOUT_MS frees the slot with a timeout error.
 //
+// CMS page drafts (I3) ship only from an explicit Publish click: the
+// lifecycle auto-publish (Finalize / Archive / Un-archive) passes
+// { cms: false }, contests only. A trailing run ships the drafts when any
+// of its callers asked for them.
+//
 // usePublisher holds that state for the Contests module, so its PublishBar
 // and the auto-publish after Finalize / Archive / Un-archive share one
 // "publishing" flag and one last outcome.
@@ -73,7 +78,12 @@ function asOutcome(body: unknown): PublishOutcome | null {
 
 // Module-level, so every caller in this page shares the guard.
 let current: Promise<PublishOutcome> | null = null;
-let trailing: { promise: Promise<PublishOutcome>; resolve: (p: Promise<PublishOutcome>) => void } | null = null;
+let trailing: { promise: Promise<PublishOutcome>; resolve: (p: Promise<PublishOutcome>) => void; cms: boolean } | null = null;
+
+export type PublishRequest = {
+  /** Ship the CMS page drafts too (default true). false: contests only (lifecycle auto-publish). */
+  cms?: boolean;
+};
 
 /** True while a publish of this page is running (a new call would queue the trailing run). */
 export function isPublishInFlight(): boolean {
@@ -81,16 +91,16 @@ export function isPublishInFlight(): boolean {
 }
 
 /** callPublish, settled as a timeout error after PUBLISH_TIMEOUT_MS. Never rejects. */
-function timed(): Promise<PublishOutcome> {
+function timed(cms: boolean): Promise<PublishOutcome> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<PublishOutcome>((resolve) => {
     timer = setTimeout(() => resolve({ status: 'error', error: TIMEOUT_TEXT }), PUBLISH_TIMEOUT_MS);
   });
-  return Promise.race([callPublish(), timeout]).finally(() => clearTimeout(timer));
+  return Promise.race([callPublish(cms), timeout]).finally(() => clearTimeout(timer));
 }
 
-function start(): Promise<PublishOutcome> {
-  const run = timed();
+function start(cms: boolean): Promise<PublishOutcome> {
+  const run = timed(cms);
   current = run;
   void run.then(() => {
     if (current !== run) return; // reset by __resetPublishGuardForTests
@@ -98,7 +108,7 @@ function start(): Promise<PublishOutcome> {
       // Hand the slot straight to the trailing run: no gap for a third run.
       const t = trailing;
       trailing = null;
-      t.resolve(start());
+      t.resolve(start(t.cms));
     } else {
       current = null;
     }
@@ -110,12 +120,14 @@ function start(): Promise<PublishOutcome> {
  * Publishes. With nothing in flight, starts a run. Otherwise returns the
  * single trailing run that starts after the current one. Never rejects.
  */
-export function invokePublish(): Promise<PublishOutcome> {
-  if (!current) return start();
+export function invokePublish({ cms = true }: PublishRequest = {}): Promise<PublishOutcome> {
+  if (!current) return start(cms);
   if (!trailing) {
     let resolve!: (p: Promise<PublishOutcome>) => void;
     const promise = new Promise<PublishOutcome>((r) => { resolve = r; });
-    trailing = { promise, resolve };
+    trailing = { promise, resolve, cms };
+  } else if (cms) {
+    trailing.cms = true;
   }
   return trailing.promise;
 }
@@ -135,9 +147,9 @@ function safeError(e: unknown): string {
   }
 }
 
-async function callPublish(): Promise<PublishOutcome> {
+async function callPublish(cms: boolean): Promise<PublishOutcome> {
   try {
-    const { data, error } = await supabase.functions.invoke('publish-content', { body: {} });
+    const { data, error } = await supabase.functions.invoke('publish-content', { body: { cms } });
     if (error) {
       // Non-2xx (409 busy, 500 error): the function's JSON body is on error.context.
       const ctx = (error as { context?: { json?: () => Promise<unknown> } }).context;
@@ -208,7 +220,7 @@ export type Publisher = {
   publishing: boolean;
   outcome: PublishOutcome | null;
   refresh: () => Promise<void>;
-  publish: () => Promise<PublishOutcome>;
+  publish: (request?: PublishRequest) => Promise<PublishOutcome>;
 };
 
 export function usePublisher(): Publisher {
@@ -238,12 +250,12 @@ export function usePublisher(): Publisher {
   // A call during a run waits for the trailing run (invokePublish). Only a
   // call that starts a run clears the outcome line; a queued one leaves the
   // current caller's line alone until its own outcome arrives.
-  const publish = useCallback(async () => {
+  const publish = useCallback(async (request?: PublishRequest) => {
     if (!isPublishInFlight()) setOutcome(null);
     pending.current += 1;
     setPublishing(true);
     try {
-      const o = await invokePublish();
+      const o = await invokePublish(request);
       setOutcome(o);
       return o;
     } finally {

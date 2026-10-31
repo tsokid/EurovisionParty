@@ -57,6 +57,15 @@ describe('074 publish_runs', () => {
     expect(r.finished_at).toBeNull();
   });
 
+  it('begin_publish records whether the run ships CMS drafts (default true; false for a contests-only publish)', async () => {
+    const id = await begin();
+    expect((await run(id)).cms).toBe(true);
+    await end(id, 'ok', null, 0, null);
+    const id2 = (await db.query<{ id: string }>(`select public.begin_publish(false) as id`)).rows[0].id;
+    expect((await run(id2)).cms).toBe(false);
+    await end(id2, 'ok', null, 0, null);
+  });
+
   it('begin_publish refuses while a run is running, then allows after end_publish', async () => {
     const id = await begin();
     await expect(begin()).rejects.toThrow(/publish already running/);

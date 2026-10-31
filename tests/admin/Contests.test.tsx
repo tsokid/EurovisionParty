@@ -266,7 +266,8 @@ describe('Contests module', () => {
     render(<Contests />);
     fireEvent.click(await (await rowFor(year)).findByRole('button', { name: label }));
     await waitFor(() => expect(h.rpc).toHaveBeenCalledWith(rpc, { p_year: year }));
-    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: {} }));
+    // Contests only (I3): CMS page drafts ship only from an explicit Publish click.
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: { cms: false } }));
     expect(await screen.findByText(/Published: 3 files changed/)).toBeTruthy();
     const order = h.rpc.mock.invocationCallOrder[h.rpc.mock.calls.findIndex(([n]) => n === rpc)];
     expect(h.invoke.mock.invocationCallOrder[0]).toBeGreaterThan(order);

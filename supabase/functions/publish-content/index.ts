@@ -1,7 +1,9 @@
 // Edge Function: publish-content (spec §7).
 //
 // POST, super-admin JWT only. Snapshots the contest tables into content/**,
-// writes each CMS draft (cms_documents) to content/pages/{doc_id}.json,
+// writes each unpublished CMS draft (cms_documents) to
+// content/pages/{doc_id}.json (skipped with body { cms: false }: the contest
+// lifecycle auto-publish ships contests only),
 // regenerates the archived-year redirects in vercel.json, and commits it all
 // to GITHUB_BRANCH of GITHUB_REPO as one commit (Git Data API). Files are
 // added or updated, never deleted.
@@ -19,7 +21,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.99.3";
 import { commitFiles, readFiles } from "./github.ts";
 import { pagesFromFiles } from "./cmsFiles.ts";
-import { runPublish, type PublishResult } from "./run.ts";
+import { publishOptions, runPublish, type PublishResult } from "./run.ts";
 import type { SnapshotInput } from "./snapshot.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -74,14 +76,15 @@ Deno.serve(async (req) => {
     if (!(await isSuperAdmin(authorization))) return jsonResponse({ error: "forbidden" }, 403);
     if (!GITHUB_TOKEN) return jsonResponse({ status: "error", error: "GITHUB_TOKEN is not set" }, 500);
 
+    const options = publishOptions(await req.json().catch(() => null));
     const user = userClient(authorization);
     const service = serviceClient();
     const github = { token: GITHUB_TOKEN, repo: GITHUB_REPO, branch: GITHUB_BRANCH, fetch };
 
     const result = await runPublish({
       rpc: {
-        async beginPublish() {
-          const { data, error } = await user.rpc("begin_publish");
+        async beginPublish(cms) {
+          const { data, error } = await user.rpc("begin_publish", { p_cms: cms });
           if (error) throw new Error(error.message);
           return Number(data);
         },
@@ -100,7 +103,7 @@ Deno.serve(async (req) => {
       readCommittedPages: async () =>
         pagesFromFiles(await readFiles({ ...github, match: (path) => path.startsWith("content/pages/") })),
       commitFiles: (files, message, transforms) => commitFiles({ ...github, files, message, transforms }),
-    });
+    }, options);
     return jsonResponse(result, HTTP_STATUS[result.status]);
   } catch (e) {
     return jsonResponse({ status: "error", error: e instanceof Error ? e.message : String(e) }, 500);

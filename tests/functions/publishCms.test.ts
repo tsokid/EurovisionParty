@@ -5,7 +5,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cmsFiles, CmsValidationError, MAX_LINE, MAX_MESSAGE_BYTES, pagesFromFiles } from '../../supabase/functions/publish-content/cmsFiles';
-import { runPublish, type PublishDeps } from '../../supabase/functions/publish-content/run';
+import { publishOptions, runPublish, type PublishDeps } from '../../supabase/functions/publish-content/run';
 import type { FileTransforms } from '../../supabase/functions/publish-content/github';
 import { buildSnapshotFiles, type CmsDocumentRow, type SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
 import { stableJson as scriptStableJson } from '../../scripts/history/import';
@@ -245,12 +245,13 @@ function deps(input: SnapshotInput) {
   const readCommittedPages = vi.fn(async () =>
     Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json')).map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))])),
   );
+  const beginPublish = vi.fn<(cms: boolean) => Promise<number>>(async () => 9);
   const d: PublishDeps = {
-    rpc: { beginPublish: async () => 9, publishInput: async () => input, endPublish },
+    rpc: { beginPublish, publishInput: async () => input, endPublish },
     commitFiles,
     readCommittedPages,
   };
-  return { d, endPublish, commitFiles, readCommittedPages };
+  return { d, endPublish, commitFiles, readCommittedPages, beginPublish };
 }
 
 describe('runPublish with CMS drafts', () => {
@@ -320,5 +321,34 @@ describe('runPublish with CMS drafts', () => {
     const { d, readCommittedPages } = deps({ ...base, cms_documents: [] });
     expect((await runPublish(d)).status).toBe('ok');
     expect(readCommittedPages).not.toHaveBeenCalled();
+  });
+
+  it('I3: a manual publish begins a CMS run and ships whatever drafts publish_input returns (only unpublished ones)', async () => {
+    const data = edited('not-found', (d) => { d.en.hero.title = 'Lost in the arena'; });
+    const { d, beginPublish, commitFiles } = deps({ ...base, cms_documents: [row('not-found', data)] });
+    expect((await runPublish(d)).status).toBe('ok');
+    expect(beginPublish).toHaveBeenCalledWith(true);
+    expect(Object.keys(commitFiles.mock.calls[0][0])).toContain('content/pages/not-found.json');
+  });
+
+  it('I3: { cms: false } (contest lifecycle auto-publish) ships contests only: drafts skipped, not even validated', async () => {
+    const bad = edited('faq', (d) => { d.en.hero = 42; });
+    const { d, beginPublish, commitFiles, readCommittedPages } = deps({ ...base, cms_documents: [row('faq', bad)] });
+    const out = await runPublish(d, { cms: false });
+    expect(out).toEqual({ status: 'ok', run_id: 9, sha: 'c1', files_changed: Object.keys(buildSnapshotFiles(base)).length });
+    expect(beginPublish).toHaveBeenCalledWith(false);
+    expect(commitFiles.mock.calls[0][0]).toEqual(buildSnapshotFiles(base));
+    expect(readCommittedPages).not.toHaveBeenCalled();
+  });
+});
+
+describe('publishOptions (the request body)', () => {
+  it('ships CMS drafts unless the body says cms: false', () => {
+    expect(publishOptions({})).toEqual({ cms: true });
+    expect(publishOptions(null)).toEqual({ cms: true });
+    expect(publishOptions({ cms: true })).toEqual({ cms: true });
+    expect(publishOptions({ cms: false })).toEqual({ cms: false });
+    expect(publishOptions({ cms: 'no' })).toEqual({ cms: true });
+    expect(publishOptions('garbage')).toEqual({ cms: true });
   });
 });

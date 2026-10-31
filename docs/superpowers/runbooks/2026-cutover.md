@@ -329,7 +329,7 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
    where has_table_privilege(r, 'public.cms_documents', p);
 
   with fns(sig, kind) as (values
-    ('public.begin_publish()',                                'admin'),
+    ('public.begin_publish(boolean)',                         'admin'),
     ('public.unpublished_summary()',                          'admin'),
     ('public.last_publish_run()',                             'admin'),
     ('public.end_publish(bigint,text,text,integer,text)',     'service'),
@@ -548,7 +548,7 @@ Proves the path Pages editor → draft → Publish → live page end to end, on 
   1. Admin → **Pages** → the **FAQ** row → **Edit**. Pick the first answer in the EN column. **Copy its exact current text** into a scratch note first: you need it to revert.
   2. Append ` (CMS check)` to that EN answer. Wait for the preview pane to show it; the form shows no errors.
   3. **Save draft**. Expect "Saved"; the list shows FAQ as **Draft (unpublished)**; the publish bar counts 1 changed page.
-  4. **Publish** (the publish bar). Wait (up to ~90 s).
+  4. **Publish** (the publish bar; the button reads "Publish (contests + 1 page draft)"). Wait (up to ~90 s).
 - **Run:**
   ```sql
   select id, status, commit_sha, files_changed, error from public.publish_runs order by id desc limit 1;
@@ -557,6 +557,7 @@ Proves the path Pages editor → draft → Publish → live page end to end, on 
 - **Expect:**
   - Newest run `ok`, `files_changed` = 1; the GitHub commit changes only `content/pages/faq.json` (the one answer). `cms_documents` holds one row, `faq`. The Pages list shows FAQ as **Published**.
   - Once the Vercel production build of that commit is Ready: `https://eurovision.games/en/faq` (hard reload) shows the answer ending in "(CMS check)", and `curl -s https://eurovision.games/en/faq | grep -c "(CMS check)"` prints 1 or more (the prerendered HTML has it, not only the client). `/el/faq` is unchanged.
+  - After a page Publish, wait **about 2 minutes** for the site (the Vercel build) before checking. The `faq` draft row stays in `cms_documents`: it remains the editor's base (the editor loads it, not the live file), and later Publishes do not re-send or re-check it unless it is saved again. Finalize, Archive and Un-archive auto-publish **contests only** (`{ cms: false }`); page drafts ship only from the **Publish** button, which reads "Publish (contests + N page drafts)" while drafts are waiting.
 - **Revert (Επαναφορά):**
   - **Before Publish** (step 4 not done): **Discard draft** in the editor. Nothing reached the site; the editor shows the published text again.
   - **After Publish** (the normal case here): **Discard draft** then **Publish** does **not** revert the live page. Publish writes each draft over its page file, so the committed `content/pages/faq.json` now holds the edit; discarding only drops the draft row (the editor then loads that committed file, edit included), and the next Publish has nothing to change. Instead: Pages → FAQ → **Edit** → paste back the exact original answer from your note → **Save draft** → **Publish**. Expect a run `ok`, `files_changed` = 1, and `/en/faq` without "(CMS check)" after the Vercel build. Then **Discard draft** if you like: the committed file now holds the original, so the site and the editor agree with no draft left, and a further **Publish** is a no-op (`noop`).

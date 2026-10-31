@@ -8,7 +8,9 @@
 --   that); the RPC only requires a jsonb object with keys en and el.
 -- * cms_list() (super admin): doc_id, doc_type, updated_at, published.
 --   published = updated_at <= started_at of the last ok/noop publish run
---   (the since of unpublished_summary(), 074); false before the first.
+--   that shipped CMS drafts (publish_runs.cms; the CMS since of
+--   unpublished_summary(), 074); false before the first. A contests-only
+--   run (the lifecycle auto-publish) never publishes a draft.
 -- * cms_get(doc_id) (super admin): {doc_id, doc_type, data, updated_at}
 --   or null.
 -- * cms_save(doc_id, doc_type, data, expected_updated_at) (super admin):
@@ -59,7 +61,7 @@ begin
 
   select max(r.started_at) into v_since
     from public.publish_runs r
-   where r.status in ('ok', 'noop');
+   where r.status in ('ok', 'noop') and r.cms;
 
   return query
     select d.doc_id, d.doc_type, d.updated_at,

@@ -1,12 +1,18 @@
 // The publish flow (spec §7), with every side effect injected so it can be
 // unit-tested; index.ts wires it to Supabase and GitHub.
 //
-// begin_publish (caller's JWT) → publish_input (service role) →
+// begin_publish(cms) (caller's JWT) → publish_input (service role) →
 // buildSnapshotFiles + cmsFiles (CMS drafts, validated, and titles /
 // descriptions unique across the committed pages: one invalid draft
 // refuses the whole publish) + vercel.json (merged against the commit's
 // parent tree, so a push in between is never reverted) → one commit →
 // end_publish. CMS warnings never block; they come back as `warnings`.
+//
+// CMS drafts (I3): publish_input returns only the drafts saved since the
+// last publish that shipped CMS drafts, so a published draft is never
+// re-validated or re-written. With { cms: false } (the contest lifecycle
+// auto-publish) drafts are skipped entirely: contests only, and the run is
+// recorded as cms = false so the drafts stay unpublished.
 //
 // A failing end_publish never hides the outcome: after a commit the SHA is
 // still returned with a warning, and in the error path the original error
@@ -29,8 +35,8 @@ export type EndPublishArgs = {
 
 export type PublishDeps = {
   rpc: {
-    /** begin_publish() as the calling super admin. Returns the run id. */
-    beginPublish(): Promise<number>;
+    /** begin_publish(p_cms) as the calling super admin. Returns the run id. */
+    beginPublish(cms: boolean): Promise<number>;
     /** publish_input() as service role. */
     publishInput(): Promise<SnapshotInput>;
     /** end_publish(...) as service role. */
@@ -87,24 +93,35 @@ export function commitMessage(changedPaths: string[]): string {
 
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
-export async function runPublish(deps: PublishDeps): Promise<PublishResult> {
+export type PublishOptions = {
+  /** Ship the CMS drafts too (default). false: contests only (lifecycle auto-publish). */
+  cms: boolean;
+};
+
+/** The options of a request body: `{ cms: false }` skips the CMS drafts; anything else ships them. */
+export function publishOptions(body: unknown): PublishOptions {
+  const cms = body && typeof body === 'object' ? (body as Record<string, unknown>).cms : undefined;
+  return { cms: cms !== false };
+}
+
+export async function runPublish(deps: PublishDeps, { cms }: PublishOptions = { cms: true }): Promise<PublishResult> {
   let id: number;
   try {
-    id = await deps.rpc.beginPublish();
+    id = await deps.rpc.beginPublish(cms);
   } catch (e) {
     if (message(e).includes(BUSY)) return { status: 'busy', run_id: null, sha: null, files_changed: 0, error: BUSY };
     throw e;
   }
 
   let result: CommitResult;
-  let cms: Warnings = {};
+  let found: Warnings = {};
   try {
     const input = await deps.rpc.publishInput();
     // Both built before anything is committed: a bad draft or bad contest data refuses it all.
-    const drafts = input.cms_documents ?? [];
+    const drafts = cms ? input.cms_documents ?? [] : [];
     const committed = drafts.length ? await deps.readCommittedPages() : {};
     const pages = cmsFiles(drafts, committed);
-    if (pages.warnings.length) cms = { warnings: pages.warnings };
+    if (pages.warnings.length) found = { warnings: pages.warnings };
     const files = { ...buildSnapshotFiles(input), ...pages.files };
     const redirects = generatedRedirects(input.contests);
     result = await deps.commitFiles(files, commitMessage, {
@@ -114,15 +131,15 @@ export async function runPublish(deps: PublishDeps): Promise<PublishResult> {
       },
     });
   } catch (e) {
-    if (e instanceof CmsValidationError && e.warnings.length) cms = { warnings: e.warnings };
+    if (e instanceof CmsValidationError && e.warnings.length) found = { warnings: e.warnings };
     const error = message(e);
     const warning = await tryEnd(deps, { id, status: 'error', sha: null, files: null, error });
-    return { status: 'error', run_id: id, sha: null, files_changed: 0, error, ...warning, ...cms };
+    return { status: 'error', run_id: id, sha: null, files_changed: 0, error, ...warning, ...found };
   }
 
   const status = result.sha ? 'ok' : 'noop';
   const warning = await tryEnd(deps, { id, status, sha: result.sha, files: result.changed, error: null });
-  return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...warning, ...cms };
+  return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...warning, ...found };
 }
 
 /** end_publish; a failure becomes { warning } instead of an exception. */

@@ -66,7 +66,8 @@ describe('FinalizeCard', () => {
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
     fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
-    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: {} }));
+    // Contests only (I3): CMS page drafts ship only from an explicit Publish click.
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: { cms: false } }));
     expect(await screen.findByText(/Published: 2 files changed/)).toBeTruthy();
   });
 

@@ -97,7 +97,8 @@ describe('PublishBar', () => {
     const summariesBefore = h.rpc.mock.calls.filter(([n]) => n === 'unpublished_summary').length;
 
     fireEvent.click(button);
-    expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: {} });
+    // The manual Publish ships contests and CMS page drafts (I3).
+    expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: { cms: true } });
     const running = (await screen.findByRole('button', { name: 'Publishing…' })) as HTMLButtonElement;
     expect(running.disabled).toBe(true);
 
@@ -192,6 +193,16 @@ describe('PublishBar', () => {
     expect(await screen.findByText('5 unpublished changes: 2 years (2024-2025), 3 pages (about, faq, rules)')).toBeTruthy();
   });
 
+  it('the Publish button says it ships the page drafts too, when there are any (I3)', async () => {
+    h.summary = { changed_years: [2024], changed_docs: ['about', 'faq'], since: '2026-10-29T10:00:00Z' } as typeof h.summary;
+    const { unmount } = render(<Harness />);
+    expect(await screen.findByRole('button', { name: 'Publish (contests + 2 page drafts)' })).toBeTruthy();
+    unmount();
+    h.summary = { changed_years: [], changed_docs: ['about'], since: '2026-10-29T10:00:00Z' } as typeof h.summary;
+    render(<Harness />);
+    expect(await screen.findByRole('button', { name: 'Publish (contests + 1 page draft)' })).toBeTruthy();
+  });
+
   it('pages alone count as unpublished changes, in the singular too', async () => {
     h.summary = { changed_years: [], changed_docs: ['about'], since: '2026-10-29T10:00:00Z' } as typeof h.summary;
     render(<Harness />);
@@ -275,6 +286,35 @@ describe('invokePublish guard', () => {
     h.invoke.mockResolvedValue(ok(3));
     expect(await invokePublish()).toMatchObject({ files_changed: 3 });
     expect(h.invoke).toHaveBeenCalledTimes(3);
+  });
+
+  it('cms: false (auto-publish) and a manual Publish queued behind a run share one trailing run that ships the drafts (I3)', async () => {
+    const resolvers: Array<(v: unknown) => void> = [];
+    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
+    const first = invokePublish({ cms: false });
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: false } });
+    const auto = invokePublish({ cms: false });
+    const manual = invokePublish();
+    expect(auto).toBe(manual);
+    resolvers[0](ok(1));
+    await first;
+    await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: true } });
+    resolvers[1](ok(2));
+    expect(await auto).toMatchObject({ files_changed: 2 });
+  });
+
+  it('a trailing run of auto-publishes only stays contests-only', async () => {
+    const resolvers: Array<(v: unknown) => void> = [];
+    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
+    const first = invokePublish();
+    const auto = invokePublish({ cms: false });
+    resolvers[0](ok(1));
+    await first;
+    await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: false } });
+    resolvers[1](ok(2));
+    await auto;
   });
 
   it('a hung invoke times out after 90 s and frees the slot', async () => {

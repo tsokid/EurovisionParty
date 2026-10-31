@@ -3,7 +3,8 @@
 // finalize_contest lifecycle RPC (current -> finalized). It locks the
 // results, stops the Results parser, scores every room of that year and
 // computes winners. Two-click confirm; cannot be undone. A successful
-// finalize publishes automatically (spec §7) through the shared
+// finalize publishes the contests automatically (spec §7; CMS page
+// drafts are left for an explicit Publish) through the shared
 // invokePublish, which queues a trailing run when a publish is already
 // in flight; a failed or busy publish is shown and the finalize stands
 // (Publish again from the Contests module).
@@ -103,7 +104,8 @@ export function FinalizeCard({ job, onRefresh }: Props) {
     setPublishing(true);
     setPublished(null);
     try {
-      setPublished(await invokePublish());
+      // Contests only: CMS page drafts ship only from an explicit Publish click (I3).
+      setPublished(await invokePublish({ cms: false }));
     } finally {
       setPublishing(false);
     }
