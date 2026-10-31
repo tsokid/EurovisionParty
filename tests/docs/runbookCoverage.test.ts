@@ -121,6 +121,21 @@ const BRIEF_TOKENS = [
   'Save draft',
   'Discard draft',
   '(CMS check)',
+  // CMS 3c (Task 7): 077 after 076, the private cms-media bucket and its policies, the media smoke test.
+  '077_cms_media.sql',
+  'cms-media',
+  'storage.buckets',
+  'pg_policies',
+  'cms_media_admin_select',
+  'cms_media_admin_insert',
+  'cms_media_admin_update',
+  'cms_media_admin_delete',
+  'must be owner of table objects',
+  'public.media_register(uuid,text,text,text,int,int,int,text,uuid)',
+  'Add editorial for',
+  'eurovision-2005-kyiv',
+  'public, max-age=31536000, immutable',
+  '-800.webp',
 ];
 
 const runbook = readFileSync(RUNBOOK, 'utf8');
@@ -193,6 +208,56 @@ describe('cutover runbook coverage', () => {
     expect(lines.find((l) => l.startsWith('Order:'))).toContain('074 + 076 (same step)');
     expect(lines.find((l) => l.includes('**Apply at cutover**'))).toContain('074 + 076');
     expect(lines.find((l) => l.startsWith('| 5 |'))).toContain('**076**');
+  });
+
+  it('077 is applied right after 076 (5.3), still before the edge functions, and its checks cover the private bucket and four policies', () => {
+    const s52 = runbook.indexOf('### 5.2 Apply 074 and 076 together');
+    const s53 = runbook.indexOf('### 5.3 Apply 077');
+    const step6 = runbook.indexOf('## 6.');
+    expect(s52).toBeGreaterThanOrEqual(0);
+    expect(s53).toBeGreaterThan(s52);
+    expect(step6).toBeGreaterThan(s53);
+    // 077 comes after 076 in 5.2 and in every order line.
+    expect(runbook.indexOf('076_cms_documents.sql')).toBeLessThan(runbook.indexOf('077_cms_media.sql'));
+    const lines = runbook.split(/\r?\n/);
+    const order = lines.find((l) => l.startsWith('Order:'))!;
+    expect(order.indexOf('076')).toBeGreaterThanOrEqual(0);
+    expect(order.indexOf('077')).toBeGreaterThan(order.indexOf('076'));
+    expect(order.indexOf('077')).toBeLessThan(order.indexOf('edge functions'));
+    expect(lines.find((l) => l.includes('**Apply at cutover**'))).toContain('077');
+    expect(lines.find((l) => l.startsWith('| 5 |'))).toContain('**077**');
+    const section = runbook.slice(s53, step6);
+    for (const t of [
+      "select id, public, file_size_limit from storage.buckets where id = 'cms-media'",
+      'from pg_policies',
+      "schemaname = 'storage' and tablename = 'objects' and policyname ilike '%cms%'",
+      '`public` must be `false`',
+      'cms_media_admin_select | SELECT', 'cms_media_admin_insert | INSERT',
+      'cms_media_admin_update | UPDATE', 'cms_media_admin_delete | DELETE',
+      'rolled back', 'SQL Editor', 'public.media_mark_published(uuid,text)',
+    ]) expect(section, `5.3 is missing "${t}"`).toContain(t);
+  });
+
+  it('every policy name the runbook expects exists in migration 077', () => {
+    const sql = readFileSync(path.join(root, 'supabase/migrations/077_cms_media.sql'), 'utf8');
+    for (const n of ['select', 'insert', 'update', 'delete']) expect(sql).toContain(`create policy cms_media_admin_${n} on storage.objects`);
+    expect(sql).toContain("values ('cms-media', 'cms-media', false)");
+  });
+
+  it('a media smoke test follows the CMS smoke test, before 072, with a revert', () => {
+    const s92 = runbook.indexOf('### 9.2 CMS smoke test');
+    const s93 = runbook.indexOf('### 9.3 Media smoke test');
+    const step10 = runbook.indexOf('## 10. Apply 072');
+    expect(s93).toBeGreaterThan(s92);
+    expect(step10).toBeGreaterThan(s93);
+    const section = runbook.slice(s93, step10);
+    for (const t of [
+      'Add editorial for', '2005', 'alt text', 'EN and EL', 'Publish',
+      '/el/past-contests/eurovision-2005-kyiv', '/media/<sha12>.webp', '/media/<sha12>-800.webp',
+      '`width` and `height`', 'Cache-Control: public, max-age=31536000, immutable',
+      'Revert', 'revert the Publish commit on GitHub', 'edit the editorial back to empty',
+    ]) expect(section, `9.3 is missing "${t}"`).toContain(t);
+    expect(runbook.split(/\r?\n/).find((l) => l.startsWith('| 9 |'))).toContain('media smoke test');
   });
 
   it('the deploy rehearsal checks that publish-content resolves zod through its deno.json', () => {

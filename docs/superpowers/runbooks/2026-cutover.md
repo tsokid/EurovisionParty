@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| **Scope** | Sub-projects 1 (prerender/SEO), 2a (contests data layer), 2b (archive pages + Publish) and the CMS (3a page documents, 3b Pages editor) go live together. |
+| **Scope** | Sub-projects 1 (prerender/SEO), 2a (contests data layer), 2b (archive pages + Publish) and the CMS (3a page documents, 3b Pages editor, 3c media and editorial layer) go live together. |
 | **Branch** | `feat/foundation-prerender` (worktree `C:/Users/User/EurovisionParty-foundation`). Merge to `main` = Vercel production deploy. |
 | **Supabase** | Project ref `ameneqrrfdhntfzvchnn`, free tier. Migrations are applied by hand in **Dashboard → SQL Editor** (paste the whole file, Run). Already applied: up to **069**. |
-| **Apply at cutover** | 070, 071, 073, **074 + 076 in the same step** (5.2); 075 after the merge, before the first Publish (8.4); then 072 **last**. |
+| **Apply at cutover** | 070, 071, 073, **074 + 076 in the same step** (5.2), then **077** (5.3, creates the private `cms-media` bucket); 075 after the merge, before the first Publish (8.4); then 072 **last**. |
 | **Edge functions** | `eurovision-parse` (changed), `publish-content` (new). `admin-otp` unchanged, do not redeploy. |
 | **Time** | ~2 hours for steps 0–11. Do not start late in the day: step 10 (072) must wait until steps 7–9 pass. |
 | **Old admin** | From step 4 until 072, the **old** admin's Parser and Results controls stay unused (they would hit 071's functions or write the old tables). |
@@ -19,9 +19,10 @@
 - The **old frontend** (live until the merge) reads `eurovision_2026_participants` / `eurovision_2026_results`. Those tables survive until **072**, so the old site keeps working between 070 and the merge.
 - **072 drops the old tables.** It is the only step that cannot be undone by a Vercel rollback, so it runs last, after the new site is verified.
 - **076 goes with 074, never later.** 074's `publish_input()` and `unpublished_summary()` read `cms_documents`, which 076 creates. They are plpgsql, so 074 applies on its own, but every call fails ("relation cms_documents does not exist") until 076 is in: the admin's publish bar errors and the contest **Publish** breaks.
+- **077 follows 076, before the first Publish.** It creates `cms_media` and the private Storage bucket `cms-media` with its policies. Without it the Media library and every image or video upload fail, and `publish_input()` has no media to commit (074 reads `cms_media` only when it exists).
 - **Publish** commits to `main`. It must run **after** the merge, or the bot commit lands on `main` while the branch is unmerged and the merge conflicts on `content/**` and `vercel.json`.
 
-Order: **068/069 (done) → 070 → 071 → 073 → 074 + 076 (same step) → edge functions + secrets → merge to main → verify site, admin and game → 075 (2026 semis) → first Publish → verify → 072**.
+Order: **068/069 (done) → 070 → 071 → 073 → 074 + 076 (same step) → 077 (media bucket) → edge functions + secrets → merge to main → verify site, admin and game → 075 (2026 semis) → first Publish → verify → 072**.
 
 **Before the merge** (on the branch, local): run `npm run build`, then `npx vitest run tests/scripts/historicalUrls.test.ts tests/scripts/bundleSize.test.ts`. Both **skip silently without `dist/`**, so they only prove something right after a build. Expect: all pass (85 historical URLs in one hop; main chunk within its budget).
 
@@ -37,11 +38,11 @@ Order: **068/069 (done) → 070 → 071 → 073 → 074 + 076 (same step) → ed
 | 2 | Pre-070 data checks (participants count, ISOs, `source_url`) | SQL Editor | n/a (read-only) | ☐ |
 | 3 | Apply **070** + reconcile (`in_final` = old participants, `final_place` = old results) | SQL Editor | yes (old tables untouched) | ☐ |
 | 4 | Apply **071** + privilege checks; **freeze 2026 edits until step 10** | SQL Editor | yes | ☐ |
-| 5 | Apply **073** (history 1956–2025), then **074** (publish_runs) and **076** (cms_documents) together, one right after the other | SQL Editor | yes | ☐ |
+| 5 | Apply **073** (history 1956–2025), then **074** (publish_runs) and **076** (cms_documents) together, one right after the other; then **077** (cms_media + private `cms-media` bucket and its Storage policies), verified with SQL | SQL Editor | yes | ☐ |
 | 6 | Deploy `eurovision-parse` + `publish-content` (its `deno.json` resolves `npm:zod@4.3.6`); set `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | terminal / Dashboard | yes (redeploy old) | ☐ |
 | 7 | Record `<OLD_MAIN_SHA>`; merge `feat/foundation-prerender` → `main`; verify production (SP1 checklist + 10 historical URLs + CLS) | git, Vercel, curl | yes (Instant Rollback) | ☐ |
 | 8 | Admin smoke test (OTP login, Contests 1956–2026) and game reads (lobby lineup = 2026 finalists, `PredictionsResultsScreen`); then apply **075** (2026 semi-final data) and check 30 semi rows, before Publish | /admin, site, SQL | yes (Instant Rollback; 075 only fills semi columns) | ☐ |
-| 9 | First **Publish**; verify commit, Vercel build, `/en/eurovision-2026`; then the CMS smoke test (Pages: edit one FAQ answer, Save draft, Publish, check the live page, revert) | /admin, GitHub, Vercel, site | yes (git revert to `<OLD_MAIN_SHA>`; **not** Instant Rollback) | ☐ |
+| 9 | First **Publish**; verify commit, Vercel build, `/en/eurovision-2026`; then the CMS smoke test (Pages: edit one FAQ answer, Save draft, Publish, check the live page, revert); then the media smoke test (upload an image with EN and EL alt text into the 2005 editorial, Publish, check `/el/past-contests/eurovision-2005-kyiv`) | /admin, GitHub, Vercel, site | yes (git revert to `<OLD_MAIN_SHA>`; **not** Instant Rollback) | ☐ |
 | 10 | Apply **072** (drops old 2026 tables, guarded) | SQL Editor | **no: restore from backup** | ☐ |
 | 11 | Post-deploy: Search Console sitemap + URL Inspection, watch Pages 3 weeks; semis cross-check (optional); indexable switches | GSC, /admin | n/a | ☐ |
 | 12 | Before May 2027: create 2027 (Burgas), lineup, Archive 2026, re-enable parser-tick (047) | /admin, SQL Editor | see step | ☐ |
@@ -137,7 +138,7 @@ End of session: `unset PGURL PGPASSWORD`.
   pg_restore --list eurogames-pre-cutover-*.dump | grep -c "TABLE DATA"
   grep -c "COPY public.eurovision_2026" old-2026-tables-*.sql
   ```
-  Why these flags: `--no-owner` because the pooler login cannot recreate Supabase's internal owners; **no** `--no-privileges`, so a restore re-applies the exact privileges, the `REVOKE`s included. 069, 070, 071, 074 and 076 lock tables and functions down for `anon` / `authenticated` / `service_role`; restored without privileges, objects would fall back to Supabase's default grants and reopen what those migrations closed.
+  Why these flags: `--no-owner` because the pooler login cannot recreate Supabase's internal owners; **no** `--no-privileges`, so a restore re-applies the exact privileges, the `REVOKE`s included. 069, 070, 071, 074, 076 and 077 lock tables and functions down for `anon` / `authenticated` / `service_role`; restored without privileges, objects would fall back to Supabase's default grants and reopen what those migrations closed.
 - **Expect:** both files non-empty; the `grep -c` on the plain file prints `2`.
 - **If it fails:** `server version mismatch` → install a newer major and fix the PATH line. `pg_dump: command not found` → PATH line missing or wrong major folder. `password authentication failed` → re-run the `read -s` line; still failing → Dashboard → Database → Settings → Reset database password (the app uses API keys, not this password). **Do not continue without both files.**
 
@@ -282,7 +283,7 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
 
 ---
 
-## 5. Apply 073 (history 1956–2025), then 074 + 076 (publish_runs, cms_documents) (Εφαρμογή 073, 074 και 076)
+## 5. Apply 073 (history 1956–2025), then 074 + 076 (publish_runs, cms_documents), then 077 (cms_media) (Εφαρμογή 073, 074, 076 και 077)
 
 ### 5.1 Apply 073
 - **Do:** SQL Editor → paste all of `supabase/migrations/073_history_import.sql` (≈ 230 KB, generated) → Run. Idempotent (`on conflict do nothing`); never touches 2026.
@@ -349,6 +350,53 @@ The new parser has no Vienna fallback URL: a job without `source_url` errors.
   ```
 - **Expect:** `publish_runs | 0`; `cms_documents | 0`; `cms_docs` = 0; table-privilege query **0 rows**; function-privilege query **0 rows**.
 - **If it fails:** "relation cms_documents does not exist" → 076 was not applied; apply it now. "function … does not exist" → re-run the file it belongs to (074 or 076; both idempotent). A privilege row → re-run that file.
+
+### 5.3 Apply 077: media library and the private `cms-media` bucket (Εφαρμογή 077 — βιβλιοθήκη πολυμέσων)
+077 follows 076 (it uses `public.is_super_admin()` and extends 074's `publish_input()`). It creates the table `cms_media`, its four RPCs, **and** the Storage bucket `cms-media` (**private**, 20 MiB, `image/webp`, `video/mp4`, `text/vtt`) with select / insert / update / delete policies on `storage.objects` for super admins on that bucket only. The bucket and policy steps are guarded: they are skipped when the `storage` schema is absent (PGlite, tests) and run on Supabase. Do **not** create the bucket by hand first and never make it public: published files are served from `/media/…` in the repo, never from Storage.
+- **Do:** SQL Editor → paste all of `supabase/migrations/077_cms_media.sql` → Run. Idempotent (`on conflict do nothing`, `drop policy if exists`); one `begin … commit`, so any error rolls back the whole file.
+- **Run:**
+  ```sql
+  select to_regclass('public.cms_media') as tbl, (select count(*) from public.cms_media) as media_rows;
+
+  -- The bucket exists and is private.
+  select id, public, file_size_limit from storage.buckets where id = 'cms-media';
+
+  -- Four policies, one per command.
+  select policyname, cmd from pg_policies
+   where schemaname = 'storage' and tablename = 'objects' and policyname ilike '%cms%'
+   order by policyname;
+
+  -- 074 still works and now sees the media list.
+  select jsonb_array_length(public.publish_input() -> 'media') as media_in_publish;
+
+  -- The table is reachable only through the RPCs (RLS on, no table grants).
+  select r as role, p as privilege
+    from unnest(array['anon', 'authenticated']) r, unnest(array['select', 'insert', 'update', 'delete']) p
+   where has_table_privilege(r, 'public.cms_media', p);
+
+  with fns(sig, kind) as (values
+    ('public.media_register(uuid,text,text,text,int,int,int,text,uuid)', 'admin'),
+    ('public.media_list(text)',                                          'admin'),
+    ('public.media_delete(uuid)',                                        'admin'),
+    ('public.media_mark_published(uuid,text)',                           'service')
+  ),
+  expected(sig, role, ok) as (
+    select sig, 'anon',          false          from fns union all
+    select sig, 'authenticated', kind = 'admin' from fns union all
+    select sig, 'service_role',  true           from fns where kind = 'service'
+  )
+  select sig, role, ok as expected, has_function_privilege(role, sig, 'execute') as actual
+    from expected where has_function_privilege(role, sig, 'execute') <> ok;
+  ```
+- **Expect:**
+  - `cms_media | 0`.
+  - Bucket row `cms-media | false | 20971520`: **`public` must be `false`**. If it shows `true`, stop: run `update storage.buckets set public = false where id = 'cms-media';` and re-run the check.
+  - Exactly four policies: `cms_media_admin_delete | DELETE`, `cms_media_admin_insert | INSERT`, `cms_media_admin_select | SELECT`, `cms_media_admin_update | UPDATE`.
+  - `media_in_publish` = 0 (no drafts reference media yet); table-privilege query **0 rows**; function-privilege query **0 rows**.
+- **If it fails:**
+  - "must be owner of table objects" (or any error on the policy step: the migration role does not own `storage.objects`) → the **whole** migration rolled back, so `cms_media` does not exist either. Take 077's last block (`-- ── Storage bucket and policies (Supabase only)`, the `do $storage$ … $storage$` statement), run **only that block** in Dashboard → SQL Editor, then re-apply the whole of 077 and repeat the checks above. If the editor refuses too, create the bucket in Dashboard → **Storage → New bucket** (name `cms-media`, **Public bucket off**), add the four policies under Storage → Policies with the expressions from 077 (role `authenticated`, `bucket_id = 'cms-media' and public.is_super_admin()`), then re-apply 077.
+  - "function public.is_super_admin() does not exist" → an earlier admin migration is missing; stop and compare with the migrations applied so far.
+  - The bucket check returns no row → the `storage` schema was absent when 077 ran (the guarded skip). Confirm you ran it on the production project, then run it again.
 
 ---
 
@@ -566,6 +614,37 @@ Proves the path Pages editor → draft → Publish → live page end to end, on 
   - Publish error starting "CMS validation failed" → the server refused the draft (same rules as the editor). Nothing was committed. **Discard draft** and Publish again to confirm a clean run.
   - Run `ok` but the live page lacks the edit → check the Vercel build of that commit (as in 9.1), then hard-reload.
 
+### 9.3 Media smoke test: one image on the 2005 editorial (Έλεγχος πολυμέσων: μία εικόνα στο editorial του 2005)
+Proves the path upload → private bucket → draft → Publish (binary commit to `public/media/`) → prerendered page → cache header. Do it after 9.2 passes. Use any small image you can afford to publish (a few hundred KB).
+- **Do:**
+  1. Admin → **Pages** → **Add editorial for …** → pick **2005** (Kyiv). The editor opens with an empty intro and no blocks.
+  2. Add an **Image** block and upload the image (WebP is produced for you: 1600 w plus an 800 w variant). Fill in the **alt text in both EN and EL**.
+  3. **Save draft**, check the preview shows the image, then **Publish** from the publish bar. Wait for the run (up to ~90 s) and for the Vercel production build of the commit to be Ready (about 2 minutes).
+- **Run** (replace `<sha12>` with the 12 hex characters in the first command's output):
+  ```bash
+  curl -s https://eurovision.games/el/past-contests/eurovision-2005-kyiv | grep -o '<img[^>]*/media/[^>]*>'
+  curl -sI https://eurovision.games/media/<sha12>.webp | grep -iE '^(HTTP|content-type|cache-control)'
+  curl -sI https://eurovision.games/media/<sha12>-800.webp | grep -iE '^(HTTP|content-type)'
+  ```
+  ```sql
+  select id, status, commit_sha, files_changed, error from public.publish_runs order by id desc limit 1;
+  select kind, storage_path, published_path from public.cms_media where published_path is not null order by created_at desc limit 4;
+  ```
+- **Expect:**
+  - The `<img>` tag has `src="/media/<sha12>.webp"`, **`width` and `height` attributes**, `loading="lazy"`, `decoding="async"` and the Greek alt text.
+  - The `.webp` response is `200` with `content-type: image/webp` and **`Cache-Control: public, max-age=31536000, immutable`**. `/media/<sha12>-800.webp` is `200` too.
+  - Newest run `ok`. The GitHub commit adds `content/pages/archive-2005.json`, updates `content/pages/index.json` (lists `archive-2005`) and adds `public/media/<sha12>.webp` and `public/media/<sha12>-800.webp`. The page JSON holds `/media/<sha12>.webp`, never `cms-media/`. The `cms_media` rows show their `published_path`.
+  - Every other page is unchanged. The build's validate-content step passed (a `/media/` reference without its file fails the build).
+- **Revert (Επαναφορά):**
+  - **Before Publish:** **Discard draft**. The uploaded files stay in the private bucket and the Media library (delete them there if you like).
+  - **After Publish:** either edit the editorial back to empty (remove the block, **Save draft**, **Publish**: the page renders as before, and the two image files stay in `public/media/`, which validate-content only reports as a warning), or revert the Publish commit on GitHub (GitHub → the commit → **Revert** → merge the PR; Vercel rebuilds without the editorial and the images).
+- **If it fails:**
+  - Upload refused → the image is over 15 MB or not an image, or the bucket policies from 5.3 are missing: repeat 5.3.
+  - Publish error naming a media reference → the draft references a deleted or missing media row; remove the block or upload again. Nothing was committed.
+  - Publish error about more than 50 MB of new media → Publish refuses to add that much in one run; remove the large items and publish again.
+  - Run `ok` but the page lacks the image → check the Vercel build of that commit (as in 9.1), then hard-reload. A build that fails in validate-content names the content file and the missing `/media/<name>`.
+  - `Cache-Control` differs → the `/media/(.*)` rule in `vercel.json` was not deployed; check the deployed commit.
+
 ---
 
 ## 10. Apply 072: drop the old 2026 tables (Εφαρμογή 072 — μη αναστρέψιμο)
@@ -685,8 +764,8 @@ In every case below the **old admin's Parser and Results controls stay unused** 
 
 | Point reached | How to roll back | Data loss |
 |---|---|---|
-| Steps 3–6 (before merge) | Nothing to do for users: the old site still reads the old tables. Leave 070/071/073/074/076 in place. To undo the parser deploy, redeploy `eurovision-parse` with the 6.2 command from a checkout of `<OLD_MAIN_SHA>`. | none |
-| Steps 7–8 (merged, **no Publish yet**) | Vercel → Deployments → the previous Production deployment (commit `<OLD_MAIN_SHA>`) → **Instant Rollback**. Leave 070–074 and 076 in place; the old tables still exist. After a rollback Vercel stops auto-promoting new `main` builds until you **Undo Rollback** / Promote; that is fine, because `main` still holds the new code. Fix forward on the branch, then undo the rollback. | none (2026 edits are frozen) |
+| Steps 3–6 (before merge) | Nothing to do for users: the old site still reads the old tables. Leave 070/071/073/074/076/077 in place. To undo the parser deploy, redeploy `eurovision-parse` with the 6.2 command from a checkout of `<OLD_MAIN_SHA>`. | none |
+| Steps 7–8 (merged, **no Publish yet**) | Vercel → Deployments → the previous Production deployment (commit `<OLD_MAIN_SHA>`) → **Instant Rollback**. Leave 070–074, 076 and 077 in place; the old tables still exist. After a rollback Vercel stops auto-promoting new `main` builds until you **Undo Rollback** / Promote; that is fine, because `main` still holds the new code. Fix forward on the branch, then undo the rollback. | none (2026 edits are frozen) |
 | Step 9 onwards (**after the first Publish**), 072 not applied | Instant Rollback no longer reaches the old site on Hobby: the previous deployment is the new frontend's pre-Publish build. Use **Git revert to the old tree** (below). Alternative, if that deployment's ⋯ menu in the Deployments list offers it: the deployment noted in 7.1 (commit `<OLD_MAIN_SHA>`) → **Promote to Production**. Do not Publish while rolled back; it would commit to `main` again. | none |
 | After 072 | 1. **Restore the old 2026 tables** (below). 2. Then **Git revert to the old tree**. | full restore loses all changes since 0.4 |
 
@@ -737,3 +816,5 @@ Full disaster only: `pg_restore --dbname="$PGURL" --no-owner --clean --if-exists
 | Brief: OTP Magic Link template, OTP length 6, expiry 600 | 1 |
 | Brief: AdminLogin "60 minutes" (done) | P.1, 8.1 |
 | Brief: publish-content imports outside `supabase/functions` (done) | P.2, 6.2 |
+| 3c T7: apply 077 after 076; private `cms-media` bucket and Storage policies, verified with SQL | 5.3 |
+| 3c T7: media smoke test (upload, 2005 editorial, Publish, dimensions, cache header) | 9.3 |
