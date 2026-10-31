@@ -2,7 +2,7 @@
 // walkSchema only), labels, immutable updates with structural sharing, and
 // the store that hands each field its own errors and warnings.
 import type { z } from 'zod';
-import { holdsField, walkSchema, type Segment } from '../../../../../supabase/functions/_shared/cms/walk';
+import { blockVariants, holdsField, walkSchema, type Segment } from '../../../../../supabase/functions/_shared/cms/walk';
 import type { FieldMeta } from '../../../../../supabase/functions/_shared/cms/fields';
 import type { Locale, ValidationError } from '../../../../../supabase/functions/_shared/cms/validate';
 
@@ -23,6 +23,14 @@ export type SchemaInfo = {
   inner?: z.ZodType;
   /** list: whether its items hold a locale-shared field (items then line up by index across locales). */
   holdsShared: boolean;
+  /**
+   * blocks and union: the schema of each block type, keyed by its `type`
+   * value. A key such as `body` means a different field in each variant, so a
+   * block is always looked up by its type, never by path.
+   */
+  variants?: Record<string, z.ZodType>;
+  /** blocks and union: the key holding the variant name. */
+  discriminator?: string;
 };
 
 const infoCache = new WeakMap<z.ZodType, SchemaInfo>();
@@ -35,7 +43,8 @@ export function schemaInfo(schema: z.ZodType): SchemaInfo {
   walkSchema(schema, (n) => {
     if (!info) {
       info = { meta: n.meta, children: [], holdsShared: false };
-      return true;
+      // A union's variants are visited at its own path: they are read below, by type.
+      return n.meta.kind !== 'union';
     }
     // optional(): the wrapper is visited, then its inner field at the same path.
     if (n.segments.length === 0) {
@@ -47,6 +56,10 @@ export function schemaInfo(schema: z.ZodType): SchemaInfo {
     return false;
   });
   const out = info!;
+  if (out.meta.kind === 'blocks' || out.meta.kind === 'union') {
+    out.variants = blockVariants(schema);
+    out.discriminator = out.meta.discriminator;
+  }
   if (out.element) out.holdsShared = holdsField(out.element, (m) => !!m.shared);
   infoCache.set(schema, out);
   return out;

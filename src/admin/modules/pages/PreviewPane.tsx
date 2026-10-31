@@ -16,19 +16,15 @@
  *   EN/EL toggle never changes the global language or <html lang>.
  * - Safety: the draft may not validate yet, so the page gets a sanitized
  *   copy (sanitizePreview.ts): rawHtml outside the allowlist is shown as
- *   escaped text and an unsafe href becomes "#".
+ *   escaped text, an unsafe href becomes "#" and an invalid media reference "".
+ * - Media: draft references (cms-media/<uuid>) render through a
+ *   MediaResolverContext backed by media_list and signed URLs of the private
+ *   bucket (media/previewResolver.ts). The public site has no resolver.
  * - Errors: a malformed draft or a placeholder the page does not supply
  *   (interpolate throws) shows "Preview error: …" inside the pane only.
  */
 import { Component, useMemo, useState, type ReactNode, type SyntheticEvent } from 'react';
 import { I18nextProvider } from 'react-i18next';
-import {
-  MemoryRouter,
-  UNSAFE_DataRouterContext,
-  UNSAFE_DataRouterStateContext,
-  UNSAFE_LocationContext,
-  UNSAFE_RouteContext,
-} from 'react-router-dom';
 import i18n from '../../../i18n';
 import { routes } from '../../../routeConfig';
 import { NotFoundPage } from '../../../pages/NotFoundPage';
@@ -39,6 +35,9 @@ import { PreviewModeContext } from '../../../lib/seo/PreviewMode';
 import { PageContentOverrideProvider } from '../../../lib/cms/PageContentOverride';
 import { docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
 import { sanitizePreviewDoc } from './sanitizePreview';
+import { MediaResolverContext } from '../../../components/cms/MediaResolver';
+import { usePreviewMediaResolver } from './media/previewResolver';
+import { DetachedMemoryRouter } from './DetachedMemoryRouter';
 
 const LOCALES: Locale[] = ['en', 'el'];
 const NOT_FOUND_PATH = '/page-not-found';
@@ -54,23 +53,6 @@ function previewTarget(docId: string, locale: Locale): Target | null {
   const children = routes.find((r) => r.path === '/:locale')?.children ?? [];
   const route = slug === '/' ? children.find((r) => r.index) : children.find((r) => r.path === slug.slice(1));
   return route?.element ? { element: route.element, path: slug } : null;
-}
-
-const ROOT_ROUTE_CONTEXT = { outlet: null, matches: [], isDataRoute: false };
-
-/** Fresh router contexts: the pane's MemoryRouter must not nest in (or drive) the admin's router. */
-function DetachedMemoryRouter({ path, children }: { path: string; children: ReactNode }) {
-  return (
-    <UNSAFE_DataRouterContext.Provider value={null}>
-      <UNSAFE_DataRouterStateContext.Provider value={null}>
-        <UNSAFE_LocationContext.Provider value={null as never}>
-          <UNSAFE_RouteContext.Provider value={ROOT_ROUTE_CONTEXT}>
-            <MemoryRouter initialEntries={[path]}>{children}</MemoryRouter>
-          </UNSAFE_RouteContext.Provider>
-        </UNSAFE_LocationContext.Provider>
-      </UNSAFE_DataRouterStateContext.Provider>
-    </UNSAFE_DataRouterContext.Provider>
-  );
 }
 
 type BoundaryProps = { resetKeys: unknown[]; children: ReactNode };
@@ -131,6 +113,7 @@ export default function PreviewPane({ docId, doc, initialLocale = 'en' }: {
   const localI18n = useMemo(() => i18n.cloneInstance({ lng: locale }), [locale]);
   // Never render the draft itself: rawHtml and hrefs are made safe on a copy.
   const safeDoc = useMemo(() => sanitizePreviewDoc(docTypeFor(docId), doc), [docId, doc]);
+  const media = usePreviewMediaResolver(safeDoc);
 
   return (
     <section className="flex flex-col rounded-xl border border-white/10 bg-black/20">
@@ -162,7 +145,9 @@ export default function PreviewPane({ docId, doc, initialLocale = 'en' }: {
             <I18nextProvider i18n={localI18n}>
               <LocaleProvider locale={locale}>
                 <PageContentOverrideProvider docId={docId} doc={safeDoc}>
-                  <PreviewPage docId={docId} locale={locale} />
+                  <MediaResolverContext.Provider value={media}>
+                    <PreviewPage docId={docId} locale={locale} />
+                  </MediaResolverContext.Provider>
                 </PageContentOverrideProvider>
               </LocaleProvider>
             </I18nextProvider>

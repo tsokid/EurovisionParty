@@ -2,10 +2,13 @@
 // is requested until a play intent (button, key, or autoplay becoming visible).
 // Autoplay (value.autoplay only) is muted, looping, inline, starts when the
 // player is visible (IntersectionObserver) and pauses when it is not.
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+// A draft (`cms-media/` references) plays only under a MediaResolverContext
+// (admin preview); on the public site it renders nothing.
+import { useContext, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import type { Locale } from '../../lib/seo/locale';
 import { isDim, isPublishedMedia, type CmsVideoValue } from './mediaTypes';
+import { isDraftMedia, MediaResolverContext, type MediaResolver, type ResolvedVideo } from './MediaResolver';
 
 const LABELS: Record<Locale, { play: string; pause: string; mute: string; unmute: string; progress: string; player: string }> = {
   en: { play: 'Play', pause: 'Pause', mute: 'Mute', unmute: 'Unmute', progress: 'Progress', player: 'Video player' },
@@ -21,8 +24,26 @@ const LABELS: Record<Locale, { play: string; pause: string; mute: string; unmute
 
 const btn = 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-euro-pink';
 
+/** The files to play: a published value as is, a draft through the resolver; null when it cannot play. */
+function source(value: CmsVideoValue, resolver: MediaResolver | null): ResolvedVideo | null {
+  if (!value) return null;
+  if (isPublishedMedia(value.media, 'mp4') && isPublishedMedia(value.poster, 'webp') && isDim(value.width) && isDim(value.height)) {
+    return {
+      src: value.media,
+      poster: value.poster,
+      width: value.width,
+      height: value.height,
+      ...(isPublishedMedia(value.captions, 'vtt') ? { captions: value.captions } : {}),
+    };
+  }
+  if (!resolver || ![value.media, value.poster, value.captions].some(isDraftMedia)) return null;
+  const r = resolver.video(value);
+  return r && r.src && r.poster && isDim(r.width) && isDim(r.height) ? r : null;
+}
+
 export default function VideoPlayer({ value }: { value: CmsVideoValue }) {
   const t = LABELS[useLocale()];
+  const src = source(value, useContext(MediaResolverContext));
   const ref = useRef<HTMLVideoElement>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const wantPlay = useRef(false);
@@ -32,8 +53,7 @@ export default function VideoPlayer({ value }: { value: CmsVideoValue }) {
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  const valid = !!value && isPublishedMedia(value.media, 'mp4') && isPublishedMedia(value.poster, 'webp') && isDim(value.width) && isDim(value.height);
-  const autoplay = valid && value.autoplay === true;
+  const autoplay = !!src && value.autoplay === true;
 
   // Play once the source attribute is on the element.
   useEffect(() => {
@@ -58,7 +78,7 @@ export default function VideoPlayer({ value }: { value: CmsVideoValue }) {
     return () => io.disconnect();
   }, [autoplay]);
 
-  if (!valid) return null;
+  if (!src) return null;
 
   const toggle = () => {
     const v = ref.current;
@@ -81,12 +101,12 @@ export default function VideoPlayer({ value }: { value: CmsVideoValue }) {
       tabIndex={0}
       onKeyDown={onKeyDown}
       className="relative w-full overflow-hidden rounded-2xl bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-euro-pink"
-      style={{ aspectRatio: `${value.width} / ${value.height}` }}
+      style={{ aspectRatio: `${src.width} / ${src.height}` }}
     >
       <video
         ref={ref}
-        {...(armed ? { src: value.media } : {})}
-        poster={value.poster}
+        {...(armed ? { src: src.src } : {})}
+        poster={src.poster}
         preload="none"
         playsInline
         muted={muted}
@@ -99,7 +119,7 @@ export default function VideoPlayer({ value }: { value: CmsVideoValue }) {
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
         onDurationChange={(e) => setDuration(e.currentTarget.duration)}
       >
-        {armed && isPublishedMedia(value.captions, 'vtt') ? <track kind="captions" src={value.captions} default /> : null}
+        {armed && src.captions ? <track kind="captions" src={src.captions} default /> : null}
       </video>
       <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/80 to-transparent p-2">
         <button type="button" className={btn} onClick={toggle} aria-label={playing ? t.pause : t.play}>

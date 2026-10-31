@@ -3,7 +3,7 @@
 // FAQ blocks feed FAQPage JSON-LD. Effects do not run under SSR, so a page that
 // needs the entries in the prerendered HTML calls faqEntries(value) while
 // rendering; `onFaq` reports the same list from an effect for client-only use.
-import { useEffect, useMemo, useRef, type ReactNode } from 'react';
+import { useContext, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import LocaleLink from '../seo/LocaleLink';
 import { isSafeHref } from '../../../supabase/functions/_shared/cms/html';
 import type { FaqEntry } from '../../lib/seo/schema';
@@ -12,6 +12,7 @@ import VideoPlayer from './VideoPlayer';
 import RichText from './RichText';
 import { faqEntries } from './faqEntries';
 import { isPublishedMedia, type CmsBlock } from './mediaTypes';
+import { isDraftMedia, MediaResolverContext } from './MediaResolver';
 
 function Caption({ children }: { children?: string }) {
   return children ? <figcaption className="mt-2 text-sm text-white/60">{children}</figcaption> : null;
@@ -37,7 +38,9 @@ function Cta({ block }: { block: Extract<CmsBlock, { type: 'cta' }> }) {
   );
 }
 
-function renderBlock(b: CmsBlock): ReactNode {
+/** Draft references count only in the admin preview (under a MediaResolverContext provider). */
+function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
+  const media = (ref: unknown, ext: 'webp' | 'mp4') => isPublishedMedia(ref, ext) || (preview && isDraftMedia(ref));
   switch (b?.type) {
     case 'text':
       return <RichText source={b.body ?? ''} />;
@@ -51,7 +54,7 @@ function renderBlock(b: CmsBlock): ReactNode {
         </aside>
       );
     case 'image':
-      if (!b.image || !isPublishedMedia(b.image.media, 'webp')) return null;
+      if (!b.image || !media(b.image.media, 'webp')) return null;
       return (
         <figure>
           <CmsImage value={b.image} />
@@ -59,7 +62,7 @@ function renderBlock(b: CmsBlock): ReactNode {
         </figure>
       );
     case 'video':
-      if (!b.video || !isPublishedMedia(b.video.media, 'mp4')) return null;
+      if (!b.video || !media(b.video.media, 'mp4')) return null;
       return (
         <figure>
           <VideoPlayer value={b.video} />
@@ -86,6 +89,7 @@ function renderBlock(b: CmsBlock): ReactNode {
 
 export default function Blocks({ value, onFaq }: { value: readonly CmsBlock[]; onFaq?: (entries: FaqEntry[]) => void }) {
   const list = Array.isArray(value) ? value : [];
+  const preview = useContext(MediaResolverContext) !== null;
   const entries = useMemo(() => faqEntries(value), [value]);
   // onFaq lives in a ref and the effect keys on the entries' content, so an
   // inline callback (that may set state) cannot retrigger it.
@@ -99,7 +103,7 @@ export default function Blocks({ value, onFaq }: { value: readonly CmsBlock[]; o
     if (key !== '[]') onFaqRef.current?.(JSON.parse(key));
   }, [key]);
 
-  const rendered = list.map((b, i) => ({ i, node: renderBlock(b) })).filter((x) => x.node !== null);
+  const rendered = list.map((b, i) => ({ i, node: renderBlock(b, preview) })).filter((x) => x.node !== null);
   if (!rendered.length) return null;
   return <div className="space-y-8">{rendered.map((x) => <div key={x.i}>{x.node}</div>)}</div>;
 }

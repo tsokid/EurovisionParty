@@ -4,13 +4,20 @@
 //   allowlist (htmlErrors) is shown as its HTML-escaped text instead;
 // - href fields go into <a href> / <Link to>: one that fails isSafeHref
 //   becomes "#".
+// - mediaRef fields go into <img src> / <video src> (through the preview's
+//   media resolver): one that is not a draft or published reference of its
+//   kind becomes "";
+// - richText is rendered through its AST (never raw HTML), so any string is
+//   safe; a non-string becomes "".
 // A value of the wrong type at either kind of path is treated the same way
 // (an array would otherwise be joined into markup by innerHTML).
 //
 // Works on a copy; the editor's draft is never changed. A document the
 // walker cannot follow (unknown doc type, not an object) is returned as is:
 // the page then fails in its own error boundary, rendering nothing raw.
+import type { z } from 'zod';
 import { CMS_DOC_TYPES } from '../../../../supabase/functions/_shared/cms/registry';
+import { mediaRefPattern } from '../../../../supabase/functions/_shared/cms/fields';
 import { walkSchema, type Segment } from '../../../../supabase/functions/_shared/cms/walk';
 import { htmlErrors, isSafeHref } from '../../../../supabase/functions/_shared/cms/html';
 
@@ -32,12 +39,18 @@ function setAt(root: unknown, segments: Segment[], value: unknown): void {
 /** A copy of the draft `doc` of `docType` that is safe to render in the preview. */
 export function sanitizePreviewDoc(docType: string, doc: unknown): unknown {
   const def = Object.prototype.hasOwnProperty.call(CMS_DOC_TYPES, docType) ? CMS_DOC_TYPES[docType] : undefined;
-  if (!def || !isRecord(doc)) return doc;
+  if (!def) return doc;
+  return sanitizeSchemaDoc(def.schema, doc);
+}
+
+/** sanitizePreviewDoc for a document of one locale's `schema`. */
+export function sanitizeSchemaDoc(schema: z.ZodType, doc: unknown): unknown {
+  if (!isRecord(doc)) return doc;
   const out = structuredClone(doc);
   for (const locale of LOCALES) {
     const root = out[locale];
     if (root === undefined) continue;
-    walkSchema(def.schema, (n) => {
+    walkSchema(schema, (n) => {
       if (n.type !== 'string' || !n.segments.length) return;
       const v = n.values[0];
       if (v === undefined) return;
@@ -46,6 +59,10 @@ export function sanitizePreviewDoc(docType: string, doc: unknown): unknown {
         else if (htmlErrors(v).length) setAt(root, n.segments, escapeHtml(v));
       } else if (n.meta.kind === 'href') {
         if (typeof v !== 'string' || !isSafeHref(v)) setAt(root, n.segments, '#');
+      } else if (n.meta.kind === 'mediaRef') {
+        if (typeof v !== 'string' || !mediaRefPattern(n.meta.mediaKind!).test(v)) setAt(root, n.segments, '');
+      } else if (n.meta.kind === 'richText') {
+        if (typeof v !== 'string') setAt(root, n.segments, '');
       }
     }, [root]);
   }

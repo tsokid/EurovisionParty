@@ -5,9 +5,11 @@ import { memo } from 'react';
 import type { z } from 'zod';
 import { useFormApi } from '../context';
 import { schemaInfo, type Segment } from '../formModel';
+import { BlocksField } from './BlocksField';
 import { GroupField } from './GroupField';
 import { LeafField } from './LeafField';
 import { ListField } from './ListField';
+import { MediaRefField } from './MediaRefField';
 import { OptionalField } from './OptionalField';
 
 export type FieldProps = {
@@ -39,9 +41,15 @@ function FieldImpl(props: FieldProps) {
   switch (meta.kind) {
     case 'group':
     case 'tuple':
+    case 'image':
+    case 'video':
       return <GroupField {...props} />;
     case 'list':
       return <ListField {...props} />;
+    case 'blocks':
+      return <BlocksField {...props} />;
+    case 'mediaRef':
+      return <MediaRefField {...props} />;
     default:
       return <LeafField {...props} />;
   }

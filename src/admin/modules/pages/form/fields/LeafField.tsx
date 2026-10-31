@@ -2,7 +2,9 @@
 // EN and EL side by side; a locale-shared field is one control that writes
 // both locales. String fields show a counter against their soft limit
 // (counting the interpolated text when live-contest vars are given) and
-// placeholder chips that insert at the cursor.
+// placeholder chips that insert at the cursor. A richText field adds a
+// Markdown toolbar and a live preview (RichTextTools.tsx); its errors carry
+// the validator's line numbers.
 import { useContext, useId, useLayoutEffect, useRef } from 'react';
 import type { FieldMeta } from '../../../../../../supabase/functions/_shared/cms/fields';
 import { interpolate } from '../../../../../../supabase/functions/_shared/cms/placeholders';
@@ -10,6 +12,8 @@ import { useFormApi, useIssues, VarsContext } from '../context';
 import { editLocales, LOCALES, schemaInfo, setIn, type Issue, type Locale } from '../formModel';
 import type { FieldProps } from './Field';
 import { IssueList } from './IssueList';
+import { applyMarkdown, type MarkdownAction } from './markdownToolbar';
+import { RichTextPreview, RichTextToolbar } from './RichTextTools';
 import { FIELD_LABEL, HELP, INPUT } from './styles';
 
 const RAW_HTML_HINT = 'Allowed: <strong>, <em>, <b>, <i>, <br>, <a href="/…">';
@@ -84,15 +88,16 @@ function LocaleControl({ meta, locale, name, tag, value, issues, withLocale, onV
   const id = useId();
   const vars = useContext(VarsContext)?.[locale];
   const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
-  const pendingCaret = useRef<number | null>(null);
+  // The selection to restore after an insert (a placeholder chip, a toolbar action).
+  const pendingSelection = useRef<{ start: number; end: number } | null>(null);
   const text = typeof value === 'string' ? value : '';
 
   useLayoutEffect(() => {
-    const caret = pendingCaret.current;
-    if (caret === null || !inputRef.current) return;
-    pendingCaret.current = null;
+    const sel = pendingSelection.current;
+    if (sel === null || !inputRef.current) return;
+    pendingSelection.current = null;
     inputRef.current.focus();
-    inputRef.current.setSelectionRange(caret, caret);
+    inputRef.current.setSelectionRange(sel.start, sel.end);
   }, [text]);
 
   const hasErrors = issues.some((i) => i.level === 'error');
@@ -104,6 +109,26 @@ function LocaleControl({ meta, locale, name, tag, value, issues, withLocale, onV
     id,
     'aria-invalid': hasErrors || undefined,
     'aria-describedby': describedBy,
+  };
+
+  const selection = () => {
+    const el = inputRef.current;
+    const start = el?.selectionStart ?? text.length;
+    return { start, end: el?.selectionEnd ?? start };
+  };
+
+  const insert = (placeholder: string) => {
+    const { start, end } = selection();
+    const caret = start + placeholder.length;
+    pendingSelection.current = { start: caret, end: caret };
+    onValue(text.slice(0, start) + placeholder + text.slice(end));
+  };
+
+  const format = (action: MarkdownAction) => {
+    const { start, end } = selection();
+    const out = applyMarkdown(text, start, end, action);
+    pendingSelection.current = { start: out.start, end: out.end };
+    onValue(out.text);
   };
 
   let control;
@@ -128,19 +153,18 @@ function LocaleControl({ meta, locale, name, tag, value, issues, withLocale, onV
     } else {
       control = <input {...common} ref={inputRef} type="text" value={text} onChange={(e) => onValue(e.target.value)} className={`${INPUT}${meta.kind === 'href' ? ' font-mono' : ''}`} />;
     }
+  } else if (meta.kind === 'richText') {
+    control = (
+      <div className="space-y-1">
+        <RichTextToolbar name={name} onAction={(a) => format(a)} />
+        <textarea {...common} ref={inputRef} rows={6} value={text} onChange={(e) => onValue(e.target.value)} className={`${INPUT} font-mono`} />
+      </div>
+    );
   } else {
     control = (
-      <textarea {...common} ref={inputRef} rows={meta.kind === 'richText' ? 5 : 3} value={text} onChange={(e) => onValue(e.target.value)} className={`${INPUT}${meta.rawHtml ? ' font-mono' : ''}`} />
+      <textarea {...common} ref={inputRef} rows={3} value={text} onChange={(e) => onValue(e.target.value)} className={`${INPUT}${meta.rawHtml ? ' font-mono' : ''}`} />
     );
   }
-
-  const insert = (placeholder: string) => {
-    const el = inputRef.current;
-    const start = el?.selectionStart ?? text.length;
-    const end = el?.selectionEnd ?? start;
-    pendingCaret.current = start + placeholder.length;
-    onValue(text.slice(0, start) + placeholder + text.slice(end));
-  };
 
   return (
     <div className="space-y-1">
@@ -168,6 +192,7 @@ function LocaleControl({ meta, locale, name, tag, value, issues, withLocale, onV
         </div>
       )}
       <IssueList id={issuesId} issues={issues} withLocale={withLocale} />
+      {meta.kind === 'richText' && <RichTextPreview text={text} locale={locale} />}
     </div>
   );
 }

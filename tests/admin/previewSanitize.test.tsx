@@ -6,7 +6,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import PreviewPane from '../../src/admin/modules/pages/PreviewPane';
-import { sanitizePreviewDoc } from '../../src/admin/modules/pages/sanitizePreview';
+import { sanitizePreviewDoc, sanitizeSchemaDoc } from '../../src/admin/modules/pages/sanitizePreview';
+import { blocks, group, image, richText } from '../../supabase/functions/_shared/cms/fields';
 import { bundledContent } from '../../src/lib/seo/contentData';
 
 vi.mock('../../src/lib/supabase', () => ({
@@ -73,5 +74,40 @@ describe('preview sanitization (I1)', () => {
   it('passes a document it cannot walk through unchanged (the page shows its own error)', () => {
     expect(sanitizePreviewDoc('rules', null)).toBeNull();
     expect(sanitizePreviewDoc('nope', { en: {}, el: {} })).toEqual({ en: {}, el: {} });
+  });
+});
+
+describe('preview sanitization: media references and rich text (CMS 3c)', () => {
+  const UUID = '0b7c1f3e-5a4d-4c2e-9f10-1234567890ab';
+  const schema = group({ hero: image(), zone: blocks(), story: richText() });
+  const doc = (media: unknown, story: unknown = 'Ok') => ({
+    en: { hero: { media, alt: 'A' }, zone: [{ type: 'video', video: { media, poster: media, autoplay: false } }], story },
+    el: { hero: { media, alt: 'Α' }, zone: [], story: 'Ok' },
+  });
+
+  it('keeps draft and published references of the right kind', () => {
+    const d = doc(`cms-media/${UUID}`);
+    expect(sanitizeSchemaDoc(schema, d)).toEqual(d);
+    const published = { en: { hero: { media: '/media/0123456789ab.webp', alt: 'A' }, zone: [], story: '' }, el: { hero: { media: '/media/0123456789ab.webp', alt: 'A' }, zone: [], story: '' } };
+    expect(sanitizeSchemaDoc(schema, published)).toEqual(published);
+  });
+
+  it.each([
+    ['a foreign url', 'https://evil.example/x.webp'],
+    ['a javascript: url', 'javascript:alert(1)'],
+    ['a published ref of another kind', '/media/0123456789ab.mp4'],
+    ['a non-string', { src: 'x' }],
+  ])('empties %s, also inside a block', (_n, bad) => {
+    const out = sanitizeSchemaDoc(schema, doc(bad)) as ReturnType<typeof doc>;
+    expect(out.en.hero.media).toBe('');
+    expect(out.el.hero.media).toBe('');
+    const video = (out.en.zone[0] as { video: { media: unknown; poster: unknown } }).video;
+    expect(video.media).toBe(bad === '/media/0123456789ab.mp4' ? bad : '');
+    expect(video.poster).toBe('');
+  });
+
+  it('a non-string rich text becomes empty (RichText parses strings only)', () => {
+    const out = sanitizeSchemaDoc(schema, doc(`cms-media/${UUID}`, ['**x**'])) as ReturnType<typeof doc>;
+    expect(out.en.story).toBe('');
   });
 });
