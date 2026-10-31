@@ -18,6 +18,12 @@
  * Also fails on a draft media reference (cms-media/<uuid>) in any file under
  * content/: published content must only hold /media/<sha12>.<ext> (publish
  * rewrites the references and commits the files).
+ *
+ * And checks that every published media reference (/media/<name>) in
+ * content/**.json names a file in public/media/ (an image value also needs its
+ * <sha12>-800.webp variant): a missing file fails the build with the content
+ * file and the reference. A file in public/media/ that nothing references is
+ * only a warning. A missing public/media/ means there are no references yet.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
@@ -30,6 +36,7 @@ import { cityName } from '../../src/pages/contest/content/hubCopy';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 export const CONTENT_DIR = resolve(ROOT, 'content');
 export const PAGES_DIR = resolve(CONTENT_DIR, 'pages');
+export const PUBLIC_MEDIA_DIR = resolve(ROOT, 'public/media');
 
 /** Every file under `dir`, recursively, as paths relative to it with / separators, sorted. */
 function filesUnder(dir: string, prefix = ''): string[] {
@@ -47,6 +54,64 @@ export function draftMediaRefs(dir: string): string[] {
   return filesUnder(dir)
     .filter((f) => /cms-media\//i.test(readFileSync(join(dir, f), 'utf8')))
     .map((f) => `${f}: draft media reference (cms-media/) in published content: publish it through the CMS`);
+}
+
+/** Strings of a parsed JSON value, with the image values (`{ media: '….webp', alt }`) flagged. */
+function* jsonStrings(v: unknown): Generator<{ text: string; image: boolean }> {
+  if (typeof v === 'string') yield { text: v, image: false };
+  else if (Array.isArray(v)) for (const x of v) yield* jsonStrings(x);
+  else if (v && typeof v === 'object') {
+    const o = v as Record<string, unknown>;
+    for (const [k, x] of Object.entries(o)) {
+      if (k === 'media' && typeof x === 'string' && typeof o.alt === 'string') yield { text: x, image: true };
+      else yield* jsonStrings(x);
+    }
+  }
+}
+
+// A reference starts a string or follows a character that cannot continue a
+// path or URL, so cms-media/…, https://host/media/… and /medias/… do not count.
+const MEDIA_REF = /(?<![\w./:-])\/media\/([\w-]+(?:\.[\w-]+)*)/g;
+
+/**
+ * Published media references of content/**.json against `mediaDir` (public/media):
+ * an error per reference whose file is missing (an image value also needs its
+ * `<sha12>-800.webp` variant), a warning per file nothing references (a variant
+ * counts as referenced with its image).
+ */
+export function mediaRefReport(contentDir: string, mediaDir: string): { errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const referenced = new Set<string>();
+  const onDisk = new Set(existsSync(mediaDir) ? readdirSync(mediaDir) : []);
+  if (existsSync(contentDir)) {
+    for (const file of filesUnder(contentDir).filter((f) => f.endsWith('.json'))) {
+      let data: unknown;
+      try {
+        data = JSON.parse(readFileSync(join(contentDir, file), 'utf8'));
+      } catch {
+        continue; // reported as invalid JSON where the file is validated
+      }
+      const seen = new Set<string>();
+      const need = (name: string, note = '') => {
+        if (seen.has(name)) return;
+        seen.add(name);
+        referenced.add(name);
+        if (!onDisk.has(name)) errors.push(`${file}: /media/${name}${note} is referenced but public/media/${name} does not exist`);
+      };
+      for (const { text, image } of jsonStrings(data)) {
+        for (const m of text.matchAll(MEDIA_REF)) need(m[1]);
+        if (image) {
+          const v = text.match(/^\/media\/([\w.-]+)\.webp$/);
+          if (v && !v[1].endsWith('-800')) need(`${v[1]}-800.webp`, ' (the 800 w variant of an image)');
+        }
+      }
+    }
+  }
+  const warnings = [...onDisk]
+    .filter((n) => !referenced.has(n) && !(n.endsWith('-800.webp') && referenced.has(n.replace(/-800\.webp$/, '.webp'))))
+    .sort()
+    .map((n) => `public/media/${n}: not referenced by anything under content/`);
+  return { errors, warnings };
 }
 
 /** The live contest's year and host city names (en, el), from content/site.json. */
@@ -113,8 +178,9 @@ export function validateContentDir(
 
 function main(): void {
   const { count, errors: docErrors, warnings } = validateContentDir(PAGES_DIR);
-  const errors = [...docErrors, ...draftMediaRefs(CONTENT_DIR)];
-  for (const w of warnings) console.warn(`validate-content: warning: ${w}`);
+  const media = mediaRefReport(CONTENT_DIR, PUBLIC_MEDIA_DIR);
+  const errors = [...docErrors, ...draftMediaRefs(CONTENT_DIR), ...media.errors];
+  for (const w of [...warnings, ...media.warnings]) console.warn(`validate-content: warning: ${w}`);
   if (errors.length) {
     for (const e of errors) console.error(`validate-content: ${e}`);
     console.error(`validate-content: ${errors.length} error(s) in ${count} documents`);

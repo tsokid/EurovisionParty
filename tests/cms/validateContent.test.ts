@@ -1,11 +1,11 @@
 // @vitest-environment node
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { text, group, list } from '../../supabase/functions/_shared/cms/fields';
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
-import { CONTENT_DIR, draftMediaRefs, liveContestFacts, validateContentDir } from '../../scripts/cms/validate-content';
+import { CONTENT_DIR, draftMediaRefs, liveContestFacts, mediaRefReport, PUBLIC_MEDIA_DIR, validateContentDir } from '../../scripts/cms/validate-content';
 import { cityName } from '../../src/pages/contest/content/hubCopy';
 
 describe('validateContentDir', () => {
@@ -226,5 +226,90 @@ describe('content/pages/index.json (editorial index) is consistent with the file
 
   it('the committed content/pages passes (its index matches its files)', () => {
     expect(validateContentDir(join(CONTENT_DIR, 'pages')).errors).toEqual([]);
+  });
+});
+
+describe('published media references (/media/…) against public/media', () => {
+  let root: string;
+  let content: string;
+  let media: string;
+  const write = (dir: string, name: string, data: string) => {
+    mkdirSync(dirname(join(dir, name)), { recursive: true });
+    writeFileSync(join(dir, name), data);
+  };
+  const image = (sha: string) => ({ media: `/media/${sha}.webp`, alt: 'a', width: 1600, height: 900 });
+  beforeEach(() => {
+    root = mkdtempSync(join(tmpdir(), 'cms-media-guard-'));
+    content = join(root, 'content');
+    media = join(root, 'public', 'media');
+    mkdirSync(content, { recursive: true });
+  });
+  afterEach(() => rmSync(root, { recursive: true, force: true }));
+
+  it('no public/media folder and no references: nothing to report', () => {
+    write(content, 'pages/about.json', JSON.stringify({ en: { title: 'x' } }));
+    expect(mediaRefReport(content, media)).toEqual({ errors: [], warnings: [] });
+  });
+
+  it('a missing content folder is fine too', () => {
+    expect(mediaRefReport(join(root, 'nope'), media)).toEqual({ errors: [], warnings: [] });
+  });
+
+  it('every reference exists: an image value needs its file and its -800 variant', () => {
+    write(content, 'pages/archive-2005.json', JSON.stringify({ en: { blocks: [{ type: 'image', image: image('0123456789ab') }] } }));
+    write(media, '0123456789ab.webp', 'x');
+    write(media, '0123456789ab-800.webp', 'x');
+    expect(mediaRefReport(content, media)).toEqual({ errors: [], warnings: [] });
+  });
+
+  it('a missing file fails with the content file and the reference', () => {
+    write(content, 'pages/archive-2005.json', JSON.stringify({ en: { intro: 'See [pic](/media/0123456789ab.webp).' } }));
+    const r = mediaRefReport(content, media);
+    expect(r.errors).toEqual(['pages/archive-2005.json: /media/0123456789ab.webp is referenced but public/media/0123456789ab.webp does not exist']);
+  });
+
+  it('an image value without its -800 variant fails naming the variant', () => {
+    write(content, 'pages/a.json', JSON.stringify({ en: { hero: image('0123456789ab') } }));
+    write(media, '0123456789ab.webp', 'x');
+    expect(mediaRefReport(content, media).errors).toEqual([
+      'pages/a.json: /media/0123456789ab-800.webp (the 800 w variant of an image) is referenced but public/media/0123456789ab-800.webp does not exist',
+    ]);
+  });
+
+  it('a video reference needs its file, poster and captions; a poster does not need a variant', () => {
+    write(content, 'pages/v.json', JSON.stringify({ en: { video: { media: '/media/aaaaaaaaaaaa.mp4', poster: '/media/bbbbbbbbbbbb.webp', captions: '/media/cccccccccccc.vtt', autoplay: false, width: 1, height: 1 } } }));
+    write(media, 'aaaaaaaaaaaa.mp4', 'x');
+    write(media, 'bbbbbbbbbbbb.webp', 'x');
+    expect(mediaRefReport(content, media).errors).toEqual([
+      'pages/v.json: /media/cccccccccccc.vtt is referenced but public/media/cccccccccccc.vtt does not exist',
+    ]);
+  });
+
+  it('draft refs, other hosts and unrelated strings are not /media/ references', () => {
+    write(content, 'pages/x.json', JSON.stringify({ en: { a: 'cms-media/0b7c1f3e', b: 'https://example.com/media/foo.webp', c: '/medias/x', d: 'media/x.webp' } }));
+    expect(mediaRefReport(content, media)).toEqual({ errors: [], warnings: [] });
+  });
+
+  it('an unreferenced file in public/media is only a warning', () => {
+    write(content, 'pages/a.json', JSON.stringify({ en: { hero: image('0123456789ab') } }));
+    write(media, '0123456789ab.webp', 'x');
+    write(media, '0123456789ab-800.webp', 'x');
+    write(media, 'ffffffffffff.webp', 'x');
+    expect(mediaRefReport(content, media)).toEqual({
+      errors: [],
+      warnings: ['public/media/ffffffffffff.webp: not referenced by anything under content/'],
+    });
+  });
+
+  it('references in files other than content/pages count (contests, site)', () => {
+    write(content, 'contests/2027.json', JSON.stringify({ poster: '/media/0123456789ab.webp' }));
+    write(media, '0123456789ab.webp', 'x');
+    expect(mediaRefReport(content, media)).toEqual({ errors: [], warnings: [] });
+  });
+
+  it('the committed repo passes (public/media may not exist yet)', () => {
+    const r = mediaRefReport(CONTENT_DIR, PUBLIC_MEDIA_DIR);
+    expect(r.errors).toEqual([]);
+    expect(PUBLIC_MEDIA_DIR).toBe(join(__dirname, '../../public/media'));
   });
 });
