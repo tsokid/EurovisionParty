@@ -7,7 +7,9 @@ import { NotFoundPage } from '../NotFoundPage';
  * What a static page renders while its CMS document (usePageContent) is not
  * ready. Only reachable on client-side navigation: prerendered pages inline
  * their document, and the server render throws if it is missing.
- * - loading / error: ContentPending (with retry on error).
+ * - loading / error: ContentPending (with retry on error), which keeps the
+ *   site footer; LocaleRoot keeps the header. LocaleLink prefetches the doc
+ *   on hover/focus, so this is rarely seen.
  * - missing: the 404 page, as the contest pages do. NotFoundPage itself must
  *   therefore never render this fallback for its own document.
  */

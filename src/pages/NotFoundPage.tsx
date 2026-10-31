@@ -25,10 +25,13 @@ const FALLBACK: Record<Locale, { title: string; home: string }> = {
 function MinimalNotFound({ locale }: { locale: Locale }) {
   const f = FALLBACK[locale];
   return (
-    <main className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4">
-      <h1 className="text-white text-2xl font-bold">{f.title}</h1>
-      <LocaleLink to="/" className="text-euro-pink-light hover:underline">{f.home}</LocaleLink>
-    </main>
+    <>
+      <main className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4">
+        <h1 className="text-white text-2xl font-bold">{f.title}</h1>
+        <LocaleLink to="/" className="text-euro-pink-light hover:underline">{f.home}</LocaleLink>
+      </main>
+      <SiteFooter />
+    </>
   );
 }
 
