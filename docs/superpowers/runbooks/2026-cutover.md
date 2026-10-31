@@ -137,7 +137,7 @@ End of session: `unset PGURL PGPASSWORD`.
   pg_restore --list eurogames-pre-cutover-*.dump | grep -c "TABLE DATA"
   grep -c "COPY public.eurovision_2026" old-2026-tables-*.sql
   ```
-  Why these flags: `--no-owner` because the pooler login cannot recreate Supabase's internal owners; **no** `--no-privileges`, so a restore re-applies the exact privileges, the `REVOKE`s included. 069, 070, 071 and 074 lock tables and functions down for `anon` / `authenticated` / `service_role`; restored without privileges, objects would fall back to Supabase's default grants and reopen what those migrations closed.
+  Why these flags: `--no-owner` because the pooler login cannot recreate Supabase's internal owners; **no** `--no-privileges`, so a restore re-applies the exact privileges, the `REVOKE`s included. 069, 070, 071, 074 and 076 lock tables and functions down for `anon` / `authenticated` / `service_role`; restored without privileges, objects would fall back to Supabase's default grants and reopen what those migrations closed.
 - **Expect:** both files non-empty; the `grep -c` on the plain file prints `2`.
 - **If it fails:** `server version mismatch` → install a newer major and fix the PATH line. `pg_dump: command not found` → PATH line missing or wrong major folder. `password authentication failed` → re-run the `read -s` line; still failing → Dashboard → Database → Settings → Reset database password (the app uses API keys, not this password). **Do not continue without both files.**
 

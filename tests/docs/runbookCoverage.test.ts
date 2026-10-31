@@ -231,6 +231,12 @@ describe('cutover runbook coverage', () => {
     expect(runbook).not.toContain("('public.begin_publish()',");
   });
 
+  it('the backup note lists 076 among the migrations that lock objects down (restore must keep their REVOKEs)', () => {
+    const note = runbook.split(/\r?\n/).find((l) => l.includes('lock tables and functions down'));
+    expect(note).toBeDefined();
+    for (const m of ['069', '070', '071', '074', '076']) expect(note, m).toContain(m);
+  });
+
   it('backup and restore commands keep privileges (no --no-privileges in any code block)', () => {
     const code = [...runbook.matchAll(/```[a-z]*\r?\n([\s\S]*?)```/g)].map((m) => m[1]).join('\n');
     expect(code).toContain('pg_dump');
