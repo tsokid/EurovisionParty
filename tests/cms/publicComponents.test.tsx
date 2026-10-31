@@ -247,7 +247,8 @@ describe('Blocks', () => {
     function Host() {
       const [, setN] = useState(0);
       renders++;
-      return <Blocks value={BLOCKS} onFaq={(e) => setN(e.length)} />;
+      // Always-changing update: re-notifying on every render would loop forever.
+      return <Blocks value={BLOCKS} onFaq={() => setN((n) => n + 1)} />;
     }
     render(at(<Host />));
     expect(renders).toBeLessThan(5);
