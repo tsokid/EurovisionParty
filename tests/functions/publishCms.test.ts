@@ -277,6 +277,7 @@ function deps(input: SnapshotInput) {
     media: {
       download: vi.fn(async () => { throw new Error('no media in this test'); }),
       markPublished: vi.fn(async () => {}),
+      publishedPaths: vi.fn(async () => new Set<string>()),
       listObjects: vi.fn(async () => []),
       registeredPaths: vi.fn(async () => []),
       removeObjects: vi.fn(async () => {}),

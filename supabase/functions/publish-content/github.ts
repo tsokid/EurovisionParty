@@ -128,6 +128,12 @@ export async function readFiles(opts: GitHubOpts & { match: (path: string) => bo
   return out;
 }
 
+/** The paths of every file in the branch head whose path `match`es (read-only, no blob reads). */
+export async function listPaths(opts: GitHubOpts & { match: (path: string) => boolean }): Promise<Set<string>> {
+  const { existing } = await headTree(client(opts), `/repos/${opts.repo}`, `heads/${opts.branch}`);
+  return new Set([...existing.keys()].filter(opts.match));
+}
+
 export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> {
   const call = client(opts);
   const repo = `/repos/${opts.repo}`;

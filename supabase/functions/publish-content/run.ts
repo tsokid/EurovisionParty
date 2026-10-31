@@ -33,7 +33,7 @@
 import { buildSnapshotFiles, type SnapshotInput } from './snapshot.ts';
 import { cmsFiles, CmsValidationError, type CmsIssue } from './cmsFiles.ts';
 import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
-import { MEDIA_MAX_NEW_BYTES, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
+import { draftRefsLeft, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
 import type { CommitResult, FileTransforms } from './github.ts';
 
 export type EndPublishArgs = {
@@ -77,6 +77,11 @@ export type PublishDeps = {
     download(storagePath: string): Promise<Uint8Array>;
     /** media_mark_published(id, path) as service role. */
     markPublished(id: string, path: string): Promise<void>;
+    /**
+     * The public/media/ paths in the branch head. Read only when a referenced
+     * row is already published: its file is then not downloaded again.
+     */
+    publishedPaths(): Promise<ReadonlySet<string>>;
   };
   /** Clock of the Storage sweep. Default: the current time. */
   now?: () => Date;
@@ -150,10 +155,13 @@ export async function runPublish(deps: PublishDeps, { cms }: PublishOptions = { 
     // The drafts as saved are validated first, so media is only resolved for valid drafts.
     let pages = cmsFiles(drafts, committed);
     if (pages.warnings.length) found = { warnings: pages.warnings };
-    const media = await publishMedia(drafts, input.media ?? [], (path) => deps.media.download(path));
-    if (media.marks.length) pages = cmsFiles(media.drafts, committed);
+    const media = await publishMedia(drafts, input.media ?? [], (path) => deps.media.download(path), () => deps.media.publishedPaths());
+    if (media.rewritten) pages = cmsFiles(media.drafts, committed);
     marks = media.marks;
     const files = { ...buildSnapshotFiles(input), ...pages.files, ...media.files };
+    // A cms-media/ left outside a media field would ship unrewritten and fail every build.
+    const left = draftRefsLeft(files);
+    if (left.length) throw new MediaError(left);
     const redirects = generatedRedirects(input.contests);
     result = await deps.commitFiles(files, commitMessage, {
       'vercel.json': (current) => {

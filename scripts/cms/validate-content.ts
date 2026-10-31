@@ -16,7 +16,7 @@
  * rewrites the references and commits the files).
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { resolve, dirname, join, relative, sep } from 'node:path';
+import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationContext } from '../../supabase/functions/_shared/cms/validate';
@@ -27,10 +27,9 @@ export const CONTENT_DIR = resolve(ROOT, 'content');
 export const PAGES_DIR = resolve(CONTENT_DIR, 'pages');
 
 /** Every file under `dir`, recursively, as paths relative to it with / separators, sorted. */
-function filesUnder(dir: string): string[] {
-  return readdirSync(dir, { recursive: true, withFileTypes: true })
-    .filter((e) => e.isFile())
-    .map((e) => relative(dir, join(e.parentPath, e.name)).split(sep).join('/'))
+function filesUnder(dir: string, prefix = ''): string[] {
+  return readdirSync(dir, { withFileTypes: true })
+    .flatMap((e) => (e.isDirectory() ? filesUnder(join(dir, e.name), `${prefix}${e.name}/`) : e.isFile() ? [`${prefix}${e.name}`] : []))
     .sort();
 }
 

@@ -23,9 +23,10 @@
 //
 // This file only wires I/O; the flow is runPublish in run.ts (unit-tested).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.99.3";
-import { commitFiles, readFiles } from "./github.ts";
+import { commitFiles, listPaths, readFiles } from "./github.ts";
 import { pagesFromFiles } from "./cmsFiles.ts";
 import { publishOptions, runPublish, type PublishResult } from "./run.ts";
+import { collectRegisteredPaths } from "./media.ts";
 import type { SnapshotInput } from "./snapshot.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -85,15 +86,19 @@ async function listBucket(service: ReturnType<typeof serviceClient>) {
   }
 }
 
-/** Every cms_media.storage_path (service role; RLS has no policies). */
-async function registeredPaths(service: ReturnType<typeof serviceClient>) {
-  const out: string[] = [];
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await service.from("cms_media").select("storage_path").order("storage_path").range(from, from + PAGE - 1);
+/**
+ * Every cms_media.storage_path (service role; RLS has no policies), by
+ * keyset pages; throws (so the sweep deletes nothing) unless the paths read
+ * match the table's exact count.
+ */
+function registeredPaths(service: ReturnType<typeof serviceClient>) {
+  return collectRegisteredPaths(async (after) => {
+    let q = service.from("cms_media").select("storage_path", { count: "exact" });
+    if (after !== null) q = q.gt("storage_path", after);
+    const { data, error, count } = await q.order("storage_path").limit(PAGE);
     if (error) throw new Error(`cms_media: ${error.message}`);
-    for (const r of data ?? []) out.push(r.storage_path as string);
-    if (!data || data.length < PAGE) return out;
-  }
+    return { paths: (data ?? []).map((r) => r.storage_path as string), count };
+  });
 }
 
 const HTTP_STATUS: Record<PublishResult["status"], number> = { ok: 200, noop: 200, busy: 409, error: 500 };
@@ -144,6 +149,7 @@ Deno.serve(async (req) => {
           const { error } = await service.rpc("media_mark_published", { p_id: id, p_path: path });
           if (error) throw new Error(error.message);
         },
+        publishedPaths: () => listPaths({ ...github, match: (path) => path.startsWith("public/media/") }),
         listObjects: () => listBucket(service),
         registeredPaths: () => registeredPaths(service),
         async removeObjects(names) {

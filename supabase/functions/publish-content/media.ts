@@ -16,7 +16,14 @@
 //   5. The references are rewritten to /media/<sha12>.<ext>; an image group
 //      gets the image row's width and height, a video group its poster's.
 // The rows to mark published (media_mark_published) are returned; the caller
-// marks them only after the commit succeeded.
+// marks them only after the commit succeeded. A row already published (its
+// published_path set, the file and any variant already in the branch head) is
+// not downloaded again: its reference is rewritten to that path.
+//
+// An image or video group that already holds a /media/ reference must carry
+// its width and height (publish cannot recompute them without the row).
+// draftRefsLeft refuses content still holding cms-media/ after the rewrite
+// (a reference typed into a text, rich text or link field).
 //
 // sweepStorage deletes cms-media objects that have no cms_media row and are
 // older than a day (an upload in flight has its object before its row).
@@ -121,6 +128,8 @@ export type PublishedMedia = {
   files: Record<string, Uint8Array>;
   /** The drafts with every reference rewritten and dimensions written (unchanged when they hold none). */
   drafts: CmsDocumentRow[];
+  /** Whether any reference was rewritten (`drafts` then differ from the input). */
+  rewritten: boolean;
   /** Every row written (main files and variants) with its /media/ path, for media_mark_published. */
   marks: Array<{ id: string; path: string }>;
 };
@@ -131,19 +140,50 @@ export type PublishedMedia = {
  * listing every problem; reference problems are found before any download.
  * `drafts` is not modified.
  */
+const isDim = (n: unknown) => typeof n === 'number' && Number.isInteger(n) && n > 0;
+
+/** `doc_id path` of each image / video group whose published (/media/) source lacks width or height. */
+function groupsWithoutDimensions(drafts: readonly CmsDocumentRow[]): string[] {
+  const out = new Set<string>();
+  for (const doc of drafts) {
+    if (!isRecord(doc.data)) continue;
+    for (const locale of LOCALES) {
+      visitLocale(doc, doc.data[locale], () => {}, (segments, kind, value) => {
+        const source = kind === 'image' ? value.media : value.poster;
+        if (typeof source !== 'string' || !source.startsWith('/media/')) return;
+        if (isDim(value.width) && isDim(value.height)) return;
+        const what = kind === 'image' ? 'image' : 'video poster';
+        out.add(`${doc.doc_id} ${segments.join('.')}: published ${what} ${source} has no width/height: pick the media again`);
+      });
+    }
+  }
+  return [...out];
+}
+
+/** The /media/<sha12>.<ext> a row was published under, if it matches its own sha (else null: publish it again). */
+function publishedName(row: MediaRow): string | null {
+  const want = `/media/${row.sha256.toLowerCase().slice(0, 12)}.${EXT[row.kind]}`;
+  return row.published_path === want ? want : null;
+}
+
 export async function publishMedia(
   drafts: readonly CmsDocumentRow[],
   rows: readonly MediaRow[],
   download: (storagePath: string) => Promise<Uint8Array>,
+  /** The public/media/ paths in the branch head; read only when a referenced row is already published. */
+  publishedPaths: () => Promise<ReadonlySet<string>> = async () => new Set(),
 ): Promise<PublishedMedia> {
+  const errors: string[] = groupsWithoutDimensions(drafts);
   const refs = collectMediaRefs(drafts);
-  if (!refs.length) return { files: {}, drafts: [...drafts], marks: [] };
+  if (!refs.length) {
+    if (errors.length) throw new MediaError(errors);
+    return { files: {}, drafts: [...drafts], rewritten: false, marks: [] };
+  }
 
   const byId = new Map(rows.map((r) => [r.id.toLowerCase(), r]));
   const variantOf = new Map(rows.filter((r) => r.variant_of).map((r) => [r.variant_of!.toLowerCase(), r]));
 
   // 1. Every reference resolves to a complete upload of the right kind.
-  const errors: string[] = [];
   const used = new Map<string, MediaRow>();
   for (const ref of refs) {
     const at = `${ref.doc_id} ${ref.path}`;
@@ -185,7 +225,15 @@ export async function publishMedia(
     files[`public${name}`] = bytes;
     marks.push({ id: row.id, path: name });
   };
+  const anyPublished = [...used.values()].some((r) => publishedName(r));
+  const inTree = anyPublished ? await publishedPaths() : new Set<string>();
   for (const [id, row] of used) {
+    // Already published and still in the branch (with its variant): reuse it, no download.
+    const prior = publishedName(row);
+    if (prior && inTree.has(`public${prior}`) && (row.kind !== 'image' || inTree.has(`public${prior.replace(/\.webp$/, '-800.webp')}`))) {
+      published.set(id, prior);
+      continue;
+    }
     const bytes = await fetchVerified(row);
     if (!bytes) continue;
     const sha12 = row.sha256.toLowerCase().slice(0, 12);
@@ -222,7 +270,7 @@ export async function publishMedia(
     return { ...doc, data: data as CmsDocumentRow['data'] };
   });
 
-  return { files, drafts: rewritten, marks };
+  return { files, drafts: rewritten, rewritten: true, marks };
 }
 
 /** Sets `value` at `segments` inside `root` (whose containers exist). */
@@ -248,6 +296,7 @@ export type StorageSweepDeps = {
  */
 export async function sweepStorage(deps: StorageSweepDeps, now: Date): Promise<string[]> {
   const [objects, registered] = await Promise.all([deps.listObjects(), deps.registeredPaths()]);
+  // Case-insensitive on purpose: a name matching a row in any case is kept (errs toward keeping objects).
   const keep = new Set(registered.map((p) => p.toLowerCase()));
   const cutoff = now.getTime() - SWEEP_MIN_AGE_MS;
   const orphans = objects
@@ -260,4 +309,69 @@ export async function sweepStorage(deps: StorageSweepDeps, now: Date): Promise<s
     .sort();
   if (orphans.length) await deps.removeObjects(orphans);
   return orphans;
+}
+
+/** One page of cms_media.storage_path, ascending, after `after` (null: from the start), and the table's row count. */
+export type StoragePathPage = (after: string | null) => Promise<{ paths: string[]; count: number | null }>;
+
+/**
+ * Every cms_media.storage_path, read by keyset pages (storage_path > the last
+ * one) until an empty page. Throws unless the set collected has exactly the
+ * row count the first page reported: the sweep then deletes nothing, never
+ * an object whose row was missed.
+ */
+export async function collectRegisteredPaths(page: StoragePathPage): Promise<string[]> {
+  const out = new Set<string>();
+  let expected: number | null | undefined;
+  let after: string | null = null;
+  for (;;) {
+    const { paths, count } = await page(after);
+    if (expected === undefined) expected = count;
+    if (!paths.length) break;
+    for (const p of paths) out.add(p);
+    const last = paths[paths.length - 1];
+    if (after !== null && last <= after) throw new Error('cms_media: paging did not advance');
+    after = last;
+  }
+  if (expected === null || expected === undefined || out.size !== expected) {
+    throw new Error(`cms_media: read ${out.size} storage paths, expected ${expected ?? 'an unknown count'}`);
+  }
+  return [...out];
+}
+
+const DRAFT_ANYWHERE = /cms-media\//i;
+
+/**
+ * `doc_id path` (or the file path, outside content/pages) of every string
+ * still holding a draft media reference (cms-media/, any case) in the
+ * content/ files about to be committed: a reference outside a media field,
+ * which publish does not rewrite and validate-content would fail the build on.
+ */
+export function draftRefsLeft(files: Record<string, string | Uint8Array>): string[] {
+  const out: string[] = [];
+  const msg = 'draft media reference (cms-media/) outside a media field: pick the file in an image, video or media field instead';
+  for (const path of Object.keys(files).sort()) {
+    const text = files[path];
+    if (!path.startsWith('content/') || typeof text !== 'string' || !DRAFT_ANYWHERE.test(text)) continue;
+    const where: string[] = [];
+    const walk = (v: unknown, at: string[]) => {
+      if (typeof v === 'string') {
+        if (DRAFT_ANYWHERE.test(v)) where.push(at.join('.'));
+      } else if (Array.isArray(v)) {
+        v.forEach((x, i) => walk(x, [...at, String(i)]));
+      } else if (isRecord(v)) {
+        for (const [k, x] of Object.entries(v)) walk(x, [...at, k]);
+      }
+    };
+    try {
+      walk(JSON.parse(text), []);
+    } catch {
+      // not JSON: reported by file below
+    }
+    const page = /^content\/pages\/([a-z0-9-]+)\.json$/.exec(path);
+    const label = page ? page[1] : path;
+    if (where.length) for (const w of where) out.push(`${label} ${w}: ${msg}`);
+    else out.push(`${label}: ${msg}`);
+  }
+  return out;
 }

@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { commitFiles, gitBlobSha, readFiles } from '../../supabase/functions/publish-content/github';
+import { commitFiles, gitBlobSha, listPaths, readFiles } from '../../supabase/functions/publish-content/github';
 
 type Call = { method: string; url: string; body: unknown; headers: Record<string, string> };
 type Route = { method: string; path: string | RegExp; status?: number; body: unknown };
@@ -233,6 +233,15 @@ describe('commitFiles', () => {
       })).rejects.toThrow('vercel.json is missing');
       expect(seen).toEqual([null]);
     });
+  });
+});
+
+describe('listPaths', () => {
+  it('lists the branch head paths that match, reading no blob', async () => {
+    const { fetch, calls } = mockFetch(await baseRoutes({ 'public/media/a.webp': 'a', 'public/media/a-800.webp': 'b', 'content/site.json': '{}' }));
+    const out = await listPaths({ token: 'tkn', repo: REPO, branch: 'main', fetch, match: (p) => p.startsWith('public/media/') });
+    expect([...out].sort()).toEqual(['public/media/a-800.webp', 'public/media/a.webp']);
+    expect(calls).toHaveLength(3);
   });
 });
 

@@ -7,10 +7,10 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { blocks, group, image, mediaRef, optional } from '../../supabase/functions/_shared/cms/fields';
+import { blocks, group, image, mediaRef, optional, text } from '../../supabase/functions/_shared/cms/fields';
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
 import {
-  collectMediaRefs, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, SWEEP_MIN_AGE_MS, type MediaRow,
+  collectMediaRefs, collectRegisteredPaths, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, SWEEP_MIN_AGE_MS, type MediaRow,
 } from '../../supabase/functions/publish-content/media';
 import { runPublish, type PublishDeps } from '../../supabase/functions/publish-content/run';
 import { commitFiles as realCommitFiles, gitBlobSha, type FileTransforms } from '../../supabase/functions/publish-content/github';
@@ -24,6 +24,7 @@ const schema = group({
   hero: image(),
   zone: blocks(),
   thumb: optional(mediaRef('image')),
+  note: optional(text()),
 });
 
 beforeAll(() => {
@@ -202,7 +203,7 @@ describe('publishMedia', () => {
 
   it('no drafts or no references: nothing downloaded, drafts unchanged', async () => {
     download.mockClear();
-    expect(await publishMedia([], rows, download)).toEqual({ files: {}, drafts: [], marks: [] });
+    expect(await publishMedia([], rows, download)).toEqual({ files: {}, drafts: [], rewritten: false, marks: [] });
     const plain = { en: { hero: { media: `/media/${IMG_SHA}.webp`, alt: 'A', width: 1600, height: 900 }, zone: [] }, el: { hero: { media: `/media/${IMG_SHA}.webp`, alt: 'B', width: 1600, height: 900 }, zone: [] } };
     const out = await publishMedia([draft(plain)], rows, download);
     expect(out.files).toEqual({});
@@ -248,9 +249,83 @@ describe('publishMedia', () => {
     expect(e.message).toMatch(new RegExp(`^Media check failed: 1 error\\nmedia ${IMG_V} \\(${IMG}-800\\.webp\\): sha256 mismatch: Storage has [0-9a-f]{64}, the row says ${rows[1].sha256}$`));
   });
 
+  it('an already-published row whose files are in the branch is not downloaded again; dimensions still come from the rows', async () => {
+    const tree = new Set([`public/media/${IMG_SHA}.webp`, `public/media/${IMG_SHA}-800.webp`, `public/media/${VID_SHA}.mp4`]);
+    const published = rows.map((r) => (r.id === IMG ? { ...r, published_path: `/media/${IMG_SHA}.webp` } : r.id === VID ? { ...r, published_path: `/media/${VID_SHA}.mp4` } : r));
+    const dl = vi.fn(async (p: string) => download(p));
+    const publishedPaths = vi.fn(async () => tree);
+    const out = await publishMedia([draft()], published, dl, publishedPaths);
+    expect(publishedPaths).toHaveBeenCalledTimes(1);
+    const fetched = dl.mock.calls.map((c) => c[0]);
+    expect(fetched).not.toContain(`${IMG}.webp`);
+    expect(fetched).not.toContain(`${IMG}-800.webp`);
+    expect(fetched).not.toContain(`${VID}.mp4`);
+    expect(fetched.sort()).toEqual([`${POSTER}-800.webp`, `${POSTER}.webp`, `${VTT}.vtt`].sort());
+    expect(Object.keys(out.files)).not.toContain(`public/media/${IMG_SHA}.webp`);
+    expect(out.marks.map((m) => m.id).sort()).toEqual([POSTER, POSTER_V, VTT].sort());
+    const data = out.drafts[0].data as { en: ReturnType<typeof locale> };
+    expect(data.en.hero).toEqual({ media: `/media/${IMG_SHA}.webp`, alt: 'Stage', width: 1600, height: 900 });
+    expect((data.en.zone[1] as unknown as { video: { media: string } }).video.media).toBe(`/media/${VID_SHA}.mp4`);
+  });
+
+  it('a published row whose file (or variant) is gone from the branch is downloaded and committed again', async () => {
+    const published = rows.map((r) => (r.id === IMG ? { ...r, published_path: `/media/${IMG_SHA}.webp` } : r));
+    const dl = vi.fn(async (p: string) => download(p));
+    const out = await publishMedia([draft()], published, dl, async () => new Set([`public/media/${IMG_SHA}.webp`]));
+    expect(dl.mock.calls.map((c) => c[0])).toContain(`${IMG}.webp`);
+    expect(out.files[`public/media/${IMG_SHA}-800.webp`]).toEqual(storage[`${IMG}-800.webp`]);
+  });
+
+  it('never reads the branch when no referenced row is published', async () => {
+    const publishedPaths = vi.fn(async () => new Set<string>());
+    await publishMedia([draft()], rows, download, publishedPaths);
+    expect(publishedPaths).not.toHaveBeenCalled();
+  });
+
+  it('an image or video group already on /media/ without width/height refuses the publish', async () => {
+    const d = { en: locale('A'), el: locale('B') };
+    for (const l of [d.en, d.el]) {
+      l.hero.media = `/media/${IMG_SHA}.webp`;
+      (l.zone[1] as unknown as { video: Record<string, unknown> }).video.poster = `/media/${POSTER_SHA}.webp`;
+      Object.assign((l.zone[1] as unknown as { video: Record<string, unknown> }).video, { width: 1280 });
+    }
+    const e = await thrown(publishMedia([draft(d)], rows, download));
+    expect(e.errors).toEqual([
+      `${DOC} hero: published image /media/${IMG_SHA}.webp has no width/height: pick the media again`,
+      `${DOC} zone.1.video: published video poster /media/${POSTER_SHA}.webp has no width/height: pick the media again`,
+    ]);
+  });
+
   it('a failed download refuses the publish', async () => {
     const e = await thrown(publishMedia([draft()], rows.map((r) => (r.id === VTT ? { ...r, storage_path: `${MISSING}.vtt` } : r)), download));
     expect(e.message).toContain(`media ${VTT} (${MISSING}.vtt): download failed: Object not found: ${MISSING}.vtt`);
+  });
+});
+
+describe('collectRegisteredPaths (keyset paging of cms_media)', () => {
+  const all = Array.from({ length: 7 }, (_, i) => `${String(i).padStart(2, '0')}.webp`);
+  /** A table of `all` served 2 rows per page (storage_path > after), reporting `count`. */
+  const pager = (count: number | null) => vi.fn(async (after: string | null) => ({
+    paths: all.filter((p) => after === null || p > after).slice(0, 2),
+    count,
+  }));
+
+  it('collects every path across short pages until an empty page', async () => {
+    const page = pager(7);
+    expect(await collectRegisteredPaths(page)).toEqual(all);
+    expect(page.mock.calls.map((c) => c[0])).toEqual([null, '01.webp', '03.webp', '05.webp', '06.webp']);
+  });
+
+  it('throws when the paths read do not match the exact count (or no count): nothing is swept', async () => {
+    await expect(collectRegisteredPaths(pager(8))).rejects.toThrow('cms_media: read 7 storage paths, expected 8');
+    await expect(collectRegisteredPaths(pager(null))).rejects.toThrow(/expected an unknown count/);
+    const removeObjects = vi.fn(async () => {});
+    await expect(sweepStorage({
+      listObjects: async () => [{ name: `${MISSING}.webp`, created_at: '2026-01-01T00:00:00Z' }],
+      registeredPaths: () => collectRegisteredPaths(pager(8)),
+      removeObjects,
+    }, new Date('2026-11-01T12:00:00Z'))).rejects.toThrow(/expected 8/);
+    expect(removeObjects).not.toHaveBeenCalled();
   });
 });
 
@@ -312,6 +387,7 @@ function deps(input: SnapshotInput, commit?: PublishDeps['commitFiles']) {
     listObjects: vi.fn(async () => { log.push('list'); return [{ name: `${MISSING}.webp`, created_at: '2026-01-01T00:00:00Z' }]; }),
     removeObjects: vi.fn(async (names: string[]) => { log.push(`remove ${names.join(',')}`); }),
     registeredPaths: vi.fn(async () => rows.map((r) => r.storage_path)),
+    publishedPaths: vi.fn(async () => new Set<string>()),
   };
   const commitFiles = vi.fn(commit ?? (async (files: Record<string, string | Uint8Array>, _m: (p: string[]) => string, t: FileTransforms) => {
     log.push('commit');
@@ -386,6 +462,30 @@ describe('runPublish with media', () => {
     expect(d.log).toHaveBeenCalledWith('publish-content: storage sweep failed: storage down');
   });
 
+  it.each([
+    ['a text field', (l: ReturnType<typeof locale>) => { (l as Record<string, unknown>).note = `See ${ref(IMG)}`; }, 'note'],
+    ['an href field', (l: ReturnType<typeof locale>) => { l.zone.push({ type: 'cta', title: 'T', body: 'B', label: 'L', href: `/${ref(IMG)}` } as never); }, 'zone.3.href'],
+  ])('a cms-media/ reference in %s (not rewritten) refuses the publish: nothing committed or marked', async (_n, put, path) => {
+    const d = { en: locale('A'), el: locale('B') };
+    put(d.en);
+    put(d.el);
+    const { d: dd, commitFiles, media } = deps({ ...withDraft, cms_documents: [draft(d)] });
+    const out = await runPublish(dd);
+    expect(out.status).toBe('error');
+    const msg = 'draft media reference (cms-media/) outside a media field: pick the file in an image, video or media field instead';
+    expect((out as { error: string }).error).toBe(`Media check failed: 2 errors\n${DOC} el.${path}: ${msg}\n${DOC} en.${path}: ${msg}`);
+    expect(commitFiles).not.toHaveBeenCalled();
+    expect(media.markPublished).not.toHaveBeenCalled();
+  });
+
+  it('a failing registeredPaths (e.g. a count mismatch) is logged and deletes nothing', async () => {
+    const { d, media } = deps(withDraft);
+    media.registeredPaths.mockRejectedValueOnce(new Error('cms_media: read 5 storage paths, expected 6'));
+    expect((await runPublish(d)).status).toBe('ok');
+    expect(media.removeObjects).not.toHaveBeenCalled();
+    expect(d.log).toHaveBeenCalledWith('publish-content: storage sweep failed: cms_media: read 5 storage paths, expected 6');
+  });
+
   it('a failing media_mark_published keeps the commit and comes back as a warning', async () => {
     const { d, media } = deps(withDraft);
     media.markPublished.mockRejectedValueOnce(new Error('rpc down'));
@@ -431,7 +531,8 @@ describe('runPublish with media', () => {
       }) as typeof globalThis.fetch;
       const commit: PublishDeps['commitFiles'] = (files, message, transforms, limits) =>
         realCommitFiles({ token: 't', repo: REPO, branch: 'main', fetch, files, message, transforms, ...limits });
-      return { commit, calls };
+      const paths = new Set(Object.keys(tree).filter((p) => p.startsWith('public/media/')));
+      return { commit, calls, paths };
     }
 
     it('media already published (published_path set, files in the tree) and the page unchanged: a no-op, no blob uploaded', async () => {
@@ -441,12 +542,15 @@ describe('runPublish with media', () => {
       const committed = first.commitFiles.mock.calls[0][0] as Record<string, string | Uint8Array>;
       const merged = { ...committed, 'vercel.json': vercelMerged };
       const published = rows.map((r) => ({ ...r, published_path: first.media.markPublished.mock.calls.find((c) => c[0] === r.id)![1] }));
-      const { commit, calls } = await github(merged);
+      const { commit, calls, paths } = await github(merged);
       const { d, media } = deps({ ...withDraft, media: published }, commit);
+      media.publishedPaths.mockResolvedValue(paths);
       const out = await runPublish(d);
       expect(out).toMatchObject({ status: 'noop', sha: null, files_changed: 0 });
       expect(calls.filter((c) => !c.startsWith('GET'))).toEqual([]);
-      expect(media.markPublished).toHaveBeenCalledTimes(6);
+      // Nothing downloaded or written, so nothing to mark.
+      expect(media.download).not.toHaveBeenCalled();
+      expect(media.markPublished).not.toHaveBeenCalled();
     });
 
     it('new media over 50 MB is refused before anything is written; already-committed media does not count', async () => {
