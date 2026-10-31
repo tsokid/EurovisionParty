@@ -21,11 +21,16 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import type { z } from 'zod';
-import { fieldMeta, schemaDef } from '../../supabase/functions/_shared/cms/fields';
-import { interpolate, placeholdersIn } from '../../supabase/functions/_shared/cms/placeholders';
+import { fieldPaths } from '../../supabase/functions/_shared/cms/fields';
+import { interpolateDocument } from '../../supabase/functions/_shared/cms/interpolateDocument';
+import { placeholdersIn } from '../../supabase/functions/_shared/cms/placeholders';
 import { CMS_DOC_TYPES, docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 import { validateDocument } from '../../supabase/functions/_shared/cms/validate';
+import { mapStrings } from '../../supabase/functions/_shared/cms/walk';
 import { stableJson } from '../history/import';
+
+/** Moved to _shared/cms (the admin preview uses it too); re-exported for the proofs. */
+export { interpolateDocument };
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -266,62 +271,8 @@ export const COPY_MAPPINGS: CopyMapping[] = [
 
 // ---- schema walk ---------------------------------------------------------
 
-const defOf = schemaDef;
-
-/**
- * Maps every string leaf of `value` through `fn(value, allowedPlaceholders, path)`,
- * following `schema`. Non-string leaves are returned as they are.
- */
-function mapStrings(
-  schema: z.ZodType,
-  value: unknown,
-  path: string,
-  fn: (s: string, allowed: string[], path: string) => string,
-): unknown {
-  const def = defOf(schema);
-  const at = (k: string | number) => (path ? `${path}.${k}` : String(k));
-  switch (def.type) {
-    case 'object': {
-      if (!value || typeof value !== 'object') return value;
-      const out: Record<string, unknown> = {};
-      for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-        const child = def.shape![k];
-        out[k] = child ? mapStrings(child, v, at(k), fn) : v;
-      }
-      return out;
-    }
-    case 'array':
-      return Array.isArray(value) ? value.map((v, i) => mapStrings(def.element!, v, at(i), fn)) : value;
-    case 'tuple':
-      return Array.isArray(value) ? value.map((v, i) => (def.items![i] ? mapStrings(def.items![i], v, at(i), fn) : v)) : value;
-    case 'optional':
-      return value === undefined ? value : mapStrings(def.innerType!, value, path, fn);
-    case 'string':
-      return typeof value === 'string' ? fn(value, fieldMeta(schema).placeholders ?? [], path) : value;
-    default:
-      return value;
-  }
-}
-
 /** Dotted paths of the fields that declare placeholders (`*` for any list index). */
-export function templatedPaths(schema: z.ZodType, path = ''): string[] {
-  const def = defOf(schema);
-  const at = (k: string | number) => (path ? `${path}.${k}` : String(k));
-  switch (def.type) {
-    case 'object':
-      return Object.entries(def.shape!).flatMap(([k, s]) => templatedPaths(s, at(k)));
-    case 'array':
-      return templatedPaths(def.element!, at('*'));
-    case 'tuple':
-      return def.items!.flatMap((s, i) => templatedPaths(s, at(i)));
-    case 'optional':
-      return templatedPaths(def.innerType!, path);
-    case 'string':
-      return (fieldMeta(schema).placeholders ?? []).length ? [path] : [];
-    default:
-      return [];
-  }
-}
+export const templatedPaths = (schema: z.ZodType): string[] => fieldPaths(schema, (m) => (m.placeholders ?? []).length > 0);
 
 const escapeBraces = (s: string): string => s.replace(/[{}]/g, (c) => c + c);
 
@@ -332,7 +283,8 @@ const escapeBraces = (s: string): string => s.replace(/[{}]/g, (c) => c + c);
 export function extractDocument(schema: z.ZodType, rendered: Doc, placeholders: string[]): Doc {
   const out = {} as Doc;
   for (const locale of ['en', 'el'] as const) {
-    out[locale] = mapStrings(schema, rendered[locale], '', (value, allowed, path) => {
+    out[locale] = mapStrings(schema, rendered[locale], (value, meta, path) => {
+      const allowed = meta.placeholders ?? [];
       const where = `${locale}.${path}`;
       let result = value;
       if (allowed.length) {
@@ -353,15 +305,6 @@ export function extractDocument(schema: z.ZodType, rendered: Doc, placeholders: 
       if (stray) throw new Error(`extract: ${where} contains an unmapped sentinel ${stray[0]}`);
       return result;
     });
-  }
-  return out;
-}
-
-/** `doc` with every templated field interpolated with `vars` (what a page renders). */
-export function interpolateDocument(schema: z.ZodType, doc: Doc, vars: Vars): Doc {
-  const out = {} as Doc;
-  for (const locale of ['en', 'el'] as const) {
-    out[locale] = mapStrings(schema, doc[locale], '', (value, allowed) => (allowed.length ? interpolate(value, vars) : value));
   }
   return out;
 }

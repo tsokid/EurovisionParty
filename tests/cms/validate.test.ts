@@ -31,7 +31,7 @@ describe('validateDocument', () => {
   it('accepts a valid doc and returns the value', () => {
     const doc = { en: page(), el: page({ title: 'Γιουροβίζιον {year}' }) };
     const r = validateDocument(TYPE, doc);
-    expect(r).toEqual({ ok: true, value: doc });
+    expect(r).toEqual({ ok: true, value: doc, errors: [], warnings: [] });
   });
 
   it('reports an empty required field in el with its path and locale', () => {
@@ -307,5 +307,87 @@ describe('docTypeFor', () => {
     expect(docTypeFor('archive-1956')).toBe('archive');
     expect(docTypeFor('country-GR')).toBe('country');
     expect(docTypeFor('hub-2026')).toBe('hub');
+  });
+});
+
+describe('validateDocument warnings (never errors)', () => {
+  const WARN = '__test-warn';
+  const warnSchema = group({
+    title: text({ softMaxLength: 10 }),
+    body: text({ placeholders: ['year'] }),
+    note: text({ required: false }),
+    extra: optional(text()),
+    link: optional(group({ label: text() })),
+    items: list(group({ q: text(), hint: text({ required: false }) })),
+    tone: optional(choice(['a', 'b'])),
+  });
+  CMS_DOC_TYPES[WARN] = { schema: warnSchema, label: 'Warn', group: 'site' };
+  const loc = (over: Record<string, unknown> = {}): Record<string, unknown> => ({
+    title: 'Short', body: 'In {year}', note: '', items: [{ q: 'Q', hint: '' }], ...over,
+  });
+
+  it('a clean doc has no warnings, and ok docs carry an empty errors list', () => {
+    const r = validateDocument(WARN, { en: loc(), el: loc() });
+    expect(r).toMatchObject({ ok: true, errors: [], warnings: [] });
+  });
+
+  it('warns (and stays ok) when a soft max length is exceeded', () => {
+    const r = validateDocument(WARN, { en: loc({ title: 'x'.repeat(11) }), el: loc() });
+    expect(r.ok).toBe(true);
+    expect(r.warnings).toEqual([{ locale: 'en', path: 'title', message: 'Longer than recommended: 11 characters, recommended max 10' }]);
+  });
+
+  it('warns for an optional field set in one locale and empty in the other', () => {
+    const r = validateDocument(WARN, {
+      en: loc({ note: 'Note', extra: 'E', items: [{ q: 'Q', hint: 'H' }, { q: 'Q2', hint: '' }] }),
+      el: loc({ link: { label: 'Λ' }, items: [{ q: 'Ε', hint: ' ' }] }),
+    });
+    expect(r.ok).toBe(true);
+    expect(r.warnings).toEqual(expect.arrayContaining([
+      { locale: 'el', path: 'note', message: 'Empty here but set in en' },
+      { locale: 'el', path: 'extra', message: 'Empty here but set in en' },
+      { locale: 'en', path: 'link', message: 'Empty here but set in el' },
+      { locale: 'el', path: 'items.0.hint', message: 'Empty here but set in en' },
+    ]));
+    expect(r.warnings).toHaveLength(4);
+  });
+
+  it('does not warn about a shared optional field (shared fields must already match)', () => {
+    const el = loc();
+    const r = validateDocument(WARN, { en: loc({ tone: 'a' }), el });
+    expect(r.ok).toBe(false);
+    expect(r.warnings).toEqual([]);
+  });
+
+  it('warns for a possible hardcoded live year or city when given the context', () => {
+    const ctx = { year: 2031, cities: ['Turin', 'Τορίνο'] };
+    const r = validateDocument(WARN, {
+      en: loc({ title: 'Turin', body: 'Since 1956 and {year}', items: [{ q: 'In 2031?', hint: '' }] }),
+      el: loc({ note: '20310 is not the year', items: [{ q: 'Στο Τορίνο', hint: '' }] }),
+    }, ctx);
+    expect(r.ok).toBe(true);
+    const facts = r.warnings.filter((w) => w.message.startsWith('Possible hardcoded'));
+    expect(facts).toEqual([
+      { locale: 'en', path: 'title', message: 'Possible hardcoded year/city: use the contest placeholders' },
+      { locale: 'en', path: 'items.0.q', message: 'Possible hardcoded year/city: use the contest placeholders' },
+      { locale: 'el', path: 'items.0.q', message: 'Possible hardcoded year/city: use the contest placeholders' },
+    ]);
+    // Without the context, no fact warnings.
+    expect(validateDocument(WARN, { en: loc({ title: 'Turin' }), el: loc() }).warnings).toEqual([]);
+  });
+
+  it('still returns warnings alongside errors', () => {
+    const r = validateDocument(WARN, { en: loc({ title: 'x'.repeat(12) }), el: loc({ body: '' }) });
+    expect(r.ok).toBe(false);
+    expect(r.errors).toHaveLength(1);
+    expect(r.warnings).toEqual([{ locale: 'en', path: 'title', message: expect.stringContaining('12 characters') }]);
+  });
+
+  it('every committed content/pages doc validates (warnings allowed)', () => {
+    for (const docId of Object.keys(CMS_DOC_TYPES).filter((id) => !id.startsWith('__'))) {
+      const doc = JSON.parse(readFileSync(resolve(ROOT, `content/pages/${docId}.json`), 'utf8'));
+      const r = validateDocument(docId, doc);
+      expect(r.errors, docId).toEqual([]);
+    }
   });
 });
