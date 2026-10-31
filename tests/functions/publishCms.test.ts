@@ -1,0 +1,201 @@
+// @vitest-environment node
+// publish-content: CMS drafts (cms_documents) become content/pages/{doc_id}.json
+// in the same commit as the contest snapshot, or the whole publish is refused.
+import { describe, it, expect, vi } from 'vitest';
+import { readdirSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { cmsFiles, CmsValidationError } from '../../supabase/functions/publish-content/cmsFiles';
+import { runPublish, type PublishDeps } from '../../supabase/functions/publish-content/run';
+import type { FileTransforms } from '../../supabase/functions/publish-content/github';
+import { buildSnapshotFiles, type CmsDocumentRow, type SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
+import { stableJson as scriptStableJson } from '../../scripts/history/import';
+import type { ContestRow } from '../../src/content/contests/types';
+
+const root = process.cwd();
+// LF as in the repo blob, whatever core.autocrlf did to the working copy.
+const read = (p: string) => readFileSync(resolve(root, p), 'utf8').replace(/\r\n/g, '\n');
+const pageText = (docId: string) => read(`content/pages/${docId}.json`);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Doc = { en: any; el: any };
+const pageDoc = (docId: string) => JSON.parse(pageText(docId)) as Doc;
+const row = (doc_id: string, data: unknown = pageDoc(doc_id), doc_type = doc_id): CmsDocumentRow =>
+  ({ doc_id, doc_type, data: data as CmsDocumentRow['data'] });
+
+/** A fresh copy of doc_id's committed document with `edit` applied. */
+function edited(docId: string, edit: (d: Doc) => void): Doc {
+  const d = pageDoc(docId);
+  edit(d);
+  return d;
+}
+
+/** Reverses object key order at every level: the serializer must not care. */
+function shuffled(v: unknown): unknown {
+  if (Array.isArray(v)) return v.map(shuffled);
+  if (v && typeof v === 'object') {
+    return Object.fromEntries(Object.keys(v).reverse().map((k) => [k, shuffled((v as Record<string, unknown>)[k])]));
+  }
+  return v;
+}
+
+function thrown(f: () => unknown): CmsValidationError {
+  try {
+    f();
+  } catch (e) {
+    expect(e).toBeInstanceOf(CmsValidationError);
+    return e as CmsValidationError;
+  }
+  throw new Error('expected cmsFiles to throw');
+}
+
+describe('cmsFiles', () => {
+  it('writes each valid draft to content/pages/{doc_id}.json in the 3a file format', () => {
+    const { files, warnings } = cmsFiles([row('not-found', shuffled(pageDoc('not-found'))), row('faq')]);
+    expect(Object.keys(files).sort()).toEqual(['content/pages/faq.json', 'content/pages/not-found.json']);
+    // Byte-identical to the committed files: sorted keys, 2-space indent, trailing newline.
+    expect(files['content/pages/not-found.json']).toBe(pageText('not-found'));
+    expect(files['content/pages/faq.json']).toBe(pageText('faq'));
+    expect(files['content/pages/faq.json']).toBe(scriptStableJson(pageDoc('faq')));
+    expect(warnings.filter((w) => w.doc_id === 'not-found')).toEqual([]);
+  });
+
+  it('every committed page, published unchanged as a draft, round-trips byte for byte', () => {
+    const ids = readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+    expect(ids.length).toBeGreaterThan(10);
+    const { files } = cmsFiles(ids.map((id) => row(id)));
+    for (const id of ids) expect(files[`content/pages/${id}.json`]).toBe(pageText(id));
+  });
+
+  it('no drafts: no files (docs without drafts are never touched)', () => {
+    expect(cmsFiles([])).toEqual({ files: {}, warnings: [] });
+    expect(cmsFiles(undefined)).toEqual({ files: {}, warnings: [] });
+  });
+
+  it('a changed draft is written with its edit', () => {
+    const data = edited('not-found', (d) => { d.en.hero.title = 'Lost in the arena'; });
+    const { files } = cmsFiles([row('not-found', data)]);
+    expect(JSON.parse(files['content/pages/not-found.json']).en.hero.title).toBe('Lost in the arena');
+  });
+
+  it('warnings do not block and carry their doc_id', () => {
+    const data = edited('not-found', (d) => { d.en.meta.title = 'x'.repeat(75); });
+    const { files, warnings } = cmsFiles([row('not-found', data)]);
+    expect(files['content/pages/not-found.json']).toBeDefined();
+    expect(warnings).toEqual([
+      { doc_id: 'not-found', locale: 'en', path: 'meta.title', message: expect.stringMatching(/Longer than recommended/) },
+    ]);
+  });
+
+  it('any error refuses every document, listing doc_id [locale] path: message', () => {
+    const bad = edited('not-found', (d) => { delete d.el.hero.title; d.en.hero.extra = 'x'; });
+    const e = thrown(() => cmsFiles([row('faq'), row('not-found', bad)]));
+    expect(e.errors.map((x) => `${x.doc_id} ${x.locale} ${x.path}`).sort()).toEqual([
+      'not-found el hero.title',
+      'not-found en hero',
+    ]);
+    expect(e.message.split('\n')[0]).toBe('CMS validation failed: 2 errors in 1 document');
+    expect(e.message).toMatch(/^not-found \[en\] hero: .+$/m);
+    expect(e.message).toMatch(/^not-found \[el\] hero\.title: .+$/m);
+  });
+
+  it('a doc_id not registered in CMS_DOC_TYPES is an error', () => {
+    expect(thrown(() => cmsFiles([row('archive-2025', { en: {}, el: {} }, 'archive')])).message).toMatch(
+      /^archive-2025 \[doc\] \(root\): Unknown doc type "archive"$/m,
+    );
+    expect(thrown(() => cmsFiles([row('nope', { en: {}, el: {} })])).message).toMatch(
+      /^nope \[doc\] \(root\): Unknown doc type "nope"$/m,
+    );
+  });
+
+  it('a doc_type that does not match the doc_id is an error', () => {
+    expect(thrown(() => cmsFiles([row('faq', pageDoc('not-found'), 'not-found')])).message).toMatch(
+      /^faq \[doc\] \(root\): doc_type "not-found" does not match doc_id "faq" \(expected "faq"\)$/m,
+    );
+  });
+
+  it('a doc_id that is not a safe file name is an error, never a path', () => {
+    for (const id of ['../vercel', 'FAQ', 'faq/x', '']) {
+      expect(thrown(() => cmsFiles([row(id, pageDoc('faq'), 'faq')])).message).toMatch(/invalid doc_id/);
+    }
+  });
+
+  it('a duplicate doc_id is an error', () => {
+    expect(thrown(() => cmsFiles([row('faq'), row('faq')])).message).toMatch(/^faq \[doc\] \(root\): duplicate doc_id$/m);
+  });
+
+  it('lists the first 20 errors in doc_id order, then "+N more"', () => {
+    const docs = Array.from({ length: 25 }, (_, i) => row(`nope-${String(24 - i).padStart(2, '0')}`, {}));
+    const lines = thrown(() => cmsFiles(docs)).message.split('\n');
+    expect(lines[0]).toBe('CMS validation failed: 25 errors in 25 documents');
+    expect(lines[1]).toMatch(/^nope-00 /);
+    expect(lines[20]).toMatch(/^nope-19 /);
+    expect(lines[21]).toBe('+5 more');
+    expect(lines).toHaveLength(22);
+  });
+});
+
+// ---------------------------------------------------------------------------
+
+function contest(year: number, city_slug: string, stage: ContestRow['stage']): ContestRow {
+  return {
+    year, host_iso: null, city: city_slug, city_slug,
+    semi1_date: null, semi2_date: null, final_date: null,
+    stage, indexable: false, cancelled: false,
+  };
+}
+
+const base: SnapshotInput = {
+  contests: [contest(2026, 'vienna', 'archived'), contest(2027, 'burgas', 'current')],
+  countries: [{ iso: 'AT', name_en: 'Austria', name_el: 'Αυστρία', slug: 'austria', related_iso: [] }],
+  entries: [],
+  generated_at: '2026-11-01T12:00:00Z',
+};
+const vercelJson = read('vercel.json');
+
+function deps(input: SnapshotInput) {
+  const endPublish = vi.fn(async () => {});
+  const commitFiles = vi.fn(async (files: Record<string, string>, _m: (p: string[]) => string, t: FileTransforms) => {
+    t['vercel.json'](vercelJson);
+    return { sha: 'c1', changed: Object.keys(files).length, paths: Object.keys(files) };
+  });
+  const d: PublishDeps = {
+    rpc: { beginPublish: async () => 9, publishInput: async () => input, endPublish },
+    commitFiles,
+  };
+  return { d, endPublish, commitFiles };
+}
+
+describe('runPublish with CMS drafts', () => {
+  it('commits the drafts in the same single commit as the contest snapshot; site.json untouched', async () => {
+    const data = edited('not-found', (d) => { d.en.hero.title = 'Lost in the arena'; });
+    const { d, commitFiles } = deps({ ...base, cms_documents: [row('not-found', data)] });
+    const out = await runPublish(d);
+    expect(out).toMatchObject({ status: 'ok', run_id: 9, sha: 'c1' });
+    expect(out).not.toHaveProperty('warnings');
+    expect(commitFiles).toHaveBeenCalledTimes(1);
+    const files = commitFiles.mock.calls[0][0];
+    const snapshot = buildSnapshotFiles(base);
+    expect(files).toEqual({ ...snapshot, 'content/pages/not-found.json': scriptStableJson(data) });
+    expect(files['content/site.json']).toBe(snapshot['content/site.json']);
+  });
+
+  it('returns validation warnings with the result', async () => {
+    const data = edited('not-found', (d) => { d.el.meta.title = 'y'.repeat(70); });
+    const { d } = deps({ ...base, cms_documents: [row('not-found', data)] });
+    const out = await runPublish(d);
+    expect(out.status).toBe('ok');
+    expect(out).toMatchObject({
+      warnings: [{ doc_id: 'not-found', locale: 'el', path: 'meta.title', message: expect.any(String) }],
+    });
+  });
+
+  it('an invalid draft refuses the whole publish: nothing committed, contests included', async () => {
+    const bad = edited('faq', (d) => { d.en.hero = 42; });
+    const { d, commitFiles, endPublish } = deps({ ...base, cms_documents: [row('not-found'), row('faq', bad)] });
+    const out = await runPublish(d);
+    expect(out.status).toBe('error');
+    expect(commitFiles).not.toHaveBeenCalled();
+    const error = (out as { error: string }).error;
+    expect(error).toMatch(/^CMS validation failed: 1 error in 1 document\nfaq \[en\] hero: /);
+    expect(endPublish).toHaveBeenCalledWith({ id: 9, status: 'error', sha: null, files: null, error });
+  });
+});

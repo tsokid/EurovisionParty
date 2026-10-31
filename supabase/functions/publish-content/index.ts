@@ -1,12 +1,16 @@
 // Edge Function: publish-content (spec §7).
 //
 // POST, super-admin JWT only. Snapshots the contest tables into content/**,
-// regenerates the archived-year redirects in vercel.json, and commits both
+// writes each CMS draft (cms_documents) to content/pages/{doc_id}.json,
+// regenerates the archived-year redirects in vercel.json, and commits it all
 // to GITHUB_BRANCH of GITHUB_REPO as one commit (Git Data API). Files are
 // added or updated, never deleted.
 //
 // Response: { status: 'ok' | 'noop' | 'error' | 'busy', sha, files_changed,
-// run_id, error? }. 200 for ok/noop, 409 busy, 500 error, 403 forbidden.
+// run_id, error?, warnings? }. warnings: CMS validation advice per doc
+// ({ doc_id, locale, path, message }), never blocking. A CMS validation
+// error refuses the whole publish. 200 for ok/noop, 409 busy, 500 error,
+// 403 forbidden.
 //
 // Secrets: GITHUB_TOKEN (fine-grained, contents read/write, this repo only),
 // GITHUB_REPO (tsokid/EurovisionParty), GITHUB_BRANCH (main).

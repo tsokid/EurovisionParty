@@ -2,8 +2,10 @@
 // unit-tested; index.ts wires it to Supabase and GitHub.
 //
 // begin_publish (caller's JWT) → publish_input (service role) →
-// buildSnapshotFiles + vercel.json (merged against the commit's parent
-// tree, so a push in between is never reverted) → one commit → end_publish.
+// buildSnapshotFiles + cmsFiles (CMS drafts, validated: one invalid draft
+// refuses the whole publish) + vercel.json (merged against the commit's
+// parent tree, so a push in between is never reverted) → one commit →
+// end_publish. CMS warnings never block; they come back as `warnings`.
 //
 // A failing end_publish never hides the outcome: after a commit the SHA is
 // still returned with a warning, and in the error path the original error
@@ -12,6 +14,7 @@
 //
 // Pure and Deno-free.
 import { buildSnapshotFiles, type SnapshotInput } from './snapshot.ts';
+import { cmsFiles, type CmsIssue } from './cmsFiles.ts';
 import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
 import type { CommitResult, FileTransforms } from './github.ts';
 
@@ -43,9 +46,12 @@ export type PublishDeps = {
   ): Promise<CommitResult>;
 };
 
+/** CMS validation warnings, present only when there are any. */
+type Warnings = { warnings?: CmsIssue[] };
+
 export type PublishResult =
-  | { status: 'ok' | 'noop'; run_id: number; sha: string | null; files_changed: number; warning?: string }
-  | { status: 'error'; run_id: number; sha: null; files_changed: 0; error: string; warning?: string }
+  | ({ status: 'ok' | 'noop'; run_id: number; sha: string | null; files_changed: number; warning?: string } & Warnings)
+  | ({ status: 'error'; run_id: number; sha: null; files_changed: 0; error: string; warning?: string } & Warnings)
   | { status: 'busy'; run_id: null; sha: null; files_changed: 0; error: string };
 
 const BUSY = 'publish already running';
@@ -84,9 +90,13 @@ export async function runPublish(deps: PublishDeps): Promise<PublishResult> {
   }
 
   let result: CommitResult;
+  let cms: Warnings = {};
   try {
     const input = await deps.rpc.publishInput();
-    const files = buildSnapshotFiles(input);
+    // Both built before anything is committed: a bad draft or bad contest data refuses it all.
+    const pages = cmsFiles(input.cms_documents);
+    if (pages.warnings.length) cms = { warnings: pages.warnings };
+    const files = { ...buildSnapshotFiles(input), ...pages.files };
     const redirects = generatedRedirects(input.contests);
     result = await deps.commitFiles(files, commitMessage, {
       'vercel.json': (current) => {
@@ -97,12 +107,12 @@ export async function runPublish(deps: PublishDeps): Promise<PublishResult> {
   } catch (e) {
     const error = message(e);
     const warning = await tryEnd(deps, { id, status: 'error', sha: null, files: null, error });
-    return { status: 'error', run_id: id, sha: null, files_changed: 0, error, ...warning };
+    return { status: 'error', run_id: id, sha: null, files_changed: 0, error, ...warning, ...cms };
   }
 
   const status = result.sha ? 'ok' : 'noop';
   const warning = await tryEnd(deps, { id, status, sha: result.sha, files: result.changed, error: null });
-  return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...warning };
+  return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...warning, ...cms };
 }
 
 /** end_publish; a failure becomes { warning } instead of an exception. */
