@@ -57,3 +57,13 @@
 - Task final: parked — runbook 8.4 should cross-check qualified vs in_final (qualified&!in_final=0; in_final&semi null=5) — Ruling: add before cutover — cost: a Wikipedia/prod mismatch could go unnoticed
 - Task final: parked — tests/docs/runbookCoverage.test.ts reads gitignored ledgers (.superpowers/) — Ruling: move checklist lines into a tracked doc before cleanup — cost: test fails in a fresh clone
 
+
+## 2026-10-31-cms-3a-content-model
+- Ruling: components get TS types from schemas via `import type` (z.infer) only; runtime validation only in scripts/tests — keeps zod out of client — cost: none
+- Ruling: choice/flag (and other presentation fields) are locale-SHARED: fieldMeta gets `shared: true` (default for choice/flag); validateDocument enforces en==el for shared fields; 3b editor edits once and writes both — carried into T5
+- Ruling: FAQ anchored ids superRefine (exactly create/join/leave once each); optional(inner) constructor with metadata; `rawHtml: true` marker on fields rendered via dangerouslySetInnerHTML — carried into T5
+- Ruling: softMaxLength (non-blocking, editor counter + validate-content warning) — deferred to 3b
+- Ruling: T5 — trivia sample questions are editorial (only in copy file) — accepted; href() shared field kind accepted
+- Ruling: lists that contain any shared field must have equal length across locales (else shared check is incomplete) — carry into T6
+- Task final: parked — N1 validateContent test cities.length===2 depends on CITY_EL entry for live city — Ruling: harden in 3b task 1 — cost: red test if site.json city lacks Greek name
+- Task final: parked — locale switch always shows pending (switcher doesn't prefetch other locale) — Ruling: prefetch other-locale doc when switcher opens, in 3b — cost: brief pending on locale switch
