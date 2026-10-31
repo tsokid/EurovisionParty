@@ -233,7 +233,7 @@ describe('074 publish_runs', () => {
     const input = await asService(async () =>
       (await db.query<{ i: SnapshotInput }>(`select public.publish_input() as i`)).rows[0].i,
     );
-    expect(Object.keys(input).sort()).toEqual(['cms_documents', 'contests', 'countries', 'entries', 'generated_at']);
+    expect(Object.keys(input).sort()).toEqual(['cms_documents', 'contests', 'countries', 'entries', 'generated_at', 'media']);
     expect(Object.keys(input.contests[0]).sort()).toEqual(
       ['cancelled', 'city', 'city_slug', 'final_date', 'host_iso', 'indexable', 'semi1_date', 'semi2_date', 'stage', 'year'],
     );

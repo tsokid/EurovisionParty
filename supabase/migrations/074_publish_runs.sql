@@ -14,7 +14,8 @@
 --   running row. ok and noop stamp contests.published_at (every contest
 --   is in the snapshot, so every contest is published).
 -- * publish_input() (service_role): the buildSnapshotFiles input,
---   { contests, countries, entries, generated_at, cms_documents }, with
+--   { contests, countries, entries, generated_at, cms_documents, media },
+--   with
 --   exactly the columns of ContestRow / CountryRow / EntryRow
 --   (src/content/contests/types.ts). generated_at is the latest
 --   updated_at of contests and contest_entries, so unchanged data gives a
@@ -23,6 +24,11 @@
 --   drafts saved after the CMS since (below), every draft before the first
 --   CMS publish. An already-published draft is neither re-validated nor
 --   re-written (a schema change can never make it block a publish).
+--   media is [{id, kind, storage_path, mime, bytes, sha256, published_path,
+--   variant_of, width, height}] from 077's cms_media, by storage_path:
+--   every row whose cms-media/<id> appears in one of those cms_documents
+--   drafts, plus the variants of those rows. [] while cms_media does not
+--   exist (077 not applied yet).
 -- * unpublished_summary() (super admin): { changed_years, changed_docs,
 --   since }. since is started_at of the last successful (ok or noop) run, null before the
 --   first. started_at precedes the run's publish_input read, so an edit
@@ -34,7 +40,7 @@
 --   cms = true (every draft before the first). A contests-only run moves
 --   since but not the CMS since. A discarded draft is not listed.
 -- * publish_input() and unpublished_summary() read cms_documents, which
---   076 creates. Both are plpgsql (bodies resolved at call time), so this
+--   076 creates (and publish_input reads 077's cms_media). Both are plpgsql (bodies resolved at call time), so this
 --   file applies before 076; neither is called before 076 is in place.
 -- * last_publish_run() (super admin): the newest publish_runs row as jsonb
 --   (id, started_at, finished_at, status, commit_sha, files_changed,
@@ -153,10 +159,33 @@ set search_path = public
 as $fn$
 declare
   v_cms_since timestamptz;
+  v_media     jsonb := '[]'::jsonb;
 begin
   select max(r.started_at) into v_cms_since
     from public.publish_runs r
    where r.status in ('ok', 'noop') and r.cms;
+
+  -- 077 may not be applied yet; this statement is planned only when run.
+  if to_regclass('public.cms_media') is not null then
+    with drafts as (
+      select d.data::text as t
+        from public.cms_documents d
+       where v_cms_since is null or d.updated_at > v_cms_since
+    ), referenced as (
+      select m.id
+        from public.cms_media m
+       where exists (select 1 from drafts where strpos(drafts.t, 'cms-media/' || m.id::text) > 0)
+    )
+    select coalesce(jsonb_agg(jsonb_build_object(
+             'id', m.id, 'kind', m.kind, 'storage_path', m.storage_path, 'mime', m.mime,
+             'bytes', m.bytes, 'sha256', m.sha256, 'published_path', m.published_path,
+             'variant_of', m.variant_of, 'width', m.width, 'height', m.height)
+           order by m.storage_path), '[]'::jsonb)
+      into v_media
+      from public.cms_media m
+     where m.id in (select id from referenced)
+        or m.variant_of in (select id from referenced);
+  end if;
 
   return jsonb_build_object(
     'contests', coalesce((
@@ -191,7 +220,8 @@ begin
       select jsonb_agg(jsonb_build_object('doc_id', d.doc_id, 'doc_type', d.doc_type, 'data', d.data)
              order by d.doc_id)
         from public.cms_documents d
-       where v_cms_since is null or d.updated_at > v_cms_since), '[]'::jsonb)
+       where v_cms_since is null or d.updated_at > v_cms_since), '[]'::jsonb),
+    'media', v_media
   );
 end;
 $fn$;

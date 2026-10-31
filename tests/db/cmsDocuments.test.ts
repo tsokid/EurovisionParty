@@ -242,7 +242,7 @@ describe('076 cms_documents', () => {
     await save('home', 'home', doc('H'), null);
     await save('about', 'about', doc('A'), null);
     const input = await read();
-    expect(Object.keys(input).sort()).toEqual(['cms_documents', 'contests', 'countries', 'entries', 'generated_at']);
+    expect(Object.keys(input).sort()).toEqual(['cms_documents', 'contests', 'countries', 'entries', 'generated_at', 'media']);
     expect(input.cms_documents).toEqual([
       { doc_id: 'about', doc_type: 'about', data: doc('A') },
       { doc_id: 'home', doc_type: 'home', data: doc('H') },
