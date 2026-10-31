@@ -87,6 +87,16 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
     }
   });
 
+  // CMS 3b Task 7: the Pages module imports the preview and the form, so their
+  // markers must be present, and only in non-public (lazy admin) chunks.
+  it('the page preview and the schema form ship in the admin chunk only', () => {
+    for (const marker of [PREVIEW_MARKER, FORM_MARKER]) {
+      const holders = jsFiles.filter(({ f }) => read(f).includes(marker)).map(({ f }) => f);
+      expect(holders.length, `${marker} is in no chunk`).toBeGreaterThan(0);
+      for (const f of holders) expect(publicNames.includes(f), `${marker} in public chunk ${f}`).toBe(false);
+    }
+  });
+
   // Regression guard (final review M4): the main chunk was 1,731,226 bytes
   // raw after sub-project 2b. Raise the budget deliberately, never silently.
   const MAIN_CHUNK_BUDGET = 1_760_000;
