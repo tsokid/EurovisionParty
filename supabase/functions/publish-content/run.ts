@@ -2,7 +2,8 @@
 // unit-tested; index.ts wires it to Supabase and GitHub.
 //
 // begin_publish (caller's JWT) → publish_input (service role) →
-// buildSnapshotFiles + cmsFiles (CMS drafts, validated: one invalid draft
+// buildSnapshotFiles + cmsFiles (CMS drafts, validated, and titles /
+// descriptions unique across the committed pages: one invalid draft
 // refuses the whole publish) + vercel.json (merged against the commit's
 // parent tree, so a push in between is never reverted) → one commit →
 // end_publish. CMS warnings never block; they come back as `warnings`.
@@ -35,6 +36,12 @@ export type PublishDeps = {
     /** end_publish(...) as service role. */
     endPublish(args: EndPublishArgs): Promise<void>;
   };
+  /**
+   * The committed content/pages/*.json of the branch head, as { doc_id:
+   * document }: the base of the cross-page title/description check. Read
+   * only when there are drafts to ship.
+   */
+  readCommittedPages(): Promise<Record<string, unknown>>;
   /**
    * Commits the files (add/update only) as one commit. Each transform gets
    * its path's content in the commit's parent tree and returns the new text.
@@ -94,7 +101,9 @@ export async function runPublish(deps: PublishDeps): Promise<PublishResult> {
   try {
     const input = await deps.rpc.publishInput();
     // Both built before anything is committed: a bad draft or bad contest data refuses it all.
-    const pages = cmsFiles(input.cms_documents);
+    const drafts = input.cms_documents ?? [];
+    const committed = drafts.length ? await deps.readCommittedPages() : {};
+    const pages = cmsFiles(drafts, committed);
     if (pages.warnings.length) cms = { warnings: pages.warnings };
     const files = { ...buildSnapshotFiles(input), ...pages.files };
     const redirects = generatedRedirects(input.contests);

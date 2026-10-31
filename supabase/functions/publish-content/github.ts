@@ -85,11 +85,10 @@ function client(opts: GitHubOpts) {
 
 type TreeEntry = { path: string; mode: string; type: string; sha: string };
 
-export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> {
-  const call = client(opts);
-  const repo = `/repos/${opts.repo}`;
-  const refPath = `heads/${opts.branch}`;
+type Call = ReturnType<typeof client>;
 
+/** The branch head: its commit, that commit's tree, and the tree's blobs by path. */
+async function headTree(call: Call, repo: string, refPath: string) {
   const ref = await call<{ object: { sha: string } }>('GET', `${repo}/git/ref/${refPath}`);
   const parent = ref.object.sha;
   const commit = await call<{ tree: { sha: string } }>('GET', `${repo}/git/commits/${parent}`);
@@ -102,6 +101,30 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
     throw new Error(`GitHub tree ${baseTree} is truncated; cannot compare files`);
   }
   const existing = new Map(tree.tree.filter((e) => e.type === 'blob').map((e) => [e.path, e]));
+  return { parent, baseTree, existing };
+}
+
+/**
+ * The UTF-8 text of every file in the branch head whose path `match`es
+ * (read-only). publish-content reads content/pages/*.json with it.
+ */
+export async function readFiles(opts: GitHubOpts & { match: (path: string) => boolean }): Promise<Record<string, string>> {
+  const call = client(opts);
+  const repo = `/repos/${opts.repo}`;
+  const { existing } = await headTree(call, repo, `heads/${opts.branch}`);
+  const out: Record<string, string> = {};
+  for (const [path, entry] of [...existing].sort(([a], [b]) => (a < b ? -1 : 1))) {
+    if (opts.match(path)) out[path] = await readBlob(call, repo, entry.sha);
+  }
+  return out;
+}
+
+export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> {
+  const call = client(opts);
+  const repo = `/repos/${opts.repo}`;
+  const refPath = `heads/${opts.branch}`;
+
+  const { parent, baseTree, existing } = await headTree(call, repo, refPath);
 
   const files = { ...opts.files };
   for (const [path, transform] of Object.entries(opts.transforms ?? {})) {
@@ -137,7 +160,7 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
 }
 
 /** A blob's UTF-8 text (blobs API, base64). */
-async function readBlob(call: ReturnType<typeof client>, repo: string, sha: string): Promise<string> {
+async function readBlob(call: Call, repo: string, sha: string): Promise<string> {
   const res = await call<{ encoding: string; content: string }>('GET', `${repo}/git/blobs/${sha}`);
   if (res.encoding !== 'base64') throw new Error(`GitHub blob ${sha}: unexpected encoding ${res.encoding}`);
   const bin = atob(res.content.replace(/\s/g, ''));

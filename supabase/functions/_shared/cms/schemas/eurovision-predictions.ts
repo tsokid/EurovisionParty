@@ -21,8 +21,8 @@ export const eurovisionPredictionsSchema = group({
   meta: group({
     title: seoTitle(),
     description: metaDescription(YEAR_CITY),
-    schemaTitle: seoTitle({ label: 'Schema title' }),
-    schemaDescription: metaDescription({ label: 'Schema description', ...YEAR_CITY }),
+    schemaTitle: seoTitle({ label: 'Schema title', seo: false }),
+    schemaDescription: metaDescription({ label: 'Schema description', seo: false, ...YEAR_CITY }),
     keywords: list(text(YEAR)),
   }, META_LABEL),
   crumbs: group({ home: text(), predictions: text() }),

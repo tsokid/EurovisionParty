@@ -9,7 +9,7 @@ import { formatError } from '../lib/formatError';
 import { useLeaveGuard } from '../unsavedGuard';
 import { PublishBar } from './contests/PublishBar';
 import { usePublisher } from './contests/publish';
-import { cmsList, type CmsListRow } from './pages/cmsApi';
+import { cmsList, resetPublishedPages, type CmsListRow } from './pages/cmsApi';
 import { PageList } from './pages/PageList';
 import { SITE_PAGES } from './pages/sitePages';
 import { PageEditor } from './pages/PageEditor';
@@ -35,6 +35,8 @@ export default function Pages() {
   );
 
   useEffect(() => { load(); }, [load]);
+  // A new editor session reads the other pages' published copies afresh (SEO check).
+  useEffect(() => { resetPublishedPages(); }, []);
 
   // After a save or discard: the list badges and the "unpublished changes" count.
   const changed = useCallback(() => {

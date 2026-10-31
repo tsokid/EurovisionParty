@@ -7,8 +7,8 @@ export const eurovisionDuelsSchema = group({
   meta: group({
     title: seoTitle(),
     description: metaDescription(),
-    schemaTitle: seoTitle({ label: 'Schema title' }),
-    schemaDescription: metaDescription({ label: 'Schema description' }),
+    schemaTitle: seoTitle({ label: 'Schema title', seo: false }),
+    schemaDescription: metaDescription({ label: 'Schema description', seo: false }),
     howToName: text(),
     howToDescription: text(),
     keywords: list(text()),

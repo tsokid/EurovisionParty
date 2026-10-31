@@ -4,7 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { cmsFiles, CmsValidationError, MAX_LINE, MAX_MESSAGE_BYTES } from '../../supabase/functions/publish-content/cmsFiles';
+import { cmsFiles, CmsValidationError, MAX_LINE, MAX_MESSAGE_BYTES, pagesFromFiles } from '../../supabase/functions/publish-content/cmsFiles';
 import { runPublish, type PublishDeps } from '../../supabase/functions/publish-content/run';
 import type { FileTransforms } from '../../supabase/functions/publish-content/github';
 import { buildSnapshotFiles, type CmsDocumentRow, type SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
@@ -169,6 +169,55 @@ describe('cmsFiles', () => {
   });
 });
 
+describe('cmsFiles: titles and descriptions unique across pages (I2)', () => {
+  const committedPages = () =>
+    Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json')).map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))]));
+
+  it('a draft whose title duplicates a committed page is refused, naming both doc ids', () => {
+    const data = edited('not-found', (d) => { d.en.meta.title = pageDoc('faq').en.meta.title; });
+    const e = thrown(() => cmsFiles([row('not-found', data)], committedPages()));
+    expect(e.errors).toEqual([
+      { doc_id: 'not-found', locale: 'en', path: 'meta.title', message: expect.stringContaining('"faq"') },
+    ]);
+    expect(e.message).toMatch(/^not-found \[en\] meta\.title: Same SEO title as "faq"/m);
+  });
+
+  it('a duplicate description, el, is refused too', () => {
+    const data = edited('not-found', (d) => { d.el.meta.description = pageDoc('about').el.meta.description; });
+    const e = thrown(() => cmsFiles([row('not-found', data)], committedPages()));
+    expect(e.errors).toEqual([
+      { doc_id: 'not-found', locale: 'el', path: 'meta.description', message: expect.stringContaining('"about"') },
+    ]);
+  });
+
+  it('the drafts being shipped override their committed copies: a swap of titles between two drafts is fine', () => {
+    const faq = pageDoc('faq');
+    const about = pageDoc('about');
+    const a = edited('about', (d) => { d.en.meta.title = faq.en.meta.title; });
+    const f = edited('faq', (d) => { d.en.meta.title = about.en.meta.title; });
+    expect(Object.keys(cmsFiles([row('about', a), row('faq', f)], committedPages()).files).sort())
+      .toEqual(['content/pages/about.json', 'content/pages/faq.json']);
+  });
+
+  it('two drafts with the same new title each get an error naming the other', () => {
+    const a = edited('about', (d) => { d.en.meta.title = 'Brand new title'; });
+    const f = edited('faq', (d) => { d.en.meta.title = 'Brand new title'; });
+    const e = thrown(() => cmsFiles([row('about', a), row('faq', f)], committedPages()));
+    expect(e.errors.map((x) => [x.doc_id, x.path, x.message.includes(x.doc_id === 'about' ? '"faq"' : '"about"')])).toEqual([
+      ['about', 'meta.title', true],
+      ['faq', 'meta.title', true],
+    ]);
+  });
+
+  it('pagesFromFiles maps content/pages/{id}.json texts to { id: data }, ignoring other paths', () => {
+    expect(pagesFromFiles({
+      'content/pages/faq.json': '{"en":{"a":1},"el":{"a":2}}\n',
+      'content/pages/sub/x.json': '{}',
+      'content/site.json': '{}',
+    })).toEqual({ faq: { en: { a: 1 }, el: { a: 2 } } });
+  });
+});
+
 // ---------------------------------------------------------------------------
 
 function contest(year: number, city_slug: string, stage: ContestRow['stage']): ContestRow {
@@ -193,11 +242,15 @@ function deps(input: SnapshotInput) {
     t['vercel.json'](vercelJson);
     return { sha: 'c1', changed: Object.keys(files).length, paths: Object.keys(files) };
   });
+  const readCommittedPages = vi.fn(async () =>
+    Object.fromEntries(readdirSync(resolve(root, 'content/pages')).filter((f) => f.endsWith('.json')).map((f) => [f.slice(0, -5), pageDoc(f.slice(0, -5))])),
+  );
   const d: PublishDeps = {
     rpc: { beginPublish: async () => 9, publishInput: async () => input, endPublish },
     commitFiles,
+    readCommittedPages,
   };
-  return { d, endPublish, commitFiles };
+  return { d, endPublish, commitFiles, readCommittedPages };
 }
 
 describe('runPublish with CMS drafts', () => {
@@ -251,5 +304,21 @@ describe('runPublish with CMS drafts', () => {
     const { d } = deps({ ...base, cms_documents: [row('not-found')] });
     d.commitFiles = async () => { throw new Error('GitHub 500'); };
     expect(await runPublish(d)).toEqual({ status: 'error', run_id: 9, sha: null, files_changed: 0, error: 'GitHub 500' });
+  });
+
+  it('checks title/description uniqueness against the committed pages: a duplicate refuses the publish (I2)', async () => {
+    const data = edited('not-found', (d) => { d.en.meta.title = pageDoc('faq').en.meta.title; });
+    const { d, commitFiles, readCommittedPages } = deps({ ...base, cms_documents: [row('not-found', data)] });
+    const out = await runPublish(d);
+    expect(readCommittedPages).toHaveBeenCalledTimes(1);
+    expect(out.status).toBe('error');
+    expect((out as { error: string }).error).toMatch(/not-found \[en\] meta\.title: Same SEO title as "faq"/);
+    expect(commitFiles).not.toHaveBeenCalled();
+  });
+
+  it('does not read the committed pages when there are no drafts to ship', async () => {
+    const { d, readCommittedPages } = deps({ ...base, cms_documents: [] });
+    expect((await runPublish(d)).status).toBe('ok');
+    expect(readCommittedPages).not.toHaveBeenCalled();
   });
 });

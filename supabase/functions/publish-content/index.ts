@@ -17,7 +17,8 @@
 //
 // This file only wires I/O; the flow is runPublish in run.ts (unit-tested).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.99.3";
-import { commitFiles } from "./github.ts";
+import { commitFiles, readFiles } from "./github.ts";
+import { pagesFromFiles } from "./cmsFiles.ts";
 import { runPublish, type PublishResult } from "./run.ts";
 import type { SnapshotInput } from "./snapshot.ts";
 
@@ -96,6 +97,8 @@ Deno.serve(async (req) => {
           if (error) throw new Error(error.message);
         },
       },
+      readCommittedPages: async () =>
+        pagesFromFiles(await readFiles({ ...github, match: (path) => path.startsWith("content/pages/") })),
       commitFiles: (files, message, transforms) => commitFiles({ ...github, files, message, transforms }),
     });
     return jsonResponse(result, HTTP_STATUS[result.status]);

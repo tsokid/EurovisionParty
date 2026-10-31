@@ -1,7 +1,7 @@
 // @vitest-environment node
 // publish-content/github.ts: one commit via the Git Data API, fetch mocked.
 import { describe, it, expect } from 'vitest';
-import { commitFiles, gitBlobSha } from '../../supabase/functions/publish-content/github';
+import { commitFiles, gitBlobSha, readFiles } from '../../supabase/functions/publish-content/github';
 
 type Call = { method: string; url: string; body: unknown; headers: Record<string, string> };
 type Route = { method: string; path: string | RegExp; status?: number; body: unknown };
@@ -231,5 +231,36 @@ describe('commitFiles', () => {
       })).rejects.toThrow('vercel.json is missing');
       expect(seen).toEqual([null]);
     });
+  });
+});
+
+describe('readFiles (I2: the committed content/pages the SEO check reads)', () => {
+  const b64text = (s: string) => Buffer.from(s, 'utf8').toString('base64');
+
+  it('returns the text of every blob of the branch head whose path matches, and reads nothing else', async () => {
+    const NL = String.fromCharCode(10);
+    const files = {
+      'content/pages/faq.json': `{"en":{"t":"Ελλάδα"}}${NL}`,
+      'content/pages/about.json': `{}${NL}`,
+      'content/site.json': `site${NL}`,
+    };
+    const routes = await baseRoutes(files);
+    for (const [, content] of Object.entries(files)) {
+      const sha = await gitBlobSha(content);
+      routes.push({ method: 'GET', path: `/repos/${REPO}/git/blobs/${sha}`, body: { sha, encoding: 'base64', content: b64text(content) } });
+    }
+    const { fetch, calls } = mockFetch(routes);
+    const out = await readFiles({ token: 'tkn', repo: REPO, branch: 'main', fetch, match: (p) => p.startsWith('content/pages/') });
+    expect(out).toEqual({ 'content/pages/about.json': files['content/pages/about.json'], 'content/pages/faq.json': files['content/pages/faq.json'] });
+    expect(calls.every((c) => c.method === 'GET')).toBe(true);
+    const site = await gitBlobSha(files['content/site.json']);
+    expect(calls.some((c) => c.url.endsWith(site))).toBe(false);
+  });
+
+  it('refuses a truncated tree', async () => {
+    const routes = await baseRoutes({});
+    routes[2] = { ...routes[2], body: { sha: 'tree0', truncated: true, tree: [] } };
+    const { fetch } = mockFetch(routes);
+    await expect(readFiles({ token: 'tkn', repo: REPO, branch: 'main', fetch, match: () => true })).rejects.toThrow(/truncated/);
   });
 });

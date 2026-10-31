@@ -56,6 +56,11 @@ export type FieldMeta = {
   pairs?: [string, string][];
   /** Set by optional(): the key may be absent. The rest of the metadata is the inner field's. */
   optional?: boolean;
+  /**
+   * String kinds only: the page's <title> or meta description (seoTitle() /
+   * metaDescription()). Unique per locale across the site pages (seo.ts).
+   */
+  seo?: 'title' | 'description';
 };
 
 export type StringFieldOptions = {
@@ -69,6 +74,8 @@ export type StringFieldOptions = {
   required?: boolean;
   shared?: boolean;
   rawHtml?: boolean;
+  /** See FieldMeta.seo; false opts a seoTitle()/metaDescription() look-alike (a JSON-LD copy) out. */
+  seo?: 'title' | 'description' | false;
 };
 
 export type ContainerFieldOptions = { label?: string; help?: string; shared?: boolean };
@@ -117,6 +124,7 @@ function stringField(kind: StringKind, opts: StringFieldOptions = {}) {
     // href is shared unless it opts out (and records the opt-out); other kinds opt in.
     ...(kind === 'href' ? { shared: opts.shared ?? true } : opts.shared && { shared: true }),
     ...(opts.rawHtml && { rawHtml: true }),
+    ...(opts.seo && { seo: opts.seo }),
   };
   if (!placeholders.length && opts.placeholderHelp) placeholderHelpFor(placeholders, opts.placeholderHelp);
   const allowed = new Set(placeholders);

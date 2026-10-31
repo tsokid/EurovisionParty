@@ -10,13 +10,19 @@ export const META_LABEL = { label: 'Page meta (SEO)' } as const satisfies GroupF
 export const HERO_LABEL = { label: 'Hero' } as const satisfies GroupFieldOptions;
 export const CTA_LABEL = { label: 'Call to action' } as const satisfies GroupFieldOptions;
 
-/** The page title in search results and the browser tab: aim for 60 characters at most (a warning, not an error). */
+/**
+ * The page title in search results and the browser tab: aim for 60 characters at most (a warning, not an error).
+ * Marked seo: 'title' (unique per locale across pages, seo.ts); a JSON-LD copy passes seo: false.
+ */
 export const seoTitle = (opts: StringFieldOptions = {}) =>
-  text({ label: 'SEO title', help: 'Shown in search results and the browser tab; about 60 characters at most', softMaxLength: 60, ...opts });
+  text({ label: 'SEO title', help: 'Shown in search results and the browser tab; about 60 characters at most', softMaxLength: 60, seo: 'title', ...opts });
 
-/** The search-result snippet: aim for 160 characters at most (a warning, not an error). */
+/**
+ * The search-result snippet: aim for 160 characters at most (a warning, not an error).
+ * Marked seo: 'description' (unique per locale across pages, seo.ts); a JSON-LD copy passes seo: false.
+ */
 export const metaDescription = (opts: StringFieldOptions = {}) =>
-  text({ label: 'Meta description', help: 'The search-result snippet; about 160 characters at most', softMaxLength: 160, ...opts });
+  text({ label: 'Meta description', help: 'The search-result snippet; about 160 characters at most', softMaxLength: 160, seo: 'description', ...opts });
 
 /** A related-page card: internal path, card title and one-line blurb. */
 export const relatedItem = group({ href: href(), title: text(), blurb: text() });
@@ -58,7 +64,7 @@ export const headers2 = tuple([text(), text()]);
 export const legalMeta = group({
   title: seoTitle(),
   description: metaDescription(),
-  schemaDescription: metaDescription({ label: 'Schema description' }),
+  schemaDescription: metaDescription({ label: 'Schema description', seo: false }),
   webPageDescription: text(),
   webPageMainEntityName: text(),
   webPageMainEntityAbout: text(),

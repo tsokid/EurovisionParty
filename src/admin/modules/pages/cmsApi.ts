@@ -52,3 +52,33 @@ export async function fetchPublished(docId: string): Promise<DocValue> {
   if (!res.ok || !json) throw new Error(`Could not load the published ${docId} page (HTTP ${res.status}${res.ok ? ', not JSON' : ''})`);
   return (await res.json()) as DocValue;
 }
+
+// The published copies of the other site pages, for the cross-page SEO
+// title/description check (I2). Each is fetched at most once per editor
+// session (Pages module mount: resetPublishedPages); a page that fails to
+// load is left out (Publish checks again against the repo).
+const publishedPages = new Map<string, Promise<DocValue | null>>();
+
+/** Forget the cached published pages (a new editor session). */
+export function resetPublishedPages(): void {
+  publishedPages.clear();
+}
+
+/** Test-only alias of resetPublishedPages. */
+export const __resetPublishedPagesForTests = resetPublishedPages;
+
+/** The published documents of `docIds` that loaded, as { doc_id: document }. */
+export async function fetchPublishedPages(docIds: readonly string[]): Promise<Record<string, DocValue>> {
+  const entries = await Promise.all(docIds.map(async (id) => {
+    let p = publishedPages.get(id);
+    if (!p) {
+      p = fetchPublished(id).catch(() => {
+        publishedPages.delete(id); // try again next time
+        return null;
+      });
+      publishedPages.set(id, p);
+    }
+    return [id, await p] as const;
+  }));
+  return Object.fromEntries(entries.filter((e): e is readonly [string, DocValue] => e[1] !== null));
+}

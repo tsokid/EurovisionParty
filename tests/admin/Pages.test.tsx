@@ -51,6 +51,7 @@ import Pages from '../../src/admin/modules/Pages';
 import { __resetPublishGuardForTests } from '../../src/admin/modules/contests/publish';
 import { UNSAVED_TEXT } from '../../src/admin/unsavedGuard';
 import { SAVE_BLOCKED_TEXT } from '../../src/admin/modules/pages/PageEditor';
+import { __resetPublishedPagesForTests } from '../../src/admin/modules/pages/cmsApi';
 
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 const published = (docId: string) => clone(bundledContent(`pages/${docId}.json`) as Doc);
@@ -69,6 +70,8 @@ function mockPublishedFetch() {
 }
 
 const pageFetches = () => fetchSpy.mock.calls.map(([u]) => String(u)).filter((u) => u.includes('/content/pages/'));
+/** Fetches of one page's published file (the other site pages are read once for the SEO uniqueness check). */
+const fetchesOf = (docId: string) => pageFetches().filter((u) => u === `/content/pages/${docId}.json`);
 const rpcCalls = (name: string) => h.rpc.mock.calls.filter(([n]) => n === name);
 
 async function openEditor(label: string) {
@@ -95,6 +98,7 @@ beforeEach(() => {
   h.saveError = null;
   h.summary = { changed_years: [], changed_docs: [], since: '2026-10-29T10:00:00Z' };
   mockPublishedFetch();
+  __resetPublishedPagesForTests();
 });
 
 afterEach(() => {
@@ -128,7 +132,7 @@ describe('Pages module: editor', () => {
   it('loads the published version when there is no draft, and shows the form and the preview', async () => {
     await openEditor('About');
     expect(rpcCalls('cms_get')[0][1]).toEqual({ p_doc_id: 'about' });
-    expect(pageFetches()).toEqual(['/content/pages/about.json']);
+    expect(fetchesOf('about')).toEqual(['/content/pages/about.json']);
     expect(screen.getByText('Published version')).toBeTruthy();
     expect(homeBreadcrumbEn().value).toBe((published('about').en.breadcrumbs as Record<string, string>).home);
     expect(screen.getByTestId('preview-pane')).toBeTruthy();
@@ -143,7 +147,7 @@ describe('Pages module: editor', () => {
     h.drafts.about = { doc_id: 'about', doc_type: 'about', data: doc, updated_at: DRAFT_TIME };
     await openEditor('About');
     expect(screen.getByText(/^Draft saved \d{4}-\d{2}-\d{2} \d{2}:\d{2}$/)).toBeTruthy();
-    expect(pageFetches()).toEqual([]);
+    expect(fetchesOf('about')).toEqual([]);
     expect(within(screen.getByTestId('preview-pane')).getByText('Draft hero from DB')).toBeTruthy();
   });
 
@@ -167,6 +171,26 @@ describe('Pages module: editor', () => {
     expect(screen.getByText(/Fix the errors to save/)).toBeTruthy();
     fireEvent.change(homeBreadcrumbEn(), { target: { value: `${original}!` } });
     await waitFor(() => expect(save.disabled).toBe(false));
+  });
+
+  it('a title or description used by another published page is an inline error that blocks Save (I2)', async () => {
+    await openEditor('About');
+    const save = screen.getByRole('button', { name: 'Save draft' }) as HTMLButtonElement;
+    const title = control('Page meta (SEO) › SEO title (EN)');
+    const faqTitle = (published('faq').en.meta as Record<string, string>).title;
+    fireEvent.change(title, { target: { value: faqTitle } });
+    await waitFor(() => expect(title.getAttribute('aria-invalid')).toBe('true'));
+    expect(screen.getByText(/Same SEO title as "faq"/)).toBeTruthy();
+    expect(save.disabled).toBe(true);
+    // Save's own check catches it too, inside the delay.
+    fireEvent.change(title, { target: { value: `${faqTitle} (about)` } });
+    await waitFor(() => expect(save.disabled).toBe(false));
+    fireEvent.change(title, { target: { value: faqTitle } });
+    fireEvent.click(save);
+    expect(screen.getByText(SAVE_BLOCKED_TEXT)).toBeTruthy();
+    expect(rpcCalls('cms_save')).toHaveLength(0);
+    // The other pages were fetched once for the whole session.
+    expect(fetchesOf('faq')).toHaveLength(1);
   });
 
   it('Save inside the validation delay re-validates: an invalid draft is not sent, and the notice shows at once', async () => {

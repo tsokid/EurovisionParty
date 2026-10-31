@@ -49,6 +49,7 @@ function deps(over: Partial<{
       endPublish,
     },
     commitFiles,
+    readCommittedPages: vi.fn(async () => ({})),
   };
   return { d, log, endPublish, commitFiles };
 }

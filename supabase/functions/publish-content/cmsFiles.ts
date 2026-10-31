@@ -6,11 +6,18 @@
 // the whole publish (CmsValidationError) so nothing half-checked reaches the
 // site. Warnings never block; they are returned for the admin to show.
 //
+// Titles and meta descriptions must also be unique per locale across the
+// site pages (the build's check-prerender fails otherwise): given the
+// committed pages, the set after this publish (committed, overlaid with the
+// drafts shipped) is checked, and a draft that collides is an error naming
+// the other page (_shared/cms/seo.ts).
+//
 // Pure and Deno-free. The bare 'zod' import inside _shared/cms resolves via
 // this function's deno.json import map (pinned to package.json's version,
 // tests/functions/zodPin.test.ts).
 import { docTypeFor } from '../_shared/cms/registry.ts';
 import { validateDocument, type Locale } from '../_shared/cms/validate.ts';
+import { seoDuplicates } from '../_shared/cms/seo.ts';
 import { stableJson } from '../_shared/stableJson.ts';
 import type { CmsDocumentRow } from './snapshot.ts';
 
@@ -73,13 +80,31 @@ export class CmsValidationError extends Error {
 
 const byDocId = (a: CmsDocumentRow, b: CmsDocumentRow) => (a.doc_id < b.doc_id ? -1 : a.doc_id > b.doc_id ? 1 : 0);
 
+const PAGE_FILE = /^content\/pages\/([a-z0-9-]+)\.json$/;
+
+/** content/pages/{doc_id}.json texts (other paths ignored) as { doc_id: parsed document }. */
+export function pagesFromFiles(files: Record<string, string>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [path, text] of Object.entries(files)) {
+    const m = PAGE_FILE.exec(path);
+    if (m) out[m[1]] = JSON.parse(text);
+  }
+  return out;
+}
+
 /**
  * Validates every draft and serializes each to content/pages/{doc_id}.json
  * (keys sorted, 2-space indent, trailing newline: the 3a file format).
+ * `committed` (doc_id -> document, the pages in the commit's parent) is what
+ * the drafts overlay for the cross-page title/description check.
  * Throws CmsValidationError listing every error when any draft is invalid.
  */
-export function cmsFiles(docs: readonly CmsDocumentRow[] | undefined): { files: Record<string, string>; warnings: CmsIssue[] } {
+export function cmsFiles(
+  docs: readonly CmsDocumentRow[] | undefined,
+  committed: Record<string, unknown> = {},
+): { files: Record<string, string>; warnings: CmsIssue[] } {
   const files: Record<string, string> = {};
+  const valid: Record<string, unknown> = {};
   const errors: CmsIssue[] = [];
   const warnings: CmsIssue[] = [];
   const seen = new Set<string>();
@@ -109,7 +134,10 @@ export function cmsFiles(docs: readonly CmsDocumentRow[] | undefined): { files: 
     }
     // The draft as saved (schemas have no transforms, so it equals the parse).
     files[`content/pages/${doc_id}.json`] = stableJson(data);
+    valid[doc_id] = data;
   }
+
+  for (const issue of seoDuplicates({ ...committed, ...valid }, Object.keys(valid))) errors.push(issue);
 
   if (errors.length) throw new CmsValidationError(errors, warnings);
   return { files, warnings };

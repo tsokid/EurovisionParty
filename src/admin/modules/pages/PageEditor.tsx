@@ -4,7 +4,9 @@
 // - Load: the saved draft (cms_get), else the published file as the base
 //   (expected_updated_at null: the first save creates the draft).
 // - Validate: live, 300 ms after the last edit, with the live contest as
-//   context. Errors block Save; warnings never do. Save re-validates what it
+//   context, plus the cross-page check: the SEO title and meta description
+//   must differ from every other published page's (seo.ts; the build fails
+//   on a duplicate). Errors block Save; warnings never do. Save re-validates what it
 //   sends: inside the 300 ms window an invalid draft shows SAVE_BLOCKED_TEXT.
 // - Save: cms_save against the updated_at of what was loaded or last saved.
 //   A save over someone else's newer save is refused: the banner offers a
@@ -15,10 +17,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CMS_DOC_TYPES, docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationError, type ValidationWarning } from '../../../../supabase/functions/_shared/cms/validate';
+import { seoDuplicates } from '../../../../supabase/functions/_shared/cms/seo';
 import { formatError } from '../../lib/formatError';
 import { useUnsavedGuard } from '../../unsavedGuard';
 import { formatRunTime } from '../contests/publish';
-import { cmsDiscard, cmsGet, cmsSave, fetchPublished, isConflict } from './cmsApi';
+import { cmsDiscard, cmsGet, cmsSave, fetchPublished, fetchPublishedPages, isConflict } from './cmsApi';
+import { SITE_PAGES } from './sitePages';
 import { useContestContext } from './contestContext';
 import { SchemaForm, type DocValue } from './form/SchemaForm';
 import PreviewPane from './PreviewPane';
@@ -40,6 +44,12 @@ type Tab = 'edit' | 'preview';
 
 const NO_ERRORS: readonly ValidationError[] = [];
 const NO_WARNINGS: readonly ValidationWarning[] = [];
+
+/** Title/description collisions of `value` (as doc `docId`) with the other published pages. */
+function seoErrors(docId: string, value: unknown, others: Record<string, unknown> | null): ValidationError[] {
+  if (!others) return [];
+  return seoDuplicates({ ...others, [docId]: value }, [docId]).map(({ locale, path, message }) => ({ locale, path, message }));
+}
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
@@ -67,7 +77,18 @@ export function PageEditor({ docId, label, onChanged }: Props) {
   const [blocked, setBlocked] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>('edit');
+  // The other site pages as published, for the cross-page SEO check.
+  const [others, setOthers] = useState<Record<string, unknown> | null>(null);
   const loadSeq = useRef(0);
+
+  useEffect(() => {
+    let live = true;
+    setOthers(null);
+    fetchPublishedPages(SITE_PAGES.map((p) => p.docId).filter((id) => id !== docId)).then((pages) => {
+      if (live) setOthers(pages);
+    });
+    return () => { live = false; };
+  }, [docId]);
 
   const load = useCallback(async () => {
     const seq = ++loadSeq.current;
@@ -99,7 +120,11 @@ export function PageEditor({ docId, label, onChanged }: Props) {
     () => (shown ? validateDocument(docType, shown, context) : null),
     [docType, shown, context],
   );
-  const errors = validation?.errors ?? NO_ERRORS;
+  const duplicates = useMemo(() => (shown ? seoErrors(docId, shown, others) : []), [docId, shown, others]);
+  const errors = useMemo(
+    () => (validation && (validation.errors.length || duplicates.length) ? [...validation.errors, ...duplicates] : NO_ERRORS),
+    [validation, duplicates],
+  );
   const warnings = validation?.warnings ?? NO_WARNINGS;
 
   const onChange = useCallback((next: DocValue) => {
@@ -112,7 +137,7 @@ export function PageEditor({ docId, label, onChanged }: Props) {
     if (!draft || !base) return;
     const value = draft.value;
     // The debounced result may be up to 300 ms old: check what is being saved.
-    if (!validateDocument(docType, value, context).ok) {
+    if (!validateDocument(docType, value, context).ok || seoErrors(docId, value, others).length) {
       setNotice(null);
       setBlocked(true);
       return;
