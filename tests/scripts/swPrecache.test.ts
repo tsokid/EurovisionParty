@@ -8,7 +8,8 @@ import { resolve } from 'node:path';
 
 const DIST = resolve(__dirname, '../../dist');
 const SW = resolve(DIST, 'sw.js');
-const MANIFEST = resolve(DIST, '.vite/manifest.json');
+// The build moves the Vite manifest out of dist/ (scripts/move-build-manifest.ts).
+const MANIFEST = resolve(__dirname, '../../dist-meta/manifest.json');
 const built = existsSync(SW) && existsSync(MANIFEST);
 
 if (!built) console.warn('swPrecache.test: dist/sw.js not found — run `npm run build` first; skipping.');

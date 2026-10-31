@@ -7,6 +7,8 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const DIST = resolve(__dirname, '../../dist');
+// The build moves the Vite manifest out of dist/ (scripts/move-build-manifest.ts).
+const META = resolve(__dirname, '../../dist-meta');
 const ASSETS = resolve(DIST, 'assets');
 const built = existsSync(ASSETS);
 
@@ -29,7 +31,7 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
   // chunk reachable from it through *static* imports (dynamic imports, i.e.
   // the admin, are excluded). Walked via the Vite manifest.
   type Entry = { file: string; isEntry?: boolean; imports?: string[]; dynamicImports?: string[] };
-  const manifestPath = resolve(DIST, '.vite/manifest.json');
+  const manifestPath = resolve(META, 'manifest.json');
   const manifest: Record<string, Entry> = built && existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : {};
   const entry = Object.values(manifest).find((e) => e.isEntry && e.file.endsWith('.js'));
   const publicFiles = new Set<string>();
@@ -52,7 +54,7 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
   const mainSize = jsFiles.find((j) => j.f === mainFile)?.size ?? 0;
 
   it('the build manifest identifies an entry chunk', () => {
-    expect(entry, 'no entry in dist/.vite/manifest.json').toBeDefined();
+    expect(entry, 'no entry in dist-meta/manifest.json').toBeDefined();
     console.log(`bundleSize.test: main chunk ${mainFile} = ${mainSize} bytes`);
   });
 

@@ -112,7 +112,8 @@ export default defineConfig(({ isSsrBuild }) => ({
     }),
   ],
   // dist/.vite/manifest.json lets tests/scripts/bundleSize.test.ts tell public
-  // chunks from the lazy admin chunk.
+  // chunks from the lazy admin chunk. The build's last step moves it to
+  // dist-meta/ (scripts/move-build-manifest.ts) so it is never deployed.
   build: { manifest: !isSsrBuild },
   resolve: {
     alias: {
