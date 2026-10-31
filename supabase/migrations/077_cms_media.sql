@@ -5,12 +5,18 @@
 --   storage_path is the object name inside the bucket (no folders):
 --   <uuid>.webp | <uuid>-800.webp | <uuid>.mp4 | <uuid>.vtt. The 800 w
 --   image variant is its own row with variant_of = the 1600 w image (and
---   goes with it: on delete cascade). Drafts reference media as
---   cms-media/<id> (the row id, not the path's uuid). published_path is
+--   goes with it: on delete cascade). The id is the path's uuid: a
+--   non-variant row is <id>.<ext>; a variant is <variant_of>-800.webp with
+--   a generated id. Drafts reference media as cms-media/<id> (matched
+--   case-insensitively). published_path is
 --   the repo path (/media/<sha12>.<ext>) set by publish-content.
 --   RLS on, no policies: access only through the RPCs below.
--- * media_register(kind, storage_path, mime, bytes, width, height, sha256,
---   variant_of) (super admin) → id. Limits:
+-- * media_register(id, kind, storage_path, mime, bytes, width, height,
+--   sha256, variant_of) (super admin) → id. storage_path may carry a
+--   leading cms-media/, which is stripped. A non-variant row needs id and
+--   storage_path = <id>.<ext>; a variant needs id null and storage_path =
+--   <variant_of>-800.webp. A duplicate id or path is 'already registered'.
+--   Limits:
 --     image     image/webp  ≤ 2 MiB    .webp  width and height required
 --     video     video/mp4   ≤ 20 MiB   .mp4   width/height optional
 --     captions  text/vtt    ≤ 200 KiB  .vtt   width/height optional
@@ -65,8 +71,11 @@ alter table public.cms_media enable row level security;
 revoke all on public.cms_media from anon, authenticated;
 
 -- ── media_register ──────────────────────────────────────────
+-- The 8-arg form (before the id ruling) must not survive as an overload.
+drop function if exists public.media_register(text, text, text, int, int, int, text, uuid);
+
 create or replace function public.media_register(
-  p_kind text, p_storage_path text, p_mime text, p_bytes int,
+  p_id uuid, p_kind text, p_storage_path text, p_mime text, p_bytes int,
   p_width int, p_height int, p_sha256 text, p_variant_of uuid)
 returns uuid
 language plpgsql
@@ -79,6 +88,7 @@ declare
   v_ext     text;
   v_variant boolean;
   v_parent  public.cms_media%rowtype;
+  v_path    text;
   v_id      uuid;
 begin
   if not public.is_super_admin() then
@@ -108,18 +118,26 @@ begin
   if p_sha256 is null or p_sha256 !~ '^[0-9a-f]{64}$' then
     raise exception 'invalid sha256';
   end if;
-  if p_storage_path is null
-     or p_storage_path !~ ('^[0-9a-f-]{36}(-800)?\.' || v_ext || '$') then
+  -- The bare object name inside the bucket.
+  v_path := regexp_replace(p_storage_path, '^cms-media/', '');
+  if v_path is null
+     or v_path !~ ('^[0-9a-f-]{36}(-800)?\.' || v_ext || '$') then
     raise exception 'invalid storage_path %', p_storage_path;
   end if;
 
-  v_variant := p_storage_path ~ '-800\.webp$';
+  v_variant := v_path ~ '-800\.webp$';
   if v_variant and p_variant_of is null then
     raise exception 'a -800 path is a variant and needs variant_of';
   end if;
   if p_variant_of is not null then
     if not v_variant then
       raise exception 'a variant needs a -800 storage_path';
+    end if;
+    if p_id is not null then
+      raise exception 'a variant gets a generated id; p_id must be null';
+    end if;
+    if v_path <> p_variant_of::text || '-800.webp' then
+      raise exception 'variant storage_path % must be %-800.webp', v_path, p_variant_of;
     end if;
     select * into v_parent from public.cms_media m where m.id = p_variant_of;
     if not found then
@@ -128,21 +146,30 @@ begin
     if v_parent.kind <> 'image' or v_parent.variant_of is not null then
       raise exception 'variant_of must be an image that is not itself a variant';
     end if;
+  else
+    if p_id is null then
+      raise exception 'p_id is required';
+    end if;
+    if v_path <> p_id::text || '.' || v_ext then
+      raise exception 'storage_path % must be %.%', v_path, p_id, v_ext;
+    end if;
   end if;
 
-  insert into public.cms_media (kind, storage_path, variant_of, mime, bytes, width, height, sha256, created_by)
-  values (p_kind, p_storage_path, p_variant_of, p_mime, p_bytes, p_width, p_height, p_sha256, auth.uid())
-  on conflict (storage_path) do nothing
+  -- No conflict target: a duplicate id or path both land here.
+  insert into public.cms_media (id, kind, storage_path, variant_of, mime, bytes, width, height, sha256, created_by)
+  values (coalesce(p_id, gen_random_uuid()), p_kind, v_path, p_variant_of, p_mime, p_bytes,
+          p_width, p_height, p_sha256, auth.uid())
+  on conflict do nothing
   returning id into v_id;
   if v_id is null then
-    raise exception 'storage_path % already registered', p_storage_path;
+    raise exception 'media % already registered', v_path;
   end if;
   return v_id;
 end;
 $fn$;
 
-revoke execute on function public.media_register(text, text, text, int, int, int, text, uuid) from public, anon;
-grant execute on function public.media_register(text, text, text, int, int, int, text, uuid) to authenticated;
+revoke execute on function public.media_register(uuid, text, text, text, int, int, int, text, uuid) from public, anon;
+grant execute on function public.media_register(uuid, text, text, text, int, int, int, text, uuid) to authenticated;
 
 -- ── media_list ──────────────────────────────────────────────
 create or replace function public.media_list(p_kind text default null)
@@ -208,7 +235,7 @@ begin
   select string_agg(d.doc_id, ', ' order by d.doc_id) into v_docs
     from public.cms_documents d
    where exists (select 1 from unnest(v_ids) i
-                  where strpos(d.data::text, 'cms-media/' || i::text) > 0);
+                  where strpos(lower(d.data::text), 'cms-media/' || i::text) > 0);
   if v_docs is not null then
     raise exception 'media in use by %', v_docs;
   end if;

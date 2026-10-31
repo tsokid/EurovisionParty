@@ -12,6 +12,8 @@ const SHA = 'a'.repeat(64);
 const MB = 1024 * 1024;
 const uuidPath = (ext: string, variant = false) =>
   `${crypto.randomUUID()}${variant ? '-800' : ''}.${ext}`;
+/** The id a non-variant row gets: the uuid at the start of its path. */
+const idOf = (path: string) => path.replace(/^cms-media\//, '').slice(0, 36);
 
 type MediaRow = {
   id: string;
@@ -57,6 +59,8 @@ describe('077 cms_media', () => {
   }
 
   type Reg = {
+    /** Default: the uuid of a non-variant path; null for a variant. */
+    id?: string | null;
     kind: string;
     path: string;
     mime: string;
@@ -69,14 +73,14 @@ describe('077 cms_media', () => {
   const register = async (r: Reg) =>
     (
       await db.query<{ id: string }>(
-        `select public.media_register($1, $2, $3, $4, $5, $6, $7, $8::uuid) as id`,
-        [r.kind, r.path, r.mime, r.bytes, r.width ?? null, r.height ?? null, r.sha ?? SHA, r.variantOf ?? null],
+        `select public.media_register($1::uuid, $2, $3, $4, $5, $6, $7, $8, $9::uuid) as id`,
+        [r.id !== undefined ? r.id : r.variantOf ? null : idOf(r.path), r.kind, r.path, r.mime, r.bytes, r.width ?? null, r.height ?? null, r.sha ?? SHA, r.variantOf ?? null],
       )
     ).rows[0].id;
   const image = (over: Partial<Reg> = {}) =>
     register({ kind: 'image', path: uuidPath('webp'), mime: 'image/webp', bytes: 1000, width: 1600, height: 900, ...over });
   const variant = (parent: string, over: Partial<Reg> = {}) =>
-    image({ path: uuidPath('webp', true), width: 800, height: 450, variantOf: parent, ...over });
+    image({ path: `${parent}-800.webp`, width: 800, height: 450, variantOf: parent, ...over });
   const video = (over: Partial<Reg> = {}) =>
     register({ kind: 'video', path: uuidPath('mp4'), mime: 'video/mp4', bytes: 5 * MB, ...over });
   const captions = (over: Partial<Reg> = {}) =>
@@ -178,7 +182,8 @@ describe('077 cms_media', () => {
   it('media_register rejects a storage_path with folders, traversal or the wrong extension', async () => {
     const u = crypto.randomUUID();
     for (const bad of [
-      `cms-media/${u}.webp`,
+      `media/${u}.webp`,
+      `cms-media/cms-media/${u}.webp`,
       `../${u}.webp`,
       `${u}/../x.webp`,
       `${u}.webp/..`,
@@ -190,40 +195,71 @@ describe('077 cms_media', () => {
       `x${u}.webp`,
       '',
     ]) {
-      await expect(image({ path: bad }), bad).rejects.toThrow(/storage_path/);
+      await expect(image({ id: u, path: bad }), bad).rejects.toThrow(/storage_path/);
     }
-    await expect(video({ path: `${u}.webp` })).rejects.toThrow(/storage_path/);
-    await expect(captions({ path: `${u}.mp4` })).rejects.toThrow(/storage_path/);
+    await expect(video({ id: u, path: `${u}.webp` })).rejects.toThrow(/storage_path/);
+    await expect(captions({ id: u, path: `${u}.mp4` })).rejects.toThrow(/storage_path/);
   });
 
-  it('media_register refuses a duplicate storage_path', async () => {
+  it('media_register: the id is the uuid of the storage_path', async () => {
+    const path = uuidPath('webp');
+    expect(await image({ path })).toBe(idOf(path));
+    // Mismatched id and path.
+    await expect(image({ id: crypto.randomUUID(), path: uuidPath('webp') })).rejects.toThrow(/storage_path .* must be/);
+    // Missing id.
+    await expect(image({ id: null })).rejects.toThrow(/p_id is required/);
+    await expect(video({ id: null })).rejects.toThrow(/p_id is required/);
+  });
+
+  it('media_register strips a leading cms-media/ and stores the bare object name', async () => {
+    const u = crypto.randomUUID();
+    expect(await image({ id: u, path: `cms-media/${u}.webp` })).toBe(u);
+    const v = await variant(u, { path: `cms-media/${u}-800.webp` });
+    const rows = await list();
+    expect(rows.find((r) => r.id === u)!.storage_path).toBe(`${u}.webp`);
+    expect(rows.find((r) => r.id === v)!.storage_path).toBe(`${u}-800.webp`);
+  });
+
+  it('media_register refuses a duplicate id or storage_path', async () => {
     const path = uuidPath('webp');
     await image({ path });
     await expect(image({ path })).rejects.toThrow(/already registered/);
+    // Same uuid, another kind: the id collides.
+    await expect(video({ path: `${idOf(path)}.mp4` })).rejects.toThrow(/already registered/);
+    // A second variant of the same image: the path collides.
+    await variant(idOf(path));
+    await expect(variant(idOf(path))).rejects.toThrow(/already registered/);
   });
 
-  it('variants: an 800 w image variant of an image is accepted', async () => {
+  it('variants: an 800 w image variant of an image is accepted, with a generated id', async () => {
     const parent = await image();
     const v = await variant(parent);
+    expect(v).not.toBe(parent);
     const rows = await list();
-    expect(rows.find((r) => r.id === v)!.variant_of).toBe(parent);
+    expect(rows.find((r) => r.id === v)).toMatchObject({ variant_of: parent, storage_path: `${parent}-800.webp` });
   });
 
-  it('variants: must be an image, of an existing non-variant image, with a -800 path', async () => {
+  it('variants: must be an image, of an existing non-variant image, at <variant_of>-800.webp', async () => {
     const parent = await image();
     const vid = await video();
     // A variant path without variant_of, and variant_of without a variant path.
-    await expect(image({ path: uuidPath('webp', true) })).rejects.toThrow(/variant/);
+    await expect(image({ id: parent, path: `${parent}-800.webp` })).rejects.toThrow(/variant/);
     await expect(image({ variantOf: parent })).rejects.toThrow(/variant/);
+    // The path's uuid must be variant_of.
+    await expect(variant(parent, { path: uuidPath('webp', true) })).rejects.toThrow(/must be .*-800\.webp/);
+    // A variant gets a generated id.
+    await expect(variant(parent, { id: crypto.randomUUID() })).rejects.toThrow(/generated id/);
+    await expect(variant(parent, { id: parent })).rejects.toThrow(/generated id/);
     // Variant of a video.
     await expect(variant(vid)).rejects.toThrow(/variant/);
     // A video as a variant.
-    await expect(video({ path: uuidPath('mp4', true), variantOf: parent })).rejects.toThrow(/variant|storage_path/);
+    await expect(video({ path: `${parent}-800.mp4`, variantOf: parent })).rejects.toThrow(/variant|storage_path/);
     // Variant of a missing row.
     await expect(variant(crypto.randomUUID())).rejects.toThrow(/variant/);
     // Variant of a variant.
     const v = await variant(parent);
     await expect(variant(v)).rejects.toThrow(/variant/);
+    expect(await list()).toHaveLength(3);
   });
 
   // ── access ─────────────────────────────────────────────────
@@ -236,7 +272,7 @@ describe('077 cms_media', () => {
 
     const can = async (role: string, fn: string) =>
       (await db.query<{ c: boolean }>(`select has_function_privilege($1, $2, 'execute') as c`, [role, fn])).rows[0].c;
-    const reg = 'public.media_register(text, text, text, int, int, int, text, uuid)';
+    const reg = 'public.media_register(uuid, text, text, text, int, int, int, text, uuid)';
     const lst = 'public.media_list(text)';
     const dl = 'public.media_delete(uuid)';
     const mp = 'public.media_mark_published(uuid, text)';
@@ -269,9 +305,9 @@ describe('077 cms_media', () => {
   // ── media_delete ───────────────────────────────────────────
   it('media_delete removes an unreferenced image and its variant, returning both storage paths', async () => {
     const pPath = uuidPath('webp');
-    const vPath = uuidPath('webp', true);
     const parent = await image({ path: pPath });
-    await variant(parent, { path: vPath });
+    const vPath = `${parent}-800.webp`;
+    await variant(parent);
     const other = await image();
     expect((await del(parent)).sort()).toEqual([pPath, vPath].sort());
     expect((await list()).map((r) => r.id)).toEqual([other]);
@@ -279,8 +315,8 @@ describe('077 cms_media', () => {
 
   it('media_delete of a variant removes only the variant', async () => {
     const parent = await image();
-    const vPath = uuidPath('webp', true);
-    const v = await variant(parent, { path: vPath });
+    const vPath = `${parent}-800.webp`;
+    const v = await variant(parent);
     expect(await del(v)).toEqual([vPath]);
     expect((await list()).map((r) => r.id)).toEqual([parent]);
   });
@@ -299,6 +335,13 @@ describe('077 cms_media', () => {
     // The variant goes with a referenced parent, so it is in use too.
     await expect(del(v)).rejects.toThrow('media in use by about, home');
     expect(await list()).toHaveLength(3);
+  });
+
+  it('media_delete matches references case-insensitively', async () => {
+    const id = await image();
+    await save('home', { en: { hero: { media: `cms-media/${id.toUpperCase()}` } }, el: {} });
+    await expect(del(id)).rejects.toThrow('media in use by home');
+    expect((await inputMedia()).map((m) => m.id)).toEqual([id]);
   });
 
   it('media_delete counts already-published drafts as references', async () => {
@@ -398,6 +441,15 @@ describe('077 migration application', () => {
       await applyMigration(db, '077');
       const ns = await db.query(`select 1 from pg_namespace where nspname = 'storage'`);
       expect(ns.rows).toHaveLength(0);
+      // The pre-ruling 8-arg media_register does not survive as an overload.
+      await db.exec(`create function public.media_register(text, text, text, int, int, int, text, uuid)
+                     returns uuid language sql as $$ select null::uuid $$`);
+      await applyMigration(db, '077');
+      const fns = await db.query<{ s: string }>(
+        `select oid::regprocedure::text as s from pg_proc where proname = 'media_register'`);
+      expect(fns.rows.map((r) => r.s)).toEqual([
+        'media_register(uuid,text,text,text,integer,integer,integer,text,uuid)',
+      ]);
     } finally {
       await db.close();
     }

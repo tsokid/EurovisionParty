@@ -15,8 +15,7 @@
 --   is in the snapshot, so every contest is published).
 -- * publish_input() (service_role): the buildSnapshotFiles input,
 --   { contests, countries, entries, generated_at, cms_documents, media },
---   with
---   exactly the columns of ContestRow / CountryRow / EntryRow
+--   with exactly the columns of ContestRow / CountryRow / EntryRow
 --   (src/content/contests/types.ts). generated_at is the latest
 --   updated_at of contests and contest_entries, so unchanged data gives a
 --   byte-identical site.json and Publish can be a no-op. cms_documents is
@@ -26,12 +25,12 @@
 --   re-written (a schema change can never make it block a publish).
 --   media is [{id, kind, storage_path, mime, bytes, sha256, published_path,
 --   variant_of, width, height}] from 077's cms_media, by storage_path:
---   every row whose cms-media/<id> appears in one of those cms_documents
---   drafts, plus the variants of those rows. [] while cms_media does not
+--   every row whose cms-media/<id> appears (case-insensitively) in one of
+--   those cms_documents drafts, plus the variants of those rows. [] while cms_media does not
 --   exist (077 not applied yet).
 -- * unpublished_summary() (super admin): { changed_years, changed_docs,
---   since }. since is started_at of the last successful (ok or noop) run, null before the
---   first. started_at precedes the run's publish_input read, so an edit
+--   since }. since is started_at of the last successful (ok or noop)
+--   run, null before the first. started_at precedes the run's publish_input read, so an edit
 --   made while a run is in flight stays unpublished. changed_years are the
 --   years whose contest row or any entry has updated_at after since (every
 --   year when since is null). Deleted entries leave no updated_at behind
@@ -40,8 +39,9 @@
 --   cms = true (every draft before the first). A contests-only run moves
 --   since but not the CMS since. A discarded draft is not listed.
 -- * publish_input() and unpublished_summary() read cms_documents, which
---   076 creates (and publish_input reads 077's cms_media). Both are plpgsql (bodies resolved at call time), so this
---   file applies before 076; neither is called before 076 is in place.
+--   076 creates (and publish_input reads 077's cms_media). Both are
+--   plpgsql (bodies resolved at call time), so this file applies before
+--   076; neither is called before 076 is in place.
 -- * last_publish_run() (super admin): the newest publish_runs row as jsonb
 --   (id, started_at, finished_at, status, commit_sha, files_changed,
 --   error), null before the first run. Feeds the admin PublishBar.
@@ -168,7 +168,7 @@ begin
   -- 077 may not be applied yet; this statement is planned only when run.
   if to_regclass('public.cms_media') is not null then
     with drafts as (
-      select d.data::text as t
+      select lower(d.data::text) as t
         from public.cms_documents d
        where v_cms_since is null or d.updated_at > v_cms_since
     ), referenced as (
