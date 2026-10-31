@@ -383,7 +383,7 @@ export async function extractMapping(m: CopyMapping): Promise<{ doc: Doc; json: 
   }
   const r = validateDocument(docTypeFor(m.docId), doc);
   if (!r.ok) {
-    throw new Error(`extract: ${m.docId} fails validation:\n${r.errors.map((e) => `  [${e.locale}] ${e.path}: ${e.message}`).join('\n')}`);
+    throw new Error(`extract: ${m.docId} fails validation:\n${r.errors.map((e) => `  [${e.locale ?? 'doc'}] ${e.path}: ${e.message}`).join('\n')}`);
   }
   return { doc, json: stableJson(doc) };
 }

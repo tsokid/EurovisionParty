@@ -43,6 +43,9 @@ describe('validateContentDir', () => {
     const lines = r2.errors.join('\n');
     expect(lines).toMatch(/__vc-ok\.json.*el.*title/);
     expect(lines).toMatch(/orphan\.json.*unknown doc type/i);
+    // Document-level errors carry no locale: printed as [doc], never [en].
+    expect(r2.errors).toContain('orphan.json: [doc] (root): Unknown doc type "orphan"');
+    expect(lines).toMatch(/__vc-ok\.json: \[el\] title: /);
     expect(lines).toMatch(/broken\.json.*JSON/);
   });
 });

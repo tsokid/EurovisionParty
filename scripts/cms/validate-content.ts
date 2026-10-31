@@ -27,7 +27,7 @@ export function validateContentDir(dir: string): { count: number; errors: string
     }
     const r = validateDocument(docTypeFor(docId), data);
     if (!r.ok) {
-      for (const e of r.errors) errors.push(`${file}: [${e.locale}] ${e.path || '(root)'}: ${e.message}`);
+      for (const e of r.errors) errors.push(`${file}: [${e.locale ?? 'doc'}] ${e.path || '(root)'}: ${e.message}`);
     }
   }
   return { count: files.length, errors };

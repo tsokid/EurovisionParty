@@ -93,7 +93,7 @@ describe('validateDocument', () => {
     if (r.ok) return;
     expect(r.errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ locale: 'el', path: '' }),
-      expect.objectContaining({ message: expect.stringContaining('fr') }),
+      { locale: null, path: '', message: expect.stringContaining('fr') },
     ]));
   });
 
@@ -106,14 +106,23 @@ describe('validateDocument', () => {
     expect(r.errors.map((e) => `${e.locale}:${e.path}`).sort()).toEqual(['el:title', 'en:faq']);
   });
 
-  it('rejects a non-object document', () => {
-    expect(validateDocument(TYPE, 'nope').ok).toBe(false);
-    expect(validateDocument(TYPE, null).ok).toBe(false);
+  it('rejects a non-object document, as a document-level error (locale null)', () => {
+    for (const data of ['nope', null, [1]]) {
+      const r = validateDocument(TYPE, data);
+      expect(r.ok).toBe(false);
+      if (r.ok) return;
+      expect(r.errors.map((e) => [e.locale, e.path])).toEqual([[null, '']]);
+    }
   });
 
-  it('rejects an unknown doc type', () => {
+  it('rejects an unknown doc type, as a document-level error (locale null)', () => {
     const r = validateDocument('no-such-type', { en: {}, el: {} });
-    expect(!r.ok && r.errors[0].message).toMatch(/unknown doc type/i);
+    expect(!r.ok && r.errors).toEqual([{ locale: null, path: '', message: expect.stringMatching(/unknown doc type/i) }]);
+  });
+
+  it('keeps the locale for an issue at a locale root (not document-level)', () => {
+    const r = validateDocument(TYPE, { en: page(), el: 'x' });
+    expect(!r.ok && r.errors.map((e) => [e.locale, e.path])).toEqual([['el', '']]);
   });
 });
 

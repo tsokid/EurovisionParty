@@ -2,9 +2,9 @@
 //
 // A document is { en: T, el: T }, strict at both levels. Every issue is
 // reported with its locale and a dotted path inside that locale's content
-// (list indices as numbers: "faq.0.a"; "" is the locale root). Issues at the
-// document root (not an object, an unknown top-level key) are reported under
-// locale "en" with path "".
+// (list indices as numbers: "faq.0.a"; "" is the locale root). Document-level
+// issues (not an object, an unknown top-level key, an unknown doc type) belong
+// to no locale: they are reported with locale null and path "".
 //
 // Locale-shared fields (fieldMeta().shared: choices, flags, hrefs...) are not
 // translated: their el value must equal the en value at the same path. Inside
@@ -16,7 +16,8 @@ import { CMS_DOC_TYPES } from './registry.ts';
 
 export type Locale = 'en' | 'el';
 
-export type ValidationError = { path: string; locale: Locale; message: string };
+/** `locale` is null for a document-level issue (not inside either locale). */
+export type ValidationError = { path: string; locale: Locale | null; message: string };
 
 export type ValidationResult<T = unknown> =
   | { ok: true; value: { en: T; el: T } }
@@ -32,7 +33,7 @@ function toError(issue: z.core.$ZodIssue): ValidationError {
   if (head === 'en' || head === 'el') {
     return { locale: head, path: rest.map(String).join('.'), message: issue.message };
   }
-  return { locale: 'en', path: '', message: issue.message };
+  return { locale: null, path: '', message: issue.message };
 }
 
 const SHARED_MESSAGE = 'must equal the en value (locale-shared field)';
@@ -111,7 +112,7 @@ export function sharedMismatches(schema: z.ZodType, en: unknown, el: unknown, pa
 
 export function validateDocument(docType: string, data: unknown): ValidationResult {
   const def = Object.prototype.hasOwnProperty.call(CMS_DOC_TYPES, docType) ? CMS_DOC_TYPES[docType] : undefined;
-  if (!def) return { ok: false, errors: [{ locale: 'en', path: '', message: `Unknown doc type "${docType}"` }] };
+  if (!def) return { ok: false, errors: [{ locale: null, path: '', message: `Unknown doc type "${docType}"` }] };
   const parsed = documentSchema(def.schema).safeParse(data);
   const errors = parsed.success ? [] : parsed.error.issues.map(toError);
   if (isRecord(data)) {
