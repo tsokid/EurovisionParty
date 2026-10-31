@@ -7,6 +7,40 @@ import { copy as faqCopy } from '@/pages/seo/content/faqCopy';
 import { copy as homeCopy } from '@/pages/content/homeCopy';
 import enJson from '@/i18n/locales/en.json';
 import elJson from '@/i18n/locales/el.json';
+import { createElement as h } from 'react';
+import { renderToString } from 'react-dom/server';
+import ContentProvider from '@/lib/seo/ContentProvider';
+import { createContentCollector } from '@/lib/seo/contentContext';
+import { LocaleProvider } from '@/lib/seo/LocaleContext';
+import { usePageContent } from '@/lib/cms/usePageContent';
+import { injectPage } from '../../scripts/prerender/injectPage';
+
+// A test-only page document, injected into the SSR content map. No real
+// content/pages/*.json exists yet, and none may be committed as a fixture
+// (validate-content checks every file there and the build publishes them).
+const { FIXTURE_DOC } = vi.hoisted(() => ({
+  FIXTURE_DOC: { en: { title: 'Fixture title' }, el: { title: 'Τίτλος δοκιμής' } },
+}));
+vi.mock('@/lib/seo/contentData', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/seo/contentData')>();
+  return {
+    ...actual,
+    bundledContent: (path: string) => (path === 'pages/__fixture.json' ? FIXTURE_DOC : actual.bundledContent(path)),
+  };
+});
+
+function FixturePage({ docId }: { docId: string }) {
+  const s = usePageContent<{ title: string }>(docId);
+  return h('main', null, h('h1', null, s.status === 'ready' ? s.data.title : s.status));
+}
+
+function ssrPage(docId: string, locale: 'en' | 'el') {
+  const collector = createContentCollector();
+  const html = renderToString(
+    h(ContentProvider, { collector }, h(LocaleProvider, { locale }, h(FixturePage, { docId }))),
+  );
+  return { html, content: collector.files };
+}
 
 describe('entry-server render', () => {
   let fetchSpy: MockInstance;
@@ -150,6 +184,21 @@ describe('entry-server render', () => {
     const el = await render('/el/faq');
     for (const label of ['Προηγούμενοι διαγωνισμοί', 'Χώρες', 'Νικητές']) expect(el.html).toContain(label);
   }, 60_000);
+
+  it('usePageContent: SSR reads pages/{docId}.json eagerly and the prerender inlines it', () => {
+    const el = ssrPage('__fixture', 'el');
+    expect(el.html).toContain('Τίτλος δοκιμής');
+    expect(Object.keys(el.content)).toEqual(['pages/__fixture.json']);
+    const shell = '<html lang="en"><head><!--seo:start--><!--seo:end--></head><body><div id="root"><!--app:start--><!--app:end--></div></body></html>';
+    const out = injectPage(shell, { html: el.html, headHtml: '', lang: 'el', content: el.content });
+    const inlined = /<script type="application\/json" id="__content__">(.*?)<\/script>/.exec(out)?.[1];
+    expect(JSON.parse(inlined ?? '{}')).toEqual({ 'pages/__fixture.json': FIXTURE_DOC });
+    expect(ssrPage('__fixture', 'en').html).toContain('Fixture title');
+  });
+
+  it('usePageContent: a missing page doc fails the server render (build failure)', () => {
+    expect(() => ssrPage('__no-such-doc', 'en')).toThrow(/pages\/__no-such-doc\.json/);
+  });
 
   it('does not touch the network', () => {
     expect(fetchSpy).not.toHaveBeenCalled();

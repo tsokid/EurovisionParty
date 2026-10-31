@@ -16,7 +16,10 @@ import type { ContentData } from './dynamicPages';
 const PREFIX = '../../../content/';
 const modules = import.meta.glob<unknown>('../../../content/**/*.json', { eager: true, import: 'default' });
 
-/** Every content file keyed by its path relative to content/ (`contests/2026.json`). */
+/**
+ * Every content file keyed by its path relative to content/ (`contests/2026.json`),
+ * CMS page documents included (`pages/about.json`, read by usePageContent()).
+ */
 const files = new Map<string, unknown>(
   Object.entries(modules).map(([key, data]) => [key.slice(PREFIX.length), data]),
 );

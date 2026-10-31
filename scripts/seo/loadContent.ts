@@ -1,6 +1,8 @@
 /**
  * Node (fs) loader for the content snapshot, for build scripts run by tsx,
  * which has no import.meta.glob. Mirrors src/lib/seo/contentData.ts.
+ * Contest data only: site.json, contests/ and countries/. CMS page documents
+ * (content/pages/) and any other files are never read here.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
