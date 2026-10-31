@@ -21,7 +21,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import type { z } from 'zod';
-import { fieldMeta } from '../../supabase/functions/_shared/cms/fields';
+import { fieldMeta, schemaDef } from '../../supabase/functions/_shared/cms/fields';
 import { interpolate, placeholdersIn } from '../../supabase/functions/_shared/cms/placeholders';
 import { CMS_DOC_TYPES, docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 import { validateDocument } from '../../supabase/functions/_shared/cms/validate';
@@ -97,8 +97,7 @@ export const COPY_MAPPINGS: CopyMapping[] = [
 
 // ---- schema walk ---------------------------------------------------------
 
-type Def = { type: string; shape?: Record<string, z.ZodType>; element?: z.ZodType; items?: z.ZodType[]; innerType?: z.ZodType };
-const defOf = (schema: z.ZodType): Def => (schema as unknown as { _zod: { def: Def } })._zod.def;
+const defOf = schemaDef;
 
 /**
  * Maps every string leaf of `value` through `fn(value, allowedPlaceholders, path)`,

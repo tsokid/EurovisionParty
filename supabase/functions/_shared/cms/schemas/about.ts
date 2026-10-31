@@ -1,6 +1,6 @@
 // /about. Mirrors the former AboutCopy interface.
 import type { z } from 'zod';
-import { group, list, text } from '../fields.ts';
+import { group, list, optional, text } from '../fields.ts';
 import { boldRest, hero, relatedItem, titleBody } from './common.ts';
 
 export const aboutSchema = group({
@@ -33,8 +33,8 @@ export const aboutSchema = group({
         bold: text(),
         lead: text(),
         // A link rendered between lead and tail; both or neither.
-        linkLabel: text().optional(),
-        linkHref: text().optional(),
+        linkLabel: optional(text()),
+        linkHref: optional(text({ shared: true })),
         tail: text({ required: false }),
       }),
     ),

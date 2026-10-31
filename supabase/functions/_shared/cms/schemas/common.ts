@@ -2,14 +2,20 @@
 // interface that the former src/pages/seo/content/*Copy.ts files repeated.
 import { group, list, text, tuple } from '../fields.ts';
 
+/** An internal path such as `/faq`: the same in every locale. */
+export const href = () => text({ shared: true, help: 'Internal path, e.g. /faq (same in both languages)' });
+
 /** A related-page card: internal path, card title and one-line blurb. */
-export const relatedItem = group({ href: text(), title: text(), blurb: text() });
+export const relatedItem = group({ href: href(), title: text(), blurb: text() });
 
 /** A bullet with a bold lead-in: `{ bold, rest }`. */
 export const boldRest = group({ bold: text(), rest: text() });
 
-/** A bullet with a strong lead-in: `{ strong, rest }`. */
+/** A bullet with a strong lead-in: `{ strong, rest }`, both plain text. */
 export const strongRest = group({ strong: text(), rest: text() });
+
+/** A bullet with a strong lead-in whose `rest` is rendered as raw HTML (may contain <em>, <strong>, <a>). */
+export const strongRestHtml = group({ strong: text(), rest: text({ rawHtml: true, help: 'HTML' }) });
 
 /** A question and its answer. */
 export const qa = group({ q: text(), a: text() });

@@ -2,7 +2,7 @@
 // the live contest's texts and used only the year: now the {year} placeholder.
 import type { z } from 'zod';
 import { group, list, text, tuple } from '../fields.ts';
-import { crumbs, cta, headers3, hero, strongRest } from './common.ts';
+import { crumbs, cta, headers3, href, hero, strongRest, strongRestHtml } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
@@ -21,13 +21,13 @@ export const rulesSchema = group({
   }),
   predictions: bullets,
   quiz: bullets,
-  duels: bullets,
+  duels: group({ title: text(), items: list(strongRestHtml) }),
   trophies: group({ title: text(), intro: text(), items: list(strongRest), note: text() }),
   suddenDeath: group({ title: text(), body: text(), cardTitle: text(), cardBody: text() }),
   disconnect: bullets,
   edgeCases: bullets,
   cta,
-  related: group({ items: list(group({ href: text(), title: text(), blurb: text(YEAR) })) }),
+  related: group({ items: list(group({ href: href(), title: text(), blurb: text(YEAR) })) }),
   crumbs,
 });
 

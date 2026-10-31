@@ -1,13 +1,13 @@
 // /cookies. Mirrors the former CookiesCopy interface.
 import type { z } from 'zod';
-import { choice, group, list, text, tuple } from '../fields.ts';
+import { choice, group, list, optional, text, tuple } from '../fields.ts';
 import { boldRest, headers3, hero, legalMeta, relatedItem } from './common.ts';
 
 const tableRow = group({
   category: text(),
   purpose: text(),
   defaultText: text(),
-  defaultTone: choice(['muted', 'pink'], { help: 'Colour of the default cell' }).optional(),
+  defaultTone: optional(choice(['muted', 'pink'], { help: 'Colour of the default cell' })),
 });
 
 export const cookiesSchema = group({

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import {
-  text, multiline, list, group, richText, tuple, choice, flag, fieldMeta,
+  text, multiline, list, group, richText, tuple, choice, flag, optional, fieldMeta, fieldPaths, fieldAt,
 } from '../../supabase/functions/_shared/cms/fields';
 import { interpolate, placeholdersIn } from '../../supabase/functions/_shared/cms/placeholders';
 
@@ -22,8 +22,8 @@ describe('field metadata', () => {
 
   it('round-trips tuple, choice and flag', () => {
     expect(fieldMeta(tuple([text(), text()], { label: 'Headers' }))).toEqual({ kind: 'tuple', label: 'Headers' });
-    expect(fieldMeta(choice(['muted', 'pink'], { label: 'Tone' }))).toEqual({ kind: 'choice', label: 'Tone', options: ['muted', 'pink'] });
-    expect(fieldMeta(flag({ help: 'Open cap' }))).toEqual({ kind: 'flag', help: 'Open cap' });
+    expect(fieldMeta(choice(['muted', 'pink'], { label: 'Tone' }))).toEqual({ kind: 'choice', label: 'Tone', options: ['muted', 'pink'], shared: true });
+    expect(fieldMeta(flag({ help: 'Open cap' }))).toEqual({ kind: 'flag', help: 'Open cap', shared: true });
   });
 
   it('tuple fixes the length; choice and flag accept only their values', () => {
@@ -36,6 +36,50 @@ describe('field metadata', () => {
     expect(c.safeParse('blue').success).toBe(false);
     expect(flag().safeParse(true).success).toBe(true);
     expect(flag().safeParse('true').success).toBe(false);
+  });
+
+  it('choice and flag are locale-shared by default; other kinds opt in', () => {
+    expect(fieldMeta(choice(['a'])).shared).toBe(true);
+    expect(fieldMeta(flag()).shared).toBe(true);
+    expect(fieldMeta(choice(['a'], { shared: false })).shared).toBe(false);
+    expect(fieldMeta(flag({ shared: false })).shared).toBe(false);
+    expect(fieldMeta(text()).shared).toBeUndefined();
+    expect(fieldMeta(text({ shared: true })).shared).toBe(true);
+    expect(fieldMeta(group({ a: text() }, { shared: true })).shared).toBe(true);
+    expect(fieldMeta(list(text())).shared).toBeUndefined();
+  });
+
+  it('records rawHtml on string fields', () => {
+    expect(fieldMeta(text({ rawHtml: true })).rawHtml).toBe(true);
+    expect(fieldMeta(multiline({ rawHtml: true })).rawHtml).toBe(true);
+    expect(fieldMeta(text()).rawHtml).toBeUndefined();
+  });
+
+  it('optional() keeps the inner metadata, adds optional: true and accepts an absent key', () => {
+    const inner = text({ label: 'Link', shared: true });
+    const o = optional(inner);
+    expect(fieldMeta(o)).toEqual({ ...fieldMeta(inner), optional: true });
+    expect(fieldMeta(inner).optional).toBeUndefined();
+    expect(fieldMeta(optional(choice(['a', 'b'])))).toEqual({ kind: 'choice', options: ['a', 'b'], shared: true, optional: true });
+    const g = group({ x: o });
+    expect(g.safeParse({}).success).toBe(true);
+    expect(g.safeParse({ x: 'a' }).success).toBe(true);
+    expect(g.safeParse({ x: 1 }).success).toBe(false);
+  });
+
+  it('fieldPaths and fieldAt walk the whole tree, optional wrappers included', () => {
+    const s = group({
+      a: text({ rawHtml: true }),
+      b: list(group({ c: text({ rawHtml: true }), d: text() })),
+      e: optional(text({ rawHtml: true })),
+      f: tuple([text(), text({ rawHtml: true })]),
+      g: optional(group({ h: text({ rawHtml: true }) })),
+    });
+    expect(fieldPaths(s, (m) => !!m.rawHtml)).toEqual(['a', 'b.*.c', 'e', 'f.1', 'g.h']);
+    for (const p of ['a', 'b.*.c', 'b.0.c', 'e', 'f.1', 'g.h']) expect(fieldMeta(fieldAt(s, p)!).rawHtml).toBe(true);
+    expect(fieldMeta(fieldAt(s, 'g')!)).toMatchObject({ kind: 'group', optional: true });
+    expect(fieldAt(s, 'nope')).toBeUndefined();
+    expect(fieldAt(s, 'a.b')).toBeUndefined();
   });
 
   it('defaults placeholders to none', () => {
