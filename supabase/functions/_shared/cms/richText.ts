@@ -31,16 +31,18 @@ export type RichBlock =
 
 export type RichTextError = { line: number; message: string };
 
-const ESCAPABLE = '\\*[]()<>#-';
+const ESCAPABLE = '\\*[]()<>#-.';
 
-function mergeText(nodes: RichInline[]): RichInline[] {
-  const out: RichInline[] = [];
+/** Nesting of bold/italic/link beyond this is literal text and an error (keeps the parser's recursion bounded). */
+const MAX_DEPTH = 8;
+
+/** Appends `nodes` to `out`, joining text that touches text. */
+function pushMerged(out: RichInline[], nodes: RichInline[]): void {
   for (const n of nodes) {
     const last = out[out.length - 1];
     if (n.type === 'text' && last?.type === 'text') last.value += n.value;
     else out.push(n);
   }
-  return out;
 }
 
 type Stop = '' | '**' | '*' | ']';
@@ -49,7 +51,7 @@ function parseLine(src: string, line: number, errors: RichTextError[]): RichInli
   let i = 0;
   const err = (message: string) => errors.push({ line, message });
 
-  const run = (stop: Stop, inLink: boolean): RichInline[] => {
+  const run = (stop: Stop, inLink: boolean, depth: number): RichInline[] => {
     const out: RichInline[] = [];
     let buf = '';
     const flush = () => {
@@ -76,27 +78,37 @@ function parseLine(src: string, line: number, errors: RichTextError[]): RichInli
         err('Images are not supported in rich text');
         buf += c;
         i++;
+      } else if ((c === '*' || c === '[') && depth >= MAX_DEPTH) {
+        err(`Too deeply nested (more than ${MAX_DEPTH} levels of bold, italic and links)`);
+        buf += c;
+        i++;
+      } else if (c === '[' && inLink) {
+        err('Links cannot be nested');
+        buf += c;
+        i++;
       } else if (src.startsWith('**', i)) {
         flush();
         i += 2;
-        const children = run('**', inLink);
+        const children = run('**', inLink, depth + 1);
         if (src.startsWith('**', i)) i += 2;
         else err('Unclosed ** (bold)');
+        if (!children.length) err('Empty bold');
         out.push({ type: 'strong', children });
       } else if (c === '*') {
         flush();
         i += 1;
-        const children = run('*', inLink);
+        const children = run('*', inLink, depth + 1);
         if (src[i] === '*') i += 1;
         else err('Unclosed * (italic)');
+        if (!children.length) err('Empty italic');
         out.push({ type: 'em', children });
       } else if (c === '[') {
         flush();
-        if (inLink) err('Links cannot be nested');
         i += 1;
-        const children = run(']', true);
+        const children = run(']', true, depth + 1);
         if (src[i] === ']') i += 1;
         else err('Unclosed [ (link label)');
+        if (!children.length) err('Empty link label');
         if (src[i] === '(') {
           const close = src.indexOf(')', i);
           if (close < 0) {
@@ -106,7 +118,10 @@ function parseLine(src: string, line: number, errors: RichTextError[]): RichInli
           } else {
             const href = src.slice(i + 1, close);
             i = close + 1;
-            if (isSafeHref(href)) out.push({ type: 'link', href, children });
+            if (href.includes('(')) {
+              err('A link address cannot contain ( (use %28)');
+              out.push(...children);
+            } else if (isSafeHref(href)) out.push({ type: 'link', href, children });
             else {
               err(`Unsafe link address "${href}" (must start with / or https://)`);
               out.push(...children);
@@ -122,10 +137,12 @@ function parseLine(src: string, line: number, errors: RichTextError[]): RichInli
       }
     }
     flush();
-    return mergeText(out);
+    const merged: RichInline[] = [];
+    pushMerged(merged, out);
+    return merged;
   };
 
-  return run('', false);
+  return run('', false, 0);
 }
 
 const BULLET = /^[-] (.*)$/;
@@ -149,6 +166,9 @@ function parse(source: string): { blocks: RichBlock[]; errors: RichTextError[] }
     if (text.trim() === '') return closeAll();
 
     const heading = HEADING.exec(text);
+    if (!heading && /^#+\S/.test(text)) {
+      errors.push({ line, message: 'A heading needs a space after the #s: write ### text (or \\# for a literal #)' });
+    }
     if (heading && /^#/.test(text)) {
       closeAll();
       if (heading[1] !== '###') errors.push({ line, message: 'Only ### headings are supported' });
@@ -176,7 +196,7 @@ function parse(source: string): { blocks: RichBlock[]; errors: RichTextError[] }
     const inline = parseLine(text.trim(), line, errors);
     if (inPara) {
       const p = blocks[blocks.length - 1] as Extract<RichBlock, { type: 'paragraph' }>;
-      p.children = mergeText([...p.children, { type: 'text', value: ' ' }, ...inline]);
+      pushMerged(p.children, [{ type: 'text', value: ' ' }, ...inline]);
     } else {
       blocks.push({ type: 'paragraph', children: inline });
       inPara = true;

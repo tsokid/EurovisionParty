@@ -92,6 +92,11 @@ describe('richText()', () => {
     expect(ok(richText(), '### Hi\n\nSome **bold** and [a page](/faq).\n\n- one\n- two')).toBe(true);
   });
 
+  it('has a hard length cap of 20,000 characters', () => {
+    expect(ok(richText(), 'a'.repeat(20_000))).toBe(true);
+    expect(ok(richText(), 'a'.repeat(20_001))).toBe(false);
+  });
+
   it('still honours placeholders and required', () => {
     expect(ok(richText({ placeholders: ['year'] }), 'In {year}')).toBe(true);
     expect(ok(richText(), '   ')).toBe(false);

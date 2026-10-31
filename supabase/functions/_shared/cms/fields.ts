@@ -126,6 +126,9 @@ function placeholderHelpFor(placeholders: string[], overrides: Record<string, st
   }));
 }
 
+/** Hard length limit of a richText() field (the parser itself accepts any length). */
+export const RICH_TEXT_MAX = 20_000;
+
 const MEDIA_EXT: Record<MediaKind, string> = { image: 'webp', video: 'mp4', captions: 'vtt' };
 
 /**
@@ -183,7 +186,9 @@ function stringField(kind: StringKind, opts: StringFieldOptions = {}, mediaKind?
     if (kind === 'mediaRef' && value !== '' && !mediaRefPattern(mediaKind!).test(value)) {
       ctx.addIssue({ code: 'custom', message: `Not a valid ${mediaKind} reference: pick an uploaded file` });
     }
-    if (kind === 'richText') {
+    if (kind === 'richText' && value.length > RICH_TEXT_MAX) {
+      ctx.addIssue({ code: 'custom', message: `Too long: ${value.length} characters, max ${RICH_TEXT_MAX} for rich text` });
+    } else if (kind === 'richText') {
       for (const e of richTextErrors(value)) ctx.addIssue({ code: 'custom', message: `Line ${e.line}: ${e.message}` });
     }
   });

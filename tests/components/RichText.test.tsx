@@ -35,6 +35,12 @@ describe('<RichText>', () => {
     expect(c.textContent).toContain('<img src=x onerror=alert(1)>');
   });
 
+  it('never nests an anchor in an anchor, even for invalid source', () => {
+    const c = r('[ [y](/z) ](/w)');
+    expect(c.querySelectorAll('a')).toHaveLength(1);
+    expect(c.querySelector('a a')).toBeNull();
+  });
+
   it('renders nothing for an empty source', () => {
     expect(r('').innerHTML).toBe('');
   });

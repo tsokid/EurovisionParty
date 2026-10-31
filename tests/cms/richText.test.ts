@@ -88,3 +88,60 @@ describe('richTextErrors', () => {
     expect(richTextErrors('<a>\nfine\n<b>').map((e) => e.line)).toEqual([1, 3]);
   });
 });
+
+describe('hardening', () => {
+  const timed = (fn: () => void) => {
+    const t0 = performance.now();
+    fn();
+    return performance.now() - t0;
+  };
+
+  it.each([
+    ['[', '['.repeat(50_000)],
+    ['*[', '*['.repeat(25_000)],
+    ['[a', '[a'.repeat(25_000)],
+    ['* ** ', '* ** '.repeat(10_000)],
+    ['**', '**'.repeat(25_000)],
+    ['](', '[](' .repeat(15_000)],
+  ])('does not throw or crawl on 50k of %s, and reports an error', (_n, src) => {
+    let errors: unknown[] = [];
+    const ms = timed(() => {
+      parseRichText(src);
+      errors = richTextErrors(src);
+    });
+    expect(errors.length).toBeGreaterThan(0);
+    expect(ms).toBeLessThan(2000);
+  });
+
+  it('treats a [ inside a link label as literal text, with a nested-link error', () => {
+    expect(richTextErrors('[a [b](/x)](/y)').some((e) => /nested/.test(e.message))).toBe(true);
+  });
+
+  it('caps nesting at 8 levels: deeper markers are literal and an error', () => {
+    const ok = `${'*'.repeat(1)}a${'*'.repeat(1)}`;
+    expect(richTextErrors(ok)).toEqual([]);
+    const deep = '**a *b '.repeat(5);
+    expect(richTextErrors(deep).some((e) => /deeply nested/.test(e.message))).toBe(true);
+  });
+
+  it('rejects an address with ( in it', () => {
+    expect(richTextErrors('[x](/a(b))').some((e) => /cannot contain \(/.test(e.message))).toBe(true);
+  });
+
+  it.each(['****', '[](/a)', '**', '*'])('rejects empty bold/italic/link in %s', (src) => {
+    expect(richTextErrors(src).length).toBeGreaterThan(0);
+  });
+
+  it('parses 20k lines of one paragraph quickly', () => {
+    const src = Array.from({ length: 20_000 }, (_, i) => `line ${i} **b**`).join('\n');
+    const ms = timed(() => parseRichText(src));
+    expect(ms).toBeLessThan(2000);
+  });
+
+  it('keeps 2026\\. as a paragraph, and flags ###x', () => {
+    expect(parseRichText('2026\\. was fun')).toEqual([{ type: 'paragraph', children: [{ type: 'text', value: '2026. was fun' }] }]);
+    const e = richTextErrors('###x');
+    expect(e[0].message).toMatch(/### text/);
+    expect(e[0].line).toBe(1);
+  });
+});
