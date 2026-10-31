@@ -16,6 +16,7 @@ const PAGES = resolve(ROOT, 'src/pages/seo');
 const RAW_HTML: Record<string, { component: string; fields: string[] }> = {
   faq: { component: 'FAQPage.tsx', fields: ['joinSection.bullets.*.rest', 'leaveSection.bullets.*.rest'] },
   rules: { component: 'RulesPage.tsx', fields: ['duels.items.*.rest'] },
+  'how-to-play': { component: 'HowToPlayPage.tsx', fields: ['setup.items.*.rest', 'duels.cardBody'] },
   scoring: {
     component: 'ScoringPage.tsx',
     fields: [

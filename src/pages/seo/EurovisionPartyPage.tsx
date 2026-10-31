@@ -10,7 +10,10 @@ import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
-import { copy as copyAll } from './content/eurovisionPartyCopy';
+import { usePageContent } from '../../lib/cms/usePageContent';
+import type { EurovisionPartyContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-party';
+import { PageContentFallback } from './PageContentFallback';
+import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
 import { contestTexts } from './content/contestText';
 import { useCurrentContest } from '../../lib/currentContest';
 
@@ -23,7 +26,11 @@ function nextDay(iso: string): string {
 export default function EurovisionPartyPage() {
   const locale = useLocale();
   const cc = useCurrentContest();
-  const c = copyAll(contestTexts(cc))[locale];
+  const content = usePageContent<EurovisionPartyContent>('eurovision-party');
+  if (content.status !== 'ready') return <PageContentFallback state={content} />;
+  const c = content.data;
+  const t = contestTexts(cc)[locale];
+  const vars = { year: t.year, finalDayShort: t.finalDayShort };
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -36,8 +43,8 @@ export default function EurovisionPartyPage() {
   const article = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: c.meta.headline,
-    description: c.meta.articleDescription,
+    headline: interpolate(c.meta.headline, vars),
+    description: interpolate(c.meta.articleDescription, vars),
     image: 'https://eurovision.games/logo.png',
     author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
     publisher: {
@@ -63,12 +70,12 @@ export default function EurovisionPartyPage() {
   const event = final && {
     '@context': 'https://schema.org',
     '@type': 'Event',
-    name: c.meta.eventName,
+    name: interpolate(c.meta.eventName, vars),
     startDate: `${final}T20:00:00+02:00`,
     endDate: `${nextDay(final)}T00:30:00+02:00`,
     eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
-    description: c.meta.eventDescription,
+    description: interpolate(c.meta.eventDescription, vars),
     location: {
       '@type': 'VirtualLocation',
       url: 'https://eurovision.games',
@@ -85,8 +92,8 @@ export default function EurovisionPartyPage() {
       <PageSeo
         pageId="eurovision-party"
         locale={locale}
-        title={c.meta.title}
-        description={c.meta.description}
+        title={interpolate(c.meta.title, vars)}
+        description={interpolate(c.meta.description, vars)}
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
         articlePublishedTime={PUBLISHED}

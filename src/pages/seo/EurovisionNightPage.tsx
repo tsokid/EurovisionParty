@@ -9,14 +9,24 @@ import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
-import { copy as copyAll } from './content/eurovisionNightCopy';
+import { usePageContent } from '../../lib/cms/usePageContent';
+import type { EurovisionNightContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-night';
+import { PageContentFallback } from './PageContentFallback';
+import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
 import { contestTexts } from './content/contestText';
 import { useCurrentContest } from '../../lib/currentContest';
 
 export default function EurovisionNightPage() {
   const locale = useLocale();
   const cc = useCurrentContest();
-  const c = copyAll(contestTexts(cc))[locale];
+  const content = usePageContent<EurovisionNightContent>('eurovision-night');
+  if (content.status !== 'ready') return <PageContentFallback state={content} />;
+  const c = content.data;
+  const t = contestTexts(cc)[locale];
+  const vars = { year: t.year, city: t.city, cityFrom: t.cityFrom, finalDay: t.finalDay };
+  const fill = (s: string) => interpolate(s, vars);
+  const faq = c.faq.map((f) => ({ q: fill(f.q), a: fill(f.a) }));
+  const relatedItems = c.related.items.map((it) => ({ ...it, blurb: fill(it.blurb) }));
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -51,7 +61,7 @@ export default function EurovisionNightPage() {
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: c.faq.map((f) => ({
+    mainEntity: faq.map((f) => ({
       '@type': 'Question',
       name: f.q,
       acceptedAnswer: { '@type': 'Answer', text: f.a },
@@ -63,13 +73,13 @@ export default function EurovisionNightPage() {
       <PageSeo
         pageId="eurovision-night"
         locale={locale}
-        title={c.meta.title}
+        title={fill(c.meta.title)}
         description={c.meta.description}
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
-        keywords={c.meta.keywords}
+        keywords={c.meta.keywords.map(fill)}
         jsonLd={[article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)]}
       />
 
@@ -84,9 +94,9 @@ export default function EurovisionNightPage() {
       <ContentLayout>
         <Section title={c.sections.what.title}>
           <p>
-            {c.sections.what.bodyBefore}
-            <strong className="text-white">{c.sections.what.bodyDate}</strong>
-            {c.sections.what.bodyAfter}
+            {fill(c.sections.what.bodyBefore)}
+            <strong className="text-white">{fill(c.sections.what.bodyDate)}</strong>
+            {fill(c.sections.what.bodyAfter)}
           </p>
         </Section>
 
@@ -95,7 +105,7 @@ export default function EurovisionNightPage() {
             {c.sections.playbook.steps.map((s) => (
               <li key={s.boldHead}>
                 <strong className="text-white">{s.boldHead}</strong>
-                {s.rest}
+                {fill(s.rest)}
                 {s.href && s.linkLabel && (
                   <a
                     href={s.href}
@@ -130,7 +140,7 @@ export default function EurovisionNightPage() {
         </Section>
 
         <Section title={c.sections.faq.title}>
-          <FaqAccordion items={c.faq} />
+          <FaqAccordion items={faq} />
         </Section>
 
         <CtaBanner
@@ -140,7 +150,7 @@ export default function EurovisionNightPage() {
           secondary={{ label: c.cta.secondary, href: '/how-to-play' }}
         />
 
-        <RelatedCards heading={c.related.heading} items={c.related.items} />
+        <RelatedCards heading={c.related.heading} items={relatedItems} />
       </ContentLayout>
       <SiteFooter />
     </>

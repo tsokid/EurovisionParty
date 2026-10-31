@@ -54,3 +54,9 @@ export const legalMeta = group({
 
 /** A `{ title, body }` section. */
 export const titleBody = group({ title: text(), body: text() });
+
+/** A HowTo JSON-LD step. */
+export const howToStep = group({ name: text(), text: text() });
+
+/** A related card's title and blurb; the page supplies the href. */
+export const titleBlurb = group({ title: text(), blurb: text() });

@@ -30,7 +30,7 @@ const FILES = [
 describe('no hardcoded live-contest year or city', () => {
   it('covers the guide copy files', () => {
     const names = FILES.map((f) => path.basename(f));
-    for (const n of ['eurovisionNightCopy.ts', 'predictionsCopy.ts', 'homeCopy.ts', 'PredictionsPage.tsx', 'HomePage.tsx', 'en.json', 'el.json']) {
+    for (const n of ['EurovisionNightPage.tsx', 'predictionsCopy.ts', 'homeCopy.ts', 'PredictionsPage.tsx', 'HomePage.tsx', 'en.json', 'el.json']) {
       expect(names).toContain(n);
     }
   });
@@ -44,6 +44,46 @@ describe('no hardcoded live-contest year or city', () => {
         if (MARKER.test(line) || (i > 0 && MARKER.test(lines[i - 1]))) return;
         hits.push(`${path.relative(root, f)}:${i + 1}: ${line.trim().slice(0, 100)}`);
       });
+    }
+    expect(hits).toEqual([]);
+  });
+
+  // CMS page documents (content/pages/*.json) hold the copy that used to live in
+  // *Copy.ts. JSON has no comments, so a dated past fact is allowed here by path
+  // (`docId:locale:path`, list indices as numbers) with the fact it states.
+  const JSON_FACTS: Record<string, string> = {
+    'privacy:en:hero.lede': 'date the policy was last updated',
+    'privacy:el:hero.lede': 'date the policy was last updated',
+    'terms:en:hero.lede': 'date the terms were last updated',
+    'terms:el:hero.lede': 'date the terms were last updated',
+    'eurovision-trivia:en:questions.2.q': 'Eurovision 2026 was held in Vienna',
+    'eurovision-trivia:el:questions.2.q': 'Eurovision 2026 was held in Vienna',
+    'eurovision-trivia:en:questions.2.options.1': 'options of the 2026 host-city question',
+    'eurovision-trivia:el:questions.2.options.1': 'options of the 2026 host-city question',
+    'eurovision-trivia:en:questions.2.answer': 'Vienna hosted 2026 after JJ won 2025 in Basel',
+    'eurovision-trivia:el:questions.2.answer': 'Vienna hosted 2026 after JJ won 2025 in Basel',
+    'eurovision-trivia:en:questions.5.answer': "Austria's 2014 winning song",
+    'eurovision-trivia:el:questions.5.answer': "Austria's 2014 winning song",
+  };
+
+  it('no CMS page document names the live year, city, host, date, venue or broadcaster outside a listed fact', () => {
+    const dir = path.join(root, 'content/pages');
+    const hits: string[] = [];
+    const walkJson = (v: unknown, at: string, push: (p: string, s: string) => void): void => {
+      if (typeof v === 'string') push(at, v);
+      else if (Array.isArray(v)) v.forEach((x, i) => walkJson(x, at ? `${at}.${i}` : String(i), push));
+      else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walkJson(x, at ? `${at}.${k}` : k, push);
+    };
+    const docs = readdirSync(dir).filter((f) => f.endsWith('.json'));
+    expect(docs).toEqual(expect.arrayContaining(['eurovision-night.json', 'eurovision-party.json', 'eurovision-trivia.json']));
+    for (const file of docs) {
+      const doc = JSON.parse(readFileSync(path.join(dir, file), 'utf8')) as Record<string, unknown>;
+      for (const locale of ['en', 'el']) {
+        walkJson(doc[locale], '', (at, s) => {
+          const key = `${file.replace(/\.json$/, '')}:${locale}:${at}`;
+          if (PATTERN.test(s) && !JSON_FACTS[key]) hits.push(`${key}: ${s.slice(0, 100)}`);
+        });
+      }
     }
     expect(hits).toEqual([]);
   });

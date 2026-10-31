@@ -51,23 +51,42 @@ const SENTINEL = /__[a-zA-Z][a-zA-Z0-9]*__/;
 
 const plainCopy = (mod: Record<string, unknown>): Doc => mod.copy as Doc;
 
-/** ContestTexts with `year` set and every other text a sentinel, so a stray use fails extraction. */
+const CONTEST_TEXT_KEYS = ['year', 'city', 'cityIn', 'cityFrom', 'host', 'finalDay', 'finalDayShort', 'finalMonth', 'flag', 'lineup'];
+
+/**
+ * ContestTexts with the mapping's placeholders taken from `vars` and every
+ * other text a sentinel, so a use the mapping does not declare fails extraction.
+ * `decided` is fixed (false): no migrated copy branches on it.
+ */
 function contestTextsFor(vars: Vars): Record<Locale, Record<string, unknown>> {
   const one = (): Record<string, unknown> => ({
-    year: vars.year,
-    city: sentinel('city'),
-    cityIn: sentinel('cityIn'),
-    cityFrom: sentinel('cityFrom'),
-    host: sentinel('host'),
-    finalDay: sentinel('finalDay'),
-    finalDayShort: sentinel('finalDayShort'),
-    finalMonth: sentinel('finalMonth'),
-    flag: sentinel('flag'),
-    lineup: sentinel('lineup'),
+    ...Object.fromEntries(CONTEST_TEXT_KEYS.map((k) => [k, Object.prototype.hasOwnProperty.call(vars, k) ? vars[k] : sentinel(k)])),
     decided: false,
   });
   return { en: one(), el: one() };
 }
+
+/** A copy module of the form `copy(contestTexts)`, templated on `placeholders`. */
+const contestCopy = (docId: string, file: string, placeholders: string[], samples: Vars[]): CopyMapping => ({
+  docId,
+  module: `src/pages/seo/content/${file}.ts`,
+  placeholders,
+  build: (mod, vars) => (mod.copy as (t: unknown) => Doc)(contestTextsFor(vars)),
+  samples,
+});
+
+/**
+ * Round-trip samples: realistic values in both languages, plus one whose
+ * values look like template syntax (braces, `$&`) to prove they are inserted
+ * verbatim.
+ */
+const CONTEST_SAMPLES: Vars[] = [
+  { year: 2031, city: 'Lisbon', cityFrom: 'from Lisbon', finalDay: 'Saturday 17 May 2031', finalDayShort: 'Saturday 17 May' },
+  { year: 2032, city: 'Λισαβόνα', cityFrom: 'από τη Λισαβόνα', finalDay: 'Σάββατο 15 Μαΐου 2032', finalDayShort: 'ένα Σάββατο του Μαΐου' },
+  { year: 1999, city: '{city}', cityFrom: '{{x}} $& }', finalDay: '{finalDay}', finalDayShort: '$1 {{' },
+];
+const samplesFor = (placeholders: string[]): Vars[] =>
+  CONTEST_SAMPLES.map((s) => Object.fromEntries(placeholders.map((p) => [p, s[p]])));
 
 const plain = (docId: string, file: string): CopyMapping => ({
   docId,
@@ -76,6 +95,9 @@ const plain = (docId: string, file: string): CopyMapping => ({
   build: plainCopy,
   samples: [],
 });
+
+const NIGHT_VARS = ['year', 'city', 'cityFrom', 'finalDay'];
+const PARTY_VARS = ['year', 'finalDayShort'];
 
 /** Per-file mapping. Tasks 5-6 append their pages here. */
 export const COPY_MAPPINGS: CopyMapping[] = [
@@ -93,6 +115,13 @@ export const COPY_MAPPINGS: CopyMapping[] = [
     samples: [{ year: 2026 }, { year: 1999 }],
   },
   plain('faq', 'faqCopy'),
+  // Task 5: guides.
+  plain('how-to-play', 'howToPlayCopy'),
+  contestCopy('eurovision-night', 'eurovisionNightCopy', NIGHT_VARS, samplesFor(NIGHT_VARS)),
+  contestCopy('eurovision-games', 'eurovisionGamesCopy', ['year'], samplesFor(['year'])),
+  contestCopy('eurovision-party', 'eurovisionPartyCopy', PARTY_VARS, samplesFor(PARTY_VARS)),
+  plain('eurovision-trivia', 'triviaCopy'),
+  plain('eurovision-duels', 'duelsCopy'),
 ];
 
 // ---- schema walk ---------------------------------------------------------

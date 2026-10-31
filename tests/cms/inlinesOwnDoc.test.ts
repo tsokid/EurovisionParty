@@ -32,9 +32,12 @@ function inlined(html: string): Record<string, unknown> {
 }
 
 describe.skipIf(!built)('prerendered pages inline their own CMS doc', () => {
-  it('covers the Task 4 pages at least', () => {
+  it('covers the Task 4 and Task 5 pages at least', () => {
     expect(migrated.map((p) => p.id)).toEqual(
-      expect.arrayContaining(['about', 'privacy', 'terms', 'cookies', 'dashboard', 'scoring', 'rules', 'faq']),
+      expect.arrayContaining([
+        'about', 'privacy', 'terms', 'cookies', 'dashboard', 'scoring', 'rules', 'faq',
+        'how-to-play', 'eurovision-night', 'eurovision-games', 'eurovision-party', 'eurovision-trivia', 'eurovision-duels',
+      ]),
     );
   });
 

@@ -1,0 +1,434 @@
+{
+  "el": {
+    "crumbs": {
+      "home": "Αρχική",
+      "trivia": "Eurovision trivia"
+    },
+    "cta": {
+      "body": "Άνοιξε ένα δωμάτιο και ξεκίνα τον πρώτο γύρο σε 60 δευτερόλεπτα.",
+      "primary": "Δημιουργία",
+      "secondary": "Πώς να παίξεις",
+      "title": "Κάνε quiz στους φίλους σου απόψε"
+    },
+    "faq": [
+      {
+        "a": "Οι ερωτήσεις αντλούνται από μια επιμελημένη τράπεζα Eurovision trivia που καλύπτει νικητές, σταθμούς ψηφοφορίας, κανόνες γλώσσας, πρώτες συμμετοχές χωρών και viral στιγμές. Η προτίμηση δεκαετίας του δωματίου επηρεάζει σε ποια εποχή δίνουν έμφαση οι ερωτήσεις.",
+        "q": "Πώς επιλέγονται οι ερωτήσεις trivia;"
+      },
+      {
+        "a": "Κάθε ερώτηση τρέχει σε χρονόμετρο 12 δευτερολέπτων στις μονομαχίες. Βαθμολογία = 12 μείον τα δευτερόλεπτα που πέρασαν, οπότε ένας δισταγμός 1 δευτερολέπτου κοστίζει έναν ολόκληρο πόντο. Λάθος απαντήσεις και υπερβάσεις χρόνου παίρνουν μηδέν.",
+        "q": "Πόσο χρόνο έχω για να απαντήσω;"
+      },
+      {
+        "a": "Υπάρχει προεπιλεγμένο όριο ανά ζευγάρι ενσωματωμένο στο παιχνίδι — 3 μονομαχίες, μέγιστο 10. Οι ρεβάνς μετράνε, οπότε δεν μπορείς να εκμεταλλεύεσαι έναν πιο αδύναμο αντίπαλο για πόντους.",
+        "q": "Μπορώ να μονομαχώ ξανά και ξανά τον ίδιο παίκτη;"
+      },
+      {
+        "a": "Ναι — η λειτουργία Quiz τρέχει κατά τη φάση Pre-show, πριν ξεκλειδώσουν οι μονομαχίες. Ο οικοδεσπότης ξεκινάει γρήγορους γύρους· όλοι απαντούν παράλληλα και οι πόντοι προστίθενται στο σύνολο των προβλέψεων.",
+        "q": "Υπάρχει solo λειτουργία trivia;"
+      }
+    ],
+    "hero": {
+      "chip": "Trivia + μονομαχίες",
+      "lede": "Το Eurovision trivia είναι ένα παιχνίδι ερωταπαντήσεων γύρω από την ιστορία, την ψηφοφορία και τους νικητές του Διαγωνισμού Τραγουδιού Eurovision. Στο Eurovision Games, το trivia είναι ο μηχανισμός των μονομαχιών: δύο παίκτες μπορούν να προκαλέσουν ο ένας τον άλλον σε ένα head-to-head γύρο 3 ερωτήσεων κατά τη διάρκεια της εκπομπής, και ο νικητής κλέβει πόντους από τον ηττημένο.",
+      "title": "Eurovision trivia — δείγματα ερωτήσεων και πώς να παίξεις ζωντανά"
+    },
+    "meta": {
+      "description": "Ένα δείγμα 10 ερωτήσεων Eurovision trivia με απαντήσεις, καθώς και πώς να τρέξεις head-to-head trivia μονομαχίες ζωντανά κατά τη διάρκεια της εκπομπής.",
+      "keywords": [
+        "eurovision trivia",
+        "eurovision quiz",
+        "ερωτήσεις eurovision trivia",
+        "eurovision quiz παιχνίδι",
+        "eurovision quiz με φίλους"
+      ],
+      "quizAbout": "Ιστορία, ψηφοφορία και νικητές του Διαγωνισμού Τραγουδιού Eurovision",
+      "quizName": "Eurovision Trivia — 10 Δείγματα Ερωτήσεων",
+      "schemaDescription": "Ένα δείγμα 10 ερωτήσεων Eurovision trivia με απαντήσεις, καθώς και πώς να τρέξεις head-to-head trivia μονομαχίες ζωντανά κατά τη διάρκεια της εκπομπής.",
+      "schemaTitle": "Eurovision Trivia — Δείγματα ερωτήσεων και πώς να παίξεις ζωντανά",
+      "title": "Eurovision Trivia — 10 Δείγματα Ερωτήσεων + Πώς να Παίξεις Ζωντανά"
+    },
+    "questions": [
+      {
+        "answer": "Ιρλανδία και Σουηδία ισοπαλούν με 7 νίκες η καθεμία (η Σουηδία ισοφάρισε το 2023 με τη Loreen).",
+        "options": [
+          "Sweden",
+          "Ireland",
+          "United Kingdom",
+          "France"
+        ],
+        "q": "Ποια χώρα έχει κερδίσει τις περισσότερες φορές την Eurovision;"
+      },
+      {
+        "answer": "1974, με το «Waterloo» εκπροσωπώντας τη Σουηδία.",
+        "options": [
+          "1972",
+          "1974",
+          "1976",
+          "1980"
+        ],
+        "q": "Σε ποια χρονιά κέρδισαν οι ABBA την Eurovision;"
+      },
+      {
+        "answer": "Βιέννη, Αυστρία — ο JJ κέρδισε το 2025 στη Βασιλεία.",
+        "options": [
+          "Stockholm",
+          "Vienna",
+          "Liverpool",
+          "Madrid"
+        ],
+        "q": "Πού διεξήχθη η Eurovision 2026;"
+      },
+      {
+        "answer": "12 πόντους — η υψηλότερη βαθμολογία που μπορεί να δώσει μια κριτική επιτροπή ή μια χώρα σε μία ψηφοφορία.",
+        "options": [
+          "10 points",
+          "12 points",
+          "8 points",
+          "7 points"
+        ],
+        "q": "Πόσους πόντους δίνει το «douze points»;"
+      },
+      {
+        "answer": "Κύπρος — δεύτερη πολλές φορές, ποτέ πρώτη.",
+        "options": [
+          "Cyprus",
+          "Iceland",
+          "Malta",
+          "Bulgaria"
+        ],
+        "q": "Ποια χώρα έχει συμμετάσχει τις περισσότερες φορές χωρίς να κερδίσει ποτέ;"
+      },
+      {
+        "answer": "Rise Like a Phoenix (Αυστρία, 2014).",
+        "options": [
+          "Heroes",
+          "Rise Like a Phoenix",
+          "Euphoria",
+          "Toy"
+        ],
+        "q": "Ποιο ήταν το νικητήριο τραγούδι της Conchita Wurst το 2014;"
+      },
+      {
+        "answer": "Ιταλία — νίκες το 1964 και το 1990, αποχώρηση το 1997, επιστροφή το 2011.",
+        "options": [
+          "Italy",
+          "Monaco",
+          "Yugoslavia",
+          "Luxembourg"
+        ],
+        "q": "Ποια χώρα αποχώρησε από την Eurovision αφού κέρδισε αρκετές φορές στις πρώτες δεκαετίες, και επέστρεψε το 2011;"
+      },
+      {
+        "answer": "583 — χαρίζοντας στη Σουηδία τον 7ο τίτλο της.",
+        "options": [
+          "340",
+          "440",
+          "583",
+          "628"
+        ],
+        "q": "Πόσους πόντους πέτυχε η Loreen με το «Tattoo» το 2023;"
+      },
+      {
+        "answer": "Στην πράξη χωρίς όριο· το ρεκόρ είναι περίπου 758 (Salvador Sobral, Πορτογαλία 2017).",
+        "options": [
+          "400",
+          "500",
+          "600",
+          "744"
+        ],
+        "q": "Ποιος είναι ο μέγιστος αριθμός πόντων που μπορεί να συγκεντρώσει μια χώρα στο σύγχρονο σύστημα ψηφοφορίας;"
+      },
+      {
+        "answer": "1997 — πέντε χώρες δοκίμασαν το televote· επεκτάθηκε ραγδαία στη συνέχεια.",
+        "options": [
+          "1991",
+          "1997",
+          "2001",
+          "2009"
+        ],
+        "q": "Σε ποιο έτος επέτρεψε η Eurovision για πρώτη φορά τη δημόσια τηλεψηφοφορία στις περισσότερες συμμετέχουσες χώρες;"
+      }
+    ],
+    "related": {
+      "duels": {
+        "blurb": "Head-to-head μονομαχίες 3 ερωτήσεων κατά τη ζωντανή εκπομπή.",
+        "title": "Eurovision μονομαχίες"
+      },
+      "howToPlay": {
+        "blurb": "Ο οδηγός 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι τα τρόπαια.",
+        "title": "Πώς να παίξεις"
+      },
+      "night": {
+        "blurb": "Το playbook 10 βημάτων για να φιλοξενήσεις ένα watch party.",
+        "title": "Βραδιά Eurovision"
+      },
+      "predictions": {
+        "blurb": "Φόρμα Top 5 και Worst 5, βαθμολογία και στρατηγική.",
+        "title": "Παιχνίδι προβλέψεων"
+      },
+      "rules": {
+        "blurb": "Sudden death, απορριμμένες μονομαχίες και πρωτόκολλο tiebreak.",
+        "title": "Κανονισμός"
+      },
+      "scoring": {
+        "blurb": "Πώς οι πόντοι από quiz, μονομαχίες και προβλέψεις τροφοδοτούν τον Πρωταθλητή.",
+        "title": "Μαθηματικά βαθμολογίας"
+      }
+    },
+    "sections": {
+      "categories": {
+        "easyBody": "νικητές ανά χώρα, ο κανόνας douze points, η πόλη-οικοδεσπότης.",
+        "easyLabel": "Εύκολο:",
+        "hardBody": "έτη μεταρρύθμισης ψηφοφορίας, αποχωρήσεις, αντιπαραθέσεις, κανόνες γλώσσας.",
+        "hardLabel": "Δύσκολο:",
+        "mediumBody": "τίτλοι τραγουδιών, έτος πρώτης συμμετοχής, θέσεις στους ημιτελικούς.",
+        "mediumLabel": "Μεσαίο:",
+        "title": "Κατηγορίες και επίπεδα δυσκολίας"
+      },
+      "disclaimer": "Οι ερωτήσεις αντλούνται από επιμελημένη τράπεζα και δεν έχουν επαληθευτεί μεμονωμένα. Πρόκειται για party game για διασκέδαση.",
+      "duels": {
+        "body1Em": "Πρόκληση",
+        "body1Post": ", και μια μονομαχία 3 ερωτήσεων εμφανίζεται στις οθόνες και των δύο. Κάθε παίκτης έχει 15 δευτερόλεπτα ανά ερώτηση. Όποιος βρει τις περισσότερες σωστές κερδίζει· σε ισοπαλία ξεχωρίζει η ταχύτητα της σωστής απάντησης. Ο νικητής κλέβει πόντους από τον ηττημένο. Κάθε ζευγάρι έχει προεπιλεγμένο όριο 3 μονομαχιών ανά βραδιά (μέγιστο 10), οι ρεβάνς μετράνε, οπότε δεν μπορείς να εκμεταλλευτείς έναν αδύναμο αντίπαλο.",
+        "body1Pre": "Κάνε κλικ στο όνομα οποιουδήποτε άλλου παίκτη στον ζωντανό πίνακα βαθμολογίας, πάτησε ",
+        "body2LinkLabel": "ειδική σελίδα μονομαχιών",
+        "body2Post": ".",
+        "body2Pre": "Για τον πλήρη κανονισμό μονομαχιών — μαθηματικά βαθμολογίας, Κλοπή vs Διπλασιασμός, και τα τρόπαια Μονομάχου/Κλέφτη — δες την ",
+        "title": "Πώς λειτουργούν οι μονομαχίες στο Eurovision Games"
+      },
+      "faqTitle": "Συχνές ερωτήσεις",
+      "play": {
+        "linkLabel": "Δημιούργησε ένα δωμάτιο",
+        "post": " στο Eurovision Games και κάλεσε έως 19 φίλους να παίξουν.",
+        "pre": "Το trivia γίνεται κατά τη διάρκεια της εκπομπής. Καλύτερα παράθυρα: ανάμεσα σε αδιάφορες συμμετοχές, στο interval act και κατά την ψηφοφορία της κριτικής επιτροπής. ",
+        "title": "Παίξε ζωντανά"
+      },
+      "samples": {
+        "answerLabel": "Απάντηση:",
+        "intro": "Δέκα ερωτήσεις από τη ζωντανή τράπεζα — δοκίμασέ τες πριν προκαλέσεις έναν φίλο.",
+        "questionPrefix": "Ε",
+        "title": "Δείγματα ερωτήσεων (με απαντήσεις)"
+      },
+      "whatIs": {
+        "body": "Ο Διαγωνισμός Τραγουδιού Eurovision διεξάγεται από το 1956, με 50+ χώρες να αγωνίζονται σε 69 μεγάλους τελικούς (1956-2025· 2020 ακυρώθηκε) — μια τεράστια δεξαμενή trivia. Οι κατηγορίες που εμφανίζονται πιο συχνά: νικητές ανά έτος, σταθμοί στην ψηφοφορία, κανόνες γλώσσας, αλλαγές βαθμολογίας, πρώτες συμμετοχές και αποχωρήσεις χωρών, viral συμμετοχές, αντιπαραθέσεις και τίτλοι τραγουδιών.",
+        "title": "Τι είναι το Eurovision trivia;"
+      }
+    }
+  },
+  "en": {
+    "crumbs": {
+      "home": "Home",
+      "trivia": "Eurovision trivia"
+    },
+    "cta": {
+      "body": "Open a room and trigger your first round in 60 seconds.",
+      "primary": "Create",
+      "secondary": "How to play",
+      "title": "Quiz your friends tonight"
+    },
+    "faq": [
+      {
+        "a": "Questions are pulled from a curated Eurovision trivia bank covering winners, voting milestones, language rules, country debuts, and viral moments. The room’s decade preference biases which era questions skew toward.",
+        "q": "How are trivia questions chosen?"
+      },
+      {
+        "a": "Each question runs on a 12-second timer in duels. Score = 12 minus elapsed seconds, so a 1-second hesitation costs a full point. Wrong answers and timeouts score zero.",
+        "q": "How long do I have to answer?"
+      },
+      {
+        "a": "There is a default per-pair cap baked into the system — 3 duels, max 10. Rematches count, so you cannot grind a single weaker opponent for points.",
+        "q": "Can I duel the same player repeatedly?"
+      },
+      {
+        "a": "Yes — Quiz mode runs during the Preshow phase before duels unlock. The host triggers fast-fire rounds; everyone answers in parallel and scores stack into the predictions total.",
+        "q": "Is there a solo trivia mode?"
+      }
+    ],
+    "hero": {
+      "chip": "Trivia + duels",
+      "lede": "Eurovision trivia is a question-and-answer format about the history, voting, and winners of the Eurovision Song Contest. In Eurovision Games, trivia is the duel mechanic: any two players can challenge each other to a head-to-head 3-question round during the broadcast, and the winner steals points from the loser.",
+      "title": "Eurovision trivia — sample questions and how to play live"
+    },
+    "meta": {
+      "description": "A 10-question Eurovision trivia sampler with answers, plus how to run head-to-head trivia duels live during the broadcast.",
+      "keywords": [
+        "eurovision trivia",
+        "eurovision quiz",
+        "eurovision trivia questions",
+        "eurovision quiz game",
+        "eurovision quiz with friends"
+      ],
+      "quizAbout": "Eurovision Song Contest history, voting, and winners",
+      "quizName": "Eurovision Trivia — 10 Sample Questions",
+      "schemaDescription": "A 10-question Eurovision trivia sampler with answers, plus how to run head-to-head trivia duels live during the broadcast.",
+      "schemaTitle": "Eurovision Trivia — Sample Questions and How to Play Live",
+      "title": "Eurovision Trivia — 10 Sample Questions + How to Play Live"
+    },
+    "questions": [
+      {
+        "answer": "Ireland and Sweden tie with 7 wins each (Sweden caught up in 2023 with Loreen).",
+        "options": [
+          "Sweden",
+          "Ireland",
+          "United Kingdom",
+          "France"
+        ],
+        "q": "Which country has won Eurovision the most times?"
+      },
+      {
+        "answer": "1974, with \"Waterloo\" representing Sweden.",
+        "options": [
+          "1972",
+          "1974",
+          "1976",
+          "1980"
+        ],
+        "q": "In what year did ABBA win Eurovision?"
+      },
+      {
+        "answer": "Vienna, Austria — JJ won 2025 in Basel.",
+        "options": [
+          "Stockholm",
+          "Vienna",
+          "Liverpool",
+          "Madrid"
+        ],
+        "q": "Where was Eurovision 2026 held?"
+      },
+      {
+        "answer": "12 points — the highest score a jury or country can give in a single vote.",
+        "options": [
+          "10 points",
+          "12 points",
+          "8 points",
+          "7 points"
+        ],
+        "q": "What does the \"douze points\" award?"
+      },
+      {
+        "answer": "Cyprus — runner-up multiple times, never first.",
+        "options": [
+          "Cyprus",
+          "Iceland",
+          "Malta",
+          "Bulgaria"
+        ],
+        "q": "Which country has competed the most times without winning?"
+      },
+      {
+        "answer": "Rise Like a Phoenix (Austria, 2014).",
+        "options": [
+          "Heroes",
+          "Rise Like a Phoenix",
+          "Euphoria",
+          "Toy"
+        ],
+        "q": "What was Conchita Wurst’s winning song in 2014?"
+      },
+      {
+        "answer": "Italy — winners in 1964 and 1990, withdrew in 1997, returned in 2011.",
+        "options": [
+          "Italy",
+          "Monaco",
+          "Yugoslavia",
+          "Luxembourg"
+        ],
+        "q": "Which country withdrew from Eurovision after winning multiple early contests, then returned in 2011?"
+      },
+      {
+        "answer": "583 — winning Sweden its 7th title.",
+        "options": [
+          "340",
+          "440",
+          "583",
+          "628"
+        ],
+        "q": "How many points did Loreen score with \"Tattoo\" in 2023?"
+      },
+      {
+        "answer": "Effectively unbounded; in practice the record sits around 758 (Salvador Sobral, Portugal 2017).",
+        "options": [
+          "400",
+          "500",
+          "600",
+          "744"
+        ],
+        "q": "What is the maximum number of points a country can earn in the modern voting system?"
+      },
+      {
+        "answer": "1997 — five countries trialled televoting; it expanded rapidly thereafter.",
+        "options": [
+          "1991",
+          "1997",
+          "2001",
+          "2009"
+        ],
+        "q": "In what year did Eurovision allow public televoting for the first time across most participating countries?"
+      }
+    ],
+    "related": {
+      "duels": {
+        "blurb": "Head-to-head 3-question duels during the live show.",
+        "title": "Eurovision duels"
+      },
+      "howToPlay": {
+        "blurb": "The 60-second walkthrough from create-room to trophy reveal.",
+        "title": "How to play"
+      },
+      "night": {
+        "blurb": "The 10-step playbook for hosting a watch party.",
+        "title": "Eurovision night"
+      },
+      "predictions": {
+        "blurb": "Top 5 and Worst 5 format, scoring, and strategy.",
+        "title": "Predictions game"
+      },
+      "rules": {
+        "blurb": "Sudden death, refused duels, and tiebreak protocol.",
+        "title": "Rule book"
+      },
+      "scoring": {
+        "blurb": "How quiz, duel, and prediction points feed the Champion total.",
+        "title": "Scoring formulas"
+      }
+    },
+    "sections": {
+      "categories": {
+        "easyBody": "winners by country, the douze points rule, host city.",
+        "easyLabel": "Easy:",
+        "hardBody": "voting reform years, withdrawals, controversies, language rules.",
+        "hardLabel": "Hard:",
+        "mediumBody": "song titles, year-of-debut, semi-final placements.",
+        "mediumLabel": "Medium:",
+        "title": "Categories and difficulty tiers"
+      },
+      "disclaimer": "Questions are drawn from a curated bank and have not been individually fact-checked. This is a party game for fun — treat answers as entertainment.",
+      "duels": {
+        "body1Em": "Challenge",
+        "body1Post": ", and a 3-question duel pops up on both your screens. Each player has 15 seconds per question. Whoever gets more correct wins; faster correct answers break a tie. The winner steals points from the loser. Each pair has a default cap of 3 duels per night (max 10), rematches counted, so you can't farm one weaker opponent.",
+        "body1Pre": "Click any other player's name in the live leaderboard, hit ",
+        "body2LinkLabel": "dedicated duels page",
+        "body2Post": ".",
+        "body2Pre": "For the full duel rule book — scoring math, Steal vs Double, and the Duelist/Thief trophies — see the ",
+        "title": "How duels work in Eurovision Games"
+      },
+      "faqTitle": "Frequently asked questions",
+      "play": {
+        "linkLabel": "Create a room",
+        "post": " on Eurovision Games and invite up to 19 friends to play.",
+        "pre": "Trivia happens during the show. Best windows: between underwhelming entries, during the interval act, and through the jury vote. ",
+        "title": "Play live"
+      },
+      "samples": {
+        "answerLabel": "Answer:",
+        "intro": "Ten questions pulled from the live bank — try them before you challenge a friend.",
+        "questionPrefix": "Q",
+        "title": "Sample questions (with answers)"
+      },
+      "whatIs": {
+        "body": "The Eurovision Song Contest has been running since 1956, with 50+ countries competing across 69 grand finals (1956-2025; 2020 cancelled) — that's a deep well of trivia. Categories that come up most: winners by year, voting milestones, language rules, scoring changes, country debuts and withdrawals, viral entries, controversies, and song titles.",
+        "title": "What is Eurovision trivia?"
+      }
+    }
+  }
+}

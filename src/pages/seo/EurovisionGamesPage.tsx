@@ -11,14 +11,19 @@ import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
-import { copy as copyAll } from './content/eurovisionGamesCopy';
-import { contestTexts } from './content/contestText';
+import { usePageContent } from '../../lib/cms/usePageContent';
+import type { EurovisionGamesContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-games';
+import { PageContentFallback } from './PageContentFallback';
+import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
 import { useCurrentContest } from '../../lib/currentContest';
 
 export default function EurovisionGamesPage() {
   const locale = useLocale();
   const cc = useCurrentContest();
-  const c = copyAll(contestTexts(cc))[locale];
+  const content = usePageContent<EurovisionGamesContent>('eurovision-games');
+  if (content.status !== 'ready') return <PageContentFallback state={content} />;
+  const c = content.data;
+  const vars = { year: cc.year };
 
   const crumbs: Crumb[] = [
     { label: c.crumbs.home, href: '/' },
@@ -31,7 +36,7 @@ export default function EurovisionGamesPage() {
   const article = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: c.meta.headline,
+    headline: interpolate(c.meta.headline, vars),
     description: c.meta.articleDescription,
     image: 'https://eurovision.games/logo.png',
     author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
@@ -59,7 +64,7 @@ export default function EurovisionGamesPage() {
       <PageSeo
         pageId="eurovision-games"
         locale={locale}
-        title={c.meta.title}
+        title={interpolate(c.meta.title, vars)}
         description={c.meta.description}
         ogType="article"
         ogImage="https://eurovision.games/logo.png"
@@ -98,7 +103,7 @@ export default function EurovisionGamesPage() {
         </Section>
 
         <Section title={c.sections.predictions.title}>
-          <p>{c.sections.predictions.p1}</p>
+          <p>{interpolate(c.sections.predictions.p1, vars)}</p>
           <p>
             {c.sections.predictions.p2Before}
             <LocaleLink to="/eurovision-predictions" className="text-euro-pink-light hover:text-white underline underline-offset-2">

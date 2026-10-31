@@ -25,11 +25,11 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10);
 // only requires updating PAGE_REGISTRY + this map.
 const PAGE_FILES: Record<PageId, string[]> = {
   'home': ['src/pages/HomePage.tsx', 'src/components/seo/HomeSeoBlock.tsx'],
-  'how-to-play': ['src/pages/seo/HowToPlayPage.tsx', 'src/pages/seo/content/howToPlayCopy.ts'],
-  'eurovision-night': ['src/pages/seo/EurovisionNightPage.tsx', 'src/pages/seo/content/eurovisionNightCopy.ts'],
-  'eurovision-games': ['src/pages/seo/EurovisionGamesPage.tsx', 'src/pages/seo/content/eurovisionGamesCopy.ts'],
-  'eurovision-party': ['src/pages/seo/EurovisionPartyPage.tsx', 'src/pages/seo/content/eurovisionPartyCopy.ts'],
-  'eurovision-trivia': ['src/pages/seo/EurovisionTriviaPage.tsx', 'src/pages/seo/content/triviaCopy.ts'],
+  'how-to-play': ['src/pages/seo/HowToPlayPage.tsx', 'content/pages/how-to-play.json'],
+  'eurovision-night': ['src/pages/seo/EurovisionNightPage.tsx', 'content/pages/eurovision-night.json'],
+  'eurovision-games': ['src/pages/seo/EurovisionGamesPage.tsx', 'content/pages/eurovision-games.json'],
+  'eurovision-party': ['src/pages/seo/EurovisionPartyPage.tsx', 'content/pages/eurovision-party.json'],
+  'eurovision-trivia': ['src/pages/seo/EurovisionTriviaPage.tsx', 'content/pages/eurovision-trivia.json'],
   'eurovision-predictions': ['src/pages/seo/PredictionsPage.tsx', 'src/pages/seo/content/predictionsCopy.ts'],
   'faq': ['src/pages/seo/FAQPage.tsx', 'content/pages/faq.json'],
   'rules': ['src/pages/seo/RulesPage.tsx', 'content/pages/rules.json'],
@@ -37,7 +37,7 @@ const PAGE_FILES: Record<PageId, string[]> = {
   'about': ['src/pages/seo/AboutPage.tsx', 'content/pages/about.json'],
   'privacy': ['src/pages/seo/PrivacyPage.tsx', 'content/pages/privacy.json'],
   'terms': ['src/pages/seo/TermsPage.tsx', 'content/pages/terms.json'],
-  'eurovision-duels': ['src/pages/seo/EurovisionDuelsPage.tsx', 'src/pages/seo/content/duelsCopy.ts'],
+  'eurovision-duels': ['src/pages/seo/EurovisionDuelsPage.tsx', 'content/pages/eurovision-duels.json'],
   'dashboard': ['src/pages/seo/DashboardPage.tsx', 'content/pages/dashboard.json'],
   'cookies': ['src/pages/seo/CookiesPage.tsx', 'content/pages/cookies.json'],
   // Pages from the registry that don't ship as standalone TSX yet — fall back

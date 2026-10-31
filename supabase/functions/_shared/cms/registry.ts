@@ -8,7 +8,13 @@ import type { z } from 'zod';
 import { aboutSchema } from './schemas/about.ts';
 import { cookiesSchema } from './schemas/cookies.ts';
 import { dashboardSchema } from './schemas/dashboard.ts';
+import { eurovisionDuelsSchema } from './schemas/eurovision-duels.ts';
+import { eurovisionGamesSchema } from './schemas/eurovision-games.ts';
+import { eurovisionNightSchema } from './schemas/eurovision-night.ts';
+import { eurovisionPartySchema } from './schemas/eurovision-party.ts';
+import { eurovisionTriviaSchema } from './schemas/eurovision-trivia.ts';
 import { faqSchema } from './schemas/faq.ts';
+import { howToPlaySchema } from './schemas/how-to-play.ts';
 import { privacySchema } from './schemas/privacy.ts';
 import { rulesSchema } from './schemas/rules.ts';
 import { scoringSchema } from './schemas/scoring.ts';
@@ -32,6 +38,12 @@ export const CMS_DOC_TYPES: Record<string, DocTypeDef> = {
   scoring: { schema: scoringSchema, label: 'Scoring', group: 'site' },
   rules: { schema: rulesSchema, label: 'Rules', group: 'site' },
   faq: { schema: faqSchema, label: 'FAQ', group: 'site' },
+  'how-to-play': { schema: howToPlaySchema, label: 'How to play', group: 'site' },
+  'eurovision-night': { schema: eurovisionNightSchema, label: 'Eurovision night', group: 'site' },
+  'eurovision-games': { schema: eurovisionGamesSchema, label: 'Eurovision Games', group: 'site' },
+  'eurovision-party': { schema: eurovisionPartySchema, label: 'Eurovision party', group: 'site' },
+  'eurovision-trivia': { schema: eurovisionTriviaSchema, label: 'Eurovision trivia', group: 'site' },
+  'eurovision-duels': { schema: eurovisionDuelsSchema, label: 'Duels', group: 'site' },
 };
 
 const FAMILIES = ['archive', 'country', 'hub'] as const;
