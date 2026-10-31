@@ -75,3 +75,39 @@ export async function writeFixtures(): Promise<number> {
   }
   return urls.length;
 }
+
+// ---------------------------------------------------------------------------
+// Data pages (CMS 3c Task 6): hub, archive and country pages, with the
+// editorial layer. A page without an editorial doc must prerender exactly as
+// before the layer existed. The whole prerender output (status, head tags,
+// body, inlined #__content__) is hashed per URL, so the fixture stays small:
+// tests/fixtures/data-pages-before.json.
+
+export const DATA_FIXTURE = resolve(process.cwd(), 'tests/fixtures/data-pages-before.json');
+
+/** Every data-driven public URL (hub + subpages, archive, countries, both indexes), both locales. */
+export async function dataPageUrls(): Promise<string[]> {
+  const { dynamicPageUrls } = await import('../../src/lib/seo/dynamicPages');
+  const { contentData } = await import('../../src/lib/seo/contentData');
+  return dynamicPageUrls(contentData()).map((p) => p.path);
+}
+
+/** sha256 of everything the prerender writes for `url`. */
+export async function dataPageDigest(url: string): Promise<string> {
+  const r = await renderPage(url);
+  const payload = JSON.stringify({
+    status: r.status,
+    head: r.head ? headTagsHtml(r.head) : null,
+    html: r.html,
+    content: JSON.stringify(r.content),
+  });
+  const { createHash } = await import('node:crypto');
+  return createHash('sha256').update(payload, 'utf8').digest('hex');
+}
+
+export async function writeDataFixture(): Promise<number> {
+  const out: Record<string, string> = {};
+  for (const url of await dataPageUrls()) out[url] = await dataPageDigest(url);
+  writeFileSync(DATA_FIXTURE, JSON.stringify(out, null, 2) + '\n', 'utf8');
+  return Object.keys(out).length;
+}
