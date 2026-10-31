@@ -2,7 +2,7 @@
 //
 // Pure and Deno-free: imported by the publish-content edge function (Deno)
 // and by vitest and scripts/snapshot/build-local.ts (Node). No URL imports,
-// no Deno or Node APIs; the only import is type-only.
+// no Deno or Node APIs; imports only types and the shared serializer.
 //
 // Output: { 'content/site.json', 'content/contests/{year}.json',
 // 'content/countries/{iso}.json', 'content/contests/index.json',
@@ -26,6 +26,10 @@ import type {
   IndexWinner,
   SiteSnapshot,
 } from '../_shared/contestTypes.ts';
+import { stableJson } from '../_shared/stableJson.ts';
+
+/** The shared serializer, re-exported for existing importers. */
+export { stableJson };
 
 export type SnapshotInput = {
   contests: ContestRow[];
@@ -44,19 +48,6 @@ export type SnapshotInput = {
 
 /** One publish_input().cms_documents row. */
 export type CmsDocumentRow = { doc_id: string; doc_type: string; data: { en: unknown; el: unknown } };
-
-/** JSON with object keys sorted at every level, 2-space indent, trailing newline. */
-export function stableJson(value: unknown): string {
-  const sort = (v: unknown): unknown => {
-    if (Array.isArray(v)) return v.map(sort);
-    if (v && typeof v === 'object') {
-      const o = v as Record<string, unknown>;
-      return Object.fromEntries(Object.keys(o).sort().map((k) => [k, sort(o[k])]));
-    }
-    return v;
-  };
-  return JSON.stringify(sort(value), null, 2) + '\n';
-}
 
 /** A country page is indexable from this many non-cancelled participations (mirrors src/lib/seo/dynamicPages.ts, which Deno cannot import). */
 export const COUNTRY_INDEXABLE_MIN = 3;

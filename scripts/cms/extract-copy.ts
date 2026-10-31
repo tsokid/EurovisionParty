@@ -27,7 +27,7 @@ import { placeholdersIn } from '../../supabase/functions/_shared/cms/placeholder
 import { CMS_DOC_TYPES, docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 import { validateDocument } from '../../supabase/functions/_shared/cms/validate';
 import { mapStrings } from '../../supabase/functions/_shared/cms/walk';
-import { stableJson } from '../history/import';
+import { stableJson } from '../../supabase/functions/_shared/stableJson';
 
 /** Moved to _shared/cms (the admin preview uses it too); re-exported for the proofs. */
 export { interpolateDocument };

@@ -14,7 +14,7 @@
 //
 // Pure and Deno-free.
 import { buildSnapshotFiles, type SnapshotInput } from './snapshot.ts';
-import { cmsFiles, type CmsIssue } from './cmsFiles.ts';
+import { cmsFiles, CmsValidationError, type CmsIssue } from './cmsFiles.ts';
 import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
 import type { CommitResult, FileTransforms } from './github.ts';
 
@@ -105,6 +105,7 @@ export async function runPublish(deps: PublishDeps): Promise<PublishResult> {
       },
     });
   } catch (e) {
+    if (e instanceof CmsValidationError && e.warnings.length) cms = { warnings: e.warnings };
     const error = message(e);
     const warning = await tryEnd(deps, { id, status: 'error', sha: null, files: null, error });
     return { status: 'error', run_id: id, sha: null, files_changed: 0, error, ...warning, ...cms };

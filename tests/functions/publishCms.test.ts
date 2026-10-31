@@ -4,7 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { cmsFiles, CmsValidationError } from '../../supabase/functions/publish-content/cmsFiles';
+import { cmsFiles, CmsValidationError, MAX_LINE, MAX_MESSAGE_BYTES } from '../../supabase/functions/publish-content/cmsFiles';
 import { runPublish, type PublishDeps } from '../../supabase/functions/publish-content/run';
 import type { FileTransforms } from '../../supabase/functions/publish-content/github';
 import { buildSnapshotFiles, type CmsDocumentRow, type SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
@@ -131,6 +131,42 @@ describe('cmsFiles', () => {
     expect(lines[21]).toBe('+5 more');
     expect(lines).toHaveLength(22);
   });
+
+  it('keeps the warnings on the error: they survive the refusal', () => {
+    const warned = edited('not-found', (d) => { d.en.meta.title = 'x'.repeat(75); });
+    const bad = edited('faq', (d) => { d.en.hero = 42; });
+    const e = thrown(() => cmsFiles([row('not-found', warned), row('faq', bad)]));
+    expect(e.warnings).toContainEqual(
+      { doc_id: 'not-found', locale: 'en', path: 'meta.title', message: expect.stringMatching(/Longer than recommended/) },
+    );
+  });
+
+  it('clips each error line to 200 characters with "…"', () => {
+    const e = new CmsValidationError([{ doc_id: 'faq', locale: 'en', path: 'hero.title', message: 'x'.repeat(500) }]);
+    const line = e.message.split('\n')[1];
+    expect(Array.from(line)).toHaveLength(MAX_LINE);
+    expect(line.startsWith('faq [en] hero.title: xxx')).toBe(true);
+    expect(line.endsWith('x…')).toBe(true);
+    // A short line is untouched.
+    expect(new CmsValidationError([{ doc_id: 'faq', locale: null, path: '', message: 'short' }]).message)
+      .toBe('CMS validation failed: 1 error in 1 document\nfaq [doc] (root): short');
+  });
+
+  it('caps the whole message at 4 KB (UTF-8), ending "… +N more"', () => {
+    // 30 errors whose clipped lines are ~400 bytes each (Greek is 2 bytes a character).
+    const errors = Array.from({ length: 30 }, (_, i) => ({
+      doc_id: `doc-${String(i).padStart(2, '0')}`, locale: 'el' as const, path: 'hero.lede', message: 'λ'.repeat(300),
+    }));
+    const msg = new CmsValidationError(errors).message;
+    expect(new TextEncoder().encode(msg).length).toBeLessThanOrEqual(MAX_MESSAGE_BYTES);
+    const lines = msg.split('\n');
+    expect(lines[0]).toBe('CMS validation failed: 30 errors in 30 documents');
+    const listed = lines.slice(1, -1);
+    expect(listed.length).toBeGreaterThan(5);
+    expect(listed.length).toBeLessThan(20);
+    expect(listed.every((l, i) => l.startsWith(`doc-${String(i).padStart(2, '0')} [el] hero.lede: λ`) && l.endsWith('…'))).toBe(true);
+    expect(lines.at(-1)).toBe(`… +${30 - listed.length} more`);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -197,5 +233,23 @@ describe('runPublish with CMS drafts', () => {
     const error = (out as { error: string }).error;
     expect(error).toMatch(/^CMS validation failed: 1 error in 1 document\nfaq \[en\] hero: /);
     expect(endPublish).toHaveBeenCalledWith({ id: 9, status: 'error', sha: null, files: null, error });
+  });
+
+  it('a refused publish still returns the warnings', async () => {
+    const warned = edited('not-found', (d) => { d.el.meta.title = 'y'.repeat(70); });
+    const bad = edited('faq', (d) => { d.en.hero = 42; });
+    const { d, commitFiles } = deps({ ...base, cms_documents: [row('not-found', warned), row('faq', bad)] });
+    const out = await runPublish(d);
+    expect(out.status).toBe('error');
+    expect(commitFiles).not.toHaveBeenCalled();
+    expect((out as { warnings?: unknown[] }).warnings).toContainEqual(
+      { doc_id: 'not-found', locale: 'el', path: 'meta.title', message: expect.any(String) },
+    );
+  });
+
+  it('a non-CMS error carries no warnings', async () => {
+    const { d } = deps({ ...base, cms_documents: [row('not-found')] });
+    d.commitFiles = async () => { throw new Error('GitHub 500'); };
+    expect(await runPublish(d)).toEqual({ status: 'error', run_id: 9, sha: null, files_changed: 0, error: 'GitHub 500' });
   });
 });

@@ -11,35 +11,63 @@
 // tests/functions/zodPin.test.ts).
 import { docTypeFor } from '../_shared/cms/registry.ts';
 import { validateDocument, type Locale } from '../_shared/cms/validate.ts';
-import { stableJson, type CmsDocumentRow } from './snapshot.ts';
+import { stableJson } from '../_shared/stableJson.ts';
+import type { CmsDocumentRow } from './snapshot.ts';
 
 /** A validation issue with the document it belongs to. */
 export type CmsIssue = { doc_id: string; locale: Locale | null; path: string; message: string };
 
 /** Errors listed in the message; the rest are counted ("+N more"). */
 const LISTED = 20;
+/** Max characters of one listed error line (longer ones end in "…"). */
+export const MAX_LINE = 200;
+/** Max UTF-8 bytes of the whole message (it is stored in publish_runs.error and shown in the admin). */
+export const MAX_MESSAGE_BYTES = 4096;
 
 /** Same rule as cms_documents.doc_id (migration 076): a safe file name. */
 const DOC_ID = /^[a-z0-9-]+$/;
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
+const bytes = (s: string) => new TextEncoder().encode(s).length;
+
+/** At most `max` code points, the last being "…" when cut. */
+function clip(s: string, max: number): string {
+  const chars = Array.from(s);
+  return chars.length <= max ? s : chars.slice(0, max - 1).join('') + '…';
+}
+
 /** `faq [en] hero.title: Required`; a document-level issue is `faq [doc] (root): ...`. */
 export const formatIssue = (i: CmsIssue) => `${i.doc_id} [${i.locale ?? 'doc'}] ${i.path || '(root)'}: ${i.message}`;
 
+/**
+ * Header, then the first LISTED errors (each clipped to MAX_LINE), then
+ * "+N more". If that exceeds MAX_MESSAGE_BYTES, trailing error lines are
+ * dropped and the tail becomes "… +N more" counting every unlisted error.
+ */
+function errorMessage(errors: CmsIssue[]): string {
+  const docs = new Set(errors.map((e) => e.doc_id)).size;
+  const header = `CMS validation failed: ${plural(errors.length, 'error')} in ${plural(docs, 'document')}`;
+  const lines = errors.slice(0, LISTED).map((e) => clip(formatIssue(e), MAX_LINE));
+  const full = [header, ...lines, ...(errors.length > LISTED ? [`+${errors.length - LISTED} more`] : [])].join('\n');
+  if (bytes(full) <= MAX_MESSAGE_BYTES) return full;
+  for (let n = lines.length - 1; n >= 0; n--) {
+    const msg = [header, ...lines.slice(0, n), `… +${errors.length - n} more`].join('\n');
+    if (bytes(msg) <= MAX_MESSAGE_BYTES) return msg;
+  }
+  return clip(header, 200); // unreachable: the header alone is short
+}
+
 export class CmsValidationError extends Error {
   readonly errors: CmsIssue[];
+  /** Warnings from the same run (they survive the refusal so the admin can show them). */
+  readonly warnings: CmsIssue[];
 
-  constructor(errors: CmsIssue[]) {
-    const docs = new Set(errors.map((e) => e.doc_id)).size;
-    const lines = [
-      `CMS validation failed: ${plural(errors.length, 'error')} in ${plural(docs, 'document')}`,
-      ...errors.slice(0, LISTED).map(formatIssue),
-      ...(errors.length > LISTED ? [`+${errors.length - LISTED} more`] : []),
-    ];
-    super(lines.join('\n'));
+  constructor(errors: CmsIssue[], warnings: CmsIssue[] = []) {
+    super(errorMessage(errors));
     this.name = 'CmsValidationError';
     this.errors = errors;
+    this.warnings = warnings;
   }
 }
 
@@ -83,6 +111,6 @@ export function cmsFiles(docs: readonly CmsDocumentRow[] | undefined): { files: 
     files[`content/pages/${doc_id}.json`] = stableJson(data);
   }
 
-  if (errors.length) throw new CmsValidationError(errors);
+  if (errors.length) throw new CmsValidationError(errors, warnings);
   return { files, warnings };
 }

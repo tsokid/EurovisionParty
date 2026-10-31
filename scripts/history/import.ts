@@ -12,6 +12,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchContestWikitext } from './fetchWikitext';
 import { parseContest, type ContestRecord, type EntryRecord } from './parseContest';
+import { stableJson } from '../../supabase/functions/_shared/stableJson';
+
+/** The shared serializer (publish-content writes with the same one); re-exported for existing importers. */
+export { stableJson };
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, '../..');
@@ -38,22 +42,6 @@ export function slugify(name: string): string {
     .replace(/^-+|-+$/g, '');
   if (!SLUG_RE.test(slug)) throw new Error(`slugify: "${name}" gives invalid slug "${slug}"`);
   return slug;
-}
-
-/** JSON with object keys sorted at every level, 2-space indent, trailing newline. */
-export function stableJson(value: unknown): string {
-  const sort = (v: unknown): unknown => {
-    if (Array.isArray(v)) return v.map(sort);
-    if (v && typeof v === 'object') {
-      return Object.fromEntries(
-        Object.keys(v as Record<string, unknown>)
-          .sort()
-          .map((k) => [k, sort((v as Record<string, unknown>)[k])]),
-      );
-    }
-    return v;
-  };
-  return JSON.stringify(sort(value), null, 2) + '\n';
 }
 
 export function sqlValue(v: string | number | boolean | null): string {
