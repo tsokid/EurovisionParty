@@ -8,7 +8,8 @@
 // naming it; objects already in Storage without a row are removed by the
 // publish sweep, so nothing is rolled back here.
 //
-// Video: MP4 only, at most 20 MB (its poster is a separate image field).
+// Video: MP4 only (video/mp4, or an .mp4 name with no type), at most 20 MB,
+// stored as video/mp4 (its poster is a separate image field).
 // Captions: WebVTT, at most 200 KB.
 //
 // Limits mirror media_register (migration 077), which enforces them again.
@@ -67,7 +68,7 @@ export async function uploadImage(file: File): Promise<string> {
   }
 
   const id = crypto.randomUUID().toLowerCase();
-  const [mainHash, smallHash] = await Promise.all([sha256Hex(main.blob), sha256Hex(small.blob)]);
+  const [mainHash, smallHash] = await step(file, 'hashing', () => Promise.all([sha256Hex(main.blob), sha256Hex(small.blob)]));
   const mainPath = `${id}.webp`;
   const smallPath = `${id}-800.webp`;
 
@@ -89,7 +90,7 @@ export async function uploadImage(file: File): Promise<string> {
 async function uploadFile(file: File, body: Blob, kind: MediaKind, ext: string, mime: string): Promise<string> {
   const id = crypto.randomUUID().toLowerCase();
   const path = `${id}.${ext}`;
-  const sha256 = await sha256Hex(body);
+  const sha256 = await step(file, 'hashing', () => sha256Hex(body));
   await step(file, 'uploading', () => uploadObject(path, body, mime));
   await step(file, 'registering', () => mediaRegister({
     id, kind, storagePath: path, mime, bytes: body.size, width: null, height: null, sha256, variantOf: null,
@@ -99,7 +100,9 @@ async function uploadFile(file: File, body: Blob, kind: MediaKind, ext: string, 
 }
 
 export async function uploadVideo(file: File): Promise<string> {
-  if (file.type !== 'video/mp4') throw fail(file, 'only MP4 (H.264) video is accepted');
+  // Some browsers and systems report no type for an .mp4: the name decides then.
+  const mp4 = file.type === 'video/mp4' || (file.type === '' && /\.mp4$/i.test(file.name));
+  if (!mp4) throw fail(file, 'only MP4 (H.264) video is accepted');
   if (file.size > VIDEO_MAX_BYTES) throw fail(file, 'larger than 20 MB');
   return uploadFile(file, file, 'video', 'mp4', 'video/mp4');
 }

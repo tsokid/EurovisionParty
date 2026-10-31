@@ -68,7 +68,8 @@ beforeEach(() => {
   );
   vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(function (this: HTMLCanvasElement, cb: BlobCallback, type?: string, quality?: unknown) {
     toBlobArgs.push({ type, quality, width: this.width, height: this.height });
-    cb(new Blob([new Uint8Array(outputBytes(this.width))], { type: outputType }));
+    // Filled with the width's low byte, so the main file and the 800 w copy differ in content too.
+    cb(new Blob([new Uint8Array(outputBytes(this.width)).fill(this.width & 0xff)], { type: outputType }));
   });
   vi.spyOn(crypto.subtle, 'digest').mockResolvedValue(new Uint8Array(32).fill(0xab).buffer);
   vi.spyOn(crypto, 'randomUUID').mockReturnValue(UUID);
@@ -80,6 +81,18 @@ afterEach(() => {
 });
 
 const png = (bytes = 1000, type = 'image/png', name = 'stage.png') => new File([new Uint8Array(bytes)], name, { type });
+
+const toBytes = async (v: unknown) =>
+  Array.from(v instanceof Blob ? new Uint8Array(await v.arrayBuffer()) : new Uint8Array(v as ArrayBuffer | ArrayBufferView as ArrayBuffer));
+
+/** Each uploaded body was hashed: the bytes given to crypto.subtle.digest are exactly the upload bodies, in order. */
+async function expectHashedBodies() {
+  const digested = vi.mocked(crypto.subtle.digest).mock.calls.map(([, data]) =>
+    toBytes(ArrayBuffer.isView(data) ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : data));
+  const uploaded = h.upload.mock.calls.map(([, body]) => toBytes(body));
+  expect(uploaded.length).toBeGreaterThan(0);
+  expect(await Promise.all(digested)).toEqual(await Promise.all(uploaded));
+}
 
 describe('encodeWebp (resize)', () => {
   it('scales to the target width keeping the aspect ratio, WebP at quality 0.82', async () => {
@@ -134,6 +147,13 @@ describe('uploadImage', () => {
       p_bytes: 800, p_width: 800, p_height: 533, p_sha256: HASH, p_variant_of: UUID,
     });
     expect(closed).toHaveBeenCalled();
+    await expectHashedBodies();
+  });
+
+  it('a hashing failure is reported as a named step, before any upload', async () => {
+    vi.mocked(crypto.subtle.digest).mockRejectedValue(new Error('no crypto'));
+    await expect(uploadImage(png())).rejects.toThrow('Could not upload stage.png: hashing failed: no crypto');
+    expect(h.calls).toEqual([]);
   });
 
   it('a small source still gets both files, each at its actual size', async () => {
@@ -181,6 +201,21 @@ describe('uploadVideo', () => {
     expect(h.rpc.mock.calls[0][1]).toMatchObject({ p_id: UUID, p_kind: 'video', p_mime: 'video/mp4', p_bytes: 1000, p_width: null, p_height: null, p_sha256: HASH, p_variant_of: null });
   });
 
+  it('hashes exactly the uploaded bytes', async () => {
+    await uploadVideo(new File([new Uint8Array([1, 2, 3, 4, 5])], 'clip.mp4', { type: 'video/mp4' }));
+    await expectHashedBodies();
+  });
+
+  it('accepts a .mp4 the browser gives no type, uploaded as video/mp4; the size limit still applies', async () => {
+    expect(await uploadVideo(mp4(1000, '', 'Clip.MP4'))).toBe(`cms-media/${UUID}`);
+    expect(h.upload.mock.calls[0][2]).toEqual({ contentType: 'video/mp4', upsert: false });
+    expect(h.rpc.mock.calls[0][1]).toMatchObject({ p_mime: 'video/mp4' });
+    await expect(uploadVideo(mp4(VIDEO_MAX_BYTES + 1, '', 'big.mp4'))).rejects.toThrow(/20 MB/);
+    // No type and another extension is still refused.
+    await expect(uploadVideo(mp4(10, '', 'clip.mov'))).rejects.toThrow(/MP4/);
+    expect(h.upload).toHaveBeenCalledTimes(1);
+  });
+
   it('refuses another type and a file over 20 MB', async () => {
     await expect(uploadVideo(mp4(10, 'video/webm', 'clip.webm'))).rejects.toThrow(/MP4/);
     await expect(uploadVideo(mp4(VIDEO_MAX_BYTES + 1))).rejects.toThrow(/20 MB/);
@@ -196,6 +231,11 @@ describe('uploadCaptions', () => {
     expect(h.upload.mock.calls[0][0]).toBe(`${UUID}.vtt`);
     expect(h.upload.mock.calls[0][2]).toEqual({ contentType: 'text/vtt', upsert: false });
     expect(h.rpc.mock.calls[0][1]).toMatchObject({ p_kind: 'captions', p_mime: 'text/vtt' });
+  });
+
+  it('hashes exactly the uploaded bytes (the text re-encoded without a BOM)', async () => {
+    await uploadCaptions(vtt('﻿WEBVTT\n\n00:00.000 --> 00:01.000\nHi'));
+    await expectHashedBodies();
   });
 
   it('refuses a file that is not WebVTT', async () => {
