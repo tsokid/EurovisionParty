@@ -171,8 +171,8 @@ describe('archive year pages (SSR)', () => {
     // Winner callout, then the final ranking, then the semis.
     expect(r.html.indexOf('id="winner"')).toBeLessThan(r.html.indexOf('id="final"'));
     expect(r.html.indexOf('id="final"')).toBeLessThan(r.html.indexOf('id="semi-1"'));
-    // 2019 is not indexable in the snapshot.
-    expect(robots(r)).toBe('noindex');
+    // Every archived year is indexable: no robots meta.
+    expect(robots(r)).toBeUndefined();
     const links = hrefs(r.html);
     expect(links).toContain('/en/past-contests/eurovision-2018-lisbon');
     expect(links).toContain('/en/past-contests/eurovision-2020-rotterdam');
@@ -195,7 +195,7 @@ describe('archive year pages (SSR)', () => {
     expect(r.status).toBe(200);
     expect(h1(r.html)).toMatch(GREEK);
     expect(h1(r.html)).toContain('Στοκχόλμη');
-    expect(robots(r)).toBe('noindex');
+    expect(robots(r)).toBeUndefined();
     expect(r.html).not.toContain('id="semi-1"');
     expect(r.html).toContain('Ολλανδία');
     expect(r.html).toContain('href="/el/countries/netherlands"');

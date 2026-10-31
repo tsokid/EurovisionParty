@@ -230,7 +230,7 @@
     }
   ],
   "host_iso": "NL",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 1958
 }

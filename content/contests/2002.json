@@ -538,7 +538,7 @@
     }
   ],
   "host_iso": "EE",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2002
 }

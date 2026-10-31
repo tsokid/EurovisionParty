@@ -450,7 +450,7 @@
     }
   ],
   "host_iso": "NO",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 1986
 }

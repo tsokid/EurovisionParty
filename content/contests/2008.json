@@ -956,7 +956,7 @@
     }
   ],
   "host_iso": "RS",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2008
 }

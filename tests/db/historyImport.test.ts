@@ -47,12 +47,12 @@ describe('073 history import', () => {
     await db?.close();
   });
 
-  it('creates 70 archived, non-indexable contests 1956–2025', async () => {
+  it('creates 70 archived, indexable contests 1956–2025', async () => {
     const r = await db.query<{ n: number; lo: number; hi: number; idx: number }>(
       `select count(*)::int as n, min(year) as lo, max(year) as hi, count(*) filter (where indexable)::int as idx
          from public.contests where stage = 'archived'`,
     );
-    expect(r.rows[0]).toEqual({ n: 70, lo: 1956, hi: 2025, idx: 0 });
+    expect(r.rows[0]).toEqual({ n: 70, lo: 1956, hi: 2025, idx: 70 });
   });
 
   it('marks only 2020 cancelled, keeping its planned dates', async () => {

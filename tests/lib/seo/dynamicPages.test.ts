@@ -53,9 +53,12 @@ describe('dynamicPageUrls against the committed snapshot', () => {
     expect(pages.some((p) => p.kind === 'archive' && p.path.includes('eurovision-2026'))).toBe(false);
   });
 
-  it('1975 follows contests.indexable (false)', () => {
-    expect(find('/en/past-contests/eurovision-1975-stockholm')).toMatchObject({ kind: 'archive', indexable: false });
-    expect(find('/el/past-contests/eurovision-1975-stockholm')).toMatchObject({ indexable: false });
+  it('every archive page (1956–2025, both locales) follows contests.indexable, which is true', () => {
+    const archive = pages.filter((p) => p.kind === 'archive');
+    expect(archive).toHaveLength(140);
+    expect(archive.every((p) => p.indexable)).toBe(true);
+    expect(find('/en/past-contests/eurovision-1975-stockholm')).toMatchObject({ kind: 'archive', indexable: true });
+    expect(find('/en/past-contests/eurovision-2020-rotterdam')).toMatchObject({ kind: 'archive', indexable: true });
   });
 
   it('Greece is indexable (>= 3 participations)', () => {

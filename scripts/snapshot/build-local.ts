@@ -57,7 +57,7 @@ const contestRow = (r: ContestRecord): ContestRow => ({
   semi2_date: r.semi2_date,
   final_date: r.final_date,
   stage: 'archived',
-  indexable: false,
+  indexable: true,
   cancelled: r.cancelled,
 });
 

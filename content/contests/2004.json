@@ -802,7 +802,7 @@
     }
   ],
   "host_iso": "TR",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2004
 }

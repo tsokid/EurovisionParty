@@ -934,7 +934,7 @@
     }
   ],
   "host_iso": "FI",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2007
 }

@@ -890,7 +890,7 @@
     }
   ],
   "host_iso": "AT",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2015
 }

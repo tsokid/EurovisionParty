@@ -538,7 +538,7 @@
     }
   ],
   "host_iso": "SE",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2000
 }

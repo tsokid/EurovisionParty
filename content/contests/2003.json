@@ -582,7 +582,7 @@
     }
   ],
   "host_iso": "LV",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2003
 }

@@ -912,7 +912,7 @@
     }
   ],
   "host_iso": "IL",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2019
 }

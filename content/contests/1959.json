@@ -252,7 +252,7 @@
     }
   ],
   "host_iso": "FR",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 1959
 }

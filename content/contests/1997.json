@@ -560,7 +560,7 @@
     }
   ],
   "host_iso": "IE",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 1997
 }

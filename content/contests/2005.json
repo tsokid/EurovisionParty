@@ -868,7 +868,7 @@
     }
   ],
   "host_iso": "UA",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2005
 }

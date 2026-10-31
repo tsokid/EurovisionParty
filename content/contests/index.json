@@ -6,7 +6,7 @@
     "co_winners": [],
     "final_date": "1956-05-24",
     "host_iso": "CH",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Lys Assia",
@@ -24,7 +24,7 @@
     "co_winners": [],
     "final_date": "1957-03-03",
     "host_iso": "DE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Corry Brokken",
@@ -42,7 +42,7 @@
     "co_winners": [],
     "final_date": "1958-03-12",
     "host_iso": "NL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "André Claveau",
@@ -60,7 +60,7 @@
     "co_winners": [],
     "final_date": "1959-03-11",
     "host_iso": "FR",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Teddy Scholten",
@@ -78,7 +78,7 @@
     "co_winners": [],
     "final_date": "1960-03-29",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Jacqueline Boyer",
@@ -96,7 +96,7 @@
     "co_winners": [],
     "final_date": "1961-03-18",
     "host_iso": "FR",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Jean-Claude Pascal",
@@ -114,7 +114,7 @@
     "co_winners": [],
     "final_date": "1962-03-18",
     "host_iso": "LU",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Isabelle Aubret",
@@ -132,7 +132,7 @@
     "co_winners": [],
     "final_date": "1963-03-23",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Grethe and Jørgen Ingmann",
@@ -150,7 +150,7 @@
     "co_winners": [],
     "final_date": "1964-03-21",
     "host_iso": "DK",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Gigliola Cinquetti",
@@ -168,7 +168,7 @@
     "co_winners": [],
     "final_date": "1965-03-20",
     "host_iso": "IT",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "France Gall",
@@ -186,7 +186,7 @@
     "co_winners": [],
     "final_date": "1966-03-05",
     "host_iso": "LU",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Udo Jürgens",
@@ -204,7 +204,7 @@
     "co_winners": [],
     "final_date": "1967-04-08",
     "host_iso": "AT",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Sandie Shaw",
@@ -222,7 +222,7 @@
     "co_winners": [],
     "final_date": "1968-04-06",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Massiel",
@@ -265,7 +265,7 @@
     ],
     "final_date": "1969-03-29",
     "host_iso": "ES",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Salomé",
@@ -283,7 +283,7 @@
     "co_winners": [],
     "final_date": "1970-03-21",
     "host_iso": "NL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Dana",
@@ -301,7 +301,7 @@
     "co_winners": [],
     "final_date": "1971-04-03",
     "host_iso": "IE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Séverine",
@@ -319,7 +319,7 @@
     "co_winners": [],
     "final_date": "1972-03-25",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Vicky Leandros",
@@ -337,7 +337,7 @@
     "co_winners": [],
     "final_date": "1973-04-07",
     "host_iso": "LU",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Anne-Marie David",
@@ -355,7 +355,7 @@
     "co_winners": [],
     "final_date": "1974-04-06",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "ABBA",
@@ -373,7 +373,7 @@
     "co_winners": [],
     "final_date": "1975-03-22",
     "host_iso": "SE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Teach-In",
@@ -391,7 +391,7 @@
     "co_winners": [],
     "final_date": "1976-04-03",
     "host_iso": "NL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Brotherhood of Man",
@@ -409,7 +409,7 @@
     "co_winners": [],
     "final_date": "1977-05-07",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Marie Myriam",
@@ -427,7 +427,7 @@
     "co_winners": [],
     "final_date": "1978-04-22",
     "host_iso": "FR",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Izhar Cohen and the Alphabeta",
@@ -445,7 +445,7 @@
     "co_winners": [],
     "final_date": "1979-03-31",
     "host_iso": "IL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Milk and Honey",
@@ -463,7 +463,7 @@
     "co_winners": [],
     "final_date": "1980-04-19",
     "host_iso": "NL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Johnny Logan",
@@ -481,7 +481,7 @@
     "co_winners": [],
     "final_date": "1981-04-04",
     "host_iso": "IE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Bucks Fizz",
@@ -499,7 +499,7 @@
     "co_winners": [],
     "final_date": "1982-04-24",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Nicole",
@@ -517,7 +517,7 @@
     "co_winners": [],
     "final_date": "1983-04-23",
     "host_iso": "DE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Corinne Hermès",
@@ -535,7 +535,7 @@
     "co_winners": [],
     "final_date": "1984-05-05",
     "host_iso": "LU",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Herreys",
@@ -553,7 +553,7 @@
     "co_winners": [],
     "final_date": "1985-05-04",
     "host_iso": "SE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Bobbysocks",
@@ -571,7 +571,7 @@
     "co_winners": [],
     "final_date": "1986-05-03",
     "host_iso": "NO",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Sandra Kim",
@@ -589,7 +589,7 @@
     "co_winners": [],
     "final_date": "1987-05-09",
     "host_iso": "BE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Johnny Logan",
@@ -607,7 +607,7 @@
     "co_winners": [],
     "final_date": "1988-04-30",
     "host_iso": "IE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Céline Dion",
@@ -625,7 +625,7 @@
     "co_winners": [],
     "final_date": "1989-05-06",
     "host_iso": "CH",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Riva",
@@ -643,7 +643,7 @@
     "co_winners": [],
     "final_date": "1990-05-05",
     "host_iso": "YU",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Toto Cutugno",
@@ -661,7 +661,7 @@
     "co_winners": [],
     "final_date": "1991-05-04",
     "host_iso": "IT",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Carola",
@@ -679,7 +679,7 @@
     "co_winners": [],
     "final_date": "1992-05-09",
     "host_iso": "SE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Linda Martin",
@@ -697,7 +697,7 @@
     "co_winners": [],
     "final_date": "1993-05-15",
     "host_iso": "IE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Niamh Kavanagh",
@@ -715,7 +715,7 @@
     "co_winners": [],
     "final_date": "1994-04-30",
     "host_iso": "IE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Paul Harrington and Charlie McGettigan",
@@ -733,7 +733,7 @@
     "co_winners": [],
     "final_date": "1995-05-13",
     "host_iso": "IE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Secret Garden",
@@ -751,7 +751,7 @@
     "co_winners": [],
     "final_date": "1996-05-18",
     "host_iso": "NO",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Eimear Quinn",
@@ -769,7 +769,7 @@
     "co_winners": [],
     "final_date": "1997-05-03",
     "host_iso": "IE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Katrina and the Waves",
@@ -787,7 +787,7 @@
     "co_winners": [],
     "final_date": "1998-05-09",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Dana International",
@@ -805,7 +805,7 @@
     "co_winners": [],
     "final_date": "1999-05-29",
     "host_iso": "IL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Charlotte Nilsson",
@@ -823,7 +823,7 @@
     "co_winners": [],
     "final_date": "2000-05-13",
     "host_iso": "SE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Olsen Brothers",
@@ -841,7 +841,7 @@
     "co_winners": [],
     "final_date": "2001-05-12",
     "host_iso": "DK",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Tanel Padar, Dave Benton and 2XL",
@@ -859,7 +859,7 @@
     "co_winners": [],
     "final_date": "2002-05-25",
     "host_iso": "EE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Marie N",
@@ -877,7 +877,7 @@
     "co_winners": [],
     "final_date": "2003-05-24",
     "host_iso": "LV",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Sertab Erener",
@@ -895,7 +895,7 @@
     "co_winners": [],
     "final_date": "2004-05-15",
     "host_iso": "TR",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Ruslana",
@@ -913,7 +913,7 @@
     "co_winners": [],
     "final_date": "2005-05-21",
     "host_iso": "UA",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Helena Paparizou",
@@ -931,7 +931,7 @@
     "co_winners": [],
     "final_date": "2006-05-20",
     "host_iso": "GR",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Lordi",
@@ -949,7 +949,7 @@
     "co_winners": [],
     "final_date": "2007-05-12",
     "host_iso": "FI",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Marija Šerifović",
@@ -967,7 +967,7 @@
     "co_winners": [],
     "final_date": "2008-05-24",
     "host_iso": "RS",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Dima Bilan",
@@ -985,7 +985,7 @@
     "co_winners": [],
     "final_date": "2009-05-16",
     "host_iso": "RU",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Alexander Rybak",
@@ -1003,7 +1003,7 @@
     "co_winners": [],
     "final_date": "2010-05-29",
     "host_iso": "NO",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Lena",
@@ -1021,7 +1021,7 @@
     "co_winners": [],
     "final_date": "2011-05-14",
     "host_iso": "DE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Ell and Nikki",
@@ -1039,7 +1039,7 @@
     "co_winners": [],
     "final_date": "2012-05-26",
     "host_iso": "AZ",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Loreen",
@@ -1057,7 +1057,7 @@
     "co_winners": [],
     "final_date": "2013-05-18",
     "host_iso": "SE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Emmelie de Forest",
@@ -1075,7 +1075,7 @@
     "co_winners": [],
     "final_date": "2014-05-10",
     "host_iso": "DK",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Conchita Wurst",
@@ -1093,7 +1093,7 @@
     "co_winners": [],
     "final_date": "2015-05-23",
     "host_iso": "AT",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Måns Zelmerlöw",
@@ -1111,7 +1111,7 @@
     "co_winners": [],
     "final_date": "2016-05-14",
     "host_iso": "SE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Jamala",
@@ -1129,7 +1129,7 @@
     "co_winners": [],
     "final_date": "2017-05-13",
     "host_iso": "UA",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Salvador Sobral",
@@ -1147,7 +1147,7 @@
     "co_winners": [],
     "final_date": "2018-05-12",
     "host_iso": "PT",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Netta",
@@ -1165,7 +1165,7 @@
     "co_winners": [],
     "final_date": "2019-05-18",
     "host_iso": "IL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Duncan Laurence",
@@ -1183,7 +1183,7 @@
     "co_winners": [],
     "final_date": "2020-05-16",
     "host_iso": "NL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": null
   },
@@ -1194,7 +1194,7 @@
     "co_winners": [],
     "final_date": "2021-05-22",
     "host_iso": "NL",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Måneskin",
@@ -1212,7 +1212,7 @@
     "co_winners": [],
     "final_date": "2022-05-14",
     "host_iso": "IT",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Kalush Orchestra",
@@ -1230,7 +1230,7 @@
     "co_winners": [],
     "final_date": "2023-05-13",
     "host_iso": "GB",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Loreen",
@@ -1248,7 +1248,7 @@
     "co_winners": [],
     "final_date": "2024-05-11",
     "host_iso": "SE",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "Nemo",
@@ -1266,7 +1266,7 @@
     "co_winners": [],
     "final_date": "2025-05-17",
     "host_iso": "CH",
-    "indexable": false,
+    "indexable": true,
     "stage": "archived",
     "winner": {
       "artist": "JJ",

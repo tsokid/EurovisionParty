@@ -76,7 +76,7 @@ export function buildMigration(records: ContestRecord[]): string {
         sqlValue(r.semi2_date),
         sqlValue(r.final_date),
         `'archived'`,
-        'false',
+        'true',
         sqlValue(r.cancelled),
         `'${ARCHIVED_AT}'`,
       ].join(', ')})`,
@@ -100,7 +100,8 @@ export function buildMigration(records: ContestRecord[]): string {
 -- Source: English Wikipedia, "Eurovision Song Contest {year}" articles,
 -- CC BY-SA 4.0 (see content/SOURCES.md).
 --
--- * contests: one row per year, stage 'archived', indexable false,
+-- * contests: one row per year, stage 'archived', indexable true
+-- (every archived year is indexed; the owner's decision),
 --   archived_at fixed at ${ARCHIVED_AT}. 2020 has cancelled = true
 --   (planned dates kept) and its selected entries, with no results.
 -- * contest_entries: source 'import:wikipedia'.

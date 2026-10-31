@@ -890,7 +890,7 @@
     }
   ],
   "host_iso": "IT",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2022
 }

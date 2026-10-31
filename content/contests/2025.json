@@ -824,7 +824,7 @@
     }
   ],
   "host_iso": "CH",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2025
 }

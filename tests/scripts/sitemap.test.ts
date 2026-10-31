@@ -27,12 +27,15 @@ describe('sitemap.xml', () => {
     expect(xml).toContain('hreflang="x-default"');
     expect(xml).toContain('https://eurovision.games/en/eurovision-night');
     expect(xml).toContain('https://eurovision.games/el/eurovision-night');
-    // Data-driven pages: indexable ones are listed, noindex ones are not.
+    // Data-driven pages: indexable ones are listed, noindex ones are not (e.g. one-participation countries).
     expect(xml).toContain('https://eurovision.games/en/eurovision-2026</loc>');
     expect(xml).toContain('https://eurovision.games/el/countries</loc>');
     expect(xml).toContain('https://eurovision.games/en/past-contests</loc>');
     expect(xml).toContain('https://eurovision.games/en/countries/greece</loc>');
     expect(xml).not.toContain('https://eurovision.games/en/countries/morocco</loc>');
-    expect(xml).not.toContain('https://eurovision.games/en/past-contests/eurovision-2019-tel-aviv</loc>');
+    // Every archived year (1956-2025) is indexable: listed in both locales.
+    expect(xml).toContain('https://eurovision.games/en/past-contests/eurovision-2019-tel-aviv</loc>');
+    expect(xml).toContain('https://eurovision.games/el/past-contests/eurovision-1956-lugano</loc>');
+    expect(xml.match(/<loc>https:\/\/eurovision\.games\/(en|el)\/past-contests\/eurovision-\d{4}-[a-z-]+<\/loc>/g)).toHaveLength(140);
   }, 120_000); // spawns tsx and ~80 git log calls: slow under full-suite load
 });

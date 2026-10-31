@@ -406,7 +406,7 @@
     }
   ],
   "host_iso": "GB",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 1982
 }

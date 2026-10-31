@@ -934,7 +934,7 @@
     }
   ],
   "host_iso": "AZ",
-  "indexable": false,
+  "indexable": true,
   "stage": "archived",
   "year": 2012
 }
