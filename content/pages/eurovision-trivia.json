@@ -50,12 +50,12 @@
     },
     "questions": [
       {
-        "answer": "Ιρλανδία και Σουηδία ισοπαλούν με 7 νίκες η καθεμία (η Σουηδία ισοφάρισε το 2023 με τη Loreen).",
+        "answer": "Το ρεκόρ είναι {stats.topWins} νίκες και το κατέχουν: {stats.topCountries}.",
         "options": [
-          "Sweden",
-          "Ireland",
-          "United Kingdom",
-          "France"
+          "Σουηδία",
+          "Ιρλανδία",
+          "Ηνωμένο Βασίλειο",
+          "Γαλλία"
         ],
         "q": "Ποια χώρα έχει κερδίσει τις περισσότερες φορές την Eurovision;"
       },
@@ -70,32 +70,32 @@
         "q": "Σε ποια χρονιά κέρδισαν οι ABBA την Eurovision;"
       },
       {
-        "answer": "Βιέννη, Αυστρία — ο JJ κέρδισε το 2025 στη Βασιλεία.",
+        "answer": "{current.city}, {current.host}.",
         "options": [
-          "Stockholm",
-          "Vienna",
-          "Liverpool",
-          "Madrid"
+          "Στοκχόλμη",
+          "{current.city}",
+          "Λίβερπουλ",
+          "Μαδρίτη"
         ],
-        "q": "Πού διεξήχθη η Eurovision 2026;"
+        "q": "Ποια πόλη φιλοξενεί τη Eurovision {current.year};"
       },
       {
         "answer": "12 πόντους — η υψηλότερη βαθμολογία που μπορεί να δώσει μια κριτική επιτροπή ή μια χώρα σε μία ψηφοφορία.",
         "options": [
-          "10 points",
-          "12 points",
-          "8 points",
-          "7 points"
+          "10 πόντους",
+          "12 πόντους",
+          "8 πόντους",
+          "7 πόντους"
         ],
         "q": "Πόσους πόντους δίνει το «douze points»;"
       },
       {
-        "answer": "Κύπρος — δεύτερη πολλές φορές, ποτέ πρώτη.",
+        "answer": "{stats.noWinCountry}: {stats.noWinEntries} συμμετοχές χωρίς νίκη.",
         "options": [
-          "Cyprus",
-          "Iceland",
-          "Malta",
-          "Bulgaria"
+          "{stats.noWinCountry}",
+          "Ισλανδία",
+          "Μάλτα",
+          "Βουλγαρία"
         ],
         "q": "Ποια χώρα έχει συμμετάσχει τις περισσότερες φορές χωρίς να κερδίσει ποτέ;"
       },
@@ -112,10 +112,10 @@
       {
         "answer": "Ιταλία — νίκες το 1964 και το 1990, αποχώρηση το 1997, επιστροφή το 2011.",
         "options": [
-          "Italy",
-          "Monaco",
-          "Yugoslavia",
-          "Luxembourg"
+          "Ιταλία",
+          "Μονακό",
+          "Γιουγκοσλαβία",
+          "Λουξεμβούργο"
         ],
         "q": "Ποια χώρα αποχώρησε από την Eurovision αφού κέρδισε αρκετές φορές στις πρώτες δεκαετίες, και επέστρεψε το 2011;"
       },
@@ -130,7 +130,7 @@
         "q": "Πόσους πόντους πέτυχε η Loreen με το «Tattoo» το 2023;"
       },
       {
-        "answer": "Στην πράξη χωρίς όριο· το ρεκόρ είναι περίπου 758 (Salvador Sobral, Πορτογαλία 2017).",
+        "answer": "Στην πράξη χωρίς όριο· το ρεκόρ είναι {stats.recordPoints} ({stats.recordArtist}, {stats.recordCountry} {stats.recordYear}).",
         "options": [
           "400",
           "500",
@@ -210,7 +210,7 @@
         "title": "Δείγματα ερωτήσεων (με απαντήσεις)"
       },
       "whatIs": {
-        "body": "Ο Διαγωνισμός Τραγουδιού Eurovision διεξάγεται από το 1956, με 50+ χώρες να αγωνίζονται σε 69 μεγάλους τελικούς (1956-2025· 2020 ακυρώθηκε) — μια τεράστια δεξαμενή trivia. Οι κατηγορίες που εμφανίζονται πιο συχνά: νικητές ανά έτος, σταθμοί στην ψηφοφορία, κανόνες γλώσσας, αλλαγές βαθμολογίας, πρώτες συμμετοχές και αποχωρήσεις χωρών, viral συμμετοχές, αντιπαραθέσεις και τίτλοι τραγουδιών.",
+        "body": "Ο Διαγωνισμός Τραγουδιού Eurovision διεξάγεται από το 1956, με 50+ χώρες να αγωνίζονται σε {stats.finals} μεγάλους τελικούς (1956-{latest.year}· 2020 ακυρώθηκε) — μια τεράστια δεξαμενή trivia. Οι κατηγορίες που εμφανίζονται πιο συχνά: νικητές ανά έτος, σταθμοί στην ψηφοφορία, κανόνες γλώσσας, αλλαγές βαθμολογίας, πρώτες συμμετοχές και αποχωρήσεις χωρών, viral συμμετοχές, αντιπαραθέσεις και τίτλοι τραγουδιών.",
         "title": "Τι είναι το Eurovision trivia;"
       }
     }
@@ -266,7 +266,7 @@
     },
     "questions": [
       {
-        "answer": "Ireland and Sweden tie with 7 wins each (Sweden caught up in 2023 with Loreen).",
+        "answer": "The record is {stats.topWins} wins, held by {stats.topCountries}.",
         "options": [
           "Sweden",
           "Ireland",
@@ -286,14 +286,14 @@
         "q": "In what year did ABBA win Eurovision?"
       },
       {
-        "answer": "Vienna, Austria — JJ won 2025 in Basel.",
+        "answer": "{current.city}, {current.host}.",
         "options": [
           "Stockholm",
-          "Vienna",
+          "{current.city}",
           "Liverpool",
           "Madrid"
         ],
-        "q": "Where was Eurovision 2026 held?"
+        "q": "Which city hosts Eurovision {current.year}?"
       },
       {
         "answer": "12 points — the highest score a jury or country can give in a single vote.",
@@ -306,9 +306,9 @@
         "q": "What does the \"douze points\" award?"
       },
       {
-        "answer": "Cyprus — runner-up multiple times, never first.",
+        "answer": "{stats.noWinCountry}: {stats.noWinEntries} contests without a win.",
         "options": [
-          "Cyprus",
+          "{stats.noWinCountry}",
           "Iceland",
           "Malta",
           "Bulgaria"
@@ -346,7 +346,7 @@
         "q": "How many points did Loreen score with \"Tattoo\" in 2023?"
       },
       {
-        "answer": "Effectively unbounded; in practice the record sits around 758 (Salvador Sobral, Portugal 2017).",
+        "answer": "Effectively unbounded; in practice the record is {stats.recordPoints} ({stats.recordArtist}, {stats.recordCountry} {stats.recordYear}).",
         "options": [
           "400",
           "500",
@@ -426,7 +426,7 @@
         "title": "Sample questions (with answers)"
       },
       "whatIs": {
-        "body": "The Eurovision Song Contest has been running since 1956, with 50+ countries competing across 69 grand finals (1956-2025; 2020 cancelled) — that's a deep well of trivia. Categories that come up most: winners by year, voting milestones, language rules, scoring changes, country debuts and withdrawals, viral entries, controversies, and song titles.",
+        "body": "The Eurovision Song Contest has been running since 1956, with 50+ countries competing across {stats.finals} grand finals (1956-{latest.year}; 2020 cancelled) — that's a deep well of trivia. Categories that come up most: winners by year, voting milestones, language rules, scoring changes, country debuts and withdrawals, viral entries, controversies, and song titles.",
         "title": "What is Eurovision trivia?"
       }
     }

@@ -45,7 +45,8 @@ describe('src/components/cms', () => {
     };
     visit(join(DIR, 'RichText.tsx'));
     const names = [...seen].filter((f) => f.replaceAll('\\', '/').includes('_shared/cms/')).map((f) => f.replaceAll('\\', '/').split('/').pop());
-    // pagesIndex.ts (editorial ids) arrives through LocaleLink -> usePageContent; it is zod-free like the others.
-    expect(names.sort()).toEqual(['html.ts', 'pagesIndex.ts', 'richText.ts']);
+    // pagesIndex.ts (editorial ids) and facts.ts (fact tokens) arrive through LocaleLink -> usePageContent;
+    // they are zod-free like the others.
+    expect(names.sort()).toEqual(['facts.ts', 'html.ts', 'pagesIndex.ts', 'richText.ts']);
   });
 });

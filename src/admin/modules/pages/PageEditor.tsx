@@ -17,6 +17,7 @@
 // - Discard draft: cms_discard, then back to the published version.
 // - Unsaved edits arm the admin's leave guard (unsavedGuard.ts).
 
+import FactTokensHelp from './FactTokensHelp';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CMS_DOC_TYPES, docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationError, type ValidationWarning } from '../../../../supabase/functions/_shared/cms/validate';
@@ -256,6 +257,8 @@ export function PageEditor({ docId, label, previewPath, onChanged }: Props) {
           </div>
         )}
       </div>
+
+      <FactTokensHelp />
 
       <div role="tablist" aria-label="Editor view" className="flex gap-1 xl:hidden">
         {(['edit', 'preview'] as const).map((t) => (

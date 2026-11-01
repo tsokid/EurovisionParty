@@ -13,6 +13,7 @@
 import { z } from 'zod';
 import { holdsField, walkSchema } from './walk.ts';
 import { CMS_DOC_TYPES } from './registry.ts';
+import { factTokensIn } from './facts.ts';
 
 export type Locale = 'en' | 'el';
 
@@ -123,7 +124,8 @@ export function documentWarnings(schema: z.ZodType, data: unknown, context?: Val
       if (soft !== undefined && v.length > soft) {
         warnings.push({ locale, path: n.path, message: `Longer than recommended: ${v.length} characters, recommended max ${soft}` });
       }
-      if (fact?.test(v)) warnings.push({ locale, path: n.path, message: FACT_MESSAGE });
+      // A fact token ({2026.city}) names its year on purpose: only the rest of the text counts.
+      if (fact?.test(v.replace(/\{[a-z0-9]+\.[a-zA-Z]+\}/g, ''))) warnings.push({ locale, path: n.path, message: FACT_MESSAGE });
     }, [data[locale]]);
   }
   const isSet = (v: unknown) => v !== undefined && !(typeof v === 'string' && v.trim() === '');
@@ -152,6 +154,17 @@ export function validateDocument(docType: string, data: unknown, context?: Valid
   if (isRecord(data)) {
     for (const { path, message } of sharedMismatches(def.schema, data.en, data.el)) {
       errors.push({ path, locale: 'el', message });
+    }
+  }
+  if (isRecord(data)) {
+    for (const locale of LOCALES) {
+      walkSchema(def.schema, (n) => {
+        const v = n.values[0];
+        if (n.type !== 'string' || typeof v !== 'string') return;
+        for (const { token, fact } of factTokensIn(v)) {
+          if (typeof fact === 'string') errors.push({ locale, path: n.path, message: `Contest fact ${token}: ${fact}` });
+        }
+      }, [data[locale]]);
     }
   }
   const warnings = documentWarnings(def.schema, data, context);

@@ -29,6 +29,13 @@
  * consulted for that doc (useContent gets a null path). A draft lacking the
  * active locale throws, for the preview's error boundary.
  *
+ * Contest fact tokens ({2014.song}, {stats.topCountries}..., see
+ * src/lib/cms/facts.ts) are resolved in every string of the returned slice,
+ * draft included. A doc using any loads contests/index.json (and
+ * countries/index.json only for the facts that need it) through useContent,
+ * so the prerender inlines them; 'loading' until they are ready. A doc
+ * without tokens loads nothing more.
+ *
  * T comes from the doc type's schema via `import type` (z.infer), so zod
  * stays out of the client bundle.
  */
@@ -38,6 +45,12 @@ import { PAGES_INDEX_PATH, readPagesIndex } from '../../../supabase/functions/_s
 import { ContentCollectorContext } from '../seo/contentContext';
 import { useLocale } from '../seo/LocaleContext';
 import { usePageContentOverride } from './pageContentOverrideContext';
+import { factNeeds, factValues, resolveFacts } from './facts';
+import { SITE_PATH } from '../currentContest';
+import type { ContestIndex, CountryIndex, SiteSnapshot } from '../../content/contests/types';
+
+const CONTEST_INDEX_PATH = 'contests/index.json';
+const COUNTRY_INDEX_PATH = 'countries/index.json';
 
 export const pageContentPath = (docId: string): string => `pages/${docId}.json`;
 
@@ -53,7 +66,37 @@ function listedInIndex(index: ContentState<unknown>, docId: string): boolean | n
   return readPagesIndex(index.data)?.includes(docId) ?? true;
 }
 
-export function usePageContent<T>(docId: string, { optional = false }: PageContentOptions = {}): ContentState<T> {
+export function usePageContent<T>(docId: string, options: PageContentOptions = {}): ContentState<T> {
+  const raw = useRawPageContent<T>(docId, options);
+  return useResolvedFacts(raw);
+}
+
+/** Resolved slices: slice → contests table → { locale, countries, value }. */
+const resolved = new WeakMap<object, WeakMap<object, { locale: string; countries: object | null; value: unknown }>>();
+
+function useResolvedFacts<T>(state: ContentState<T>): ContentState<T> {
+  const locale = useLocale();
+  const needs = factNeeds(state.status === 'ready' ? state.data : null);
+  const contests = useContent<ContestIndex>(needs.any ? CONTEST_INDEX_PATH : null);
+  const countries = useContent<CountryIndex>(needs.countries ? COUNTRY_INDEX_PATH : null);
+  const site = useContent<SiteSnapshot>(needs.any ? SITE_PATH : null);
+  if (state.status !== 'ready' || !needs.any) return state;
+  const pending = [contests, site, ...(needs.countries ? [countries] : [])].find((s) => s.status !== 'ready');
+  if (pending) return pending as ContentState<T>;
+  if (contests.status !== 'ready' || site.status !== 'ready') return { status: 'loading' };
+  const tables = { contests: contests.data, countries: countries.status === 'ready' ? countries.data : null, site: site.data };
+  const data = state.data as object;
+  let byTable = resolved.get(data);
+  if (!byTable) resolved.set(data, (byTable = new WeakMap()));
+  let hit = byTable.get(tables.contests);
+  if (!hit || hit.locale !== locale || hit.countries !== tables.countries) {
+    hit = { locale, countries: tables.countries, value: resolveFacts(state.data, factValues(tables, locale)) };
+    byTable.set(tables.contests, hit);
+  }
+  return { status: 'ready', data: hit.value as T };
+}
+
+function useRawPageContent<T>(docId: string, { optional = false }: PageContentOptions): ContentState<T> {
   const path = pageContentPath(docId);
   const locale = useLocale();
   const isServer = useContext(ContentCollectorContext) !== null;

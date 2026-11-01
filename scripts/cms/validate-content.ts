@@ -15,6 +15,11 @@
  * (archive-*, country-*, hub-*) and must match the files exactly, sorted. It
  * may be absent only while there are none.
  *
+ * Also fails on a contest fact token ({2014.song}, {stats.topCountries}...)
+ * that has no value in the contest tables (content/contests/index.json,
+ * content/countries/index.json, content/site.json), in either locale: the
+ * page would show the token as written.
+ *
  * Also fails on a draft media reference (cms-media/<uuid>) in any file under
  * content/: published content must only hold /media/<sha12>.<ext> (publish
  * rewrites the references and commits the files).
@@ -32,6 +37,7 @@ import { docTypeFor } from '../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationContext } from '../../supabase/functions/_shared/cms/validate';
 import { isEditorialDocId, readPagesIndex } from '../../supabase/functions/_shared/cms/pagesIndex';
 import { cityName } from '../../src/pages/contest/content/hubCopy';
+import { factValues, unresolvedFacts, type FactTables } from '../../src/lib/cms/facts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 export const CONTENT_DIR = resolve(ROOT, 'content');
@@ -157,9 +163,16 @@ export function pagesIndexErrors(dir: string, docIds: readonly string[]): string
   return errors;
 }
 
+/** The contest tables the fact tokens read, from content/. */
+export function factTables(contentDir = CONTENT_DIR): FactTables {
+  const read = (rel: string) => JSON.parse(readFileSync(join(contentDir, rel), 'utf8'));
+  return { contests: read('contests/index.json'), countries: read('countries/index.json'), site: read('site.json') };
+}
+
 export function validateContentDir(
   dir: string,
   facts: LiveContestFacts = liveContestFacts(),
+  tables: FactTables = factTables(),
 ): { count: number; errors: string[]; warnings: string[] } {
   if (!existsSync(dir)) return { count: 0, errors: [], warnings: [] };
   const files = readdirSync(dir).filter((f) => f.endsWith('.json') && f !== INDEX_FILE).sort();
@@ -178,6 +191,11 @@ export function validateContentDir(
     const line = (e: { locale: string | null; path: string; message: string }) => `${file}: [${e.locale ?? 'doc'}] ${e.path || '(root)'}: ${e.message}`;
     errors.push(...r.errors.map(line));
     warnings.push(...r.warnings.map(line));
+    if (r.ok) {
+      for (const locale of ['en', 'el'] as const) {
+        for (const u of new Set(unresolvedFacts(r.value[locale], factValues(tables, locale)))) errors.push(`${file}: [${locale}] ${u}`);
+      }
+    }
   }
   return { count: files.length, errors, warnings };
 }

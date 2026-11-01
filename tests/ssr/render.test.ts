@@ -162,7 +162,7 @@ describe('entry-server render', () => {
     expect((await render('/en/eurovision-2026-predictions')).status).toBe(404);
   });
 
-  it('guide pages inline only site.json and their own CMS doc (predictions adds the contest file; winners its index)', async () => {
+  it('guide pages inline only site.json and their own CMS doc (predictions adds the contest file; winners its index; trivia the tables its fact tokens read)', async () => {
     // Static pages migrated to content/pages (their pageId is a CMS doc type) also inline that doc.
     const ownDoc = new Map<string, string>();
     for (const page of PAGE_REGISTRY) {
@@ -175,6 +175,8 @@ describe('entry-server render', () => {
       const own = ownDoc.has(path) ? [ownDoc.get(path)!] : [];
       if (path.endsWith('/eurovision-predictions')) expect(files, path).toEqual([...own, 'contests/2026.json', 'site.json'].sort());
       else if (path.endsWith('/winners')) expect(files, path).toEqual([...own, 'contests/index.json', 'site.json'].sort());
+      // {stats.noWinCountry} needs countries/index.json; the other tokens read contests/index.json.
+      else if (path.endsWith('/eurovision-trivia')) expect(files, path).toEqual([...own, 'contests/index.json', 'countries/index.json', 'site.json'].sort());
       else expect(files, path).toEqual([...own, 'site.json'].sort());
       // Only the active locale's slice of the page doc is inlined.
       if (own.length) expect(Object.keys(r.content[own[0]] as object), path).toEqual([path.slice(1, 3)]);
