@@ -7,7 +7,7 @@
     "cta": {
       "body": "Οι μονομαχίες ανοίγουν τη στιγμή που ο οικοδεσπότης ξεκινά το πάρτι και τρέχουν μέχρι να ανοίξει η ψηφοφορία. Στήσε ένα δωμάτιο σε 60 δευτερόλεπτα και έχε έτοιμο τον σύνδεσμο πριν παίξει το πρώτο τραγούδι.",
       "primary": "Δημιουργία δωματίου",
-      "secondary": "Πώς να παίξεις",
+      "secondary": "Πώς παίζεις",
       "title": "Άνοιξε δωμάτιο και προκάλεσε τους φίλους σου"
     },
     "faq": [
@@ -70,7 +70,7 @@
     "related": {
       "howToPlay": {
         "blurb": "Οδηγός στησίματος από τη δημιουργία δωματίου μέχρι τα τρόπαια.",
-        "title": "Πώς να παίξεις σε 60 δευτερόλεπτα"
+        "title": "Πώς παίζεις σε 60 δευτερόλεπτα"
       },
       "leave": {
         "blurb": "Τι συμβαίνει με το ιστορικό μονομαχιών σου αν φύγεις στη μέση της εκπομπής.",
@@ -108,7 +108,6 @@
         "rows": {
           "eleven": "Σωστή απάντηση στα 11 δευτερόλεπτα",
           "five": "Σωστή απάντηση στα 5 δευτερόλεπτα",
-          "winBonus": "Μέγιστο ανά ερώτηση (σωστή απάντηση σε κάτω από 1 δευτερόλεπτο)",
           "wrong": "Λάθος / υπέρβαση χρόνου",
           "zeroToOne": "Σωστή απάντηση στα 0–1 δευτερόλεπτα"
         },
@@ -149,7 +148,7 @@
         "bodyPre": "Η μονομαχία είναι ένας ιδιωτικός γύρος Eurovision trivia 3 ερωτήσεων ανάμεσα σε ακριβώς δύο παίκτες στο ίδιο δωμάτιο. Και οι δύο παίκτες απαντούν στις ίδιες ερωτήσεις με χρονόμετρο 12 δευτερολέπτων. Η πρώτη ερώτηση εμφανίζεται μόλις ο προκαλούμενος δεχτεί· όλοι οι υπόλοιποι στο δωμάτιο βλέπουν μια διακριτική ένδειξη ",
         "bullets": [
           {
-            "rest": " Αντλούνται από την τράπεζα Eurovision trivia, με έμφαση στη δεκαετία που προτιμά το δωμάτιο.",
+            "rest": " Αντλούνται από την τράπεζα Eurovision trivia, με σταθερή αναλογία κατηγοριών.",
             "strong": "3 ερωτήσεις."
           },
           {
@@ -288,7 +287,6 @@
         "rows": {
           "eleven": "Correct answer at 11 seconds",
           "five": "Correct answer at 5 seconds",
-          "winBonus": "Maximum per question (correct in under 1 second)",
           "wrong": "Wrong / timeout",
           "zeroToOne": "Correct answer at 0–1 seconds"
         },
@@ -329,7 +327,7 @@
         "bodyPre": "A duel is a private 3-question Eurovision trivia round between exactly two players in the same room. Both players answer the same questions on a 12-second timer. The first question fires once the challenged player accepts; everyone else in the room sees a discreet ",
         "bullets": [
           {
-            "rest": " Pulled from the Eurovision trivia bank, weighted toward the room's decade preference.",
+            "rest": " Pulled from the Eurovision trivia bank, with a fixed mix of categories.",
             "strong": "3 questions."
           },
           {

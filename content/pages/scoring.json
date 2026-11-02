@@ -98,7 +98,7 @@
           "strong": "Αποσύνδεση μέσα σε μονομαχία."
         },
         {
-          "rest": "(πολλαπλές συσκευές, βοήθεια AI): στη διακριτική ευχέρεια του οικοδεσπότη· η προτεινόμενη λύση είναι η ακύρωση των μονομαχιών και γύρων quiz που επηρεάστηκαν.",
+          "rest": "(πολλαπλές συσκευές, βοήθεια AI): η εφαρμογή δεν μπορεί να τις εντοπίσει ούτε να τις αναιρέσει, οπότε η παρέα το λύνει με τους δικούς της κανόνες.",
           "strong": "Ζαβολιά"
         },
         {
@@ -338,7 +338,7 @@
           "strong": "Mid-duel disconnect."
         },
         {
-          "rest": "(multi-device, AI assist): at the host’s discretion; the suggested resolution is voiding affected duels and quiz rounds.",
+          "rest": "(multi-device, AI assist): the app can’t detect or undo it, so the room settles it by house rules.",
           "strong": "Cheating"
         },
         {

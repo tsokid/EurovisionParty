@@ -133,7 +133,6 @@ export default function EurovisionDuelsPage() {
               [c.sections.scoring.rows.five, <strong key="b" className="text-white">7</strong>],
               [c.sections.scoring.rows.eleven, <strong key="c" className="text-white">1</strong>],
               [c.sections.scoring.rows.wrong, <span key="d" className="text-white/50">0</span>],
-              [c.sections.scoring.rows.winBonus, <strong key="e" className="text-euro-pink-light">+12</strong>],
             ]}
           />
           <p>

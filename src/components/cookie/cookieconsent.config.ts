@@ -20,7 +20,7 @@ export const config: CookieConsentConfig = {
     consentModal: {
       layout: 'bar',
       position: 'bottom',
-      equalWeightButtons: false,
+      equalWeightButtons: true,
       flipButtons: false,
     },
     preferencesModal: {

@@ -24,6 +24,7 @@ const RENAMED: Record<string, string> = {
  *   description keeps its wording, templated on the live contest.
  * - /el/winners description: fixes the typo "αιώνιο πίνακας" → "αιώνιος πίνακας".
  *   (/en/winners is compared like every other page.)
+ * - /el title and description: were English on the Greek home page; now Greek.
  * - /el/eurovision-party description: "σειρά εμφάνισης" (the song running
  *   order) mistranslated "run-of-show"; now "πρόγραμμα βραδιάς".
  */
@@ -37,6 +38,11 @@ const EXCEPTIONS: Record<string, Partial<Record<'title' | 'description', string>
   '/el/winners': {
     description:
       'Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το 2026. Πρόσφατοι πρωταθλητές, αιώνιος πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές.',
+  },
+  '/el': {
+    title: 'Eurovision Games 2026 · Δωρεάν Παιχνίδι για Πάρτι — Προβλέψεις, Trivia & Live Βαθμολογία',
+    description:
+      'Δωρεάν παιχνίδι για πάρτι Eurovision 2026. Κάνε προβλέψεις ζωντανά, μονομάχησε με φίλους σε trivia και μάζεψε πόντους όσο βλέπεις τον Μεγάλο Τελικό. Χωρίς εγγραφή.',
   },
   '/el/eurovision-party': {
     description:

@@ -5,7 +5,7 @@
       "home": "Αρχική"
     },
     "cta": {
-      "body": "Οι προεπιλογές δουλεύουν για τις περισσότερες παρέες. Άνοιξε το host panel για να ενεργοποιήσεις sudden death και να ρυθμίσεις τους γύρους quiz.",
+      "body": "Οι κανόνες είναι ίδιοι σε κάθε δωμάτιο, οπότε δεν χρειάζεται καμία ρύθμιση. Οι ισοπαλίες λύνονται στην οθόνη των τροπαίων με ψηφοφορία του δωματίου.",
       "primary": "Δημιουργία δωματίου",
       "secondary": "Βαθμολογία",
       "title": "Φτιάξε ένα δωμάτιο με αυτούς τους κανόνες"
@@ -67,19 +67,19 @@
           "strong": "Παίκτης φεύγει μέσα στην εκπομπή."
         },
         {
-          "rest": "Η συνεδρία τελειώνει για όλους. Μια επιβεβαίωση 5 δευτερολέπτων αποτρέπει τις κατά λάθος διαγραφές· η διαγραφή είναι μη αναστρέψιμη.",
+          "rest": "Η συνεδρία τελειώνει για όλους. Ένα μήνυμα επιβεβαίωσης αποτρέπει τις κατά λάθος διαγραφές· η διαγραφή είναι μη αναστρέψιμη.",
           "strong": "Ο οικοδεσπότης διαγράφει το δωμάτιο."
         },
         {
-          "rest": "Πολλαπλές συσκευές ή απαντήσεις με βοήθεια AI: στη διακριτική ευχέρεια του οικοδεσπότη· η προτεινόμενη λύση είναι η ακύρωση των μονομαχιών και γύρων quiz που επηρεάστηκαν.",
+          "rest": "Πολλαπλές συσκευές ή απαντήσεις με βοήθεια AI: η εφαρμογή δεν μπορεί να τις εντοπίσει ούτε να τις αναιρέσει, οπότε η παρέα το λύνει με τους δικούς της κανόνες.",
           "strong": "Ζαβολιά."
         },
         {
-          "rest": "Ο οικοδεσπότης μπορεί να διορθώσει καταχωρήσεις βαθμολογίας από το host panel. Με επανεκτέλεση του auto-parse αντλούνται εκ νέου τα επίσημα αποτελέσματα.",
+          "rest": "Ο οικοδεσπότης δεν μπορεί να αλλάξει βαθμολογίες. Τα επίσημα αποτελέσματα εισάγονται αυτόματα και μια νέα εισαγωγή φέρνει τυχόν επίσημες διορθώσεις.",
           "strong": "Σφάλμα καταχώρησης αποτελέσματος."
         },
         {
-          "rest": "Επιτρέπονται, αλλά μόνο ένα δωμάτιο είναι ενεργό ανά οικοδεσπότη κάθε στιγμή κατά τη μετάδοση.",
+          "rest": "Επιτρέπονται: ένας οικοδεσπότης μπορεί να φτιάξει έως 10 δωμάτια την ώρα.",
           "strong": "Πολλαπλά δωμάτια ανά οικοδεσπότη."
         }
       ],
@@ -87,7 +87,7 @@
     },
     "hero": {
       "chip": "Κανονισμός",
-      "lede": "Ό,τι χρειάζεται ένας οικοδεσπότης ή ένας παίκτης για να λύσει μια διαφωνία στη μέση της εκπομπής. Φάσεις, κανόνες προβλέψεων, μηχανική quiz και μονομαχιών, ορισμοί τροπαίων, sudden death και πολιτική αποσύνδεσης. Οι προεπιλογές δουλεύουν για τις περισσότερες παρέες· ο οικοδεσπότης μπορεί να αλλάξει τα περισσότερα από το lobby.",
+      "lede": "Ό,τι χρειάζεται ένας οικοδεσπότης ή ένας παίκτης για να λύσει μια διαφωνία στη μέση της εκπομπής. Φάσεις, κανόνες προβλέψεων, μηχανική quiz και μονομαχιών, ορισμοί τροπαίων, sudden death και πολιτική αποσύνδεσης. Οι κανόνες είναι ίδιοι σε κάθε δωμάτιο και δουλεύουν για τις περισσότερες παρέες.",
       "title": "Κανόνες — ο πλήρης κανονισμός του Eurovision Games"
     },
     "hostLimits": {
@@ -97,8 +97,8 @@
           "strong": "2 έως 20 παίκτες ανά δωμάτιο."
         },
         {
-          "rest": "Magic-link στο email, χωρίς κωδικό πρόσβασης. Ο οικοδεσπότης διαχειρίζεται το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
-          "strong": "Ένας οικοδεσπότης συνδέεται."
+          "rest": "Χωρίς εγγραφή και χωρίς email. Ο οικοδεσπότης διαχειρίζεται το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
+          "strong": "Ένας οικοδεσπότης φτιάχνει το δωμάτιο."
         },
         {
           "rest": "Δεν χρειάζεται λογαριασμός για τους καλεσμένους — μόνο ο κωδικός δωματίου 6 χαρακτήρων και ένα όνομα εμφάνισης.",
@@ -109,8 +109,8 @@
           "strong": "Ο οικοδεσπότης ξεκινά το πάρτι."
         },
         {
-          "rest": "Μπορεί να επανεκκινήσει γύρους trivia, να ακυρώσει μονομαχίες, να διορθώσει βαθμολογία σε προφανή λάθη καταχώρησης και να αποβάλει παίκτες από το host panel.",
-          "strong": "Ο οικοδεσπότης έχει δικαίωμα παρέμβασης."
+          "rest": "Εκτός από την έναρξη του πάρτι, ο οικοδεσπότης μπορεί να ανοίξει την ψηφοφορία για ένα τρόπαιο με ισοπαλία και να διαγράψει το δωμάτιο. Κανείς δεν μπορεί να επανεκκινήσει γύρους quiz, να ακυρώσει μονομαχίες, να αλλάξει βαθμολογίες ή να αφαιρέσει παίκτες.",
+          "strong": "Ο οικοδεσπότης έχει περιορισμένες δυνατότητες."
         }
       ],
       "title": "Όρια παικτών και ευθύνες οικοδεσπότη"
@@ -260,8 +260,8 @@
     },
     "suddenDeath": {
       "body": "Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης ανοίγει μια ψηφοφορία 60 δευτερολέπτων — το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia — κερδίζει όποιος δώσει τις περισσότερες σωστές απαντήσεις· σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.",
-      "cardBody": "Το sudden death ενεργοποιείται προαιρετικά ανά κατηγορία από το host panel στη φάση Final. Αν ο οικοδεσπότης δεν το ανοίξει, οι ισόπαλοι παίκτες μοιράζονται το τρόπαιο από προεπιλογή.",
-      "cardTitle": "Διακόπτης οικοδεσπότη",
+      "cardBody": "Όταν οριστικοποιηθούν τα αποτελέσματα, ο οικοδεσπότης ανοίγει την ψηφοφορία για κάθε κατηγορία με ισοπαλία από την οθόνη των τροπαίων. Αν ο οικοδεσπότης δεν την ανοίξει, οι ισόπαλοι παίκτες μοιράζονται το τρόπαιο από προεπιλογή.",
+      "cardTitle": "Ο οικοδεσπότης ανοίγει την ψηφοφορία",
       "title": "Sudden death για ισοπαλίες"
     },
     "trophies": {
@@ -298,7 +298,7 @@
       "home": "Home"
     },
     "cta": {
-      "body": "Default rules work for most groups. Open the host panel to toggle sudden death and adjust quiz rounds.",
+      "body": "The rules are the same in every room, so there’s nothing to set up. Ties are settled on the trophy screen by a room vote.",
       "primary": "Create room",
       "secondary": "Scoring",
       "title": "Start a room with these rules"
@@ -360,19 +360,19 @@
           "strong": "Player leaves mid-show."
         },
         {
-          "rest": "Session ends for everyone. A 5-second confirmation prevents accidents; deletion is irreversible.",
+          "rest": "Session ends for everyone. A confirmation prompt prevents accidents; deletion is irreversible.",
           "strong": "Host deletes the room."
         },
         {
-          "rest": "Multi-device or AI-assisted answering: at the host’s discretion; the suggested resolution is voiding affected duels and quiz rounds.",
+          "rest": "Multi-device or AI-assisted answering: the app can’t detect or undo it, so the room settles it by house rules.",
           "strong": "Cheating."
         },
         {
-          "rest": "Host can override scoring entries from the host panel. Re-running auto-parse pulls fresh official results.",
+          "rest": "Hosts can’t edit scores. Official results are imported automatically, and re-running the import pulls in any official correction.",
           "strong": "Result entry error."
         },
         {
-          "rest": "Allowed, but only one room is active per host at a time during the broadcast.",
+          "rest": "Allowed: a host can create up to 10 rooms an hour.",
           "strong": "Multiple rooms per host."
         }
       ],
@@ -380,7 +380,7 @@
     },
     "hero": {
       "chip": "Rule book",
-      "lede": "Everything a host or player needs to settle a dispute mid-show. Phases, prediction rules, quiz and duel mechanics, trophy definitions, sudden-death tiebreak, and the disconnect policy. The defaults work for most groups; the host can override most of it from the lobby.",
+      "lede": "Everything a host or player needs to settle a dispute mid-show. Phases, prediction rules, quiz and duel mechanics, trophy definitions, sudden-death tiebreak, and the disconnect policy. The rules are the same in every room and work for most groups.",
       "title": "Eurovision Games — the full rule book"
     },
     "hostLimits": {
@@ -390,8 +390,8 @@
           "strong": "2 to 20 players per room."
         },
         {
-          "rest": "Magic-link email auth, no password. The host owns the room until they leave or delete it.",
-          "strong": "One host signs in."
+          "rest": "No sign-up or email needed. The host owns the room until they leave or delete it.",
+          "strong": "One host creates the room."
         },
         {
           "rest": "No account needed for guests — just the 6-character room code and a display name.",
@@ -402,8 +402,8 @@
           "strong": "Host starts the party."
         },
         {
-          "rest": "Reset trivia rounds, void duels, override scoring on clear input errors, and eject players from the host panel.",
-          "strong": "Host has override authority."
+          "rest": "Besides starting the party, the host can open the tiebreak vote for a tied trophy and delete the room. Nobody can reset quiz rounds, void duels, edit scores or remove players.",
+          "strong": "Host powers are limited."
         }
       ],
       "title": "Player limits and host responsibilities"
@@ -553,8 +553,8 @@
     },
     "suddenDeath": {
       "body": "For any tied trophy category, the host opens a 60-second tiebreak vote — the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins — speed breaks ties. If the vote stays with Accept, all tied players share the trophy.",
-      "cardBody": "Sudden death is opt-in per category from the host panel during the Final phase. If the host doesn’t open it, tied players share the trophy by default.",
-      "cardTitle": "Host toggle",
+      "cardBody": "Once results are final, the host opens the tiebreak vote for each tied category from the trophy screen. If the host doesn’t open it, tied players share the trophy by default.",
+      "cardTitle": "Host opens the vote",
       "title": "Sudden-death tiebreak"
     },
     "trophies": {

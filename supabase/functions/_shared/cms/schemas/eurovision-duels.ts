@@ -31,7 +31,7 @@ export const eurovisionDuelsSchema = group({
       title: text(),
       intro: text(),
       headers: group({ scenario: text(), points: text() }),
-      rows: group({ zeroToOne: text(), five: text(), eleven: text(), wrong: text(), winBonus: text() }),
+      rows: group({ zeroToOne: text(), five: text(), eleven: text(), wrong: text() }),
       winnerScorePre: text(),
       winnerScoreEm: text(),
       winnerScorePost: text(),

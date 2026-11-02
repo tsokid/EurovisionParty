@@ -21,22 +21,22 @@
       "title": "Επικοινωνία"
     },
     "cookies": {
-      "lead": "Χρησιμοποιούμε μία κατηγορία απολύτως απαραίτητων για να κρατάμε ζωντανή τη συνεδρία σου (συνεδρία σύνδεσης, κωδικός δωματίου, γλώσσα, επιλογή συναίνεσης). Δεν τρέχουμε κανένα εργαλείο στατιστικών· αν προσθέσουμε ποτέ, θα μένει απενεργοποιημένο μέχρι να συναινέσεις. Κανένα διαφημιστικό cookie, καμία παρακολούθηση μεταξύ ιστοτόπων. Αναλυτικά στη ",
+      "lead": "Χρησιμοποιούμε μία κατηγορία απολύτως απαραίτητων για να κρατάμε ζωντανή τη συνεδρία σου (ανώνυμη συνεδρία, κωδικός δωματίου, γλώσσα, επιλογή συγκατάθεσης). Δεν τρέχουμε κανένα εργαλείο στατιστικών· αν προσθέσουμε ποτέ, θα μένει απενεργοποιημένο μέχρι να δώσεις τη συγκατάθεσή σου. Κανένα διαφημιστικό cookie, καμία παρακολούθηση μεταξύ ιστοτόπων. Αναλυτικά στη ",
       "linkLabel": "σελίδα cookies",
       "tail": ".",
       "title": "Cookies"
     },
     "deletion": {
-      "cardBody": "Για να διαγράψεις τον λογαριασμό σου, στείλε αίτημα από τη διεύθυνση με την οποία εγγράφηκες. Διαγράφουμε το email του οικοδεσπότη και αποσυνδέουμε τυχόν ιστορικά δεδομένα δωματίων εντός 7 ημερών. Τα ονόματα των guest παικτών διαγράφονται αυτόματα 30 ημέρες μετά τη λήξη του δωματίου.",
+      "cardBody": "Αν δημιούργησες δωμάτιο, διάγραψέ το από την ενότητα «Τα Δωμάτιά σου» στην αρχική σελίδα. Το δωμάτιο και όλο το περιεχόμενό του (τα ονόματα εμφάνισης και τα avatar όλων των παικτών, οι προβλέψεις, οι απαντήσεις quiz, τα αποτελέσματα των μονομαχιών και οι πόντοι) διαγράφονται αμέσως και δεν μπορούν να ανακτηθούν. Τα δωμάτια δεν διαγράφονται αυτόματα: παραμένουν μέχρι να τα διαγράψει ο οικοδεσπότης. Για οποιοδήποτε άλλο αίτημα, στείλε email στο privacy@eurovision.games.",
       "cardLead": "Στείλε email στο ",
-      "cardTail": " από τη διεύθυνση με την οποία εγγράφηκες. Διαγράφουμε το email του οικοδεσπότη και αποσυνδέουμε τυχόν ιστορικά δεδομένα δωματίων εντός 7 ημερών. Τα ονόματα των guest παικτών διαγράφονται αυτόματα 30 ημέρες μετά τη λήξη του δωματίου — δεν χρειάζεται να το ζητήσεις.",
-      "cardTitle": "Πώς να διαγράψεις τον λογαριασμό σου",
-      "note": "Αν μπήκες σε δωμάτιο ως guest και θέλεις να αφαιρεθεί νωρίτερα το όνομά σου, ζήτησε από τον οικοδεσπότη του δωματίου να το διαγράψει από το host dashboard.",
+      "cardTail": " για οποιοδήποτε άλλο αίτημα διαγραφής. Ο οικοδεσπότης μπορεί ανά πάσα στιγμή να διαγράψει ένα δωμάτιο, μαζί με όλο το περιεχόμενό του, από την ενότητα «Τα Δωμάτιά σου» στην αρχική σελίδα· τα δωμάτια δεν διαγράφονται αυτόματα.",
+      "cardTitle": "Πώς να διαγράψεις τα δεδομένα σου",
+      "note": "Αν μπήκες σε δωμάτιο ως guest και θέλεις να αφαιρεθεί το όνομά σου, ζήτησε από τον οικοδεσπότη να διαγράψει το δωμάτιο από την ενότητα «Τα Δωμάτιά σου».",
       "title": "Διαγραφή δεδομένων"
     },
     "hero": {
       "chip": "Απόρρητο",
-      "lede": "Το Eurovision Games είναι ένα δωρεάν party game μέσα στον browser. Δεν πουλάμε δεδομένα, δεν προβάλλουμε διαφημίσεις τρίτων και συλλέγουμε το ελάχιστο που χρειάζεται για να δουλεύει το παιχνίδι. Τελευταία ενημέρωση: 30 Απριλίου 2026.",
+      "lede": "Το Eurovision Games είναι ένα δωρεάν party game μέσα στον browser. Δεν πουλάμε δεδομένα, δεν προβάλλουμε διαφημίσεις τρίτων και συλλέγουμε το ελάχιστο που χρειάζεται για να δουλεύει το παιχνίδι. Τελευταία ενημέρωση: 2 Νοεμβρίου 2026.",
       "title": "Πολιτική απορρήτου"
     },
     "meta": {
@@ -77,9 +77,9 @@
     },
     "related": [
       {
-        "blurb": "Τι αποθηκεύουμε, πώς λειτουργεί η συναίνεση και πού ζουν τα δεδομένα.",
+        "blurb": "Τι αποθηκεύουμε, πώς λειτουργεί η συγκατάθεση και πού ζουν τα δεδομένα.",
         "href": "/cookies",
-        "title": "Cookies & συναίνεση"
+        "title": "Cookies & συγκατάθεση"
       },
       {
         "blurb": "Συμπεριφορά παικτών, ευθύνες οικοδεσπότη και η αποποίηση εμπορικού σήματος EBU.",
@@ -135,21 +135,21 @@
         "Σκοπός",
         "Διατήρηση"
       ],
-      "intro": "Τέσσερις κατηγορίες — σε τι χρησιμεύει η καθεμία και για πόσο την κρατάμε. Οι guest παίκτες (όσοι μπαίνουν σε δωμάτιο μόνο με όνομα) δεν συνδέονται με αναγνωριστικά δεδομένα στο σύστημά μας.",
+      "intro": "Τέσσερις κατηγορίες — σε τι χρησιμεύει η καθεμία και για πόσο την κρατάμε. Κανείς δεν κάνει εγγραφή: οικοδεσπότες και παίκτες παίζουν σε ανώνυμη συνεδρία και δεν ζητάμε ποτέ διεύθυνση email ή πραγματικό όνομα.",
       "rows": [
         {
-          "purpose": "Αυθεντικοποίηση του οικοδεσπότη μέσω one-time code (OTP). Κανένα marketing email.",
-          "retention": "Μέχρι να διαγράψεις τον λογαριασμό σου.",
-          "type": "Email οικοδεσπότη"
+          "purpose": "Ένα τυχαίο αναγνωριστικό που δημιουργείται αυτόματα όταν φτιάχνεις ή μπαίνεις σε δωμάτιο, ώστε η εφαρμογή να ξέρει ποιος παίκτης και ποια δωμάτια είναι δικά σου. Δεν συνδέεται με email, κωδικό πρόσβασης ή πραγματικό όνομα.",
+          "retention": "Αποθηκεύεται στον browser σου μέχρι να διαγράψεις τα δεδομένα του ιστότοπου. Η αντίστοιχη εγγραφή στο σύστημά μας δεν περιέχει προσωπικά στοιχεία.",
+          "type": "Αναγνωριστικό ανώνυμης συνεδρίας"
         },
         {
           "purpose": "Επιλέγεται από κάθε παίκτη που μπαίνει στο δωμάτιο. Ορατό μόνο στους άλλους παίκτες του ίδιου δωματίου.",
-          "retention": "Διαγράφεται 30 ημέρες μετά τη λήξη του δωματίου.",
-          "type": "Όνομα εμφάνισης παίκτη"
+          "retention": "Διατηρείται μέχρι ο οικοδεσπότης να διαγράψει το δωμάτιο.",
+          "type": "Όνομα εμφάνισης & avatar παίκτη"
         },
         {
-          "purpose": "Προβλέψεις, απαντήσεις trivia, αποτελέσματα μονομαχιών, βαθμολογία. Συνδέονται με room ID, όχι με αναγνωριστικά δεδομένα για guests.",
-          "retention": "Ενεργό δωμάτιο + 24 ώρες· συγκεντρωτικά στατιστικά ανωνυμοποιούνται μετά από 30 ημέρες.",
+          "purpose": "Στοιχεία δωματίου (κωδικός και κρυπτογραφημένος κωδικός πρόσβασης), προβλέψεις, απαντήσεις quiz, αποτελέσματα μονομαχιών, πόντοι και τρόπαια. Συνδέονται με το δωμάτιο και με το αναγνωριστικό ανώνυμης συνεδρίας κάθε παίκτη.",
+          "retention": "Διατηρείται μέχρι ο οικοδεσπότης να διαγράψει το δωμάτιο.",
           "type": "Κατάσταση παιχνιδιού"
         },
         {
@@ -161,19 +161,19 @@
       "title": "Τι συλλέγουμε"
     },
     "whoHasAccess": {
-      "intro": "Το Eurovision Games τρέχει σε δύο παρόχους υποδομής. Κανένας άλλος τρίτος δεν βλέπει τα δεδομένα σου.",
+      "intro": "Το Eurovision Games τρέχει σε δύο παρόχους υποδομής. Είναι οι μόνοι τρίτοι που διατηρούν δεδομένα σου.",
       "items": [
         {
           "bold": "Supabase (Postgres database, auth)",
-          "rest": " — αποθηκεύει την κατάσταση δωματίων, τους λογαριασμούς οικοδεσποτών και τα δεδομένα παιχνιδιού. Πολιτικές row-level security εμποδίζουν την πρόσβαση μεταξύ δωματίων."
+          "rest": " — αποθηκεύει την κατάσταση δωματίων, τις ανώνυμες συνεδρίες και τα δεδομένα παιχνιδιού και διαχειρίζεται τη σύνδεση μέσω email που χρησιμοποιούν μόνο οι διαχειριστές του ιστότοπου. Πολιτικές row-level security εμποδίζουν την πρόσβαση μεταξύ δωματίων."
         },
         {
           "bold": "Vercel (hosting)",
           "rest": " — εξυπηρετεί την εφαρμογή και διατηρεί βραχυπρόθεσμα request logs για ασφάλεια και πρόληψη κατάχρησης."
         },
         {
-          "bold": "Κανείς άλλος.",
-          "rest": " Κανένας μεσάζοντας στατιστικών, κανένα διαφημιστικό δίκτυο, κανένα CRM, κανένα data warehouse, κανένας τρίτος πάροχος email πέραν του transactional sender για το OTP."
+          "bold": "Κανείς άλλος δεν διατηρεί δεδομένα σου.",
+          "rest": " Κανένας μεσάζοντας στατιστικών, κανένα διαφημιστικό δίκτυο, κανένα CRM, κανένα data warehouse, κανένα διαφημιστικό email. Για να εμφανιστεί ο ιστότοπος, ο browser σου μπορεί επίσης να συνδεθεί στο Google Fonts και φορτώνει εικόνες σημαιών από το flagcdn.com· όπως κάθε αίτημα στο διαδίκτυο, αυτά περιέχουν τη διεύθυνση IP σου, αλλά κανένα δεδομένο παιχνιδιού."
         }
       ],
       "title": "Ποιος έχει πρόσβαση"
@@ -201,22 +201,22 @@
       "title": "Contact"
     },
     "cookies": {
-      "lead": "We use one strictly-necessary category to keep your session alive (sign-in session, room code, language, consent choice). We run no analytics; if we ever add an analytics tool, it will stay off until you opt in. No advertising cookies, no cross-site tracking. Full breakdown on the ",
+      "lead": "We use one strictly-necessary category to keep your session alive (anonymous session, room code, language, consent choice). We run no analytics; if we ever add an analytics tool, it will stay off until you opt in. No advertising cookies, no cross-site tracking. Full breakdown on the ",
       "linkLabel": "cookies page",
       "tail": ".",
       "title": "Cookies"
     },
     "deletion": {
-      "cardBody": "To delete your account, send a request from the address you signed up with. We delete the host email and detach any historical room data within 7 days. Guest player names are stripped automatically 30 days after the room ends.",
+      "cardBody": "If you created a room, delete it from “Your Rooms” on the home page. The room and everything in it (every player’s display name and avatar, predictions, quiz answers, duel results and points) is removed immediately and can’t be restored. Rooms are not deleted automatically: they stay until the host deletes them. For any other request, email privacy@eurovision.games.",
       "cardLead": "Email ",
-      "cardTail": " from the address you signed up with. We delete the host email and detach any historical room data within 7 days. Guest player names are stripped automatically 30 days after the room ends — you do not need to ask for that.",
-      "cardTitle": "How to delete your account",
-      "note": "If you joined a room as a guest and want your display name removed sooner, ask the room host to delete the room from the host dashboard.",
+      "cardTail": " with any other deletion request. Hosts can delete a room, and everything in it, from “Your Rooms” on the home page at any time; rooms are not deleted automatically.",
+      "cardTitle": "How to delete your data",
+      "note": "If you joined a room as a guest and want your display name removed, ask the room’s host to delete the room from “Your Rooms”.",
       "title": "Data deletion"
     },
     "hero": {
       "chip": "Privacy",
-      "lede": "Eurovision Games is a free browser-based party game. We do not sell data, we do not run third-party advertising, and we collect the minimum needed for the game to work. Last updated 30 April 2026.",
+      "lede": "Eurovision Games is a free browser-based party game. We do not sell data, we do not run third-party advertising, and we collect the minimum needed for the game to work. Last updated 2 November 2026.",
       "title": "Privacy policy"
     },
     "meta": {
@@ -315,21 +315,21 @@
         "Purpose",
         "Retention"
       ],
-      "intro": "Four categories — what each is for, and how long we keep it. Guest players (people who join a room with just a name) are not tied to identifying data on our side.",
+      "intro": "Four categories — what each is for, and how long we keep it. Nobody signs up: hosts and players alike play in an anonymous session, and we never ask for an email address or real name.",
       "rows": [
         {
-          "purpose": "Authenticate the host via one-time code (OTP). No marketing email.",
-          "retention": "Until you delete your account.",
-          "type": "Host email"
+          "purpose": "A random ID created automatically when you create or join a room, so the app knows which player and which rooms are yours. No email, password or real name is attached to it.",
+          "retention": "Stored in your browser until you clear its site data. The matching record on our side holds no personal details.",
+          "type": "Anonymous session ID"
         },
         {
           "purpose": "Chosen by each player joining a room. Visible to other players in the same room only.",
-          "retention": "Stripped 30 days after the room ends.",
-          "type": "Player display name"
+          "retention": "Kept until the host deletes the room.",
+          "type": "Player display name & avatar"
         },
         {
-          "purpose": "Predictions, trivia answers, duel outcomes, scores. Tied to a room ID, not to identifying data for guests.",
-          "retention": "Active room + 24 hours; aggregate stats anonymised after 30 days.",
+          "purpose": "Room details (code and an encrypted room password), predictions, quiz answers, duel results, points and trophies. Tied to the room and to each player’s anonymous session ID.",
+          "retention": "Kept until the host deletes the room.",
           "type": "Game state"
         },
         {
@@ -341,19 +341,19 @@
       "title": "What we collect"
     },
     "whoHasAccess": {
-      "intro": "Eurovision Games runs on two infrastructure providers. No other third parties see your data.",
+      "intro": "Eurovision Games runs on two infrastructure providers. They are the only third parties that hold your data.",
       "items": [
         {
           "bold": "Supabase (Postgres database, auth)",
-          "rest": " — stores room state, host accounts, and game data. Row-level security policies prevent cross-room data access."
+          "rest": " — stores room state, anonymous sessions and game data, and handles the email sign-in used only by site administrators. Row-level security policies prevent cross-room data access."
         },
         {
           "bold": "Vercel (hosting)",
           "rest": " — serves the app and retains short-term request logs for security and abuse prevention."
         },
         {
-          "bold": "No-one else.",
-          "rest": " No analytics broker, no advertising network, no CRM, no data warehouse, no third-party email provider beyond the OTP transactional sender."
+          "bold": "No-one else holds your data.",
+          "rest": " No analytics broker, no advertising network, no CRM, no data warehouse, no marketing email. To display the site, your browser may also connect to Google Fonts and load flag images from flagcdn.com; like any web request, these carry your IP address, but no game data."
         }
       ],
       "title": "Who has access"

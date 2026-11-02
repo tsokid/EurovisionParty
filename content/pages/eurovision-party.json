@@ -28,7 +28,7 @@
         "q": "Μπορώ να κάνω το πάρτι σε Zoom;"
       },
       {
-        "a": "Η βαθμολογία του παγώνει. Τα σύνολα προβλέψεων και quiz είναι ήδη κατοχυρωμένα, τα αποτελέσματα των μονομαχιών μένουν στον πίνακα και κρατάει όσα τρόπαια κερδίσει — έτσι ο φίλος που πρέπει να βάλει τα παιδιά για ύπνο στις 22:00 μπορεί και πάλι να φύγει με Μάντη ή Γκουρού.",
+        "a": "Η βαθμολογία του παγώνει. Τα σύνολα προβλέψεων και quiz είναι ήδη κατοχυρωμένα και τα αποτελέσματα των μονομαχιών μένουν στον πίνακα, οπότε μπορεί ακόμα να κερδίσει Μάντη, Γκουρού ή Μονομάχο — ο φίλος που πρέπει να βάλει τα παιδιά για ύπνο στις 22:00 μπορεί και πάλι να φύγει με τρόπαιο. Η εξαίρεση είναι ο Πρωταθλητής: όποιος αποχωρήσει από το παιχνίδι δεν μπορεί να τον κερδίσει.",
         "q": "Τι γίνεται αν φύγει κάποιος νωρίτερα;"
       },
       {
@@ -123,7 +123,7 @@
             "strong": "Ισραήλ"
           }
         ],
-        "drinks": "Ποτά: κοκτέιλ ανά χώρα (Aperol για Ιταλία, Aquavit για Σουηδία, Limoncello για Ιταλία, Pastis για Γαλλία) και μια πλούσια επιλογή mocktail για όσους οδηγούν ή δεν πίνουν.",
+        "drinks": "Ποτά: κοκτέιλ ανά χώρα (Aperol για Ιταλία, Aquavit για Σουηδία, ούζο για Ελλάδα, Pastis για Γαλλία) και μια πλούσια επιλογή mocktail για όσους οδηγούν ή δεν πίνουν.",
         "intro": "Διάλεξε έξι χώρες από τη σειρά εμφάνισης και σέρβιρε ένα πιάτο ανά χώρα, όλα finger food (χωρίς σερβίρισμα σε πιάτα κατά τη διάρκεια της εκπομπής). Μια ενδεικτική επιλογή:",
         "title": "Φαγητό και ποτό — μπουφές ανά χώρα"
       },
@@ -264,7 +264,7 @@
         "title": "Θέμα και διακόσμηση"
       },
       "timezone": {
-        "body": "Η Eurovision μεταδίδεται ζωντανά σε ώρα CET, που για το μεγαλύτερο μέρος της Ευρώπης είναι μέσα στο βράδυ, και μία ώρα νωρίτερα στο Ηνωμένο Βασίλειο, την Ιρλανδία και την Πορτογαλία. Στην Αμερική πέφτει από το μεσημέρι έως το απόγευμα· στην Αυστραλία και τη Νέα Ζηλανδία πέφτει νωρίς το πρωί της Κυριακής. Ταίριαξε το φαγητό με την τοπική ώρα — πρωινό στο Σίδνεϊ, πλήρες δείπνο στο Βερολίνο — αλλά κράτα το πρόγραμμα της βραδιάς ίδιο: άνοιγμα πόρτας στο T-60, κλείδωμα προβλέψεων με το άνοιγμα της ψηφοφορίας, μονομαχίες στα διαλείμματα. Ο σύνδεσμος του δωματίου δουλεύει το ίδιο σε κάθε ζώνη ώρας.",
+        "body": "Η Eurovision μεταδίδεται ζωντανά σε ώρα CEST, που για το μεγαλύτερο μέρος της Ευρώπης είναι μέσα στο βράδυ, και μία ώρα νωρίτερα στο Ηνωμένο Βασίλειο, την Ιρλανδία και την Πορτογαλία. Στην Αμερική πέφτει από το μεσημέρι έως το απόγευμα· στην Αυστραλία και τη Νέα Ζηλανδία πέφτει νωρίς το πρωί της Κυριακής. Ταίριαξε το φαγητό με την τοπική ώρα — πρωινό στο Σίδνεϊ, πλήρες δείπνο στο Βερολίνο — αλλά κράτα το πρόγραμμα της βραδιάς ίδιο: άνοιγμα πόρτας στο T-60, κλείδωμα προβλέψεων με το άνοιγμα της ψηφοφορίας, μονομαχίες στα διαλείμματα. Ο σύνδεσμος του δωματίου δουλεύει το ίδιο σε κάθε ζώνη ώρας.",
         "title": "Διοργάνωση σε διαφορετικές ζώνες ώρας"
       },
       "what": {
@@ -308,7 +308,7 @@
         "q": "Can I host the party on Zoom?"
       },
       {
-        "a": "Their score freezes. Predictions and quiz totals are already banked, duel records stay on the leaderboard, and they keep any trophies they win — so the friend who has to put kids to bed at 22:00 can still walk away with Oracle or Guru.",
+        "a": "Their score freezes. Predictions and quiz totals are already banked and duel records stay on the leaderboard, so they can still win Oracle, Guru or Duelist — the friend who has to put kids to bed at 22:00 can still walk away with a trophy. The exception is Champion: a player who exits the game isn’t eligible for it.",
         "q": "What if someone leaves early?"
       },
       {
@@ -403,7 +403,7 @@
             "strong": "Israel"
           }
         ],
-        "drinks": "Drinks: country-themed cocktails (Aperol for Italy, Aquavit for Sweden, Limoncello for Italy, Pastis for France) plus a generous mocktail option for designated drivers and non-drinkers.",
+        "drinks": "Drinks: country-themed cocktails (Aperol for Italy, Aquavit for Sweden, Ouzo for Greece, Pastis for France) plus a generous mocktail option for designated drivers and non-drinkers.",
         "intro": "Pick six countries from the running order and serve one dish per country, all finger food (no plating during the show). A representative spread:",
         "title": "Food and drink — country-themed buffet"
       },
@@ -544,7 +544,7 @@
         "title": "Theme and decor"
       },
       "timezone": {
-        "body": "Eurovision broadcasts live in CET, which is mid-evening for most of Europe and an hour earlier in the UK, Ireland, and Portugal. In the Americas it is midday to mid-afternoon; in Australia and New Zealand it lands early on Sunday morning. Match the food to the local slot — breakfast spreads in Sydney, full dinner in Berlin — but keep the run-of-show identical: doors at T-60, predictions locked when voting opens, duels in the breaks. The room link works the same in every time zone.",
+        "body": "Eurovision broadcasts live in CEST, which is mid-evening for most of Europe and an hour earlier in the UK, Ireland, and Portugal. In the Americas it is midday to mid-afternoon; in Australia and New Zealand it lands early on Sunday morning. Match the food to the local slot — breakfast spreads in Sydney, full dinner in Berlin — but keep the run-of-show identical: doors at T-60, predictions locked when voting opens, duels in the breaks. The room link works the same in every time zone.",
         "title": "Hosting in different time zones"
       },
       "what": {

@@ -12,7 +12,7 @@
     },
     "faq": [
       {
-        "a": "Όχι. Οι καλεσμένοι μπαίνουν μόνο με κωδικό δωματίου. Ο οικοδεσπότης συνδέεται μία φορά.",
+        "a": "Όχι. Κανείς δεν χρειάζεται λογαριασμό: ο οικοδεσπότης απλώς φτιάχνει το δωμάτιο και οι καλεσμένοι μπαίνουν με τον κωδικό δωματίου.",
         "q": "Χρειάζομαι λογαριασμό;"
       },
       {
@@ -24,7 +24,7 @@
         "q": "Τρέχει στην τηλεόραση;"
       },
       {
-        "a": "Ο μεγάλος τελικός μεταδίδεται το {finalDay} {cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Οι ώρες έναρξης διαφέρουν ανά χώρα (21:00 CET / 20:00 BST / 22:00 EET).",
+        "a": "Ο μεγάλος τελικός μεταδίδεται το {finalDay} {cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Οι ώρες έναρξης διαφέρουν ανά χώρα (21:00 CEST / 20:00 BST / 22:00 EEST).",
         "q": "Πότε είναι η Eurovision {year};"
       }
     ],
@@ -188,7 +188,7 @@
         "title": "Πώς να διοργανώσεις (οδηγός 10 βημάτων)"
       },
       "timezones": {
-        "body": "Οι ώρες έναρξης του μεγάλου τελικού διαφέρουν ανά χώρα: 21:00 CET (Γερμανία, Γαλλία, Ισπανία), 20:00 BST/UTC+1 (Ηνωμένο Βασίλειο, Ιρλανδία), 22:00 EET (Ελλάδα, Κύπρος, Φινλανδία, Ισραήλ), 05:00 AEST το επόμενο πρωί (Αυστραλία — βάλε εγγραφή). Αν διοργανώνεις βραδιά για παρέα σε διαφορετικές χώρες, συγχρονιστείτε με την τοπική ώρα έναρξης του οικοδεσπότη και άνοιξε το δωμάτιο 30 λεπτά νωρίτερα.",
+        "body": "Οι ώρες έναρξης του μεγάλου τελικού διαφέρουν ανά χώρα: 21:00 CEST (Γερμανία, Γαλλία, Ισπανία), 20:00 BST/UTC+1 (Ηνωμένο Βασίλειο, Ιρλανδία), 22:00 EEST (Ελλάδα, Κύπρος, Φινλανδία, Ισραήλ), 05:00 AEST το επόμενο πρωί (Αυστραλία — βάλε εγγραφή). Αν διοργανώνεις βραδιά για παρέα σε διαφορετικές χώρες, συγχρονιστείτε με την τοπική ώρα έναρξης του οικοδεσπότη και άνοιξε το δωμάτιο 30 λεπτά νωρίτερα.",
         "title": "Συμβουλές για ζώνες ώρας"
       },
       "what": {
@@ -212,7 +212,7 @@
     },
     "faq": [
       {
-        "a": "No. Guests join with just a room code. The host signs in once.",
+        "a": "No. Nobody needs an account: the host just creates the room, and guests join with the room code.",
         "q": "Do I need an account?"
       },
       {
@@ -224,7 +224,7 @@
         "q": "Does it run on TV?"
       },
       {
-        "a": "The grand final airs on {finalDay} {cityFrom}, with semi-finals earlier that week. Start times vary by country (21:00 CET / 20:00 BST / 22:00 EET).",
+        "a": "The grand final airs on {finalDay} {cityFrom}, with semi-finals earlier that week. Start times vary by country (21:00 CEST / 20:00 BST / 22:00 EEST).",
         "q": "When is Eurovision {year}?"
       }
     ],
@@ -388,7 +388,7 @@
         "title": "How to host (10-step playbook)"
       },
       "timezones": {
-        "body": "Grand final start times vary by country: 21:00 CET (Germany, France, Spain), 20:00 BST/UTC+1 (UK, Ireland), 22:00 EET (Greece, Cyprus, Finland, Israel), 05:00 AEST next morning (Australia — record it). If you're hosting cross-country, align on the host's local kick-off and start the room 30 minutes earlier.",
+        "body": "Grand final start times vary by country: 21:00 CEST (Germany, France, Spain), 20:00 BST/UTC+1 (UK, Ireland), 22:00 EEST (Greece, Cyprus, Finland, Israel), 05:00 AEST next morning (Australia — record it). If you're hosting cross-country, align on the host's local kick-off and start the room 30 minutes earlier.",
         "title": "Time-zone tips"
       },
       "what": {

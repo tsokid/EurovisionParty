@@ -12,7 +12,7 @@
     },
     "faq": [
       {
-        "a": "Ναι. Χωρίς συνδρομή, χωρίς αγορές εντός εφαρμογής, χωρίς εγγραφή για τους καλεσμένους που μπαίνουν. Ο οικοδεσπότης συνδέεται μία φορά με email ώστε να αποθηκευτεί το δωμάτιο· οι παίκτες χρειάζονται μόνο τον κωδικό δωματίου.",
+        "a": "Ναι. Χωρίς συνδρομή, χωρίς αγορές εντός εφαρμογής και χωρίς εγγραφή για κανέναν, ούτε για τον οικοδεσπότη. Τα δωμάτια του οικοδεσπότη συνδέονται με μια ανώνυμη συνεδρία στη συσκευή του· οι παίκτες χρειάζονται μόνο τον κωδικό δωματίου.",
         "q": "Είναι όντως δωρεάν το Eurovision Games;"
       },
       {
@@ -24,7 +24,7 @@
         "q": "Λειτουργεί στο κινητό;"
       },
       {
-        "a": "Όχι. Μόνο ο οικοδεσπότης δημιουργεί δωρεάν λογαριασμό (email ή Google). Οι καλεσμένοι μπαίνουν με τον κωδικό δωματίου και ένα όνομα εμφάνισης· τίποτα δεν αποθηκεύεται για αυτούς ανάμεσα στις βραδιές, εκτός αν επιλέξουν να εγγραφούν.",
+        "a": "Όχι. Κανείς δεν δημιουργεί λογαριασμό, ούτε ο οικοδεσπότης. Οι καλεσμένοι μπαίνουν με τον κωδικό δωματίου και ένα όνομα εμφάνισης· τα δωμάτια στα οποία έχουν μπει αποθηκεύονται μόνο σε εκείνον τον browser.",
         "q": "Χρειάζονται οι παίκτες λογαριασμό;"
       },
       {
@@ -128,8 +128,8 @@
             "strong": "PWA με προτεραιότητα στο κινητό."
           },
           {
-            "rest": " Ο οικοδεσπότης συνδέεται μία φορά· οι καλεσμένοι απλώς γράφουν τον κωδικό δωματίου και ένα όνομα.",
-            "strong": "Εγγραφή μόνο για τον οικοδεσπότη."
+            "rest": " Ο οικοδεσπότης απλώς φτιάχνει το δωμάτιο· οι καλεσμένοι γράφουν τον κωδικό δωματίου και ένα όνομα.",
+            "strong": "Καμία εγγραφή."
           },
           {
             "rest": " Ιδανικός αριθμός: 6–10 — αρκετή ποικιλία χωρίς να κουράζει η εναλλαγή στο trivia.",
@@ -229,7 +229,7 @@
     },
     "faq": [
       {
-        "a": "Yes. No subscription, no in-app purchases, no signup required for guests to join. The host authenticates once by email so the room can be saved; players just need the room code.",
+        "a": "Yes. No subscription, no in-app purchases, and no signup for anyone, host included. The host’s rooms are linked to an anonymous session on their device; players just need the room code.",
         "q": "Is Eurovision Games really free?"
       },
       {
@@ -241,7 +241,7 @@
         "q": "Does it work on mobile?"
       },
       {
-        "a": "No. Only the host creates a free account (email or Google). Guests join with the room code and a display name; nothing is saved against them between sessions unless they choose to sign up.",
+        "a": "No. Nobody creates an account, not even the host. Guests join with the room code and a display name; the rooms they’ve joined are remembered in that browser only.",
         "q": "Do players need an account?"
       },
       {
@@ -345,8 +345,8 @@
             "strong": "Mobile-first PWA."
           },
           {
-            "rest": " The host authenticates once; guests just type a room code and a display name.",
-            "strong": "Host-only signup."
+            "rest": " The host just creates the room; guests type a room code and a display name.",
+            "strong": "No signup at all."
           },
           {
             "rest": " Sweet spot is 6–10 — enough variety without the trivia rotation getting stale.",

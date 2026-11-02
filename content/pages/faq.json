@@ -2,7 +2,7 @@
   "el": {
     "anchored": [
       {
-        "a": "Συνδέσου (μόνο με email — στέλνουμε magic link με ένα tap), πάτα \"Φτιάξε Δωμάτιο\", γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης για το δωμάτιο. Ένας κωδικός δωματίου 6 χαρακτήρων και ένας σύνδεσμος κοινοποίησης εμφανίζονται αμέσως· κάθε δωμάτιο χωράει έως 20 παίκτες. Ο οικοδεσπότης διαχειρίζεται το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
+        "a": "Πάτα \"Φτιάξε Δωμάτιο\", γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης για το δωμάτιο — χωρίς εγγραφή και χωρίς email. Ένας κωδικός δωματίου 6 χαρακτήρων και ένας σύνδεσμος κοινοποίησης εμφανίζονται αμέσως· κάθε δωμάτιο χωράει έως 20 παίκτες. Ο οικοδεσπότης διαχειρίζεται το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
         "id": "create",
         "q": "Πώς δημιουργώ ένα δωμάτιο;"
       },
@@ -12,7 +12,7 @@
         "q": "Πώς μπαίνω σε ένα δωμάτιο;"
       },
       {
-        "a": "Πάτα το όνομά σου στην κεφαλίδα του δωματίου → \"Αποχώρηση\". Η θέση σου ελευθερώνεται· οι κερδισμένοι πόντοι σου παγώνουν στον πίνακα βαθμολογίας ώστε η υπόλοιπη παρέα να μην επηρεαστεί. Οι οικοδεσπότες έχουν επιπλέον επιλογή \"Διαγραφή Δωματίου\" στο host panel που τερματίζει τη συνεδρία για όλους — επιβεβαίωση 5 δευτερολέπτων αποτρέπει ατυχήματα.",
+        "a": "Πάτα το όνομά σου στην κεφαλίδα του δωματίου → \"Αποχώρηση\". Η θέση σου ελευθερώνεται· οι κερδισμένοι πόντοι σου παγώνουν στον πίνακα βαθμολογίας ώστε η υπόλοιπη παρέα να μην επηρεαστεί. Οι οικοδεσπότες μπορούν επίσης να διαγράψουν το δωμάτιο από την ενότητα \"Τα Δωμάτιά σου\" στην αρχική σελίδα, κάτι που τερματίζει τη συνεδρία για όλους — ένα μήνυμα επιβεβαίωσης αποτρέπει τα ατυχήματα.",
         "id": "leave",
         "q": "Πώς αποχωρώ ή διαγράφω ένα δωμάτιο;"
       }
@@ -74,7 +74,7 @@
           "strong": "Οι παίκτες"
         },
         {
-          "rest": "έχουν επιπλέον επιλογή <em>Διαγραφή Δωματίου</em> στο host panel — επιβεβαίωση 5 δευτερολέπτων αποτρέπει ατυχήματα.",
+          "rest": "μπορούν επίσης να διαγράψουν το δωμάτιο από την ενότητα <em>Τα Δωμάτιά σου</em> στην αρχική σελίδα — ένα μήνυμα επιβεβαίωσης αποτρέπει τα ατυχήματα.",
           "strong": "Οι οικοδεσπότες"
         },
         {
@@ -100,7 +100,7 @@
         "q": "Είναι το Eurovision Games δωρεάν;"
       },
       {
-        "a": "Μόνο ο οικοδεσπότης συνδέεται (με email). Οι παίκτες μπαίνουν με κωδικό δωματίου και ένα όνομα — χωρίς λογαριασμό.",
+        "a": "Όχι. Κανείς δεν κάνει εγγραφή, ούτε ο οικοδεσπότης. Οι παίκτες μπαίνουν με κωδικό δωματίου και ένα όνομα.",
         "q": "Χρειάζομαι λογαριασμό;"
       },
       {
@@ -124,7 +124,7 @@
         "q": "Τι γίνεται αν αποσυνδεθεί ένας παίκτης;"
       },
       {
-        "a": "Ναι — ο οικοδεσπότης έχει panel διαχείρισης παικτών από το lobby και μετά.",
+        "a": "Όχι. Δεν υπάρχει τρόπος να αφαιρεθεί μεμονωμένος παίκτης, γι’ αυτό μοίρασε τον κωδικό δωματίου και τον κωδικό πρόσβασης μόνο σε άτομα που εμπιστεύεσαι. Αν μπει κάποιος που δεν θα έπρεπε, ο οικοδεσπότης μπορεί να διαγράψει το δωμάτιο και να φτιάξει νέο.",
         "q": "Μπορεί ο οικοδεσπότης να αποβάλει παίκτη;"
       },
       {
@@ -156,7 +156,7 @@
         "q": "Πού πάνε τα δεδομένα μου;"
       },
       {
-        "a": "Ναι — αλλά μόνο ένα δωμάτιο είναι ενεργό ανά οικοδεσπότη κάθε στιγμή κατά τη μετάδοση.",
+        "a": "Ναι. Μπορείς να φτιάξεις έως 10 δωμάτια την ώρα και καθένα εμφανίζεται στην ενότητα \"Τα Δωμάτιά σου\" στην αρχική σελίδα.",
         "q": "Μπορώ να φιλοξενήσω παραπάνω από ένα δωμάτιο;"
       }
     ],
@@ -203,7 +203,7 @@
   "en": {
     "anchored": [
       {
-        "a": "Sign in (email-only — we send a one-tap magic link), click \"Create a Room\", enter your name, pick an avatar and set a room password. A 6-character room code and shareable link appear instantly; rooms hold up to 20 players. The host owns the room until they leave or delete it.",
+        "a": "Click \"Create a Room\", enter your name, pick an avatar and set a room password — no sign-up or email needed. A 6-character room code and shareable link appear instantly; rooms hold up to 20 players. The host owns the room until they leave or delete it.",
         "id": "create",
         "q": "How do I create a room?"
       },
@@ -213,7 +213,7 @@
         "q": "How do I join a room?"
       },
       {
-        "a": "Tap your name in the room header → \"Leave room\". Your slot frees up; your scored points stay frozen on the leaderboard so the rest of the room is unaffected. Hosts have an extra \"Delete room\" option in the host panel that ends the session for everyone — a 5-second confirmation prevents accidents.",
+        "a": "Tap your name in the room header → \"Leave room\". Your slot frees up; your scored points stay frozen on the leaderboard so the rest of the room is unaffected. Hosts can also delete the room from \"Your Rooms\" on the home page, which ends the session for everyone — a confirmation prompt prevents accidents.",
         "id": "leave",
         "q": "How do I leave or delete a room?"
       }
@@ -275,7 +275,7 @@
           "strong": "Players"
         },
         {
-          "rest": "have an extra <em>Delete room</em> option in the host panel — a 5-second confirmation prevents accidents.",
+          "rest": "can also delete the room from <em>Your Rooms</em> on the home page — a confirmation prompt prevents accidents.",
           "strong": "Hosts"
         },
         {
@@ -301,7 +301,7 @@
         "q": "Is Eurovision Games free?"
       },
       {
-        "a": "Only the host signs in (with email). Players join with a room code and a name — no account.",
+        "a": "No. Nobody signs up, not even the host. Players join with a room code and a name.",
         "q": "Do I need an account?"
       },
       {
@@ -325,7 +325,7 @@
         "q": "What happens if a player disconnects?"
       },
       {
-        "a": "Yes — the host has a player-management panel from the lobby onward.",
+        "a": "No. There is no way to remove a single player, so share the room code and password only with people you trust. If someone joins who shouldn’t, the host can delete the room and start a new one.",
         "q": "Can the host eject a player?"
       },
       {
@@ -357,7 +357,7 @@
         "q": "Where does my data go?"
       },
       {
-        "a": "Yes — but only one room is active per host at a time during the broadcast.",
+        "a": "Yes. You can create up to 10 rooms an hour, and each one appears under \"Your Rooms\" on the home page.",
         "q": "Can I host more than one room?"
       }
     ],

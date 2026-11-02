@@ -2,24 +2,24 @@
   "el": {
     "account": {
       "deletionItem": {
-        "bold": "Διαγραφή λογαριασμού.",
-        "lead": " Οι οικοδεσπότες μπορούν να διαγράψουν τον λογαριασμό τους ανά πάσα στιγμή. Δες την ",
+        "bold": "Διαγραφή δωματίου.",
+        "lead": " Ο οικοδεσπότης μπορεί ανά πάσα στιγμή να διαγράψει ένα δωμάτιο, μαζί με όλα τα δεδομένα παιχνιδιού του, από την ενότητα «Τα Δωμάτιά σου» στην αρχική σελίδα. Δες την ",
         "linkLabel": "Πολιτική Απορρήτου",
         "mid": " — δες την ",
         "tail": " για λεπτομέρειες διατήρησης."
       },
-      "intro": "Οι οικοδεσπότες αυθεντικοποιούνται με κωδικό μίας χρήσης (one-time code) μέσω email. Ο οικοδεσπότης κατέχει το δωμάτιο: μπορεί να αλλάξει ρυθμίσεις, να προχωρήσει τη φάση του παιχνιδιού και να διαγράψει το δωμάτιο. Οι guests μπαίνουν με όνομα εμφάνισης ορατό μόνο στους άλλους παίκτες του ίδιου δωματίου.",
+      "intro": "Κανείς δεν κάνει εγγραφή: οικοδεσπότες και guests παίζουν σε ανώνυμη συνεδρία. Ο οικοδεσπότης κατέχει το δωμάτιο: ξεκινά το πάρτι, ανοίγει την ψηφοφορία για ένα τρόπαιο με ισοπαλία και μπορεί να διαγράψει το δωμάτιο. Μετά την έναρξη του πάρτι, το παιχνίδι προχωρά αυτόματα. Οι guests μπαίνουν με όνομα εμφάνισης ορατό μόνο στους άλλους παίκτες του ίδιου δωματίου.",
       "items": [
         {
           "bold": "Ευθύνες οικοδεσπότη.",
-          "rest": " Ο οικοδεσπότης είναι υπεύθυνος για τη διαμοίραση του κωδικού εισόδου στα σωστά πρόσωπα και για την αφαίρεση όποιου παραβιάζει τους κανόνες συμπεριφοράς."
+          "rest": " Ο οικοδεσπότης είναι υπεύθυνος να μοιράζεται τον κωδικό δωματίου και τον κωδικό πρόσβασης μόνο με τα σωστά πρόσωπα. Δεν υπάρχει τρόπος να αφαιρεθεί μεμονωμένος παίκτης· αν χρειαστεί, ο οικοδεσπότης μπορεί να διαγράψει το δωμάτιο."
         },
         {
           "bold": "Το RLS προστατεύει τα δεδομένα.",
           "rest": " Οι πολιτικές row-level security στη βάση δεδομένων εμποδίζουν την πρόσβαση μεταξύ δωματίων· οι παίκτες βλέπουν μόνο το δικό τους δωμάτιο."
         }
       ],
-      "title": "Λογαριασμός & δωμάτια"
+      "title": "Δωμάτια & συνεδρίες"
     },
     "breadcrumbs": {
       "home": "Αρχική",
@@ -81,8 +81,8 @@
           "rest": " Δεν χρεώνουμε για να φτιάξεις ή να μπεις σε δωμάτιο."
         },
         {
-          "bold": "Κανένας λογαριασμός για guests.",
-          "rest": " Οι οικοδεσπότες αυθεντικοποιούνται με κωδικό OTP μέσω email· οι guests μπαίνουν με όνομα εμφάνισης."
+          "bold": "Κανένας λογαριασμός.",
+          "rest": " Οικοδεσπότες και guests παίζουν σε ανώνυμη συνεδρία· οι guests μπαίνουν με όνομα εμφάνισης."
         },
         {
           "bold": "Κανένα download.",
@@ -93,7 +93,7 @@
     },
     "hero": {
       "chip": "Όροι χρήσης",
-      "lede": "Χρησιμοποιώντας το Eurovision Games αποδέχεσαι αυτούς τους όρους. Σύντομη εκδοχή: είναι ένα δωρεάν fan project, παίξε τίμια και δεν έχουμε καμία σχέση με την European Broadcasting Union. Τελευταία ενημέρωση: 30 Απριλίου 2026.",
+      "lede": "Χρησιμοποιώντας το Eurovision Games αποδέχεσαι αυτούς τους όρους. Σύντομη εκδοχή: είναι ένα δωρεάν fan project, παίξε τίμια και δεν έχουμε καμία σχέση με την European Broadcasting Union. Τελευταία ενημέρωση: 2 Νοεμβρίου 2026.",
       "title": "Όροι χρήσης"
     },
     "liability": {
@@ -109,7 +109,7 @@
         "αποποίηση eurovision games",
         "όροι fan game"
       ],
-      "schemaDescription": "Όροι χρήσης του Eurovision Games: ποιοι είμαστε, κανόνες δωρεάν χρήσης, συμπεριφορά παικτών, λογαριασμός & δωμάτια, αποποίηση εγγυήσεων, περιορισμός ευθύνης και αποποίηση εμπορικού σήματος EBU.",
+      "schemaDescription": "Όροι χρήσης του Eurovision Games: ποιοι είμαστε, κανόνες δωρεάν χρήσης, συμπεριφορά παικτών, δωμάτια & συνεδρίες, αποποίηση εγγυήσεων, περιορισμός ευθύνης και αποποίηση εμπορικού σήματος EBU.",
       "title": "Όροι Χρήσης — Eurovision Games",
       "webPageDescription": "Όροι που διέπουν τη χρήση του browser party game Eurovision Games. Δωρεάν, fan-made, χωρίς σχέση με την European Broadcasting Union.",
       "webPageMainEntityAbout": "Συμφωνία χρήστη για το browser game του eurovision.games",
@@ -122,9 +122,9 @@
         "title": "Πολιτική απορρήτου"
       },
       {
-        "blurb": "Τι αποθηκεύουμε, πώς λειτουργεί η συναίνεση και πού ζουν τα δεδομένα.",
+        "blurb": "Τι αποθηκεύουμε, πώς λειτουργεί η συγκατάθεση και πού ζουν τα δεδομένα.",
         "href": "/cookies",
-        "title": "Cookies & συναίνεση"
+        "title": "Cookies & συγκατάθεση"
       },
       {
         "blurb": "Γιατί υπάρχει, ποιος το έφτιαξε και η φιλοσοφία χωρίς διαφημίσεις και χωρίς λογαριασμούς.",
@@ -155,24 +155,24 @@
   "en": {
     "account": {
       "deletionItem": {
-        "bold": "Account deletion.",
-        "lead": " Hosts can delete their account at any time. See the ",
+        "bold": "Room deletion.",
+        "lead": " Hosts can delete a room, with all its game data, at any time from “Your Rooms” on the home page. See the ",
         "linkLabel": "Privacy Policy",
         "mid": " — see the ",
         "tail": " for retention details."
       },
-      "intro": "Hosts authenticate via email one-time code. The host owns the room: they can change settings, advance the game phase, and delete the room. Guests join with a display name visible only to other players in the same room.",
+      "intro": "Nobody signs up: hosts and guests alike play in an anonymous session. The host owns the room: they start the party, open the tiebreak vote for a tied trophy, and can delete the room. After the party starts, the game advances automatically. Guests join with a display name visible only to other players in the same room.",
       "items": [
         {
           "bold": "Host responsibilities.",
-          "rest": " The host is responsible for sharing the room code with the right people and removing anyone who breaks player conduct rules."
+          "rest": " The host is responsible for sharing the room code and password only with the right people. There is no way to remove a single player; if needed, the host can delete the room."
         },
         {
           "bold": "RLS protects data.",
           "rest": " Row-level security policies in the database prevent cross-room data access; players only see their own room."
         }
       ],
-      "title": "Account & rooms"
+      "title": "Rooms & sessions"
     },
     "breadcrumbs": {
       "home": "Home",
@@ -234,8 +234,8 @@
           "rest": " We do not charge to host or join a room."
         },
         {
-          "bold": "No accounts for guests.",
-          "rest": " Hosts authenticate via email OTP; guests join with a display name."
+          "bold": "No accounts.",
+          "rest": " Hosts and guests alike play in an anonymous session; guests join with a display name."
         },
         {
           "bold": "No download.",
@@ -246,7 +246,7 @@
     },
     "hero": {
       "chip": "Terms of use",
-      "lede": "By using Eurovision Games you agree to these terms. The short version: it's a free fan project, play nicely, and we're not affiliated with the European Broadcasting Union. Last updated 30 April 2026.",
+      "lede": "By using Eurovision Games you agree to these terms. The short version: it's a free fan project, play nicely, and we're not affiliated with the European Broadcasting Union. Last updated 2 November 2026.",
       "title": "Terms of use"
     },
     "liability": {
@@ -262,7 +262,7 @@
         "eurovision games disclaimer",
         "fan game terms"
       ],
-      "schemaDescription": "Terms of use for Eurovision Games: who we are, free-to-use rules, player conduct, account & rooms, disclaimer of warranties, limitation of liability, and the EBU trademark disclaimer.",
+      "schemaDescription": "Terms of use for Eurovision Games: who we are, free-to-use rules, player conduct, rooms & sessions, disclaimer of warranties, limitation of liability, and the EBU trademark disclaimer.",
       "title": "Terms of Use — Eurovision Games",
       "webPageDescription": "Terms governing use of the Eurovision Games browser party game. Free, fan-made, not affiliated with the European Broadcasting Union.",
       "webPageMainEntityAbout": "User agreement for the eurovision.games browser game",

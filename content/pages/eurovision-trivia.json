@@ -7,12 +7,12 @@
     "cta": {
       "body": "Άνοιξε ένα δωμάτιο και ξεκίνα τον πρώτο γύρο σε 60 δευτερόλεπτα.",
       "primary": "Δημιουργία",
-      "secondary": "Πώς να παίξεις",
+      "secondary": "Πώς παίζεις",
       "title": "Κάνε quiz στους φίλους σου απόψε"
     },
     "faq": [
       {
-        "a": "Οι ερωτήσεις αντλούνται από μια επιμελημένη τράπεζα Eurovision trivia που καλύπτει νικητές, σταθμούς ψηφοφορίας, κανόνες γλώσσας, πρώτες συμμετοχές χωρών και viral στιγμές. Η προτίμηση δεκαετίας του δωματίου επηρεάζει σε ποια εποχή δίνουν έμφαση οι ερωτήσεις.",
+        "a": "Οι ερωτήσεις αντλούνται από μια επιμελημένη τράπεζα Eurovision trivia που καλύπτει νικητές, σταθμούς ψηφοφορίας, κανόνες γλώσσας, πρώτες συμμετοχές χωρών και viral στιγμές. Κάθε γύρος έχει σταθερή αναλογία κατηγοριών.",
         "q": "Πώς επιλέγονται οι ερωτήσεις trivia;"
       },
       {
@@ -130,24 +130,24 @@
         "q": "Πόσους πόντους πέτυχε η Loreen με το «Tattoo» το 2023;"
       },
       {
-        "answer": "Στην πράξη χωρίς όριο· το ρεκόρ είναι {stats.recordPoints} ({stats.recordArtist}, {stats.recordCountry} {stats.recordYear}).",
+        "answer": "Δεν υπάρχει σταθερό ανώτατο όριο. Κάθε άλλη χώρα που ψηφίζει μπορεί να δώσει έως 12 βαθμούς από την κριτική επιτροπή και 12 από το televote, συν 12 από την ψήφο του «Υπόλοιπου Κόσμου», οπότε το όριο εξαρτάται από το πόσες χώρες συμμετέχουν. Το ρεκόρ είναι {stats.recordPoints} ({stats.recordArtist}, {stats.recordCountry} {stats.recordYear}).",
         "options": [
           "400",
-          "500",
           "600",
-          "744"
+          "{stats.recordPoints}",
+          "Δεν υπάρχει σταθερό όριο"
         ],
         "q": "Ποιος είναι ο μέγιστος αριθμός πόντων που μπορεί να συγκεντρώσει μια χώρα στο σύγχρονο σύστημα ψηφοφορίας;"
       },
       {
-        "answer": "1997 — πέντε χώρες δοκίμασαν το televote· επεκτάθηκε ραγδαία στη συνέχεια.",
+        "answer": "1997 — πέντε χώρες δοκίμασαν το televote και από το 1998 το χρησιμοποίησαν οι περισσότερες χώρες.",
         "options": [
           "1991",
           "1997",
           "2001",
           "2009"
         ],
-        "q": "Σε ποιο έτος επέτρεψε η Eurovision για πρώτη φορά τη δημόσια τηλεψηφοφορία στις περισσότερες συμμετέχουσες χώρες;"
+        "q": "Σε ποιο έτος χρησιμοποιήθηκε για πρώτη φορά η δημόσια τηλεψηφοφορία στη Eurovision;"
       }
     ],
     "related": {
@@ -157,7 +157,7 @@
       },
       "howToPlay": {
         "blurb": "Ο οδηγός 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι τα τρόπαια.",
-        "title": "Πώς να παίξεις"
+        "title": "Πώς παίζεις"
       },
       "night": {
         "blurb": "Το playbook 10 βημάτων για να φιλοξενήσεις ένα watch party.",
@@ -228,7 +228,7 @@
     },
     "faq": [
       {
-        "a": "Questions are pulled from a curated Eurovision trivia bank covering winners, voting milestones, language rules, country debuts, and viral moments. The room’s decade preference biases which era questions skew toward.",
+        "a": "Questions are pulled from a curated Eurovision trivia bank covering winners, voting milestones, language rules, country debuts, and viral moments. Each round draws a fixed mix of categories.",
         "q": "How are trivia questions chosen?"
       },
       {
@@ -346,24 +346,24 @@
         "q": "How many points did Loreen score with \"Tattoo\" in 2023?"
       },
       {
-        "answer": "Effectively unbounded; in practice the record is {stats.recordPoints} ({stats.recordArtist}, {stats.recordCountry} {stats.recordYear}).",
+        "answer": "No fixed maximum. Every other voting country can give up to 12 jury points and 12 televote points, plus 12 from the Rest of the World vote, so the ceiling depends on how many countries take part. The record is {stats.recordPoints} ({stats.recordArtist}, {stats.recordCountry} {stats.recordYear}).",
         "options": [
           "400",
-          "500",
           "600",
-          "744"
+          "{stats.recordPoints}",
+          "No fixed maximum"
         ],
         "q": "What is the maximum number of points a country can earn in the modern voting system?"
       },
       {
-        "answer": "1997 — five countries trialled televoting; it expanded rapidly thereafter.",
+        "answer": "1997 — five countries trialled televoting, and from 1998 most countries used it.",
         "options": [
           "1991",
           "1997",
           "2001",
           "2009"
         ],
-        "q": "In what year did Eurovision allow public televoting for the first time across most participating countries?"
+        "q": "In what year was public televoting first used at Eurovision?"
       }
     ],
     "related": {

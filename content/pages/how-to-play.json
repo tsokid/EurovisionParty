@@ -148,7 +148,7 @@
       "title": "Live βαθμολογία"
     },
     "setup": {
-      "intro": "Ένας οικοδεσπότης συνδέεται (magic-link στο email — χωρίς κωδικό πρόσβασης). Όλοι οι άλλοι μπαίνουν από έναν σύνδεσμο. Όλη η διαδικασία, από την κενή καρτέλα του browser μέχρι τις κλειδωμένες προβλέψεις, διαρκεί μόλις ένα λεπτό.",
+      "intro": "Ένας οικοδεσπότης φτιάχνει το δωμάτιο — χωρίς εγγραφή, χωρίς email. Όλοι οι άλλοι μπαίνουν από έναν σύνδεσμο. Όλη η διαδικασία, από την κενή καρτέλα του browser μέχρι τις κλειδωμένες προβλέψεις, διαρκεί μόλις ένα λεπτό.",
       "items": [
         {
           "rest": "Πάτα <em>Φτιάξε Δωμάτιο</em>, γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης. Εμφανίζεται ένας κωδικός δωματίου 6 χαρακτήρων· το δωμάτιο χωράει έως 20 παίκτες.",
@@ -223,8 +223,8 @@
           "strong": "Τη μετάδοση της Eurovision."
         },
         {
-          "rest": "Μόνο ο οικοδεσπότης συνδέεται.",
-          "strong": "Χωρίς πληρωμή, χωρίς εγκατάσταση, χωρίς λογαριασμό για καλεσμένους."
+          "rest": "Ούτε ο οικοδεσπότης κάνει εγγραφή.",
+          "strong": "Χωρίς πληρωμή, χωρίς εγκατάσταση, χωρίς λογαριασμούς."
         }
       ],
       "title": "Τι χρειάζεσαι"
@@ -379,7 +379,7 @@
       "title": "Live scoring"
     },
     "setup": {
-      "intro": "One host signs in (magic-link email — no password). Everyone else joins from a link. The whole flow from empty browser tab to locked-in predictions is a single minute.",
+      "intro": "One host creates the room — no sign-up, no email. Everyone else joins from a link. The whole flow from empty browser tab to locked-in predictions is a single minute.",
       "items": [
         {
           "rest": "Click <em>Create a Room</em>, enter your name, pick an avatar and set a room password. A 6-character room code appears; the room holds up to 20 players.",
@@ -454,8 +454,8 @@
           "strong": "The Eurovision broadcast."
         },
         {
-          "rest": "Only the host signs in.",
-          "strong": "No payment, no install, no account for guests."
+          "rest": "Not even the host signs up.",
+          "strong": "No payment, no install, no accounts."
         }
       ],
       "title": "What you need"

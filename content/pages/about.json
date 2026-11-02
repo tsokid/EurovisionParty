@@ -15,7 +15,7 @@
     "cta": {
       "body": "Στήσε μια βραδιά Eurovision σε 60 δευτερόλεπτα. Φτιάξε ιδιωτικό δωμάτιο, μοιράσου τον κωδικό και βάλε τους φίλους σου στο παιχνίδι πριν από το πρώτο postcard.",
       "primaryLabel": "Δημιουργία δωματίου",
-      "secondaryLabel": "Πώς να παίξεις",
+      "secondaryLabel": "Πώς παίζεις",
       "title": "Δοκίμασε το Eurovision Games απόψε"
     },
     "ebu": {
@@ -24,7 +24,7 @@
       "title": "Καμία σχέση με την EBU"
     },
     "freeNoAccount": {
-      "body": "Το Eurovision Games είναι δωρεάν για ιδιωτικές βραδιές Eurovision. Δεν υπάρχει συνδρομή, ούτε αγορές μέσα στην εφαρμογή, ούτε διαφημίσεις — πουθενά στο site. Οι οικοδεσπότες συνδέονται μία φορά με κωδικό μίας χρήσης μέσω email· οι guests μπαίνουν μόνο με όνομα εμφάνισης και κωδικό εισόδου. Τίποτα να κατεβάσεις, τίποτα να εγκαταστήσεις. Όλα τρέχουν μέσα στον browser, σε κινητό, tablet ή laptop.",
+      "body": "Το Eurovision Games είναι δωρεάν για ιδιωτικές βραδιές Eurovision. Δεν υπάρχει συνδρομή, ούτε αγορές μέσα στην εφαρμογή, ούτε διαφημίσεις — πουθενά στο site. Κανείς δεν κάνει εγγραφή: ο οικοδεσπότης φτιάχνει δωμάτιο σε λίγα δευτερόλεπτα και οι guests μπαίνουν μόνο με όνομα εμφάνισης και κωδικό εισόδου. Τίποτα να κατεβάσεις, τίποτα να εγκαταστήσεις. Όλα τρέχουν μέσα στον browser, σε κινητό, tablet ή laptop.",
       "title": "Δωρεάν, χωρίς λογαριασμό, χωρίς εγκατάσταση"
     },
     "hero": {
@@ -50,7 +50,7 @@
       {
         "blurb": "Οδηγός στησίματος από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων.",
         "href": "/how-to-play",
-        "title": "Πώς να παίξεις σε 60 δευτερόλεπτα"
+        "title": "Πώς παίζεις σε 60 δευτερόλεπτα"
       },
       {
         "blurb": "Run-of-show, ιδέες για σνακ και πώς το παιχνίδι ταιριάζει με τη μετάδοση.",
@@ -68,7 +68,7 @@
         "title": "FAQ"
       },
       {
-        "blurb": "Τι δεδομένα συλλέγουμε, διατήρηση και πώς να διαγράψεις τον λογαριασμό σου.",
+        "blurb": "Τι δεδομένα συλλέγουμε, διατήρηση και πώς να διαγράψεις τα δεδομένα σου.",
         "href": "/privacy",
         "title": "Πολιτική απορρήτου"
       },
@@ -132,8 +132,8 @@
           "rest": " Αν δεν ανοίγει στον browser, δεν είναι η εμπειρία Eurovision."
         },
         {
-          "bold": "Κανένας λογαριασμός για guests.",
-          "rest": " Οι οικοδεσπότες συνδέονται μία φορά· οι guests μπαίνουν με ένα όνομα."
+          "bold": "Κανένας λογαριασμός.",
+          "rest": " Ούτε ο οικοδεσπότης κάνει εγγραφή· οι guests μπαίνουν με ένα όνομα."
         },
         {
           "bold": "Mobile-first.",
@@ -172,7 +172,7 @@
       "title": "Not affiliated with the EBU"
     },
     "freeNoAccount": {
-      "body": "Eurovision Games is free for personal Eurovision watch parties. There is no subscription, no in-app purchase, and no advertising — anywhere on the site. Hosts authenticate once with an email one-time code; guests join with just a display name and a room code. Nothing to download, nothing to install. The whole thing runs in your browser on phone, tablet, or laptop.",
+      "body": "Eurovision Games is free for personal Eurovision watch parties. There is no subscription, no in-app purchase, and no advertising — anywhere on the site. Nobody signs up: the host creates a room in seconds, and guests join with just a display name and a room code. Nothing to download, nothing to install. The whole thing runs in your browser on phone, tablet, or laptop.",
       "title": "Free, no account, no install"
     },
     "hero": {
@@ -216,7 +216,7 @@
         "title": "FAQ"
       },
       {
-        "blurb": "Data we collect, retention, and how to delete your account.",
+        "blurb": "Data we collect, retention, and how to delete your data.",
         "href": "/privacy",
         "title": "Privacy policy"
       },
@@ -280,8 +280,8 @@
           "rest": " If it can't open in a browser, it's not the Eurovision experience."
         },
         {
-          "bold": "No accounts for guests.",
-          "rest": " Hosts sign in once; guests join with a name."
+          "bold": "No accounts.",
+          "rest": " Not even the host signs up; guests join with a name."
         },
         {
           "bold": "Mobile-first.",
