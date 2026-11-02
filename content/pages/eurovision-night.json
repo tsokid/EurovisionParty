@@ -12,7 +12,7 @@
     },
     "faq": [
       {
-        "a": "Όχι. Οι καλεσμένοι μπαίνουν μόνο με κωδικό δωματίου. Ο οικοδεσπότης κάνει login μία φορά.",
+        "a": "Όχι. Οι καλεσμένοι μπαίνουν μόνο με κωδικό δωματίου. Ο οικοδεσπότης συνδέεται μία φορά.",
         "q": "Χρειάζομαι λογαριασμό;"
       },
       {
@@ -30,7 +30,7 @@
     ],
     "hero": {
       "chip": "Οδηγός διοργάνωσης",
-      "lede": "Η βραδιά Eurovision είναι το ετήσιο τελετουργικό στο σαλόνι, όπου παρακολουθείς τη Eurovision Song Contest με την παρέα σου, βαθμολογείς κάθε τραγούδι και διαφωνείς για το ποια χώρα αξίζει να κερδίσει. Αυτός ο οδηγός τη μετατρέπει από παθητικό κοίταγμα σε ένα ανταγωνιστικό party game με βαθμολογία, χρησιμοποιώντας το Eurovision Games — έναν δωρεάν σύντροφο μέσα στον browser που αναλαμβάνει προβλέψεις, trivia και βαθμολογία ενώ εσύ παρακολουθείς.",
+      "lede": "Η βραδιά Eurovision είναι το ετήσιο τελετουργικό στο σαλόνι, όπου παρακολουθείς τη Eurovision Song Contest με την παρέα σου, βαθμολογείς κάθε τραγούδι και διαφωνείς για το ποια χώρα αξίζει να κερδίσει. Αυτός ο οδηγός τη μετατρέπει από παθητική παρακολούθηση σε ένα ανταγωνιστικό party game με βαθμολογία, χρησιμοποιώντας το Eurovision Games — έναν δωρεάν σύντροφο μέσα στον browser που αναλαμβάνει προβλέψεις, trivia και βαθμολογία ενώ εσύ παρακολουθείς.",
       "title": "Βραδιά Eurovision — διοργάνωσε το τέλειο watch party"
     },
     "howTo": {
@@ -49,12 +49,12 @@
           "text": "Ένα snack ανά χώρα-φαβορί· ένας ευέλικτος μπουφές για το «διάλειμμα ψηφοφορίας»."
         },
         {
-          "name": "Κλείδωσε τις προβλέψεις πριν την εκπομπή",
-          "text": "Όλοι συμπληρώνουν Top 5 / Worst 5 πριν παίξει το πρώτο τραγούδι."
+          "name": "Κάνε τις προβλέψεις πριν από την ψηφοφορία",
+          "text": "Όλοι συμπληρώνουν Top 5 / Worst 5 — αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια και κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία."
         },
         {
           "name": "Τρέξε μονομαχίες trivia στα διαλείμματα",
-          "text": "Αξιοποίησε τα σχόλια και το interval act για μονομαχίες ένας προς έναν."
+          "text": "Αξιοποίησε τα κενά με σχολιασμό και το interval act για μονομαχίες ένας προς έναν."
         },
         {
           "name": "Στέψε τους νικητές",
@@ -115,26 +115,26 @@
         "title": "Συχνές ερωτήσεις"
       },
       "food": {
-        "body": "Η κλασική κίνηση: ένα snack ανά αγαπημένη χώρα. Σουηδία = σουηδικά κεφτέδες και Daim. Ιταλία = arancini. Ελλάδα = σουβλάκι. Ηνωμένο Βασίλειο = sausage rolls. Μην παρασέρνεσαι με την προετοιμασία — το επίκεντρο είναι η οθόνη. Ένας ευέλικτος μπουφές που αντέχει στις 4 ώρες βραδιάς νικάει το ζεστό σερβιριστό δείπνο. Τα mocktails ταξιδεύουν εύκολα· μια επιλογή χωρίς αλκοόλ κρατάει χαρούμενους τους οδηγούς και όσους δεν πίνουν μέχρι το televote.",
+        "body": "Η κλασική κίνηση: ένα snack ανά αγαπημένη χώρα. Σουηδία = σουηδικοί κεφτέδες και Daim. Ιταλία = arancini. Ελλάδα = σουβλάκι. Ηνωμένο Βασίλειο = sausage rolls. Μην το παρακάνεις με το φαγητό — το επίκεντρο είναι η οθόνη. Ένας ευέλικτος μπουφές που αντέχει όλες τις 4 ώρες της βραδιάς είναι καλύτερος από ένα ζεστό σερβιριστό δείπνο. Τα mocktails είναι εύκολη λύση· μια επιλογή χωρίς αλκοόλ κρατάει χαρούμενους τους οδηγούς και όσους δεν πίνουν μέχρι το televote.",
         "title": "Ιδέες για φαγητό και ποτό"
       },
       "inRoomGames": {
         "bullets": [
           {
-            "rest": " Top 5, Worst 5 — κλειδώνουν πριν την εκπομπή, βαθμολογούνται αυτόματα έναντι κριτικής επιτροπής + televote.",
+            "rest": " Top 5, Worst 5 — αλλάζουν μέχρι να ανοίξει η ψηφοφορία, μετά κλειδώνουν και βαθμολογούνται αυτόματα με βάση το αποτέλεσμα κριτικής επιτροπής + televote.",
             "strong": "Προβλέψεις:"
           },
           {
-            "rest": " Ένας προς έναν ανάμεσα σε δύο παίκτες. Ο νικητής κλέβει πόντους από τον ηττημένο. Προεπιλεγμένο όριο 3 μονομαχιών ανά ζευγάρι (οι ρεβάνς μετράνε) για να μην τα «βγάζει» κανείς από έναν παίκτη.",
+            "rest": " Ένας προς έναν, ανάμεσα σε οποιουσδήποτε δύο παίκτες. Ο νικητής κλέβει το σκορ της μονομαχίας του από τον ηττημένο ή το διπλασιάζει για τον εαυτό του. Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, συν μία ρεβάνς για τον ηττημένο — ώστε κανείς να μη μαζεύει πόντους «αρμέγοντας» τον ίδιο αντίπαλο.",
             "strong": "Μονομαχίες trivia:"
           },
           {
-            "rest": " Γρήγοροι γύροι που τους ξεκινάει ο οικοδεσπότης ανάμεσα στις εμφανίσεις.",
+            "rest": " Τρεις γρήγοροι γύροι που ο κάθε παίκτης παίζει με τον δικό του ρυθμό, από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία.",
             "strong": "Γύροι quiz:"
           },
           {
-            "rest": " Προαιρετικό. Αν παίκτες ισοβαθμούν σε κατηγορία νικητή, το δωμάτιο ψηφίζει: Αποδοχή (μοιράζονται το τρόπαιο) ή Sudden Death. Αν νικήσει το Sudden Death, οι ισόπαλοι μάχονται σε 3 ερωτήσεις trivia.",
-            "strong": "Tiebreak με sudden-death:"
+            "rest": " Προαιρετικό. Αν παίκτες ισοβαθμήσουν σε κατηγορία τροπαίου, το δωμάτιο ψηφίζει: Αποδοχή (μοιράζονται το τρόπαιο) ή Sudden Death. Αν επικρατήσει το Sudden Death, οι ισόβαθμοι αναμετρώνται σε 3 ερωτήσεις trivia.",
+            "strong": "Ισοβαθμία με sudden death:"
           }
         ],
         "title": "Επιλογές παιχνιδιών μέσα στο δωμάτιο"
@@ -151,22 +151,22 @@
           },
           {
             "boldHead": "3. Στείλε save-the-date.",
-            "rest": " Η πόρτα ανοίγει ~1 ώρα πριν την έναρξη ώστε οι καλεσμένοι να βολευτούν και να κλειδώσουν προβλέψεις."
+            "rest": " Η πόρτα ανοίγει ~1 ώρα πριν την έναρξη ώστε οι καλεσμένοι να βολευτούν, να μπουν στο δωμάτιο και να ξεκινήσουν τις προβλέψεις τους."
           },
           {
             "boldHead": "4. Άνοιξε το Eurovision Games.",
             "href": "/",
             "linkLabel": "eurovision.games",
             "rest": " Δημιούργησε δωμάτιο στο ",
-            "restAfter": " στο κινητό ή το laptop του οικοδεσπότη, μοίρασε τον σύνδεσμο συμμετοχής."
+            "restAfter": " στο κινητό ή το laptop του οικοδεσπότη, μοίρασε τον σύνδεσμο συμμετοχής και πάτα «Ξεκίνα το Πάρτι!» μόλις μπουν όλοι."
           },
           {
             "boldHead": "5. Ετοίμασε τη λίστα.",
-            "rest": " Τύπωσε ή κάνε screenshot τη σειρά εμφάνισης του {year}, ώστε όλοι να έχουν αναφορά για τις προβλέψεις."
+            "rest": " Τύπωσε ή κάνε screenshot τη σειρά εμφάνισης του {year}, ώστε όλοι να έχουν σημείο αναφοράς για τις προβλέψεις."
           },
           {
-            "boldHead": "6. Κλείδωσε τις προβλέψεις.",
-            "rest": " Πριν το πρώτο τραγούδι, κάθε καλεσμένος διαλέγει Top 5 και Worst 5."
+            "boldHead": "6. Ώρα για προβλέψεις.",
+            "rest": " Κάθε καλεσμένος διαλέγει Top 5 και Worst 5 — ιδανικά πριν το πρώτο τραγούδι. Οι επιλογές αλλάζουν μέχρι να ανοίξει η ψηφοφορία, οπότε η εφαρμογή τις κλειδώνει."
           },
           {
             "boldHead": "7. Παρακολούθησε τραγούδι-τραγούδι.",
@@ -188,12 +188,12 @@
         "title": "Πώς να διοργανώσεις (οδηγός 10 βημάτων)"
       },
       "timezones": {
-        "body": "Οι ώρες έναρξης του μεγάλου τελικού διαφέρουν ανά χώρα: 21:00 CET (Γερμανία, Γαλλία, Ισπανία), 20:00 BST/UTC+1 (Ηνωμένο Βασίλειο, Ιρλανδία), 22:00 EET (Ελλάδα, Κύπρος, Φινλανδία, Ισραήλ), 05:00 AEDT το επόμενο πρωί (Αυστραλία — κάνε record). Αν διοργανώνεις βραδιά για παρέα σε διαφορετικές χώρες, ευθυγράμμισε στο τοπικό kick-off του οικοδεσπότη και άνοιξε το δωμάτιο 30 λεπτά νωρίτερα.",
+        "body": "Οι ώρες έναρξης του μεγάλου τελικού διαφέρουν ανά χώρα: 21:00 CET (Γερμανία, Γαλλία, Ισπανία), 20:00 BST/UTC+1 (Ηνωμένο Βασίλειο, Ιρλανδία), 22:00 EET (Ελλάδα, Κύπρος, Φινλανδία, Ισραήλ), 05:00 AEST το επόμενο πρωί (Αυστραλία — βάλε εγγραφή). Αν διοργανώνεις βραδιά για παρέα σε διαφορετικές χώρες, συγχρονιστείτε με την τοπική ώρα έναρξης του οικοδεσπότη και άνοιξε το δωμάτιο 30 λεπτά νωρίτερα.",
         "title": "Συμβουλές για ζώνες ώρας"
       },
       "what": {
         "bodyAfter": " {cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Σε όλη την Ευρώπη (και την Αυστραλία) είναι ένα ενιαίο τηλεοπτικό ζωντανό γεγονός που παρακολουθούν περίπου 160 εκατομμύρια άνθρωποι· στα σπίτια έχει γίνει ταυτόχρονα ανταγωνιστική κοινωνική εκδήλωση, costume party και drinking game.",
-        "bodyBefore": "Η βραδιά Eurovision είναι η ζωντανή μετάδοση του μεγάλου τελικού της Eurovision Song Contest, που γίνεται κάθε δεύτερο Σάββατο του Μαΐου. Το {year} ο μεγάλος τελικός μεταδίδεται το ",
+        "bodyBefore": "Η βραδιά Eurovision είναι η ζωντανή μετάδοση του μεγάλου τελικού της Eurovision Song Contest, που γίνεται κάθε χρόνο ένα Σάββατο στα μέσα Μαΐου. Το {year} ο μεγάλος τελικός μεταδίδεται το ",
         "bodyDate": "{finalDay}",
         "title": "Τι είναι η βραδιά Eurovision;"
       }
@@ -238,7 +238,7 @@
       "steps": [
         {
           "name": "Pick a venue",
-          "text": "Decide on living-room, garden, or video-call. Confirm the broadcast source."
+          "text": "Decide on living room, garden, or video call. Confirm the broadcast source."
         },
         {
           "name": "Set up the game",
@@ -249,8 +249,8 @@
           "text": "One country-themed snack per top contender; a flexible \"voting break\" buffet."
         },
         {
-          "name": "Lock predictions before the show",
-          "text": "Everyone fills in Top 5 / Worst 5 before the first song airs."
+          "name": "Get predictions in before voting",
+          "text": "Everyone fills in Top 5 / Worst 5 — editable through the songs, locked automatically when voting opens."
         },
         {
           "name": "Run trivia duels in the breaks",
@@ -321,15 +321,15 @@
       "inRoomGames": {
         "bullets": [
           {
-            "rest": " Top 5, Worst 5 — locked before the show, scored automatically against jury + televote.",
+            "rest": " Top 5, Worst 5 — editable until voting opens, then locked and scored automatically against jury + televote.",
             "strong": "Predictions:"
           },
           {
-            "rest": " Head-to-head between any two players. Winner steals points from loser. Default per-pair cap of 3 duels (rematches counted) prevents grinding one opponent.",
+            "rest": " Head-to-head between any two players. The winner steals their duel score from the loser or doubles it for themselves. Each of you can challenge the other once, plus one rematch for the loser — so nobody grinds one opponent.",
             "strong": "Trivia duels:"
           },
           {
-            "rest": " Fast-fire rounds the host triggers between performances.",
+            "rest": " Three rapid-fire rounds each player plays at their own pace, from party start until voting opens.",
             "strong": "Quiz rounds:"
           },
           {
@@ -343,7 +343,7 @@
         "steps": [
           {
             "boldHead": "1. Pick a venue.",
-            "rest": " Living-room, garden, projector on a wall — or a Zoom/FaceTime call if you're scattered."
+            "rest": " Living room, garden, projector on a wall — or a Zoom/FaceTime call if you're scattered."
           },
           {
             "boldHead": "2. Confirm the broadcast.",
@@ -351,22 +351,22 @@
           },
           {
             "boldHead": "3. Send a save-the-date.",
-            "rest": " Doors open ~1 hour before kick-off so guests can settle and lock predictions."
+            "rest": " Doors open ~1 hour before kick-off so guests can settle in, join the room and start their predictions."
           },
           {
             "boldHead": "4. Open Eurovision Games.",
             "href": "/",
             "linkLabel": "eurovision.games",
             "rest": " Create a room at ",
-            "restAfter": " on the host's phone or laptop, share the join link."
+            "restAfter": " on the host's phone or laptop, share the join link and tap Start the Party! once everyone is in."
           },
           {
             "boldHead": "5. Set the lineup.",
             "rest": " Print or screenshot the {year} running order so everyone has a reference for predictions."
           },
           {
-            "boldHead": "6. Lock predictions.",
-            "rest": " Before the first song, every guest picks Top 5 and Worst 5."
+            "boldHead": "6. Make predictions.",
+            "rest": " Every guest picks Top 5 and Worst 5 — ideally before the first song. Picks stay editable until voting opens, when the app locks them."
           },
           {
             "boldHead": "7. Watch song-by-song.",
@@ -388,12 +388,12 @@
         "title": "How to host (10-step playbook)"
       },
       "timezones": {
-        "body": "Grand final start times vary by country: 21:00 CET (Germany, France, Spain), 20:00 BST/UTC+1 (UK, Ireland), 22:00 EET (Greece, Cyprus, Finland, Israel), 05:00 AEDT next morning (Australia — record it). If you're hosting cross-country, align on the host's local kick-off and start the room 30 minutes earlier.",
+        "body": "Grand final start times vary by country: 21:00 CET (Germany, France, Spain), 20:00 BST/UTC+1 (UK, Ireland), 22:00 EET (Greece, Cyprus, Finland, Israel), 05:00 AEST next morning (Australia — record it). If you're hosting cross-country, align on the host's local kick-off and start the room 30 minutes earlier.",
         "title": "Time-zone tips"
       },
       "what": {
         "bodyAfter": " {cityFrom}, with semi-finals earlier that week. Across Europe (and Australia) it is a single televised live event watched by ~160 million people; in homes it has become a competitive social event, a costume party, and a drinking game all at once.",
-        "bodyBefore": "Eurovision night is the live grand-final broadcast of the Eurovision Song Contest, held on the second Saturday of May each year. In {year} the grand final airs on ",
+        "bodyBefore": "Eurovision night is the live grand-final broadcast of the Eurovision Song Contest, held on a Saturday in mid-May each year. In {year} the grand final airs on ",
         "bodyDate": "{finalDay}",
         "title": "What is Eurovision night?"
       }

@@ -64,7 +64,7 @@ export const config: CookieConsentConfig = {
           sections: [
             {
               title: 'Strictly necessary',
-              description: 'Language preference (localStorage), Supabase authentication tokens. Cannot be disabled.',
+              description: 'Supabase sign-in session, your room code, player ID and room password if set, language, sound and display preferences (localStorage), and this consent choice (cookie). Cannot be disabled.',
               linkedCategory: 'necessary',
             },
             {
@@ -79,7 +79,7 @@ export const config: CookieConsentConfig = {
         consentModal: {
           title: '🍪 Χρησιμοποιούμε cookies',
           description:
-            'Χρησιμοποιούμε απαραίτητα cookies για τη λειτουργία του παιχνιδιού και την αποθήκευση της γλωσσικής προτίμησής σου.',
+            'Χρησιμοποιούμε απαραίτητα cookies για τη λειτουργία του παιχνιδιού και την αποθήκευση της γλωσσικής προτίμησής σου. Καμία παρακολούθηση χωρίς τη συγκατάθεσή σου.',
           acceptAllBtn: 'Αποδοχή όλων',
           acceptNecessaryBtn: 'Μόνο απαραίτητα',
           showPreferencesBtn: 'Διαχείριση προτιμήσεων',
@@ -89,17 +89,17 @@ export const config: CookieConsentConfig = {
           title: 'Προτιμήσεις cookies',
           acceptAllBtn: 'Αποδοχή όλων',
           acceptNecessaryBtn: 'Μόνο απαραίτητα',
-          savePreferencesBtn: 'Αποθήκευση',
+          savePreferencesBtn: 'Αποθήκευση προτιμήσεων',
           closeIconLabel: 'Κλείσιμο',
           sections: [
             {
               title: 'Απολύτως απαραίτητα',
-              description: 'Γλωσσική προτίμηση (localStorage) και tokens αυθεντικοποίησης Supabase. Δεν μπορούν να απενεργοποιηθούν.',
+              description: 'Συνεδρία σύνδεσης Supabase, ο κωδικός δωματίου, το player ID και ο κωδικός πρόσβασης του δωματίου (αν έχει οριστεί), γλώσσα και ρυθμίσεις ήχου και εμφάνισης (localStorage), και αυτή η επιλογή συγκατάθεσης (cookie). Δεν μπορούν να απενεργοποιηθούν.',
               linkedCategory: 'necessary',
             },
             {
-              title: 'Αναλυτικά στοιχεία (κανένα αυτή τη στιγμή)',
-              description: 'Εάν προσθέσουμε analytics στο μέλλον, θα ζητήσουμε τη συγκατάθεσή σου.',
+              title: 'Στατιστικά (δεν χρησιμοποιούνται προς το παρόν)',
+              description: 'Αν προσθέσουμε εργαλείο στατιστικών στο μέλλον (π.χ. Plausible), θα σου ζητήσουμε πρώτα εδώ τη συγκατάθεσή σου.',
               linkedCategory: 'analytics',
             },
           ],

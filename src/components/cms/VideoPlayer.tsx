@@ -18,7 +18,7 @@ const LABELS: Record<Locale, { play: string; pause: string; mute: string; unmute
     mute: 'Σίγαση',
     unmute: 'Ενεργοποίηση ήχου',
     progress: 'Πρόοδος',
-    player: 'Αναπαραγωγή βίντεο',
+    player: 'Πρόγραμμα αναπαραγωγής βίντεο',
   },
 };
 

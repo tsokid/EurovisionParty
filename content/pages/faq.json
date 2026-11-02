@@ -2,12 +2,12 @@
   "el": {
     "anchored": [
       {
-        "a": "Συνδέσου (μόνο με email — στέλνουμε magic link με ένα tap), πάτα \"Δημιουργία Δωματίου\", διάλεξε αριθμό γύρων (1-3 γύροι quiz) και μέγιστους παίκτες (2-20). Ένας 6ψήφιος κωδικός δωματίου και κοινοποιήσιμος σύνδεσμος εμφανίζονται αμέσως. Ο οικοδεσπότης έχει το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
+        "a": "Συνδέσου (μόνο με email — στέλνουμε magic link με ένα tap), πάτα \"Φτιάξε Δωμάτιο\", γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης για το δωμάτιο. Ένας κωδικός δωματίου 6 χαρακτήρων και ένας σύνδεσμος κοινοποίησης εμφανίζονται αμέσως· κάθε δωμάτιο χωράει έως 20 παίκτες. Ο οικοδεσπότης διαχειρίζεται το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
         "id": "create",
         "q": "Πώς δημιουργώ ένα δωμάτιο;"
       },
       {
-        "a": "Χρησιμοποίησε τον σύνδεσμο εισόδου που μοιράστηκε ο οικοδεσπότης (ένα tap, χωρίς λογαριασμό), ή άνοιξε το Eurovision Games, πάτα \"Είσοδος σε Δωμάτιο\" και πληκτρολόγησε τον 6ψήφιο κωδικό μαζί με το όνομα εμφάνισής σου. Όσοι μπουν αργότερα μπορούν να παίξουν μονομαχίες και quiz, αλλά οι προβλέψεις κλειδώνουν μόλις ο οικοδεσπότης προχωρήσει τη φάση.",
+        "a": "Χρησιμοποίησε τον σύνδεσμο εισόδου που μοιράστηκε ο οικοδεσπότης (ένα tap, χωρίς λογαριασμό) ή άνοιξε το Eurovision Games, πάτα \"Μπες σε Δωμάτιο\" και πληκτρολόγησε τον κωδικό 6 χαρακτήρων μαζί με το όνομα εμφάνισής σου. Όσοι μπουν αργότερα μπορούν να κάνουν προβλέψεις και να παίξουν quiz και μονομαχίες μέχρι να ανοίξει η ψηφοφορία, οπότε όλα κλειδώνουν αυτόματα.",
         "id": "join",
         "q": "Πώς μπαίνω σε ένα δωμάτιο;"
       },
@@ -24,12 +24,12 @@
           "strong": "3 γύροι quiz"
         },
         {
-          "rest": "— το ανώτατο όριο· τα μικρότερα δωμάτια δείχνουν πιο ζωηρά.",
-          "strong": "Μέγιστο 20 παίκτες"
+          "rest": "— το ανώτατο όριο· τα μικρότερα δωμάτια κυλούν πιο γρήγορα.",
+          "strong": "Έως 20 παίκτες"
         },
         {
-          "rest": "(οι ρεβάνς μετράνε) — αποτρέπει την εκμετάλλευση ενός μόνο στόχου.",
-          "strong": "Προεπιλεγμένο όριο μονομαχιών ανά ζευγάρι 3"
+          "rest": "— αποτρέπει την εκμετάλλευση ενός μόνο στόχου.",
+          "strong": "Μία πρόκληση προς κάθε κατεύθυνση ανά ζευγάρι, συν μία ρεβάνς"
         }
       ],
       "cardTitle": "Προεπιλογές που δουλεύουν",
@@ -47,7 +47,7 @@
     },
     "hero": {
       "chip": "Συχνές Ερωτήσεις",
-      "lede": "Σύντομες απαντήσεις στις ερωτήσεις που κάνουν περισσότερο οικοδεσπότες και παίκτες. Οι τρεις πιο συχνές — δημιουργία, είσοδος και αποχώρηση — είναι στην κορυφή. Οι υπόλοιπες είναι σε accordion από κάτω. Για περισσότερη λεπτομέρεια δες τον κανονισμό, τις φόρμουλες βαθμολογίας και τον οδηγό εγκατάστασης.",
+      "lede": "Σύντομες απαντήσεις στις ερωτήσεις που κάνουν πιο συχνά οι οικοδεσπότες και οι παίκτες. Οι τρεις πιο συχνές — δημιουργία, είσοδος και αποχώρηση — είναι στην κορυφή. Οι υπόλοιπες βρίσκονται σε αναδιπλούμενη λίστα παρακάτω. Για περισσότερη λεπτομέρεια δες τον κανονισμό, τα μαθηματικά βαθμολογίας και τον οδηγό εκκίνησης.",
       "title": "Eurovision Games — συχνές ερωτήσεις"
     },
     "joinSection": {
@@ -57,11 +57,11 @@
           "strong": "Πιο εύκολος δρόμος:"
         },
         {
-          "rest": "άνοιξε το Eurovision Games → <em>Είσοδος σε Δωμάτιο</em> → πληκτρολόγησε τον 6ψήφιο κωδικό μαζί με ένα όνομα εμφάνισης.",
+          "rest": "άνοιξε το Eurovision Games → <em>Μπες σε Δωμάτιο</em> → πληκτρολόγησε τον κωδικό 6 χαρακτήρων μαζί με ένα όνομα εμφάνισης.",
           "strong": "Χειροκίνητα:"
         },
         {
-          "rest": "μπορούν να παίξουν trivia και μονομαχίες, αλλά οι προβλέψεις είναι κλειδωμένες μόλις ο οικοδεσπότης περάσει τις Προβλέψεις.",
+          "rest": "μπορούν ακόμα να κάνουν προβλέψεις και να παίξουν trivia και μονομαχίες — όλα κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία.",
           "strong": "Όσοι μπουν αργότερα"
         }
       ],
@@ -78,7 +78,7 @@
           "strong": "Οι οικοδεσπότες"
         },
         {
-          "rest": "Ξανα-μπες με τον ίδιο κωδικό και όνομα εμφάνισης. Οι πόντοι σου επανέρχονται.",
+          "rest": "Ξαναμπές με τον ίδιο κωδικό και όνομα εμφάνισης οποιαδήποτε στιγμή πριν το δωμάτιο φτάσει στη Βαθμολογία. Οι πόντοι σου επανέρχονται.",
           "strong": "Κατά λάθος αποχώρηση;"
         }
       ],
@@ -116,11 +116,11 @@
         "q": "Ποιοι browsers υποστηρίζονται;"
       },
       {
-        "a": "Ναι — μέχρι ο οικοδεσπότης να περάσει τη φάση των προβλέψεων. Όσοι μπουν αργότερα μπορούν να παίξουν μονομαχίες trivia.",
+        "a": "Ναι — οποιαδήποτε στιγμή. Μέχρι να ανοίξει η ψηφοφορία μπορούν ακόμα να κάνουν προβλέψεις και να παίξουν quiz και μονομαχίες· μετά, όλα είναι κλειδωμένα.",
         "q": "Μπορούν να μπουν παίκτες αργότερα;"
       },
       {
-        "a": "Εμφανίζεται ένα banner επανασύνδεσης· ένα tap τους ξαναβάζει με την κατάσταση να διατηρείται. Προβλέψεις και πόντοι δεν χάνονται.",
+        "a": "Εμφανίζεται ένα banner επανασύνδεσης· με ένα tap ο παίκτης επιστρέφει στο δωμάτιο όπως το άφησε. Προβλέψεις και πόντοι δεν χάνονται.",
         "q": "Τι γίνεται αν αποσυνδεθεί ένας παίκτης;"
       },
       {
@@ -128,27 +128,27 @@
         "q": "Μπορεί ο οικοδεσπότης να αποβάλει παίκτη;"
       },
       {
-        "a": "Trivia 3 ερωτήσεων ένας προς έναν. Ο νικητής κλέβει πόντους από τον ηττημένο. Κάθε ζευγάρι έχει προεπιλεγμένο όριο (3 μονομαχίες ανά ζευγάρι σε όλη τη βραδιά, οι ρεβάνς μετράνε).",
+        "a": "Trivia 3 ερωτήσεων ένας προς έναν. Ο νικητής κλέβει το σκορ της μονομαχίας του από τον ηττημένο ή το διπλασιάζει — δεν υπάρχει σταθερό μπόνους νίκης. Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, συν μία ρεβάνς για τον ηττημένο.",
         "q": "Πώς δουλεύουν οι μονομαχίες;"
       },
       {
-        "a": "Δες τη σελίδα Βαθμολογίας για τις πλήρεις φόρμουλες. Οι επιλογές Top-5 παίρνουν μεταβλητούς πόντους ανάλογα με την αντιστοίχιση θέσης· οι Worst-5 παίρνουν σταθερούς πόντους αν η χώρα προσγειωθεί στις τελευταίες 5· trivia και μονομαχίες προσθέτουν πόντους quiz.",
+        "a": "Δες τη σελίδα Βαθμολογίας για τις πλήρεις φόρμουλες. Οι επιλογές Top-5 και Worst-5 βαθμολογούνται με τον ίδιο τρόπο: 50 πόντοι για την ακριβή θέση, 20 αν η χώρα είναι στη σωστή λίστα αλλά σε άλλη θέση. Οι απαντήσεις quiz παίρνουν 12, 8 ή 4 πόντους ανάλογα με την ταχύτητα, και οι μονομαχίες μετακινούν πόντους με Κλοπή ή Διπλασιασμό.",
         "q": "Πώς υπολογίζεται η βαθμολογία;"
       },
       {
-        "a": "Πρωταθλητής (περισσότεροι συνολικοί πόντοι), Κλέφτης (περισσότεροι πόντοι κλεμμένοι σε μονομαχίες), Μονομάχος (περισσότερες κερδισμένες μονομαχίες), Μάντης (καλύτερες προβλέψεις), Γκουρού (περισσότερες σωστές απαντήσεις trivia).",
+        "a": "Πρωταθλητής (περισσότεροι συνολικοί πόντοι), Κλέφτης (περισσότεροι πόντοι κλεμμένοι σε μονομαχίες), Μονομάχος (περισσότερες κερδισμένες μονομαχίες), Μάντης (υψηλότερη βαθμολογία προβλέψεων, Top 5 + Worst 5), Γκουρού (περισσότερες σωστές απαντήσεις quiz).",
         "q": "Ποιες είναι οι πέντε κατηγορίες νικητών;"
       },
       {
-        "a": "ΈΠροαιρετικό tiebreak: το δωμάτιο ψηφίζει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Αν νικήσει το Sudden Death με αρκετές ψήφους, οι ισόπαλοι παίκτες απαντούν 3 ερωτήσεις trivia — κερδίζει όποιος απαντά περισσότερες σωστά, σε ισοπαλία κερδίζει ο γρηγορότερος.",
+        "a": "Ένα προαιρετικό tiebreak: το δωμάτιο ψηφίζει Αποδοχή (όλοι οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Αν νικήσει το Sudden Death με αρκετές ψήφους, οι ισόπαλοι παίκτες απαντούν σε 3 ερωτήσεις trivia — κερδίζει όποιος απαντήσει σωστά στις περισσότερες· σε ισοπαλία κερδίζει ο γρηγορότερος.",
         "q": "Τι είναι το sudden death;"
       },
       {
-        "a": "Είτε ο οικοδεσπότης καταχωρεί ζωντανά τα αποτελέσματα κριτικής επιτροπής και televote, είτε ενημερώνονται αυτόματα από την επίσημη πηγή τη βραδιά του τελικού.",
+        "a": "Τα επίσημα αποτελέσματα κριτικής επιτροπής και televote έρχονται αυτόματα από την επίσημη πηγή τη βραδιά του τελικού — ο οικοδεσπότης δεν χρειάζεται να καταχωρήσει τίποτα.",
         "q": "Πώς διαχειρίζεστε τα αποτελέσματα της Eurovision;"
       },
       {
-        "a": "Όχι. Δεν είμαστε συνδεδεμένοι με την European Broadcasting Union, κανέναν ραδιοτηλεοπτικό φορέα-οικοδεσπότη ή τη μάρκα Eurovision Song Contest.",
+        "a": "Όχι. Δεν συνδεόμαστε με την Ευρωπαϊκή Ραδιοτηλεοπτική Ένωση (EBU), με κανέναν ραδιοτηλεοπτικό φορέα-οικοδεσπότη ή με τη μάρκα Eurovision Song Contest.",
         "q": "Είναι το Eurovision Games επίσημο;"
       },
       {
@@ -164,7 +164,7 @@
     "related": {
       "items": [
         {
-          "blurb": "Οδηγός εγκατάστασης 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.",
+          "blurb": "Οδηγός στησίματος 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων.",
           "href": "/how-to-play",
           "title": "Πώς παίζεται"
         },
@@ -174,12 +174,12 @@
           "title": "Κανονισμός"
         },
         {
-          "blurb": "Ακριβή μαθηματικά πόντων για κάθε πρόβλεψη, απάντηση quiz και μονομαχία.",
+          "blurb": "Ο ακριβής υπολογισμός πόντων για κάθε πρόβλεψη, απάντηση quiz και μονομαχία.",
           "href": "/scoring",
-          "title": "Φόρμουλες βαθμολογίας"
+          "title": "Μαθηματικά βαθμολογίας"
         },
         {
-          "blurb": "Τι αποθηκεύουμε, πού βρίσκεται και χρόνοι διατήρησης.",
+          "blurb": "Τι αποθηκεύουμε, πού φυλάσσεται και για πόσο διατηρείται.",
           "href": "/privacy",
           "title": "Απόρρητο"
         },
@@ -189,9 +189,9 @@
           "title": "Σχετικά / επικοινωνία"
         },
         {
-          "blurb": "Οδηγός hosting για τη βραδιά του τελικού με πλήρες χρονοδιάγραμμα.",
+          "blurb": "Οδηγός διοργάνωσης για τη βραδιά του τελικού με πλήρες χρονοδιάγραμμα.",
           "href": "/eurovision-night",
-          "title": "Eurovision night"
+          "title": "Βραδιά Eurovision"
         }
       ]
     },
@@ -203,12 +203,12 @@
   "en": {
     "anchored": [
       {
-        "a": "Sign in (email-only — we send a one-tap magic link), click \"Create Room\", pick the round count (1-3 quiz rounds) and max players (2-20). A 6-character room code and shareable link appear instantly. The host owns the room until they leave or delete it.",
+        "a": "Sign in (email-only — we send a one-tap magic link), click \"Create a Room\", enter your name, pick an avatar and set a room password. A 6-character room code and shareable link appear instantly; rooms hold up to 20 players. The host owns the room until they leave or delete it.",
         "id": "create",
         "q": "How do I create a room?"
       },
       {
-        "a": "Use the join link the host shared (one tap, no account), or open Eurovision Games, click \"Join Room\", and type the 6-character code plus your display name. Late joiners can still play duels and quiz, but predictions lock once the host advances the phase.",
+        "a": "Use the join link the host shared (one tap, no account), or open Eurovision Games, click \"Join a Room\", and type the 6-character code plus your display name. Late joiners can still make predictions, play quiz and duel until voting opens, when everything locks automatically.",
         "id": "join",
         "q": "How do I join a room?"
       },
@@ -229,8 +229,8 @@
           "strong": "Max 20 players"
         },
         {
-          "rest": "(rematches counted) — prevents one-target grinding.",
-          "strong": "A default per-pair duel cap of 3"
+          "rest": "— prevents one-target grinding.",
+          "strong": "One challenge each way per pair, plus one rematch"
         }
       ],
       "cardTitle": "Defaults that work",
@@ -258,11 +258,11 @@
           "strong": "Easiest path:"
         },
         {
-          "rest": "open Eurovision Games → <em>Join Room</em> → enter the 6-character code plus a display name.",
+          "rest": "open Eurovision Games → <em>Join a Room</em> → enter the 6-character code plus a display name.",
           "strong": "Manual:"
         },
         {
-          "rest": "can still play trivia and duels, but predictions are locked once the host advances past Predictions.",
+          "rest": "can still make predictions, play trivia and duel — everything locks automatically when voting opens.",
           "strong": "Late joiners"
         }
       ],
@@ -279,7 +279,7 @@
           "strong": "Hosts"
         },
         {
-          "rest": "Re-join with the same code and display name. Your points are restored.",
+          "rest": "Re-join with the same code and display name any time before the room reaches Final Results. Your points are restored.",
           "strong": "Accidental leave?"
         }
       ],
@@ -317,7 +317,7 @@
         "q": "What browsers are supported?"
       },
       {
-        "a": "Yes — until the host advances past the predictions phase. Late joiners can still play trivia duels.",
+        "a": "Yes — at any point. Until voting opens they can still make predictions, play quiz and duel; after that everything is locked.",
         "q": "Can players join late?"
       },
       {
@@ -325,19 +325,19 @@
         "q": "What happens if a player disconnects?"
       },
       {
-        "a": "Yes — host has a player-management panel from the lobby onward.",
+        "a": "Yes — the host has a player-management panel from the lobby onward.",
         "q": "Can the host eject a player?"
       },
       {
-        "a": "3-question head-to-head trivia. Winner steals points from loser. Each pair has a default limit (3 duels per pair across the night, rematches counted).",
+        "a": "3-question head-to-head trivia. The winner steals their duel score from the loser or doubles it — there is no flat win bonus. Each of you can challenge the other once, plus one rematch for the loser.",
         "q": "How do duels work?"
       },
       {
-        "a": "See the Scoring page for full formulas. Top-5 picks earn variable points by rank match; Worst-5 earn flat points if the country lands in the bottom 5; trivia and duels add quiz points.",
+        "a": "See the Scoring page for full formulas. Top-5 and Worst-5 picks score the same way: 50 points for the exact position, 20 if the country is in the right list at a different position. Quiz answers score 12, 8 or 4 points by speed, and duels move points through Steal or Double.",
         "q": "How is scoring calculated?"
       },
       {
-        "a": "Champion (most total points), Thief (most points stolen in duels), Duelist (most duels won), Oracle (best predictions), Guru (most correct trivia answers).",
+        "a": "Champion (most total points), Thief (most points stolen in duels), Duelist (most duels won), Oracle (highest prediction score, Top 5 + Worst 5), Guru (most correct quiz answers).",
         "q": "What are the five winner categories?"
       },
       {
@@ -345,7 +345,7 @@
         "q": "What is sudden death?"
       },
       {
-        "a": "Either the host enters jury and televote results live, or they update automatically from the official source on grand-final night.",
+        "a": "Official jury and televote results are pulled in automatically from the official source on grand-final night — the host doesn’t need to enter anything.",
         "q": "How do you handle Eurovision results?"
       },
       {

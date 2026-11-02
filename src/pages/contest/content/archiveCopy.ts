@@ -91,6 +91,16 @@ const sharedPoints = (ws: ArchiveWinner[]): number | null => {
   return p !== null && ws.every((w) => w.points === p) ? p : null;
 };
 
+/** Greek list of winners with their articles: "Η Ισπανία, το Ηνωμένο Βασίλειο και η Γαλλία". */
+const elWinnerList = (ws: ArchiveWinner[], capitalize: boolean): string =>
+  joinList(
+    ws.map((w, i) => {
+      const s = greekCountrySubject(w.iso, w.country);
+      return i === 0 && capitalize ? s : s.charAt(0).toLowerCase() + s.slice(1);
+    }),
+    'el',
+  );
+
 // ─── Copy ───────────────────────────────────────────────────────────────────
 
 export interface ArchiveIndexFacts {
@@ -246,7 +256,7 @@ const el: ArchiveCopy = {
         won = ` ${greekCountrySubject(w.iso, w.country)} κέρδισε${songBy(w, 'el')}${w.points !== null ? ` και ${w.points} βαθμούς` : ''}.`;
       } else if (f.winners.length > 1) {
         const p = sharedPoints(f.winners);
-        won = ` ${joinList(f.winners.map((w) => w.country), 'el')} μοιράστηκαν την πρώτη θέση${p !== null ? ` με ${p} βαθμούς η κάθε χώρα` : ''}.`;
+        won = ` ${elWinnerList(f.winners, true)} μοιράστηκαν την πρώτη θέση${p !== null ? ` με ${p} βαθμούς η κάθε χώρα` : ''}.`;
       }
       return `${where}: ${shows}.${won} Η πλήρης κατάταξη με καλλιτέχνες, τραγούδια και βαθμούς.`;
     },
@@ -266,14 +276,14 @@ const el: ArchiveCopy = {
         return `${greekCountrySubject(w.iso, w.country)} κέρδισε τον διαγωνισμό του ${f.year} ${f.cityIn}${songBy(w, 'el')}. ${rest}`;
       }
       if (f.winners.length > 1) {
-        return `Ο διαγωνισμός του ${f.year} ${f.cityIn} έληξε με ισοβαθμία: ${joinList(f.winners.map((w) => w.country), 'el')} μοιράστηκαν την πρώτη θέση. ${rest}`;
+        return `Ο διαγωνισμός του ${f.year} ${f.cityIn} έληξε με ισοβαθμία: ${elWinnerList(f.winners, false)} μοιράστηκαν την πρώτη θέση. ${rest}`;
       }
       return `Ο διαγωνισμός του ${f.year} ${f.cityIn}. ${rest}`;
     },
     callout: (f) => {
       if (f.winners.length > 1) {
         const p = sharedPoints(f.winners);
-        return `${joinList(f.winners.map((w) => w.country), 'el')} μοιράστηκαν τη νίκη το ${f.year}${p !== null ? ` με ${p} βαθμούς η κάθε χώρα` : ''}`;
+        return `${elWinnerList(f.winners, true)} μοιράστηκαν τη νίκη το ${f.year}${p !== null ? ` με ${p} βαθμούς η κάθε χώρα` : ''}`;
       }
       const w = f.winners[0];
       return `${greekCountrySubject(w.iso, w.country)} κέρδισε τη Eurovision ${f.year}${w.points !== null ? ` με ${w.points} βαθμούς` : ''}`;

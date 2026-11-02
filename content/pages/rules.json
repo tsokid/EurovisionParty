@@ -34,8 +34,8 @@
     "duels": {
       "items": [
         {
-          "rest": "Κλειδωμένες σε Lobby, Προβλέψεις και Quiz.",
-          "strong": "Διαθέσιμες από τη Ζωντανή Εκπομπή και μετά."
+          "rest": "Ανοιχτές στις φάσεις Pre-Night Show και Προβλέψεις· κλειδωμένες στην Αναμονή και από την Ψηφοφορία Live και μετά.",
+          "strong": "Διαθέσιμες από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία."
         },
         {
           "rest": "Ίδιες ερωτήσεις και για τους δύο παίκτες, απαντώνται ιδιωτικά.",
@@ -46,15 +46,15 @@
           "strong": "Χρονόμετρο 12 δευτερολέπτων ανά ερώτηση."
         },
         {
-          "rest": "Προεπιλογή 3, μέγιστο 10 σε όλη τη βραδιά, μετράει τις ρεβάνς — δεν μπορείς να εκμεταλλεύεσαι έναν αντίπαλο.",
+          "rest": "Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, και ο ηττημένος μιας μονομαχίας μπορεί να ζητήσει μία ρεβάνς. Μόλις υπάρξει ρεβάνς ανάμεσα σε δύο παίκτες, δεν μπορούν να ξαναπαίξουν — δεν μπορείς να μαζεύεις πόντους από τον ίδιο αντίπαλο ξανά και ξανά.",
           "strong": "Όριο ανά ζευγάρι."
         },
         {
-          "rest": "Καμία ποινή πόντων, και οι αρνημένες προκλήσεις δεν μετράνε στο όριο.",
-          "strong": "Η άρνηση επιτρέπεται."
+          "rest": "Καμία ποινή πόντων, αλλά κάθε παίκτης μπορεί να αρνηθεί μόνο 2 προκλήσεις τη βραδιά σε δωμάτια έως 5 παικτών, 3 με 6–10, 4 με 11–15 και 5 με 16 ή περισσότερους. Μετράνε και οι ρεβάνς που απορρίπτεις.",
+          "strong": "Οι αρνήσεις είναι περιορισμένες."
         },
         {
-          "rest": "Η Κλοπή παίρνει <em>winner_score</em> από τον ηττημένο· ο Διπλασιασμός προσθέτει το ίδιο στον νικητή. Ο ηττημένος κρατά τους πόντους του στον Διπλασιασμό.",
+          "rest": "Δεν υπάρχει σταθερό μπόνους νίκης. Η Κλοπή μεταφέρει το σκορ της μονομαχίας σου (το άθροισμα των 3 απαντήσεων) από τον ηττημένο σε σένα — έως όσους πόντους έχει, και δεν επιτρέπεται αν έχει 0 πόντους. Ο Διπλασιασμός σού προσθέτει το διπλάσιο του σκορ της μονομαχίας σου και ο ηττημένος κρατά τους πόντους του. Ίσα σκορ σημαίνουν ισοπαλία: κανένας νικητής, καμία μεταφορά πόντων.",
           "strong": "Ο νικητής διαλέγει Κλοπή ή Διπλασιασμό."
         }
       ],
@@ -67,15 +67,15 @@
           "strong": "Παίκτης φεύγει μέσα στην εκπομπή."
         },
         {
-          "rest": "Η συνεδρία τελειώνει για όλους. Επιβεβαίωση 5 δευτερολέπτων αποτρέπει ατυχήματα· η διαγραφή είναι μη αναστρέψιμη.",
+          "rest": "Η συνεδρία τελειώνει για όλους. Μια επιβεβαίωση 5 δευτερολέπτων αποτρέπει τις κατά λάθος διαγραφές· η διαγραφή είναι μη αναστρέψιμη.",
           "strong": "Ο οικοδεσπότης διαγράφει το δωμάτιο."
         },
         {
-          "rest": "Πολλαπλές συσκευές ή απαντήσεις με βοήθεια AI: στη διακριτική ευχέρεια του οικοδεσπότη, προτεινόμενη λύση είναι η ακύρωση των μονομαχιών και γύρων quiz που επηρεάστηκαν.",
+          "rest": "Πολλαπλές συσκευές ή απαντήσεις με βοήθεια AI: στη διακριτική ευχέρεια του οικοδεσπότη· η προτεινόμενη λύση είναι η ακύρωση των μονομαχιών και γύρων quiz που επηρεάστηκαν.",
           "strong": "Ζαβολιά."
         },
         {
-          "rest": "Ο οικοδεσπότης μπορεί να διορθώσει καταχωρήσεις βαθμολογίας από το host panel. Επανεκκίνηση του auto-parse τραβάει φρέσκα επίσημα αποτελέσματα.",
+          "rest": "Ο οικοδεσπότης μπορεί να διορθώσει καταχωρήσεις βαθμολογίας από το host panel. Με επανεκτέλεση του auto-parse αντλούνται εκ νέου τα επίσημα αποτελέσματα.",
           "strong": "Σφάλμα καταχώρησης αποτελέσματος."
         },
         {
@@ -97,20 +97,20 @@
           "strong": "2 έως 20 παίκτες ανά δωμάτιο."
         },
         {
-          "rest": "Magic-link στο email, χωρίς κωδικό. Ο οικοδεσπότης έχει το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
+          "rest": "Magic-link στο email, χωρίς κωδικό πρόσβασης. Ο οικοδεσπότης διαχειρίζεται το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
           "strong": "Ένας οικοδεσπότης συνδέεται."
         },
         {
-          "rest": "Δεν χρειάζεται λογαριασμός για τους καλεσμένους — μόνο ο 6ψήφιος κωδικός δωματίου και ένα όνομα εμφάνισης.",
+          "rest": "Δεν χρειάζεται λογαριασμός για τους καλεσμένους — μόνο ο κωδικός δωματίου 6 χαρακτήρων και ένα όνομα εμφάνισης.",
           "strong": "Οι παίκτες μπαίνουν με κωδικό."
         },
         {
-          "rest": "Το δωμάτιο περνά από Lobby → Προβλέψεις → Quiz → Ζωντανή Εκπομπή → Αποτελέσματα → Final με ενέργεια του οικοδεσπότη· οι παίκτες δεν μπορούν να παραλείψουν φάσεις.",
-          "strong": "Ο οικοδεσπότης προχωρά τις φάσεις."
+          "rest": "Το δωμάτιο περνά από Αναμονή → Pre-Night Show (μόνο αν δεν έχει ανακοινωθεί ακόμα η σύνθεση) → Προβλέψεις → Ψηφοφορία Live → Βαθμολογία. Ο οικοδεσπότης το ξεκινά από την Αναμονή· όλες οι επόμενες αλλαγές φάσης γίνονται αυτόματα.",
+          "strong": "Ο οικοδεσπότης ξεκινά το πάρτι."
         },
         {
           "rest": "Μπορεί να επανεκκινήσει γύρους trivia, να ακυρώσει μονομαχίες, να διορθώσει βαθμολογία σε προφανή λάθη καταχώρησης και να αποβάλει παίκτες από το host panel.",
-          "strong": "Ο οικοδεσπότης έχει εξουσία υπερκάλυψης."
+          "strong": "Ο οικοδεσπότης έχει δικαίωμα παρέμβασης."
         }
       ],
       "title": "Όρια παικτών και ευθύνες οικοδεσπότη"
@@ -131,37 +131,37 @@
         "Τυπική διάρκεια",
         "Τι κλειδώνει"
       ],
-      "intro": "Το δωμάτιο περνά μέσα από έξι φάσεις σε σταθερή σειρά. Ο οικοδεσπότης προχωρά κάθε μία χειροκίνητα — δεν υπάρχει αυτόματο χρονόμετρο που σπρώχνει την παρέα μπροστά.",
+      "intro": "Το δωμάτιο περνά από πέντε φάσεις με σταθερή σειρά, συν ένα προαιρετικό tiebreak στο τέλος. Ο οικοδεσπότης ξεκινά το πάρτι από την Αναμονή· από εκεί και πέρα η εφαρμογή προχωρά το δωμάτιο αυτόματα, καθώς έρχονται τα επίσημα δεδομένα της εκπομπής — κανείς δεν χρειάζεται να πατήσει τίποτα στη μέση της βραδιάς.",
       "rows": [
         [
-          "Lobby",
-          "Μέχρι να ξεκινήσει ο οικοδεσπότης",
+          "Αναμονή",
+          "Μέχρι ο οικοδεσπότης να πατήσει «Ξεκίνα το Πάρτι!»",
           "Προβλέψεις, quiz, μονομαχίες"
         ],
         [
+          "Pre-Night Show",
+          "Μόνο μέχρι να ανακοινωθεί η σύνθεση του Μεγάλου Τελικού — τη βραδιά του τελικού συνήθως παραλείπεται",
+          "Προβλέψεις"
+        ],
+        [
           "Προβλέψεις",
-          "5–10 λεπτά πριν την εκπομπή",
-          "Μονομαχίες"
+          "Από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία — σε όλη τη διάρκεια των τραγουδιών",
+          "Τίποτα — προβλέψεις, quiz και μονομαχίες είναι όλα ανοιχτά"
         ],
         [
-          "Quiz",
-          "Παράλληλα με τις Προβλέψεις",
-          "Μονομαχίες"
+          "Ψηφοφορία Live",
+          "Από την έναρξη της ψηφοφορίας μέχρι να οριστικοποιηθούν τα επίσημα αποτελέσματα",
+          "Προβλέψεις, quiz, μονομαχίες"
         ],
         [
-          "Ζωντανή Εκπομπή",
-          "Διάρκεια μετάδοσης",
-          "Προβλέψεις, quiz"
-        ],
-        [
-          "Αποτελέσματα",
+          "Βαθμολογία",
           "Τελευταία 30 λεπτά της εκπομπής",
-          "Προβλέψεις, quiz"
+          "Όλα εκτός από την ψηφοφορία ισοπαλίας και το sudden death"
         ],
         [
-          "Final",
-          "Αποκάλυψη τροπαίων",
-          "Όλα εκτός από sudden death"
+          "Tiebreak (προαιρετικό)",
+          "Ψηφοφορία 60 δευτερολέπτων στο δωμάτιο και, αν το επιλέξει, αγώνας sudden death 3 ερωτήσεων",
+          "Όλα τα υπόλοιπα"
         ]
       ],
       "title": "Φάσεις"
@@ -185,11 +185,11 @@
           "strong": "Η σειρά μετράει."
         },
         {
-          "rest": "Μόλις ο οικοδεσπότης περάσει τις Προβλέψεις, καμία επεξεργασία και καμία καθυστερημένη καταχώρηση.",
-          "strong": "Σκληρό κλείδωμα στην αλλαγή φάσης."
+          "rest": "Μόλις το δωμάτιο περάσει στην Ψηφοφορία Live, οι λίστες κλειδώνουν αυτόματα — καμία επεξεργασία και καμία καθυστερημένη καταχώρηση.",
+          "strong": "Οριστικό κλείδωμα με το άνοιγμα της ψηφοφορίας."
         },
         {
-          "rest": "μπορούν να παίξουν trivia και μονομαχίες αλλά δεν μπορούν να καταχωρήσουν προβλέψεις.",
+          "rest": " μπορούν να καταχωρήσουν προβλέψεις και να παίξουν quiz και μονομαχίες μέχρι να ανοίξει η ψηφοφορία.",
           "strong": "Όσοι μπουν αργότερα"
         }
       ],
@@ -198,24 +198,24 @@
     "quiz": {
       "items": [
         {
-          "rest": "Προεπιλογή 3 γύροι, 10 ερωτήσεις ο καθένας (παραμετροποιήσιμο από τον οικοδεσπότη, 1–3).",
-          "strong": "Ο οικοδεσπότης ξεκινά κάθε γύρο."
+          "rest": "3 γύροι των 10 ερωτήσεων, με τον δικό σου ρυθμό.",
+          "strong": "Κάθε παίκτης ξεκινά τους γύρους του."
         },
         {
-          "rest": "Μία επιλογή, χρονόμετρο 15 δευτερολέπτων.",
+          "rest": "Επιλέγεις μία απάντηση, χρονόμετρο 15 δευτερολέπτων.",
           "strong": "4 επιλογές ανά ερώτηση."
         },
         {
           "rest": "12 πόντοι (≤3δ), 8 πόντοι (≤7δ), 4 πόντοι (≤15δ)· 0 για λάθος ή λήξη χρόνου.",
-          "strong": "Κλιμακωτή βαθμολογία ανά χρόνο απάντησης."
+          "strong": "Κλιμακωτή βαθμολογία ανάλογα με τον χρόνο απάντησης."
         },
         {
           "rest": "σε όλη τη βραδιά, συμπεριλαμβανομένων των μονομαχιών.",
           "strong": "Καμία επανάληψη ερώτησης ανά παίκτη"
         },
         {
-          "rest": "Οι μονομαχίες το αντικαθιστούν από την έναρξη μέχρι τα Αποτελέσματα.",
-          "strong": "Το quiz κλειδώνει στη Ζωντανή Εκπομπή."
+          "rest": "Quiz και μονομαχίες τρέχουν παράλληλα από την έναρξη του πάρτι μέχρι την Ψηφοφορία Live.",
+          "strong": "Το quiz κλειδώνει όταν ανοίγει η ψηφοφορία."
         }
       ],
       "title": "Κανόνες quiz"
@@ -228,7 +228,7 @@
           "title": "Φόρμουλες βαθμολογίας"
         },
         {
-          "blurb": "Οδηγός εγκατάστασης 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.",
+          "blurb": "Οδηγός 60 δευτερολέπτων για το στήσιμο, από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.",
           "href": "/how-to-play",
           "title": "Πώς παίζεται"
         },
@@ -238,17 +238,17 @@
           "title": "Συχνές Ερωτήσεις"
         },
         {
-          "blurb": "Μηχανική Top 5 και Worst 5 με τη λίστα χωρών {year}.",
+          "blurb": "Μηχανική Top 5 και Worst 5 με τη λίστα χωρών του {year}.",
           "href": "/eurovision-predictions",
           "title": "Προβλέψεις"
         },
         {
-          "blurb": "Κανόνες trivia ένας προς έναν, Κλοπή vs Διπλασιασμός και επίδραση στα τρόπαια.",
+          "blurb": "Κανόνες για τις μονομαχίες trivia ένας προς έναν, Κλοπή vs Διπλασιασμός και επίδραση στα τρόπαια.",
           "href": "/duels",
           "title": "Μονομαχίες"
         },
         {
-          "blurb": "Ενδεικτικές ερωτήσεις και η τράπεζα από όπου τραβάνε quiz/μονομαχίες.",
+          "blurb": "Ενδεικτικές ερωτήσεις και η τράπεζα ερωτήσεων από την οποία αντλούν το quiz και οι μονομαχίες.",
           "href": "/eurovision-trivia",
           "title": "Trivia"
         }
@@ -259,8 +259,8 @@
       "articleHeadline": "Eurovision Games — Πλήρης Κανονισμός ({year})"
     },
     "suddenDeath": {
-      "body": "Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης μπορεί να ανοίξει έναν ψηφοφορία — το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia — κερδίζει όποιος απαντά περισσότερες σωστά, σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.",
-      "cardBody": "Το sudden death ενεργοποιείται προαιρετικά ανά κατηγορία από το host panel στη φάση Final. Αν ο οικοδεσπότης δεν το ανοίξει, οι ισόπαλοι παίκτες μοιράζονται το τρόπαιο εξ ορισμού.",
+      "body": "Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης ανοίγει μια ψηφοφορία 60 δευτερολέπτων — το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia — κερδίζει όποιος δώσει τις περισσότερες σωστές απαντήσεις· σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.",
+      "cardBody": "Το sudden death ενεργοποιείται προαιρετικά ανά κατηγορία από το host panel στη φάση Final. Αν ο οικοδεσπότης δεν το ανοίξει, οι ισόπαλοι παίκτες μοιράζονται το τρόπαιο από προεπιλογή.",
       "cardTitle": "Διακόπτης οικοδεσπότη",
       "title": "Sudden death για ισοπαλίες"
     },
@@ -284,11 +284,11 @@
           "strong": "Μάντης"
         },
         {
-          "rest": "— περισσότερες σωστές απαντήσεις trivia σε γύρους quiz και μονομαχίες μαζί.",
+          "rest": "— περισσότερες σωστές απαντήσεις σε όλους τους γύρους quiz (οι απαντήσεις στις μονομαχίες δεν μετράνε).",
           "strong": "Γκουρού"
         }
       ],
-      "note": "Συν-νικητές (2–5 παίκτες ισόπαλοι σε μια κατηγορία) μοιράζονται ένα τρόπαιο εκτός αν ο οικοδεσπότης ενεργοποιήσει sudden death.",
+      "note": "Συν-νικητές (2–5 παίκτες ισόπαλοι σε μια κατηγορία) μοιράζονται ένα τρόπαιο, εκτός αν το δωμάτιο ψηφίσει sudden death.",
       "title": "Κανόνες τροπαίων"
     }
   },
@@ -327,8 +327,8 @@
     "duels": {
       "items": [
         {
-          "rest": "Locked during Lobby, Predictions, and Quiz phases.",
-          "strong": "Available from Live Show onward."
+          "rest": "Open in Pre-Night Show and Predictions Open; locked in the Lobby and from Voting Live onward.",
+          "strong": "Available from party start until voting opens."
         },
         {
           "rest": "Same questions for both players, answered in private.",
@@ -339,15 +339,15 @@
           "strong": "12-second timer per question."
         },
         {
-          "rest": "Default 3, max 10 across the night, counts rematches — you cannot grind one opponent.",
-          "strong": "Per-pair cap."
+          "rest": "Each of you can challenge the other once, and the loser of a duel can request one rematch. Once a rematch exists between two players, they can’t duel again — you cannot grind one opponent.",
+          "strong": "Per-pair limit."
         },
         {
-          "rest": "No point penalty, and refused challenges do not count against the cap.",
-          "strong": "Refusing is allowed."
+          "rest": "No point penalty, but each player can refuse only 2 challenges per night in rooms of up to 5 players, 3 with 6–10, 4 with 11–15 and 5 with 16 or more. Refused rematches count too.",
+          "strong": "Refusals are limited."
         },
         {
-          "rest": "Steal takes <em>winner_score</em> from the loser; Double adds the same to the winner. Loser keeps their points if Double.",
+          "rest": "There is no flat win bonus. Steal moves your duel score (your 3-answer total) from the loser to you — capped at what they have, and unavailable if they have 0 points. Double adds twice your duel score to you, and the loser keeps their points. Equal totals are a tie: no winner, no points move.",
           "strong": "Winner picks Steal or Double."
         }
       ],
@@ -364,7 +364,7 @@
           "strong": "Host deletes the room."
         },
         {
-          "rest": "Multi-device or AI-assisted answering: host discretion, suggested resolution is voiding affected duels and quiz rounds.",
+          "rest": "Multi-device or AI-assisted answering: at the host’s discretion; the suggested resolution is voiding affected duels and quiz rounds.",
           "strong": "Cheating."
         },
         {
@@ -380,7 +380,7 @@
     },
     "hero": {
       "chip": "Rule book",
-      "lede": "Everything one host or one player needs to settle a dispute mid-show. Phases, prediction rules, quiz and duel mechanics, trophy definitions, sudden-death tiebreak, and the disconnect policy. The defaults work for most groups; the host can override most of it from the lobby.",
+      "lede": "Everything a host or player needs to settle a dispute mid-show. Phases, prediction rules, quiz and duel mechanics, trophy definitions, sudden-death tiebreak, and the disconnect policy. The defaults work for most groups; the host can override most of it from the lobby.",
       "title": "Eurovision Games — the full rule book"
     },
     "hostLimits": {
@@ -398,8 +398,8 @@
           "strong": "Players join with a code."
         },
         {
-          "rest": "The room moves through Lobby → Predictions → Quiz → Live Show → Results → Final on host action; players cannot skip phases.",
-          "strong": "Host advances phases."
+          "rest": "The room moves Lobby → Pre-Night Show (only if the line-up isn’t out yet) → Predictions Open → Voting Live → Final Results. The host starts it from the Lobby; every later phase change happens automatically.",
+          "strong": "Host starts the party."
         },
         {
           "rest": "Reset trivia rounds, void duels, override scoring on clear input errors, and eject players from the host panel.",
@@ -424,37 +424,37 @@
         "Typical duration",
         "What’s locked"
       ],
-      "intro": "The room moves through six phases in fixed order. The host advances each one manually — there is no automatic timer pushing groups forward.",
+      "intro": "The room moves through five phases in a fixed order, plus an optional tiebreak at the end. The host starts the party from the Lobby; after that the app moves the room on automatically as the official show data comes in — nobody has to press anything mid-show.",
       "rows": [
         [
           "Lobby",
-          "Until host starts",
+          "Until the host taps Start the Party!",
           "Predictions, quiz, duels"
         ],
         [
-          "Predictions",
-          "5–10 min before show",
-          "Duels"
+          "Pre-Night Show",
+          "Only until the Grand Final line-up is published — usually skipped on final night",
+          "Predictions"
         ],
         [
-          "Quiz",
-          "Concurrent with Predictions",
-          "Duels"
+          "Predictions Open",
+          "From party start until voting opens — all through the songs",
+          "Nothing — predictions, quiz and duels are all open"
         ],
         [
-          "Live Show",
-          "Duration of broadcast",
-          "Predictions, quiz"
+          "Voting Live",
+          "From the start of voting until the official results are final",
+          "Predictions, quiz, duels"
         ],
         [
-          "Results",
+          "Final Results",
           "Final 30 min of show",
-          "Predictions, quiz"
+          "Everything except the tie vote and sudden death"
         ],
         [
-          "Final",
-          "Trophy reveal",
-          "Everything except sudden death"
+          "Tiebreak (optional)",
+          "60-second room vote, then a 3-question sudden-death match if the room chooses it",
+          "Everything else"
         ]
       ],
       "title": "Phases"
@@ -478,21 +478,21 @@
           "strong": "Ordering matters."
         },
         {
-          "rest": "Once the host advances past Predictions, no edits and no late entries.",
-          "strong": "Hard lock at phase advance."
+          "rest": "When the room moves to Voting Live, lists lock automatically — no edits and no late entries.",
+          "strong": "Hard lock when voting opens."
         },
         {
-          "rest": "can still play trivia and duels but cannot enter predictions.",
+          "rest": " can still enter predictions, play quiz and duel until voting opens.",
           "strong": "Late joiners"
         }
       ],
-      "title": "Predictions rules"
+      "title": "Prediction rules"
     },
     "quiz": {
       "items": [
         {
-          "rest": "Default 3 rounds, 10 questions each (host configurable, 1–3).",
-          "strong": "Host triggers each round."
+          "rest": "3 rounds of 10 questions, played at your own pace.",
+          "strong": "Players start each round."
         },
         {
           "rest": "Single-select, 15-second timer.",
@@ -507,8 +507,8 @@
           "strong": "No question repeats per player"
         },
         {
-          "rest": "Duels replace it from kick-off through Results.",
-          "strong": "Quiz locks at Live Show."
+          "rest": "Quiz and duels run side by side from party start until Voting Live.",
+          "strong": "Quiz locks when voting opens."
         }
       ],
       "title": "Quiz rules"
@@ -552,7 +552,7 @@
       "articleHeadline": "Eurovision Games — Full Rule Book ({year})"
     },
     "suddenDeath": {
-      "body": "For any tied trophy category, the host triggers a tiebreak vote — the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins — speed breaks ties. If the vote stays with Accept, all tied players share the trophy.",
+      "body": "For any tied trophy category, the host opens a 60-second tiebreak vote — the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins — speed breaks ties. If the vote stays with Accept, all tied players share the trophy.",
       "cardBody": "Sudden death is opt-in per category from the host panel during the Final phase. If the host doesn’t open it, tied players share the trophy by default.",
       "cardTitle": "Host toggle",
       "title": "Sudden-death tiebreak"
@@ -577,11 +577,11 @@
           "strong": "Oracle"
         },
         {
-          "rest": "— most correct trivia answers across quiz rounds and duels combined.",
+          "rest": "— most correct quiz answers across all quiz rounds (duel answers don’t count).",
           "strong": "Guru"
         }
       ],
-      "note": "Co-winners (2–5 players tied on a category) split a single trophy unless the host triggers sudden death.",
+      "note": "Co-winners (2–5 players tied on a category) split a single trophy unless the room votes for sudden death.",
       "title": "Trophy rules"
     }
   }

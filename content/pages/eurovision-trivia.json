@@ -20,17 +20,17 @@
         "q": "Πόσο χρόνο έχω για να απαντήσω;"
       },
       {
-        "a": "Υπάρχει προεπιλεγμένο όριο ανά ζευγάρι ενσωματωμένο στο παιχνίδι — 3 μονομαχίες, μέγιστο 10. Οι ρεβάνς μετράνε, οπότε δεν μπορείς να εκμεταλλεύεσαι έναν πιο αδύναμο αντίπαλο για πόντους.",
-        "q": "Μπορώ να μονομαχώ ξανά και ξανά τον ίδιο παίκτη;"
+        "a": "Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, και ο ηττημένος μιας μονομαχίας μπορεί να ζητήσει μία ρεβάνς. Μόλις υπάρξει ρεβάνς ανάμεσα σε δύο παίκτες, δεν γίνονται άλλες προκλήσεις μεταξύ τους — οπότε δεν μπορείς να εκμεταλλεύεσαι έναν πιο αδύναμο αντίπαλο για πόντους.",
+        "q": "Μπορώ να μονομαχώ ξανά και ξανά με τον ίδιο παίκτη;"
       },
       {
-        "a": "Ναι — η λειτουργία Quiz τρέχει κατά τη φάση Pre-show, πριν ξεκλειδώσουν οι μονομαχίες. Ο οικοδεσπότης ξεκινάει γρήγορους γύρους· όλοι απαντούν παράλληλα και οι πόντοι προστίθενται στο σύνολο των προβλέψεων.",
+        "a": "Ναι — η λειτουργία Quiz ανοίγει μόλις ο οικοδεσπότης ξεκινήσει το πάρτι και τρέχει παράλληλα με τις μονομαχίες μέχρι να ανοίξει η ψηφοφορία. Κάθε παίκτης παίζει 3 γύρους των 10 ερωτήσεων με τον δικό του ρυθμό και οι πόντοι του quiz προστίθενται στο σύνολο της βραδιάς του.",
         "q": "Υπάρχει solo λειτουργία trivia;"
       }
     ],
     "hero": {
       "chip": "Trivia + μονομαχίες",
-      "lede": "Το Eurovision trivia είναι ένα παιχνίδι ερωταπαντήσεων γύρω από την ιστορία, την ψηφοφορία και τους νικητές του Διαγωνισμού Τραγουδιού Eurovision. Στο Eurovision Games, το trivia είναι ο μηχανισμός των μονομαχιών: δύο παίκτες μπορούν να προκαλέσουν ο ένας τον άλλον σε ένα head-to-head γύρο 3 ερωτήσεων κατά τη διάρκεια της εκπομπής, και ο νικητής κλέβει πόντους από τον ηττημένο.",
+      "lede": "Το Eurovision trivia είναι ένα παιχνίδι ερωταπαντήσεων γύρω από την ιστορία, την ψηφοφορία και τους νικητές του Διαγωνισμού Τραγουδιού Eurovision. Στο Eurovision Games, το trivia είναι ο μηχανισμός των μονομαχιών: οποιοιδήποτε δύο παίκτες μπορούν να προκαλέσουν ο ένας τον άλλον σε έναν head-to-head γύρο 3 ερωτήσεων κατά τη διάρκεια της εκπομπής, και ο νικητής κλέβει το σκορ της μονομαχίας του από τον ηττημένο ή το διπλασιάζει.",
       "title": "Eurovision trivia — δείγματα ερωτήσεων και πώς να παίξεις ζωντανά"
     },
     "meta": {
@@ -50,7 +50,7 @@
     },
     "questions": [
       {
-        "answer": "Το ρεκόρ είναι {stats.topWins} νίκες και το κατέχουν: {stats.topCountries}.",
+        "answer": "Το ρεκόρ είναι {stats.topWins} νίκες ({stats.topCountries}).",
         "options": [
           "Σουηδία",
           "Ιρλανδία",
@@ -60,7 +60,7 @@
         "q": "Ποια χώρα έχει κερδίσει τις περισσότερες φορές την Eurovision;"
       },
       {
-        "answer": "1974, με το «Waterloo» εκπροσωπώντας τη Σουηδία.",
+        "answer": "1974, με το «Waterloo», για τη Σουηδία.",
         "options": [
           "1972",
           "1974",
@@ -77,7 +77,7 @@
           "Λίβερπουλ",
           "Μαδρίτη"
         ],
-        "q": "Ποια πόλη φιλοξενεί τη Eurovision {current.year};"
+        "q": "Ποια πόλη φιλοξενεί την Eurovision {current.year};"
       },
       {
         "answer": "12 πόντους — η υψηλότερη βαθμολογία που μπορεί να δώσει μια κριτική επιτροπή ή μια χώρα σε μία ψηφοφορία.",
@@ -110,7 +110,7 @@
         "q": "Ποιο ήταν το νικητήριο τραγούδι της Conchita Wurst το 2014;"
       },
       {
-        "answer": "Ιταλία — νίκες το 1964 και το 1990, αποχώρηση το 1997, επιστροφή το 2011.",
+        "answer": "Ιταλία — νίκες το 1964 και το 1990, αποχώρηση μετά το 1997, επιστροφή το 2011.",
         "options": [
           "Ιταλία",
           "Μονακό",
@@ -153,7 +153,7 @@
     "related": {
       "duels": {
         "blurb": "Head-to-head μονομαχίες 3 ερωτήσεων κατά τη ζωντανή εκπομπή.",
-        "title": "Eurovision μονομαχίες"
+        "title": "Μονομαχίες Eurovision"
       },
       "howToPlay": {
         "blurb": "Ο οδηγός 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι τα τρόπαια.",
@@ -168,7 +168,7 @@
         "title": "Παιχνίδι προβλέψεων"
       },
       "rules": {
-        "blurb": "Sudden death, απορριμμένες μονομαχίες και πρωτόκολλο tiebreak.",
+        "blurb": "Sudden death, απορριμμένες μονομαχίες και πρωτόκολλο ισοβαθμίας.",
         "title": "Κανονισμός"
       },
       "scoring": {
@@ -186,10 +186,10 @@
         "mediumLabel": "Μεσαίο:",
         "title": "Κατηγορίες και επίπεδα δυσκολίας"
       },
-      "disclaimer": "Οι ερωτήσεις αντλούνται από επιμελημένη τράπεζα και δεν έχουν επαληθευτεί μεμονωμένα. Πρόκειται για party game για διασκέδαση.",
+      "disclaimer": "Οι ερωτήσεις αντλούνται από επιμελημένη τράπεζα και δεν έχουν επαληθευτεί μεμονωμένα. Πρόκειται για party game για διασκέδαση — δες τις απαντήσεις ως ψυχαγωγία.",
       "duels": {
         "body1Em": "Πρόκληση",
-        "body1Post": ", και μια μονομαχία 3 ερωτήσεων εμφανίζεται στις οθόνες και των δύο. Κάθε παίκτης έχει 15 δευτερόλεπτα ανά ερώτηση. Όποιος βρει τις περισσότερες σωστές κερδίζει· σε ισοπαλία ξεχωρίζει η ταχύτητα της σωστής απάντησης. Ο νικητής κλέβει πόντους από τον ηττημένο. Κάθε ζευγάρι έχει προεπιλεγμένο όριο 3 μονομαχιών ανά βραδιά (μέγιστο 10), οι ρεβάνς μετράνε, οπότε δεν μπορείς να εκμεταλλευτείς έναν αδύναμο αντίπαλο.",
+        "body1Post": ", και μια μονομαχία 3 ερωτήσεων εμφανίζεται στις οθόνες και των δύο. Κάθε παίκτης έχει 12 δευτερόλεπτα ανά ερώτηση και κάθε σωστή απάντηση παίρνει 12 μείον τα ολόκληρα δευτερόλεπτα που πέρασαν. Νικά το μεγαλύτερο σύνολο· ίσα σύνολα σημαίνουν ισοπαλία χωρίς νικητή. Ο νικητής κλέβει το σκορ της μονομαχίας του από τον ηττημένο ή το διπλασιάζει. Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, συν μία ρεβάνς για τον ηττημένο, οπότε δεν μπορείς να εκμεταλλευτείς έναν αδύναμο αντίπαλο.",
         "body1Pre": "Κάνε κλικ στο όνομα οποιουδήποτε άλλου παίκτη στον ζωντανό πίνακα βαθμολογίας, πάτησε ",
         "body2LinkLabel": "ειδική σελίδα μονομαχιών",
         "body2Post": ".",
@@ -210,7 +210,7 @@
         "title": "Δείγματα ερωτήσεων (με απαντήσεις)"
       },
       "whatIs": {
-        "body": "Ο Διαγωνισμός Τραγουδιού Eurovision διεξάγεται από το 1956, με 50+ χώρες να αγωνίζονται σε {stats.finals} μεγάλους τελικούς (1956-{latest.year}· 2020 ακυρώθηκε) — μια τεράστια δεξαμενή trivia. Οι κατηγορίες που εμφανίζονται πιο συχνά: νικητές ανά έτος, σταθμοί στην ψηφοφορία, κανόνες γλώσσας, αλλαγές βαθμολογίας, πρώτες συμμετοχές και αποχωρήσεις χωρών, viral συμμετοχές, αντιπαραθέσεις και τίτλοι τραγουδιών.",
+        "body": "Ο Διαγωνισμός Τραγουδιού Eurovision διεξάγεται από το 1956, με 50+ χώρες να αγωνίζονται σε {stats.finals} μεγάλους τελικούς (1956-{latest.year}· το 2020 ακυρώθηκε) — μια τεράστια δεξαμενή trivia. Οι κατηγορίες που εμφανίζονται πιο συχνά: νικητές ανά έτος, σταθμοί στην ψηφοφορία, κανόνες γλώσσας, αλλαγές βαθμολογίας, πρώτες συμμετοχές και αποχωρήσεις χωρών, viral συμμετοχές, αντιπαραθέσεις και τίτλοι τραγουδιών.",
         "title": "Τι είναι το Eurovision trivia;"
       }
     }
@@ -236,17 +236,17 @@
         "q": "How long do I have to answer?"
       },
       {
-        "a": "There is a default per-pair cap baked into the system — 3 duels, max 10. Rematches count, so you cannot grind a single weaker opponent for points.",
+        "a": "Each of you can challenge the other once, and the loser of a duel can request one rematch. Once a rematch exists between two players, no more challenges between them — so you cannot grind a single weaker opponent for points.",
         "q": "Can I duel the same player repeatedly?"
       },
       {
-        "a": "Yes — Quiz mode runs during the Preshow phase before duels unlock. The host triggers fast-fire rounds; everyone answers in parallel and scores stack into the predictions total.",
+        "a": "Yes — Quiz mode opens as soon as the host starts the party and runs alongside duels until voting opens. Each player plays 3 rounds of 10 questions at their own pace, and quiz points add to their night total.",
         "q": "Is there a solo trivia mode?"
       }
     ],
     "hero": {
       "chip": "Trivia + duels",
-      "lede": "Eurovision trivia is a question-and-answer format about the history, voting, and winners of the Eurovision Song Contest. In Eurovision Games, trivia is the duel mechanic: any two players can challenge each other to a head-to-head 3-question round during the broadcast, and the winner steals points from the loser.",
+      "lede": "Eurovision trivia is a question-and-answer format about the history, voting, and winners of the Eurovision Song Contest. In Eurovision Games, trivia is the duel mechanic: any two players can challenge each other to a head-to-head 3-question round during the broadcast, and the winner steals their duel score from the loser or doubles it.",
       "title": "Eurovision trivia — sample questions and how to play live"
     },
     "meta": {
@@ -326,7 +326,7 @@
         "q": "What was Conchita Wurst’s winning song in 2014?"
       },
       {
-        "answer": "Italy — winners in 1964 and 1990, withdrew in 1997, returned in 2011.",
+        "answer": "Italy — winners in 1964 and 1990, withdrew after 1997, returned in 2011.",
         "options": [
           "Italy",
           "Monaco",
@@ -405,7 +405,7 @@
       "disclaimer": "Questions are drawn from a curated bank and have not been individually fact-checked. This is a party game for fun — treat answers as entertainment.",
       "duels": {
         "body1Em": "Challenge",
-        "body1Post": ", and a 3-question duel pops up on both your screens. Each player has 15 seconds per question. Whoever gets more correct wins; faster correct answers break a tie. The winner steals points from the loser. Each pair has a default cap of 3 duels per night (max 10), rematches counted, so you can't farm one weaker opponent.",
+        "body1Post": ", and a 3-question duel pops up on both your screens. Each player has 12 seconds per question, and each correct answer scores 12 minus the elapsed whole seconds. The higher total wins; equal totals are a tie with no winner. The winner steals their duel score from the loser or doubles it. Each of you can challenge the other once, plus one rematch for the loser, so you can’t farm one weaker opponent.",
         "body1Pre": "Click any other player's name in the live leaderboard, hit ",
         "body2LinkLabel": "dedicated duels page",
         "body2Post": ".",

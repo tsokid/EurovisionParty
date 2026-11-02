@@ -13,18 +13,18 @@
       "title": "Φτιαγμένο από"
     },
     "cta": {
-      "body": "Στήσε μια βραδιά Eurovision σε 60 δευτερόλεπτα. Φτιάξε ιδιωτικό δωμάτιο, μοιράσου τον κωδικό και κλείδωσε τους φίλους σου πριν από το πρώτο postcard.",
+      "body": "Στήσε μια βραδιά Eurovision σε 60 δευτερόλεπτα. Φτιάξε ιδιωτικό δωμάτιο, μοιράσου τον κωδικό και βάλε τους φίλους σου στο παιχνίδι πριν από το πρώτο postcard.",
       "primaryLabel": "Δημιουργία δωματίου",
       "secondaryLabel": "Πώς να παίξεις",
       "title": "Δοκίμασε το Eurovision Games απόψε"
     },
     "ebu": {
-      "body": "Το Eurovision Games είναι ένα ανεξάρτητο fan project. Δεν έχουμε καμία σχέση με, ούτε υποστηριζόμαστε ή χρηματοδοτούμαστε από την European Broadcasting Union, τον Διαγωνισμό Τραγουδιού Eurovision, τον φιλοξενούντα ραδιοτηλεοπτικό φορέα ή οποιονδήποτε συμμετέχοντα φορέα. Η λέξη «Eurovision» είναι εμπορικό σήμα της EBU· τη χρησιμοποιούμε περιγραφικά μόνο για να υποδείξουμε τη μετάδοση που το παιχνίδι αυτό έχει σχεδιαστεί να συνοδεύει. Ονόματα χωρών, τίτλοι τραγουδιών, ονόματα καλλιτεχνών και σχετικά σήματα παραμένουν ιδιοκτησία των αντίστοιχων κατόχων τους.",
+      "body": "Το Eurovision Games είναι ένα ανεξάρτητο fan project. Δεν συνδεόμαστε με την European Broadcasting Union, τον Διαγωνισμό Τραγουδιού Eurovision, τον φιλοξενούντα ραδιοτηλεοπτικό φορέα ή οποιονδήποτε συμμετέχοντα φορέα, ούτε υποστηριζόμαστε ή χρηματοδοτούμαστε από αυτούς. Η λέξη «Eurovision» είναι εμπορικό σήμα της EBU· τη χρησιμοποιούμε περιγραφικά μόνο για να υποδείξουμε τη μετάδοση που το παιχνίδι αυτό έχει σχεδιαστεί να συνοδεύει. Ονόματα χωρών, τίτλοι τραγουδιών, ονόματα καλλιτεχνών και σχετικά σήματα παραμένουν ιδιοκτησία των αντίστοιχων κατόχων τους.",
       "cardTitle": "Ανεξάρτητο fan project",
       "title": "Καμία σχέση με την EBU"
     },
     "freeNoAccount": {
-      "body": "Το Eurovision Games είναι δωρεάν για ιδιωτικές βραδιές Eurovision. Δεν υπάρχει συνδρομή, δεν υπάρχει in-app αγορά και καμία διαφήμιση — πουθενά στο site. Οι οικοδεσπότες αυθεντικοποιούνται μία φορά με email one-time code· οι guests μπαίνουν μόνο με όνομα εμφάνισης και κωδικό εισόδου. Τίποτα να κατεβάσεις, τίποτα να εγκαταστήσεις. Όλο τρέχει μέσα στον browser σε κινητό, tablet ή laptop.",
+      "body": "Το Eurovision Games είναι δωρεάν για ιδιωτικές βραδιές Eurovision. Δεν υπάρχει συνδρομή, ούτε αγορές μέσα στην εφαρμογή, ούτε διαφημίσεις — πουθενά στο site. Οι οικοδεσπότες συνδέονται μία φορά με κωδικό μίας χρήσης μέσω email· οι guests μπαίνουν μόνο με όνομα εμφάνισης και κωδικό εισόδου. Τίποτα να κατεβάσεις, τίποτα να εγκαταστήσεις. Όλα τρέχουν μέσα στον browser, σε κινητό, tablet ή laptop.",
       "title": "Δωρεάν, χωρίς λογαριασμό, χωρίς εγκατάσταση"
     },
     "hero": {
@@ -48,7 +48,7 @@
     },
     "related": [
       {
-        "blurb": "Οδηγός στησίματος από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίου.",
+        "blurb": "Οδηγός στησίματος από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων.",
         "href": "/how-to-play",
         "title": "Πώς να παίξεις σε 60 δευτερόλεπτα"
       },
@@ -58,7 +58,7 @@
         "title": "Φιλοξενώντας μια βραδιά Eurovision"
       },
       {
-        "blurb": "Κλείδωσε το Top 5 και το Worst 5 σου πριν την εκπομπή — οι πόντοι στοιβάζονται με τις μονομαχίες.",
+        "blurb": "Κλείδωσε το Top 5 και το Worst 5 σου πριν ανοίξει η ψηφοφορία — οι πόντοι στοιβάζονται με τις μονομαχίες.",
         "href": "/eurovision-predictions",
         "title": "Παιχνίδι προβλέψεων"
       },
@@ -80,11 +80,11 @@
     ],
     "whatIs": {
       "parts": {
-        "lead": "Το Eurovision Games είναι ένα δωρεάν, browser-based party game που παίζεται παράλληλα με τη μετάδοση του Διαγωνισμού Τραγουδιού Eurovision. Οι οικοδεσπότες στήνουν ιδιωτικό δωμάτιο σε 60 δευτερόλεπτα και μοιράζονται τον κωδικό· οι guests μπαίνουν μόνο με όνομα εμφάνισης. Το παιχνίδι περνά από τρεις ζωντανές φάσεις: ",
-        "mid1": " πριν την εκπομπή (κλείδωσε το Top 5 και το Worst 5 σου), ",
-        "mid2": " κατά τη διάρκεια της εκπομπής (head-to-head γύροι 12 δευτερολέπτων στις διαφημίσεις) και ",
+        "lead": "Το Eurovision Games είναι ένα δωρεάν, browser-based party game που παίζεται παράλληλα με τη μετάδοση του Διαγωνισμού Τραγουδιού Eurovision. Οι οικοδεσπότες στήνουν ιδιωτικό δωμάτιο σε 60 δευτερόλεπτα και μοιράζονται τον κωδικό· οι guests μπαίνουν μόνο με όνομα εμφάνισης. Το παιχνίδι έχει τρία μέρη: ",
+        "mid1": " από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία (φτιάξε και βελτίωσε το Top 5 και το Worst 5 σου), ",
+        "mid2": " στο ίδιο διάστημα, πριν και κατά τη διάρκεια της εκπομπής (3 γύροι quiz και head-to-head μονομαχίες 12 δευτερολέπτων ανά ερώτηση στις διαφημίσεις) και ",
         "predictionsBold": "προβλέψεις",
-        "tail": " μετά την ανακοίνωση του νικητή (Πρωταθλητής, Μάντης, Quizmaster, Μονομάχος, Κλέφτης). Όλα βαθμολογούνται αυτόματα.",
+        "tail": " μετά την ανακοίνωση του νικητή (Πρωταθλητής, Μάντης, Γκουρού, Μονομάχος, Κλέφτης). Όλα βαθμολογούνται αυτόματα.",
         "triviaBold": "trivia και μονομαχίες",
         "trophiesBold": "τρόπαια"
       },
@@ -94,33 +94,33 @@
       "items": [
         {
           "bold": "Προβλέψεις",
-          "lead": " — κλείδωσε το Top 5 και το Worst 5 σου πριν την εκπομπή. Οι πόντοι στοιβάζονται καθώς εξελίσσεται η μετάδοση. Δες ",
+          "lead": " — φτιάξε το Top 5 και το Worst 5 σου· κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία. Οι πόντοι στοιβάζονται καθώς έρχονται τα αποτελέσματα. Δες ",
           "linkHref": "/eurovision-predictions",
           "linkLabel": "τη φετινή σελίδα προβλέψεων",
           "tail": "."
         },
         {
           "bold": "Quiz",
-          "lead": " — open-room Eurovision trivia στη φάση Pre-show. Κλειδώνει μόλις ξεκινήσει η ζωντανή εκπομπή.",
+          "lead": " — 3 γύροι Eurovision trivia, που τους παίζεις με τον δικό σου ρυθμό από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία.",
           "tail": ""
         },
         {
           "bold": "Μονομαχίες",
-          "lead": " — head-to-head μάχες trivia 3 ερωτήσεων κατά τη διάρκεια της ζωντανής εκπομπής. Κλέψε πόντους ή διπλασίασε τους δικούς σου. ",
+          "lead": " — head-to-head μάχες trivia 3 ερωτήσεων, πριν και κατά τη διάρκεια της εκπομπής μέχρι να ανοίξει η ψηφοφορία. Κλέψε το σκορ της μονομαχίας σου από τον ηττημένο ή διπλασίασέ το. ",
           "linkHref": "/duels",
           "linkLabel": "Πλήρεις κανόνες μονομαχίας",
           "tail": "."
         },
         {
           "bold": "Τρόπαια",
-          "lead": " — πέντε κατηγορίες τέλους βραδιάς (Πρωταθλητής, Μάντης, Quizmaster, Μονομάχος, Κλέφτης). Sudden-death tiebreak αν δύο παίκτες ισοβαθμήσουν.",
+          "lead": " — πέντε κατηγορίες τέλους βραδιάς (Πρωταθλητής, Μάντης, Γκουρού, Μονομάχος, Κλέφτης). Sudden-death tiebreak αν δύο παίκτες ισοβαθμήσουν.",
           "tail": ""
         }
       ],
       "title": "Τι περιλαμβάνει το παιχνίδι"
     },
     "why": {
-      "body": "Το να βλέπεις Eurovision είναι ωραίο. Το να βλέπεις Eurovision με στοιχήματα είναι καλύτερο. Οι υπάρχουσες επιλογές — εκτυπωμένα bingo cards, επί πληρωμή πακέτα quiz, custom Google Sheets — σπάνε όλες με τον ίδιο τρόπο: κάποιος πρέπει να κάνει τη βαθμολογία και αυτός ο κάποιος χάνει τη μισή εκπομπή. Θέλαμε ζωντανή, αυτόματη βαθμολογία που δεν θα κόστιζε τίποτα και δεν θα απαιτούσε εγκατάσταση. Αυτό είναι όλο το προϊόν.",
+      "body": "Το να βλέπεις Eurovision είναι ωραίο. Το να βλέπεις Eurovision όταν κάτι διακυβεύεται είναι καλύτερο. Οι υπάρχουσες επιλογές — εκτυπωμένα bingo cards, επί πληρωμή πακέτα quiz, custom Google Sheets — αποτυγχάνουν όλες στο ίδιο σημείο: κάποιος πρέπει να κάνει τη βαθμολογία και αυτός ο κάποιος χάνει τη μισή εκπομπή. Θέλαμε ζωντανή, αυτόματη βαθμολογία που δεν θα κόστιζε τίποτα και δεν θα απαιτούσε εγκατάσταση. Αυτό είναι όλο το προϊόν.",
       "cardTitle": "Πέντε αρχές, καμία εξαίρεση",
       "items": [
         {
@@ -206,7 +206,7 @@
         "title": "Hosting a Eurovision night"
       },
       {
-        "blurb": "Lock your Top 5 and Worst 5 before the show — points stack with duels.",
+        "blurb": "Lock your Top 5 and Worst 5 before voting opens — points stack with duels.",
         "href": "/eurovision-predictions",
         "title": "Predictions game"
       },
@@ -228,11 +228,11 @@
     ],
     "whatIs": {
       "parts": {
-        "lead": "Eurovision Games is a free, browser-based party game played alongside the Eurovision Song Contest broadcast. Hosts spin up a private room in 60 seconds and share the code; guests join with just a display name. The game runs through three live phases: ",
-        "mid1": " before the show (lock your Top 5 and Worst 5), ",
-        "mid2": " during the show (head-to-head 12-second rounds during ad breaks), and ",
+        "lead": "Eurovision Games is a free, browser-based party game played alongside the Eurovision Song Contest broadcast. Hosts spin up a private room in 60 seconds and share the code; guests join with just a display name. The game has three parts: ",
+        "mid1": " from party start until voting opens (build and refine your Top 5 and Worst 5), ",
+        "mid2": " in the same window, before and during the show (3 quiz rounds plus head-to-head 12-second duel rounds in the ad breaks), and ",
         "predictionsBold": "predictions",
-        "tail": " after the winner is announced (Champion, Oracle, Quizmaster, Duelist, Thief). Everything scores automatically.",
+        "tail": " after the winner is announced (Champion, Oracle, Guru, Duelist, Thief). Everything scores automatically.",
         "triviaBold": "trivia and duels",
         "trophiesBold": "trophies"
       },
@@ -242,26 +242,26 @@
       "items": [
         {
           "bold": "Predictions",
-          "lead": " — lock your Top 5 and Worst 5 before the show. Points stack as the broadcast plays out. See ",
+          "lead": " — build your Top 5 and Worst 5; they lock automatically when voting opens. Points stack as the results come in. See ",
           "linkHref": "/eurovision-predictions",
           "linkLabel": "this year's predictions page",
           "tail": "."
         },
         {
           "bold": "Quiz",
-          "lead": " — open-room Eurovision trivia in the Preshow phase. Locks when the live show starts.",
+          "lead": " — 3 rounds of Eurovision trivia, played at your own pace from party start until voting opens.",
           "tail": ""
         },
         {
           "bold": "Duels",
-          "lead": " — 3-question head-to-head trivia battles during the live show. Steal points or double your own. ",
+          "lead": " — 3-question head-to-head trivia battles, before and during the show until voting opens. Steal your duel score from the loser or double it. ",
           "linkHref": "/duels",
           "linkLabel": "Full duel rules",
           "tail": "."
         },
         {
           "bold": "Trophies",
-          "lead": " — five end-of-night categories (Champion, Oracle, Quizmaster, Duelist, Thief). Sudden-death tiebreaks if two players tie.",
+          "lead": " — five end-of-night categories (Champion, Oracle, Guru, Duelist, Thief). Sudden-death tiebreaks if two players tie.",
           "tail": ""
         }
       ],
@@ -285,7 +285,7 @@
         },
         {
           "bold": "Mobile-first.",
-          "rest": " Most people host from a sofa with a phone in hand."
+          "rest": " Most people play from a sofa with a phone in hand."
         },
         {
           "bold": "Real fun, not gamified.",

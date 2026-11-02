@@ -203,7 +203,7 @@
     "sentChallenges": "Open Duel Invitations",
     "waitingResponse": "Waiting for response...",
     "yourTurn": "⚔️ Your Turn",
-    "waitingOpponent": "Waiting for Opponent to answer Quiz",
+    "waitingOpponent": "Waiting for opponent to answer the quiz",
     "opponentAnswering": "Opponent Answering",
     "doneCheck": "Done ✓",
     "answering": "Answering...",
@@ -450,8 +450,8 @@
       "champion": { "name": "Champion",    "subtitle": "Most Points" },
       "duelist":  { "name": "The Duelist", "subtitle": "Most Duels Won" },
       "thief":    { "name": "Thief",       "subtitle": "Most Points Stolen" },
-      "guru":     { "name": "Guru",        "subtitle": "Most Quiz Answers" },
-      "oracle":   { "name": "The Oracle",  "subtitle": "Most Predictions" }
+      "guru":     { "name": "Guru",        "subtitle": "Most Correct Answers" },
+      "oracle":   { "name": "The Oracle",  "subtitle": "Most Prediction Points" }
     }
   },
   "sd": {
@@ -528,10 +528,10 @@
   },
   "exitModal": {
     "title": "Exit Game?",
-    "body": "This will remove you from the game. You can rejoin within 2 hours to recover your points. After that, your progress is gone permanently.",
+    "body": "This will remove you from the game. You can rejoin any time until the room ends, and your points will be waiting. If the room ends first, they're gone for good.",
     "warn1": "You'll appear as left to other players",
-    "warn2": "You can rejoin within 2 hours to recover your points",
-    "warn3": "After 2 hours, access and points are gone forever",
+    "warn2": "You can rejoin any time until the room ends — your points are kept",
+    "warn3": "If the room ends before you rejoin, your points are lost",
     "confirm": "Yes, Exit Game",
     "cancel": "Cancel — Stay in Room"
   },

@@ -11,12 +11,12 @@
       "title": "Δοκίμασε τα μαθηματικά ζωντανά"
     },
     "duel": {
-      "body": "Όποιος έχει το υψηλότερο σύνολο απαντήσεων κερδίζει τη μονομαχία· σε ισοπαλία, σπάει ο γρηγορότερος συνολικός χρόνος απάντησης. Ο νικητής παίρνει επίσης σταθερό μπόνους νίκης <strong>+12</strong>. Το σύνολο που κέρδισε σε εκείνη τη μονομαχία ονομάζεται <em>v_winner_score</em>.",
+      "body": "Όποιος έχει το υψηλότερο σύνολο απαντήσεων κερδίζει τη μονομαχία· αν τα σύνολα είναι ίσα, η μονομαχία λήγει ισόπαλη, χωρίς νικητή, και κανείς δεν κερδίζει ή χάνει πόντους. Το σύνολο απαντήσεων του νικητή σε εκείνη τη μονομαχία είναι το <em>σκορ της μονομαχίας</em> του· πάνω σε αυτό υπολογίζονται η Κλοπή και ο Διπλασιασμός παρακάτω. Δεν υπάρχει ξεχωριστό μπόνους νίκης.",
       "headers": [
         "Σενάριο",
         "Πόντοι"
       ],
-      "intro": "Μια μονομαχία είναι 3 ερωτήσεις trivia, ένας προς έναν. Κάθε σωστή απάντηση βαθμολογείται ανά δευτερόλεπτο που πέρασε — μισό δευτερόλεπτο δισταγμός κοστίζει έναν πόντο.",
+      "intro": "Μια μονομαχία είναι 3 ερωτήσεις trivia, ένας προς έναν. Κάθε σωστή απάντηση βαθμολογείται ανάλογα με τα δευτερόλεπτα που πέρασαν — κάθε δευτερόλεπτο δισταγμού κοστίζει έναν πόντο.",
       "rows": [
         {
           "label": "Σωστή απάντηση στα 0–1 δευτερόλεπτα",
@@ -39,9 +39,9 @@
           "value": "0"
         },
         {
-          "label": "Μπόνους νίκης (υψηλότερο σύνολο απαντήσεων)",
-          "tone": "pinkBonus",
-          "value": "+12"
+          "label": "Μπόνους νίκης (κανένα — ο νικητής διαλέγει Κλοπή ή Διπλασιασμό)",
+          "tone": "muted",
+          "value": "0"
         }
       ],
       "title": "Βαθμολογία μονομαχίας"
@@ -50,7 +50,7 @@
       "intro": "Τελείωσες τη βραδιά με:",
       "items": [
         {
-          "rest": "18 σωστές στις 30, κυρίως κλίμακας 2 ως προς τον χρόνο → <strong>~144</strong> πόντοι.",
+          "rest": "18 σωστές στις 30, κυρίως στη 2η χρονική κλίμακα → <strong>~144</strong> πόντοι.",
           "strong": "Quiz."
         },
         {
@@ -58,20 +58,20 @@
           "strong": "Προβλέψεις."
         },
         {
-          "rest": "Κερδισμένες 2, και οι δύο Κλοπή — 28 πόντοι ήρθαν προς εσένα και άλλοι 24 κλεμμένοι στη δεύτερη = 52 από κλοπές + 2 × 12 μπόνους νίκης = <strong>76</strong> πόντοι καθαρά.",
+          "rest": "2 νίκες, και οι δύο με Κλοπή — σκορ μονομαχίας 28 και 24, και οι δύο αντίπαλοι είχαν τουλάχιστον τόσους κατοχυρωμένους πόντους, άρα 28 + 24 = <strong>52</strong> πόντοι πέρασαν σε σένα (δεν υπάρχει μπόνους νίκης). Με Διπλασιασμό και τις δύο φορές θα έπαιρνες 2 × (28 + 24) = 104, χωρίς να χάσουν τίποτα εκείνοι.",
           "strong": "Μονομαχίες."
         },
         {
-          "rest": "Πιθανός διεκδικητής τίτλου Πρωταθλητή σε μια κανονική βραδιά.",
-          "strong": "Σύνολο: 380 πόντοι."
+          "rest": "(144 + 160 + 52) Πιθανός διεκδικητής του τροπαίου Πρωταθλητή σε μια συνηθισμένη βραδιά.",
+          "strong": "Σύνολο: 356 πόντοι."
         }
       ],
-      "title": "Λυμένο παράδειγμα"
+      "title": "Παράδειγμα υπολογισμού"
     },
     "hero": {
       "chip": "Φόρμουλες βαθμολογίας",
       "lede": "Κάθε ενέργεια αντιστοιχεί σε ένα διαφανές σύνολο πόντων. Η σελίδα δείχνει τις ακριβείς φόρμουλες που χρησιμοποιεί ο server για προβλέψεις Top-5 και Worst-5, απαντήσεις quiz και αποτελέσματα μονομαχιών — χρήσιμο αν χαράζεις στρατηγική πριν την εκπομπή ή τσακώνεσαι με τον οικοδεσπότη μετά.",
-      "title": "Βαθμολογία και Φόρμουλες — ακριβείς φόρμουλες του Eurovision Games"
+      "title": "Eurovision Games — οι ακριβείς φόρμουλες βαθμολογίας"
     },
     "meta": {
       "description": "Οι ακριβείς φόρμουλες βαθμολογίας του Eurovision Games για προβλέψεις Top-5 και Worst-5, κλίμακες χρόνου απάντησης quiz, μαθηματικά μονομαχιών, Κλοπή vs Διπλασιασμό και ακραίες περιπτώσεις.",
@@ -86,23 +86,23 @@
     "penalties": {
       "items": [
         {
-          "rest": "Ο παίκτης μαρκάρεται απών. Οι προβλέψεις βαθμολογούνται αυτόματα· οι ευκαιρίες quiz και μονομαχιών χάνονται.",
+          "rest": "Ο παίκτης σημειώνεται ως απών. Οι προβλέψεις εξακολουθούν να βαθμολογούνται αυτόματα· οι ευκαιρίες quiz και μονομαχιών χάνονται.",
           "strong": "Αποχώρηση μέσα στο παιχνίδι."
         },
         {
-          "rest": "Καταγράφονται ανά παίκτη αλλά χωρίς ποινή πόντων. Το τρόπαιο Μονομάχος ανταμείβει τη συμμετοχή.",
-          "strong": "Αρνημένες προκλήσεις μονομαχιών."
+          "rest": "Καμία ποινή πόντων, αλλά οι αρνήσεις είναι περιορισμένες ανά παίκτη και βραδιά: 2 σε δωμάτια έως 5 παικτών, 3 με 6–10, 4 με 11–15, 5 με 16 ή περισσότερους. Μετράνε και οι ρεβάνς που απορρίπτεις.",
+          "strong": "Απορριφθείσες προκλήσεις μονομαχιών."
         },
         {
           "rest": "Οι αναπάντητες ερωτήσεις παίρνουν 0· η μονομαχία κρίνεται από όποιον έχει περισσότερους πόντους.",
           "strong": "Αποσύνδεση μέσα σε μονομαχία."
         },
         {
-          "rest": "(πολλαπλές συσκευές, βοήθεια AI): στη διακριτική ευχέρεια του οικοδεσπότη· προτεινόμενη λύση είναι η ακύρωση των μονομαχιών και γύρων quiz που επηρεάστηκαν.",
+          "rest": "(πολλαπλές συσκευές, βοήθεια AI): στη διακριτική ευχέρεια του οικοδεσπότη· η προτεινόμενη λύση είναι η ακύρωση των μονομαχιών και γύρων quiz που επηρεάστηκαν.",
           "strong": "Ζαβολιά"
         },
         {
-          "rest": "Δεν μπορείς να σύρεις τον ηττημένο κάτω από το μηδέν — αν έχει λιγότερα κατοχυρωμένα από <em>v_winner_score</em>, η Κλοπή παίρνει μόνο όσα υπάρχουν.",
+          "rest": "Δεν μπορείς να σύρεις τον ηττημένο κάτω από το μηδέν — αν έχει λιγότερους κατοχυρωμένους πόντους από το <em>σκορ της μονομαχίας</em> σου, η Κλοπή παίρνει μόνο όσους υπάρχουν· αν δεν έχει καθόλου, διαθέσιμος είναι μόνο ο Διπλασιασμός.",
           "strong": "Όριο Κλοπής."
         }
       ],
@@ -113,8 +113,8 @@
         "Χρόνος απάντησης",
         "Πόντοι (σωστά)"
       ],
-      "intro": "Κάθε γύρος quiz έχει 10 ερωτήσεις, 4 επιλογές ανά ερώτηση, χρονόμετρο 15 δευτερολέπτων. Οι πόντοι είναι κλιμακωτοί ανάλογα με τον χρόνο απάντησης — γρήγορα και σωστά πληρώνει τα περισσότερα.",
-      "note": "Μέγιστοι πόντοι quiz ανά γύρο: 10 ερωτήσεις × 12 = <strong>120</strong>. Η προεπιλεγμένη βραδιά τρέχει 3 γύρους (παραμετροποιήσιμο από τον οικοδεσπότη, 1–3), για όριο quiz <strong>360</strong> πόντων.",
+      "intro": "Κάθε γύρος quiz έχει 10 ερωτήσεις, με 4 επιλογές ανά ερώτηση και χρονόμετρο 15 δευτερολέπτων. Οι πόντοι είναι κλιμακωτοί ανάλογα με τον χρόνο απάντησης — η γρήγορη σωστή απάντηση δίνει τους περισσότερους πόντους.",
+      "note": "Μέγιστοι πόντοι quiz ανά γύρο: 10 ερωτήσεις × 12 = <strong>120</strong>. Κάθε βραδιά έχει 3 γύρους, άρα το μέγιστο στο quiz είναι <strong>360</strong> πόντοι.",
       "rows": [
         {
           "label": "0–3 δευτερόλεπτα",
@@ -122,12 +122,12 @@
           "value": "12"
         },
         {
-          "label": "3.01–7 δευτερόλεπτα",
+          "label": "3,01–7 δευτερόλεπτα",
           "tone": "strong",
           "value": "8"
         },
         {
-          "label": "7.01–15 δευτερόλεπτα",
+          "label": "7,01–15 δευτερόλεπτα",
           "tone": "strong",
           "value": "4"
         },
@@ -152,7 +152,7 @@
           "title": "Μονομαχίες"
         },
         {
-          "blurb": "50+ ενδεικτικές ερωτήσεις και η τράπεζα από όπου τραβάνε quiz/μονομαχίες.",
+          "blurb": "50+ ενδεικτικές ερωτήσεις και η τράπεζα ερωτήσεων από την οποία αντλούν το quiz και οι μονομαχίες.",
           "href": "/eurovision-trivia",
           "title": "Trivia"
         },
@@ -162,12 +162,12 @@
           "title": "Κανονισμός"
         },
         {
-          "blurb": "Οδηγός εγκατάστασης 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.",
+          "blurb": "Οδηγός 60 δευτερολέπτων για το στήσιμο, από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.",
           "href": "/how-to-play",
           "title": "Πώς παίζεται"
         },
         {
-          "blurb": "Οδηγός hosting για τη βραδιά του τελικού με πλήρες χρονοδιάγραμμα.",
+          "blurb": "Οδηγός διοργάνωσης για τη βραδιά του Μεγάλου Τελικού με πλήρες χρονοδιάγραμμα.",
           "href": "/eurovision-night",
           "title": "Eurovision night"
         }
@@ -178,11 +178,11 @@
       "articleHeadline": "Eurovision Games — Ακριβείς Φόρμουλες Βαθμολογίας"
     },
     "stealDouble": {
-      "doubleBody": "Πρόσθεσε άλλο ένα <em>v_winner_score</em> στο δικό σου σύνολο. Ο ηττημένος κρατά τους πόντους του. Καλύτερο όταν είσαι ήδη μπροστά και δεν θες να τροφοδοτήσεις πρόκληση εκδίκησης — αυστηρά καλύτερο όταν ο ηττημένος έχει λιγότερα από <em>v_winner_score</em> κατοχυρωμένα.",
+      "doubleBody": "Πρόσθεσε <strong>2 ×</strong> το <em>σκορ της μονομαχίας</em> σου στο δικό σου σύνολο. Ο ηττημένος κρατά τους πόντους του. Σού δίνει πάντα το μεγαλύτερο κέρδος — η φυσική επιλογή όταν κυνηγάς όλο το δωμάτιο και όχι μόνο αυτόν τον αντίπαλο, ή όταν ο ηττημένος έχει λίγους ή καθόλου κατοχυρωμένους πόντους.",
       "doubleTitle": "✨ Διπλασιασμός",
       "intro": "Ο νικητής της μονομαχίας διαλέγει μία από δύο επιδράσεις στους πόντους που μόλις κέρδισε:",
-      "note": "Και τα δύο πληρώνουν το ίδιο σε σένα όταν ο αντίπαλος έχει τουλάχιστον <em>v_winner_score</em> κατοχυρωμένα· αν δεν έχει, ο Διπλασιασμός πληρώνει περισσότερα.",
-      "stealBody": "Πάρε <em>v_winner_score</em> πόντους από το κατοχυρωμένο σύνολο του ηττημένου. Με όριο όσα έχει πραγματικά ο ηττημένος — δεν μπορείς να τον πας κάτω από το μηδέν. Μηδενικού αθροίσματος μετατόπιση: το κέρδος σου ισούται με την απώλειά του. Καλύτερο όταν η προσπέραση του πρώτου μετράει περισσότερο από το απόλυτο κέρδος.",
+      "note": "Απέναντι σε αυτόν τον αντίπαλο, και οι δύο επιλογές ανοίγουν την ίδια διαφορά (2 × το σκορ της μονομαχίας σου), αρκεί να έχει τουλάχιστον τόσους κατοχυρωμένους πόντους· απέναντι σε όλους τους άλλους στο δωμάτιο, ο Διπλασιασμός αξίζει τα διπλά. Αν ο ηττημένος έχει 0 πόντους, διαθέσιμος είναι μόνο ο Διπλασιασμός.",
+      "stealBody": "Μετέφερε το <em>σκορ της μονομαχίας</em> σου από το κατοχυρωμένο σύνολο του ηττημένου στο δικό σου. Το ποσό περιορίζεται σε όσους πόντους έχει πραγματικά ο ηττημένος — δεν μπορείς να τον ρίξεις κάτω από το μηδέν — και η Κλοπή δεν επιτρέπεται αν έχει 0 πόντους. Ανταλλαγή μηδενικού αθροίσματος: το κέρδος σου ισούται με την απώλειά του. Καλύτερη όταν αυτός ο αντίπαλος είναι αυτός που πρέπει να προσπεράσεις.",
       "stealTitle": "⚔️ Κλοπή",
       "title": "Κλοπή vs Διπλασιασμός"
     },
@@ -217,8 +217,8 @@
         "Αποτέλεσμα",
         "Πόντοι"
       ],
-      "intro": "Συμμετρικό με το Top-5, βαθμολογείται με βάση το επίσημο bottom 5 (η τελευταία θέση = θέση 1 στη λίστα Worst-5 σου):",
-      "note": "Μέγιστοι πόντοι Worst-5: <strong>250</strong>. Συνδυαστικό όριο προβλέψεων: <strong>500</strong>.",
+      "intro": "Συμμετρικά με το Top-5, βαθμολογείται με βάση τις 5 τελευταίες θέσεις της επίσημης κατάταξης (η τελευταία θέση = θέση 1 στη λίστα Worst-5 σου):",
+      "note": "Μέγιστοι πόντοι Worst-5: <strong>250</strong>. Μέγιστο συνολικό σκορ προβλέψεων: <strong>500</strong>.",
       "rows": [
         {
           "label": "Χώρα στην ακριβή τελευταία θέση που προέβλεψες",
@@ -251,12 +251,12 @@
       "title": "Try the math live"
     },
     "duel": {
-      "body": "Whoever has the higher answer total wins the duel; if tied, faster total response time breaks it. The winner also pockets a flat <strong>+12</strong> duel-win bonus. Their total earned that duel is called <em>v_winner_score</em>.",
+      "body": "Whoever has the higher answer total wins the duel; if the totals are equal, the duel is a tie — no winner, and no points change hands. The winner’s answer total in that duel is their <em>duel score</em>; it is the base for Steal and Double below. There is no separate win bonus.",
       "headers": [
         "Scenario",
         "Points"
       ],
-      "intro": "A duel is 3 trivia questions, head-to-head. Each correct answer scores by elapsed seconds — a half-second hesitation costs you a point.",
+      "intro": "A duel is 3 trivia questions, head-to-head. Each correct answer scores by elapsed seconds — every second of hesitation costs you a point.",
       "rows": [
         {
           "label": "Correct answer at 0–1 seconds",
@@ -279,9 +279,9 @@
           "value": "0"
         },
         {
-          "label": "Win bonus (higher answer total)",
-          "tone": "pinkBonus",
-          "value": "+12"
+          "label": "Win bonus (none — the winner picks Steal or Double instead)",
+          "tone": "muted",
+          "value": "0"
         }
       ],
       "title": "Duel scoring"
@@ -298,12 +298,12 @@
           "strong": "Predictions."
         },
         {
-          "rest": "Won 2, both Steal — 28 pts swung your way and another 24 stolen on the second = 52 from steals + 2 × 12 win bonus = <strong>76</strong> pts net.",
+          "rest": "Won 2, both Steal — duel scores of 28 and 24, and both opponents had at least that much banked, so 28 + 24 = <strong>52</strong> pts moved to you (there is no win bonus). Picking Double both times would have added 2 × (28 + 24) = 104 instead, with nothing taken from them.",
           "strong": "Duels."
         },
         {
-          "rest": "Likely Champion contender on a normal night.",
-          "strong": "Total: 380 pts."
+          "rest": "(144 + 160 + 52) Likely Champion contender on a normal night.",
+          "strong": "Total: 356 pts."
         }
       ],
       "title": "Worked example"
@@ -330,7 +330,7 @@
           "strong": "Quitting mid-game."
         },
         {
-          "rest": "Tracked per player but no point penalty. The Duelist trophy rewards participation.",
+          "rest": "No point penalty, but refusals are limited per player per night: 2 in rooms of up to 5 players, 3 with 6–10, 4 with 11–15, 5 with 16 or more. Refused rematches count too.",
           "strong": "Refused duel challenges."
         },
         {
@@ -338,11 +338,11 @@
           "strong": "Mid-duel disconnect."
         },
         {
-          "rest": "(multi-device, AI assist): host discretion; suggested resolution is voiding affected duels and quiz rounds.",
+          "rest": "(multi-device, AI assist): at the host’s discretion; the suggested resolution is voiding affected duels and quiz rounds.",
           "strong": "Cheating"
         },
         {
-          "rest": "You cannot drag the loser below zero — if they have less banked than <em>v_winner_score</em>, Steal only takes what’s there.",
+          "rest": "You cannot drag the loser below zero — if they have less banked than your <em>duel score</em>, Steal only takes what’s there; if they have nothing, only Double is available.",
           "strong": "Steal cap."
         }
       ],
@@ -354,7 +354,7 @@
         "Points (correct)"
       ],
       "intro": "Each quiz round is 10 questions, 4 options per question, 15-second timer. Points are tier-based on response time — fast and right pays the most.",
-      "note": "Maximum quiz points per round: 10 questions × 12 = <strong>120</strong>. Default night runs 3 rounds (host configurable, 1–3) for a quiz cap of <strong>360</strong> points.",
+      "note": "Maximum quiz points per round: 10 questions × 12 = <strong>120</strong>. Every night has 3 rounds, for a quiz cap of <strong>360</strong> points.",
       "rows": [
         {
           "label": "0–3 seconds",
@@ -418,11 +418,11 @@
       "articleHeadline": "Eurovision Games — Exact Scoring Formulas"
     },
     "stealDouble": {
-      "doubleBody": "Add another <em>v_winner_score</em> to your own total. Loser keeps their points. Better when you’re already ahead and don’t want to fuel a revenge challenge — strictly better when the loser has less than <em>v_winner_score</em> banked.",
+      "doubleBody": "Add <strong>2 ×</strong> your <em>duel score</em> to your own total. The loser keeps their points. Always the bigger gain for you — the natural pick when you’re racing the whole room rather than this one opponent, or when the loser has little or nothing banked.",
       "doubleTitle": "✨ Double",
       "intro": "The duel winner picks one of two effects on the points they just earned:",
-      "note": "Both pay the same to you when the opponent has at least <em>v_winner_score</em> banked; if they don’t, Double pays more.",
-      "stealBody": "Take <em>v_winner_score</em> points from the loser’s banked total. Capped at what the loser actually has — you cannot take them below zero. Zero-sum swing: your gain matches their loss. Best when overtaking the leader matters more than the absolute gain.",
+      "note": "Against that one opponent, both options open the same gap (2 × your duel score) as long as they have at least your duel score banked; against everyone else in the room, Double is worth twice as much. If the loser has 0 points, only Double is available.",
+      "stealBody": "Move your <em>duel score</em> from the loser’s banked total to yours. Capped at what the loser actually has — you cannot take them below zero — and unavailable if they have 0 points. Zero-sum swing: your gain matches their loss. Best when this opponent is the one you need to overtake.",
       "stealTitle": "⚔️ Steal",
       "title": "Steal vs Double"
     },

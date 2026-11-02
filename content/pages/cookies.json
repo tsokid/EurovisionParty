@@ -6,9 +6,9 @@
         "lead": "Στην πρώτη επίσκεψη βλέπεις ένα μικρό banner στο κάτω μέρος της σελίδας με τρία κουμπιά: ",
         "manage": "Διαχείριση προτιμήσεων",
         "mid1": ", ",
-        "mid2": " (στατιστικά off) και ",
-        "reject": "Απόρριψη όλων",
-        "tail": ". Το Reject απαιτεί τα ίδια κλικ με το Accept — δεν σε σπρώχνουμε με dark patterns σε αποδοχή. Το banner εμφανίζεται ξανά αν καθαρίσεις το browser storage ή ανακαλέσεις την επιλογή σου από αυτή τη σελίδα."
+        "mid2": " (χωρίς στατιστικά) και ",
+        "reject": "Μόνο απαραίτητα",
+        "tail": ". Το «Μόνο απαραίτητα» απαιτεί τόσα κλικ όσα και το «Αποδοχή όλων» — δεν σε σπρώχνουμε σε αποδοχή με dark patterns. Το banner εμφανίζεται ξανά αν καθαρίσεις τα δεδομένα αποθήκευσης του browser ή ανακαλέσεις την επιλογή σου από αυτή τη σελίδα."
       },
       "title": "Banner συναίνεσης cookies"
     },
@@ -21,15 +21,15 @@
       "cardBody": "Ανοίγει το παράθυρο προτιμήσεων όπου μπορείς να επανεξετάσεις την επιλογή σου. Η επιλογή σου διατηρείται μεταξύ επισκέψεων σε αυτή τη συσκευή μέχρι να καθαριστεί.",
       "cardTitle": "Άνοιξε τις προτιμήσεις cookies",
       "intro": {
-        "emphasis": "Cookies & Συναίνεση",
+        "emphasis": "Cookies & Συγκατάθεση",
         "lead": "Άνοιξε το παράθυρο προτιμήσεων παρακάτω ή κάνε κλικ στην επιλογή ",
-        "tail": " στο footer οποιασδήποτε σελίδας. Μπορείς να ενεργοποιήσεις ή να απενεργοποιήσεις τα Στατιστικά χωρίς να επηρεάσεις την κατηγορία απολύτως απαραίτητων."
+        "tail": " στο footer οποιασδήποτε σελίδας. Μπορείς να ενεργοποιήσεις ή να απενεργοποιήσεις τα Στατιστικά χωρίς να επηρεάσεις την κατηγορία των απολύτως απαραίτητων."
       },
       "title": "Άλλαξε τη συναίνεσή σου"
     },
     "hero": {
       "chip": "Cookies & συναίνεση",
-      "lede": "Στο Eurovision Games κρατάμε τα cookies στο ελάχιστο: μία κατηγορία απολύτως απαραίτητων που κρατά το παιχνίδι σε λειτουργία, και μία προαιρετική κατηγορία στατιστικών που μπορείς να ενεργοποιήσεις ή να απενεργοποιήσεις όποτε θέλεις. Καμία διαφήμιση, καμία διασταυρούμενη παρακολούθηση, κανένα dark pattern.",
+      "lede": "Στο Eurovision Games κρατάμε τα cookies στο ελάχιστο: μία κατηγορία απολύτως απαραίτητων που κρατά το παιχνίδι σε λειτουργία, και μία κατηγορία στατιστικών που είναι απενεργοποιημένη και δεν χρησιμοποιείται προς το παρόν — δεν τρέχουμε κανένα εργαλείο στατιστικών. Καμία διαφήμιση, καμία παρακολούθηση μεταξύ ιστοτόπων, κανένα dark pattern.",
       "title": "Cookies & συναίνεση"
     },
     "meta": {
@@ -63,7 +63,7 @@
         },
         {
           "bold": "Καμία βιβλιοθήκη fingerprinting.",
-          "rest": " Χωρίς device hashing ή behavioural ID."
+          "rest": " Χωρίς hashing συσκευής ή αναγνωριστικά συμπεριφοράς."
         }
       ],
       "title": "Τι ΔΕΝ χρησιμοποιούμε"
@@ -91,33 +91,33 @@
         "Σκοπός",
         "Προεπιλογή"
       ],
-      "intro": "Δύο κατηγορίες — τη μία μπορείς να την κλείσεις χωρίς να σπάσει τίποτα ορατό. Το Reject απαιτεί τα ίδια κλικ με το Accept — δεν κρύβουμε τον διακόπτη.",
+      "intro": "Δύο κατηγορίες: τα απολύτως απαραίτητα και μια κατηγορία στατιστικών που προς το παρόν είναι κενή. Το «Μόνο απαραίτητα» απαιτεί τόσα κλικ όσα και το «Αποδοχή όλων» — δεν κρύβουμε τον διακόπτη απενεργοποίησης.",
       "rows": [
         {
           "category": "Απολύτως απαραίτητα",
           "defaultText": "Πάντα ενεργά — απαραίτητα για να δουλέψει το παιχνίδι.",
           "defaultTone": "muted",
-          "purpose": "Σε κρατά συνδεδεμένο στο δωμάτιό σου (player ID, κωδικός εισόδου, όνομα), θυμάται τη γλώσσα σου και αποθηκεύει την ίδια την επιλογή συναίνεσης."
+          "purpose": "Σε κρατά στο δωμάτιό σου — μια συνεδρία σύνδεσης Supabase (ανώνυμη για παίκτες και οικοδεσπότες· σύνδεση με email για τους διαχειριστές του site) μαζί με τον κωδικό δωματίου, το player ID και τον κωδικό πρόσβασης του δωματίου, αν έχει οριστεί — θυμάται τη γλώσσα σου και τις ρυθμίσεις ήχου και εμφάνισης, και αποθηκεύει την ίδια την επιλογή συναίνεσης."
         },
         {
-          "category": "Στατιστικά",
+          "category": "Στατιστικά (δεν χρησιμοποιούνται προς το παρόν)",
           "defaultText": "Ανενεργά μέχρι να συναινέσεις.",
           "defaultTone": "pink",
-          "purpose": "Ανώνυμα, συγκεντρωτικά νούμερα προβολών σελίδων ώστε να βλέπουμε ποιοι οδηγοί και σελίδες χρησιμοποιούνται πραγματικά. Χωρίς προσωπικά αναγνωριστικά, χωρίς διασταυρούμενη παρακολούθηση."
+          "purpose": "Κανένα — σήμερα δεν τρέχουμε κανένα εργαλείο στατιστικών. Αν προσθέσουμε στο μέλλον (π.χ. Plausible), θα σου ζητήσουμε πρώτα εδώ τη συναίνεσή σου."
         }
       ],
       "title": "Τι χρησιμοποιούμε"
     },
     "whereDataLives": {
       "intro": {
-        "lead": "Η κατάσταση των απολύτως απαραίτητων ζει στο local storage του browser σου και σε standard cookies — τίποτα δεν φεύγει από τη συσκευή σου μέχρι να μπεις ενεργά σε δωμάτιο. Η κατάσταση παιχνιδιού (δωμάτιο, παίκτες, προβλέψεις, βαθμολογία) ζει στη βάση δεδομένων μας όσο το δωμάτιο είναι ενεργό και διαγράφεται σύμφωνα με την πολιτική διατήρησης στην ",
+        "lead": "Η κατάσταση των απολύτως απαραίτητων ζει στο local storage του browser σου και σε standard cookies. Εκτός από μια ανώνυμη συνεδρία σύνδεσης που δημιουργείται όταν ανοίγεις το παιχνίδι, τίποτα για σένα δεν αποστέλλεται μέχρι να φτιάξεις ή να μπεις σε δωμάτιο. Η κατάσταση παιχνιδιού (δωμάτιο, παίκτες, προβλέψεις, βαθμολογία) ζει στη βάση δεδομένων μας όσο το δωμάτιο είναι ενεργό και διαγράφεται σύμφωνα με την πολιτική διατήρησης στην ",
         "linkLabel": "Πολιτική Απορρήτου",
         "tail": " μας."
       },
       "items": [
         {
           "bold": "Browser storage",
-          "rest": " — γλώσσα, κωδικός εισόδου, όνομα παίκτη, επιλογή συναίνεσης."
+          "rest": " — συνεδρία σύνδεσης, γλώσσα, κωδικός δωματίου, player ID, κωδικός πρόσβασης δωματίου (αν έχει οριστεί), ρυθμίσεις ήχου και εμφάνισης, επιλογή συναίνεσης."
         },
         {
           "bold": "Server (Supabase Postgres)",
@@ -139,8 +139,8 @@
         "manage": "Manage preferences",
         "mid1": ", ",
         "mid2": " (analytics off), and ",
-        "reject": "Reject all",
-        "tail": ". Reject is the same number of clicks as Accept — we don't dark-pattern you into agreeing. The banner reappears if you clear browser storage or revoke your choice from this page."
+        "reject": "Necessary only",
+        "tail": ". \"Necessary only\" takes the same number of clicks as \"Accept all\" — we don't dark-pattern you into agreeing. The banner reappears if you clear browser storage or revoke your choice from this page."
       },
       "title": "Cookie consent banner"
     },
@@ -161,7 +161,7 @@
     },
     "hero": {
       "chip": "Cookies & consent",
-      "lede": "Eurovision Games keeps cookies to the bare minimum: one strictly-necessary category that keeps the game working, and one optional analytics category you can flip on or off any time. No advertising, no cross-site tracking, no dark patterns.",
+      "lede": "Eurovision Games keeps cookies to the bare minimum: one strictly-necessary category that keeps the game working, and an analytics category that is off and currently unused — we run no analytics. No advertising, no cross-site tracking, no dark patterns.",
       "title": "Cookies & consent"
     },
     "meta": {
@@ -173,7 +173,7 @@
         "eurovision games privacy",
         "analytics opt-in"
       ],
-      "schemaDescription": "What cookies Eurovision Games uses, why, and how to change your consent. Strict necessary only by default; analytics is opt-in.",
+      "schemaDescription": "What cookies Eurovision Games uses, why, and how to change your consent. Strictly necessary only by default; analytics is opt-in.",
       "title": "Cookies & Consent — Eurovision Games",
       "webPageDescription": "Cookie policy for Eurovision Games. Strictly necessary cookies are always on; analytics is off by default and opt-in.",
       "webPageMainEntityAbout": "Cookies, consent, and tracking practices on eurovision.games",
@@ -223,33 +223,33 @@
         "Purpose",
         "Default"
       ],
-      "intro": "Two categories, one of which you can switch off without breaking anything you can see. Reject is the same number of clicks as Accept — we don't bury the off switch.",
+      "intro": "Two categories: the strictly-necessary one, and an analytics category that is currently empty. \"Necessary only\" is the same number of clicks as \"Accept all\" — we don't bury the off switch.",
       "rows": [
         {
           "category": "Strictly necessary",
           "defaultText": "Always on — required for the game to work.",
           "defaultTone": "muted",
-          "purpose": "Keeps you signed into your room (player ID, room code, name), remembers your language preference, and stores the consent choice itself."
+          "purpose": "Keeps you in your room — a Supabase authentication session (anonymous for players and hosts; email sign-in for site admins) plus your room code, player ID and the room password if one was set — remembers your language, sound and display preferences, and stores the consent choice itself."
         },
         {
-          "category": "Analytics",
+          "category": "Analytics (none currently)",
           "defaultText": "Off until you opt in.",
           "defaultTone": "pink",
-          "purpose": "Anonymous, aggregated page-view counts so we can see which guides and pages people actually use. No personal identifiers, no cross-site tracking."
+          "purpose": "None — we run no analytics today. If we ever add an analytics tool (e.g. Plausible), we will ask for your consent here first."
         }
       ],
       "title": "What we use"
     },
     "whereDataLives": {
       "intro": {
-        "lead": "The strictly-necessary state lives in your browser's local storage and standard cookies — nothing leaves your device until you actively join a room. Game state (room, players, predictions, scores) lives in our database while the room is active and is purged according to the retention policy in our ",
+        "lead": "The strictly-necessary state lives in your browser's local storage and standard cookies. Apart from an anonymous sign-in session created when you open the game, nothing about you is sent until you create or join a room. Game state (room, players, predictions, scores) lives in our database while the room is active and is purged according to the retention policy in our ",
         "linkLabel": "Privacy Policy",
         "tail": "."
       },
       "items": [
         {
           "bold": "Browser storage",
-          "rest": " — language, room code, player name, consent choice."
+          "rest": " — sign-in session, language, room code, player ID, room password (if set), sound and display preferences, consent choice."
         },
         {
           "bold": "Server (Supabase Postgres)",

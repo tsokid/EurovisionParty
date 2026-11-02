@@ -6,22 +6,22 @@
       "winners": "Νικητές"
     },
     "cta": {
-      "body": "Κλείδωσε το Top 5 σου πριν ξεκινήσει, σκόραρε ζωντανά ενάντια στις επίσημες ψήφους κριτικής επιτροπής + televote, και δες αν μπορείς να μαντέψεις τον φετινό πρωταθλητή πριν από όλους.",
+      "body": "Κλείδωσε το Top 5 σου πριν ανοίξει η ψηφοφορία, σκόραρε ζωντανά με βάση τις επίσημες ψήφους κριτικής επιτροπής + televote και δες αν μπορείς να μαντέψεις τον φετινό πρωταθλητή πριν από όλους.",
       "primary": "Φτιάξε δωμάτιο",
       "secondary": "Πώς παίζεται",
       "title": "Μάντεψε τον επόμενο νικητή"
     },
     "faq": [
       {
-        "a": "Το ρεκόρ είναι {stats.topWins} νίκες και το κατέχουν: {stats.topCountries}. Η Σουηδία ισοφάρισε το 2023 όταν η Loreen κέρδισε τον δεύτερο διαγωνισμό της με το \"Tattoo\", και έγινε η πρώτη γυναίκα που κερδίζει την Eurovision δύο φορές.",
+        "a": "Το ρεκόρ είναι {stats.topWins} νίκες ({stats.topCountries}). Η Σουηδία ισοφάρισε το 2023 όταν η Loreen κέρδισε τον δεύτερο διαγωνισμό της με το \"Tattoo\" και έγινε η πρώτη γυναίκα που κερδίζει την Eurovision δύο φορές.",
         "q": "Ποιος έχει κερδίσει την Eurovision τις περισσότερες φορές;"
       },
       {
-        "a": "Ο πρώτος διαγωνισμός έγινε στο Lugano της Ελβετίας στις 24 Μαΐου 1956. Επτά χώρες διαγωνίστηκαν. Η Ελβετία κέρδισε με το \"Refrain\" από τη Lys Assia.",
+        "a": "Ο πρώτος διαγωνισμός έγινε στο Λουγκάνο της Ελβετίας στις 24 Μαΐου 1956. Επτά χώρες διαγωνίστηκαν. Η Ελβετία κέρδισε με το \"Refrain\" της Lys Assia.",
         "q": "Πότε έγινε η πρώτη Eurovision;"
       },
       {
-        "a": "Το \"{stats.recordSong}\" ({stats.recordArtist}, {stats.recordCountry}, {stats.recordYear}) κρατά το ρεκόρ νικητήριου τραγουδιού με {stats.recordPoints} πόντους. Το σύστημα ψηφοφορίας έχει αλλάξει πολλές φορές, οπότε οι άμεσες συγκρίσεις μεταξύ εποχών δεν έχουν νόημα.",
+        "a": "Το \"{stats.recordSong}\" ({stats.recordArtist}, {stats.recordCountry}, {stats.recordYear}) κατέχει το ρεκόρ πόντων για νικητήριο τραγούδι, με {stats.recordPoints} πόντους. Το σύστημα ψηφοφορίας έχει αλλάξει πολλές φορές, οπότε οι άμεσες συγκρίσεις μεταξύ εποχών δεν έχουν νόημα.",
         "q": "Ποιο είναι το νικητήριο τραγούδι με τους περισσότερους πόντους;"
       },
       {
@@ -29,13 +29,13 @@
         "q": "Έχει κερδίσει το ίδιο άτομο δύο φορές;"
       },
       {
-        "a": "Ο διαγωνισμός του 2020, που είχε προγραμματιστεί για το Rotterdam, ακυρώθηκε τον Μάρτιο του 2020 λόγω COVID-19. Ήταν η πρώτη ακύρωση στην ιστορία του διαγωνισμού. Η Ολλανδία κράτησε τη θέση οικοδέσποινας για το 2021, όπου κέρδισαν οι Måneskin από την Ιταλία.",
+        "a": "Ο διαγωνισμός του 2020, που είχε προγραμματιστεί για το Ρότερνταμ, ακυρώθηκε τον Μάρτιο του 2020 λόγω COVID-19. Ήταν η πρώτη ακύρωση στην ιστορία του διαγωνισμού. Η Ολλανδία διατήρησε τη διοργάνωση για το 2021, όταν κέρδισαν οι Måneskin από την Ιταλία.",
         "q": "Γιατί δεν υπήρχε νικητής Eurovision το 2020;"
       }
     ],
     "hero": {
       "chip": "Ιστορία Eurovision",
-      "lede": "Αναφορά για τη πιο συχνή ερώτηση της Eurovision: ποιος κέρδισε; Παρακάτω — οι τελευταίοι 15 πρωταθλητές με τραγούδια και πόντους τελικού γύρου, ο αιώνιος πίνακας νικών, και τα ρεκόρ που στέκονται ακόμα.",
+      "lede": "Οδηγός αναφοράς για την πιο συχνή ερώτηση της Eurovision: ποιος κέρδισε; Παρακάτω — οι τελευταίοι 15 πρωταθλητές με τραγούδια και πόντους τελικού γύρου, ο αιώνιος πίνακας νικών και τα ρεκόρ που ισχύουν ακόμα.",
       "title": "Όλοι οι νικητές Eurovision — 1956 έως σήμερα"
     },
     "meta": {
@@ -67,7 +67,7 @@
           "title": "Βραδιά Eurovision"
         },
         {
-          "blurb": "50+ ενδεικτικές ερωτήσεις από όλες τις δεκαετίες.",
+          "blurb": "10 ενδεικτικές ερωτήσεις και πώς λειτουργούν οι μονομαχίες.",
           "href": "/eurovision-trivia",
           "title": "Trivia Eurovision"
         },
@@ -77,12 +77,12 @@
           "title": "Πάρτι Eurovision"
         },
         {
-          "blurb": "Πώς έχει εξελιχθεί το σύστημα ψηφοφορίας.",
+          "blurb": "Ακριβείς πόντοι ανά Top-5, quiz και μονομαχία.",
           "href": "/scoring",
-          "title": "Φόρμουλες βαθμολογίας"
+          "title": "Μαθηματικά βαθμολογίας"
         },
         {
-          "blurb": "Ερωτήσεις για εκκίνηση, βαθμολογία και gameplay.",
+          "blurb": "Ερωτήσεις για το στήσιμο, τη βαθμολογία και το παιχνίδι.",
           "href": "/faq",
           "title": "Συχνές ερωτήσεις"
         }
@@ -91,7 +91,7 @@
     "sections": {
       "all": {
         "cancelled": "Ο διαγωνισμός ακυρώθηκε",
-        "intro": "Ο πλήρης κατάλογος, από τον πιο πρόσφατο. Διαλέξτε χρονιά για τα πλήρη αποτελέσματά της.",
+        "intro": "Ο πλήρης κατάλογος, ξεκινώντας από τον πιο πρόσφατο. Διάλεξε χρονιά για τα πλήρη αποτελέσματά της.",
         "shared": "ισοβαθμία",
         "title": "Όλοι οι νικητές από το {from}"
       },
@@ -102,7 +102,7 @@
           "mostRecent": "Πιο πρόσφατη",
           "wins": "Νίκες"
         },
-        "intro": "Χώρες που έχουν κερδίσει την Eurovision περισσότερες από δύο φορές. Το αιώνιο ρεκόρ είναι {stats.topWins} νίκες και το κατέχουν: {stats.topCountries}.",
+        "intro": "Χώρες που έχουν κερδίσει την Eurovision περισσότερες από δύο φορές. Το αιώνιο ρεκόρ είναι {stats.topWins} νίκες ({stats.topCountries}).",
         "title": "Αιώνιος πίνακας νικών"
       },
       "notable": {
@@ -128,7 +128,7 @@
             "strong": "Πρώτος διαγωνισμός, 1956 — Ελβετία (Lys Assia, \"Refrain\")."
           }
         ],
-        "intro": "Μια χούφτα ρεκόρ που στέκονται ακόμα ή μόλις έσπασαν:",
+        "intro": "Μια χούφτα ρεκόρ που ισχύουν ακόμα ή μόλις καταρρίφθηκαν:",
         "title": "Αξιοσημείωτα ρεκόρ"
       },
       "recent": {
@@ -139,8 +139,8 @@
           "song": "Τραγούδι",
           "year": "Έτος"
         },
-        "intro": "Νικητές από το {from}, με το τραγούδι, τον καλλιτέχνη, και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό.",
-        "introCancelled": " (Δεν υπάρχει {cancelled} — ο διαγωνισμός ακυρώθηκε λόγω COVID.)",
+        "intro": "Νικητές από το {from}, με το τραγούδι, τον καλλιτέχνη και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό.",
+        "introCancelled": " (Δεν υπάρχει νικητής για το {cancelled} — ο διαγωνισμός ακυρώθηκε λόγω COVID.)",
         "title": "Πρόσφατοι νικητές ({from}–{to})"
       }
     }
@@ -152,7 +152,7 @@
       "winners": "Winners"
     },
     "cta": {
-      "body": "Lock your Top 5 before kick-off, score live against the official jury + televote, and see if you can pick this year's champion before everyone else.",
+      "body": "Lock your Top 5 before voting opens, score live against the official jury + televote, and see if you can pick this year's champion before everyone else.",
       "primary": "Create room",
       "secondary": "How to play",
       "title": "Predict the next winner"
@@ -163,11 +163,11 @@
         "q": "Who has won Eurovision the most times?"
       },
       {
-        "a": "The first contest was held in Lugano, Switzerland on 24 May 1956. Seven countries competed. Switzerland won with \"Refrain\" performed by Lys Assia.",
+        "a": "The first contest was held in Lugano, Switzerland, on 24 May 1956. Seven countries competed. Switzerland won with \"Refrain\" performed by Lys Assia.",
         "q": "When was the first Eurovision Song Contest?"
       },
       {
-        "a": "\"{stats.recordSong}\" by {stats.recordArtist} ({stats.recordCountry}, {stats.recordYear}) holds the record for a winning song at {stats.recordPoints} points. The voting system has changed multiple times so direct comparisons across eras are not meaningful.",
+        "a": "\"{stats.recordSong}\" by {stats.recordArtist} ({stats.recordCountry}, {stats.recordYear}) holds the record for a winning song at {stats.recordPoints} points. The voting system has changed multiple times, so direct comparisons across eras are not meaningful.",
         "q": "What's the highest-scoring winning song?"
       },
       {
@@ -214,7 +214,7 @@
           "title": "Eurovision night"
         },
         {
-          "blurb": "50+ sample questions across decades.",
+          "blurb": "10 sample questions and how duels work.",
           "href": "/eurovision-trivia",
           "title": "Eurovision trivia"
         },
@@ -224,7 +224,7 @@
           "title": "Eurovision party"
         },
         {
-          "blurb": "How the voting system has evolved.",
+          "blurb": "Exact points per Top-5, quiz, and duel.",
           "href": "/scoring",
           "title": "Scoring formulas"
         },

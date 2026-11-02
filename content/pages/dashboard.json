@@ -12,15 +12,15 @@
     },
     "faq": [
       {
-        "a": "Το Dashboard είναι ο πίνακας βαθμολογίας που είναι πάντα ορατός και ενημερώνεται σε πραγματικό χρόνο, καθώς λύνονται προβλέψεις, μπαίνουν απαντήσεις στο quiz και τελειώνουν μονομαχίες. Δείχνει κάθε παίκτη σε κατάταξη με βάση τους συνολικούς πόντους από τις τέσσερις πηγές: προβλέψεις, quiz, μονομαχίες και μπόνους τροπαίων.",
+        "a": "Το Dashboard είναι ο πίνακας βαθμολογίας που είναι πάντα ορατός και ενημερώνεται σε πραγματικό χρόνο, καθώς λύνονται προβλέψεις, μπαίνουν απαντήσεις στο quiz και τελειώνουν μονομαχίες. Κατατάσσει κάθε παίκτη με βάση τους συνολικούς πόντους: προβλέψεις + quiz + μονομαχίες, μείον ό,τι ξόδεψε σε αποκαλύψεις πληροφοριών (intel). Τα τρόπαια είναι μόνο διακρίσεις — δεν προσθέτουν πόντους.",
         "q": "Τι είναι το Dashboard;"
       },
       {
-        "a": "Ζωντανά, με push. Οι απαντήσεις στο quiz ενημερώνουν με την υποβολή· οι μονομαχίες με την ολοκλήρωση· οι προβλέψεις καθώς ο οικοδεσπότης καταχωρεί τα αποτελέσματα της Eurovision (ή καθώς ενημερώνονται αυτόματα). Δεν χρειάζεται refresh.",
+        "a": "Ζωντανά, με push. Οι απαντήσεις στο quiz ενημερώνουν με την υποβολή· οι μονομαχίες όταν ο νικητής διαλέξει Κλοπή ή Διπλασιασμό· οι προβλέψεις όταν έρθουν αυτόματα τα επίσημα αποτελέσματα της Eurovision. Δεν χρειάζεται refresh.",
         "q": "Πότε ενημερώνεται το Dashboard;"
       },
       {
-        "a": "Ναι. Πάτα έναν παίκτη στο Dashboard για να δεις τους πόντους του χωρισμένους σε προβλέψεις, quiz, κερδισμένες μονομαχίες, κλεμμένους πόντους και τρόπαια — χρήσιμο για να συζητάς ποιος πραγματικά άξιζε τον τίτλο του Πρωταθλητή.",
+        "a": "Ναι. Πάτα έναν παίκτη στο Dashboard για να δεις τους πόντους του χωρισμένους σε προβλέψεις, quiz και μονομαχίες — χρήσιμο για να συζητάς ποιος πραγματικά άξιζε τον τίτλο του Πρωταθλητή.",
         "q": "Μπορώ να δω την ανάλυση ανά παίκτη;"
       },
       {
@@ -30,8 +30,8 @@
     ],
     "hero": {
       "chip": "Ζωντανός πίνακας βαθμολογίας",
-      "lede": "Το Dashboard είναι ο παλμός κάθε δωματίου Eurovision Games. Ο πίνακας βαθμολογίας που είναι πάντα ορατός και ενημερώνεται σε πραγματικό χρόνο — κάθε πρόβλεψη που λύνεται, κάθε απάντηση στο quiz, κάθε μονομαχία που τελειώνει στέλνει νέα σύνολα σε όλους στο δωμάτιο, χωρίς refresh.",
-      "title": "Dashboard — ζωντανός πίνακας βαθμολογίας"
+      "lede": "Το Dashboard είναι ο παλμός κάθε δωματίου Eurovision Games. Είναι ο πίνακας βαθμολογίας που είναι πάντα ορατός και ενημερώνεται σε πραγματικό χρόνο — κάθε πρόβλεψη που λύνεται, κάθε απάντηση στο quiz, κάθε μονομαχία που τελειώνει στέλνει νέα σύνολα σε όλους στο δωμάτιο, χωρίς refresh.",
+      "title": "Dashboard — ο ζωντανός πίνακας βαθμολογίας σου για τη Eurovision"
     },
     "meta": {
       "articleDescription": "Πώς δουλεύει το ζωντανό Dashboard σε ένα δωμάτιο Eurovision Games: τι δείχνει, πότε ενημερώνεται και οι τέσσερις πηγές πόντων που τροφοδοτούν τη βαθμολογία.",
@@ -54,7 +54,7 @@
           "title": "Προβλέψεις"
         },
         {
-          "blurb": "Μάχες trivia ένας προς έναν που οδηγούν τα ζωντανά swings στα διαφημιστικά.",
+          "blurb": "Μάχες trivia ένας προς έναν που φέρνουν τις ζωντανές ανατροπές στα διαφημιστικά διαλείμματα.",
           "href": "/duels",
           "title": "Μονομαχίες"
         },
@@ -74,7 +74,7 @@
           "title": "Πώς παίζεις"
         },
         {
-          "blurb": "Πώς εντάσσεται το Dashboard στη σειρά εμφάνισης τεσσάρων ωρών.",
+          "blurb": "Πώς εντάσσεται το Dashboard στο τετράωρο πρόγραμμα της βραδιάς.",
           "href": "/eurovision-night",
           "title": "Βραδιά Eurovision"
         }
@@ -88,15 +88,15 @@
             "strong": "Τέλος γύρου quiz."
           },
           {
-            "rest": " Τα μεγαλύτερα swings της βραδιάς, καθώς 26+ προβλέψεις βαθμολογούνται αυτόματα έναντι των συνόλων κριτικής επιτροπής και televote.",
-            "strong": "Καταχώρηση ζωντανών αποτελεσμάτων."
+            "rest": " Οι μεγαλύτερες ανατροπές της βραδιάς, καθώς το Top 5 και το Worst 5 κάθε παίκτη βαθμολογούνται αυτόματα με βάση τα σύνολα κριτικής επιτροπής και televote.",
+            "strong": "Επίσημα αποτελέσματα."
           },
           {
             "rest": " Μικρές αλλά συνεχείς ενημερώσεις καθώς οι προκλήσεις ξεκινούν και λύνονται στα διαφημιστικά διαλείμματα.",
             "strong": "Ζωντανές μονομαχίες."
           },
           {
-            "rest": " Τελική στοίβα καθώς δημοσιεύονται τα μπόνους Πρωταθλητής / Κλέφτης / Μονομάχος / Μάντης / Γκουρού.",
+            "rest": " Ανακοινώνονται Πρωταθλητής / Κλέφτης / Μονομάχος / Μάντης / Γκουρού — τα τρόπαια στέφουν τη βραδιά αλλά δεν αλλάζουν τους πόντους κανενός.",
             "strong": "Αποκάλυψη τροπαίων."
           }
         ],
@@ -106,18 +106,18 @@
         "title": "Συχνές ερωτήσεις"
       },
       "hostVsPlayer": {
-        "body": "Ο οικοδεσπότης βλέπει ένα επιπλέον χειριστήριο στο Dashboard — ένα κουμπί μετάβασης φάσης που οδηγεί το δωμάτιο από το Λόμπι στις Προβλέψεις, στο Quiz, στη Ζωντανή Εκπομπή, στα Αποτελέσματα και στους Νικητές. Οι παίκτες βλέπουν τον ίδιο πίνακα αλλά χωρίς χειριστήρια. Τα σύνολα όλων είναι πανομοιότυπα· δεν υπάρχει \"κρυφό μπόνους οικοδεσπότη\".",
-        "title": "Όψη οικοδεσπότη vs όψη παίκτη"
+        "body": "Ο μόνος έλεγχος φάσης που έχει ο οικοδεσπότης είναι το κουμπί «Ξεκίνα το Πάρτι!» στην Αναμονή· από εκεί και πέρα το δωμάτιο περνά αυτόματα από τις Προβλέψεις στην Ψηφοφορία Live και στη Βαθμολογία. Οι παίκτες βλέπουν τον ίδιο πίνακα. Τα σύνολα όλων είναι πανομοιότυπα· δεν υπάρχει \"κρυφό μπόνους οικοδεσπότη\".",
+        "title": "Όψη οικοδεσπότη έναντι όψης παίκτη"
       },
       "notShown": {
         "bullets": [
           {
-            "rest": " πριν κλειδώσουν — μένουν ιδιωτικές μέχρι ο οικοδεσπότης να προχωρήσει από τη φάση Προβλέψεων.",
+            "rest": " — κάθε παίκτης βλέπει μόνο τις δικές του λίστες, πριν και μετά το κλείδωμα.",
             "strong": "Τις επιλογές Top 5 / Worst 5 των άλλων παικτών"
           },
           {
             "rest": " — μόνο οι δύο συμμετέχοντες βλέπουν τις ερωτήσεις· όλοι οι άλλοι βλέπουν ένα διακριτικό chip \"μονομαχία σε εξέλιξη\".",
-            "strong": "Ερωτήσεις μονομαχίας σε εξέλιξη"
+            "strong": "Τις ερωτήσεις μονομαχιών σε εξέλιξη"
           },
           {
             "rest": " — Πρωταθλητής, Κλέφτης, Μονομάχος, Μάντης και Γκουρού αποκαλύπτονται στο τέλος, σε ξεχωριστή οθόνη Νικητών.",
@@ -138,11 +138,11 @@
             "strong": "Ζωντανά βέλη κατάταξης"
           },
           {
-            "rest": " με ένα tap: προβλέψεις, quiz, μονομαχίες που κερδήθηκαν, πόντοι που κλάπηκαν, μπόνους τροπαίων.",
+            "rest": " με ένα tap: προβλέψεις, quiz, μονομαχίες.",
             "strong": "Ανάλυση πηγών"
           },
           {
-            "rest": " — Λόμπι, Προβλέψεις, Quiz, Ζωντανή Εκπομπή, Αποτελέσματα, Νικητές.",
+            "rest": " — Αναμονή, Pre-Night Show, Προβλέψεις, Ψηφοφορία Live, Βαθμολογία.",
             "strong": "Δείκτης φάσης"
           },
           {
@@ -159,13 +159,13 @@
           "before": "Οι Προβλέψεις και το Quiz έχουν όριο· οι μονομαχίες είναι σκόπιμα χωρίς όριο, ώστε ένας αουτσάιντερ να μπορεί να κερδίσει έδαφος στο τελευταίο διαφημιστικό. Δες την ",
           "linkLabel": "πλήρη σελίδα βαθμολογίας"
         },
-        "intro": "Το σύνολό σου στο Dashboard είναι το άθροισμα τεσσάρων ζωντανών συνιστωσών. Καθεμία έχει το δικό της trigger ενημέρωσης και το δικό της όριο, που εμποδίζει οποιαδήποτε μεμονωμένη λειτουργία να μονοπωλήσει τη βραδιά.",
+        "intro": "Το σύνολό σου στο Dashboard είναι το άθροισμα τεσσάρων ζωντανών συνιστωσών. Καθεμία έχει το δικό της trigger ενημέρωσης, και οι δύο μεγαλύτερες έχουν ανώτατο όριο, ώστε καμία μεμονωμένη λειτουργία να μη μονοπωλεί τη βραδιά.",
         "rows": [
           {
             "capIsOpen": false,
             "capLabel": "500",
             "source": "Προβλέψεις (Top 5 + Worst 5)",
-            "when": "Ο οικοδεσπότης καταχωρεί τα αποτελέσματα της Eurovision ή ενημερώνονται αυτόματα"
+            "when": "Όταν έρθουν τα επίσημα αποτελέσματα της Eurovision (αυτόματα)"
           },
           {
             "capIsOpen": false,
@@ -176,14 +176,14 @@
           {
             "capIsOpen": true,
             "capLabel": "ανοιχτό",
-            "source": "Μονομαχίες — κερδισμένες",
-            "when": "Στο τέλος κάθε μονομαχίας"
+            "source": "Μονομαχίες — Διπλασιασμός",
+            "when": "Όταν ο νικητής διαλέξει Διπλασιασμό"
           },
           {
             "capIsOpen": true,
             "capLabel": "ανοιχτό",
-            "source": "Μονομαχίες — κλεμμένες",
-            "when": "Στο τέλος κάθε Steal"
+            "source": "Μονομαχίες — Κλοπή",
+            "when": "Όταν ο νικητής διαλέξει Κλοπή"
           }
         ],
         "tableHeaders": [
@@ -208,15 +208,15 @@
     },
     "faq": [
       {
-        "a": "The Dashboard is the always-visible leaderboard that updates in real time as predictions resolve, quiz answers come in, and duels finish. It shows every player ranked by total points across all four sources: predictions, quiz, duels, and trophy bonuses.",
+        "a": "The Dashboard is the always-visible leaderboard that updates in real time as predictions resolve, quiz answers come in, and duels finish. It ranks every player by total points: predictions + quiz + duels, minus anything spent on intel reveals. Trophies are awards only — they don’t add points.",
         "q": "What is the Dashboard?"
       },
       {
-        "a": "Live, push-driven. Quiz answers update on submission; duels update on finish; predictions update as the host enters Eurovision results (or as they update automatically). No refresh needed.",
+        "a": "Live, push-driven. Quiz answers update on submission; duels update when the winner picks Steal or Double; predictions update when the official Eurovision results come in automatically. No refresh needed.",
         "q": "When does the Dashboard update?"
       },
       {
-        "a": "Yes. Tap a player on the Dashboard to see their points split into prediction, quiz, duel-won, duel-stolen, and trophy components — useful for arguing about who actually deserved Champion.",
+        "a": "Yes. Tap a player on the Dashboard to see their points split into prediction, quiz and duel components — useful for arguing about who actually deserved Champion.",
         "q": "Can I see the breakdown per player?"
       },
       {
@@ -284,15 +284,15 @@
             "strong": "Quiz round end."
           },
           {
-            "rest": " Biggest swings of the night as 26+ predictions auto-score against jury and televote totals.",
-            "strong": "Live results entry."
+            "rest": " Biggest swings of the night as every player’s Top 5 and Worst 5 auto-score against the jury and televote totals.",
+            "strong": "Official results."
           },
           {
             "rest": " Small but constant updates as challenges fire and resolve in commercial breaks.",
             "strong": "Live duels."
           },
           {
-            "rest": " Final stack as Champion / Thief / Duelist / Oracle / Guru bonuses post.",
+            "rest": " Champion / Thief / Duelist / Oracle / Guru are announced — trophies crown the night but don’t change anyone’s points.",
             "strong": "Trophy reveal."
           }
         ],
@@ -302,13 +302,13 @@
         "title": "Frequently asked questions"
       },
       "hostVsPlayer": {
-        "body": "The host sees one extra control on the Dashboard — a phase advance button that walks the room from Lobby through Predictions, Quiz, Live Show, Results, and Winners. Players see the same leaderboard but no controls. Everyone’s totals are identical; there is no \"hidden host bonus.\"",
+        "body": "The host’s only phase control is the Start the Party! button in the Lobby; after that the room moves through Predictions Open, Voting Live and Final Results automatically. Players see the same leaderboard. Everyone’s totals are identical; there is no \"hidden host bonus.\"",
         "title": "Hosting view vs player view"
       },
       "notShown": {
         "bullets": [
           {
-            "rest": " before they lock — those stay private until the host advances out of the Predictions phase.",
+            "rest": " — each player only ever sees their own lists, before and after they lock.",
             "strong": "Other players' Top 5 / Worst 5 picks"
           },
           {
@@ -334,11 +334,11 @@
             "strong": "Live rank arrows"
           },
           {
-            "rest": " on tap: predictions, quiz, duels won, points stolen, trophy bonuses.",
+            "rest": " on tap: predictions, quiz, duels.",
             "strong": "Source split"
           },
           {
-            "rest": " — Lobby, Predictions, Quiz, Live Show, Results, Winners.",
+            "rest": " — Lobby, Pre-Night Show, Predictions Open, Voting Live, Final Results.",
             "strong": "Phase indicator"
           },
           {
@@ -355,13 +355,13 @@
           "before": "Predictions and Quiz are bounded; duels are uncapped on purpose so that an underdog can claw back the lead in the final ad break. See the ",
           "linkLabel": "full scoring page"
         },
-        "intro": "Your total on the Dashboard is the sum of four live components. Each has its own update trigger and its own cap, which keeps any single mode from running away with the night.",
+        "intro": "Your total on the Dashboard is the sum of four live components. Each has its own update trigger, and the two biggest are capped, which keeps any single mode from running away with the night.",
         "rows": [
           {
             "capIsOpen": false,
             "capLabel": "500",
             "source": "Predictions (Top 5 + Worst 5)",
-            "when": "Host enters Eurovision results, or they update automatically"
+            "when": "Official Eurovision results come in (automatic)"
           },
           {
             "capIsOpen": false,
@@ -372,14 +372,14 @@
           {
             "capIsOpen": true,
             "capLabel": "open",
-            "source": "Duels — won",
-            "when": "Each duel finishes"
+            "source": "Duels — Double",
+            "when": "Winner picks Double"
           },
           {
             "capIsOpen": true,
             "capLabel": "open",
-            "source": "Duels — stolen",
-            "when": "Each Steal finishes"
+            "source": "Duels — Steal",
+            "when": "Winner picks Steal"
           }
         ],
         "tableHeaders": [

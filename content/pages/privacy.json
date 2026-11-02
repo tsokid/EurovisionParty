@@ -5,11 +5,11 @@
       "privacy": "Απόρρητο"
     },
     "changes": {
-      "body": "Αν αλλάξουμε αυτή την πολιτική, θα ενημερώσουμε την ημερομηνία «Τελευταία ενημέρωση» στο hero παραπάνω και θα αναρτήσουμε σχετικό σημείωμα στο FAQ. Ουσιώδεις αλλαγές θα επισημαίνονται στην κορυφή της σελίδας για τουλάχιστον 30 ημέρες.",
+      "body": "Αν αλλάξουμε αυτή την πολιτική, θα ενημερώσουμε την ημερομηνία «Τελευταία ενημέρωση» στην αρχή της σελίδας και θα αναρτήσουμε σχετικό σημείωμα στο FAQ. Ουσιώδεις αλλαγές θα επισημαίνονται στην κορυφή της σελίδας για τουλάχιστον 30 ημέρες.",
       "title": "Αλλαγές σε αυτή την πολιτική"
     },
     "children": {
-      "body": "Το Eurovision Games δεν απευθύνεται σε παιδιά κάτω των 13 ετών. Οι οικοδεσπότες πρέπει να είναι ενήλικες· τυχόν παιδιά που παίζουν σε δωμάτιο το κάνουν υπό την επίβλεψη του οικοδεσπότη.",
+      "body": "Το Eurovision Games δεν απευθύνεται σε παιδιά κάτω των 13 ετών. Οι οικοδεσπότες θα πρέπει να είναι ενήλικες· τυχόν παιδιά που παίζουν σε δωμάτιο το κάνουν υπό την επίβλεψη του οικοδεσπότη.",
       "title": "Παιδιά"
     },
     "contact": {
@@ -21,7 +21,7 @@
       "title": "Επικοινωνία"
     },
     "cookies": {
-      "lead": "Χρησιμοποιούμε μία κατηγορία απολύτως απαραίτητων cookies για να κρατάμε ζωντανή τη συνεδρία σου (κωδικός εισόδου, γλώσσα, επιλογή συναίνεσης). Τα cookies στατιστικών είναι απενεργοποιημένα από προεπιλογή και opt-in. Καμία διαφήμιση, καμία διασταυρούμενη παρακολούθηση. Αναλυτικά στη ",
+      "lead": "Χρησιμοποιούμε μία κατηγορία απολύτως απαραίτητων για να κρατάμε ζωντανή τη συνεδρία σου (συνεδρία σύνδεσης, κωδικός δωματίου, γλώσσα, επιλογή συναίνεσης). Δεν τρέχουμε κανένα εργαλείο στατιστικών· αν προσθέσουμε ποτέ, θα μένει απενεργοποιημένο μέχρι να συναινέσεις. Κανένα διαφημιστικό cookie, καμία παρακολούθηση μεταξύ ιστοτόπων. Αναλυτικά στη ",
       "linkLabel": "σελίδα cookies",
       "tail": ".",
       "title": "Cookies"
@@ -57,12 +57,12 @@
     "notCollect": {
       "items": [
         {
-          "bold": "Καμία πραγματική ταυτότητα, διεύθυνση, τηλέφωνο ή στοιχεία πληρωμής.",
+          "bold": "Κανένα πραγματικό όνομα, διεύθυνση, τηλέφωνο ή στοιχεία πληρωμής.",
           "rest": " Το παιχνίδι είναι δωρεάν και δεν υπάρχει τίποτα να χρεώσουμε."
         },
         {
-          "bold": "Κανένα cross-site tracking cookie.",
-          "rest": " Καμία διαφήμιση και καμία προφιλοποίηση συμπεριφοράς."
+          "bold": "Κανένα cookie παρακολούθησης μεταξύ ιστοτόπων.",
+          "rest": " Καμία διαφήμιση και καμία κατάρτιση προφίλ συμπεριφοράς."
         },
         {
           "bold": "Καμία είσοδος μικροφώνου ή κάμερας.",
@@ -77,7 +77,7 @@
     },
     "related": [
       {
-        "blurb": "Τι αποθηκεύουμε, πώς να απενεργοποιήσεις τα στατιστικά και πού ζουν τα δεδομένα.",
+        "blurb": "Τι αποθηκεύουμε, πώς λειτουργεί η συναίνεση και πού ζουν τα δεδομένα.",
         "href": "/cookies",
         "title": "Cookies & συναίνεση"
       },
@@ -135,7 +135,7 @@
         "Σκοπός",
         "Διατήρηση"
       ],
-      "intro": "Τρεις κατηγορίες — σε τι χρησιμεύει η καθεμία και για πόσο την κρατάμε. Οι guest παίκτες (όσοι μπαίνουν σε δωμάτιο μόνο με όνομα) δεν συνδέονται με αναγνωριστικά δεδομένα στο σύστημά μας.",
+      "intro": "Τέσσερις κατηγορίες — σε τι χρησιμεύει η καθεμία και για πόσο την κρατάμε. Οι guest παίκτες (όσοι μπαίνουν σε δωμάτιο μόνο με όνομα) δεν συνδέονται με αναγνωριστικά δεδομένα στο σύστημά μας.",
       "rows": [
         {
           "purpose": "Αυθεντικοποίηση του οικοδεσπότη μέσω one-time code (OTP). Κανένα marketing email.",
@@ -185,7 +185,7 @@
       "privacy": "Privacy"
     },
     "changes": {
-      "body": "If we change this policy, we'll update the \"Last updated\" date in the hero above and post a note in the FAQ. Material changes will be highlighted at the top of this page for at least 30 days.",
+      "body": "If we change this policy, we'll update the \"Last updated\" date at the top of this page and post a note in the FAQ. Material changes will be highlighted at the top of this page for at least 30 days.",
       "title": "Changes to this policy"
     },
     "children": {
@@ -201,7 +201,7 @@
       "title": "Contact"
     },
     "cookies": {
-      "lead": "We use one strictly-necessary cookie category to keep your session alive (room code, language, consent choice). Analytics cookies are off by default and opt-in. No advertising cookies, no cross-site tracking. Full breakdown on the ",
+      "lead": "We use one strictly-necessary category to keep your session alive (sign-in session, room code, language, consent choice). We run no analytics; if we ever add an analytics tool, it will stay off until you opt in. No advertising cookies, no cross-site tracking. Full breakdown on the ",
       "linkLabel": "cookies page",
       "tail": ".",
       "title": "Cookies"
@@ -257,7 +257,7 @@
     },
     "related": [
       {
-        "blurb": "What we store, how to flip analytics off, and where the data lives.",
+        "blurb": "What we store, how consent works, and where the data lives.",
         "href": "/cookies",
         "title": "Cookies & consent"
       },
@@ -303,7 +303,7 @@
           "rest": " — limit or object to how we process your data."
         },
         {
-          "bold": "Complain",
+          "bold": "Complaint",
           "rest": " — lodge a complaint with your local data protection authority."
         }
       ],
@@ -315,7 +315,7 @@
         "Purpose",
         "Retention"
       ],
-      "intro": "Three categories — what each is for, and how long we keep it. Guest players (people who join a room with just a name) are not tied to identifying data on our side.",
+      "intro": "Four categories — what each is for, and how long we keep it. Guest players (people who join a room with just a name) are not tied to identifying data on our side.",
       "rows": [
         {
           "purpose": "Authenticate the host via one-time code (OTP). No marketing email.",

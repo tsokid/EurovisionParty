@@ -5,38 +5,38 @@
       "home": "Αρχική"
     },
     "cta": {
-      "body": "Οι μονομαχίες ανοίγουν τη στιγμή που ο οικοδεσπότης προχωρά στη Ζωντανή Εκπομπή. Στήσε ένα δωμάτιο σε 60 δευτερόλεπτα και έχε έτοιμο το link πριν παίξει το πρώτο τραγούδι.",
+      "body": "Οι μονομαχίες ανοίγουν τη στιγμή που ο οικοδεσπότης ξεκινά το πάρτι και τρέχουν μέχρι να ανοίξει η ψηφοφορία. Στήσε ένα δωμάτιο σε 60 δευτερόλεπτα και έχε έτοιμο τον σύνδεσμο πριν παίξει το πρώτο τραγούδι.",
       "primary": "Δημιουργία δωματίου",
       "secondary": "Πώς να παίξεις",
-      "title": "Άνοιξε δωμάτιο και πρόκαλεσε τους φίλους σου"
+      "title": "Άνοιξε δωμάτιο και προκάλεσε τους φίλους σου"
     },
     "faq": [
       {
-        "a": "Η μονομαχία είναι μια head-to-head μάχη trivia 3 ερωτήσεων ανάμεσα σε δύο παίκτες στο ίδιο δωμάτιο Eurovision Games. Ο νικητής μπορεί είτε να κλέψει πόντους από τον ηττημένο είτε να διπλασιάσει τους δικούς του. Οι μονομαχίες γίνονται ζωντανά κατά τη διάρκεια της εκπομπής — συνήθως σε διαφημιστικά διαλείμματα ή στα postcard intervals.",
+        "a": "Η μονομαχία είναι μια αναμέτρηση trivia 3 ερωτήσεων, ένας προς έναν, ανάμεσα σε δύο παίκτες στο ίδιο δωμάτιο Eurovision Games. Ο νικητής μπορεί είτε να κλέψει το σκορ της μονομαχίας του από τον ηττημένο είτε να το διπλασιάσει για τον εαυτό του. Οι μονομαχίες γίνονται από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία — συνήθως στα διαφημιστικά διαλείμματα ή στα postcards ανάμεσα στις εμφανίσεις.",
         "q": "Τι είναι μια μονομαχία Eurovision;"
       },
       {
-        "a": "Οι μονομαχίες ξεκλειδώνουν από τη φάση Ζωντανή Εκπομπή και παραμένουν ανοιχτές μέχρι τα αποτελέσματα. Είναι κλειδωμένες κατά το Pre-show (lobby + προβλέψεις). Η λειτουργία Quiz επίσης κλειδώνει μόλις ξεκινήσει η Ζωντανή Εκπομπή — οι μονομαχίες την αντικαθιστούν.",
+        "a": "Οι μονομαχίες ανοίγουν μόλις ο οικοδεσπότης ξεκινήσει το πάρτι και μένουν ανοιχτές στις φάσεις Pre-Night Show και Προβλέψεις, σε όλη τη διάρκεια των τραγουδιών. Κλειδώνουν αυτόματα όταν το δωμάτιο περάσει στην Ψηφοφορία Live — ταυτόχρονα με το quiz και τις προβλέψεις — και μένουν κλειδωμένες μέχρι τα αποτελέσματα. Quiz και μονομαχίες τρέχουν παράλληλα· το ένα δεν αντικαθιστά το άλλο.",
         "q": "Πότε μπορώ να μονομαχήσω;"
       },
       {
-        "a": "Υπάρχει προεπιλεγμένο όριο ανά ζευγάρι (3 μονομαχίες, μέγιστο 10) ενσωματωμένο στο παιχνίδι. Το όριο μετράει τις ρεβάνς, οπότε δεν μπορείς να εκμεταλλεύεσαι έναν αντίπαλο για πόντους όλη τη βραδιά.",
+        "a": "Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, και ο ηττημένος μιας μονομαχίας μπορεί να ζητήσει μία ρεβάνς. Μόλις υπάρξει ρεβάνς ανάμεσα σε δύο παίκτες, δεν γίνονται άλλες προκλήσεις μεταξύ τους — οπότε δεν μπορείς να εκμεταλλεύεσαι έναν αντίπαλο για πόντους όλη τη βραδιά.",
         "q": "Πόσες μονομαχίες μπορώ να έχω με ένα άτομο;"
       },
       {
-        "a": "Κάθε σωστή απάντηση βαθμολογείται 12 μείον τα δευτερόλεπτα που πέρασαν (12 στα 0s, 1 στα 11s, 0 μετά τα 12s ή σε λάθος). Όποιος έχει το μεγαλύτερο σύνολο απαντήσεων κερδίζει τη μονομαχία και παίρνει flat bonus +12 από πάνω. Ο νικητής έπειτα διαλέγει Κλοπή (παίρνει winner_score από τον ηττημένο) ή Διπλασιασμό (προσθέτει winner_score στον εαυτό του).",
+        "a": "Κάθε σωστή απάντηση βαθμολογείται 12 μείον τα ολόκληρα δευτερόλεπτα που πέρασαν (12 κάτω από 1s, 1 στα 11s, 0 μετά τα 12s ή σε λάθος). Όποιος έχει το μεγαλύτερο σύνολο απαντήσεων κερδίζει τη μονομαχία· ίσα σύνολα σημαίνουν ισοπαλία χωρίς νικητή. Δεν υπάρχει bonus νίκης: ο νικητής διαλέγει Κλοπή (μεταφέρει το σκορ της μονομαχίας του από τον ηττημένο, έως όσους πόντους έχει εκείνος) ή Διπλασιασμό (προσθέτει στον εαυτό του το διπλάσιο του σκορ της μονομαχίας του).",
         "q": "Πώς υπολογίζονται οι πόντοι μονομαχίας;"
       }
     ],
     "hero": {
       "chip": "Λειτουργία ζωντανής εκπομπής",
-      "lede": "Μια μονομαχία μετατρέπει τον νεκρό χρόνο ανάμεσα στις εμφανίσεις σε πεδίο μάχης. Πρόκαλεσε οποιονδήποτε στο δωμάτιό σου σε μια μάχη Eurovision trivia 3 ερωτήσεων — ο νικητής κλέβει τους πόντους του ή διπλασιάζει τους δικούς του. Δύο από τα πέντε τρόπαια της βραδιάς (Μονομάχος, Κλέφτης) κρίνονται εδώ.",
+      "lede": "Μια μονομαχία μετατρέπει τον νεκρό χρόνο ανάμεσα στις εμφανίσεις σε πεδίο μάχης. Πρόκαλεσε οποιονδήποτε στο δωμάτιό σου σε μια μάχη Eurovision trivia 3 ερωτήσεων — ο νικητής κλέβει το σκορ της μονομαχίας του από τον ηττημένο ή το διπλασιάζει για τον εαυτό του. Δύο από τα πέντε τρόπαια της βραδιάς (Μονομάχος, Κλέφτης) κρίνονται εδώ.",
       "title": "Eurovision μονομαχίες — head-to-head trivia κατά τη ζωντανή εκπομπή"
     },
     "howToSteps": [
       {
         "name": "Διάλεξε αντίπαλο",
-        "text": "Στη φάση Ζωντανή Εκπομπή, πάτησε το όνομα οποιουδήποτε άλλου παίκτη στο δωμάτιο και διάλεξε Πρόκληση."
+        "text": "Οποιαδήποτε στιγμή από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία, πάτησε το όνομα οποιουδήποτε άλλου παίκτη στο δωμάτιο και διάλεξε Πρόκληση."
       },
       {
         "name": "Απάντα γρήγορα",
@@ -44,16 +44,16 @@
       },
       {
         "name": "Νίκη στο σύνολο",
-        "text": "Το μεγαλύτερο σύνολο απαντήσεων κερδίζει τη μονομαχία και παίρνει flat bonus νίκης +12."
+        "text": "Το μεγαλύτερο σύνολο απαντήσεων κερδίζει τη μονομαχία. Ίσα σύνολα σημαίνουν ισοπαλία: κανένας νικητής, καμία μεταφορά πόντων."
       },
       {
         "name": "Κλοπή ή Διπλασιασμός",
-        "text": "Ο νικητής διαλέγει: Κλοπή παίρνει πόντους από τον ηττημένο, Διπλασιασμός προσθέτει πόντους στον εαυτό του. Ο ηττημένος κρατάει τους πόντους του στον Διπλασιασμό."
+        "text": "Ο νικητής διαλέγει: η Κλοπή μεταφέρει το σκορ της μονομαχίας του από τον ηττημένο σε εκείνον, ο Διπλασιασμός τού προσθέτει το διπλάσιο του σκορ της μονομαχίας του. Με τον Διπλασιασμό ο ηττημένος κρατάει τους πόντους του."
       }
     ],
     "meta": {
       "description": "Πρόκαλεσε φίλους σε μονομαχίες Eurovision trivia 3 ερωτήσεων κατά τη ζωντανή εκπομπή. Κλέψε τους πόντους τους ή διπλασίασε τους δικούς σου. Πλήρεις κανόνες, βαθμολογία και στρατηγική.",
-      "howToDescription": "Μια head-to-head μονομαχία trivia 3 ερωτήσεων με 12 δευτερόλεπτα ανά ερώτηση. Ταχύτητα και ακρίβεια κερδίζουν· Κλοπή ή Διπλασιασμός ανεβάζει το ρίσκο.",
+      "howToDescription": "Μια head-to-head μονομαχία trivia 3 ερωτήσεων με 12 δευτερόλεπτα ανά ερώτηση. Η ταχύτητα και η ακρίβεια κερδίζουν· η Κλοπή ή ο Διπλασιασμός ανεβάζουν το ρίσκο.",
       "howToName": "Πώς να κερδίσεις μια μονομαχία Eurovision",
       "keywords": [
         "eurovision μονομαχίες",
@@ -77,15 +77,15 @@
         "title": "Έξοδος ή διαγραφή δωματίου"
       },
       "predictions": {
-        "blurb": "Κλείδωσε Top 5 και Worst 5 πριν την εκπομπή — οι πόντοι αθροίζονται με τις μονομαχίες.",
+        "blurb": "Κλείδωσε Top 5 και Worst 5 πριν ανοίξει η ψηφοφορία — οι πόντοι αθροίζονται με τις μονομαχίες.",
         "title": "Παιχνίδι προβλέψεων"
       },
       "rules": {
-        "blurb": "Sudden death, απορριμμένες μονομαχίες και πρωτόκολλο tiebreak.",
+        "blurb": "Sudden death, μονομαχίες που απορρίπτονται και κανόνες ισοβαθμίας.",
         "title": "Κανονισμός"
       },
       "scoring": {
-        "blurb": "Πού τροφοδοτούν Κλοπή και Διπλασιασμός τον Πρωταθλητή / Κλέφτη / Μονομάχο.",
+        "blurb": "Πώς η Κλοπή και ο Διπλασιασμός μετρούν για τα τρόπαια Πρωταθλητής / Κλέφτης / Μονομάχος.",
         "title": "Πλήρη μαθηματικά βαθμολογίας"
       },
       "trivia": {
@@ -96,39 +96,39 @@
     "sections": {
       "faqTitle": "Συχνές ερωτήσεις",
       "scoring": {
-        "doubleBodyEm": "winner_score",
-        "doubleBodyPost": " στον εαυτό σου. Ο ηττημένος κρατάει τη βαθμολογία του.",
-        "doubleBodyPre": " — πρόσθεσε άλλο ένα ",
+        "doubleBodyEm": "2 × το σκορ της μονομαχίας σου",
+        "doubleBodyPost": " στη δική σου βαθμολογία. Ο ηττημένος κρατάει τη βαθμολογία του.",
+        "doubleBodyPre": " — πρόσθεσε ",
         "doubleLabel": "Διπλασιασμός",
         "headers": {
           "points": "Πόντοι",
           "scenario": "Σενάριο"
         },
-        "intro": "Ο τύπος επιβραβεύει εξίσου ταχύτητα και ακρίβεια — ένας δισταγμός μισού δευτερολέπτου σου κοστίζει έναν πόντο.",
+        "intro": "Ο τύπος επιβραβεύει εξίσου ταχύτητα και ακρίβεια — κάθε ολόκληρο δευτερόλεπτο δισταγμού σού κοστίζει έναν πόντο.",
         "rows": {
           "eleven": "Σωστή απάντηση στα 11 δευτερόλεπτα",
           "five": "Σωστή απάντηση στα 5 δευτερόλεπτα",
-          "winBonus": "Bonus νίκης",
+          "winBonus": "Μέγιστο ανά ερώτηση (σωστή απάντηση σε κάτω από 1 δευτερόλεπτο)",
           "wrong": "Λάθος / υπέρβαση χρόνου",
           "zeroToOne": "Σωστή απάντηση στα 0–1 δευτερόλεπτα"
         },
-        "stealBodyEm": "winner_score",
-        "stealBodyPost": " από το αποθηκευμένο σύνολο του ηττημένου. Έχει ταβάνι όσα έχει πραγματικά ο ηττημένος (δεν μπορείς να τον βάλεις κάτω από το μηδέν).",
-        "stealBodyPre": " — πάρε ",
+        "stealBodyEm": "το σκορ της μονομαχίας σου",
+        "stealBodyPost": " από το κατοχυρωμένο σύνολο του ηττημένου στο δικό σου. Δεν μπορεί να ξεπεράσει όσους πόντους έχει πραγματικά ο ηττημένος (δεν μπορείς να τον ρίξεις κάτω από το μηδέν)· δεν επιτρέπεται αν έχει 0 πόντους.",
+        "stealBodyPre": " — μετέφερε ",
         "stealLabel": "Κλοπή",
         "title": "Μαθηματικά βαθμολογίας",
-        "winnerScoreEm": "winner_score",
-        "winnerScorePost": ". Έπειτα διαλέγει:",
-        "winnerScorePre": "Το σύνολο που κέρδισε ο νικητής σε αυτή τη μονομαχία ονομάζεται "
+        "winnerScoreEm": "σκορ της μονομαχίας",
+        "winnerScorePost": " του. Δεν υπάρχει επιπλέον bonus νίκης — ο νικητής διαλέγει:",
+        "winnerScorePre": "Το σύνολο που κέρδισε ο νικητής σε αυτή τη μονομαχία είναι το "
       },
       "stealVsDouble": {
-        "doubleBodyEm": "winner_score",
-        "doubleBodyPost": " αποθηκευμένα (δεν υπάρχουν πόντοι να κλέψεις ούτως ή άλλως).",
-        "doubleBodyPre": " Καθαρή πρόσθεση — καλύτερος όταν είσαι ήδη μπροστά και δεν θέλεις να τροφοδοτήσεις πρόκληση εκδίκησης. Σαφώς καλύτερος όταν ο ηττημένος έχει λιγότερα από ",
+        "doubleBodyEm": "0 πόντους",
+        "doubleBodyPost": ". Καλύτερος όταν κυνηγάς όλο το δωμάτιο και όχι μόνο αυτόν τον αντίπαλο.",
+        "doubleBodyPre": " Σού προσθέτει το διπλάσιο του σκορ της μονομαχίας σου — πάντα το μεγαλύτερο προσωπικό κέρδος, και η μόνη επιλογή όταν ο ηττημένος έχει ",
         "doubleHeading": "✨ Διπλασιασμός",
-        "stealBody": "Μηδενικού αθροίσματος ταλάντωση — το κέρδος σου εξισώνεται με τη δική του απώλεια. Χρησιμοποίησέ την όταν η προσπέραση του πρωτοπόρου μετράει περισσότερο από το απόλυτο κέρδος (στη μέση της εκπομπής, με τον πίνακα στενό, είσαι δεύτερος με διαφορά 30 πόντων).",
+        "stealBody": "Παιχνίδι μηδενικού αθροίσματος — κερδίζεις το σκορ της μονομαχίας σου και εκείνος το χάνει (έως όσους πόντους έχει). Απέναντι σε αυτόν τον αντίπαλο η διαφορά αλλάζει όσο και με τον Διπλασιασμό, οπότε χρησιμοποίησέ την όταν αυτός που νίκησες είναι αυτός που πρέπει να περάσεις (στη μέση της εκπομπής, με στενή κατάταξη, ενώ είσαι δεύτερος με διαφορά 30 πόντων).",
         "stealHeading": "⚔️ Κλοπή",
-        "title": "Κλοπή vs Διπλασιασμός — πότε κερδίζει η καθεμία"
+        "title": "Κλοπή vs Διπλασιασμός — πότε συμφέρει καθεμία επιλογή"
       },
       "trophies": {
         "duelistBody": " — οι περισσότερες νίκες σε μονομαχίες όλη τη βραδιά.",
@@ -136,8 +136,8 @@
         "intro": "Δύο από τα πέντε τρόπαια της βραδιάς προέρχονται απευθείας από τα δεδομένα μονομαχιών:",
         "rulesLink": "κανονισμό",
         "scoringLink": "πλήρη σελίδα βαθμολογίας",
-        "seeMid": " για το πώς ο Μονομάχος και ο Κλέφτης τροφοδοτούν τον Πρωταθλητή, και τον ",
-        "seePost": " για sudden-death tiebreak όταν δύο παίκτες ισοβαθμούν σε κατηγορία τροπαίου.",
+        "seeMid": " για το πώς ο Μονομάχος και ο Κλέφτης μετρούν στο σύνολο του Πρωταθλητή, και τον ",
+        "seePost": " για την ισοβαθμία με sudden death όταν δύο παίκτες ισοβαθμούν σε κατηγορία τροπαίου.",
         "seePre": "Δες την ",
         "thiefBody": " — οι περισσότεροι πόντοι που πάρθηκαν με Κλοπή.",
         "thiefLabel": "Κλέφτης",
@@ -145,11 +145,11 @@
       },
       "whatIs": {
         "bodyEm": "«μονομαχία σε εξέλιξη»",
-        "bodyPost": " chip, αλλά οι ερωτήσεις παραμένουν ιδιωτικές μέχρι να τελειώσει η μονομαχία.",
-        "bodyPre": "Η μονομαχία είναι ένας ιδιωτικός γύρος Eurovision trivia 3 ερωτήσεων ανάμεσα σε ακριβώς δύο παίκτες στο ίδιο δωμάτιο. Και οι δύο παίκτες απαντούν στις ίδιες ερωτήσεις σε χρονόμετρο 12 δευτερολέπτων. Η πρώτη ερώτηση εκκινεί μόλις ο προκαλούμενος δεχτεί· όλοι οι υπόλοιποι στο δωμάτιο βλέπουν ένα διακριτικό ",
+        "bodyPost": ", αλλά οι ερωτήσεις παραμένουν ιδιωτικές μέχρι να τελειώσει η μονομαχία.",
+        "bodyPre": "Η μονομαχία είναι ένας ιδιωτικός γύρος Eurovision trivia 3 ερωτήσεων ανάμεσα σε ακριβώς δύο παίκτες στο ίδιο δωμάτιο. Και οι δύο παίκτες απαντούν στις ίδιες ερωτήσεις με χρονόμετρο 12 δευτερολέπτων. Η πρώτη ερώτηση εμφανίζεται μόλις ο προκαλούμενος δεχτεί· όλοι οι υπόλοιποι στο δωμάτιο βλέπουν μια διακριτική ένδειξη ",
         "bullets": [
           {
-            "rest": " Αντλούνται από την τράπεζα Eurovision trivia, με βάρος προς την προτίμηση δεκαετίας του δωματίου.",
+            "rest": " Αντλούνται από την τράπεζα Eurovision trivia, με έμφαση στη δεκαετία που προτιμά το δωμάτιο.",
             "strong": "3 ερωτήσεις."
           },
           {
@@ -157,23 +157,23 @@
             "strong": "12 δευτερόλεπτα ανά ερώτηση."
           },
           {
-            "rest": " — συν ένα flat bonus νίκης +12.",
-            "strong": "Ο νικητής παίρνει το μεγαλύτερο σύνολο απαντήσεων"
+            "rest": " — ίσα σύνολα σημαίνουν ισοπαλία, χωρίς νικητή και χωρίς μεταφορά πόντων. Δεν υπάρχει σταθερό bonus νίκης.",
+            "strong": "Νικά το μεγαλύτερο σύνολο απαντήσεων"
           },
           {
-            "rest": " Ο νικητής διαλέγει. Ο ηττημένος κρατάει τους πόντους του στον Διπλασιασμό· χάνει έως winner_score στην Κλοπή.",
+            "rest": " Ο νικητής διαλέγει. Με τον Διπλασιασμό παίρνει το διπλάσιο του σκορ της μονομαχίας του και ο ηττημένος κρατάει τους πόντους του· με την Κλοπή το σκορ της μονομαχίας περνά από τον ηττημένο στον νικητή (έως όσους πόντους έχει ο ηττημένος).",
             "strong": "Κλοπή ή Διπλασιασμός."
           }
         ],
         "title": "Τι είναι μια μονομαχία Eurovision;"
       },
       "when": {
-        "body1Mid": " και μετά. Κατά τη φάση ",
-        "body1Post": " (lobby + προβλέψεις) όλα τα κουμπιά μονομαχίας είναι ανενεργά — εκείνη τη στιγμή είναι ανοιχτή και η λειτουργία Quiz. Μόλις ξεκινήσει η εκπομπή και ο οικοδεσπότης προχωρήσει στη Ζωντανή Εκπομπή, το Quiz κλειδώνει και οι μονομαχίες ανοίγουν. Και τα δύο μένουν ανοιχτά μέχρι την αποκάλυψη Αποτελεσμάτων και Νικητών.",
-        "body1Pre": "Οι μονομαχίες ξεκλειδώνουν από τη φάση ",
-        "body1Strong1": "Ζωντανή Εκπομπή",
-        "body1Strong2": "Pre-show",
-        "ruleOfThumbBody": " Το Quiz είναι το ζέσταμα, οι μονομαχίες είναι το κυρίως πιάτο. Χτίζεις βαθμολογία με προβλέψεις πριν την εκπομπή, την υπερασπίζεσαι με quiz πριν την έναρξη και μετά επιτίθεσαι σε αντιπάλους με μονομαχίες κατά τα διαφημιστικά διαλείμματα.",
+        "body1Mid": " και μένουν ανοιχτές σε όλη τη διάρκεια των τραγουδιών, παράλληλα με το Quiz. Κλειδώνουν αυτόματα στη φάση ",
+        "body1Post": " — τη στιγμή που ανοίγει η ψηφοφορία της εκπομπής — μαζί με το quiz και τις προβλέψεις, και μένουν κλειδωμένες μέχρι τα αποτελέσματα και την αποκάλυψη των τροπαίων. Η μόνη άλλη φορά που τα κουμπιά μονομαχίας είναι ανενεργά είναι η Αναμονή, πριν ξεκινήσει το πάρτι.",
+        "body1Pre": "Οι μονομαχίες ανοίγουν μόλις ο οικοδεσπότης πατήσει ",
+        "body1Strong1": "«Ξεκίνα το Πάρτι!»",
+        "body1Strong2": "Ψηφοφορία Live",
+        "ruleOfThumbBody": " Quiz και μονομαχίες μοιράζονται το ίδιο παράθυρο, οπότε μοίρασε τον χρόνο σου: τελείωσε νωρίς τους γύρους quiz, βελτίωνε τις προβλέψεις σου όσο παίζουν τα τραγούδια και κράτα τις μονομαχίες για τα postcards και τα διαφημιστικά — όλα κλειδώνουν όταν ανοίξει η ψηφοφορία.",
         "ruleOfThumbStrong": "Κανόνας φάσεων με μια ματιά:",
         "title": "Πότε είναι διαθέσιμες οι μονομαχίες"
       }
@@ -185,38 +185,38 @@
       "home": "Home"
     },
     "cta": {
-      "body": "Duels open the moment the host advances to Live Show. Spin up a room in 60 seconds and have the link ready before the first song airs.",
+      "body": "Duels open the moment the host starts the party and run until voting opens. Spin up a room in 60 seconds and have the link ready before the first song airs.",
       "primary": "Create room",
       "secondary": "How to play",
       "title": "Start a room and challenge your friends"
     },
     "faq": [
       {
-        "a": "A duel is a 3-question, head-to-head trivia battle between two players in the same Eurovision Games room. The winner can either steal points from the loser or double their own points. Duels happen live during the show — typically during ad breaks or postcard interludes.",
+        "a": "A duel is a 3-question, head-to-head trivia battle between two players in the same Eurovision Games room. The winner can either steal their duel score from the loser or double it for themselves. Duels run from the start of the party until voting opens — typically during ad breaks or postcard interludes.",
         "q": "What is a Eurovision duel?"
       },
       {
-        "a": "Duels unlock from the Live Show phase and stay open through results. They are locked during Preshow (lobby + predictions). Quiz mode is also locked once Live Show starts — duels replace it.",
+        "a": "Duels open as soon as the host starts the party and stay open through the Pre-Night Show and Predictions Open phases, all through the songs. They lock automatically when the room moves to Voting Live — at the same moment as quiz and predictions — and stay locked through the results. Quiz and duels run side by side; neither replaces the other.",
         "q": "When can I duel?"
       },
       {
-        "a": "There is a default per-pair cap (3 duels, max 10) baked into the system. The cap counts rematches, so you cannot grind one opponent for points all night.",
+        "a": "Each of you can challenge the other once, and the loser of a duel can request one rematch. Once a rematch exists between two players, no more challenges between them — so you cannot grind one opponent for points all night.",
         "q": "How many duels can I have with one person?"
       },
       {
-        "a": "Each correct answer scores 12 minus elapsed seconds (12 at 0s, 1 at 11s, 0 after 12s or wrong). Whoever has the higher answer total wins the duel and gets a flat +12 bonus on top. The winner then chooses Steal (take winner_score from the loser) or Double (add winner_score to themselves).",
+        "a": "Each correct answer scores 12 minus the elapsed whole seconds (12 under 1s, 1 at 11s, 0 after 12s or wrong). Whoever has the higher answer total wins the duel; equal totals are a tie with no winner. There is no win bonus: the winner chooses Steal (move their duel score from the loser, up to what the loser has) or Double (add twice their duel score to themselves).",
         "q": "How are duel points calculated?"
       }
     ],
     "hero": {
       "chip": "Live-show feature",
-      "lede": "A duel turns the dead air between performances into a battlefield. Challenge anyone in your room to a 3-question Eurovision trivia fight — winner steals their points or doubles their own. Two of the five end-of-night trophies (Duelist, Thief) are decided here.",
+      "lede": "A duel turns the dead air between performances into a battlefield. Challenge anyone in your room to a 3-question Eurovision trivia fight — the winner steals their duel score from the loser or doubles it for themselves. Two of the five end-of-night trophies (Duelist, Thief) are decided here.",
       "title": "Eurovision duels — head-to-head trivia during the live show"
     },
     "howToSteps": [
       {
         "name": "Pick an opponent",
-        "text": "During the Live Show phase, tap any other player’s name in the room and choose Challenge."
+        "text": "Any time from party start until voting opens, tap any other player’s name in the room and choose Challenge."
       },
       {
         "name": "Answer fast",
@@ -224,11 +224,11 @@
       },
       {
         "name": "Win on total",
-        "text": "Highest answer total wins the duel and gets a flat +12 win bonus."
+        "text": "Highest answer total wins the duel. Equal totals are a tie: no winner, no points move."
       },
       {
         "name": "Steal or Double",
-        "text": "Winner picks: Steal takes points from the loser, Double adds points to themselves. Loser keeps points if Double."
+        "text": "Winner picks: Steal moves their duel score from the loser to them, Double adds twice their duel score to themselves. Loser keeps points if Double."
       }
     ],
     "meta": {
@@ -257,7 +257,7 @@
         "title": "Leaving or deleting a room"
       },
       "predictions": {
-        "blurb": "Lock Top 5 and Worst 5 before the show — points stack with duels.",
+        "blurb": "Lock Top 5 and Worst 5 before voting opens — points stack with duels.",
         "title": "Predictions game"
       },
       "rules": {
@@ -276,37 +276,37 @@
     "sections": {
       "faqTitle": "Frequently asked questions",
       "scoring": {
-        "doubleBodyEm": "winner_score",
+        "doubleBodyEm": "2 × your duel score",
         "doubleBodyPost": " to yourself. Loser keeps their score.",
-        "doubleBodyPre": " — add another ",
+        "doubleBodyPre": " — add ",
         "doubleLabel": "Double",
         "headers": {
           "points": "Points",
           "scenario": "Scenario"
         },
-        "intro": "The formula rewards speed and accuracy equally — a half-second hesitation costs you a point.",
+        "intro": "The formula rewards speed and accuracy equally — every full second of hesitation costs you a point.",
         "rows": {
           "eleven": "Correct answer at 11 seconds",
           "five": "Correct answer at 5 seconds",
-          "winBonus": "Win bonus",
+          "winBonus": "Maximum per question (correct in under 1 second)",
           "wrong": "Wrong / timeout",
           "zeroToOne": "Correct answer at 0–1 seconds"
         },
-        "stealBodyEm": "winner_score",
-        "stealBodyPost": " from the loser's banked total. Capped at what the loser actually has (you cannot take them below zero).",
-        "stealBodyPre": " — take ",
+        "stealBodyEm": "your duel score",
+        "stealBodyPost": " from the loser’s banked total to yours. Capped at what the loser actually has (you cannot take them below zero); unavailable if they have 0 points.",
+        "stealBodyPre": " — move ",
         "stealLabel": "Steal",
         "title": "Scoring math",
-        "winnerScoreEm": "winner_score",
-        "winnerScorePost": ". They then pick:",
-        "winnerScorePre": "The winner's total earned that duel is called "
+        "winnerScoreEm": "duel score",
+        "winnerScorePost": ". There is no extra win bonus — the winner picks:",
+        "winnerScorePre": "The winner’s total earned in that duel is their "
       },
       "stealVsDouble": {
-        "doubleBodyEm": "winner_score",
-        "doubleBodyPost": " banked (no points to steal anyway).",
-        "doubleBodyPre": " Flat add — better when you're already ahead and don't want to fuel a revenge challenge. Strictly better when the loser has less than ",
+        "doubleBodyEm": "0 points",
+        "doubleBodyPost": ". Better when you’re racing the whole room rather than this one opponent.",
+        "doubleBodyPre": " Adds twice your duel score to you — always the bigger personal gain, and the only option when the loser has ",
         "doubleHeading": "✨ Double",
-        "stealBody": "Zero-sum swing — your gain is matched by their loss. Use it when overtaking the leader matters more than the absolute gain (mid-show, leaderboard tight, you're second by 30 points).",
+        "stealBody": "Zero-sum swing — you gain your duel score and they lose it (capped at what they have). Against that one opponent the gap moves as much as with Double, so use it when the person you beat is the one you need to overtake (mid-show, leaderboard tight, you’re second by 30 points).",
         "stealHeading": "⚔️ Steal",
         "title": "Steal vs Double — when each one wins"
       },
@@ -325,8 +325,8 @@
       },
       "whatIs": {
         "bodyEm": "\"duel in progress\"",
-        "bodyPost": " chip but the questions stay private until the duel ends.",
-        "bodyPre": "A duel is a private 3-question Eurovision trivia round between exactly two players in the same room. Both players answer the same questions on a 12-second timer. The first question fires once the challenger accepts; everyone else in the room sees a discreet ",
+        "bodyPost": " chip, but the questions stay private until the duel ends.",
+        "bodyPre": "A duel is a private 3-question Eurovision trivia round between exactly two players in the same room. Both players answer the same questions on a 12-second timer. The first question fires once the challenged player accepts; everyone else in the room sees a discreet ",
         "bullets": [
           {
             "rest": " Pulled from the Eurovision trivia bank, weighted toward the room's decade preference.",
@@ -337,23 +337,23 @@
             "strong": "12 seconds per question."
           },
           {
-            "rest": " — plus a flat +12 win bonus.",
+            "rest": " — equal totals are a tie, with no winner and no points moved. There is no flat win bonus.",
             "strong": "Winner takes the bigger answer total"
           },
           {
-            "rest": " Winner picks one. Loser keeps their points if Double; loses up to winner_score if Steal.",
+            "rest": " Winner picks one. Double adds twice the winner’s duel score and the loser keeps their points; Steal moves the duel score from the loser to the winner (up to what the loser has).",
             "strong": "Steal or Double."
           }
         ],
         "title": "What is a Eurovision duel?"
       },
       "when": {
-        "body1Mid": " phase onward. During the ",
-        "body1Post": " phase (lobby + predictions) all duel buttons are inactive — that's also when Quiz mode is open. Once the broadcast starts and the host advances to Live Show, Quiz locks and duels open. Both stay open through Results and Winners reveal.",
-        "body1Pre": "Duels unlock from the ",
-        "body1Strong1": "Live Show",
-        "body1Strong2": "Preshow",
-        "ruleOfThumbBody": " Quiz is the warm-up, duels are the main event. You build score with predictions before the show, defend it with quiz before kick-off, then attack rivals with duels during commercial breaks.",
+        "body1Mid": " and stay open all through the songs, side by side with Quiz. They lock automatically at ",
+        "body1Post": " — the moment the show’s voting opens — together with quiz and predictions, and stay locked through the results and trophy reveal. The only other time duel buttons are inactive is the Lobby, before the party starts.",
+        "body1Pre": "Duels open as soon as the host taps ",
+        "body1Strong1": "Start the Party!",
+        "body1Strong2": "Voting Live",
+        "ruleOfThumbBody": " Quiz and duels share the same window, so pace yourself: knock out your quiz rounds early, keep refining predictions as the songs play, and save duels for postcards and ad breaks — everything locks when voting opens.",
         "ruleOfThumbStrong": "Phase rule of thumb:",
         "title": "When duels are available"
       }

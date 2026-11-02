@@ -12,15 +12,15 @@
     },
     "faq": [
       {
-        "a": "Ναι. Χωρίς συνδρομή, χωρίς αγορές εντός εφαρμογής, χωρίς εγγραφή για τους καλεσμένους που μπαίνουν. Ο οικοδεσπότης κάνει login μία φορά με email ώστε να αποθηκευτεί το δωμάτιο· οι παίκτες χρειάζονται μόνο τον κωδικό δωματίου.",
+        "a": "Ναι. Χωρίς συνδρομή, χωρίς αγορές εντός εφαρμογής, χωρίς εγγραφή για τους καλεσμένους που μπαίνουν. Ο οικοδεσπότης συνδέεται μία φορά με email ώστε να αποθηκευτεί το δωμάτιο· οι παίκτες χρειάζονται μόνο τον κωδικό δωματίου.",
         "q": "Είναι όντως δωρεάν το Eurovision Games;"
       },
       {
-        "a": "Από δύο έως είκοσι ανά δωμάτιο. Ιδανικό σημείο τα έξι έως δέκα — αρκετή ποικιλία στις προβλέψεις και τις μονομαχίες χωρίς να βαρετιάζει η εναλλαγή trivia σε μια τετράωρη εκπομπή.",
+        "a": "Από δύο έως είκοσι ανά δωμάτιο. Ιδανικός αριθμός: έξι έως δέκα — αρκετή ποικιλία στις προβλέψεις και τις μονομαχίες χωρίς να κουράζει η εναλλαγή στο trivia σε μια τετράωρη εκπομπή.",
         "q": "Πόσοι παίκτες μπορούν να μπουν;"
       },
       {
-        "a": "Ναι. Είναι ένα mobile-first PWA που τρέχει σε κάθε σύγχρονο browser σε iOS, Android ή desktop. Χωρίς εγκατάσταση από app store — οι παίκτες απλώς ανοίγουν τον σύνδεσμο, γράφουν τον κωδικό δωματίου και παίζουν.",
+        "a": "Ναι. Είναι PWA σχεδιασμένο πρώτα για κινητά, που τρέχει σε κάθε σύγχρονο browser σε iOS, Android ή desktop. Χωρίς εγκατάσταση από app store — οι παίκτες απλώς ανοίγουν τον σύνδεσμο, γράφουν τον κωδικό δωματίου και παίζουν.",
         "q": "Λειτουργεί στο κινητό;"
       },
       {
@@ -29,20 +29,20 @@
       },
       {
         "a": "Όχι. Το Eurovision Games είναι ένα ανεξάρτητο fan project. Τα Eurovision Song Contest, ESC και το λογότυπο με την καρδιά είναι σήματα κατατεθέντα της European Broadcasting Union. Χρησιμοποιούμε τα δεδομένα χωρών και τραγουδιών μόνο για να βαθμολογήσουμε τις προβλέψεις σου.",
-        "q": "Έχει σχέση με την EBU ή την επίσημη Eurovision Song Contest;"
+        "q": "Έχει σχέση με την EBU ή τον επίσημο διαγωνισμό Eurovision Song Contest;"
       },
       {
-        "a": "Περίπου τέσσερις ώρες, σε αντιστοιχία με τη μετάδοση. Οι προβλέψεις κλειδώνουν πριν το πρώτο τραγούδι, το quiz τρέχει στο pre-show, οι μονομαχίες τρέχουν στα διαφημιστικά διαλείμματα και στο interval, τα αποτελέσματα δημοσιεύονται ζωντανά και τα τρόπαια αποκαλύπτονται μετά την ανακοίνωση του νικητή.",
+        "a": "Περίπου τέσσερις ώρες, σε αντιστοιχία με τη μετάδοση. Quiz και μονομαχίες ανοίγουν μόλις ο οικοδεσπότης ξεκινήσει το πάρτι, οι προβλέψεις αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια, όλα κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία, τα αποτελέσματα δημοσιεύονται ζωντανά και τα τρόπαια αποκαλύπτονται μετά την ανακοίνωση του νικητή.",
         "q": "Πόσο διαρκεί μια ολόκληρη βραδιά;"
       }
     ],
     "hero": {
       "chip": "Όλα τα παιχνίδια",
-      "lede": "Το Eurovision Games είναι ο δωρεάν σύντροφος για τη Eurovision μέσα στον browser. Προβλέψεις πριν την εκπομπή, γύροι quiz στο pre-show, μονομαχίες ένας προς έναν στα διαφημιστικά διαλείμματα, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια στο τέλος. Από δύο έως είκοσι παίκτες, χωρίς install και χωρίς λογαριασμό για τους καλεσμένους.",
+      "lede": "Το Eurovision Games είναι ο δωρεάν σύντροφος για τη Eurovision μέσα στον browser. Προβλέψεις που κλειδώνουν όταν ανοίγει η ψηφοφορία, γύροι quiz και μονομαχίες ένας προς έναν πριν και κατά τη διάρκεια της εκπομπής, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια στο τέλος. Από δύο έως είκοσι παίκτες, χωρίς εγκατάσταση και χωρίς λογαριασμό για τους καλεσμένους.",
       "title": "Παιχνίδια Eurovision — όλα όσα παίζονται"
     },
     "meta": {
-      "articleDescription": "Ένα δωρεάν party game μέσα στον browser, χτισμένο γύρω από τη Eurovision: προβλέψεις, quiz, μονομαχίες, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια. Από δύο έως είκοσι παίκτες, χωρίς install.",
+      "articleDescription": "Ένα δωρεάν party game μέσα στον browser, χτισμένο γύρω από τη Eurovision: προβλέψεις, quiz, μονομαχίες, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια. Από δύο έως είκοσι παίκτες, χωρίς εγκατάσταση.",
       "description": "Το δωρεάν party game της Eurovision μέσα στον browser: προβλέψεις Top 5 και Worst 5, μονομαχίες trivia, γύροι quiz, ζωντανός πίνακας βαθμολογίας και πέντε τρόπαια. 2–20 παίκτες, χωρίς install.",
       "headline": "Eurovision Games — Ο δωρεάν multiplayer σύντροφος για τη Eurovision {year}",
       "keywords": [
@@ -59,12 +59,12 @@
       "heading": "Συνέχισε την ανάγνωση",
       "items": [
         {
-          "blurb": "Κλείδωσε Top 5 και Worst 5 πριν την εκπομπή — η μηχανή των 500 πόντων της βραδιάς.",
+          "blurb": "Κλείδωσε Top 5 και Worst 5 πριν ανοίξει η ψηφοφορία — η μηχανή των 500 πόντων της βραδιάς.",
           "href": "/eurovision-predictions",
           "title": "Προβλέψεις"
         },
         {
-          "blurb": "Δείγματα ερωτήσεων και η τράπεζα από όπου τραβάνε quiz και μονομαχίες.",
+          "blurb": "Ενδεικτικές ερωτήσεις και η τράπεζα από την οποία αντλούν το quiz και οι μονομαχίες.",
           "href": "/eurovision-trivia",
           "title": "Trivia"
         },
@@ -74,7 +74,7 @@
           "title": "Μονομαχίες"
         },
         {
-          "blurb": "Ο ζωντανός πίνακας βαθμολογίας που παρακολουθούν όλοι. Push-updated, χωρίς refresh.",
+          "blurb": "Ο ζωντανός πίνακας βαθμολογίας που παρακολουθούν όλοι. Ενημερώνεται αυτόματα, χωρίς ανανέωση.",
           "href": "/dashboard",
           "title": "Dashboard"
         },
@@ -89,7 +89,7 @@
           "title": "Βραδιά Eurovision"
         },
         {
-          "blurb": "Οδηγός διοργάνωσης — χώρος, φαγητό, σειρά εμφάνισης και ποια παιχνίδια να βάλεις πάνω.",
+          "blurb": "Οδηγός διοργάνωσης — χώρος, φαγητό, πρόγραμμα βραδιάς και ποια παιχνίδια να προσθέσεις.",
           "href": "/eurovision-party",
           "title": "Πάρτι Eurovision"
         }
@@ -97,7 +97,7 @@
     },
     "sections": {
       "dashboard": {
-        "p1": "Το Dashboard είναι ο πίνακας βαθμολογίας που είναι πάντα ορατός και ενημερώνεται με push τη στιγμή που λύνεται οποιαδήποτε από τις τέσσερις πηγές — προβλέψεις, quiz, κερδισμένες μονομαχίες, κλεμμένοι πόντοι. Πάτα έναν παίκτη για να δεις την ανάλυση ανά πηγή. Δεν υπάρχει refresh ούτε spectator mode· όλοι στο δωμάτιο βλέπουν τα ίδια σύνολα την ίδια στιγμή.",
+        "p1": "Το Dashboard είναι ο πίνακας βαθμολογίας που είναι πάντα ορατός και ενημερώνεται αυτόματα τη στιγμή που κρίνεται οποιαδήποτε από τις τέσσερις πηγές — προβλέψεις, quiz, κερδισμένες μονομαχίες, κλεμμένοι πόντοι. Πάτα έναν παίκτη για να δεις την ανάλυση ανά πηγή. Δεν χρειάζεται ανανέωση και δεν υπάρχει λειτουργία θεατή· όλοι στο δωμάτιο βλέπουν τα ίδια σύνολα την ίδια στιγμή.",
         "p2After": ".",
         "p2Before": "Πλήρης ανάλυση στη ",
         "p2Link": "σελίδα Dashboard",
@@ -105,9 +105,9 @@
       },
       "duels": {
         "double": "Double",
-        "p1Mid": " (παίρνει πόντους από τον ηττημένο) ή ",
-        "p1Post": " (προσθέτει πόντους στον εαυτό του). Δύο τρόπαια — Μονομάχος και Κλέφτης — κρίνονται εδώ.",
-        "p1Pre": "Μόλις ξεκινήσει η μετάδοση, το quiz κλειδώνει και ανοίγουν οι μονομαχίες. Μια μονομαχία είναι ένα ιδιωτικό head-to-head 3 ερωτήσεων με 12 δευτερόλεπτα ανά ερώτηση με άλλον παίκτη. Ο νικητής επιλέγει ",
+        "p1Mid": " (μεταφέρει το σκορ της μονομαχίας του από τον ηττημένο) ή ",
+        "p1Post": " (προσθέτει στον εαυτό του το διπλάσιο του σκορ της μονομαχίας του). Δύο τρόπαια — Μονομάχος και Κλέφτης — κρίνονται εδώ.",
+        "p1Pre": "Οι μονομαχίες ανοίγουν μόλις ο οικοδεσπότης ξεκινήσει το πάρτι και τρέχουν παράλληλα με το quiz μέχρι να ανοίξει η ψηφοφορία. Μια μονομαχία είναι μια ιδιωτική αναμέτρηση ένας προς έναν με άλλον παίκτη: 3 ερωτήσεις, 12 δευτερόλεπτα η καθεμία. Δεν υπάρχει μπόνους νίκης — ο νικητής επιλέγει ",
         "p2After": ".",
         "p2Before": "Όλοι οι κανόνες και η βαθμολογία στη ",
         "p2Link": "σελίδα μονομαχιών",
@@ -128,37 +128,37 @@
             "strong": "PWA με προτεραιότητα στο κινητό."
           },
           {
-            "rest": " Ο οικοδεσπότης κάνει login μία φορά· οι καλεσμένοι απλώς γράφουν τον κωδικό δωματίου και ένα όνομα.",
+            "rest": " Ο οικοδεσπότης συνδέεται μία φορά· οι καλεσμένοι απλώς γράφουν τον κωδικό δωματίου και ένα όνομα.",
             "strong": "Εγγραφή μόνο για τον οικοδεσπότη."
           },
           {
-            "rest": " Ιδανικό σημείο τα 6–10 — αρκετή ποικιλία χωρίς να βαρετιάζει η εναλλαγή trivia.",
+            "rest": " Ιδανικός αριθμός: 6–10 — αρκετή ποικιλία χωρίς να κουράζει η εναλλαγή στο trivia.",
             "strong": "2–20 παίκτες."
           }
         ],
         "intro": "Το Eurovision Games είναι δωρεάν και έχει χτιστεί έτσι ώστε να εξαλείφει κάθε λόγο που θα έκανε έναν καλεσμένο να τα παρατήσει πριν το πρώτο τραγούδι.",
-        "title": "Δωρεάν, χωρίς install, χωρίς λογαριασμό"
+        "title": "Δωρεάν, χωρίς εγκατάσταση, χωρίς λογαριασμό"
       },
       "inside": {
-        "intro": "Τέσσερα modes βαθμολογίας απλώνονται στις τέσσερις ώρες της μετάδοσης — καθένα στοχεύει σε διαφορετικό σημείο της βραδιάς, ώστε το δωμάτιο να μη μένει ποτέ \"χωρίς να κάνει κάτι\". Οι προβλέψεις είναι το long game. Το quiz είναι το ζέσταμα. Οι μονομαχίες είναι το όπλο της ζωντανής εκπομπής. Το Dashboard είναι ο πίνακας βαθμολογίας που παρακολουθούν όλοι.",
+        "intro": "Τέσσερα παιχνίδια βαθμολογίας απλώνονται στις τέσσερις ώρες της μετάδοσης — καθένα στοχεύει σε διαφορετικό σημείο της βραδιάς, ώστε το δωμάτιο να μη μένει ποτέ \"χωρίς να κάνει κάτι\". Οι προβλέψεις είναι το μακροπρόθεσμο παιχνίδι. Το quiz είναι το ζέσταμα. Οι μονομαχίες είναι το όπλο της ζωντανής εκπομπής. Το Dashboard είναι ο πίνακας βαθμολογίας που παρακολουθούν όλοι.",
         "rows": [
           {
             "game": "Προβλέψεις",
             "href": "/eurovision-predictions",
-            "scoring": "Top 5 + Worst 5, σταθμισμένες θέσεις, όριο 500",
-            "when": "Λόμπι → κλείδωμα στο τραγούδι 1"
+            "scoring": "Top 5 + Worst 5, 50 ακριβής θέση / 20 εντός λίστας, όριο 500",
+            "when": "Έναρξη πάρτι → κλείδωμα με το άνοιγμα της ψηφοφορίας"
           },
           {
             "game": "Quiz",
             "href": "/eurovision-trivia",
             "scoring": "3 γύροι × 120 = όριο 360",
-            "when": "Μόνο pre-show"
+            "when": "Έναρξη πάρτι → κλείδωμα με το άνοιγμα της ψηφοφορίας"
           },
           {
             "game": "Μονομαχίες",
             "href": "/duels",
-            "scoring": "3 ερωτήσεις, 12 δευτ. έκαστη, Steal ή Double",
-            "when": "Ζωντανή Εκπομπή → Νικητές"
+            "scoring": "3 ερωτήσεις, 12 δευτ. η καθεμία, Steal ή Double",
+            "when": "Έναρξη πάρτι → κλείδωμα με το άνοιγμα της ψηφοφορίας"
           },
           {
             "game": "Dashboard",
@@ -175,14 +175,14 @@
         "title": "Τι περιλαμβάνει το Eurovision Games"
       },
       "predictions": {
-        "p1": "Πριν το πρώτο τραγούδι, κάθε παίκτης κλειδώνει ένα Top 5 και ένα Worst 5 από τη σειρά εμφάνισης του μεγάλου τελικού του {year}. Οι σταθμισμένες θέσεις ανταμείβουν την πεποίθηση (η #1 επιλογή σου αξίζει περισσότερο από τη #5) και ο τύπος βαθμολογεί έναντι του επίσημου συνόλου κριτικής επιτροπής + televote, μόλις ο οικοδεσπότης καταχωρήσει τα αποτελέσματα. Το όριο είναι 500 πόντοι, ώστε καμία κατηγορία να μην μπορεί να μονοπωλήσει τη βραδιά.",
+        "p1": "Πριν ή κατά τη διάρκεια της εκπομπής, κάθε παίκτης φτιάχνει ένα Top 5 και ένα Worst 5 από τη σειρά εμφάνισης του μεγάλου τελικού του {year} και μπορεί να τα αλλάζει μέχρι να ανοίξει η ψηφοφορία. Η ακριβής θέση δίνει 50 πόντους και η σωστή λίστα σε λάθος θέση δίνει 20· ο τύπος βαθμολογεί με βάση το επίσημο σύνολο κριτικής επιτροπής + televote μόλις έρθουν τα επίσημα αποτελέσματα. Το όριο είναι 500 πόντοι, ώστε καμία κατηγορία να μην μπορεί να μονοπωλήσει τη βραδιά.",
         "p2After": ".",
         "p2Before": "Πλήρης μορφή στη ",
         "p2Link": "σελίδα του παιχνιδιού προβλέψεων",
         "title": "Προβλέψεις — Top 5 και Worst 5"
       },
       "quiz": {
-        "p1": "Τρεις γύροι, που τους ξεκινάει ο οικοδεσπότης, τρέχουν στο παράθυρο του pre-show: δέκα ερωτήσεις ο καθένας, δώδεκα δευτερόλεπτα ανά ερώτηση, από την ίδια τράπεζα trivia της Eurovision που τροφοδοτεί και τις μονομαχίες. Το quiz κλειδώνει τη στιγμή που ο οικοδεσπότης προχωράει στη Ζωντανή Εκπομπή — αυτό είναι το όριο. Συνολικό όριο 360 πόντοι και για τους τρεις γύρους.",
+        "p1": "Κάθε παίκτης παίζει τρεις γύρους με τον δικό του ρυθμό: δέκα ερωτήσεις ο καθένας, δεκαπέντε δευτερόλεπτα ανά ερώτηση, από την ίδια τράπεζα trivia της Eurovision που τροφοδοτεί και τις μονομαχίες. Το quiz ανοίγει όταν ο οικοδεσπότης ξεκινήσει το πάρτι και κλειδώνει αυτόματα όταν ανοίξει η ψηφοφορία — αυτό είναι το όριο. Συνολικό όριο: 360 πόντοι για τους τρεις γύρους μαζί.",
         "p2After": ".",
         "p2Before": "Δείγματα ερωτήσεων και ανάλυση της τράπεζας στη ",
         "p2Link": "σελίδα Eurovision trivia",
@@ -195,11 +195,11 @@
             "strong": "Πρωταθλητής"
           },
           {
-            "rest": " — καλύτερη βαθμολογία πρόβλεψης Top 5.",
+            "rest": " — καλύτερη βαθμολογία προβλέψεων (Top 5 + Worst 5 μαζί).",
             "strong": "Μάντης"
           },
           {
-            "rest": " — υψηλότερη βαθμολογία quiz στους τρεις γύρους.",
+            "rest": " — οι περισσότερες σωστές απαντήσεις quiz στους τρεις γύρους.",
             "strong": "Γκουρού"
           },
           {
@@ -249,13 +249,13 @@
         "q": "Is this affiliated with the EBU or the official Eurovision Song Contest?"
       },
       {
-        "a": "Roughly four hours, matched to the broadcast. Predictions lock before song one, quiz runs in the preshow, duels run during ad breaks and the interval, results post live, and trophies reveal after the winner is announced.",
+        "a": "Roughly four hours, matched to the broadcast. Quiz and duels open as soon as the host starts the party, predictions stay editable through the songs, everything locks automatically when voting opens, results post live, and trophies reveal after the winner is announced.",
         "q": "How long does a full session take?"
       }
     ],
     "hero": {
       "chip": "All games",
-      "lede": "Eurovision Games is the free, browser-based companion for the Eurovision Song Contest. Predictions before the show, quiz rounds in the preshow, head-to-head duels in the ad breaks, a live dashboard, and five trophies at the end. Two to twenty players, no install, no account for guests.",
+      "lede": "Eurovision Games is the free, browser-based companion for the Eurovision Song Contest. Predictions that lock when voting opens, quiz rounds and head-to-head duels before and during the show, a live dashboard, and five trophies at the end. Two to twenty players, no install, no account for guests.",
       "title": "Eurovision Games — every game in the suite"
     },
     "meta": {
@@ -276,7 +276,7 @@
       "heading": "Keep reading",
       "items": [
         {
-          "blurb": "Lock Top 5 and Worst 5 before the show — the 500-point engine of the night.",
+          "blurb": "Lock Top 5 and Worst 5 before voting opens — the 500-point engine of the night.",
           "href": "/eurovision-predictions",
           "title": "Predictions"
         },
@@ -322,9 +322,9 @@
       },
       "duels": {
         "double": "Double",
-        "p1Mid": " (take points from the loser) or ",
-        "p1Post": " (add points to themselves). Two trophies — Duelist and Thief — are decided here.",
-        "p1Pre": "Once the broadcast starts, quiz locks and duels open. A duel is a private 3-question, 12-second-per-question head-to-head with another player. Winner picks ",
+        "p1Mid": " (move their duel score from the loser) or ",
+        "p1Post": " (add twice their duel score to themselves). Two trophies — Duelist and Thief — are decided here.",
+        "p1Pre": "Duels open as soon as the host starts the party and run alongside the quiz until voting opens. A duel is a private 3-question, 12-second-per-question head-to-head with another player. There is no win bonus — the winner picks ",
         "p2After": ".",
         "p2Before": "Full rules and scoring on the ",
         "p2Link": "duels page",
@@ -362,20 +362,20 @@
           {
             "game": "Predictions",
             "href": "/eurovision-predictions",
-            "scoring": "Top 5 + Worst 5, weighted slots, 500 cap",
-            "when": "Lobby → lock at song 1"
+            "scoring": "Top 5 + Worst 5, 50 exact / 20 in list, 500 cap",
+            "when": "Party start → lock when voting opens"
           },
           {
             "game": "Quiz",
             "href": "/eurovision-trivia",
             "scoring": "3 rounds × 120 = 360 cap",
-            "when": "Preshow only"
+            "when": "Party start → lock when voting opens"
           },
           {
             "game": "Duels",
             "href": "/duels",
             "scoring": "3 questions, 12s each, Steal or Double",
-            "when": "Live Show → Winners"
+            "when": "Party start → lock when voting opens"
           },
           {
             "game": "Dashboard",
@@ -392,14 +392,14 @@
         "title": "What's inside Eurovision Games"
       },
       "predictions": {
-        "p1": "Before song one, every player locks a Top 5 and a Worst 5 from the {year} grand-final running order. Weighted slots reward conviction (your #1 pick is worth more than your #5), and the formula scores against the official jury + televote total once the host enters results. The hard cap is 500 points so no single category can run the night.",
+        "p1": "Before or during the show, every player builds a Top 5 and a Worst 5 from the {year} grand-final running order, and can keep editing until voting opens. An exact position pays 50 points and the right list at the wrong rank pays 20; the formula scores against the official jury + televote total as soon as the official results come in. The hard cap is 500 points so no single category can run the night.",
         "p2After": ".",
         "p2Before": "Full format on the ",
         "p2Link": "predictions game page",
         "title": "Predictions — Top 5 and Worst 5"
       },
       "quiz": {
-        "p1": "Three host-triggered rounds run during the preshow window: ten questions each, twelve seconds per question, drawn from the same Eurovision trivia bank that feeds duels. Quiz locks the moment the host advances to Live Show — that is the cutoff. Cap is 360 across all three rounds combined.",
+        "p1": "Each player plays three rounds at their own pace: ten questions each, fifteen seconds per question, drawn from the same Eurovision trivia bank that feeds duels. Quiz opens when the host starts the party and locks automatically when voting opens — that is the cutoff. Cap is 360 across all three rounds combined.",
         "p2After": ".",
         "p2Before": "Sample questions and the bank breakdown live on the ",
         "p2Link": "Eurovision trivia page",
@@ -412,11 +412,11 @@
             "strong": "Champion"
           },
           {
-            "rest": " — best Top 5 prediction score.",
+            "rest": " — best prediction score (Top 5 + Worst 5 combined).",
             "strong": "Oracle"
           },
           {
-            "rest": " — highest quiz score across the three rounds.",
+            "rest": " — most correct quiz answers across the three rounds.",
             "strong": "Guru"
           },
           {

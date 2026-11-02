@@ -11,16 +11,16 @@
       "title": "Φτιάξε ένα δωμάτιο τώρα"
     },
     "duels": {
-      "capLine": "Προεπιλεγμένο όριο 3 μονομαχιών ανά ζευγάρι (μέγιστο 10), με τις ρεβάνς να μετράνε, για να μην τα «βγάζει» κανείς από έναν παίκτη όλο το βράδυ. Οι αρνημένες προκλήσεις δεν μετράνε στο όριο.",
-      "cardBody": "Πάτα το όνομα οποιουδήποτε άλλου παίκτη στη ζωντανή εκπομπή και διάλεξε <em>Πρόκληση</em>. Και οι δύο παίκτες απαντούν τις ίδιες 3 ερωτήσεις σε ιδιωτικό περιβάλλον. Όποιος έχει το υψηλότερο σύνολο κερδίζει τη μονομαχία και παίρνει σταθερό μπόνους <strong>+12</strong>. Ο νικητής μετά διαλέγει <strong>Κλοπή</strong> (παίρνει πόντους από τον ηττημένο) ή <strong>Διπλασιασμό</strong> (προσθέτει τους ίδιους στον εαυτό του).",
+      "capLine": "Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, και ο ηττημένος μιας μονομαχίας μπορεί να ζητήσει μία ρεβάνς· μόλις υπάρξει ρεβάνς, το ζευγάρι δεν μπορεί να ξαναπαίξει — ώστε κανείς να μη μαζεύει πόντους από τον ίδιο αντίπαλο όλο το βράδυ. Η άρνηση δεν κοστίζει πόντους, αλλά οι αρνήσεις είναι περιορισμένες: 2 ανά παίκτη σε δωμάτια έως 5 παικτών, 3 με 6–10, 4 με 11–15 και 5 με 16 ή περισσότερους (μετράνε και οι ρεβάνς που απορρίπτονται).",
+      "cardBody": "Πάτα το όνομα οποιουδήποτε άλλου παίκτη οποιαδήποτε στιγμή από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία και διάλεξε <em>Πρόκληση</em>. Και οι δύο παίκτες απαντούν τις ίδιες 3 ερωτήσεις σε ιδιωτικό περιβάλλον. Όποιος έχει το υψηλότερο σύνολο κερδίζει τη μονομαχία· ίσα σύνολα σημαίνουν ισοπαλία. Δεν υπάρχει μπόνους νίκης — ο νικητής διαλέγει <strong>Κλοπή</strong> (μεταφέρει το σκορ της μονομαχίας του από τον ηττημένο στον εαυτό του) ή <strong>Διπλασιασμό</strong> (προσθέτει στο σύνολό του το διπλάσιο του σκορ της μονομαχίας του).",
       "cardTitle": "Πώς εξελίσσεται μια μονομαχία",
-      "intro": "Μια μονομαχία είναι μια μάχη trivia 3 ερωτήσεων μεταξύ δύο παικτών στο δωμάτιο. Οι ερωτήσεις τρέχουν σε χρονόμετρο 12 δευτερολέπτων· μετράει και η ταχύτητα και η ακρίβεια.",
+      "intro": "Μια μονομαχία είναι μια μάχη trivia 3 ερωτήσεων μεταξύ δύο παικτών στο δωμάτιο. Οι ερωτήσεις τρέχουν σε χρονόμετρο 12 δευτερολέπτων· μετράνε και η ταχύτητα και η ακρίβεια.",
       "title": "Μονομαχίες trivia μέσα στην εκπομπή"
     },
     "hero": {
       "chip": "Οδηγός εκκίνησης",
-      "lede": "Ένα δωρεάν παιχνίδι μέσα στον browser για τον διαγωνισμό τραγουδιού της Eurovision. Οι παίκτες προβλέπουν το Top 5 και το Worst 5, μάχονται σε μονομαχίες trivia ένας προς έναν και κυνηγούν πέντε τρόπαια — όλα ενώ παίζει η εκπομπή. Χωρίς εφαρμογή, χωρίς λογαριασμό για τους καλεσμένους, από 2 έως 20 παίκτες.",
-      "title": "Πώς Παίζεται το Eurovision Games σε 60 δευτερόλεπτα"
+      "lede": "Ένα δωρεάν παιχνίδι για πάρτι, μέσα από τον browser, για τον Διαγωνισμό Τραγουδιού της Eurovision. Οι παίκτες προβλέπουν το Top 5 και το Worst 5, μάχονται σε μονομαχίες trivia ένας προς έναν και κυνηγούν πέντε τρόπαια — όλα αυτά όσο παίζει η εκπομπή. Χωρίς εφαρμογή, χωρίς λογαριασμό για τους καλεσμένους, από 2 έως 20 παίκτες.",
+      "title": "Πώς παίζεται το Eurovision Games σε 60 δευτερόλεπτα"
     },
     "meta": {
       "description": "Σύντομος οδηγός για να στήσεις ένα Eurovision watch party με προβλέψεις, μονομαχίες trivia και live βαθμολογία. Η εγκατάσταση παίρνει 60 δευτερόλεπτα, για 2-20 παίκτες, χωρίς εφαρμογή.",
@@ -53,8 +53,8 @@
           "label": "Η σειρά μετράει."
         },
         {
-          "body": "Μόλις ο οικοδεσπότης περάσει τις Προβλέψεις, καμία επεξεργασία. Όσοι μπουν αργότερα παίζουν trivia και μονομαχίες αλλά δεν μπορούν να καταχωρήσουν προβλέψεις.",
-          "label": "Σκληρό κλείδωμα."
+          "body": "Οι προβλέψεις κλειδώνουν αυτόματα όταν ανοίγει η ψηφοφορία (Ψηφοφορία Live) — καμία επεξεργασία μετά. Όσοι μπουν αργότερα μπορούν μέχρι τότε να καταχωρήσουν προβλέψεις και να παίξουν trivia και μονομαχίες.",
+          "label": "Οριστικό κλείδωμα."
         }
       ],
       "title": "Κλείδωμα προβλέψεων"
@@ -67,7 +67,7 @@
           "title": "Προβλέψεις"
         },
         {
-          "blurb": "50+ ενδεικτικές ερωτήσεις και η τράπεζα από όπου τραβάνε quiz/μονομαχίες.",
+          "blurb": "50+ ενδεικτικές ερωτήσεις και η τράπεζα ερωτήσεων από την οποία αντλούν το quiz και οι μονομαχίες.",
           "href": "/eurovision-trivia",
           "title": "Eurovision trivia"
         },
@@ -94,26 +94,26 @@
       ]
     },
     "schema": {
-      "articleDescription": "Βήμα προς βήμα οδηγός για να στήσεις ένα Eurovision watch party με προβλέψεις, μονομαχίες trivia και live βαθμολογία. Η εγκατάσταση παίρνει 60 δευτερόλεπτα.",
+      "articleDescription": "Βήμα προς βήμα οδηγός για να στήσεις ένα Eurovision watch party με προβλέψεις, μονομαχίες trivia και live βαθμολογία. Στήνεται σε 60 δευτερόλεπτα.",
       "articleHeadline": "Πώς Παίζεται το Eurovision Games — Οδηγός 2 λεπτών",
-      "howToDescription": "Εγκατάσταση 60 δευτερολέπτων που σε πάει από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων μέσα από όλη τη μετάδοση της Eurovision.",
+      "howToDescription": "Στήσιμο 60 δευτερολέπτων που σε πάει από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων, σε όλη τη διάρκεια της μετάδοσης της Eurovision.",
       "howToName": "Πώς να παίξεις το Eurovision Games",
       "steps": [
         {
           "name": "Δημιουργία δωματίου",
-          "text": "Πάτα \"Δημιουργία Δωματίου\", όρισε μέγιστους παίκτες (2-20) και γύρους quiz (1-3)."
+          "text": "Πάτα «Φτιάξε Δωμάτιο», γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης για το δωμάτιο (6+ χαρακτήρες). Κάθε δωμάτιο χωράει έως 20 παίκτες."
         },
         {
           "name": "Πρόσκληση φίλων",
-          "text": "Μοιράσου τον 6ψήφιο κωδικό δωματίου, τον σύνδεσμο και τον αυτόματο κωδικό δωματίου. Οι φίλοι μπαίνουν από τον browser τους, χωρίς εφαρμογή."
+          "text": "Μοιράσου τον κωδικό δωματίου 6 χαρακτήρων, τον σύνδεσμο και τον κωδικό πρόσβασης του δωματίου. Οι φίλοι μπαίνουν από τον browser τους, χωρίς εφαρμογή."
         },
         {
           "name": "Κλείδωμα προβλέψεων",
-          "text": "Κάθε παίκτης διαλέγει το Top 5 και Worst 5 για τον μεγάλο τελικό της Eurovision. Οι επιλογές κλειδώνουν όταν ο οικοδεσπότης προχωρά τη φάση."
+          "text": "Κάθε παίκτης διαλέγει το δικό του Top 5 και Worst 5 για τον Μεγάλο Τελικό της Eurovision. Οι επιλογές αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια και κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία."
         },
         {
           "name": "Μάχη στις μονομαχίες",
-          "text": "Στη ζωντανή εκπομπή, προκάλεσε φίλους σε μονομαχίες trivia 3 ερωτήσεων ένας προς έναν. Κλέψε πόντους ή διπλασίασε τους δικούς σου."
+          "text": "Από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία, προκάλεσε φίλους σε μονομαχίες trivia 3 ερωτήσεων ένας προς έναν. Κλέψε το σκορ της μονομαχίας σου από τον ηττημένο ή διπλασίασέ το."
         },
         {
           "name": "Live βαθμολογία",
@@ -133,52 +133,52 @@
           "strong": "Top 5 / Worst 5"
         },
         {
-          "rest": "κατοχυρώνονται από τη φάση των προβλέψεων και δεν αλλάζουν.",
+          "rest": "κατοχυρώνονται τη στιγμή που απαντάς και δεν αλλάζουν.",
           "strong": "Πόντοι quiz"
         },
         {
-          "rest": "παίζουν σε πραγματικό χρόνο καθώς οι μονομαχίες κλείνουν στη μετάδοση.",
+          "rest": "αλλάζουν σε πραγματικό χρόνο καθώς ολοκληρώνονται οι μονομαχίες κατά τη μετάδοση.",
           "strong": "Πόντοι μονομαχιών"
         },
         {
-          "rest": "ο οικοδεσπότης καταχωρεί ζωντανά τα αποτελέσματα κριτικής επιτροπής και televote, είτε ενημερώνονται αυτόματα τη βραδιά του τελικού.",
-          "strong": "Είτε"
+          "rest": "— τα επίσημα αποτελέσματα κριτικής επιτροπής και televote έρχονται αυτόματα τη βραδιά του Μεγάλου Τελικού· κανείς δεν χρειάζεται να τα πληκτρολογήσει.",
+          "strong": "Χωρίς καταχώρηση"
         }
       ],
       "title": "Live βαθμολογία"
     },
     "setup": {
-      "intro": "Ένας οικοδεσπότης συνδέεται (magic-link στο email — χωρίς κωδικό). Όλοι οι άλλοι μπαίνουν από έναν σύνδεσμο. Όλη η ροή από την κενή καρτέλα του browser μέχρι τις κλειδωμένες προβλέψεις είναι ένα λεπτό.",
+      "intro": "Ένας οικοδεσπότης συνδέεται (magic-link στο email — χωρίς κωδικό πρόσβασης). Όλοι οι άλλοι μπαίνουν από έναν σύνδεσμο. Όλη η διαδικασία, από την κενή καρτέλα του browser μέχρι τις κλειδωμένες προβλέψεις, διαρκεί μόλις ένα λεπτό.",
       "items": [
         {
-          "rest": "Πάτα <em>Δημιουργία Δωματίου</em>. Διάλεξε γύρους quiz (προεπιλογή 3) και μέγιστους παίκτες (έως 20). Εμφανίζεται ένας 6ψήφιος κωδικός δωματίου.",
+          "rest": "Πάτα <em>Φτιάξε Δωμάτιο</em>, γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης. Εμφανίζεται ένας κωδικός δωματίου 6 χαρακτήρων· το δωμάτιο χωράει έως 20 παίκτες.",
           "strong": "Φτιάξε το δωμάτιο (10δ)."
         },
         {
-          "rest": "Μοιράσου τον κωδικό, τον σύνδεσμο και τον αυτόματο κωδικό δωματίου (περιέχεται στο μήνυμα). Κινητό ή laptop, οποιοσδήποτε σύγχρονος browser.",
+          "rest": "Μοιράσου τον κωδικό, τον σύνδεσμο συμμετοχής και τον κωδικό πρόσβασης (περιλαμβάνονται όλα στο μήνυμα κοινοποίησης). Κινητό ή laptop, οποιοσδήποτε σύγχρονος browser. Όταν μπουν όλοι, πάτα <em>Ξεκίνα το Πάρτι!</em>",
           "strong": "Κάλεσε φίλους (20δ)."
         },
         {
-          "rest": "Κάθε παίκτης φτιάχνει ένα Top 5 και ένα Worst 5. Οι επιλογές κλειδώνουν όταν ο οικοδεσπότης περάσει τη φάση των προβλέψεων.",
-          "strong": "Κλείδωσε προβλέψεις (5 λεπτά πριν την έναρξη)."
+          "rest": "Κάθε παίκτης φτιάχνει ένα Top 5 και ένα Worst 5. Οι επιλογές αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια και κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία.",
+          "strong": "Κάνε προβλέψεις (πριν ή κατά τη διάρκεια της εκπομπής)."
         },
         {
-          "rest": "Οι γύροι quiz τρέχουν στη φάση των προβλέψεων ως γέμισμα — οι πόντοι μετράνε στο σύνολο της βραδιάς.",
+          "rest": "Κάθε παίκτης παίζει 3 γύρους quiz με τον δικό του ρυθμό, οποιαδήποτε στιγμή από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία — οι πόντοι μετράνε στο σύνολο της βραδιάς.",
           "strong": "Προθέρμανση trivia."
         },
         {
-          "rest": "Μόλις ο οικοδεσπότης περάσει στη Ζωντανή Εκπομπή, το quiz κλείνει και ανοίγουν οι μονομαχίες. Προκάλεσε όποιον θες στο δωμάτιο.",
-          "strong": "Ζωντανή εκπομπή — ώρα για μονομαχίες."
+          "rest": "Οι μονομαχίες είναι κι αυτές ανοιχτές από την έναρξη του πάρτι — προκάλεσε όποιον θες στο δωμάτιο στα postcards και στα διαφημιστικά. Quiz, μονομαχίες και προβλέψεις κλειδώνουν όλα αυτόματα όταν ανοίξει η ψηφοφορία.",
+          "strong": "Ώρα για μονομαχίες."
         },
         {
-          "rest": "Όταν καταχωρηθούν τα αποτελέσματα, το δωμάτιο πάει σε Final και στέφονται πέντε νικητές.",
+          "rest": "Όταν οριστικοποιηθούν τα επίσημα αποτελέσματα, το δωμάτιο περνά αυτόματα στη Βαθμολογία και στέφονται πέντε νικητές.",
           "strong": "Αποκάλυψη τροπαίων."
         }
       ],
-      "title": "Εγκατάσταση σε 60 δευτερόλεπτα"
+      "title": "Στήσιμο σε 60 δευτερόλεπτα"
     },
     "suddenDeath": {
-      "body": "Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης ξεκινά ψηφοφορία — το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia — κερδίζει όποιος απαντά περισσότερες σωστά, σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.",
+      "body": "Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης ανοίγει ψηφοφορία 60 δευτερολέπτων — το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia — κερδίζει όποιος δώσει τις περισσότερες σωστές απαντήσεις· σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.",
       "title": "Sudden death για ισοπαλίες"
     },
     "trophies": {
@@ -201,11 +201,11 @@
           "strong": "Μάντης"
         },
         {
-          "rest": "— περισσότερες σωστές απαντήσεις trivia σε quiz και μονομαχίες μαζί.",
+          "rest": "— περισσότερες σωστές απαντήσεις σε όλους τους γύρους quiz (οι απαντήσεις στις μονομαχίες δεν μετράνε).",
           "strong": "Γκουρού"
         }
       ],
-      "note": "Ένας παίκτης μπορεί να κερδίσει πολλά τρόπαια. Συν-νικητές (2–5 ισόπαλοι) μοιράζονται ένα τρόπαιο εκτός αν ο οικοδεσπότης ενεργοποιήσει sudden death.",
+      "note": "Ένας παίκτης μπορεί να κερδίσει πολλά τρόπαια. Συν-νικητές (2–5 ισόπαλοι) μοιράζονται ένα τρόπαιο, εκτός αν το δωμάτιο ψηφίσει sudden death.",
       "title": "Πέντε τρόπαια νικητών"
     },
     "whatYouNeed": {
@@ -242,8 +242,8 @@
       "title": "Start a room now"
     },
     "duels": {
-      "capLine": "A default cap of 3 duels per pair (max 10), with rematches counted, prevents grinding one opponent for points all night. Refused challenges don’t count against the cap.",
-      "cardBody": "Tap any other player’s name during the live show and choose <em>Challenge</em>. Both players answer the same 3 questions in private. The higher answer total wins the duel and pockets a flat <strong>+12</strong> bonus. The winner then picks <strong>Steal</strong> (take points from the loser) or <strong>Double</strong> (add the same to themselves).",
+      "capLine": "Each of you can challenge the other once, and the loser of a duel can request one rematch; once a rematch exists, that pair can’t duel again — so nobody grinds one opponent for points all night. Refusing costs no points, but refusals are limited: 2 per player in rooms of up to 5, 3 with 6–10, 4 with 11–15 and 5 with 16 or more (refused rematches count).",
+      "cardBody": "Tap any other player’s name any time from party start until voting opens and choose <em>Challenge</em>. Both players answer the same 3 questions in private. The higher answer total wins the duel; equal totals are a tie. There is no win bonus — the winner picks <strong>Steal</strong> (move their duel score from the loser to themselves) or <strong>Double</strong> (add twice their duel score to themselves).",
       "cardTitle": "How a duel plays out",
       "intro": "A duel is a 3-question Eurovision trivia battle between two players in the room. Questions fire on a 12-second timer; speed and accuracy both count.",
       "title": "Trivia duels during the show"
@@ -284,7 +284,7 @@
           "label": "Order matters."
         },
         {
-          "body": "Once the host advances past Predictions, no edits. Late joiners can still play trivia and duels but cannot enter predictions.",
+          "body": "Predictions lock automatically when voting opens (Voting Live) — no edits after that. Late joiners can still enter predictions, play trivia and duel until then.",
           "label": "Hard lock."
         }
       ],
@@ -318,7 +318,7 @@
           "title": "Full rule book"
         },
         {
-          "blurb": "Quick answers on creating rooms, joining, and leaving mid-night.",
+          "blurb": "Quick answers on creating rooms, joining, and leaving partway through the night.",
           "href": "/faq",
           "title": "FAQ"
         }
@@ -332,19 +332,19 @@
       "steps": [
         {
           "name": "Create a room",
-          "text": "Click \"Create Room\", set max players (2-20) and quiz rounds (1-3)."
+          "text": "Click \"Create a Room\", enter your name, pick an avatar and set a room password (6+ characters). Rooms hold up to 20 players."
         },
         {
           "name": "Invite friends",
-          "text": "Share the 6-character room code, link, and auto-generated room password. Friends join in their browser, no app install."
+          "text": "Share the 6-character room code, the join link and the room password. Friends join in their browser, no app install."
         },
         {
           "name": "Lock predictions",
-          "text": "Each player picks their Top 5 and Worst 5 of the Eurovision grand final. Picks lock when the host advances the phase."
+          "text": "Each player picks their Top 5 and Worst 5 for the Eurovision grand final. Picks stay editable through the songs and lock automatically when voting opens."
         },
         {
           "name": "Battle in duels",
-          "text": "During the live show, challenge friends to head-to-head 3-question trivia duels. Steal points or double your own."
+          "text": "From party start until voting opens, challenge friends to head-to-head 3-question trivia duels. Steal your duel score from the loser or double it."
         },
         {
           "name": "Watch live scoring",
@@ -352,7 +352,7 @@
         },
         {
           "name": "Crown winners",
-          "text": "Five trophies reveal at the end: Champion, Thief, Duelist, Oracle, Guru. Optional sudden-death tiebreak settles ties."
+          "text": "Five trophies are revealed at the end: Champion, Thief, Duelist, Oracle, Guru. Optional sudden-death tiebreak settles ties."
         }
       ]
     },
@@ -364,7 +364,7 @@
           "strong": "Top 5 / Worst 5"
         },
         {
-          "rest": "are banked from the predictions phase and never change.",
+          "rest": "are banked as you answer and never change.",
           "strong": "Quiz points"
         },
         {
@@ -372,8 +372,8 @@
           "strong": "Duel points"
         },
         {
-          "rest": "the host enters jury and televote results live, or they update automatically on grand-final night.",
-          "strong": "Either"
+          "rest": "— official jury and televote results are pulled in automatically on grand-final night; nobody has to type them in.",
+          "strong": "No data entry"
         }
       ],
       "title": "Live scoring"
@@ -382,38 +382,38 @@
       "intro": "One host signs in (magic-link email — no password). Everyone else joins from a link. The whole flow from empty browser tab to locked-in predictions is a single minute.",
       "items": [
         {
-          "rest": "Click <em>Create Room</em>. Pick quiz rounds (default 3) and max players (up to 20). A 6-character room code appears.",
+          "rest": "Click <em>Create a Room</em>, enter your name, pick an avatar and set a room password. A 6-character room code appears; the room holds up to 20 players.",
           "strong": "Create the room (10s)."
         },
         {
-          "rest": "Share the code, the join link, and the auto-generated room password (included in the share message). Phone or laptop, any modern browser.",
+          "rest": "Share the code, the join link and the room password (all included in the share message). Phone or laptop, any modern browser. When everyone’s in, tap <em>Start the Party!</em>",
           "strong": "Invite friends (20s)."
         },
         {
-          "rest": "Every player builds a Top 5 and Worst 5. Picks lock when the host advances past the predictions phase.",
-          "strong": "Lock predictions (5 min before kick-off)."
+          "rest": "Every player builds a Top 5 and Worst 5. Picks stay editable through the songs and lock automatically when voting opens.",
+          "strong": "Make predictions (before or during the show)."
         },
         {
-          "rest": "Quiz rounds run during the predictions phase as filler — points carry into the night total.",
+          "rest": "Each player plays 3 quiz rounds at their own pace, any time from party start until voting opens — points carry into the night total.",
           "strong": "Trivia warm-up."
         },
         {
-          "rest": "Once the host advances to Live Show, quiz closes and duels open. Challenge anyone in the room.",
-          "strong": "Live show — duel time."
+          "rest": "Duels are open from party start too — challenge anyone in the room during postcards and ad breaks. Quiz, duels and predictions all lock automatically when voting opens.",
+          "strong": "Duel time."
         },
         {
-          "rest": "When results are entered, the room moves to Final and five winners are crowned.",
+          "rest": "When the official results are final, the room moves to Final Results automatically and five winners are crowned.",
           "strong": "Trophy reveal."
         }
       ],
       "title": "Setup in 60 seconds"
     },
     "suddenDeath": {
-      "body": "For any tied trophy category, the host triggers a tiebreak vote — the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins — speed breaks ties. If the vote stays with Accept, all tied players share the trophy.",
+      "body": "For any tied trophy category, the host opens a 60-second tiebreak vote — the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins — speed breaks ties. If the vote stays with Accept, all tied players share the trophy.",
       "title": "Sudden-death tiebreak"
     },
     "trophies": {
-      "intro": "At the end of the night, five trophy cards reveal in sequence:",
+      "intro": "At the end of the night, five trophy cards are revealed in sequence:",
       "items": [
         {
           "rest": "— most total points across every phase. The headline title.",
@@ -432,11 +432,11 @@
           "strong": "Oracle"
         },
         {
-          "rest": "— most correct trivia answers across quiz and duels combined.",
+          "rest": "— most correct answers across all quiz rounds (duel answers don’t count).",
           "strong": "Guru"
         }
       ],
-      "note": "One player can win multiple trophies. Co-winners (2–5 tied) split a single trophy unless the host triggers sudden death.",
+      "note": "One player can win multiple trophies. Co-winners (2–5 tied) split a single trophy unless the room votes for sudden death.",
       "title": "Five winner trophies"
     },
     "whatYouNeed": {
