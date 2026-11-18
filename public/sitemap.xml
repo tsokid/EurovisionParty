@@ -4,7 +4,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://eurovision.games/en</loc>
-    <lastmod>2026-10-31</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en" />
@@ -13,7 +13,7 @@
   </url>
   <url>
     <loc>https://eurovision.games/el</loc>
-    <lastmod>2026-10-31</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en" />
@@ -292,7 +292,7 @@
   </url>
   <url>
     <loc>https://eurovision.games/en/winners</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/winners" />
@@ -301,7 +301,7 @@
   </url>
   <url>
     <loc>https://eurovision.games/el/winners</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://eurovision.games/en/winners" />
