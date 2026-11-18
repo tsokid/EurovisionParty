@@ -1294,5 +1294,16 @@
       "points": 516,
       "song": "Bangaranga"
     }
+  },
+  "2027": {
+    "cancelled": false,
+    "city": "Burgas",
+    "city_slug": "burgas",
+    "co_winners": [],
+    "final_date": "2027-05-15",
+    "host_iso": "BG",
+    "indexable": false,
+    "stage": "upcoming",
+    "winner": null
   }
 }

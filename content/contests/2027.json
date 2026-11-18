@@ -1,0 +1,15 @@
+{
+  "cancelled": false,
+  "city": "Burgas",
+  "city_slug": "burgas",
+  "dates": {
+    "final": "2027-05-15",
+    "semi1": "2027-05-11",
+    "semi2": "2027-05-13"
+  },
+  "entries": [],
+  "host_iso": "BG",
+  "indexable": false,
+  "stage": "upcoming",
+  "year": 2027
+}
