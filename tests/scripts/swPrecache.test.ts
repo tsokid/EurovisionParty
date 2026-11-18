@@ -48,4 +48,11 @@ describe.skipIf(!built)('service worker precache (dist/sw.js)', () => {
     for (const file of adminOnly) expect(precached, `${file} is precached`).not.toContain(file);
     expect(precached.some((u) => /AdminRoute-/.test(u))).toBe(false);
   });
+
+  // dist/index.html is the prerendered home page: a SW that answered
+  // navigations with it would hydrate every other page against home markup.
+  it('never answers navigations from the cache and precaches no HTML', () => {
+    expect(sw).not.toMatch(/NavigationRoute|createHandlerBoundToURL/);
+    expect(precached.filter((u) => u.endsWith('.html'))).toEqual([]);
+  });
 });

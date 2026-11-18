@@ -90,15 +90,15 @@ export default defineConfig(({ isSsrBuild }) => ({
     !isSsrBuild && VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        navigateFallbackDenylist: [/^\/sitemap\.xml$/, /^\/robots\.txt$/, /^\/llms\.txt$/, /^\/content\//],
-        // Belt-and-braces only: keeps prerendered HTML out of the precache
-        // manifest. Once the SW controls the page, its NavigationRoute still
-        // answers navigations (including /en/** and /el/**) with the cached
-        // index.html SPA shell; prerendered HTML reaches crawlers and first
-        // visits, not SW-controlled navigations.
-        // The lazy admin chunk loads on /admin only: not precached for
-        // every visitor (tests/scripts/swPrecache.test.ts).
-        globIgnores: ['en.html', 'el.html', 'en/**', 'el/**', '404.html', 'content/**', 'assets/AdminRoute-*.js'],
+        // No navigation route: every page request goes to the network, so
+        // each URL gets its own prerendered HTML. dist/index.html is the
+        // prerendered home page, not an empty shell; served for every
+        // navigation it made React hydrate the wrong page (#418).
+        navigateFallback: null,
+        // HTML is never precached for the same reason. The lazy admin chunk
+        // loads on /admin only: not precached for every visitor
+        // (tests/scripts/swPrecache.test.ts).
+        globIgnores: ['**/*.html', 'content/**', 'assets/AdminRoute-*.js'],
       },
       manifest: {
         name: 'Eurovision Games',
