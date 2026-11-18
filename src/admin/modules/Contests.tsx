@@ -8,7 +8,7 @@
 // Finalize, Archive and Un-archive publish automatically once they
 // succeed (spec §7); a failed publish never undoes the lifecycle move.
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { formatError } from '../lib/formatError';
 import { ContestList, type ContestSummary } from './contests/ContestList';
@@ -150,6 +150,13 @@ export default function Contests() {
 
   const selected = contests.find((c) => c.year === selectedYear) ?? null;
 
+  // The editor renders below the full year list (70+ rows): bring it into
+  // view on Edit, or the click looks like it did nothing.
+  const editorRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (selectedYear !== null) editorRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }, [selectedYear]);
+
   return (
     <div className="p-4 space-y-4">
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -210,7 +217,19 @@ export default function Contests() {
       />
 
       {selected && (
-        <ContestDetailsForm key={`details-${selected.year}`} year={selected.year} onSaved={changed} />
+        <section ref={editorRef} aria-label={`Edit ${selected.year}`} className="space-y-4 scroll-mt-4">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-lg font-bold text-white">Editing {selected.year} · {selected.city}</h3>
+            <button
+              type="button"
+              onClick={() => setSelectedYear(null)}
+              className="px-2.5 py-1 rounded border border-white/15 text-white/80 text-xs cursor-pointer"
+            >
+              Close
+            </button>
+          </div>
+          <ContestDetailsForm key={`details-${selected.year}`} year={selected.year} onSaved={changed} />
+        </section>
       )}
 
       {selected && (
