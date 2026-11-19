@@ -16,7 +16,9 @@ interface Entry {
   artist: string | null;
   song: string | null;
   semi: number | null;
+  semi_running_order: number | null;
   semi_place: number | null;
+  semi_points: number | null;
   qualified: boolean | null;
   in_final: boolean;
   final_running_order: number | null;
@@ -171,7 +173,9 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
               <th className="px-2 py-1.5">Artist</th>
               <th className="px-2 py-1.5">Song</th>
               <th className="px-2 py-1.5">Semi</th>
+              <th className="px-2 py-1.5">Semi RO</th>
               <th className="px-2 py-1.5">Semi place</th>
+              <th className="px-2 py-1.5">Semi points</th>
               <th className="px-2 py-1.5">Qualified</th>
               <th className="px-2 py-1.5">In final</th>
               <th className="px-2 py-1.5">Final RO</th>
@@ -218,9 +222,27 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                   <td className="px-2 py-1.5">
                     <input
                       type="number"
+                      aria-label={`Semi RO ${e.iso}`}
+                      value={valueOf(e, 'semi_running_order') ?? ''}
+                      onChange={(ev) => edit(e.iso, 'semi_running_order', toNum(ev.target.value))}
+                      className={`${INPUT} w-16`}
+                    />
+                  </td>
+                  <td className="px-2 py-1.5">
+                    <input
+                      type="number"
                       aria-label={`Semi place ${e.iso}`}
                       value={valueOf(e, 'semi_place') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi_place', toNum(ev.target.value))}
+                      className={`${INPUT} w-16`}
+                    />
+                  </td>
+                  <td className="px-2 py-1.5">
+                    <input
+                      type="number"
+                      aria-label={`Semi points ${e.iso}`}
+                      value={valueOf(e, 'semi_points') ?? ''}
+                      onChange={(ev) => edit(e.iso, 'semi_points', toNum(ev.target.value))}
                       className={`${INPUT} w-16`}
                     />
                   </td>

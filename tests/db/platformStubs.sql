@@ -13,9 +13,14 @@ create table if not exists auth.users (
 );
 
 -- The harness sets test.uid via asUser(); unset or '' means anonymous.
+-- Otherwise it reads request.jwt.claims ->> 'sub', as Supabase's own auth.uid()
+-- does (scripts/cms/entries-sql.ts sets it).
 create or replace function auth.uid() returns uuid
 language sql stable as $$
-  select nullif(current_setting('test.uid', true), '')::uuid
+  select coalesce(
+    nullif(current_setting('test.uid', true), ''),
+    nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub'
+  )::uuid
 $$;
 
 create or replace function auth.jwt() returns jsonb
