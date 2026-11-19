@@ -105,6 +105,7 @@ export default function EurovisionParser() {
         <ParticipantsCard
           job={jobs.participants}
           recentRun={lastParticipantsRun}
+          runs={runs.filter((r) => r.kind === "participants")}
           onRefresh={refresh}
         />
         {/* When manual override is ON, the ResultsCard auto-parsing controls

@@ -124,8 +124,13 @@ async function logRun(args: {
   rowsUpserted: number;
   payloadHash: string | null;
   error: string | null;
+  /** What the page gave, written even when blocked (the admin parse report, 080). */
+  rows?: unknown[];
+  sourceUrl?: string | null;
 }) {
   await admin().from("parse_runs").insert({
+    rows: args.rows ?? null,
+    source_url: args.sourceUrl ?? null,
     year: args.year,
     kind: args.kind,
     http_status: args.httpStatus,
@@ -250,6 +255,8 @@ async function handleParticipants(): Promise<Response> {
     year, kind: "participants",
     httpStatus, status: runStatus, rowsUpserted,
     payloadHash, error: err,
+    rows: entries.map((e) => ({ iso: e.iso, name: e.name, artist: e.artist, song: e.song })),
+    sourceUrl,
   });
 
   await autoErrorIfStreak(year, "participants");
@@ -358,6 +365,8 @@ async function handleResults(): Promise<Response> {
     year, kind: "results",
     httpStatus, status: runStatus, rowsUpserted,
     payloadHash, error: err,
+    rows: rows.map((r) => ({ iso: r.iso, place: r.ranking, points: r.total_points })),
+    sourceUrl,
   });
 
   if (runStatus === "error") await autoErrorIfStreak(year, "results");

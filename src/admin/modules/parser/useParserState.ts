@@ -71,6 +71,9 @@ export interface ParseRun {
   status: "ok" | "error" | "blocked";
   rows_upserted: number | null;
   error: string | null;
+  /** What the run found (migration 080); null for runs logged before it. */
+  rows?: import("./reportRules").ReportRow[] | null;
+  source_url?: string | null;
 }
 
 interface JobsByKind {

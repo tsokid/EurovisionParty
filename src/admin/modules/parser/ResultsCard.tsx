@@ -8,6 +8,7 @@ import { formatError } from "../../lib/formatError";
 import { StatusPill } from "./StatusPill";
 import { SourceUrlEditor } from "./SourceUrlEditor";
 import { ScheduleEditor } from "./ScheduleEditor";
+import { ParseReport } from "./ParseReport";
 import type { ParseJob, ParseRun } from "./useParserState";
 
 interface Props {
@@ -257,6 +258,7 @@ export function ResultsCard({ job, recentRuns, onRefresh }: Props) {
         </table>
       </details>
       {err && <p className="text-sm text-red-300 mt-2">{err}</p>}
+      <ParseReport kind="results" year={job.year} runs={recentRuns} />
     </section>
   );
 }

@@ -10,15 +10,18 @@ import { formatError } from "../../lib/formatError";
 import { StatusPill } from "./StatusPill";
 import { SourceUrlEditor } from "./SourceUrlEditor";
 import { ScheduleEditor } from "./ScheduleEditor";
+import { ParseReport } from "./ParseReport";
 import type { ParseJob, ParseRun } from "./useParserState";
 
 interface Props {
   job?: ParseJob;
   recentRun?: ParseRun;
+  /** Participants runs of the job's year, newest first (the parse report). */
+  runs?: ParseRun[];
   onRefresh: () => void;
 }
 
-export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
+export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [armed, setArmed] = useState(false);
@@ -250,6 +253,7 @@ export function ParticipantsCard({ job, recentRun, onRefresh }: Props) {
             : recentRun.error ?? recentRun.status}
         </div>
       )}
+      <ParseReport kind="participants" year={job.year} runs={runs} />
     </section>
   );
 }
