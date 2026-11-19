@@ -69,6 +69,9 @@ export function cityName(locale: Locale, citySlug: string, cityEn: string): { na
   return CITY_EL[citySlug] ?? { name: cityEn, in: `στο ${cityEn}` };
 }
 
+/** The entry count followed by a space, or nothing before any entry exists (no "0 entries"). */
+const n = (f: { entries: number }): string => (f.entries > 0 ? `${f.entries} ` : '');
+
 // ─── Countries ──────────────────────────────────────────────────────────────
 
 /** Greek article for country names that are not feminine (the default "Η"). */
@@ -276,13 +279,13 @@ const en: HubCopy = {
   hub: {
     title: (f) => `Eurovision ${f.year} ${f.cityIn}: dates, semi-finals & songs`,
     description: (f) =>
-      `Eurovision Song Contest ${f.year} ${f.cityIn}${f.host ? `, ${f.host}` : ''}: ${f.entries} countries, ${showsClause(f, 'en')}.` +
+      `Eurovision Song Contest ${f.year} ${f.cityIn}${f.host ? `, ${f.host}` : ''}: ${f.entries > 0 ? `${f.entries} countries, ` : ''}${showsClause(f, 'en')}.` +
       (showsResults(f) ? ` ${f.winner!.country} won with ${f.winner!.points} points.` : ''),
     h1: (f) => `Eurovision ${f.year} ${f.cityIn}`,
     lede: (f) =>
       showsResults(f) && f.winner!.song
         ? `${f.winner!.country} won Eurovision ${f.year} ${f.cityIn} with “${f.winner!.song}”${f.winner!.artist ? ` by ${f.winner!.artist}` : ''}. Here are the full results, the semi-final split, the show dates and every song.`
-        : `Everything about the ${f.year} contest ${f.cityIn}: ${f.entries} countries, ${showsClause(f, 'en')}. Line-ups, schedule and songs on one page.`,
+        : `Everything about the ${f.year} contest ${f.cityIn}: ${f.entries > 0 ? `${f.entries} countries, ` : ''}${showsClause(f, 'en')}. Line-ups, schedule and songs on one page.`,
     results: 'Final results',
     lineup: (f) => `The ${f.entries} entries`,
     glance: 'At a glance',
@@ -334,13 +337,13 @@ const en: HubCopy = {
     pending: 'Semi-final results will appear here.',
   },
   songs: {
-    title: (f) => `Eurovision ${f.year} songs: all ${f.entries} entries and artists`,
+    title: (f) => `Eurovision ${f.year} songs: all ${n(f)}entries and artists`,
     description: (f) =>
-      `Every song of Eurovision ${f.year} ${f.cityIn} in one list: ${f.entries} countries with their artists, song titles and semi-final.`,
+      `Every song of Eurovision ${f.year} ${f.cityIn} in one list: ${f.entries > 0 ? `${f.entries} countries` : 'every country'} with their artists, song titles and semi-final.`,
     h1: (f) => `Eurovision ${f.year} songs`,
     lede: (f) =>
-      `All ${f.entries} entries of the ${f.year} contest, sorted by country. Use it as your listening guide before the shows or as your score sheet on the night.`,
-    listTitle: (f) => `All ${f.entries} songs`,
+      `All ${n(f)}entries of the ${f.year} contest, sorted by country. Use it as your listening guide before the shows or as your score sheet on the night.`,
+    listTitle: (f) => `All ${n(f)}songs`,
     listName: (y) => `Eurovision ${y} songs`,
   },
   glance: { hostCity: 'Host city', hostCountry: 'Host country', countries: 'Countries', finalists: 'Countries in the final' },
@@ -370,13 +373,13 @@ const el: HubCopy = {
   hub: {
     title: (f) => `Eurovision ${f.year} ${f.cityIn}: ημερομηνίες, ημιτελικοί και τραγούδια`,
     description: (f) =>
-      `Eurovision ${f.year} ${f.cityIn}${f.host ? ` (${f.host})` : ''}: ${f.entries} χώρες, ${showsClause(f, 'el')}.` +
+      `Eurovision ${f.year} ${f.cityIn}${f.host ? ` (${f.host})` : ''}: ${f.entries > 0 ? `${f.entries} χώρες, ` : ''}${showsClause(f, 'el')}.` +
       (showsResults(f) ? ` ${greekCountrySubject(f.winner!.iso, f.winner!.country)} κέρδισε με ${f.winner!.points} βαθμούς.` : ''),
     h1: (f) => `Eurovision ${f.year} ${f.cityIn}`,
     lede: (f) =>
       showsResults(f) && f.winner!.song
         ? `${greekCountrySubject(f.winner!.iso, f.winner!.country)} κέρδισε τη Eurovision ${f.year} ${f.cityIn} με το «${f.winner!.song}»${f.winner!.artist ? ` (${f.winner!.artist})` : ''}. Εδώ θα βρείτε τα πλήρη αποτελέσματα, τους ημιτελικούς, το πρόγραμμα και όλα τα τραγούδια.`
-        : `Όλα για τον διαγωνισμό του ${f.year} ${f.cityIn}: ${f.entries} χώρες, ${showsClause(f, 'el')}. Συμμετοχές, πρόγραμμα και τραγούδια σε μία σελίδα.`,
+        : `Όλα για τον διαγωνισμό του ${f.year} ${f.cityIn}: ${f.entries > 0 ? `${f.entries} χώρες, ` : ''}${showsClause(f, 'el')}. Συμμετοχές, πρόγραμμα και τραγούδια σε μία σελίδα.`,
     results: 'Αποτελέσματα τελικού',
     lineup: (f) => `Οι ${f.entries} συμμετοχές`,
     glance: 'Με μια ματιά',
@@ -428,13 +431,13 @@ const el: HubCopy = {
     pending: 'Τα αποτελέσματα των ημιτελικών θα εμφανιστούν εδώ.',
   },
   songs: {
-    title: (f) => `Τραγούδια Eurovision ${f.year}: όλες οι ${f.entries} συμμετοχές`,
+    title: (f) => `Τραγούδια Eurovision ${f.year}: όλες οι ${n(f)}συμμετοχές`,
     description: (f) =>
-      `Όλα τα τραγούδια της Eurovision ${f.year} ${f.cityIn} σε μία λίστα: ${f.entries} χώρες με καλλιτέχνες, τίτλους τραγουδιών και ημιτελικό.`,
+      `Όλα τα τραγούδια της Eurovision ${f.year} ${f.cityIn} σε μία λίστα: ${f.entries > 0 ? `${f.entries} χώρες` : 'όλες οι χώρες'} με καλλιτέχνες, τίτλους τραγουδιών και ημιτελικό.`,
     h1: (f) => `Τα τραγούδια της Eurovision ${f.year}`,
     lede: (f) =>
-      `Όλες οι ${f.entries} συμμετοχές του διαγωνισμού του ${f.year}, ανά χώρα. Χρησιμοποιήστε τη λίστα ως οδηγό ακρόασης πριν από τις εκπομπές ή ως φύλλο βαθμολογίας τη βραδιά του τελικού.`,
-    listTitle: (f) => `Όλα τα ${f.entries} τραγούδια`,
+      `Όλες οι ${n(f)}συμμετοχές του διαγωνισμού του ${f.year}, ανά χώρα. Χρησιμοποιήστε τη λίστα ως οδηγό ακρόασης πριν από τις εκπομπές ή ως φύλλο βαθμολογίας τη βραδιά του τελικού.`,
+    listTitle: (f) => `Όλα τα ${n(f)}τραγούδια`,
     listName: (y) => `Τα τραγούδια της Eurovision ${y}`,
   },
   glance: { hostCity: 'Πόλη διεξαγωγής', hostCountry: 'Χώρα διοργάνωσης', countries: 'Χώρες', finalists: 'Χώρες στον τελικό' },

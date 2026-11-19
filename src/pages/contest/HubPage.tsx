@@ -55,7 +55,7 @@ function HubBody({ hub }: { hub: Hub }) {
     [c.shows.semi1, contest.dates.semi1 && formatDate(contest.dates.semi1, locale)],
     [c.shows.semi2, contest.dates.semi2 && formatDate(contest.dates.semi2, locale)],
     [c.shows.final, contest.dates.final && formatDate(contest.dates.final, locale)],
-    [c.glance.countries, f.entries],
+    [c.glance.countries, f.entries || null],
     [c.glance.finalists, f.finalists || null],
   ];
 

@@ -17,7 +17,10 @@ vi.mock('@/lib/seo/contentData', async (importOriginal) => {
         return {
           ...c,
           stage: 'upcoming',
-          entries: c.entries.map((e) => ({ ...e, artist: '', song: '', final_place: null, total_points: null })),
+          // EMPTY_LINEUP: no entries at all (a contest just added); otherwise artist-less entries.
+          entries: process.env.EMPTY_LINEUP
+            ? []
+            : c.entries.map((e) => ({ ...e, artist: '', song: '', final_place: null, total_points: null })),
         };
       }
       return data;
@@ -44,6 +47,22 @@ describe('line-up not announced yet', () => {
       expect(r.html, path).toContain(`href="/${locale}/countries/greece"`);
       expect(t, path).toContain(greece);
       expect(t, path).not.toMatch(/The 0 entries|Οι 0 συμμετοχές/);
+    }
+  });
+
+  it('a contest with no entries at all: no "0 countries" in titles, descriptions or the page', async () => {
+    process.env.EMPTY_LINEUP = '1';
+    try {
+      for (const locale of ['en', 'el'] as const) {
+        for (const path of [`/${locale}/eurovision-2026`, `/${locale}/eurovision-2026/songs`, `/${locale}/eurovision-2026/semifinals`, `/${locale}/eurovision-predictions`]) {
+          const r = await render(path);
+          expect(r.status, path).toBe(200);
+          const all = `${r.head!.title} ${r.head!.description} ${text(r.html)}`;
+          expect(all, path).not.toMatch(/(?<![0-9])0 (countries|entries|songs|χώρες|συμμετοχές|τραγούδια)/);
+        }
+      }
+    } finally {
+      delete process.env.EMPTY_LINEUP;
     }
   });
 
