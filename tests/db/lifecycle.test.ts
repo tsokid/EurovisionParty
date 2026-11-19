@@ -193,7 +193,7 @@ describe('071 lifecycle and entry RPCs', () => {
     await addContest(2028, 'upcoming');
     await db.exec(`
       insert into public.parse_jobs (year, kind) values (2027, 'results');
-      insert into public.contest_entries (year, iso, in_final, final_running_order, final_place) values
+      insert into public.game_entries (year, iso, in_final, final_running_order, final_place) values
         (2027, 'SE', true, 1, 1), (2027, 'GR', true, 2, 2);
       insert into public.rooms (id, code, host_id, host_name, year, phase) values
         ('${ROOM_DONE}', 'L27D', '${ADMIN}', 'h', 2027, 'final'),
@@ -289,14 +289,19 @@ describe('071 lifecycle and entry RPCs', () => {
     await addContest(2027, 'upcoming');
     expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
     // Countries without artist or song (a parse of the country list only): no switch.
-    await db.query(`insert into public.contest_entries (year, iso, artist, song) values (2027, 'GR', null, null), (2027, 'SE', '', ' ')`);
+    // 081: the game line-up lives in game_entries.
+    await db.query(`insert into public.game_entries (year, iso, artist, song) values (2027, 'GR', null, null), (2027, 'SE', '', ' ')`);
     expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
     // One entry still incomplete: no switch.
-    await db.query(`update public.contest_entries set artist = 'A', song = 'S' where year = 2027 and iso = 'GR'`);
+    await db.query(`update public.game_entries set artist = 'A', song = 'S' where year = 2027 and iso = 'GR'`);
     expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
     // Every entry has artist and song: the game moves to 2027.
-    await db.query(`update public.contest_entries set artist = 'B', song = 'T' where year = 2027 and iso = 'SE'`);
+    await db.query(`update public.game_entries set artist = 'B', song = 'T' where year = 2027 and iso = 'SE'`);
     expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2027 });
+    // Public entries (the CMS) never move the game year.
+    await db.query(`delete from public.game_entries where year = 2027`);
+    await db.query(`insert into public.contest_entries (year, iso, artist, song, in_final) values (2027, 'IT', 'I', 'J', true)`);
+    expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
   });
 
   // ── update_contest on archived years (I3) ────────────────────────────

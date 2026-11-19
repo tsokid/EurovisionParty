@@ -13,12 +13,12 @@ const R26B = '10000000-0000-4000-8000-00000000026b';
 const R25 = '10000000-0000-4000-8000-000000000025';
 const R25_OPEN = '10000000-0000-4000-8000-0000000025f0';
 
-const ENTRY_COLS = `iso, semi, semi_running_order, semi_place, semi_points, qualified,
+const ENTRY_COLS = `iso,
   in_final, final_running_order, final_place, total_points, jury_points, televote_points, source`;
 
 type Row = Record<string, unknown>;
 
-describe('071 result RPCs on contest_entries', () => {
+describe('071 result RPCs, on game_entries since 081', () => {
   let db: PGlite;
 
   beforeAll(async () => {
@@ -39,7 +39,7 @@ describe('071 result RPCs on contest_entries', () => {
   async function seed(): Promise<void> {
     await db.exec(`
       delete from public.rooms where true;
-      delete from public.contest_entries where year in (2025, 2026);
+      delete from public.game_entries where year in (2025, 2026);
 
       insert into public.contests (year, host_iso, city, city_slug, stage)
       values (2025, 'CH', 'Basel', 'basel', 'archived')
@@ -47,14 +47,14 @@ describe('071 result RPCs on contest_entries', () => {
       update public.contests set stage = 'current' where year = 2026;
 
       -- 2026: three grand finalists without results, one semi-finalist that did not qualify.
-      insert into public.contest_entries (year, iso, artist, song, semi, semi_running_order, semi_place, semi_points, qualified, in_final, final_running_order, source) values
-        (2026, 'GR', 'A1', 'S1', 1, 4, 2, 180, true, true, 1, 'parser'),
-        (2026, 'AT', 'A2', 'S2', null, null, null, null, null, true, 2, 'parser'),
-        (2026, 'SE', 'A3', 'S3', 2, 7, 1, 220, true, true, 3, 'parser'),
-        (2026, 'MD', 'A4', 'S4', 1, 9, 12, 20, false, false, null, 'parser');
+      insert into public.game_entries (year, iso, artist, song, in_final, final_running_order, source) values
+        (2026, 'GR', 'A1', 'S1', true, 1, 'parser'),
+        (2026, 'AT', 'A2', 'S2', true, 2, 'parser'),
+        (2026, 'SE', 'A3', 'S3', true, 3, 'parser'),
+        (2026, 'MD', 'A4', 'S4', false, null, 'parser');
 
       -- 2025: archived, with results.
-      insert into public.contest_entries (year, iso, artist, song, in_final, final_running_order, final_place, total_points, jury_points, televote_points, source) values
+      insert into public.game_entries (year, iso, artist, song, in_final, final_running_order, final_place, total_points, jury_points, televote_points, source) values
         (2025, 'AT', 'JJ', 'Wasted Love', true, 9, 1, 436, 258, 178, 'import:test'),
         (2025, 'IL', 'Yuval Raphael', 'New Day Will Rise', true, 20, 2, 357, 60, 297, 'import:test');
 
@@ -87,7 +87,7 @@ describe('071 result RPCs on contest_entries', () => {
   }
 
   async function entries(year: number): Promise<Row[]> {
-    return (await db.query<Row>(`select ${ENTRY_COLS} from public.contest_entries where year = $1 order by iso`, [year])).rows;
+    return (await db.query<Row>(`select ${ENTRY_COLS} from public.game_entries where year = $1 order by iso`, [year])).rows;
   }
 
   async function roomState(roomId: string) {
@@ -118,7 +118,7 @@ describe('071 result RPCs on contest_entries', () => {
     const got = (
       await db.query<Row>(
         `select iso, final_place, total_points, jury_points, televote_points, source
-           from public.contest_entries where year = 2026 and in_final order by final_place`,
+           from public.game_entries where year = 2026 and in_final order by final_place`,
       )
     ).rows;
     expect(got).toEqual([
@@ -134,7 +134,7 @@ describe('071 result RPCs on contest_entries', () => {
     await db.query(`update public.parse_jobs set status = 'idle' where year = 2026 and kind = 'results'`);
     await commit(['AT', 'SE', 'GR']);
     const places = (
-      await db.query<Row>(`select iso, final_place from public.contest_entries where year = 2026 order by iso`)
+      await db.query<Row>(`select iso, final_place from public.game_entries where year = 2026 order by iso`)
     ).rows;
     expect(places).toEqual([
       { iso: 'AT', final_place: 1 },
@@ -157,14 +157,14 @@ describe('071 result RPCs on contest_entries', () => {
     // AT loses its running order but stays a finalist; MD gets one but is not a finalist.
     await asUser(db, null);
     await db.exec(`
-      update public.contest_entries set final_running_order = null where year = 2026 and iso = 'AT';
-      update public.contest_entries set final_running_order = 4 where year = 2026 and iso = 'MD';
+      update public.game_entries set final_running_order = null where year = 2026 and iso = 'AT';
+      update public.game_entries set final_running_order = 4 where year = 2026 and iso = 'MD';
     `);
     await asUser(db, ADMIN);
     await expect(commit(['SE', 'GR', 'MD'])).rejects.toThrow(/not .*finalist/i);
     expect((await commit(['AT', 'SE', 'GR'])).rows[0].n).toBe(3);
     expect(
-      (await db.query<Row>(`select iso, final_place from public.contest_entries where year = 2026 and final_place is not null order by final_place`)).rows,
+      (await db.query<Row>(`select iso, final_place from public.game_entries where year = 2026 and final_place is not null order by final_place`)).rows,
     ).toEqual([
       { iso: 'AT', final_place: 1 },
       { iso: 'SE', final_place: 2 },
@@ -173,7 +173,7 @@ describe('071 result RPCs on contest_entries', () => {
   });
 
   // ── finalize_results ─────────────────────────────────────────────────
-  it('finalize_results reads contest_entries', async () => {
+  it('finalize_results reads game_entries', async () => {
     await commit(['SE', 'GR', 'AT']);
     for (const id of [R26A, R26B]) {
       const s = await roomState(id);
@@ -230,21 +230,9 @@ describe('071 result RPCs on contest_entries', () => {
 
     await db.query(`select public.reset_contest(2026, false, false, false)`);
 
-    const e26 = await entries(2026);
-    expect(e26.map((e) => e.iso)).toEqual(['AT', 'GR', 'MD', 'SE']);
-    for (const e of e26) {
-      expect(e).toMatchObject({
-        in_final: false,
-        final_running_order: null,
-        final_place: null,
-        total_points: null,
-        jury_points: null,
-        televote_points: null,
-        qualified: null,
-      });
-    }
-    // Semi data survives.
-    expect(e26.find((e) => e.iso === 'MD')).toMatchObject({ semi: 1, semi_running_order: 9, semi_place: 12, semi_points: 20 });
+    // 081: the game line-up and results of p_year are gone; the public
+    // contest_entries is never touched (see gameEntries081.test.ts).
+    expect(await entries(2026)).toEqual([]);
     for (const id of [R26A, R26B]) {
       const s = await roomState(id);
       expect(s.exists).toBe(true);

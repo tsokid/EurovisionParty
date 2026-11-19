@@ -30,7 +30,7 @@ vi.mock('../../src/lib/supabase', () => ({
 }));
 
 import { FinalizeCard } from '../../src/admin/modules/parser/FinalizeCard';
-import { __resetPublishGuardForTests, invokePublish } from '../../src/admin/modules/contests/publish';
+import { __resetPublishGuardForTests } from '../../src/admin/modules/contests/publish';
 
 const job = (status: ParseJob['status']): ParseJob =>
   ({ kind: 'results', year: 2027, status, manual_override: false }) as ParseJob;
@@ -62,63 +62,25 @@ describe('FinalizeCard', () => {
     expect(onRefresh).toHaveBeenCalled();
   });
 
-  it('publishes automatically after a successful finalize', async () => {
+  it('never publishes: Finalize changes only the game (081)', async () => {
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
     fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
-    // Contests only (I3): CMS page drafts ship only from an explicit Publish click.
-    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: { cms: false } }));
-    expect(await screen.findByText(/Published: 2 files changed/)).toBeTruthy();
+    await waitFor(() => expect(screen.getByText(/2027 finalized\./)).toBeTruthy());
+    expect(h.invoke).not.toHaveBeenCalled();
   });
 
-  it('a failed publish after finalize shows the error; the finalize stands', async () => {
-    h.invoke.mockResolvedValue({ data: null, error: { message: 'Failed to send a request to the Edge Function' } });
+  it('offers Copy to public once finalized and calls copy_game_to_public after a confirm', async () => {
+    h.result = { data: 25, error: null };
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
+    expect(screen.queryByText('Copy 2027 results to public')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
     fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
-    expect(await screen.findByText('Publish failed: Failed to send a request to the Edge Function')).toBeTruthy();
-    expect(screen.getByText(/2027 finalized\./)).toBeTruthy();
-  });
-
-  it('a busy publish after finalize shows the busy message', async () => {
-    h.invoke.mockResolvedValue({
-      data: null,
-      error: {
-        message: 'Edge Function returned a non-2xx status code',
-        context: { json: async () => ({ status: 'busy', run_id: null, sha: null, files_changed: 0, error: 'publish already running' }) },
-      },
-    });
-    render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
-    expect(await screen.findByText('Another publish is running — try again in a minute')).toBeTruthy();
-    expect(screen.getByText(/2027 finalized\./)).toBeTruthy();
-  });
-
-  it('finalize during a publish in flight queues one trailing run instead of a parallel one', async () => {
-    const resolvers: Array<(v: unknown) => void> = [];
-    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
-    const earlier = invokePublish(); // e.g. the Contests module publishing
-    render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
-    expect(await screen.findByText('Publishing…')).toBeTruthy();
-    expect(h.invoke).toHaveBeenCalledTimes(1);
-    resolvers[0]({ data: { status: 'noop', run_id: 1, sha: null, files_changed: 0 }, error: null });
-    await earlier;
-    await waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
-    resolvers[1]({ data: { status: 'ok', run_id: 2, sha: 'abc1234ffff', files_changed: 2 }, error: null });
-    expect(await screen.findByText(/Published: 2 files changed/)).toBeTruthy();
-    expect(h.invoke).toHaveBeenCalledTimes(2);
-  });
-
-  it.each(['finalized', 'archived'])('hides Reset Finalized once the contest is %s, and points to Edit + Republish', async (stage) => {
-    h.stage = stage;
-    render(<FinalizeCard job={job('finalized')} onRefresh={() => {}} />);
-    expect(
-      await screen.findByText('To correct results of 2027, edit its entries in Contests, then Publish.'),
-    ).toBeTruthy();
-    expect(screen.queryByRole('button', { name: /Reset Finalized/ })).toBeNull();
+    fireEvent.click(await screen.findByRole('button', { name: 'Copy 2027 results to public' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Yes, copy' }));
+    await waitFor(() => expect(h.rpc).toHaveBeenCalledWith('copy_game_to_public', { p_year: 2027 }));
+    expect(await screen.findByText(/25 finalists copied\. Review them in Contests → Edit, then Publish\./)).toBeTruthy();
+    expect(h.invoke).not.toHaveBeenCalled();
   });
 
   it('keeps Reset Finalized for a finalized job whose contest is still current', async () => {

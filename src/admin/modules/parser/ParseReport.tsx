@@ -27,7 +27,7 @@ export function ParseReport({ kind, year, runs }: Props) {
     if (kind !== "results") return;
     let cancelled = false;
     Promise.resolve(
-      supabase.from("contest_entries").select("iso").eq("year", year).eq("in_final", true),
+      supabase.from("game_entries").select("iso").eq("year", year).eq("in_final", true),
     )
       .then((res) => {
         const data = (res as { data?: { iso: string }[] | null } | undefined)?.data;

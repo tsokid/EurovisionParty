@@ -54,7 +54,7 @@ describe('071 parser_upsert_entries', () => {
     (
       await db.query<Row>(
         `select iso, artist, in_final, final_running_order, final_place, total_points, jury_points, televote_points, source
-           from public.contest_entries where year = $1 order by iso`,
+           from public.game_entries where year = $1 order by iso`,
         [year],
       )
     ).rows;
@@ -67,6 +67,8 @@ describe('071 parser_upsert_entries', () => {
       { iso: 'AT', artist: 'Cosmo', in_final: true, final_running_order: 2, ...blank, source: 'parser' },
       { iso: 'GR', artist: 'Akylas', in_final: true, final_running_order: 1, ...blank, source: 'parser' },
     ]);
+    // 081: the game data only; the public contest_entries is untouched.
+    expect((await db.query(`select 1 from public.contest_entries where year = 2027`)).rows).toEqual([]);
     // app.writer is transaction-local: nothing leaks into the session.
     const w = await db.query<{ w: string | null }>(`select nullif(current_setting('app.writer', true), '') as w`);
     expect(w.rows[0].w).toBeNull();
@@ -94,7 +96,7 @@ describe('071 parser_upsert_entries', () => {
   it('results are written only for finalists of the year', async () => {
     await upsert(2027, lineup([['GR', 'Akylas', 1], ['AT', 'Cosmo', 2]]), 'participants');
     // MD is a semi-only entry (not in_final, even with a running order); SE has no row at all.
-    await db.query(`insert into public.contest_entries (year, iso, artist, semi, final_running_order) values (2027, 'MD', 'M', 1, 9)`);
+    await db.query(`insert into public.game_entries (year, iso, artist, in_final, final_running_order) values (2027, 'MD', 'M', false, 9)`);
     const result = (iso: string, place: number, total: number, jury: number, televote: number) => ({
       year: 2027, iso, final_place: place, total_points: total, jury_points: jury, televote_points: televote, source: 'parser',
     });
@@ -130,7 +132,7 @@ describe('071 parser_upsert_entries', () => {
     // The harness has no legacy 2026 lineup, so make one 2026 entry a
     // finalist (as a non-parser writer) for the results call to target.
     const iso = (await entries(2026))[0].iso as string;
-    await db.query(`update public.contest_entries set in_final = true where year = 2026 and iso = $1`, [iso]);
+    await db.query(`update public.game_entries set in_final = true where year = 2026 and iso = $1`, [iso]);
     const before = await entries(2026);
     await expect(
       upsert(2026, JSON.stringify([{ iso, artist: 'X', song: 'Y', final_running_order: 2, source: 'parser' }]), 'participants'),

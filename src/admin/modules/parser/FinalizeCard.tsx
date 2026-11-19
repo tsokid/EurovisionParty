@@ -2,22 +2,21 @@
 // Terminal action: finalize the contest of the job's year through the
 // finalize_contest lifecycle RPC (current -> finalized). It locks the
 // results, stops the Results parser, scores every room of that year and
-// computes winners. Two-click confirm; cannot be undone. A successful
-// finalize publishes the contests automatically (spec §7; CMS page
-// drafts are left for an explicit Publish) through the shared
-// invokePublish, which queues a trailing run when a publish is already
-// in flight; a failed or busy publish is shown and the finalize stands
-// (Publish again from the Contests module).
+// computes winners. Two-click confirm; cannot be undone.
+//
+// Game data and public data are separate (migration 081): Finalize changes
+// only the game. Once finalized, "Copy to public" (copy_game_to_public)
+// copies the game's final line-up and ranking into the public contest data;
+// the owner reviews it in Contests and Publishes from there. Nothing here
+// publishes.
 //
 // "Reset Finalized" (reset_manual_results) is refused by the database
 // once the contest is finalized or archived, so it is offered only while
-// the contest of the job's year is still upcoming or current. Results of
-// a finalized year are corrected through Contests (Edit + Republish).
+// the contest of the job's year is still upcoming or current.
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
-import { invokePublish, outcomeText, type PublishOutcome } from "../contests/publish";
 import type { ParseJob } from "./useParserState";
 
 interface Props {
@@ -33,8 +32,8 @@ export function FinalizeCard({ job, onRefresh }: Props) {
   // Confirmation banner after success. finalize_contest returns the number
   // of rooms of the year whose winners it computed.
   const [report, setReport] = useState<{ winners: number } | null>(null);
-  const [publishing, setPublishing] = useState(false);
-  const [published, setPublished] = useState<PublishOutcome | null>(null);
+  const [confirmCopy, setConfirmCopy] = useState(false);
+  const [copied, setCopied] = useState<number | null>(null);
   // Stage of the job year's contest; null until loaded (or no contest row).
   const [stage, setStage] = useState<string | null>(null);
 
@@ -97,17 +96,27 @@ export function FinalizeCard({ job, onRefresh }: Props) {
       setConfirm(false);
     } catch (e) {
       setErr(formatError(e));
-      return;
     } finally {
       setBusy(false);
     }
-    setPublishing(true);
-    setPublished(null);
+  };
+
+  // Copy to public: the game's final line-up and ranking into the public
+  // contest data (copy_game_to_public). Nothing is published.
+  const copyToPublic = async () => {
+    if (!job) return;
+    setBusy(true);
+    setErr(null);
+    setCopied(null);
     try {
-      // Contests only: CMS page drafts ship only from an explicit Publish click (I3).
-      setPublished(await invokePublish({ cms: false }));
+      const { data, error } = await supabase.rpc("copy_game_to_public", { p_year: job.year });
+      if (error) throw error;
+      setCopied(typeof data === "number" ? data : 0);
+      setConfirmCopy(false);
+    } catch (e) {
+      setErr(formatError(e));
     } finally {
-      setPublishing(false);
+      setBusy(false);
     }
   };
 
@@ -196,20 +205,50 @@ export function FinalizeCard({ job, onRefresh }: Props) {
           </p>
         </div>
       )}
-      {publishing && <p className="text-sm text-white/60 mt-2">Publishing…</p>}
-      {published && (
-        <p
-          className={`text-sm mt-2 break-all ${
-            published.status === "ok" || published.status === "noop"
-              ? "text-emerald-300"
-              : published.status === "busy"
-                ? "text-amber-300"
-                : "text-red-300"
-          }`}
-        >
-          {outcomeText(published)}
-          {published.warning && ` Warning: ${published.warning}`}
-        </p>
+      {stage === "finalized" && (
+        <div className="mt-4 rounded-lg border border-emerald-400/30 bg-emerald-500/5 p-3">
+          <h4 className="font-semibold text-emerald-300 text-sm">Copy to public</h4>
+          <p className="text-xs text-white/60 mt-1">
+            Copies the game&apos;s final line-up and ranking of {job?.year} into the public contest data. Artist and
+            song names already in the CMS are kept. Test runs never reach the public pages unless you press this.
+            Then review the entries in Contests → Edit and Publish.
+          </p>
+          {!confirmCopy ? (
+            <button
+              type="button"
+              onClick={() => setConfirmCopy(true)}
+              disabled={busy}
+              className="mt-2 px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40"
+            >
+              Copy {job?.year} results to public
+            </button>
+          ) : (
+            <div className="mt-2 flex flex-wrap gap-2 items-center">
+              <span className="text-xs text-white/80">Overwrite the public grand final of {job?.year}?</span>
+              <button
+                type="button"
+                onClick={copyToPublic}
+                disabled={busy}
+                className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40"
+              >
+                {busy ? "Copying…" : "Yes, copy"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmCopy(false)}
+                disabled={busy}
+                className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+          {copied !== null && (
+            <p className="text-sm text-emerald-300 mt-2">
+              ✅ {copied} finalists copied. Review them in Contests → Edit, then Publish.
+            </p>
+          )}
+        </div>
       )}
       {err && <p className="text-sm text-red-300 mt-2 break-all">{err}</p>}
     </section>

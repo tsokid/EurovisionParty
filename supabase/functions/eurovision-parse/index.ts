@@ -23,7 +23,8 @@ import { parseResults, type ResultRow } from "./parseResults.ts";
 import { participantRows, resultRows, semiRows, type SemiEntryRow } from "./rows.ts";
 import { parseSemis, semiProblem, semiUrl } from "./parseSemis.ts";
 
-// Every write to contest_entries goes through the parser_upsert_entries
+// Participants and results write the game's data (game_entries, migration
+// 081); semis write the public contest_entries. Every write goes through the parser_upsert_entries
 // RPC (migration 071, section C): it sets app.writer = 'parser' for its
 // transaction, so finalized and archived years are refused, and it never
 // deletes rows. Value of contest_entries.source for parser writes.
@@ -324,7 +325,7 @@ async function handleResults(): Promise<Response> {
   let rowsUpserted = 0;
   if (runStatus === "ok") {
     const { data: fData, error: fErr } = await db
-      .from("contest_entries")
+      .from("game_entries")
       .select("iso")
       .eq("year", year)
       .eq("in_final", true);

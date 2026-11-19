@@ -71,7 +71,7 @@ describe('071 final-review fixes', () => {
   }
 
   const entry = async (iso: string) =>
-    (await db.query<Row>(`select ${RESULT_COLS} from public.contest_entries where year = 2027 and iso = $1`, [iso])).rows[0];
+    (await db.query<Row>(`select ${RESULT_COLS} from public.game_entries where year = 2027 and iso = $1`, [iso])).rows[0];
 
   const phase = async (id: string) =>
     (await db.query<{ phase: string }>(`select phase from public.rooms where id = $1`, [id])).rows[0].phase;
@@ -109,7 +109,7 @@ describe('071 final-review fixes', () => {
       await upsert(lineup(['GR', 'SE']), 'participants');
       await upsert(results([['GR', 2, 400], ['SE', 3, 300]]), 'results');
       // A non-finalist with a place, written directly (not through an RPC).
-      await db.exec(`insert into public.contest_entries (year, iso, in_final, final_place, total_points)
+      await db.exec(`insert into public.game_entries (year, iso, in_final, final_place, total_points)
                      values (2027, 'MD', false, 1, 999)`);
       await addPredictions();
       await asUser(db, ADMIN);
@@ -119,15 +119,18 @@ describe('071 final-review fixes', () => {
 
     it('finalize_contest refuses when only non-finalists have a final_place', async () => {
       await upsert(lineup(['GR', 'SE']), 'participants');
-      await db.exec(`insert into public.contest_entries (year, iso, in_final, final_place) values (2027, 'MD', false, 1)`);
+      await db.exec(`insert into public.game_entries (year, iso, in_final, final_place) values (2027, 'MD', false, 1)`);
       await asUser(db, ADMIN);
       await expect(db.query(`select public.finalize_contest(2027)`)).rejects.toThrow(/contest 2027 has no results/);
     });
 
     it('unticking in_final via upsert_contest_entry nulls the result columns', async () => {
-      await upsert(lineup(['GR', 'AT']), 'participants');
-      await upsert(results([['AT', 1, 500], ['GR', 2, 400]]), 'results');
+      // The CMS edits the public contest_entries (081: the parser writes game_entries).
+      const entry = async (iso: string) =>
+        (await db.query<Row>(`select ${RESULT_COLS} from public.contest_entries where year = 2027 and iso = $1`, [iso])).rows[0];
       await asUser(db, ADMIN);
+      await db.query(`select public.upsert_contest_entry(2027, 'AT', '{"in_final": true, "final_place": 1, "total_points": 500, "jury_points": 400, "televote_points": 100}'::jsonb)`);
+      await db.query(`select public.upsert_contest_entry(2027, 'GR', '{"in_final": true, "final_place": 2, "total_points": 400, "jury_points": 300, "televote_points": 100}'::jsonb)`);
       await db.query(`select public.upsert_contest_entry(2027, 'AT', '{"in_final": false}'::jsonb)`);
       expect(await entry('AT')).toEqual({ iso: 'AT', in_final: false, ...NO_RESULT });
       // Even when the same call also sends a place: a non-finalist has none.
