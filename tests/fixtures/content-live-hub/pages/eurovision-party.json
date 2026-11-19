@@ -1,0 +1,562 @@
+{
+  "el": {
+    "crumbs": {
+      "current": "Πάρτι Eurovision",
+      "home": "Αρχική"
+    },
+    "cta": {
+      "body": "Στείλε τον σύνδεσμο του δωματίου με την πρόσκληση — οι καλεσμένοι μπορούν να κάνουν προβλέψεις από οπουδήποτε.",
+      "primary": "Δημιουργία",
+      "secondary": "Βραδιά Eurovision",
+      "title": "Κλείδωσε το πάρτι Eurovision σου"
+    },
+    "faq": [
+      {
+        "a": "Υπολόγισε τέσσερις με πέντε ώρες από το άνοιγμα της πόρτας μέχρι το τελευταίο ποτό. Η πόρτα ανοίγει μία ώρα πριν τη μετάδοση, ο μεγάλος τελικός κρατάει περίπου τρεισήμισι ώρες μαζί με κριτική επιτροπή και televote, και η αποκάλυψη τροπαίων με το debrief παίρνει άλλα είκοσι λεπτά.",
+        "q": "Πόσο διαρκεί ένα πάρτι Eurovision;"
+      },
+      {
+        "a": "Φρόντισε να έχουν μπει όλες οι προβλέψεις πριν ανοίξει η ψηφοφορία — αυτή είναι η μόνη σκληρή προθεσμία, και η εφαρμογή την επιβάλλει κλειδώνοντας αυτόματα τις επιλογές. Όσοι έρθουν αργότερα μπορούν να μπουν στο δωμάτιο οποιαδήποτε στιγμή και να κάνουν προβλέψεις, να παίξουν γύρους quiz και μονομαχίες μέχρι να ανοίξει η ψηφοφορία· όποιος έρθει μετά μπορεί να παρακολουθεί τον πίνακα βαθμολογίας, αλλά δεν έχει πια κάτι να σκοράρει.",
+        "q": "Τι γίνεται αν αργήσουν καλεσμένοι;"
+      },
+      {
+        "a": "Δες την επίσημη μετάδοση σε laptop ή projector. Οι περισσότεροι εθνικοί μεταδότες τη μεταδίδουν δωρεάν στην περιοχή της EBU και το επίσημο κανάλι της Eurovision στο YouTube προσφέρει αγγλόφωνο stream ζωντανά σε πολλές χώρες.",
+        "q": "Τι κάνω αν δεν έχω τηλεόραση;"
+      },
+      {
+        "a": "Ναι. Μοίρασε τον σύνδεσμο του δωματίου στο chat του Zoom και κάνε screen-share τη μετάδοση. Οι καλεσμένοι παίζουν στα κινητά τους ενώ παρακολουθούν την κλήση. Το Dashboard δουλεύει σαν δεύτερο παράθυρο σε tablet για να βλέπουν όλοι την κατάταξη.",
+        "q": "Μπορώ να κάνω το πάρτι σε Zoom;"
+      },
+      {
+        "a": "Η βαθμολογία του παγώνει. Τα σύνολα προβλέψεων και quiz είναι ήδη κατοχυρωμένα και τα αποτελέσματα των μονομαχιών μένουν στον πίνακα, οπότε μπορεί ακόμα να κερδίσει Μάντη, Γκουρού ή Μονομάχο — ο φίλος που πρέπει να βάλει τα παιδιά για ύπνο στις 22:00 μπορεί και πάλι να φύγει με τρόπαιο. Η εξαίρεση είναι ο Πρωταθλητής: όποιος αποχωρήσει από το παιχνίδι δεν μπορεί να τον κερδίσει.",
+        "q": "Τι γίνεται αν φύγει κάποιος νωρίτερα;"
+      },
+      {
+        "a": "Η εφαρμογή υποστηρίζει 20 παίκτες σε ένα δωμάτιο, αλλά πάνω από 12 αλλάζει η δυναμική παρακολούθησης — λιγότεροι δίνουν προσοχή σε κάθε τραγούδι και οι μονομαχίες trivia δεν προλαβαίνουν να εναλλαχθούν σε όλους πριν τελειώσει η βραδιά. Για ένα ανταγωνιστικό πάρτι, ο ιδανικός αριθμός είναι 6–10.",
+        "q": "Πόσοι καλεσμένοι είναι πολλοί;"
+      }
+    ],
+    "hero": {
+      "chip": "Οδηγός διοργάνωσης",
+      "lede": "Το πάρτι Eurovision είναι μια βραδιά παρακολούθησης του Eurovision Song Contest, συνήθως με κοστούμια, θεματικό φαγητό, παιχνίδια ψηφοφορίας και ζωηρό σχολιασμό. Όταν στηθεί σωστά, είναι το πιο χαοτικό δείπνο της χρονιάς. Δες πώς το στήνεις — λίστα καλεσμένων, θέμα, φαγητό, πρόγραμμα της βραδιάς και πώς κρατάς ανταγωνιστικό κάθε τραγούδι.",
+      "title": "Πάρτι Eurovision — πλήρης οδηγός διοργάνωσης"
+    },
+    "meta": {
+      "articleDescription": "Πώς διοργανώνεις πάρτι Eurovision το {year}: αριθμός καλεσμένων, χώρος, θέμα, φαγητό ανά χώρα, τετράωρο πρόγραμμα βραδιάς και τα δωρεάν παιχνίδια που κρατούν ζωντανό τον ανταγωνισμό.",
+      "description": "Διοργάνωσε πάρτι Eurovision το {year}: αριθμός καλεσμένων, χώρος, θέμα, μπουφές με πιάτα ανά χώρα, τετράωρο πρόγραμμα βραδιάς και τα δωρεάν παιχνίδια βαθμολογίας που κάνουν κάθε τραγούδι να μετράει.",
+      "eventDescription": "Διοργάνωσε βραδιά Eurovision για τον μεγάλο τελικό του {year}, {finalDayShort}. Φαγητό ανά χώρα, κοστούμια και μια δωρεάν εφαρμογή βαθμολογίας για προβλέψεις, quiz και μονομαχίες.",
+      "eventName": "Eurovision Song Contest {year} — Βραδιά μεγάλου τελικού",
+      "headline": "Πάρτι Eurovision — Ο πλήρης οδηγός διοργάνωσης για το {year}",
+      "keywords": [
+        "πάρτι eurovision",
+        "πώς διοργανώνεις πάρτι eurovision",
+        "βραδιά eurovision",
+        "παιχνίδια πάρτι eurovision",
+        "ιδέες πάρτι eurovision",
+        "eurovision night"
+      ],
+      "title": "Πάρτι Eurovision — Ο πλήρης οδηγός διοργάνωσης για το {year}"
+    },
+    "related": {
+      "heading": "Συνέχισε την ανάγνωση",
+      "items": [
+        {
+          "blurb": "Λεπτό προς λεπτό πρόγραμμα για όλη την τετράωρη μετάδοση.",
+          "href": "/eurovision-night",
+          "title": "Βραδιά Eurovision"
+        },
+        {
+          "blurb": "Οδηγός εκκίνησης 60 δευτερολέπτων — από τη δημιουργία δωματίου μέχρι την αποκάλυψη τροπαίων.",
+          "href": "/how-to-play",
+          "title": "Πώς παίζεις"
+        },
+        {
+          "blurb": "Top 5 και Worst 5 — η μηχανή των 500 πόντων κάθε πίνακα βαθμολογίας πάρτι.",
+          "href": "/eurovision-predictions",
+          "title": "Προβλέψεις"
+        },
+        {
+          "blurb": "Ενδεικτικές ερωτήσεις quiz και πώς είναι οργανωμένη η τράπεζα ερωτήσεων.",
+          "href": "/eurovision-trivia",
+          "title": "Trivia"
+        },
+        {
+          "blurb": "Μάχες ένας προς έναν για τα διαφημιστικά διαλείμματα. Steal ή Double.",
+          "href": "/duels",
+          "title": "Μονομαχίες"
+        },
+        {
+          "blurb": "Ειδικές περιπτώσεις — αργοπορημένοι, αποχωρήσεις, διοργάνωση μέσω Zoom και ζώνες ώρας.",
+          "href": "/faq",
+          "title": "Συχνές ερωτήσεις"
+        }
+      ]
+    },
+    "sections": {
+      "faq": {
+        "title": "Συχνές ερωτήσεις"
+      },
+      "food": {
+        "bullets": [
+          {
+            "rest": " — σουηδικοί κεφτέδες με σάλτσα lingonberry.",
+            "strong": "Σουηδία"
+          },
+          {
+            "rest": " — arancini και bruschetta.",
+            "strong": "Ιταλία"
+          },
+          {
+            "rest": " — τριγωνάκια σπανακόπιτας.",
+            "strong": "Ελλάδα"
+          },
+          {
+            "rest": " — sausage rolls (ρολά λουκάνικου σε σφολιάτα).",
+            "strong": "Ηνωμένο Βασίλειο"
+          },
+          {
+            "rest": " — μίνι κρουασάν με μπρι.",
+            "strong": "Γαλλία"
+          },
+          {
+            "rest": " — χούμους με πίτα.",
+            "strong": "Ισραήλ"
+          }
+        ],
+        "drinks": "Ποτά: κοκτέιλ ανά χώρα (Aperol για Ιταλία, Aquavit για Σουηδία, ούζο για Ελλάδα, Pastis για Γαλλία) και μια πλούσια επιλογή mocktail για όσους οδηγούν ή δεν πίνουν.",
+        "intro": "Διάλεξε έξι χώρες από τη σειρά εμφάνισης και σέρβιρε ένα πιάτο ανά χώρα, όλα finger food (χωρίς σερβίρισμα σε πιάτα κατά τη διάρκεια της εκπομπής). Μια ενδεικτική επιλογή:",
+        "title": "Φαγητό και ποτό — μπουφές ανά χώρα"
+      },
+      "games": {
+        "bullets": [
+          {
+            "href": "/eurovision-predictions",
+            "label": "Προβλέψεις",
+            "rest": " — Top 5 και Worst 5, αλλάζουν μέχρι να ανοίξει η ψηφοφορία. Η σπονδυλική στήλη των 500 πόντων του πίνακα βαθμολογίας."
+          },
+          {
+            "href": "/eurovision-trivia",
+            "label": "Quiz",
+            "rest": " — τρεις γύροι που ο κάθε παίκτης παίζει με τον δικό του ρυθμό, πριν και κατά τη διάρκεια της εκπομπής, μέχρι να ανοίξει η ψηφοφορία."
+          },
+          {
+            "href": "/duels",
+            "label": "Μονομαχίες",
+            "rest": " — trivia ένας προς έναν στα διαφημιστικά διαλείμματα. Steal ή Double."
+          },
+          {
+            "href": "/dashboard",
+            "label": "Dashboard",
+            "rest": " — ο ζωντανός πίνακας βαθμολογίας που παρακολουθούν όλοι στο δωμάτιο."
+          }
+        ],
+        "introAfter": " συνδυάζει τέσσερα παιχνίδια βαθμολογίας σε όλη τη βραδιά — διάλεξε και τα τέσσερα για πλήρες χάος ή μόνο τις προβλέψεις αν θες πιο ήσυχο δωμάτιο.",
+        "introBefore": "Το ",
+        "introLink": "Eurovision Games",
+        "title": "Παιχνίδια για να προσθέσεις στη βραδιά"
+      },
+      "headcount": {
+        "bullets": [
+          {
+            "rest": " Ιδανικός αριθμός: 6–10 — αρκετή ποικιλία στις προβλέψεις και τις μονομαχίες χωρίς να κουράζει η εναλλαγή στο trivia.",
+            "strong": "2–20 παίκτες μέσω της εφαρμογής."
+          },
+          {
+            "rest": " Η εφαρμογή βαθμολογίας τρέχει στο κινητό κάθε καλεσμένου, οπότε ο χώρος αρκεί να χωράει τη μετάδοση και τον μπουφέ.",
+            "strong": "Σαλόνι, κήπος ή Zoom."
+          },
+          {
+            "rest": " Εθνικός μεταδότης (BBC, RAI, ARD, ΕΡΤ κ.ά.), το επίσημο stream της Eurovision στο YouTube όπου είναι διαθέσιμο, ή projector με οποιαδήποτε από τις παραπάνω πηγές.",
+            "strong": "Πηγή μετάδοσης."
+          },
+          {
+            "link": {
+              "after": " κρατάει την κατάταξη ορατή χωρίς να σκύβει κανείς πάνω από το κινητό.",
+              "before": "",
+              "label": "ζωντανό Dashboard"
+            },
+            "rest": " Μια δεύτερη οθόνη που δείχνει το ",
+            "strong": "Μία οθόνη για την εκπομπή, μία για τον πίνακα βαθμολογίας."
+          }
+        ],
+        "title": "Καλεσμένοι και χώρος"
+      },
+      "runOfShow": {
+        "intro": "Οι ώρες μετρούν από την έναρξη της μετάδοσης (T-0 = πρώτο τραγούδι). Στήσε τα πάντα γύρω από το T-0 και η βραδιά κυλάει μόνη της.",
+        "rows": [
+          [
+            "T-60",
+            "Άνοιγμα πόρτας",
+            "Κλήρωση χωρών, κρίση κοστουμιών, πρώτο ποτό"
+          ],
+          [
+            "T-45",
+            "Άνοιγμα δωματίου",
+            "Μοίρασε τον κωδικό συμμετοχής· πάτα «Ξεκίνα το Πάρτι!» μόλις μπουν όλοι — ανοίγουν προβλέψεις, quiz και μονομαχίες"
+          ],
+          [
+            "T-30",
+            "Προβλέψεις και ζέσταμα",
+            "Όλοι συμπληρώνουν Top 5 / Worst 5 και παίζουν τον 1ο γύρο quiz· τελευταίο γέμισμα μπουφέ"
+          ],
+          [
+            "T-0",
+            "Έναρξη μετάδοσης",
+            "Οι προβλέψεις αλλάζουν όσο παίζουν τα τραγούδια· quiz και μονομαχίες συνεχίζονται"
+          ],
+          [
+            "T+0–2:00",
+            "26 συμμετοχές στον αέρα",
+            "Μονομαχίες στα postcards και στα διαφημιστικά"
+          ],
+          [
+            "T+2:00",
+            "Interval act (~25 λεπτά)",
+            "Μεγάλο παράθυρο μονομαχιών· έξτρα ζεστό φαγητό"
+          ],
+          [
+            "T+2:30",
+            "Άνοιγμα ψηφοφορίας",
+            "Ανοίγουν οι γραμμές για κριτική επιτροπή + televote· η εφαρμογή κλειδώνει αυτόματα προβλέψεις, quiz και μονομαχίες"
+          ],
+          [
+            "T+3:00",
+            "Ψήφος κριτικής επιτροπής",
+            "Τα πιο χαοτικά 25 λεπτά της τηλεοπτικής χρονιάς"
+          ],
+          [
+            "T+3:30",
+            "Televote + νικητής",
+            "Τα επίσημα αποτελέσματα περνούν αυτόματα στο δωμάτιο"
+          ],
+          [
+            "T+3:45",
+            "Αποκάλυψη τροπαίων",
+            "Πέντε νικητές στην εφαρμογή· φωτογραφίες"
+          ]
+        ],
+        "tableHeaders": [
+          "Ώρα",
+          "Τι συμβαίνει",
+          "Τι να κάνεις"
+        ],
+        "title": "Πρόγραμμα βραδιάς — χρονοδιάγραμμα 4 ωρών"
+      },
+      "theme": {
+        "bullets": [
+          {
+            "rest": " Τύπωσε τις 26 σημαίες του μεγάλου τελικού και κρέμασέ τες στον χώρο — η πιο φθηνή και ευδιάκριτη διακόσμηση της βραδιάς.",
+            "strong": "Γιρλάντα με σημαίες."
+          },
+          {
+            "rest": " Μία με μπαταρία δίπλα στον μπουφέ αρκεί για να βάλει όλο τον χώρο σε κλίμα Eurovision.",
+            "strong": "Μια μίνι ντίσκο μπάλα."
+          },
+          {
+            "rest": " Ροζ και μωβ για να ταιριάζουν στην παλέτα της εκπομπής· κόλλησέ τα γύρω από το πλαίσιο της οθόνης.",
+            "strong": "LED φωτάκια με μπαταρία."
+          },
+          {
+            "rest": " Κάθε καλεσμένος τραβάει μια χώρα από μπολ στην είσοδο και την υποστηρίζει όλη τη βραδιά — άμεση συναισθηματική επένδυση.",
+            "strong": "Κλήρωση χωρών."
+          }
+        ],
+        "title": "Θέμα και διακόσμηση"
+      },
+      "timezone": {
+        "body": "Η Eurovision μεταδίδεται ζωντανά σε ώρα CEST, που για το μεγαλύτερο μέρος της Ευρώπης είναι μέσα στο βράδυ, και μία ώρα νωρίτερα στο Ηνωμένο Βασίλειο, την Ιρλανδία και την Πορτογαλία. Στην Αμερική πέφτει από το μεσημέρι έως το απόγευμα· στην Αυστραλία και τη Νέα Ζηλανδία πέφτει νωρίς το πρωί της Κυριακής. Ταίριαξε το φαγητό με την τοπική ώρα — πρωινό στο Σίδνεϊ, πλήρες δείπνο στο Βερολίνο — αλλά κράτα το πρόγραμμα της βραδιάς ίδιο: άνοιγμα πόρτας στο T-60, κλείδωμα προβλέψεων με το άνοιγμα της ψηφοφορίας, μονομαχίες στα διαλείμματα. Ο σύνδεσμος του δωματίου δουλεύει το ίδιο σε κάθε ζώνη ώρας.",
+        "title": "Διοργάνωση σε διαφορετικές ζώνες ώρας"
+      },
+      "what": {
+        "b1": "απόψεις",
+        "b1Suffix": " (όλοι έχουν άποψη), ",
+        "b2": "στοίχημα",
+        "b2Suffix": " (ένα παιχνίδι με βαθμολογία κάνει κάθε τραγούδι να μετράει) και ",
+        "b3": "συνεχής ενέργεια",
+        "intro": "Το πάρτι Eurovision είναι μια δομημένη βραδιά Eurovision γύρω από τον μεγάλο τελικό του Eurovision Song Contest. Η μετάδοση κρατάει περίπου τρεισήμισι ώρες· ένα καλό πάρτι μετατρέπει αυτή τη διάρκεια σε διαγωνισμό προσθέτοντας τρία συστατικά: ",
+        "outro": " (φαγητό, κοστούμια και διαλείμματα δομημένα γύρω από τη μετάδοση). Παράλειψε ένα και έχεις μια ήσυχη προβολή στο σαλόνι — διασκεδαστική, αλλά όχι πάρτι.",
+        "title": "Τι είναι το πάρτι Eurovision;"
+      }
+    }
+  },
+  "en": {
+    "crumbs": {
+      "current": "Eurovision Party",
+      "home": "Home"
+    },
+    "cta": {
+      "body": "Send the room link with the invite — guests can predict from anywhere.",
+      "primary": "Create",
+      "secondary": "Eurovision night",
+      "title": "Lock in your Eurovision party"
+    },
+    "faq": [
+      {
+        "a": "Plan for four to five hours from doors to last drink. Doors open an hour before broadcast, the grand final runs roughly three and a half hours including the jury and televote, and trophy reveals plus debrief take another twenty minutes.",
+        "q": "How long does a Eurovision party last?"
+      },
+      {
+        "a": "Get everyone’s predictions in before voting opens — that is the only hard deadline, and the app enforces it by locking picks automatically. Late arrivals can join the room at any point and still make predictions, play quiz rounds and duel until voting opens; anyone who arrives after that can follow the leaderboard but has nothing left to score.",
+        "q": "What if guests turn up late?"
+      },
+      {
+        "a": "Stream the official broadcast on a laptop or projector. Most national broadcasters carry it free in the EBU region, and the official Eurovision YouTube channel runs an English-language stream live in many territories.",
+        "q": "What if I do not have a TV?"
+      },
+      {
+        "a": "Yes. Share the room link in the Zoom chat and screen-share the broadcast. Guests play on their phones while watching the call. The Dashboard works as a second window on a tablet so everyone can glance at the leaderboard.",
+        "q": "Can I host the party on Zoom?"
+      },
+      {
+        "a": "Their score freezes. Predictions and quiz totals are already banked and duel records stay on the leaderboard, so they can still win Oracle, Guru or Duelist — the friend who has to put kids to bed at 22:00 can still walk away with a trophy. The exception is Champion: a player who exits the game isn’t eligible for it.",
+        "q": "What if someone leaves early?"
+      },
+      {
+        "a": "The app supports 20 in a single room, but past 12 the watch dynamic changes — fewer people pay close attention to each song, and trivia duels cannot rotate through everyone before the night ends. For a competitive party, 6–10 is the sweet spot.",
+        "q": "How many guests is too many?"
+      }
+    ],
+    "hero": {
+      "chip": "Hosting playbook",
+      "lede": "A Eurovision party is a watch party for the Eurovision Song Contest, usually styled as a costume night with themed food, voting games, and rowdy commentary. Done right, it is the most chaotic dinner party of the year. Here is how to run one — guest list, theme, food, run-of-show, and how to keep every song competitive.",
+      "title": "Eurovision party — the complete hosting playbook"
+    },
+    "meta": {
+      "articleDescription": "How to throw a Eurovision party in {year}: headcount, venue, theme, country-themed food, a four-hour run-of-show, and the free games to keep guests competitive.",
+      "description": "Throw a Eurovision party in {year}: headcount, venue, theme, country-themed buffet, four-hour run-of-show, and the free scoring games that keep every song competitive.",
+      "eventDescription": "Host a Eurovision watch party for the {year} grand final on {finalDayShort}. Country-themed food, costumes, and a free scoring app for predictions, quiz, and duels.",
+      "eventName": "Eurovision Song Contest {year} — Grand Final watch party",
+      "headline": "Eurovision Party — The Complete Hosting Playbook for {year}",
+      "keywords": [
+        "eurovision party",
+        "how to host eurovision party",
+        "eurovision watch party",
+        "eurovision party games",
+        "eurovision party ideas",
+        "eurovision night"
+      ],
+      "title": "Eurovision Party — The Complete Hosting Playbook for {year}"
+    },
+    "related": {
+      "heading": "Keep reading",
+      "items": [
+        {
+          "blurb": "Minute-by-minute run-of-show across the four-hour broadcast.",
+          "href": "/eurovision-night",
+          "title": "Eurovision Night"
+        },
+        {
+          "blurb": "Sixty-second setup walkthrough — create-room to trophy reveal.",
+          "href": "/how-to-play",
+          "title": "How to play"
+        },
+        {
+          "blurb": "Top 5 and Worst 5 — the 500-point engine of every party leaderboard.",
+          "href": "/eurovision-predictions",
+          "title": "Predictions"
+        },
+        {
+          "blurb": "Sample quiz questions and how the bank is structured.",
+          "href": "/eurovision-trivia",
+          "title": "Trivia"
+        },
+        {
+          "blurb": "Head-to-head battles for the ad-break window. Steal or Double.",
+          "href": "/duels",
+          "title": "Duels"
+        },
+        {
+          "blurb": "Edge cases — late guests, leavers, Zoom hosting, and time zones.",
+          "href": "/faq",
+          "title": "FAQ"
+        }
+      ]
+    },
+    "sections": {
+      "faq": {
+        "title": "Frequently asked questions"
+      },
+      "food": {
+        "bullets": [
+          {
+            "rest": " — meatballs with lingonberry.",
+            "strong": "Sweden"
+          },
+          {
+            "rest": " — arancini and bruschetta.",
+            "strong": "Italy"
+          },
+          {
+            "rest": " — spanakopita triangles.",
+            "strong": "Greece"
+          },
+          {
+            "rest": " — sausage rolls.",
+            "strong": "UK"
+          },
+          {
+            "rest": " — mini croissants with brie.",
+            "strong": "France"
+          },
+          {
+            "rest": " — hummus with pita.",
+            "strong": "Israel"
+          }
+        ],
+        "drinks": "Drinks: country-themed cocktails (Aperol for Italy, Aquavit for Sweden, Ouzo for Greece, Pastis for France) plus a generous mocktail option for designated drivers and non-drinkers.",
+        "intro": "Pick six countries from the running order and serve one dish per country, all finger food (no plating during the show). A representative spread:",
+        "title": "Food and drink — country-themed buffet"
+      },
+      "games": {
+        "bullets": [
+          {
+            "href": "/eurovision-predictions",
+            "label": "Predictions",
+            "rest": " — Top 5 and Worst 5, editable until voting opens. The 500-point spine of the leaderboard."
+          },
+          {
+            "href": "/eurovision-trivia",
+            "label": "Quiz",
+            "rest": " — three rounds each player plays at their own pace, before and during the show, until voting opens."
+          },
+          {
+            "href": "/duels",
+            "label": "Duels",
+            "rest": " — head-to-head trivia in the ad breaks. Steal or Double."
+          },
+          {
+            "href": "/dashboard",
+            "label": "Dashboard",
+            "rest": " — the live leaderboard everyone in the room is watching."
+          }
+        ],
+        "introAfter": " stacks four scoring modes across the night — pick all four for full chaos, or just predictions if you want a quieter room.",
+        "introBefore": "",
+        "introLink": "Eurovision Games",
+        "title": "Game options to layer on"
+      },
+      "headcount": {
+        "bullets": [
+          {
+            "rest": " Sweet spot is 6–10 — enough variety in predictions and duels without the trivia rotation getting stale.",
+            "strong": "2–20 players via the app."
+          },
+          {
+            "rest": " The scoring app runs on every guest's phone, so the venue just has to fit the broadcast and the buffet.",
+            "strong": "Living room, garden, or Zoom."
+          },
+          {
+            "rest": " National broadcaster (BBC, RAI, ARD, ERT, etc.), the official Eurovision YouTube stream where available, or a projector pulled from any of the above.",
+            "strong": "Broadcast source."
+          },
+          {
+            "link": {
+              "after": " keeps the standings visible without anyone craning at a phone.",
+              "before": "",
+              "label": "live Dashboard"
+            },
+            "rest": " A second screen mirroring the ",
+            "strong": "One screen for the show, one for the leaderboard."
+          }
+        ],
+        "title": "Headcount and venue"
+      },
+      "runOfShow": {
+        "intro": "Times are relative to broadcast start (T-0 = first song). Anchor everything around T-0 and the night runs itself.",
+        "rows": [
+          [
+            "T-60",
+            "Doors open",
+            "Country draw, costume judging, first drink"
+          ],
+          [
+            "T-45",
+            "Open the room",
+            "Share the join code; tap Start the Party! once everyone is in — predictions, quiz and duels open"
+          ],
+          [
+            "T-30",
+            "Picks and warm-up",
+            "Everyone fills in Top 5 / Worst 5 and plays quiz round 1; final buffet top-up"
+          ],
+          [
+            "T-0",
+            "Broadcast starts",
+            "Predictions stay editable through the songs; quiz and duels keep running"
+          ],
+          [
+            "T+0–2:00",
+            "26 entries air",
+            "Duels run during postcards and ad breaks"
+          ],
+          [
+            "T+2:00",
+            "Interval act (~25 min)",
+            "Big duel window; hot food drop"
+          ],
+          [
+            "T+2:30",
+            "Voting opens",
+            "Lines open for jury + televote; the app locks predictions, quiz and duels automatically"
+          ],
+          [
+            "T+3:00",
+            "Jury vote",
+            "Most chaotic 25 minutes on TV"
+          ],
+          [
+            "T+3:30",
+            "Televote + winner",
+            "Official results land in the room automatically"
+          ],
+          [
+            "T+3:45",
+            "Trophy reveal",
+            "Five winners in the app; photos"
+          ]
+        ],
+        "tableHeaders": [
+          "Time",
+          "What happens",
+          "What to do"
+        ],
+        "title": "Run-of-show — 4-hour timeline"
+      },
+      "theme": {
+        "bullets": [
+          {
+            "rest": " Print the 26 grand-final flags and string them across the room — cheapest, most legible decor on the night.",
+            "strong": "National flag bunting."
+          },
+          {
+            "rest": " One on a battery base in the buffet area is enough to tilt the whole room into Eurovision territory.",
+            "strong": "A mini disco ball."
+          },
+          {
+            "rest": " Pink and purple to match the broadcast palette; tape them along the screen frame.",
+            "strong": "Battery-powered LED lights."
+          },
+          {
+            "rest": " Each guest draws a country at the door from a bowl and roots for it all night — instant emotional investment.",
+            "strong": "Country assignments."
+          }
+        ],
+        "title": "Theme and decor"
+      },
+      "timezone": {
+        "body": "Eurovision broadcasts live in CEST, which is mid-evening for most of Europe and an hour earlier in the UK, Ireland, and Portugal. In the Americas it is midday to mid-afternoon; in Australia and New Zealand it lands early on Sunday morning. Match the food to the local slot — breakfast spreads in Sydney, full dinner in Berlin — but keep the run-of-show identical: doors at T-60, predictions locked when voting opens, duels in the breaks. The room link works the same in every time zone.",
+        "title": "Hosting in different time zones"
+      },
+      "what": {
+        "b1": "opinions",
+        "b1Suffix": " (everyone has a take), ",
+        "b2": "stakes",
+        "b2Suffix": " (a scored game makes every song matter), and ",
+        "b3": "sustained energy",
+        "intro": "A Eurovision party is a structured watch night built around the grand final of the Eurovision Song Contest. The broadcast lasts roughly three and a half hours; a good party turns that runtime into a competition by adding three ingredients: ",
+        "outro": " (food, costumes, and breaks structured around the broadcast). Skip any one and you get a quiet living-room screening — fun, but not a party.",
+        "title": "What is a Eurovision party?"
+      }
+    }
+  }
+}

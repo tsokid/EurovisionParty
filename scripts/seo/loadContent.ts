@@ -10,7 +10,9 @@ import { fileURLToPath } from 'node:url';
 import type { ContestSnapshot, CountrySnapshot, SiteSnapshot } from '../../src/content/contests/types';
 import type { ContentData } from '../../src/lib/seo/dynamicPages';
 
-const CONTENT = resolve(dirname(fileURLToPath(import.meta.url)), '../../content');
+// EUROPARTY_CONTENT_DIR: vitest points it at the frozen test fixture.
+const CONTENT = process.env.EUROPARTY_CONTENT_DIR
+  ?? resolve(dirname(fileURLToPath(import.meta.url)), '../../content');
 
 function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(path, 'utf8')) as T;

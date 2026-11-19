@@ -121,6 +121,7 @@ export default defineConfig(({ isSsrBuild }) => ({
   resolve: {
     alias: {
       '@': '/src',
+      '@content': CONTENT_DIR,
     },
   },
 }))

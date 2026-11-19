@@ -1,0 +1,404 @@
+{
+  "el": {
+    "anchored": [
+      {
+        "a": "Πάτα \"Φτιάξε Δωμάτιο\", γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης για το δωμάτιο — χωρίς εγγραφή και χωρίς email. Ένας κωδικός δωματίου 6 χαρακτήρων και ένας σύνδεσμος κοινοποίησης εμφανίζονται αμέσως· κάθε δωμάτιο χωράει έως 20 παίκτες. Ο οικοδεσπότης διαχειρίζεται το δωμάτιο μέχρι να αποχωρήσει ή να το διαγράψει.",
+        "id": "create",
+        "q": "Πώς δημιουργώ ένα δωμάτιο;"
+      },
+      {
+        "a": "Χρησιμοποίησε τον σύνδεσμο εισόδου που μοιράστηκε ο οικοδεσπότης (ένα tap, χωρίς λογαριασμό) ή άνοιξε το Eurovision Games, πάτα \"Μπες σε Δωμάτιο\" και πληκτρολόγησε τον κωδικό 6 χαρακτήρων μαζί με το όνομα εμφάνισής σου. Όσοι μπουν αργότερα μπορούν να κάνουν προβλέψεις και να παίξουν quiz και μονομαχίες μέχρι να ανοίξει η ψηφοφορία, οπότε όλα κλειδώνουν αυτόματα.",
+        "id": "join",
+        "q": "Πώς μπαίνω σε ένα δωμάτιο;"
+      },
+      {
+        "a": "Πάτα το όνομά σου στην κεφαλίδα του δωματίου → \"Αποχώρηση\". Η θέση σου ελευθερώνεται· οι κερδισμένοι πόντοι σου παγώνουν στον πίνακα βαθμολογίας ώστε η υπόλοιπη παρέα να μην επηρεαστεί. Οι οικοδεσπότες μπορούν επίσης να διαγράψουν το δωμάτιο από την ενότητα \"Τα Δωμάτιά σου\" στην αρχική σελίδα, κάτι που τερματίζει τη συνεδρία για όλους — ένα μήνυμα επιβεβαίωσης αποτρέπει τα ατυχήματα.",
+        "id": "leave",
+        "q": "Πώς αποχωρώ ή διαγράφω ένα δωμάτιο;"
+      }
+    ],
+    "createSection": {
+      "bullets": [
+        {
+          "rest": "— αρκετή προθέρμανση χωρίς να κουράζει.",
+          "strong": "3 γύροι quiz"
+        },
+        {
+          "rest": "— το ανώτατο όριο· τα μικρότερα δωμάτια κυλούν πιο γρήγορα.",
+          "strong": "Έως 20 παίκτες"
+        },
+        {
+          "rest": "— αποτρέπει την εκμετάλλευση ενός μόνο στόχου.",
+          "strong": "Μία πρόκληση προς κάθε κατεύθυνση ανά ζευγάρι, συν μία ρεβάνς"
+        }
+      ],
+      "cardTitle": "Προεπιλογές που δουλεύουν",
+      "title": "Δημιουργία δωματίου"
+    },
+    "crumbs": {
+      "current": "Συχνές Ερωτήσεις",
+      "home": "Αρχική"
+    },
+    "cta": {
+      "body": "Μπες σε ένα δωμάτιο και ρώτα τον οικοδεσπότη — ή δες τη σελίδα Σχετικά για στοιχεία επικοινωνίας.",
+      "primary": "Δημιουργία δωματίου",
+      "secondary": "Σχετικά / επικοινωνία",
+      "title": "Δεν βρήκες απάντηση;"
+    },
+    "hero": {
+      "chip": "Συχνές Ερωτήσεις",
+      "lede": "Σύντομες απαντήσεις στις ερωτήσεις που κάνουν πιο συχνά οι οικοδεσπότες και οι παίκτες. Οι τρεις πιο συχνές — δημιουργία, είσοδος και αποχώρηση — είναι στην κορυφή. Οι υπόλοιπες βρίσκονται σε αναδιπλούμενη λίστα παρακάτω. Για περισσότερη λεπτομέρεια δες τον κανονισμό, τα μαθηματικά βαθμολογίας και τον οδηγό εκκίνησης.",
+      "title": "Eurovision Games — συχνές ερωτήσεις"
+    },
+    "joinSection": {
+      "bullets": [
+        {
+          "rest": "πάτα τον σύνδεσμο εισόδου που μοιράστηκε ο οικοδεσπότης. Ένα βήμα, χωρίς λογαριασμό.",
+          "strong": "Πιο εύκολος δρόμος:"
+        },
+        {
+          "rest": "άνοιξε το Eurovision Games → <em>Μπες σε Δωμάτιο</em> → πληκτρολόγησε τον κωδικό 6 χαρακτήρων μαζί με ένα όνομα εμφάνισης.",
+          "strong": "Χειροκίνητα:"
+        },
+        {
+          "rest": "μπορούν ακόμα να κάνουν προβλέψεις και να παίξουν trivia και μονομαχίες — όλα κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία.",
+          "strong": "Όσοι μπουν αργότερα"
+        }
+      ],
+      "title": "Είσοδος σε δωμάτιο"
+    },
+    "leaveSection": {
+      "bullets": [
+        {
+          "rest": "πατούν το όνομά τους στην κεφαλίδα του δωματίου → <em>Αποχώρηση</em>. Οι κατοχυρωμένοι πόντοι παγώνουν στον πίνακα βαθμολογίας.",
+          "strong": "Οι παίκτες"
+        },
+        {
+          "rest": "μπορούν επίσης να διαγράψουν το δωμάτιο από την ενότητα <em>Τα Δωμάτιά σου</em> στην αρχική σελίδα — ένα μήνυμα επιβεβαίωσης αποτρέπει τα ατυχήματα.",
+          "strong": "Οι οικοδεσπότες"
+        },
+        {
+          "rest": "Ξαναμπές με τον ίδιο κωδικό και όνομα εμφάνισης οποιαδήποτε στιγμή πριν το δωμάτιο φτάσει στη Βαθμολογία. Οι πόντοι σου επανέρχονται.",
+          "strong": "Κατά λάθος αποχώρηση;"
+        }
+      ],
+      "title": "Αποχώρηση ή διαγραφή δωματίου"
+    },
+    "meta": {
+      "description": "Συχνές ερωτήσεις για το Eurovision Games: εγκατάσταση, παίκτες, βαθμολογία, μονομαχίες, sudden death, εγκατάσταση σε κινητό, επίλυση προβλημάτων και απόρρητο.",
+      "keywords": [
+        "eurovision games συχνές ερωτήσεις",
+        "eurovision party παιχνίδι βοήθεια",
+        "πώς να κάνω host eurovision",
+        "eurovision games υποστήριξη"
+      ],
+      "title": "Συχνές Ερωτήσεις Eurovision Games — Εγκατάσταση, Κανόνες, Βαθμολογία και Επίλυση Προβλημάτων"
+    },
+    "more": [
+      {
+        "a": "Ναι — εντελώς δωρεάν. Χωρίς συνδρομές, χωρίς in-app αγορές, χωρίς διαφημίσεις.",
+        "q": "Είναι το Eurovision Games δωρεάν;"
+      },
+      {
+        "a": "Όχι. Κανείς δεν κάνει εγγραφή, ούτε ο οικοδεσπότης. Οι παίκτες μπαίνουν με κωδικό δωματίου και ένα όνομα.",
+        "q": "Χρειάζομαι λογαριασμό;"
+      },
+      {
+        "a": "2 έως 20. Τα ζευγάρια μπορούν να μοιραστούν μία συσκευή.",
+        "q": "Πόσοι παίκτες μπορούν να μπουν σε ένα δωμάτιο;"
+      },
+      {
+        "a": "Ναι. Η εφαρμογή είναι mobile-first και εγκαθίσταται ως PWA σε iOS και Android.",
+        "q": "Δουλεύει σε κινητό;"
+      },
+      {
+        "a": "Chrome 120+, Safari 17+, Firefox 121+, Edge 120+. Παλαιότεροι browsers μπορεί να δουλεύουν αλλά δεν έχουν δοκιμαστεί.",
+        "q": "Ποιοι browsers υποστηρίζονται;"
+      },
+      {
+        "a": "Ναι — οποιαδήποτε στιγμή. Μέχρι να ανοίξει η ψηφοφορία μπορούν ακόμα να κάνουν προβλέψεις και να παίξουν quiz και μονομαχίες· μετά, όλα είναι κλειδωμένα.",
+        "q": "Μπορούν να μπουν παίκτες αργότερα;"
+      },
+      {
+        "a": "Εμφανίζεται ένα banner επανασύνδεσης· με ένα tap ο παίκτης επιστρέφει στο δωμάτιο όπως το άφησε. Προβλέψεις και πόντοι δεν χάνονται.",
+        "q": "Τι γίνεται αν αποσυνδεθεί ένας παίκτης;"
+      },
+      {
+        "a": "Όχι. Δεν υπάρχει τρόπος να αφαιρεθεί μεμονωμένος παίκτης, γι’ αυτό μοίρασε τον κωδικό δωματίου και τον κωδικό πρόσβασης μόνο σε άτομα που εμπιστεύεσαι. Αν μπει κάποιος που δεν θα έπρεπε, ο οικοδεσπότης μπορεί να διαγράψει το δωμάτιο και να φτιάξει νέο.",
+        "q": "Μπορεί ο οικοδεσπότης να αποβάλει παίκτη;"
+      },
+      {
+        "a": "Trivia 3 ερωτήσεων ένας προς έναν. Ο νικητής κλέβει το σκορ της μονομαχίας του από τον ηττημένο ή το διπλασιάζει — δεν υπάρχει σταθερό μπόνους νίκης. Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, συν μία ρεβάνς για τον ηττημένο.",
+        "q": "Πώς δουλεύουν οι μονομαχίες;"
+      },
+      {
+        "a": "Δες τη σελίδα Βαθμολογίας για τις πλήρεις φόρμουλες. Οι επιλογές Top-5 και Worst-5 βαθμολογούνται με τον ίδιο τρόπο: 50 πόντοι για την ακριβή θέση, 20 αν η χώρα είναι στη σωστή λίστα αλλά σε άλλη θέση. Οι απαντήσεις quiz παίρνουν 12, 8 ή 4 πόντους ανάλογα με την ταχύτητα, και οι μονομαχίες μετακινούν πόντους με Κλοπή ή Διπλασιασμό.",
+        "q": "Πώς υπολογίζεται η βαθμολογία;"
+      },
+      {
+        "a": "Πρωταθλητής (περισσότεροι συνολικοί πόντοι), Κλέφτης (περισσότεροι πόντοι κλεμμένοι σε μονομαχίες), Μονομάχος (περισσότερες κερδισμένες μονομαχίες), Μάντης (υψηλότερη βαθμολογία προβλέψεων, Top 5 + Worst 5), Γκουρού (περισσότερες σωστές απαντήσεις quiz).",
+        "q": "Ποιες είναι οι πέντε κατηγορίες νικητών;"
+      },
+      {
+        "a": "Ένα προαιρετικό tiebreak: το δωμάτιο ψηφίζει Αποδοχή (όλοι οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Αν νικήσει το Sudden Death με αρκετές ψήφους, οι ισόπαλοι παίκτες απαντούν σε 3 ερωτήσεις trivia — κερδίζει όποιος απαντήσει σωστά στις περισσότερες· σε ισοπαλία κερδίζει ο γρηγορότερος.",
+        "q": "Τι είναι το sudden death;"
+      },
+      {
+        "a": "Τα επίσημα αποτελέσματα κριτικής επιτροπής και televote έρχονται αυτόματα από την επίσημη πηγή τη βραδιά του τελικού — ο οικοδεσπότης δεν χρειάζεται να καταχωρήσει τίποτα.",
+        "q": "Πώς διαχειρίζεστε τα αποτελέσματα της Eurovision;"
+      },
+      {
+        "a": "Όχι. Δεν συνδεόμαστε με την Ευρωπαϊκή Ραδιοτηλεοπτική Ένωση (EBU), με κανέναν ραδιοτηλεοπτικό φορέα-οικοδεσπότη ή με τη μάρκα Eurovision Song Contest.",
+        "q": "Είναι το Eurovision Games επίσημο;"
+      },
+      {
+        "a": "Αποθηκεύονται στο Supabase (Postgres + auth). Δες τη σελίδα Απορρήτου για λεπτομέρειες διατήρησης.",
+        "q": "Πού πάνε τα δεδομένα μου;"
+      },
+      {
+        "a": "Ναι. Μπορείς να φτιάξεις έως 10 δωμάτια την ώρα και καθένα εμφανίζεται στην ενότητα \"Τα Δωμάτιά σου\" στην αρχική σελίδα.",
+        "q": "Μπορώ να φιλοξενήσω παραπάνω από ένα δωμάτιο;"
+      }
+    ],
+    "moreTitle": "Περισσότερες ερωτήσεις",
+    "related": {
+      "items": [
+        {
+          "blurb": "Οδηγός στησίματος 60 δευτερολέπτων από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων.",
+          "href": "/how-to-play",
+          "title": "Πώς παίζεται"
+        },
+        {
+          "blurb": "Κανόνες ανά φάση, sudden death και ακραίες περιπτώσεις.",
+          "href": "/rules",
+          "title": "Κανονισμός"
+        },
+        {
+          "blurb": "Ο ακριβής υπολογισμός πόντων για κάθε πρόβλεψη, απάντηση quiz και μονομαχία.",
+          "href": "/scoring",
+          "title": "Μαθηματικά βαθμολογίας"
+        },
+        {
+          "blurb": "Τι αποθηκεύουμε, πού φυλάσσεται και για πόσο διατηρείται.",
+          "href": "/privacy",
+          "title": "Απόρρητο"
+        },
+        {
+          "blurb": "Ποιος φτιάχνει το Eurovision Games και πώς να μας βρεις.",
+          "href": "/about",
+          "title": "Σχετικά / επικοινωνία"
+        },
+        {
+          "blurb": "Οδηγός διοργάνωσης για τη βραδιά του τελικού με πλήρες χρονοδιάγραμμα.",
+          "href": "/eurovision-night",
+          "title": "Βραδιά Eurovision"
+        }
+      ]
+    },
+    "schema": {
+      "articleDescription": "Συχνές ερωτήσεις για το Eurovision Games: εγκατάσταση, παίκτες, βαθμολογία, μονομαχίες, sudden death, εγκατάσταση σε κινητό, επίλυση προβλημάτων και απόρρητο.",
+      "articleHeadline": "Συχνές Ερωτήσεις Eurovision Games — Εγκατάσταση, Κανόνες, Βαθμολογία και Επίλυση Προβλημάτων"
+    }
+  },
+  "en": {
+    "anchored": [
+      {
+        "a": "Click \"Create a Room\", enter your name, pick an avatar and set a room password — no sign-up or email needed. A 6-character room code and shareable link appear instantly; rooms hold up to 20 players. The host owns the room until they leave or delete it.",
+        "id": "create",
+        "q": "How do I create a room?"
+      },
+      {
+        "a": "Use the join link the host shared (one tap, no account), or open Eurovision Games, click \"Join a Room\", and type the 6-character code plus your display name. Late joiners can still make predictions, play quiz and duel until voting opens, when everything locks automatically.",
+        "id": "join",
+        "q": "How do I join a room?"
+      },
+      {
+        "a": "Tap your name in the room header → \"Leave room\". Your slot frees up; your scored points stay frozen on the leaderboard so the rest of the room is unaffected. Hosts can also delete the room from \"Your Rooms\" on the home page, which ends the session for everyone — a confirmation prompt prevents accidents.",
+        "id": "leave",
+        "q": "How do I leave or delete a room?"
+      }
+    ],
+    "createSection": {
+      "bullets": [
+        {
+          "rest": "— enough warm-up without dragging.",
+          "strong": "3 quiz rounds"
+        },
+        {
+          "rest": "— the upper limit; smaller rooms feel snappier.",
+          "strong": "Max 20 players"
+        },
+        {
+          "rest": "— prevents one-target grinding.",
+          "strong": "One challenge each way per pair, plus one rematch"
+        }
+      ],
+      "cardTitle": "Defaults that work",
+      "title": "Creating a room"
+    },
+    "crumbs": {
+      "current": "FAQ",
+      "home": "Home"
+    },
+    "cta": {
+      "body": "Hop into a room and ask the host — or check the About page for direct contact details.",
+      "primary": "Create room",
+      "secondary": "About / contact",
+      "title": "Couldn’t find an answer?"
+    },
+    "hero": {
+      "chip": "FAQ",
+      "lede": "Quick answers to the questions hosts and players ask most. The three most-asked — creating, joining, and leaving — are highlighted at the top. The rest are in an accordion below. For deeper detail see the rule book, scoring formulas, and setup guide.",
+      "title": "Eurovision Games — frequently asked questions"
+    },
+    "joinSection": {
+      "bullets": [
+        {
+          "rest": "tap the join link the host shared. One step, no account.",
+          "strong": "Easiest path:"
+        },
+        {
+          "rest": "open Eurovision Games → <em>Join a Room</em> → enter the 6-character code plus a display name.",
+          "strong": "Manual:"
+        },
+        {
+          "rest": "can still make predictions, play trivia and duel — everything locks automatically when voting opens.",
+          "strong": "Late joiners"
+        }
+      ],
+      "title": "Joining a room"
+    },
+    "leaveSection": {
+      "bullets": [
+        {
+          "rest": "tap their name in the room header → <em>Leave room</em>. Banked points stay frozen on the leaderboard.",
+          "strong": "Players"
+        },
+        {
+          "rest": "can also delete the room from <em>Your Rooms</em> on the home page — a confirmation prompt prevents accidents.",
+          "strong": "Hosts"
+        },
+        {
+          "rest": "Re-join with the same code and display name any time before the room reaches Final Results. Your points are restored.",
+          "strong": "Accidental leave?"
+        }
+      ],
+      "title": "Leaving or deleting a room"
+    },
+    "meta": {
+      "description": "Frequently asked questions about Eurovision Games: setup, players, scoring, duels, sudden death, mobile install, troubleshooting, and privacy.",
+      "keywords": [
+        "eurovision games faq",
+        "eurovision party game help",
+        "how to host eurovision",
+        "eurovision games support"
+      ],
+      "title": "Eurovision Games FAQ — Setup, Rules, Scoring & Troubleshooting"
+    },
+    "more": [
+      {
+        "a": "Yes — completely free. No subscriptions, no in-app purchases, no ads.",
+        "q": "Is Eurovision Games free?"
+      },
+      {
+        "a": "No. Nobody signs up, not even the host. Players join with a room code and a name.",
+        "q": "Do I need an account?"
+      },
+      {
+        "a": "2 to 20. Couples can share a single device.",
+        "q": "How many players can join a room?"
+      },
+      {
+        "a": "Yes. The app is mobile-first and installs as a PWA on iOS and Android.",
+        "q": "Does it work on mobile?"
+      },
+      {
+        "a": "Chrome 120+, Safari 17+, Firefox 121+, Edge 120+. Older browsers may work but are not tested.",
+        "q": "What browsers are supported?"
+      },
+      {
+        "a": "Yes — at any point. Until voting opens they can still make predictions, play quiz and duel; after that everything is locked.",
+        "q": "Can players join late?"
+      },
+      {
+        "a": "A reconnect banner appears; one tap rejoins them with state preserved. Predictions and points are not lost.",
+        "q": "What happens if a player disconnects?"
+      },
+      {
+        "a": "No. There is no way to remove a single player, so share the room code and password only with people you trust. If someone joins who shouldn’t, the host can delete the room and start a new one.",
+        "q": "Can the host eject a player?"
+      },
+      {
+        "a": "3-question head-to-head trivia. The winner steals their duel score from the loser or doubles it — there is no flat win bonus. Each of you can challenge the other once, plus one rematch for the loser.",
+        "q": "How do duels work?"
+      },
+      {
+        "a": "See the Scoring page for full formulas. Top-5 and Worst-5 picks score the same way: 50 points for the exact position, 20 if the country is in the right list at a different position. Quiz answers score 12, 8 or 4 points by speed, and duels move points through Steal or Double.",
+        "q": "How is scoring calculated?"
+      },
+      {
+        "a": "Champion (most total points), Thief (most points stolen in duels), Duelist (most duels won), Oracle (highest prediction score, Top 5 + Worst 5), Guru (most correct quiz answers).",
+        "q": "What are the five winner categories?"
+      },
+      {
+        "a": "An optional tiebreak: the room votes on Accept (all tied players share the trophy) or Sudden Death. If Sudden Death wins with enough votes, the tied players answer 3 trivia questions — most correct wins, speed breaks ties.",
+        "q": "What is sudden death?"
+      },
+      {
+        "a": "Official jury and televote results are pulled in automatically from the official source on grand-final night — the host doesn’t need to enter anything.",
+        "q": "How do you handle Eurovision results?"
+      },
+      {
+        "a": "No. We are not affiliated with the European Broadcasting Union, any host broadcaster, or the Eurovision Song Contest brand.",
+        "q": "Is Eurovision Games official?"
+      },
+      {
+        "a": "Stored on Supabase (Postgres + auth). See the Privacy page for retention details.",
+        "q": "Where does my data go?"
+      },
+      {
+        "a": "Yes. You can create up to 10 rooms an hour, and each one appears under \"Your Rooms\" on the home page.",
+        "q": "Can I host more than one room?"
+      }
+    ],
+    "moreTitle": "More questions",
+    "related": {
+      "items": [
+        {
+          "blurb": "60-second setup walkthrough from create-room to trophy reveal.",
+          "href": "/how-to-play",
+          "title": "How to play"
+        },
+        {
+          "blurb": "Phase-by-phase rules, sudden death, and edge cases.",
+          "href": "/rules",
+          "title": "Rule book"
+        },
+        {
+          "blurb": "Exact point math behind every prediction, quiz answer, and duel.",
+          "href": "/scoring",
+          "title": "Scoring formulas"
+        },
+        {
+          "blurb": "What we store, where it lives, and retention windows.",
+          "href": "/privacy",
+          "title": "Privacy"
+        },
+        {
+          "blurb": "Who builds Eurovision Games and how to reach us.",
+          "href": "/about",
+          "title": "About / contact"
+        },
+        {
+          "blurb": "Hosting guide for grand-final night with a full timeline.",
+          "href": "/eurovision-night",
+          "title": "Eurovision night"
+        }
+      ]
+    },
+    "schema": {
+      "articleDescription": "Frequently asked questions about Eurovision Games: setup, players, scoring, duels, sudden death, mobile install, troubleshooting, and privacy.",
+      "articleHeadline": "Eurovision Games FAQ — Setup, Rules, Scoring & Troubleshooting"
+    }
+  }
+}

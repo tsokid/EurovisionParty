@@ -1,0 +1,464 @@
+{
+  "el": {
+    "crumbs": {
+      "current": "Πώς παίζεται",
+      "home": "Αρχική"
+    },
+    "cta": {
+      "body": "60 δευτερόλεπτα, χωρίς εγκατάσταση, χωρίς λογαριασμό.",
+      "primary": "Δημιουργία δωματίου",
+      "secondary": "Eurovision night",
+      "title": "Φτιάξε ένα δωμάτιο τώρα"
+    },
+    "duels": {
+      "capLine": "Ο καθένας μπορεί να προκαλέσει τον άλλον μία φορά, και ο ηττημένος μιας μονομαχίας μπορεί να ζητήσει μία ρεβάνς· μόλις υπάρξει ρεβάνς, το ζευγάρι δεν μπορεί να ξαναπαίξει — ώστε κανείς να μη μαζεύει πόντους από τον ίδιο αντίπαλο όλο το βράδυ. Η άρνηση δεν κοστίζει πόντους, αλλά οι αρνήσεις είναι περιορισμένες: 2 ανά παίκτη σε δωμάτια έως 5 παικτών, 3 με 6–10, 4 με 11–15 και 5 με 16 ή περισσότερους (μετράνε και οι ρεβάνς που απορρίπτονται).",
+      "cardBody": "Πάτα το όνομα οποιουδήποτε άλλου παίκτη οποιαδήποτε στιγμή από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία και διάλεξε <em>Πρόκληση</em>. Και οι δύο παίκτες απαντούν τις ίδιες 3 ερωτήσεις σε ιδιωτικό περιβάλλον. Όποιος έχει το υψηλότερο σύνολο κερδίζει τη μονομαχία· ίσα σύνολα σημαίνουν ισοπαλία. Δεν υπάρχει μπόνους νίκης — ο νικητής διαλέγει <strong>Κλοπή</strong> (μεταφέρει το σκορ της μονομαχίας του από τον ηττημένο στον εαυτό του) ή <strong>Διπλασιασμό</strong> (προσθέτει στο σύνολό του το διπλάσιο του σκορ της μονομαχίας του).",
+      "cardTitle": "Πώς εξελίσσεται μια μονομαχία",
+      "intro": "Μια μονομαχία είναι μια μάχη trivia 3 ερωτήσεων μεταξύ δύο παικτών στο δωμάτιο. Οι ερωτήσεις τρέχουν σε χρονόμετρο 12 δευτερολέπτων· μετράνε και η ταχύτητα και η ακρίβεια.",
+      "title": "Μονομαχίες trivia μέσα στην εκπομπή"
+    },
+    "hero": {
+      "chip": "Οδηγός εκκίνησης",
+      "lede": "Ένα δωρεάν παιχνίδι για πάρτι, μέσα από τον browser, για τον Διαγωνισμό Τραγουδιού της Eurovision. Οι παίκτες προβλέπουν το Top 5 και το Worst 5, μάχονται σε μονομαχίες trivia ένας προς έναν και κυνηγούν πέντε τρόπαια — όλα αυτά όσο παίζει η εκπομπή. Χωρίς εφαρμογή, χωρίς λογαριασμό για τους καλεσμένους, από 2 έως 20 παίκτες.",
+      "title": "Πώς παίζεται το Eurovision Games σε 60 δευτερόλεπτα"
+    },
+    "meta": {
+      "description": "Σύντομος οδηγός για να στήσεις ένα Eurovision watch party με προβλέψεις, μονομαχίες trivia και live βαθμολογία. Η εγκατάσταση παίρνει 60 δευτερόλεπτα, για 2-20 παίκτες, χωρίς εφαρμογή.",
+      "keywords": [
+        "eurovision games πώς παίζεται",
+        "eurovision party παιχνίδι",
+        "δωρεάν eurovision watch party",
+        "eurovision κανόνες",
+        "eurovision drinking game εναλλακτική"
+      ],
+      "title": "Πώς Παίζεται το Eurovision Games — Οδηγός 2 λεπτών"
+    },
+    "predictions": {
+      "intro": "Οι προβλέψεις είναι ο πυρήνας της βραδιάς — βαθμολογούνται αυτόματα τη στιγμή που έρχονται τα αποτελέσματα της Eurovision, οπότε ανταμείβουν τη μελέτη και λίγο τσαγανό.",
+      "items": [
+        {
+          "body": "Οι πέντε χώρες που πιστεύεις ότι θα τερματίσουν 1–5 στην επίσημη συνδυαστική κατάταξη, με τη σειρά που προβλέπεις.",
+          "label": "Top 5."
+        },
+        {
+          "body": "Οι πέντε χώρες που πιστεύεις ότι θα μείνουν στον πάτο, με πρώτη την τελευταία θέση.",
+          "label": "Worst 5."
+        },
+        {
+          "body": "Μια χώρα μπορεί να εμφανιστεί σε μία μόνο λίστα ανά παίκτη.",
+          "label": "Χωρίς επικάλυψη."
+        },
+        {
+          "body": "Ακριβής θέση δίνει 50 πόντους· χώρα στη σωστή λίστα αλλά σε λάθος θέση δίνει 20.",
+          "label": "Η σειρά μετράει."
+        },
+        {
+          "body": "Οι προβλέψεις κλειδώνουν αυτόματα όταν ανοίγει η ψηφοφορία (Ψηφοφορία Live) — καμία επεξεργασία μετά. Όσοι μπουν αργότερα μπορούν μέχρι τότε να καταχωρήσουν προβλέψεις και να παίξουν trivia και μονομαχίες.",
+          "label": "Οριστικό κλείδωμα."
+        }
+      ],
+      "title": "Κλείδωμα προβλέψεων"
+    },
+    "related": {
+      "items": [
+        {
+          "blurb": "Μηχανική Top 5 και Worst 5, βαθμολογία και η φετινή λίστα χωρών.",
+          "href": "/eurovision-predictions",
+          "title": "Προβλέψεις"
+        },
+        {
+          "blurb": "50+ ενδεικτικές ερωτήσεις και η τράπεζα ερωτήσεων από την οποία αντλούν το quiz και οι μονομαχίες.",
+          "href": "/eurovision-trivia",
+          "title": "Eurovision trivia"
+        },
+        {
+          "blurb": "Στρατηγική Κλοπής vs Διπλασιασμού, όρια ανά ζευγάρι και επίδραση στα τρόπαια.",
+          "href": "/duels",
+          "title": "Μονομαχίες σε βάθος"
+        },
+        {
+          "blurb": "Ακριβή μαθηματικά πόντων για κάθε πρόβλεψη, απάντηση quiz και μονομαχία.",
+          "href": "/scoring",
+          "title": "Φόρμουλες βαθμολογίας"
+        },
+        {
+          "blurb": "Κανόνες ανά φάση, πολιτική αποσύνδεσης και ακραίες περιπτώσεις.",
+          "href": "/rules",
+          "title": "Πλήρης κανονισμός"
+        },
+        {
+          "blurb": "Σύντομες απαντήσεις για δημιουργία, είσοδο και αποχώρηση μέσα στη βραδιά.",
+          "href": "/faq",
+          "title": "Συχνές Ερωτήσεις"
+        }
+      ]
+    },
+    "schema": {
+      "articleDescription": "Βήμα προς βήμα οδηγός για να στήσεις ένα Eurovision watch party με προβλέψεις, μονομαχίες trivia και live βαθμολογία. Στήνεται σε 60 δευτερόλεπτα.",
+      "articleHeadline": "Πώς Παίζεται το Eurovision Games — Οδηγός 2 λεπτών",
+      "howToDescription": "Στήσιμο 60 δευτερολέπτων που σε πάει από τη δημιουργία δωματίου μέχρι την αποκάλυψη των τροπαίων, σε όλη τη διάρκεια της μετάδοσης της Eurovision.",
+      "howToName": "Πώς να παίξεις το Eurovision Games",
+      "steps": [
+        {
+          "name": "Δημιουργία δωματίου",
+          "text": "Πάτα «Φτιάξε Δωμάτιο», γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης για το δωμάτιο (6+ χαρακτήρες). Κάθε δωμάτιο χωράει έως 20 παίκτες."
+        },
+        {
+          "name": "Πρόσκληση φίλων",
+          "text": "Μοιράσου τον κωδικό δωματίου 6 χαρακτήρων, τον σύνδεσμο και τον κωδικό πρόσβασης του δωματίου. Οι φίλοι μπαίνουν από τον browser τους, χωρίς εφαρμογή."
+        },
+        {
+          "name": "Κλείδωμα προβλέψεων",
+          "text": "Κάθε παίκτης διαλέγει το δικό του Top 5 και Worst 5 για τον Μεγάλο Τελικό της Eurovision. Οι επιλογές αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια και κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία."
+        },
+        {
+          "name": "Μάχη στις μονομαχίες",
+          "text": "Από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία, προκάλεσε φίλους σε μονομαχίες trivia 3 ερωτήσεων ένας προς έναν. Κλέψε το σκορ της μονομαχίας σου από τον ηττημένο ή διπλασίασέ το."
+        },
+        {
+          "name": "Live βαθμολογία",
+          "text": "Καθώς έρχονται τα αποτελέσματα κριτικής επιτροπής και televote, οι προβλέψεις βαθμολογούνται αυτόματα και ο πίνακας βαθμολογίας ενημερώνεται σε πραγματικό χρόνο."
+        },
+        {
+          "name": "Στέψη νικητών",
+          "text": "Στο τέλος αποκαλύπτονται πέντε τρόπαια: Πρωταθλητής, Κλέφτης, Μονομάχος, Μάντης, Γκουρού. Προαιρετικό sudden death σπάει τις ισοπαλίες."
+        }
+      ]
+    },
+    "scoring": {
+      "intro": "Καθώς έρχονται τα αποτελέσματα κριτικής επιτροπής και televote της Eurovision, οι προβλέψεις βαθμολογούνται αυτόματα με βάση την επίσημη συνδυαστική κατάταξη και ο πίνακας βαθμολογίας ενημερώνεται ακαριαία για όλους στο δωμάτιο.",
+      "items": [
+        {
+          "rest": "βαθμολογούνται με βάση την τελική συνδυαστική κατάταξη τη στιγμή που έρχονται τα αποτελέσματα.",
+          "strong": "Top 5 / Worst 5"
+        },
+        {
+          "rest": "κατοχυρώνονται τη στιγμή που απαντάς και δεν αλλάζουν.",
+          "strong": "Πόντοι quiz"
+        },
+        {
+          "rest": "αλλάζουν σε πραγματικό χρόνο καθώς ολοκληρώνονται οι μονομαχίες κατά τη μετάδοση.",
+          "strong": "Πόντοι μονομαχιών"
+        },
+        {
+          "rest": "— τα επίσημα αποτελέσματα κριτικής επιτροπής και televote έρχονται αυτόματα τη βραδιά του Μεγάλου Τελικού· κανείς δεν χρειάζεται να τα πληκτρολογήσει.",
+          "strong": "Χωρίς καταχώρηση"
+        }
+      ],
+      "title": "Live βαθμολογία"
+    },
+    "setup": {
+      "intro": "Ένας οικοδεσπότης φτιάχνει το δωμάτιο — χωρίς εγγραφή, χωρίς email. Όλοι οι άλλοι μπαίνουν από έναν σύνδεσμο. Όλη η διαδικασία, από την κενή καρτέλα του browser μέχρι τις κλειδωμένες προβλέψεις, διαρκεί μόλις ένα λεπτό.",
+      "items": [
+        {
+          "rest": "Πάτα <em>Φτιάξε Δωμάτιο</em>, γράψε το όνομά σου, διάλεξε avatar και όρισε κωδικό πρόσβασης. Εμφανίζεται ένας κωδικός δωματίου 6 χαρακτήρων· το δωμάτιο χωράει έως 20 παίκτες.",
+          "strong": "Φτιάξε το δωμάτιο (10δ)."
+        },
+        {
+          "rest": "Μοιράσου τον κωδικό, τον σύνδεσμο συμμετοχής και τον κωδικό πρόσβασης (περιλαμβάνονται όλα στο μήνυμα κοινοποίησης). Κινητό ή laptop, οποιοσδήποτε σύγχρονος browser. Όταν μπουν όλοι, πάτα <em>Ξεκίνα το Πάρτι!</em>",
+          "strong": "Κάλεσε φίλους (20δ)."
+        },
+        {
+          "rest": "Κάθε παίκτης φτιάχνει ένα Top 5 και ένα Worst 5. Οι επιλογές αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια και κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία.",
+          "strong": "Κάνε προβλέψεις (πριν ή κατά τη διάρκεια της εκπομπής)."
+        },
+        {
+          "rest": "Κάθε παίκτης παίζει 3 γύρους quiz με τον δικό του ρυθμό, οποιαδήποτε στιγμή από την έναρξη του πάρτι μέχρι να ανοίξει η ψηφοφορία — οι πόντοι μετράνε στο σύνολο της βραδιάς.",
+          "strong": "Προθέρμανση trivia."
+        },
+        {
+          "rest": "Οι μονομαχίες είναι κι αυτές ανοιχτές από την έναρξη του πάρτι — προκάλεσε όποιον θες στο δωμάτιο στα postcards και στα διαφημιστικά. Quiz, μονομαχίες και προβλέψεις κλειδώνουν όλα αυτόματα όταν ανοίξει η ψηφοφορία.",
+          "strong": "Ώρα για μονομαχίες."
+        },
+        {
+          "rest": "Όταν οριστικοποιηθούν τα επίσημα αποτελέσματα, το δωμάτιο περνά αυτόματα στη Βαθμολογία και στέφονται πέντε νικητές.",
+          "strong": "Αποκάλυψη τροπαίων."
+        }
+      ],
+      "title": "Στήσιμο σε 60 δευτερόλεπτα"
+    },
+    "suddenDeath": {
+      "body": "Για κάθε κατηγορία τροπαίου με ισοπαλία, ο οικοδεσπότης ανοίγει ψηφοφορία 60 δευτερολέπτων — το δωμάτιο επιλέγει Αποδοχή (οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Το Sudden Death γίνεται μόνο αν κερδίσει σαφή πλειοψηφία με τουλάχιστον 3 ψήφους. Αν γίνει, οι ισόπαλοι παίκτες αντιμετωπίζονται σε αγώνα 3 ερωτήσεων trivia — κερδίζει όποιος δώσει τις περισσότερες σωστές απαντήσεις· σε ισοπαλία κερδίζει ο γρηγορότερος. Αν η ψηφοφορία πάει σε Αποδοχή, όλοι οι ισόπαλοι μοιράζονται το τρόπαιο.",
+      "title": "Sudden death για ισοπαλίες"
+    },
+    "trophies": {
+      "intro": "Στο τέλος της βραδιάς αποκαλύπτονται διαδοχικά πέντε κάρτες τροπαίων:",
+      "items": [
+        {
+          "rest": "— περισσότεροι συνολικοί πόντοι σε όλες τις φάσεις. Ο κεντρικός τίτλος.",
+          "strong": "Πρωταθλητής"
+        },
+        {
+          "rest": "— περισσότεροι πόντοι κλεμμένοι μέσω Κλοπής σε μονομαχίες.",
+          "strong": "Κλέφτης"
+        },
+        {
+          "rest": "— περισσότερες μονομαχίες κερδισμένες σε όλη τη βραδιά.",
+          "strong": "Μονομάχος"
+        },
+        {
+          "rest": "— υψηλότερη βαθμολογία προβλέψεων (σύνολα Top 5 + Worst 5).",
+          "strong": "Μάντης"
+        },
+        {
+          "rest": "— περισσότερες σωστές απαντήσεις σε όλους τους γύρους quiz (οι απαντήσεις στις μονομαχίες δεν μετράνε).",
+          "strong": "Γκουρού"
+        }
+      ],
+      "note": "Ένας παίκτης μπορεί να κερδίσει πολλά τρόπαια. Συν-νικητές (2–5 ισόπαλοι) μοιράζονται ένα τρόπαιο, εκτός αν το δωμάτιο ψηφίσει sudden death.",
+      "title": "Πέντε τρόπαια νικητών"
+    },
+    "whatYouNeed": {
+      "items": [
+        {
+          "rest": "Chrome 120+, Safari 17+, Firefox 121+, Edge 120+ — κινητό ή υπολογιστή. Εγκατάσταση ως PWA σε iOS και Android.",
+          "strong": "Έναν σύγχρονο browser."
+        },
+        {
+          "rest": "Τα ζευγάρια μπορούν να μοιραστούν μία συσκευή.",
+          "strong": "2 έως 20 παίκτες."
+        },
+        {
+          "rest": "Τηλεόραση, επίσημο stream ή το YouTube live feed της EBU — οτιδήποτε σε αφήνει να βλέπεις σε πραγματικό χρόνο.",
+          "strong": "Τη μετάδοση της Eurovision."
+        },
+        {
+          "rest": "Ούτε ο οικοδεσπότης κάνει εγγραφή.",
+          "strong": "Χωρίς πληρωμή, χωρίς εγκατάσταση, χωρίς λογαριασμούς."
+        }
+      ],
+      "title": "Τι χρειάζεσαι"
+    }
+  },
+  "en": {
+    "crumbs": {
+      "current": "How to play",
+      "home": "Home"
+    },
+    "cta": {
+      "body": "60 seconds, no install, no account.",
+      "primary": "Create room",
+      "secondary": "Eurovision night",
+      "title": "Start a room now"
+    },
+    "duels": {
+      "capLine": "Each of you can challenge the other once, and the loser of a duel can request one rematch; once a rematch exists, that pair can’t duel again — so nobody grinds one opponent for points all night. Refusing costs no points, but refusals are limited: 2 per player in rooms of up to 5, 3 with 6–10, 4 with 11–15 and 5 with 16 or more (refused rematches count).",
+      "cardBody": "Tap any other player’s name any time from party start until voting opens and choose <em>Challenge</em>. Both players answer the same 3 questions in private. The higher answer total wins the duel; equal totals are a tie. There is no win bonus — the winner picks <strong>Steal</strong> (move their duel score from the loser to themselves) or <strong>Double</strong> (add twice their duel score to themselves).",
+      "cardTitle": "How a duel plays out",
+      "intro": "A duel is a 3-question Eurovision trivia battle between two players in the room. Questions fire on a 12-second timer; speed and accuracy both count.",
+      "title": "Trivia duels during the show"
+    },
+    "hero": {
+      "chip": "Setup guide",
+      "lede": "A free, browser-based party game for the Eurovision Song Contest. Players predict the Top 5 and Worst 5, battle in head-to-head trivia duels, and chase five winner trophies — all while the show is on. No app, no account for guests, 2 to 20 players.",
+      "title": "How to play Eurovision Games in 60 seconds"
+    },
+    "meta": {
+      "description": "Quick guide to running a Eurovision watch party with predictions, trivia duels, and live scoring. Setup takes 60 seconds, supports 2-20 players, no app install.",
+      "keywords": [
+        "eurovision games how to play",
+        "eurovision party game setup",
+        "free eurovision watch party game",
+        "eurovision rules",
+        "eurovision drinking game alternative"
+      ],
+      "title": "How to Play Eurovision Games — 2-Minute Setup Guide"
+    },
+    "predictions": {
+      "intro": "Predictions are the bedrock of the night — they score automatically the moment Eurovision results come in, so they reward homework and a bit of nerve.",
+      "items": [
+        {
+          "body": "The five countries you think will finish 1–5 in the official combined ranking, in your predicted order.",
+          "label": "Top 5."
+        },
+        {
+          "body": "The five countries you think will finish bottom of the leaderboard, ordered last-place first.",
+          "label": "Worst 5."
+        },
+        {
+          "body": "A country can appear in only one list per player.",
+          "label": "No overlap."
+        },
+        {
+          "body": "An exact-position hit pays 50 points; a country that lands in the right list at the wrong rank pays 20.",
+          "label": "Order matters."
+        },
+        {
+          "body": "Predictions lock automatically when voting opens (Voting Live) — no edits after that. Late joiners can still enter predictions, play trivia and duel until then.",
+          "label": "Hard lock."
+        }
+      ],
+      "title": "Lock predictions"
+    },
+    "related": {
+      "items": [
+        {
+          "blurb": "Top 5 and Worst 5 mechanics, scoring, and this year's country list.",
+          "href": "/eurovision-predictions",
+          "title": "Predictions explained"
+        },
+        {
+          "blurb": "50+ sample questions and the bank quiz/duels pull from.",
+          "href": "/eurovision-trivia",
+          "title": "Eurovision trivia"
+        },
+        {
+          "blurb": "Steal vs Double strategy, per-pair caps, and trophy impact.",
+          "href": "/duels",
+          "title": "Duel deep-dive"
+        },
+        {
+          "blurb": "Exact point math behind every prediction, quiz answer, and duel.",
+          "href": "/scoring",
+          "title": "Scoring formulas"
+        },
+        {
+          "blurb": "Phase-by-phase rules, disconnect policy, and edge cases.",
+          "href": "/rules",
+          "title": "Full rule book"
+        },
+        {
+          "blurb": "Quick answers on creating rooms, joining, and leaving partway through the night.",
+          "href": "/faq",
+          "title": "FAQ"
+        }
+      ]
+    },
+    "schema": {
+      "articleDescription": "Step-by-step guide to running a Eurovision watch party with predictions, trivia duels, and live scoring. Setup takes 60 seconds.",
+      "articleHeadline": "How to Play Eurovision Games — 2-Minute Setup Guide",
+      "howToDescription": "A 60-second setup that takes you from create-room to trophy reveal across the full Eurovision broadcast.",
+      "howToName": "How to play Eurovision Games",
+      "steps": [
+        {
+          "name": "Create a room",
+          "text": "Click \"Create a Room\", enter your name, pick an avatar and set a room password (6+ characters). Rooms hold up to 20 players."
+        },
+        {
+          "name": "Invite friends",
+          "text": "Share the 6-character room code, the join link and the room password. Friends join in their browser, no app install."
+        },
+        {
+          "name": "Lock predictions",
+          "text": "Each player picks their Top 5 and Worst 5 for the Eurovision grand final. Picks stay editable through the songs and lock automatically when voting opens."
+        },
+        {
+          "name": "Battle in duels",
+          "text": "From party start until voting opens, challenge friends to head-to-head 3-question trivia duels. Steal your duel score from the loser or double it."
+        },
+        {
+          "name": "Watch live scoring",
+          "text": "As Eurovision jury and televote results land, predictions auto-score and the leaderboard updates in real time."
+        },
+        {
+          "name": "Crown winners",
+          "text": "Five trophies are revealed at the end: Champion, Thief, Duelist, Oracle, Guru. Optional sudden-death tiebreak settles ties."
+        }
+      ]
+    },
+    "scoring": {
+      "intro": "As Eurovision jury and televote results come in, predictions auto-score against the official combined ranking and the leaderboard updates instantly for everyone in the room.",
+      "items": [
+        {
+          "rest": "score against the final combined ranking the moment results land.",
+          "strong": "Top 5 / Worst 5"
+        },
+        {
+          "rest": "are banked as you answer and never change.",
+          "strong": "Quiz points"
+        },
+        {
+          "rest": "swing in real time as duels resolve through the broadcast.",
+          "strong": "Duel points"
+        },
+        {
+          "rest": "— official jury and televote results are pulled in automatically on grand-final night; nobody has to type them in.",
+          "strong": "No data entry"
+        }
+      ],
+      "title": "Live scoring"
+    },
+    "setup": {
+      "intro": "One host creates the room — no sign-up, no email. Everyone else joins from a link. The whole flow from empty browser tab to locked-in predictions is a single minute.",
+      "items": [
+        {
+          "rest": "Click <em>Create a Room</em>, enter your name, pick an avatar and set a room password. A 6-character room code appears; the room holds up to 20 players.",
+          "strong": "Create the room (10s)."
+        },
+        {
+          "rest": "Share the code, the join link and the room password (all included in the share message). Phone or laptop, any modern browser. When everyone’s in, tap <em>Start the Party!</em>",
+          "strong": "Invite friends (20s)."
+        },
+        {
+          "rest": "Every player builds a Top 5 and Worst 5. Picks stay editable through the songs and lock automatically when voting opens.",
+          "strong": "Make predictions (before or during the show)."
+        },
+        {
+          "rest": "Each player plays 3 quiz rounds at their own pace, any time from party start until voting opens — points carry into the night total.",
+          "strong": "Trivia warm-up."
+        },
+        {
+          "rest": "Duels are open from party start too — challenge anyone in the room during postcards and ad breaks. Quiz, duels and predictions all lock automatically when voting opens.",
+          "strong": "Duel time."
+        },
+        {
+          "rest": "When the official results are final, the room moves to Final Results automatically and five winners are crowned.",
+          "strong": "Trophy reveal."
+        }
+      ],
+      "title": "Setup in 60 seconds"
+    },
+    "suddenDeath": {
+      "body": "For any tied trophy category, the host opens a 60-second tiebreak vote — the room chooses Accept (co-winners share the trophy) or Sudden Death. Sudden Death only goes ahead if it wins a clear majority with at least 3 votes cast. If it does, the tied players enter a 3-question trivia match; most correct answers wins — speed breaks ties. If the vote stays with Accept, all tied players share the trophy.",
+      "title": "Sudden-death tiebreak"
+    },
+    "trophies": {
+      "intro": "At the end of the night, five trophy cards are revealed in sequence:",
+      "items": [
+        {
+          "rest": "— most total points across every phase. The headline title.",
+          "strong": "Champion"
+        },
+        {
+          "rest": "— most points stolen via duel Steal effects.",
+          "strong": "Thief"
+        },
+        {
+          "rest": "— most duels won across the night.",
+          "strong": "Duelist"
+        },
+        {
+          "rest": "— highest prediction-only score (Top 5 + Worst 5 totals).",
+          "strong": "Oracle"
+        },
+        {
+          "rest": "— most correct answers across all quiz rounds (duel answers don’t count).",
+          "strong": "Guru"
+        }
+      ],
+      "note": "One player can win multiple trophies. Co-winners (2–5 tied) split a single trophy unless the room votes for sudden death.",
+      "title": "Five winner trophies"
+    },
+    "whatYouNeed": {
+      "items": [
+        {
+          "rest": "Chrome 120+, Safari 17+, Firefox 121+, Edge 120+ — phone or desktop. PWA install on iOS and Android.",
+          "strong": "A modern browser."
+        },
+        {
+          "rest": "Couples can share a single device.",
+          "strong": "2 to 20 players."
+        },
+        {
+          "rest": "TV, official stream, or the EBU’s YouTube live feed — anything that lets you watch in real time.",
+          "strong": "The Eurovision broadcast."
+        },
+        {
+          "rest": "Not even the host signs up.",
+          "strong": "No payment, no install, no accounts."
+        }
+      ],
+      "title": "What you need"
+    }
+  }
+}

@@ -1,0 +1,470 @@
+{
+  "albania": {
+    "best_place": 5,
+    "indexable": true,
+    "iso": "AL",
+    "name_el": "Αλβανία",
+    "name_en": "Albania",
+    "participations": 22,
+    "wins": 0
+  },
+  "andorra": {
+    "best_place": null,
+    "indexable": true,
+    "iso": "AD",
+    "name_el": "Ανδόρα",
+    "name_en": "Andorra",
+    "participations": 6,
+    "wins": 0
+  },
+  "armenia": {
+    "best_place": 4,
+    "indexable": true,
+    "iso": "AM",
+    "name_el": "Αρμενία",
+    "name_en": "Armenia",
+    "participations": 18,
+    "wins": 0
+  },
+  "australia": {
+    "best_place": 2,
+    "indexable": true,
+    "iso": "AU",
+    "name_el": "Αυστραλία",
+    "name_en": "Australia",
+    "participations": 11,
+    "wins": 0
+  },
+  "austria": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "AT",
+    "name_el": "Αυστρία",
+    "name_en": "Austria",
+    "participations": 58,
+    "wins": 3
+  },
+  "azerbaijan": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "AZ",
+    "name_el": "Αζερμπαϊτζάν",
+    "name_en": "Azerbaijan",
+    "participations": 18,
+    "wins": 1
+  },
+  "belarus": {
+    "best_place": 6,
+    "indexable": true,
+    "iso": "BY",
+    "name_el": "Λευκορωσία",
+    "name_en": "Belarus",
+    "participations": 16,
+    "wins": 0
+  },
+  "belgium": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "BE",
+    "name_el": "Βέλγιο",
+    "name_en": "Belgium",
+    "participations": 67,
+    "wins": 1
+  },
+  "bosnia-and-herzegovina": {
+    "best_place": 3,
+    "indexable": true,
+    "iso": "BA",
+    "name_el": "Βοσνία-Ερζεγοβίνη",
+    "name_en": "Bosnia and Herzegovina",
+    "participations": 19,
+    "wins": 0
+  },
+  "bulgaria": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "BG",
+    "name_el": "Βουλγαρία",
+    "name_en": "Bulgaria",
+    "participations": 15,
+    "wins": 1
+  },
+  "croatia": {
+    "best_place": 2,
+    "indexable": true,
+    "iso": "HR",
+    "name_el": "Κροατία",
+    "name_en": "Croatia",
+    "participations": 31,
+    "wins": 0
+  },
+  "cyprus": {
+    "best_place": 2,
+    "indexable": true,
+    "iso": "CY",
+    "name_el": "Κύπρος",
+    "name_en": "Cyprus",
+    "participations": 42,
+    "wins": 0
+  },
+  "czechia": {
+    "best_place": 6,
+    "indexable": true,
+    "iso": "CZ",
+    "name_el": "Τσεχία",
+    "name_en": "Czechia",
+    "participations": 14,
+    "wins": 0
+  },
+  "denmark": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "DK",
+    "name_el": "Δανία",
+    "name_en": "Denmark",
+    "participations": 54,
+    "wins": 3
+  },
+  "estonia": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "EE",
+    "name_el": "Εσθονία",
+    "name_en": "Estonia",
+    "participations": 31,
+    "wins": 1
+  },
+  "finland": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "FI",
+    "name_el": "Φινλανδία",
+    "name_en": "Finland",
+    "participations": 59,
+    "wins": 1
+  },
+  "france": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "FR",
+    "name_el": "Γαλλία",
+    "name_en": "France",
+    "participations": 68,
+    "wins": 5
+  },
+  "georgia": {
+    "best_place": 9,
+    "indexable": true,
+    "iso": "GE",
+    "name_el": "Γεωργία",
+    "name_en": "Georgia",
+    "participations": 18,
+    "wins": 0
+  },
+  "germany": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "DE",
+    "name_el": "Γερμανία",
+    "name_en": "Germany",
+    "participations": 69,
+    "wins": 2
+  },
+  "greece": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "GR",
+    "name_el": "Ελλάδα",
+    "name_en": "Greece",
+    "participations": 46,
+    "wins": 1
+  },
+  "hungary": {
+    "best_place": 4,
+    "indexable": true,
+    "iso": "HU",
+    "name_el": "Ουγγαρία",
+    "name_en": "Hungary",
+    "participations": 17,
+    "wins": 0
+  },
+  "iceland": {
+    "best_place": 2,
+    "indexable": true,
+    "iso": "IS",
+    "name_el": "Ισλανδία",
+    "name_en": "Iceland",
+    "participations": 37,
+    "wins": 0
+  },
+  "ireland": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "IE",
+    "name_el": "Ιρλανδία",
+    "name_en": "Ireland",
+    "participations": 58,
+    "wins": 7
+  },
+  "israel": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "IL",
+    "name_el": "Ισραήλ",
+    "name_en": "Israel",
+    "participations": 48,
+    "wins": 4
+  },
+  "italy": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "IT",
+    "name_el": "Ιταλία",
+    "name_en": "Italy",
+    "participations": 51,
+    "wins": 3
+  },
+  "latvia": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "LV",
+    "name_el": "Λετονία",
+    "name_en": "Latvia",
+    "participations": 26,
+    "wins": 1
+  },
+  "lithuania": {
+    "best_place": 6,
+    "indexable": true,
+    "iso": "LT",
+    "name_el": "Λιθουανία",
+    "name_en": "Lithuania",
+    "participations": 26,
+    "wins": 0
+  },
+  "luxembourg": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "LU",
+    "name_el": "Λουξεμβούργο",
+    "name_en": "Luxembourg",
+    "participations": 40,
+    "wins": 5
+  },
+  "malta": {
+    "best_place": 2,
+    "indexable": true,
+    "iso": "MT",
+    "name_el": "Μάλτα",
+    "name_en": "Malta",
+    "participations": 38,
+    "wins": 0
+  },
+  "moldova": {
+    "best_place": 3,
+    "indexable": true,
+    "iso": "MD",
+    "name_el": "Μολδαβία",
+    "name_en": "Moldova",
+    "participations": 20,
+    "wins": 0
+  },
+  "monaco": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "MC",
+    "name_el": "Μονακό",
+    "name_en": "Monaco",
+    "participations": 24,
+    "wins": 1
+  },
+  "montenegro": {
+    "best_place": 13,
+    "indexable": true,
+    "iso": "ME",
+    "name_el": "Μαυροβούνιο",
+    "name_en": "Montenegro",
+    "participations": 14,
+    "wins": 0
+  },
+  "morocco": {
+    "best_place": 18,
+    "indexable": false,
+    "iso": "MA",
+    "name_el": "Μαρόκο",
+    "name_en": "Morocco",
+    "participations": 1,
+    "wins": 0
+  },
+  "netherlands": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "NL",
+    "name_el": "Ολλανδία",
+    "name_en": "Netherlands",
+    "participations": 65,
+    "wins": 5
+  },
+  "north-macedonia": {
+    "best_place": 7,
+    "indexable": true,
+    "iso": "MK",
+    "name_el": "Βόρεια Μακεδονία",
+    "name_en": "North Macedonia",
+    "participations": 21,
+    "wins": 0
+  },
+  "norway": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "NO",
+    "name_el": "Νορβηγία",
+    "name_en": "Norway",
+    "participations": 64,
+    "wins": 3
+  },
+  "poland": {
+    "best_place": 2,
+    "indexable": true,
+    "iso": "PL",
+    "name_el": "Πολωνία",
+    "name_en": "Poland",
+    "participations": 28,
+    "wins": 0
+  },
+  "portugal": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "PT",
+    "name_el": "Πορτογαλία",
+    "name_en": "Portugal",
+    "participations": 57,
+    "wins": 1
+  },
+  "romania": {
+    "best_place": 3,
+    "indexable": true,
+    "iso": "RO",
+    "name_el": "Ρουμανία",
+    "name_en": "Romania",
+    "participations": 24,
+    "wins": 0
+  },
+  "russia": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "RU",
+    "name_el": "Ρωσία",
+    "name_en": "Russia",
+    "participations": 23,
+    "wins": 1
+  },
+  "san-marino": {
+    "best_place": 19,
+    "indexable": true,
+    "iso": "SM",
+    "name_el": "Άγιος Μαρίνος",
+    "name_en": "San Marino",
+    "participations": 16,
+    "wins": 0
+  },
+  "serbia": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "RS",
+    "name_el": "Σερβία",
+    "name_en": "Serbia",
+    "participations": 18,
+    "wins": 1
+  },
+  "serbia-and-montenegro": {
+    "best_place": 2,
+    "indexable": false,
+    "iso": "CS",
+    "name_el": "Σερβία και Μαυροβούνιο",
+    "name_en": "Serbia and Montenegro",
+    "participations": 2,
+    "wins": 0
+  },
+  "slovakia": {
+    "best_place": 18,
+    "indexable": true,
+    "iso": "SK",
+    "name_el": "Σλοβακία",
+    "name_en": "Slovakia",
+    "participations": 7,
+    "wins": 0
+  },
+  "slovenia": {
+    "best_place": 7,
+    "indexable": true,
+    "iso": "SI",
+    "name_el": "Σλοβενία",
+    "name_en": "Slovenia",
+    "participations": 30,
+    "wins": 0
+  },
+  "spain": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "ES",
+    "name_el": "Ισπανία",
+    "name_en": "Spain",
+    "participations": 64,
+    "wins": 2
+  },
+  "sweden": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "SE",
+    "name_el": "Σουηδία",
+    "name_en": "Sweden",
+    "participations": 65,
+    "wins": 7
+  },
+  "switzerland": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "CH",
+    "name_el": "Ελβετία",
+    "name_en": "Switzerland",
+    "participations": 66,
+    "wins": 3
+  },
+  "turkey": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "TR",
+    "name_el": "Τουρκία",
+    "name_en": "Turkey",
+    "participations": 34,
+    "wins": 1
+  },
+  "ukraine": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "UA",
+    "name_el": "Ουκρανία",
+    "name_en": "Ukraine",
+    "participations": 21,
+    "wins": 3
+  },
+  "united-kingdom": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "GB",
+    "name_el": "Ηνωμένο Βασίλειο",
+    "name_en": "United Kingdom",
+    "participations": 68,
+    "wins": 5
+  },
+  "yugoslavia": {
+    "best_place": 1,
+    "indexable": true,
+    "iso": "YU",
+    "name_el": "Γιουγκοσλαβία",
+    "name_en": "Yugoslavia",
+    "participations": 27,
+    "wins": 1
+  }
+}

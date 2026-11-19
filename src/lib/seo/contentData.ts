@@ -13,15 +13,20 @@
 import type { ContestSnapshot, CountrySnapshot, SiteSnapshot } from '../../content/contests/types';
 import type { ContentData } from './dynamicPages';
 
-const PREFIX = '../../../content/';
-const modules = import.meta.glob<unknown>('../../../content/**/*.json', { eager: true, import: 'default' });
+// `@content` is content/ in the build (vite.config.ts) and a frozen copy in
+// vitest (vitest.config.ts), so tests do not change with every Publish.
+const modules = import.meta.glob<unknown>('@content/**/*.json', { eager: true, import: 'default' });
+
+/** Path relative to the content root, from a glob key (`…/content/contests/2026.json` → `contests/2026.json`). */
+const ROOT_ENTRY = /(?:^|\/)(site\.json|SOURCES\.md|(?:contests|countries|pages|media)\/.*)$/;
+const relPath = (key: string): string => ROOT_ENTRY.exec(key)?.[1] ?? key;
 
 /**
  * Every content file keyed by its path relative to content/ (`contests/2026.json`),
  * CMS page documents included (`pages/about.json`, read by usePageContent()).
  */
 const files = new Map<string, unknown>(
-  Object.entries(modules).map(([key, data]) => [key.slice(PREFIX.length), data]),
+  Object.entries(modules).map(([key, data]) => [relPath(key), data]),
 );
 
 const site = files.get('site.json') as SiteSnapshot;

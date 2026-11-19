@@ -1,0 +1,295 @@
+{
+  "el": {
+    "crumbs": {
+      "history": "Προηγούμενοι διαγωνισμοί",
+      "home": "Αρχική",
+      "winners": "Νικητές"
+    },
+    "cta": {
+      "body": "Κλείδωσε το Top 5 σου πριν ανοίξει η ψηφοφορία, σκόραρε ζωντανά με βάση τις επίσημες ψήφους κριτικής επιτροπής + televote και δες αν μπορείς να μαντέψεις τον φετινό πρωταθλητή πριν από όλους.",
+      "primary": "Φτιάξε δωμάτιο",
+      "secondary": "Πώς παίζεται",
+      "title": "Μάντεψε τον επόμενο νικητή"
+    },
+    "faq": [
+      {
+        "a": "Το ρεκόρ είναι {stats.topWins} νίκες ({stats.topCountries}). Η Σουηδία ισοφάρισε το 2023 όταν η Loreen κέρδισε τον δεύτερο διαγωνισμό της με το \"Tattoo\" και έγινε η πρώτη γυναίκα που κερδίζει την Eurovision δύο φορές.",
+        "q": "Ποιος έχει κερδίσει την Eurovision τις περισσότερες φορές;"
+      },
+      {
+        "a": "Ο πρώτος διαγωνισμός έγινε στο Λουγκάνο της Ελβετίας στις 24 Μαΐου 1956. Επτά χώρες διαγωνίστηκαν. Η Ελβετία κέρδισε με το \"Refrain\" της Lys Assia.",
+        "q": "Πότε έγινε η πρώτη Eurovision;"
+      },
+      {
+        "a": "Το \"{stats.recordSong}\" ({stats.recordArtist}, {stats.recordCountry}, {stats.recordYear}) κατέχει το ρεκόρ πόντων για νικητήριο τραγούδι, με {stats.recordPoints} πόντους. Το σύστημα ψηφοφορίας έχει αλλάξει πολλές φορές, οπότε οι άμεσες συγκρίσεις μεταξύ εποχών δεν έχουν νόημα.",
+        "q": "Ποιο είναι το νικητήριο τραγούδι με τους περισσότερους πόντους;"
+      },
+      {
+        "a": "Ναι, δύο ερμηνευτές. Ο Johnny Logan (Ιρλανδία) κέρδισε το 1980 και το 1987, και τρίτη φορά το 1992 ως συνθέτης. Η Loreen (Σουηδία) κέρδισε το 2012 με το \"Euphoria\" και το 2023 με το \"Tattoo\".",
+        "q": "Έχει κερδίσει το ίδιο άτομο δύο φορές;"
+      },
+      {
+        "a": "Ο διαγωνισμός του 2020, που είχε προγραμματιστεί για το Ρότερνταμ, ακυρώθηκε τον Μάρτιο του 2020 λόγω COVID-19. Ήταν η πρώτη ακύρωση στην ιστορία του διαγωνισμού. Η Ολλανδία διατήρησε τη διοργάνωση για το 2021, όταν κέρδισαν οι Måneskin από την Ιταλία.",
+        "q": "Γιατί δεν υπήρχε νικητής Eurovision το 2020;"
+      }
+    ],
+    "hero": {
+      "chip": "Ιστορία Eurovision",
+      "lede": "Οδηγός αναφοράς για την πιο συχνή ερώτηση της Eurovision: ποιος κέρδισε; Παρακάτω — οι τελευταίοι 15 πρωταθλητές με τραγούδια και πόντους τελικού γύρου, ο αιώνιος πίνακας νικών και τα ρεκόρ που ισχύουν ακόμα.",
+      "title": "Όλοι οι νικητές Eurovision — 1956 έως σήμερα"
+    },
+    "meta": {
+      "description": "Πλήρης λίστα νικητών της Eurovision από το 1956 μέχρι το {last}. Πρόσφατοι πρωταθλητές, αιώνιος πίνακας νικών, ρεκόρ και αξιοσημείωτες στιγμές.",
+      "keywords": [
+        "νικητές eurovision",
+        "πρωταθλητές eurovision",
+        "eurovision νικητής {last}",
+        "eurovision νικητές λίστα",
+        "eurovision ιστορία",
+        "eurovision νικητές χωρών",
+        "eurovision όλοι νικητές"
+      ],
+      "schemaDescription": "Λίστα νικητών της Eurovision με χρονιά, χώρα, καλλιτέχνη, τραγούδι και πόντους. Πίνακας αιώνιων νικών και κατόχοι ρεκόρ.",
+      "schemaTitle": "Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα",
+      "title": "Νικητές Eurovision — Όλοι οι Πρωταθλητές 1956 έως Σήμερα · Eurovision Games"
+    },
+    "related": {
+      "heading": "Συνέχισε να διαβάζεις",
+      "items": [
+        {
+          "blurb": "Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.",
+          "href": "/eurovision-predictions",
+          "title": "Παιχνίδι προβλέψεων"
+        },
+        {
+          "blurb": "Οδηγός 10 βημάτων για το watch party.",
+          "href": "/eurovision-night",
+          "title": "Βραδιά Eurovision"
+        },
+        {
+          "blurb": "10 ενδεικτικές ερωτήσεις και πώς λειτουργούν οι μονομαχίες.",
+          "href": "/eurovision-trivia",
+          "title": "Trivia Eurovision"
+        },
+        {
+          "blurb": "Οδηγός διοργάνωσης με ροή της βραδιάς.",
+          "href": "/eurovision-party",
+          "title": "Πάρτι Eurovision"
+        },
+        {
+          "blurb": "Ακριβείς πόντοι ανά Top-5, quiz και μονομαχία.",
+          "href": "/scoring",
+          "title": "Μαθηματικά βαθμολογίας"
+        },
+        {
+          "blurb": "Ερωτήσεις για το στήσιμο, τη βαθμολογία και το παιχνίδι.",
+          "href": "/faq",
+          "title": "Συχνές ερωτήσεις"
+        }
+      ]
+    },
+    "sections": {
+      "all": {
+        "cancelled": "Ο διαγωνισμός ακυρώθηκε",
+        "intro": "Ο πλήρης κατάλογος, ξεκινώντας από τον πιο πρόσφατο. Διάλεξε χρονιά για τα πλήρη αποτελέσματά της.",
+        "shared": "ισοβαθμία",
+        "title": "Όλοι οι νικητές από το {from}"
+      },
+      "faqTitle": "Συχνές ερωτήσεις",
+      "leaderboard": {
+        "headers": {
+          "country": "Χώρα",
+          "mostRecent": "Πιο πρόσφατη",
+          "wins": "Νίκες"
+        },
+        "intro": "Χώρες που έχουν κερδίσει την Eurovision περισσότερες από δύο φορές. Το αιώνιο ρεκόρ είναι {stats.topWins} νίκες ({stats.topCountries}).",
+        "title": "Αιώνιος πίνακας νικών"
+      },
+      "notable": {
+        "bullets": [
+          {
+            "rest": " {stats.recordPoints} πόντοι με το \"{stats.recordSong}\".",
+            "strong": "Υψηλότερη βαθμολογία νικητή — {stats.recordArtist}, {stats.recordCountry}, {stats.recordYear}."
+          },
+          {
+            "rest": " Νίκησε ως ερμηνευτής το 1980 (\"What's Another Year\") και το 1987 (\"Hold Me Now\"), και ξανά το 1992 ως συνθέτης για τη Linda Martin.",
+            "strong": "Περισσότερες νίκες από έναν καλλιτέχνη — Johnny Logan, Ιρλανδία."
+          },
+          {
+            "rest": " {stats.streakWins} συνεχόμενες νίκες, το μεγαλύτερο σερί στην ιστορία του διαγωνισμού.",
+            "strong": "Μεγαλύτερο σερί νικών — {stats.streakCountry}, {stats.streakFrom}–{stats.streakTo}."
+          },
+          {
+            "rest": " 439 πόντοι από το κοινό, η υψηλότερη βαθμολογία televote νικητή μέχρι τότε.",
+            "strong": "Μεγαλύτερη νίκη στο televote — Kalush Orchestra, Ουκρανία, 2022."
+          },
+          {
+            "rest": " Μόνο επτά χώρες διαγωνίστηκαν· η ψηφοφορία κρατήθηκε μυστική. Τα πλήρη αποτελέσματα δεν δημοσιεύτηκαν ποτέ.",
+            "strong": "Πρώτος διαγωνισμός, 1956 — Ελβετία (Lys Assia, \"Refrain\")."
+          }
+        ],
+        "intro": "Μια χούφτα ρεκόρ που ισχύουν ακόμα ή μόλις καταρρίφθηκαν:",
+        "title": "Αξιοσημείωτα ρεκόρ"
+      },
+      "recent": {
+        "headers": {
+          "artist": "Καλλιτέχνης",
+          "country": "Χώρα",
+          "points": "Πόντοι",
+          "song": "Τραγούδι",
+          "year": "Έτος"
+        },
+        "intro": "Νικητές από το {from}, με το τραγούδι, τον καλλιτέχνη και τους συνολικούς πόντους από κριτική επιτροπή + televote στον μεγάλο τελικό.",
+        "introCancelled": " (Δεν υπάρχει νικητής για το {cancelled} — ο διαγωνισμός ακυρώθηκε λόγω COVID.)",
+        "title": "Πρόσφατοι νικητές ({from}–{to})"
+      }
+    }
+  },
+  "en": {
+    "crumbs": {
+      "history": "Past contests",
+      "home": "Home",
+      "winners": "Winners"
+    },
+    "cta": {
+      "body": "Lock your Top 5 before voting opens, score live against the official jury + televote, and see if you can pick this year's champion before everyone else.",
+      "primary": "Create room",
+      "secondary": "How to play",
+      "title": "Predict the next winner"
+    },
+    "faq": [
+      {
+        "a": "The record is {stats.topWins} wins, held by {stats.topCountries}. Sweden equalised in 2023 when Loreen won her second contest with \"Tattoo\", becoming the first woman to win Eurovision twice.",
+        "q": "Who has won Eurovision the most times?"
+      },
+      {
+        "a": "The first contest was held in Lugano, Switzerland, on 24 May 1956. Seven countries competed. Switzerland won with \"Refrain\" performed by Lys Assia.",
+        "q": "When was the first Eurovision Song Contest?"
+      },
+      {
+        "a": "\"{stats.recordSong}\" by {stats.recordArtist} ({stats.recordCountry}, {stats.recordYear}) holds the record for a winning song at {stats.recordPoints} points. The voting system has changed multiple times, so direct comparisons across eras are not meaningful.",
+        "q": "What's the highest-scoring winning song?"
+      },
+      {
+        "a": "Yes, two performers have. Johnny Logan (Ireland) won in 1980 and 1987, then a third time in 1992 as songwriter. Loreen (Sweden) won in 2012 with \"Euphoria\" and in 2023 with \"Tattoo\".",
+        "q": "Has the same person won twice?"
+      },
+      {
+        "a": "The 2020 contest, scheduled for Rotterdam, was cancelled in March 2020 due to COVID-19. It was the first cancellation in the contest's history. The Netherlands kept the host slot for 2021, where Italy's Måneskin won.",
+        "q": "Why was there no Eurovision winner in 2020?"
+      }
+    ],
+    "hero": {
+      "chip": "Eurovision history",
+      "lede": "A reference for the most-asked Eurovision question: who won? Below — the last 15 champions with songs and final-round points, the all-time wins leaderboard, and the records that still stand.",
+      "title": "Every Eurovision winner — 1956 to today"
+    },
+    "meta": {
+      "description": "Complete list of Eurovision Song Contest winners from 1956 to {last}. Recent champions, all-time leaderboard, record-holders, and notable moments.",
+      "keywords": [
+        "eurovision winners",
+        "eurovision song contest winners",
+        "eurovision champion list",
+        "eurovision all winners",
+        "eurovision winning songs",
+        "eurovision most wins",
+        "eurovision {last} winner",
+        "eurovision history"
+      ],
+      "schemaDescription": "Reference list of Eurovision Song Contest winners with year, country, artist, song, and points. Plus the all-time wins leaderboard and notable record-holders.",
+      "schemaTitle": "Eurovision Winners — Every Champion 1956 to Today",
+      "title": "Eurovision Winners — Every Champion 1956 to Today · Eurovision Games"
+    },
+    "related": {
+      "heading": "Keep reading",
+      "items": [
+        {
+          "blurb": "Top 5 / Worst 5 format and this year's line-up.",
+          "href": "/eurovision-predictions",
+          "title": "Predictions game"
+        },
+        {
+          "blurb": "10-step playbook for the watch party.",
+          "href": "/eurovision-night",
+          "title": "Eurovision night"
+        },
+        {
+          "blurb": "10 sample questions and how duels work.",
+          "href": "/eurovision-trivia",
+          "title": "Eurovision trivia"
+        },
+        {
+          "blurb": "Hosting playbook with run-of-show.",
+          "href": "/eurovision-party",
+          "title": "Eurovision party"
+        },
+        {
+          "blurb": "Exact points per Top-5, quiz, and duel.",
+          "href": "/scoring",
+          "title": "Scoring formulas"
+        },
+        {
+          "blurb": "Setup, scoring, and gameplay questions.",
+          "href": "/faq",
+          "title": "FAQ"
+        }
+      ]
+    },
+    "sections": {
+      "all": {
+        "cancelled": "Contest cancelled",
+        "intro": "The full roll of honour, newest first. Pick a year for its complete results.",
+        "shared": "shared",
+        "title": "Every winner since {from}"
+      },
+      "faqTitle": "Frequently asked questions",
+      "leaderboard": {
+        "headers": {
+          "country": "Country",
+          "mostRecent": "Most recent",
+          "wins": "Wins"
+        },
+        "intro": "Countries that have won Eurovision more than twice. The all-time record is {stats.topWins} wins, held by {stats.topCountries}.",
+        "title": "All-time wins leaderboard"
+      },
+      "notable": {
+        "bullets": [
+          {
+            "rest": " {stats.recordPoints} points with \"{stats.recordSong}\".",
+            "strong": "Highest winning score — {stats.recordArtist}, {stats.recordCountry}, {stats.recordYear}."
+          },
+          {
+            "rest": " Won as performer in 1980 (\"What's Another Year\") and 1987 (\"Hold Me Now\"), then again in 1992 as songwriter for Linda Martin.",
+            "strong": "Most wins by a single artist — Johnny Logan, Ireland."
+          },
+          {
+            "rest": " {stats.streakWins} wins in a row, the longest run in the contest's history.",
+            "strong": "Longest winning streak — {stats.streakCountry}, {stats.streakFrom}–{stats.streakTo}."
+          },
+          {
+            "rest": " 439 points from the public vote, the highest televote score of any winner at the time.",
+            "strong": "Biggest televote landslide — Kalush Orchestra, Ukraine, 2022."
+          },
+          {
+            "rest": " Only seven countries competed; voting was kept secret. The full results were never published.",
+            "strong": "First contest, 1956 — Switzerland (Lys Assia, \"Refrain\")."
+          }
+        ],
+        "intro": "A handful of records that still stand or have only just been broken:",
+        "title": "Notable records"
+      },
+      "recent": {
+        "headers": {
+          "artist": "Artist",
+          "country": "Country",
+          "points": "Points",
+          "song": "Song",
+          "year": "Year"
+        },
+        "intro": "Winners since {from}, with the song, performing artist, and the combined jury + televote points from the grand final.",
+        "introCancelled": " (No {cancelled} — the contest was cancelled due to COVID.)",
+        "title": "Recent winners ({from}–{to})"
+      }
+    }
+  }
+}

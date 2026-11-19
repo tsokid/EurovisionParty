@@ -7,6 +7,7 @@ import { join, resolve } from 'node:path';
 import { resolveUrl, type VercelConfig } from '../../scripts/seo/resolveUrl';
 import { generatedRedirects, mergeVercelRedirects } from '../../supabase/functions/publish-content/redirects';
 import type { ContestRow } from '../../src/content/contests/types';
+import { committedContests } from '../helpers/committedContests';
 
 const root = process.cwd();
 const DIST = resolve(root, 'dist');
@@ -39,6 +40,14 @@ function builtPaths(): Set<string> {
   walk(DIST, '');
   return out;
 }
+
+// 2026 follows the committed state: its hub pages while live, its archive
+// page (every subpage included) once archived.
+const c2026 = committedContests().find((c) => c.year === 2026)!;
+const hub2026 = (loc: 'en' | 'el', sub = ''): string =>
+  c2026.stage === 'archived'
+    ? `/${loc}/past-contests/eurovision-2026-${c2026.city_slug}`
+    : `/${loc}/eurovision-2026${sub ? `/${sub}` : ''}`;
 
 const UNPREFIXED_EN_ONLY = new Set(['/online-games', '/mobile-games']);
 
@@ -74,7 +83,7 @@ describe.skipIf(!hasDist)('every historical URL resolves to a built page', () =>
   const built = hasDist ? builtPaths() : new Set<string>();
 
   it('sanity: dist has the locale homes, the hub and the archive', () => {
-    for (const p of ['/en', '/el', '/en/eurovision-2026', '/en/past-contests', '/el/countries/greece', '/en/eurovision-predictions']) {
+    for (const p of ['/en', '/el', hub2026('en'), '/en/past-contests', '/el/countries/greece', '/en/eurovision-predictions']) {
       expect(built.has(p), p).toBe(true);
     }
   });
@@ -105,10 +114,10 @@ describe.skipIf(!hasDist)('every historical URL resolves to a built page', () =>
       ['/en/eurovision-2026-predictions', '/en/eurovision-predictions'],
       ['/el/eurovision-2026-predictions', '/el/eurovision-predictions'],
       ['/eurovision-2026-predictions', '/en/eurovision-predictions'],
-      ['/en/eurovision-2026-songs', '/en/eurovision-2026/songs'],
-      ['/el/eurovision-2026-schedule', '/el/eurovision-2026/schedule'],
-      ['/el/eurovision-2026-semifinals', '/el/eurovision-2026/semifinals'],
-      ['/el/eurovision-2026-programma', '/el/eurovision-2026/schedule'],
+      ['/en/eurovision-2026-songs', hub2026('en', 'songs')],
+      ['/el/eurovision-2026-schedule', hub2026('el', 'schedule')],
+      ['/el/eurovision-2026-semifinals', hub2026('el', 'semifinals')],
+      ['/el/eurovision-2026-programma', hub2026('el', 'schedule')],
       ['/el/eurovision-2026-elliniko-tragoudi', '/el/countries/greece'],
       ['/el/eurovision-ellada', '/el/countries/greece'],
       ['/el/eurovision-kypros', '/el/countries/cyprus'],
@@ -135,7 +144,7 @@ describe.skipIf(!hasDist)('every historical URL resolves to a built page', () =>
       ['/eurovision-ellada', '/el/countries/greece'],
       ['/eurovision-kypros', '/el/countries/cyprus'],
       ['/eurovision-2026-elliniko-tragoudi', '/el/countries/greece'],
-      ['/eurovision-2026-programma', '/el/eurovision-2026/schedule'],
+      ['/eurovision-2026-programma', hub2026('el', 'schedule')],
     ];
     for (const [from, to] of greek) {
       for (const acceptLanguage of [undefined, 'en-US,en;q=0.9', 'el-GR']) {

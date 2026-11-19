@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { generatedRedirects, mergeVercelRedirects } from '../../supabase/functions/publish-content/redirects';
 import type { ContestRow } from '../../src/content/contests/types';
-import { localInput } from '../../scripts/snapshot/build-local';
+import { committedContests } from '../helpers/committedContests';
 import { resolveUrl, type VercelConfig } from '../../scripts/seo/resolveUrl';
 
 // LF as in the repo blob, whatever core.autocrlf did to the working copy.
@@ -38,15 +38,17 @@ const yearSources = (json: string, year: number) =>
 const EL = [{ type: 'header', key: 'accept-language', value: '(?<l>.*\\bel\\b.*)' }];
 
 describe('generatedRedirects', () => {
-  it('emits three redirect shapes per archived year by year, then the live hub locale-detect redirects (M8)', () => {
+  it('emits four redirect shapes per archived year by year, then the live hub locale-detect redirects (M8)', () => {
     const r = generatedRedirects(archived2026);
     expect(r).toEqual([
       { source: '/:locale(en|el)/eurovision-2025', destination: '/:locale/past-contests/eurovision-2025-basel', permanent: true },
       { source: '/:locale(en|el)/eurovision-2025/:sub(schedule|semifinals|songs)', destination: '/:locale/past-contests/eurovision-2025-basel', permanent: true },
       { source: '/eurovision-2025', destination: '/en/past-contests/eurovision-2025-basel', permanent: true },
+      { source: '/eurovision-2025/:sub(schedule|semifinals|songs)', destination: '/en/past-contests/eurovision-2025-basel', permanent: true },
       { source: '/:locale(en|el)/eurovision-2026', destination: '/:locale/past-contests/eurovision-2026-vienna', permanent: true },
       { source: '/:locale(en|el)/eurovision-2026/:sub(schedule|semifinals|songs)', destination: '/:locale/past-contests/eurovision-2026-vienna', permanent: true },
       { source: '/eurovision-2026', destination: '/en/past-contests/eurovision-2026-vienna', permanent: true },
+      { source: '/eurovision-2026/:sub(schedule|semifinals|songs)', destination: '/en/past-contests/eurovision-2026-vienna', permanent: true },
       { source: '/eurovision-2027', has: EL, destination: '/el/eurovision-2027', permanent: true },
       { source: '/eurovision-2027', destination: '/en/eurovision-2027', permanent: true },
       { source: '/eurovision-2027/:sub(schedule|semifinals|songs)', has: EL, destination: '/el/eurovision-2027/:sub', permanent: true },
@@ -78,7 +80,7 @@ describe('mergeVercelRedirects', () => {
   const redirectsOf = (json: string) => JSON.parse(json).redirects as R[];
   const isYearSource = (r: R) => /\/eurovision-\d{4}(\/|$)/.test(r.source);
 
-  it('archiving 2026 replaces its live-hub redirects with three archive redirects, after the others', () => {
+  it('archiving 2026 replaces its live-hub redirects with four archive redirects, after the others', () => {
     expect(yearSources(live, 2026).map((r) => r.source)).toEqual([
       '/eurovision-2026',
       '/eurovision-2026',
@@ -90,10 +92,11 @@ describe('mergeVercelRedirects', () => {
       '/:locale(en|el)/eurovision-2026',
       '/:locale(en|el)/eurovision-2026/:sub(schedule|semifinals|songs)',
       '/eurovision-2026',
+      '/eurovision-2026/:sub(schedule|semifinals|songs)',
     ]);
     const kept = redirectsOf(live).filter((r) => !isYearSource(r));
     expect(redirectsOf(out).slice(0, kept.length).map((r) => r.source)).toEqual(kept.map((r) => r.source));
-    expect(redirectsOf(out)).toHaveLength(kept.length + 3 * 2 + 4);
+    expect(redirectsOf(out)).toHaveLength(kept.length + 4 * 2 + 4);
   });
 
   it('archiving 2026 repoints static redirects into its hub to the archive page (M2); un-archiving points them back', () => {
@@ -119,7 +122,7 @@ describe('mergeVercelRedirects', () => {
     const y2026 = yearSources(unarchived, 2026);
     expect(y2026).toHaveLength(4); // the live-hub redirects only
     expect(y2026.every((r) => r.source.startsWith('/eurovision-2026'))).toBe(true);
-    expect(yearSources(unarchived, 2025)).toHaveLength(3);
+    expect(yearSources(unarchived, 2025)).toHaveLength(4);
   });
 
   it('is idempotent', () => {
@@ -131,7 +134,7 @@ describe('mergeVercelRedirects', () => {
     const base = JSON.parse(vercelJson);
     // The committed file already holds generated year redirects; merging with none drops them.
     const generatedInBase = base.redirects.filter((r: { source: string }) => /\/eurovision-\d{4}(\/|$)/.test(r.source)).length;
-    expect(generatedInBase).toBe(70 * 3 + 4);
+    expect(generatedInBase).toBe(generatedRedirects(committedContests()).length);
     base.redirects.push(
       { source: '/:locale(en|el)/eurovision-2026-predictions', destination: '/:locale/eurovision-predictions', permanent: true },
       { source: '/eurovision-history', destination: '/en/past-contests', permanent: true },
@@ -163,13 +166,14 @@ describe('committed vercel.json', () => {
     expect(vercelJson).toBe(JSON.stringify(JSON.parse(vercelJson), null, 2) + '\n');
   });
 
-  it('equals what Publish writes for the local snapshot (M1: build-local merges the generated redirects)', () => {
-    const contests = localInput().contests;
+  it('equals what Publish writes for the committed content (M1)', () => {
+    const contests = committedContests();
     expect(vercelJson).toBe(mergeVercelRedirects(vercelJson, generatedRedirects(contests)));
     const archivedYears = contests.filter((c) => c.stage === 'archived').length;
-    expect(archivedYears).toBe(70);
-    expect(generatedRedirects(contests)).toHaveLength(archivedYears * 3 + 4);
-    expect(yearSources(vercelJson, 1999)).toHaveLength(3);
+    expect(archivedYears).toBeGreaterThanOrEqual(70);
+    const liveHub = contests.some((c) => c.stage === 'current' || c.stage === 'finalized');
+    expect(generatedRedirects(contests)).toHaveLength(archivedYears * 4 + (liveHub ? 4 : 0));
+    expect(yearSources(vercelJson, 1999)).toHaveLength(4);
   });
 
   it("stays under Vercel's 1024-route limit", () => {
@@ -177,11 +181,14 @@ describe('committed vercel.json', () => {
     expect(cfg.redirects.length + cfg.rewrites.length + cfg.headers.length).toBeLessThan(1024);
   });
 
+  // 2026 follows the committed state: its hub while live, its archive page once archived.
+  const c2026 = committedContests().find((c) => c.year === 2026)!;
+  const page2026 = c2026.stage === 'archived' ? `/en/past-contests/eurovision-2026-${c2026.city_slug}` : null;
   it.each([
-    ['/eurovision-2026', undefined, '/en/eurovision-2026'],
-    ['/eurovision-2026', 'el-GR,el;q=0.9', '/el/eurovision-2026'],
-    ['/eurovision-2026/semifinals', undefined, '/en/eurovision-2026/semifinals'],
-    ['/eurovision-2026/songs', 'el', '/el/eurovision-2026/songs'],
+    ['/eurovision-2026', undefined, page2026 ?? '/en/eurovision-2026'],
+    ['/eurovision-2026', 'el-GR,el;q=0.9', page2026 ?? '/el/eurovision-2026'],
+    ['/eurovision-2026/semifinals', undefined, page2026 ?? '/en/eurovision-2026/semifinals'],
+    ['/eurovision-2026/songs', 'el', page2026 ?? '/el/eurovision-2026/songs'],
     ['/past-contests', undefined, '/en/past-contests'],
     ['/past-contests', 'el', '/el/past-contests'],
     ['/countries', undefined, '/en/countries'],

@@ -250,6 +250,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1956/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1956-lugano",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1957",
       "destination": "/:locale/past-contests/eurovision-1957-frankfurt",
       "permanent": true
@@ -261,6 +266,11 @@
     },
     {
       "source": "/eurovision-1957",
+      "destination": "/en/past-contests/eurovision-1957-frankfurt",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1957/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1957-frankfurt",
       "permanent": true
     },
@@ -280,6 +290,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1958/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1958-hilversum",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1959",
       "destination": "/:locale/past-contests/eurovision-1959-cannes",
       "permanent": true
@@ -291,6 +306,11 @@
     },
     {
       "source": "/eurovision-1959",
+      "destination": "/en/past-contests/eurovision-1959-cannes",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1959/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1959-cannes",
       "permanent": true
     },
@@ -310,6 +330,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1960/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1960-london",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1961",
       "destination": "/:locale/past-contests/eurovision-1961-cannes",
       "permanent": true
@@ -321,6 +346,11 @@
     },
     {
       "source": "/eurovision-1961",
+      "destination": "/en/past-contests/eurovision-1961-cannes",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1961/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1961-cannes",
       "permanent": true
     },
@@ -340,6 +370,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1962/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1962-luxembourg-city",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1963",
       "destination": "/:locale/past-contests/eurovision-1963-london",
       "permanent": true
@@ -351,6 +386,11 @@
     },
     {
       "source": "/eurovision-1963",
+      "destination": "/en/past-contests/eurovision-1963-london",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1963/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1963-london",
       "permanent": true
     },
@@ -370,6 +410,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1964/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1964-copenhagen",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1965",
       "destination": "/:locale/past-contests/eurovision-1965-naples",
       "permanent": true
@@ -381,6 +426,11 @@
     },
     {
       "source": "/eurovision-1965",
+      "destination": "/en/past-contests/eurovision-1965-naples",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1965/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1965-naples",
       "permanent": true
     },
@@ -400,6 +450,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1966/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1966-luxembourg-city",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1967",
       "destination": "/:locale/past-contests/eurovision-1967-vienna",
       "permanent": true
@@ -411,6 +466,11 @@
     },
     {
       "source": "/eurovision-1967",
+      "destination": "/en/past-contests/eurovision-1967-vienna",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1967/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1967-vienna",
       "permanent": true
     },
@@ -430,6 +490,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1968/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1968-london",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1969",
       "destination": "/:locale/past-contests/eurovision-1969-madrid",
       "permanent": true
@@ -441,6 +506,11 @@
     },
     {
       "source": "/eurovision-1969",
+      "destination": "/en/past-contests/eurovision-1969-madrid",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1969/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1969-madrid",
       "permanent": true
     },
@@ -460,6 +530,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1970/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1970-amsterdam",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1971",
       "destination": "/:locale/past-contests/eurovision-1971-dublin",
       "permanent": true
@@ -471,6 +546,11 @@
     },
     {
       "source": "/eurovision-1971",
+      "destination": "/en/past-contests/eurovision-1971-dublin",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1971/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1971-dublin",
       "permanent": true
     },
@@ -490,6 +570,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1972/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1972-edinburgh",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1973",
       "destination": "/:locale/past-contests/eurovision-1973-luxembourg-city",
       "permanent": true
@@ -501,6 +586,11 @@
     },
     {
       "source": "/eurovision-1973",
+      "destination": "/en/past-contests/eurovision-1973-luxembourg-city",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1973/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1973-luxembourg-city",
       "permanent": true
     },
@@ -520,6 +610,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1974/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1974-brighton",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1975",
       "destination": "/:locale/past-contests/eurovision-1975-stockholm",
       "permanent": true
@@ -531,6 +626,11 @@
     },
     {
       "source": "/eurovision-1975",
+      "destination": "/en/past-contests/eurovision-1975-stockholm",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1975/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1975-stockholm",
       "permanent": true
     },
@@ -550,6 +650,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1976/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1976-the-hague",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1977",
       "destination": "/:locale/past-contests/eurovision-1977-london",
       "permanent": true
@@ -561,6 +666,11 @@
     },
     {
       "source": "/eurovision-1977",
+      "destination": "/en/past-contests/eurovision-1977-london",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1977/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1977-london",
       "permanent": true
     },
@@ -580,6 +690,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1978/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1978-paris",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1979",
       "destination": "/:locale/past-contests/eurovision-1979-jerusalem",
       "permanent": true
@@ -591,6 +706,11 @@
     },
     {
       "source": "/eurovision-1979",
+      "destination": "/en/past-contests/eurovision-1979-jerusalem",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1979/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1979-jerusalem",
       "permanent": true
     },
@@ -610,6 +730,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1980/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1980-the-hague",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1981",
       "destination": "/:locale/past-contests/eurovision-1981-dublin",
       "permanent": true
@@ -621,6 +746,11 @@
     },
     {
       "source": "/eurovision-1981",
+      "destination": "/en/past-contests/eurovision-1981-dublin",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1981/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1981-dublin",
       "permanent": true
     },
@@ -640,6 +770,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1982/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1982-harrogate",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1983",
       "destination": "/:locale/past-contests/eurovision-1983-munich",
       "permanent": true
@@ -651,6 +786,11 @@
     },
     {
       "source": "/eurovision-1983",
+      "destination": "/en/past-contests/eurovision-1983-munich",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1983/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1983-munich",
       "permanent": true
     },
@@ -670,6 +810,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1984/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1984-luxembourg-city",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1985",
       "destination": "/:locale/past-contests/eurovision-1985-gothenburg",
       "permanent": true
@@ -681,6 +826,11 @@
     },
     {
       "source": "/eurovision-1985",
+      "destination": "/en/past-contests/eurovision-1985-gothenburg",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1985/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1985-gothenburg",
       "permanent": true
     },
@@ -700,6 +850,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1986/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1986-bergen",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1987",
       "destination": "/:locale/past-contests/eurovision-1987-brussels",
       "permanent": true
@@ -711,6 +866,11 @@
     },
     {
       "source": "/eurovision-1987",
+      "destination": "/en/past-contests/eurovision-1987-brussels",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1987/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1987-brussels",
       "permanent": true
     },
@@ -730,6 +890,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1988/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1988-dublin",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1989",
       "destination": "/:locale/past-contests/eurovision-1989-lausanne",
       "permanent": true
@@ -741,6 +906,11 @@
     },
     {
       "source": "/eurovision-1989",
+      "destination": "/en/past-contests/eurovision-1989-lausanne",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1989/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1989-lausanne",
       "permanent": true
     },
@@ -760,6 +930,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1990/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1990-zagreb",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1991",
       "destination": "/:locale/past-contests/eurovision-1991-rome",
       "permanent": true
@@ -771,6 +946,11 @@
     },
     {
       "source": "/eurovision-1991",
+      "destination": "/en/past-contests/eurovision-1991-rome",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1991/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1991-rome",
       "permanent": true
     },
@@ -790,6 +970,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1992/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1992-malmo",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1993",
       "destination": "/:locale/past-contests/eurovision-1993-millstreet",
       "permanent": true
@@ -801,6 +986,11 @@
     },
     {
       "source": "/eurovision-1993",
+      "destination": "/en/past-contests/eurovision-1993-millstreet",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1993/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1993-millstreet",
       "permanent": true
     },
@@ -820,6 +1010,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1994/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1994-dublin",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1995",
       "destination": "/:locale/past-contests/eurovision-1995-dublin",
       "permanent": true
@@ -831,6 +1026,11 @@
     },
     {
       "source": "/eurovision-1995",
+      "destination": "/en/past-contests/eurovision-1995-dublin",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1995/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1995-dublin",
       "permanent": true
     },
@@ -850,6 +1050,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1996/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1996-oslo",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1997",
       "destination": "/:locale/past-contests/eurovision-1997-dublin",
       "permanent": true
@@ -861,6 +1066,11 @@
     },
     {
       "source": "/eurovision-1997",
+      "destination": "/en/past-contests/eurovision-1997-dublin",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1997/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1997-dublin",
       "permanent": true
     },
@@ -880,6 +1090,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-1998/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-1998-birmingham",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-1999",
       "destination": "/:locale/past-contests/eurovision-1999-jerusalem",
       "permanent": true
@@ -891,6 +1106,11 @@
     },
     {
       "source": "/eurovision-1999",
+      "destination": "/en/past-contests/eurovision-1999-jerusalem",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-1999/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-1999-jerusalem",
       "permanent": true
     },
@@ -910,6 +1130,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2000/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2000-stockholm",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2001",
       "destination": "/:locale/past-contests/eurovision-2001-copenhagen",
       "permanent": true
@@ -921,6 +1146,11 @@
     },
     {
       "source": "/eurovision-2001",
+      "destination": "/en/past-contests/eurovision-2001-copenhagen",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2001/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2001-copenhagen",
       "permanent": true
     },
@@ -940,6 +1170,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2002/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2002-tallinn",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2003",
       "destination": "/:locale/past-contests/eurovision-2003-riga",
       "permanent": true
@@ -951,6 +1186,11 @@
     },
     {
       "source": "/eurovision-2003",
+      "destination": "/en/past-contests/eurovision-2003-riga",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2003/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2003-riga",
       "permanent": true
     },
@@ -970,6 +1210,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2004/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2004-istanbul",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2005",
       "destination": "/:locale/past-contests/eurovision-2005-kyiv",
       "permanent": true
@@ -981,6 +1226,11 @@
     },
     {
       "source": "/eurovision-2005",
+      "destination": "/en/past-contests/eurovision-2005-kyiv",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2005/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2005-kyiv",
       "permanent": true
     },
@@ -1000,6 +1250,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2006/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2006-athens",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2007",
       "destination": "/:locale/past-contests/eurovision-2007-helsinki",
       "permanent": true
@@ -1011,6 +1266,11 @@
     },
     {
       "source": "/eurovision-2007",
+      "destination": "/en/past-contests/eurovision-2007-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2007/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2007-helsinki",
       "permanent": true
     },
@@ -1030,6 +1290,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2008/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2008-belgrade",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2009",
       "destination": "/:locale/past-contests/eurovision-2009-moscow",
       "permanent": true
@@ -1041,6 +1306,11 @@
     },
     {
       "source": "/eurovision-2009",
+      "destination": "/en/past-contests/eurovision-2009-moscow",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2009/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2009-moscow",
       "permanent": true
     },
@@ -1060,6 +1330,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2010/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2010-oslo",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2011",
       "destination": "/:locale/past-contests/eurovision-2011-dusseldorf",
       "permanent": true
@@ -1071,6 +1346,11 @@
     },
     {
       "source": "/eurovision-2011",
+      "destination": "/en/past-contests/eurovision-2011-dusseldorf",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2011/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2011-dusseldorf",
       "permanent": true
     },
@@ -1090,6 +1370,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2012/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2012-baku",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2013",
       "destination": "/:locale/past-contests/eurovision-2013-malmo",
       "permanent": true
@@ -1101,6 +1386,11 @@
     },
     {
       "source": "/eurovision-2013",
+      "destination": "/en/past-contests/eurovision-2013-malmo",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2013/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2013-malmo",
       "permanent": true
     },
@@ -1120,6 +1410,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2014/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2014-copenhagen",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2015",
       "destination": "/:locale/past-contests/eurovision-2015-vienna",
       "permanent": true
@@ -1131,6 +1426,11 @@
     },
     {
       "source": "/eurovision-2015",
+      "destination": "/en/past-contests/eurovision-2015-vienna",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2015/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2015-vienna",
       "permanent": true
     },
@@ -1150,6 +1450,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2016/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2016-stockholm",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2017",
       "destination": "/:locale/past-contests/eurovision-2017-kyiv",
       "permanent": true
@@ -1161,6 +1466,11 @@
     },
     {
       "source": "/eurovision-2017",
+      "destination": "/en/past-contests/eurovision-2017-kyiv",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2017/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2017-kyiv",
       "permanent": true
     },
@@ -1180,6 +1490,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2018/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2018-lisbon",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2019",
       "destination": "/:locale/past-contests/eurovision-2019-tel-aviv",
       "permanent": true
@@ -1191,6 +1506,11 @@
     },
     {
       "source": "/eurovision-2019",
+      "destination": "/en/past-contests/eurovision-2019-tel-aviv",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2019/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2019-tel-aviv",
       "permanent": true
     },
@@ -1210,6 +1530,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2020/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2020-rotterdam",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2021",
       "destination": "/:locale/past-contests/eurovision-2021-rotterdam",
       "permanent": true
@@ -1221,6 +1546,11 @@
     },
     {
       "source": "/eurovision-2021",
+      "destination": "/en/past-contests/eurovision-2021-rotterdam",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2021/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2021-rotterdam",
       "permanent": true
     },
@@ -1240,6 +1570,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2022/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2022-turin",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2023",
       "destination": "/:locale/past-contests/eurovision-2023-liverpool",
       "permanent": true
@@ -1251,6 +1586,11 @@
     },
     {
       "source": "/eurovision-2023",
+      "destination": "/en/past-contests/eurovision-2023-liverpool",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2023/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2023-liverpool",
       "permanent": true
     },
@@ -1270,6 +1610,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2024/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2024-malmo",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2025",
       "destination": "/:locale/past-contests/eurovision-2025-basel",
       "permanent": true
@@ -1285,6 +1630,11 @@
       "permanent": true
     },
     {
+      "source": "/eurovision-2025/:sub(schedule|semifinals|songs)",
+      "destination": "/en/past-contests/eurovision-2025-basel",
+      "permanent": true
+    },
+    {
       "source": "/:locale(en|el)/eurovision-2026",
       "destination": "/:locale/past-contests/eurovision-2026-vienna",
       "permanent": true
@@ -1296,6 +1646,11 @@
     },
     {
       "source": "/eurovision-2026",
+      "destination": "/en/past-contests/eurovision-2026-vienna",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2026/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2026-vienna",
       "permanent": true
     }

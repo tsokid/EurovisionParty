@@ -1,7 +1,7 @@
 // Contest-year redirects in vercel.json (spec §3).
 //
-// * Archived year Y: /eurovision-Y and its subpages 301 to the archive page
-//   (Un-archive removes them).
+// * Archived year Y: /eurovision-Y and its subpages, prefixed or not, 301 to
+//   the archive page (Un-archive removes them).
 // * Live hub year: unprefixed /eurovision-Y (and its subpages) redirect to
 //   /en or, for Greek browsers, /el, instead of falling to the SPA shell.
 // * Static redirects whose destination is an archived year's hub path (e.g.
@@ -45,7 +45,7 @@ function liveHubYear(contests: ContestRow[]): number | null {
   return pick.stage === 'archived' ? null : pick.year;
 }
 
-/** Archived years (three redirects each, by year), then the live hub (four). */
+/** Archived years (four redirects each, by year), then the live hub (four). */
 export function generatedRedirects(contests: ContestRow[]): VercelRedirect[] {
   const archived = contests
     .filter((c) => c.stage === 'archived')
@@ -60,6 +60,10 @@ export function generatedRedirects(contests: ContestRow[]): VercelRedirect[] {
           permanent: true,
         },
         { source: `/eurovision-${c.year}`, destination: `/en/${page}`, permanent: true },
+        // The unprefixed subpages too: a year whose hub was live had them
+        // (locale-detect redirects), and without this they fall to the SPA
+        // shell, a soft 404.
+        { source: `/eurovision-${c.year}/${SUBPAGES}`, destination: `/en/${page}`, permanent: true },
       ];
     });
   const y = liveHubYear(contests);
