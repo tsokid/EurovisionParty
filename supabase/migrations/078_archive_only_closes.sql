@@ -9,15 +9,22 @@
 -- * unarchive_contest: archived -> finalized for the latest archived year,
 --   refused only while another contest is current or finalized (at most one
 --   live contest, one_live_contest).
--- * live_contest_year(): new rooms play the newest contest that has entries,
---   in any stage, so archiving changes nothing for the game. Falls back to the
---   previous rule when no contest has entries.
+-- * live_contest_year(): new rooms play the newest contest with a complete
+--   line-up (entries, every one with artist and song), in any stage, so
+--   archiving changes nothing for the game. A parse that brings countries
+--   without artists or songs does not switch the game. Falls back to the
+--   previous rule when no contest qualifies.
 
 -- ── live_contest_year() ─────────────────────────────────────────────────
 create or replace function public.live_contest_year()
 returns int language sql stable security definer set search_path = public as $$
   select coalesce(
-    (select max(e.year) from public.contest_entries e),
+    (select max(c.year) from public.contests c
+      where exists (select 1 from public.contest_entries e where e.year = c.year)
+        and not exists (
+          select 1 from public.contest_entries e
+           where e.year = c.year
+             and (coalesce(btrim(e.artist), '') = '' or coalesce(btrim(e.song), '') = ''))),
     (select year from public.contests where stage in ('current', 'finalized')),
     (select max(year) from public.contests where stage <> 'archived'),
     extract(year from now())::int

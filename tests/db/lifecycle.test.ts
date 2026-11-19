@@ -285,10 +285,17 @@ describe('071 lifecycle and entry RPCs', () => {
     expect(await one(`select public.live_contest_year() as y`)).toEqual(before);
   });
 
-  it('game year: the newest contest with entries, in any stage (078)', async () => {
+  it('game year: the newest contest with a complete line-up, in any stage (078)', async () => {
     await addContest(2027, 'upcoming');
     expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
-    await addEntry(2027, 'GR');
+    // Countries without artist or song (a parse of the country list only): no switch.
+    await db.query(`insert into public.contest_entries (year, iso, artist, song) values (2027, 'GR', null, null), (2027, 'SE', '', ' ')`);
+    expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
+    // One entry still incomplete: no switch.
+    await db.query(`update public.contest_entries set artist = 'A', song = 'S' where year = 2027 and iso = 'GR'`);
+    expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
+    // Every entry has artist and song: the game moves to 2027.
+    await db.query(`update public.contest_entries set artist = 'B', song = 'T' where year = 2027 and iso = 'SE'`);
     expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2027 });
   });
 
