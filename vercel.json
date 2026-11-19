@@ -30,17 +30,17 @@
     },
     {
       "source": "/:locale(en|el)/eurovision-2026-schedule",
-      "destination": "/:locale/eurovision-2026/schedule",
+      "destination": "/:locale/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
       "source": "/:locale(en|el)/eurovision-2026-semifinals",
-      "destination": "/:locale/eurovision-2026/semifinals",
+      "destination": "/:locale/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
       "source": "/:locale(en|el)/eurovision-2026-songs",
-      "destination": "/:locale/eurovision-2026/songs",
+      "destination": "/:locale/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
@@ -65,7 +65,7 @@
     },
     {
       "source": "/:locale(en|el)/eurovision-2026-programma",
-      "destination": "/:locale/eurovision-2026/schedule",
+      "destination": "/:locale/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
@@ -122,17 +122,17 @@
     },
     {
       "source": "/eurovision-2026-schedule",
-      "destination": "/en/eurovision-2026/schedule",
+      "destination": "/en/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
       "source": "/eurovision-2026-semifinals",
-      "destination": "/en/eurovision-2026/semifinals",
+      "destination": "/en/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
       "source": "/eurovision-2026-songs",
-      "destination": "/en/eurovision-2026/songs",
+      "destination": "/en/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
@@ -157,7 +157,7 @@
     },
     {
       "source": "/eurovision-2026-programma",
-      "destination": "/el/eurovision-2026/schedule",
+      "destination": "/el/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
@@ -1285,37 +1285,18 @@
       "permanent": true
     },
     {
-      "source": "/eurovision-2026",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept-language",
-          "value": "(?<l>.*\\bel\\b.*)"
-        }
-      ],
-      "destination": "/el/eurovision-2026",
+      "source": "/:locale(en|el)/eurovision-2026",
+      "destination": "/:locale/past-contests/eurovision-2026-vienna",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|el)/eurovision-2026/:sub(schedule|semifinals|songs)",
+      "destination": "/:locale/past-contests/eurovision-2026-vienna",
       "permanent": true
     },
     {
       "source": "/eurovision-2026",
-      "destination": "/en/eurovision-2026",
-      "permanent": true
-    },
-    {
-      "source": "/eurovision-2026/:sub(schedule|semifinals|songs)",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept-language",
-          "value": "(?<l>.*\\bel\\b.*)"
-        }
-      ],
-      "destination": "/el/eurovision-2026/:sub",
-      "permanent": true
-    },
-    {
-      "source": "/eurovision-2026/:sub(schedule|semifinals|songs)",
-      "destination": "/en/eurovision-2026/:sub",
+      "destination": "/en/past-contests/eurovision-2026-vienna",
       "permanent": true
     }
   ],

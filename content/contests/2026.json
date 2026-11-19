@@ -780,7 +780,7 @@
     }
   ],
   "host_iso": "AT",
-  "indexable": false,
-  "stage": "finalized",
+  "indexable": true,
+  "stage": "archived",
   "year": 2026
 }

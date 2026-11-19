@@ -1284,8 +1284,8 @@
     "co_winners": [],
     "final_date": "2026-05-16",
     "host_iso": "AT",
-    "indexable": false,
-    "stage": "finalized",
+    "indexable": true,
+    "stage": "archived",
     "winner": {
       "artist": "DARA",
       "iso": "BG",

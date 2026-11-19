@@ -279,6 +279,10 @@
     {
       "city_slug": "basel",
       "year": 2025
+    },
+    {
+      "city_slug": "vienna",
+      "year": 2026
     }
   ]
 }
