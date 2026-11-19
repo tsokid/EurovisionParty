@@ -1,7 +1,7 @@
 // @vitest-environment node
 // Final-review fixes in 071: I1 (demoted rows never count), I3 (phase
 // triggers year-scoped), M4 (semis keep an existing source), M6 (archive
-// requires Y+1 upcoming).
+// requires Y+1 upcoming; superseded by 078).
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import type { PGlite } from '@electric-sql/pglite';
 import { createDb, asUser, makeAdmin } from './harness';
@@ -209,20 +209,19 @@ describe('071 final-review fixes', () => {
     ]);
   });
 
-  // ── M6 ────────────────────────────────────────────────────────────────
-  it('M6 archive_contest refuses when Y+1 is not upcoming', async () => {
+  // ── M6 (superseded by 078) ──────────────────────────────────────────
+  // Archive no longer looks at Y+1 at all (owner decision, 19 Nov 2026);
+  // lifecycle.test.ts covers the 078 rules.
+  it('M6 archive_contest ignores the stage of Y+1 (078)', async () => {
     await db.exec(`
-      insert into public.contest_entries (year, iso, artist, song) values (2027, 'GR', 'A', 'S');
       update public.contests set stage = 'archived', archived_at = now() where year = 2027;
       update public.contests set stage = 'finalized', archived_at = null where year = 2026;
     `);
     await asUser(db, ADMIN);
-    await expect(db.query(`select public.archive_contest(2026)`)).rejects.toThrow(
-      /contest 2027 is archived; archive of 2026 requires it upcoming/,
-    );
+    await db.query(`select public.archive_contest(2026)`);
     const s = await db.query<Row>(`select year, stage from public.contests where year in (2026, 2027) order by year`);
     expect(s.rows).toEqual([
-      { year: 2026, stage: 'finalized' },
+      { year: 2026, stage: 'archived' },
       { year: 2027, stage: 'archived' },
     ]);
   });

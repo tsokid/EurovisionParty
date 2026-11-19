@@ -46,9 +46,6 @@ const FORM_FIELDS: Array<{ key: keyof Form; label: string; type: string }> = [
 
 export default function Contests() {
   const [contests, setContests] = useState<ContestSummary[]>([]);
-  // Years known to have at least one room. Only Y+1 of the latest archived
-  // year is checked (it gates Un-archive); unknown years count as having rooms.
-  const [roomsChecked, setRoomsChecked] = useState<Record<number, boolean>>({});
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState<Form>(EMPTY_FORM);
@@ -65,17 +62,6 @@ export default function Contests() {
       if (error) throw error;
       const rows = (data ?? []) as ContestSummary[];
       setContests(rows);
-
-      const archived = rows.filter((r) => r.stage === 'archived').map((r) => r.year);
-      const latest = archived.length ? Math.max(...archived) : null;
-      const next = latest === null ? undefined : rows.find((r) => r.year === latest + 1);
-      if (next && next.stage === 'current') {
-        const res = await supabase.rpc('contest_has_rooms', { p_year: next.year });
-        if (res.error) throw res.error;
-        setRoomsChecked({ [next.year]: res.data === true });
-      } else {
-        setRoomsChecked({});
-      }
     } catch (e) {
       setErr(formatError(e));
     }
@@ -89,10 +75,8 @@ export default function Contests() {
     refreshPublish();
   }, [load, refreshPublish]);
 
-  const hasRooms = (year: number) => roomsChecked[year] ?? true;
-
   const act = async (action: ContestAction, c: ContestSummary) => {
-    if (!window.confirm(confirmText(action, c, contests))) return;
+    if (!window.confirm(confirmText(action, c))) return;
     setBusy(true);
     setErr(null);
     setNotice(null);
@@ -209,7 +193,6 @@ export default function Contests() {
 
       <ContestList
         contests={contests}
-        hasRooms={hasRooms}
         selectedYear={selectedYear}
         busy={busy}
         onAction={act}

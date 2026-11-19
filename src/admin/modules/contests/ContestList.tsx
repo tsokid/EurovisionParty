@@ -23,15 +23,13 @@ const ACTION_BUTTON: Record<ContestAction, string> = {
 
 interface Props {
   contests: ContestSummary[];
-  /** Whether a room of `year` exists; only Y+1 of the latest archived year is ever asked. */
-  hasRooms: (year: number) => boolean;
   selectedYear: number | null;
   busy: boolean;
   onAction: (action: ContestAction, contest: ContestSummary) => void;
   onSelect: (year: number) => void;
 }
 
-export function ContestList({ contests, hasRooms, selectedYear, busy, onAction, onSelect }: Props) {
+export function ContestList({ contests, selectedYear, busy, onAction, onSelect }: Props) {
   const sorted = [...contests].sort((a, b) => b.year - a.year);
 
   if (sorted.length === 0) {
@@ -55,7 +53,7 @@ export function ContestList({ contests, hasRooms, selectedYear, busy, onAction, 
         </thead>
         <tbody>
           {sorted.map((c) => {
-            const actions = allowedActions(c, sorted, hasRooms(c.year + 1));
+            const actions = allowedActions(c, sorted);
             const selected = c.year === selectedYear;
             return (
               <tr

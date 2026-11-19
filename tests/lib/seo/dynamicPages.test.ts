@@ -12,7 +12,7 @@ const find = (path: string) => pages.find((p) => p.path === path);
 describe('contentData (import.meta.glob over content/)', () => {
   it('loads site, contests and countries', () => {
     expect(getSite().current_year).toBe(2026);
-    expect(allContests()).toHaveLength(71);
+    expect(allContests()).toHaveLength(72); // 1956-2026 + 2027 (upcoming)
     expect(allContests()[0].year).toBe(1956);
     expect(getContest(1975)?.city_slug).toBe('stockholm');
     expect(getContest(1800)).toBeUndefined();

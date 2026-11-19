@@ -103,7 +103,7 @@ describe('Contests module', () => {
 
     fireEvent.click(r26.getByRole('button', { name: 'Archive' }));
     expect(confirm).toHaveBeenCalledWith(
-      'Archive 2026: 2026 becomes archived and 2027 becomes the current contest. You can undo with Un-archive until a 2027 room is created.',
+      'Archive 2026: 2026 is locked and its page moves to the past contests (the old 2026 address redirects there). Games and the next contest are not affected. You can undo with Un-archive while no other contest is started.',
     );
     expect(h.rpc).not.toHaveBeenCalledWith('archive_contest', expect.anything());
 
@@ -116,12 +116,12 @@ describe('Contests module', () => {
     );
   });
 
-  it('Un-archive is checked against rooms of Y+1', async () => {
-    h.summaries = [summary(2027, 'current', 5), summary(2026, 'archived', 26)];
+  it('Un-archive is offered on the latest archived year while nothing is live', async () => {
+    h.summaries = [summary(2027, 'upcoming', 0), summary(2026, 'archived', 26)];
     render(<Contests />);
     const r26 = await rowFor(2026);
-    await waitFor(() => expect(h.rpc).toHaveBeenCalledWith('contest_has_rooms', { p_year: 2027 }));
     expect(await r26.findByRole('button', { name: 'Un-archive' })).toBeTruthy();
+    expect(h.rpc).not.toHaveBeenCalledWith('contest_has_rooms', expect.anything());
   });
 
   it('Create year sends the form to create_contest', async () => {
@@ -258,7 +258,7 @@ describe('Contests module', () => {
   it.each([
     ['Archive', 'archive_contest', [summary(2027, 'upcoming', 5), summary(2026, 'finalized', 26)], 2026],
     ['Finalize', 'finalize_contest', [summary(2026, 'current', 26)], 2026],
-    ['Un-archive', 'unarchive_contest', [summary(2027, 'current', 5), summary(2026, 'archived', 26)], 2026],
+    ['Un-archive', 'unarchive_contest', [summary(2027, 'upcoming', 5), summary(2026, 'archived', 26)], 2026],
   ])('%s publishes automatically after it succeeds', async (label, rpc, rows, year) => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     h.summaries = rows as Row[];

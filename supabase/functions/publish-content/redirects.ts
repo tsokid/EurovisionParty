@@ -13,6 +13,7 @@
 // Pure and Deno-free: imported by the publish-content edge function, by
 // scripts/snapshot/build-local.ts and by vitest. The only import is type-only.
 import type { ContestRow } from '../_shared/contestTypes.ts';
+import { siteContest } from '../_shared/siteYear.ts';
 
 export type VercelRedirect = {
   source: string;
@@ -35,15 +36,13 @@ const GREEK_BROWSER = { type: 'header', key: 'accept-language', value: '(?<l>.*\
 const SUBPAGES = ':sub(schedule|semifinals|songs)';
 
 /**
- * Year whose hub is live: the current or finalized contest, else the latest
- * non-archived one, else none. Mirrors the site.json pick in snapshot.ts
- * (minus its "latest archived" fallback, which has no hub).
+ * Year whose hub is live: the site's year (siteContest, the same pick as
+ * site.json), unless that contest is archived (its page is the archive page).
  */
 function liveHubYear(contests: ContestRow[]): number | null {
-  const live = contests.find((c) => c.stage === 'current' || c.stage === 'finalized');
-  if (live) return live.year;
-  const open = contests.filter((c) => c.stage !== 'archived').map((c) => c.year);
-  return open.length ? Math.max(...open) : null;
+  if (contests.length === 0) return null;
+  const pick = siteContest(contests);
+  return pick.stage === 'archived' ? null : pick.year;
 }
 
 /** Archived years (three redirects each, by year), then the live hub (four). */

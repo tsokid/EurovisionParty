@@ -262,31 +262,34 @@ describe('071 lifecycle and entry RPCs', () => {
     expect([await stage(2026), await stage(2027)]).toEqual(['current', 'upcoming']);
   });
 
-  it('archive refuses when next year has no entries', async () => {
-    await expect(db.query(`select public.archive_contest(2026)`)).rejects.toThrow(/2027/);
-    await addContest(2027, 'upcoming');
-    await expect(db.query(`select public.archive_contest(2026)`)).rejects.toThrow(/no entries for 2027/);
-    expect([await stage(2026), await stage(2027)]).toEqual(['finalized', 'upcoming']);
-  });
-
-  it('archive flips both years', async () => {
-    await addContest(2027, 'upcoming');
-    await addEntry(2027, 'GR');
+  it('archive needs nothing from the next year and leaves it alone (078)', async () => {
+    // No 2027 at all.
     await db.query(`select public.archive_contest(2026)`);
     expect(
-      await one(`select stage, archived_at is not null as stamped from public.contests where year = 2026`),
-    ).toEqual({ stage: 'archived', stamped: true });
-    expect(await stage(2027)).toBe('current');
-    expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2027 });
+      await one(`select stage, archived_at is not null as stamped, indexable from public.contests where year = 2026`),
+    ).toEqual({ stage: 'archived', stamped: true, indexable: true });
   });
 
-  it('archive makes the archived year indexable (I1: it was the live, indexed hub)', async () => {
+  it('archive keeps an empty upcoming next year upcoming (078)', async () => {
     await addContest(2027, 'upcoming');
-    await addEntry(2027, 'GR');
-    expect(await one(`select indexable from public.contests where year = 2026`)).toEqual({ indexable: false });
     await db.query(`select public.archive_contest(2026)`);
-    expect(await one(`select stage, indexable from public.contests where year = 2026`)).toEqual({ stage: 'archived', indexable: true });
+    expect([await stage(2026), await stage(2027)]).toEqual(['archived', 'upcoming']);
     expect(await one(`select indexable from public.contests where year = 2027`)).toEqual({ indexable: false });
+  });
+
+  it('archive does not change the game year (078)', async () => {
+    await addContest(2027, 'upcoming');
+    const before = await one(`select public.live_contest_year() as y`);
+    expect(before).toEqual({ y: 2026 });
+    await db.query(`select public.archive_contest(2026)`);
+    expect(await one(`select public.live_contest_year() as y`)).toEqual(before);
+  });
+
+  it('game year: the newest contest with entries, in any stage (078)', async () => {
+    await addContest(2027, 'upcoming');
+    expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
+    await addEntry(2027, 'GR');
+    expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2027 });
   });
 
   // ── update_contest on archived years (I3) ────────────────────────────
@@ -306,32 +309,24 @@ describe('071 lifecycle and entry RPCs', () => {
   });
 
   // ── unarchive_contest ────────────────────────────────────────────────
-  it('unarchive refuses when rooms exist for next year', async () => {
+  it('unarchive refuses while another contest is live (078)', async () => {
     await addContest(2027, 'upcoming');
-    await addEntry(2027, 'GR');
     await db.query(`select public.archive_contest(2026)`);
-    await db.query(
-      `insert into public.rooms (id, code, host_id, host_name, year, phase) values ($1, 'U27R', $2, 'h', 2027, 'lobby')`,
-      [ROOM_OPEN, ADMIN],
-    );
+    await db.query(`select public.start_contest(2027)`);
     await expect(db.query(`select public.unarchive_contest(2026)`)).rejects.toThrow(
-      /rooms exist for 2027; un-archive refused/,
+      /contest 2027 is current; un-archive of 2026 refused/,
     );
     expect([await stage(2026), await stage(2027)]).toEqual(['archived', 'current']);
   });
 
-  it('unarchive refuses unless latest archived year with next year current', async () => {
-    // 2025 is archived but not the latest once 2026 is archived.
-    await addContest(2027, 'upcoming');
-    await addEntry(2027, 'GR');
+  it('unarchive refuses unless latest archived year', async () => {
     await db.query(`select public.archive_contest(2026)`);
     await expect(db.query(`select public.unarchive_contest(2025)`)).rejects.toThrow(/not the latest archived/);
-    // 2026 finalized is not archived.
     await db.query(`select public.unarchive_contest(2026)`);
     await expect(db.query(`select public.unarchive_contest(2026)`)).rejects.toThrow(/contest 2026 is finalized/);
   });
 
-  it('unarchive restores and keeps next-year entries', async () => {
+  it('unarchive restores finalized and leaves the next year alone', async () => {
     await addContest(2027, 'upcoming');
     await addEntry(2027, 'GR');
     await addEntry(2027, 'SE');
@@ -345,7 +340,6 @@ describe('071 lifecycle and entry RPCs', () => {
       { iso: 'GR' },
       { iso: 'SE' },
     ]);
-    expect(await one(`select public.live_contest_year() as y`)).toEqual({ y: 2026 });
   });
 
   // ── parser write guard ───────────────────────────────────────────────

@@ -15,83 +15,67 @@ const row = (year: number, stage: ContestRow['stage'], entry_count = 0): Contest
 describe('allowedActions', () => {
   it('start: upcoming with nothing live', () => {
     const c = row(2027, 'upcoming');
-    expect(allowedActions(c, [c, row(2026, 'archived', 30)], false)).toEqual(['start']);
+    expect(allowedActions(c, [c, row(2026, 'archived', 30)])).toEqual(['start']);
   });
 
   it('start is hidden while another contest is current or finalized', () => {
     const c = row(2027, 'upcoming');
-    expect(allowedActions(c, [c, row(2026, 'current', 30)], false)).toEqual([]);
-    expect(allowedActions(c, [c, row(2026, 'finalized', 30)], false)).toEqual([]);
+    expect(allowedActions(c, [c, row(2026, 'current', 30)])).toEqual([]);
+    expect(allowedActions(c, [c, row(2026, 'finalized', 30)])).toEqual([]);
   });
 
   it('finalize: current', () => {
     const c = row(2026, 'current', 30);
-    expect(allowedActions(c, [c], false)).toEqual(['finalize']);
+    expect(allowedActions(c, [c])).toEqual(['finalize']);
   });
 
-  it('archive: finalized and Y+1 has entries', () => {
+  it('archive: any finalized contest, whatever the next year looks like', () => {
     const c = row(2026, 'finalized', 30);
-    expect(allowedActions(c, [row(2027, 'upcoming', 5), c], false)).toEqual(['archive']);
+    expect(allowedActions(c, [c])).toEqual(['archive']);
+    expect(allowedActions(c, [row(2027, 'upcoming', 0), c])).toEqual(['archive']);
+    expect(allowedActions(c, [row(2027, 'upcoming', 5), c])).toEqual(['archive']);
   });
 
-  it('archive is hidden when Y+1 is missing or has no entries', () => {
-    const c = row(2026, 'finalized', 30);
-    expect(allowedActions(c, [c], false)).toEqual([]);
-    expect(allowedActions(c, [row(2027, 'upcoming', 0), c], false)).toEqual([]);
-    // Y+2 with entries does not count
-    expect(allowedActions(c, [row(2028, 'upcoming', 5), c], false)).toEqual([]);
-  });
-
-  it('unarchive: latest archived year with Y+1 current and no Y+1 rooms', () => {
+  it('unarchive: latest archived year while nothing is live', () => {
     const c = row(2026, 'archived', 30);
-    const all = [row(2027, 'current', 5), c, row(2025, 'archived', 26)];
-    expect(allowedActions(c, all, false)).toEqual(['unarchive']);
+    expect(allowedActions(c, [c, row(2025, 'archived', 26)])).toEqual(['unarchive']);
+    expect(allowedActions(c, [row(2027, 'upcoming', 0), c])).toEqual(['unarchive']);
   });
 
-  it('unarchive is hidden when Y+1 has rooms', () => {
+  it('unarchive is hidden while another contest is current or finalized', () => {
     const c = row(2026, 'archived', 30);
-    expect(allowedActions(c, [row(2027, 'current', 5), c], true)).toEqual([]);
+    expect(allowedActions(c, [row(2027, 'current', 5), c])).toEqual([]);
+    expect(allowedActions(c, [row(2027, 'finalized', 5), c])).toEqual([]);
   });
 
   it('unarchive is hidden for an archived year that is not the latest', () => {
     const c = row(2025, 'archived', 26);
-    const all = [row(2027, 'current', 5), row(2026, 'archived', 30), c];
-    expect(allowedActions(c, all, false)).toEqual([]);
+    expect(allowedActions(c, [row(2026, 'archived', 30), c])).toEqual([]);
   });
 
-  it('unarchive is hidden when Y+1 is not current', () => {
-    const c = row(2026, 'archived', 30);
-    expect(allowedActions(c, [row(2027, 'upcoming', 5), c], false)).toEqual([]);
-    expect(allowedActions(c, [c], false)).toEqual([]);
-  });
-
-  it('upcoming with a live contest elsewhere, finalized without next: no actions', () => {
+  it('upcoming while another contest is finalized: no start', () => {
     const live = row(2026, 'finalized', 30);
     const next = row(2027, 'upcoming', 0);
-    const all = [next, live];
-    expect(allowedActions(next, all, false)).toEqual([]);
-    expect(allowedActions(live, all, false)).toEqual([]);
+    expect(allowedActions(next, [next, live])).toEqual([]);
   });
 });
 
 describe('confirmText', () => {
-  const all = [row(2027, 'current', 5), row(2026, 'archived', 30)];
-
   it('archive sentence', () => {
-    expect(confirmText('archive', row(2026, 'finalized', 30), all)).toBe(
-      'Archive 2026: 2026 becomes archived and 2027 becomes the current contest. You can undo with Un-archive until a 2027 room is created.',
+    expect(confirmText('archive', row(2026, 'finalized', 30))).toBe(
+      'Archive 2026: 2026 is locked and its page moves to the past contests (the old 2026 address redirects there). Games and the next contest are not affected. You can undo with Un-archive while no other contest is started.',
     );
   });
 
   it('unarchive sentence', () => {
-    expect(confirmText('unarchive', row(2026, 'archived', 30), all)).toBe(
-      'Un-archive 2026: 2026 goes back to finalized and 2027 goes back to upcoming. Entries of 2027 are kept.',
+    expect(confirmText('unarchive', row(2026, 'archived', 30))).toBe(
+      'Un-archive 2026: 2026 goes back to finalized and its results can be corrected again.',
     );
   });
 
   it('start and finalize sentences name the year', () => {
-    expect(confirmText('start', row(2027, 'upcoming'), all)).toBe('Start 2027: 2027 becomes the current contest.');
-    expect(confirmText('finalize', row(2026, 'current', 30), all)).toBe(
+    expect(confirmText('start', row(2027, 'upcoming'))).toBe('Start 2027: 2027 becomes the current contest.');
+    expect(confirmText('finalize', row(2026, 'current', 30))).toBe(
       'Finalize 2026: 2026 becomes finalized and every 2026 room is scored and gets its winners. Results can no longer be changed. This cannot be undone.',
     );
   });

@@ -180,6 +180,13 @@ describe('buildSnapshotFiles', () => {
       current: { year: 2025, city: 'Basel', stage: 'current', entry_count: 3, finalist_count: 3 },
     });
 
+    // Archiving the live year does not move the site to an upcoming one (078).
+    const afterArchive = buildSnapshotFiles({
+      ...input(),
+      contests: [contest(2026, 'Vienna', 'AT', 'archived'), contest(2027, 'Burgas', 'BG', 'upcoming'), ...contests.filter((c) => c.year < 2026)],
+    });
+    expect(JSON.parse(afterArchive['content/site.json'])).toMatchObject({ current_year: 2026, live_stage: 'archived' });
+
     // Two live contests break the one_live_contest invariant.
     expect(() =>
       buildSnapshotFiles({
@@ -381,7 +388,18 @@ describe('build-local', () => {
     expect(() => assertLocalSnapshot(site('2026-11-02T10:00:00.123Z'), true)).not.toThrow();
   });
 
-  it('the committed content/ matches a fresh build byte for byte', () => {
+  // Once Publish has written content/ (production data), a local build from the
+  // Wikipedia seed is expected to differ; the same rule build-local enforces.
+  const publishedSnapshot = (() => {
+    try {
+      assertLocalSnapshot(readFileSync(resolve(process.cwd(), 'content/site.json'), 'utf8'), false);
+      return false;
+    } catch {
+      return true;
+    }
+  })();
+
+  it.skipIf(publishedSnapshot)('the committed content/ matches a fresh build byte for byte', () => {
     const files = buildSnapshotFiles(localInput());
     for (const [rel, text] of Object.entries(files)) {
       expect(readFileSync(resolve(process.cwd(), rel), 'utf8'), rel).toBe(text);

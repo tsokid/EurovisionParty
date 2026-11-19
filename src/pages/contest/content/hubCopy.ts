@@ -23,6 +23,7 @@ export const CITY_EL: Record<string, { name: string; in: string }> = {
   birmingham: { name: 'Μπέρμιγχαμ', in: 'στο Μπέρμιγχαμ' },
   brighton: { name: 'Μπράιτον', in: 'στο Μπράιτον' },
   brussels: { name: 'Βρυξέλλες', in: 'στις Βρυξέλλες' },
+  burgas: { name: 'Μπουργκάς', in: 'στο Μπουργκάς' },
   cannes: { name: 'Κάννες', in: 'στις Κάννες' },
   copenhagen: { name: 'Κοπεγχάγη', in: 'στην Κοπεγχάγη' },
   dublin: { name: 'Δουβλίνο', in: 'στο Δουβλίνο' },

@@ -123,7 +123,7 @@ export type SiteCurrentContest = {
 
 /** content/site.json. */
 export type SiteSnapshot = {
-  /** The contest in stage current or finalized (else the latest non-archived, else the latest). */
+  /** The contest in stage current or finalized (else the latest started one, else the latest); see siteYear.ts. */
   current_year: number;
   /** That contest's stage. */
   live_stage: ContestStage;

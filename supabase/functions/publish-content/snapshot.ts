@@ -27,6 +27,7 @@ import type {
   SiteSnapshot,
 } from '../_shared/contestTypes.ts';
 import { stableJson } from '../_shared/stableJson.ts';
+import { siteContest } from '../_shared/siteYear.ts';
 
 /** The shared serializer, re-exported for existing importers. */
 export { stableJson };
@@ -82,8 +83,8 @@ export const FIRST_SEMI_YEAR = 2004;
 const byIso = (a: { iso: string }, b: { iso: string }) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0);
 
 /**
- * The site's current year: the live contest (current or finalized), else the
- * latest non-archived, else the latest; plus that contest's facts (`current`).
+ * The site's current year (siteContest: the live contest, else the latest
+ * started one, else the latest) plus that contest's facts (`current`).
  */
 function siteSnapshot(
   contests: ContestRow[],
@@ -92,13 +93,7 @@ function siteSnapshot(
   generated_at: string,
 ): SiteSnapshot {
   if (contests.length === 0) throw new Error('buildSnapshotFiles: no contests');
-  const live = contests.filter((c) => c.stage === 'current' || c.stage === 'finalized');
-  if (live.length > 1) {
-    throw new Error(`buildSnapshotFiles: ${live.length} live contests (${live.map((c) => c.year).join(', ')}); expected at most one`);
-  }
-  const latest = (xs: ContestRow[]) => xs.reduce((a, b) => (b.year > a.year ? b : a));
-  const notArchived = contests.filter((c) => c.stage !== 'archived');
-  const pick = live[0] ?? (notArchived.length ? latest(notArchived) : latest(contests));
+  const pick = siteContest(contests);
   const entries = entriesByYear.get(pick.year) ?? [];
   const host = pick.host_iso ? countries.get(pick.host_iso) : undefined;
   return {
