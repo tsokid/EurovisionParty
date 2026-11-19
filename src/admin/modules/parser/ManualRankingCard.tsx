@@ -24,7 +24,6 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 import { supabase } from "../../../lib/supabase";
-import { fetchLiveContestYear } from "../../../lib/liveContestYear";
 import { formatError } from "../../lib/formatError";
 import type { ParseJob } from "./useParserState";
 
@@ -135,30 +134,22 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
 
-  // Year: always the live contest year (RPC). The ranking list comes from
-  // current_participants (live year), so the RPCs must target that year
-  // too, whatever year the parse job belongs to.
-  const [liveYear, setLiveYear] = useState<number | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    fetchLiveContestYear()
-      .then((y) => { if (!cancelled) setLiveYear(y); })
-      .catch((e) => { if (!cancelled) setErr(formatError(e)); });
-    return () => { cancelled = true; };
-  }, []);
-  const year = liveYear;
+  // Year: the year of the parser page (the job's year), the same year the
+  // other parser cards and Finalize act on.
+  const year = job?.year ?? null;
   const requireYear = useCallback((): number => {
     if (year == null) throw new Error("Contest year not loaded yet");
     return year;
   }, [year]);
 
-  // Load participants whenever override turns on. current_participants is
-  // already scoped to the live year's finalists.
+  // Load the finalists of the page's year whenever override turns on.
   useEffect(() => {
-    if (!overrideOn) return;
+    if (!overrideOn || year == null) return;
     supabase
-      .from("current_participants")
+      .from("entries_with_names")
       .select("iso, name_en, artist, song")
+      .eq("year", year)
+      .eq("in_final", true)
       .order("name_en")
       .then(({ data, error }) => {
         if (error) { setErr(error.message); return; }
@@ -168,7 +159,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
           })),
         );
       });
-  }, [overrideOn]);
+  }, [overrideOn, year]);
 
   // Persist ranked draft per browser (no DB chatter on every drag).
   // Storage key is per-year so future years don't clash.

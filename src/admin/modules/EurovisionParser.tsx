@@ -2,7 +2,9 @@
 // Thin composition over four parser cards. State lives in useParserState; this
 // component just slots data into the right card and provides a refresh handle.
 
+import { useEffect, useState } from "react";
 import { useParserState } from "./parser/useParserState";
+import { fetchLiveContestYear } from "../../lib/liveContestYear";
 import { ParticipantsCard } from "./parser/ParticipantsCard";
 import { ResultsCard } from "./parser/ResultsCard";
 import { FinalizeCard } from "./parser/FinalizeCard";
@@ -11,7 +13,17 @@ import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
 
 export default function EurovisionParser() {
-  const { jobs, runs, loading, refresh, year, error } = useParserState();
+  // The page opens on the game year (the contest new rooms play), not on the
+  // newest contest created; the picker switches to any year with parse jobs.
+  const [picked, setPicked] = useState<number | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchLiveContestYear()
+      .then((y) => { if (!cancelled) setPicked((p) => p ?? y); })
+      .catch(() => { /* fall back to the latest parse_jobs year */ });
+    return () => { cancelled = true; };
+  }, []);
+  const { jobs, runs, loading, refresh, year, years, error } = useParserState(picked);
 
   if (loading && Object.keys(jobs).length === 0) {
     return (
@@ -49,9 +61,22 @@ export default function EurovisionParser() {
   return (
     <div className="p-4 space-y-4">
       <header>
-        <h2 className="text-xl font-bold text-white">
-          🛰️ Eurovision Parser <span className="text-white/40 font-normal text-base">· {year}</span>
+        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          🛰️ Eurovision Parser
+          <select
+            aria-label="Contest year"
+            value={year}
+            onChange={(e) => setPicked(Number(e.target.value))}
+            className="bg-white/10 text-white/80 font-normal text-base rounded px-2 py-0.5 cursor-pointer"
+          >
+            {years.map((y) => (
+              <option key={y} value={y} className="text-black">{y}</option>
+            ))}
+          </select>
         </h2>
+        <p className="text-xs text-white/50 mt-1">
+          Parse, manual ranking and Finalize below all act on {year} and its rooms only.
+        </p>
         <p className="text-sm text-white/60 mt-1">
           Manual host control with cron fallbacks. Each parser has its own
           schedule (start, end, poll interval) editable below — all times in

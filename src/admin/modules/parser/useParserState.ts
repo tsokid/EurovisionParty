@@ -16,6 +16,7 @@ import { supabase } from "../../../lib/supabase";
 let cachedJobs: JobsByKind = {};
 let cachedRuns: ParseRun[] = [];
 let cachedYear: number | null = null;
+let cachedYears: number[] = [];
 
 // Fail fetches that hang past this so the UI surfaces an error + retry
 // path instead of staying stuck on "Loading…" forever. The underlying
@@ -80,27 +81,31 @@ interface JobsByKind {
 interface UseParserState {
   jobs: JobsByKind;
   runs: ParseRun[];
-  /** The contest year currently displayed — discovered from parse_jobs.
-   *  null only when the table is completely empty (first-time setup). */
+  /** The contest year currently displayed: the requested year when it has
+   *  parse_jobs rows, else the latest year in parse_jobs. null only when the
+   *  table is completely empty (first-time setup). */
   year: number | null;
+  /** Every year with parse_jobs rows, newest first (the year picker). */
+  years: number[];
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
 }
 
 /**
- * No year argument by design — the active contest year is whichever max(year)
- * exists in parse_jobs. parse_jobs holds 1–2 rows per contest cycle so a full
- * scan is trivial; this keeps the admin UI year-agnostic forever (Vienna 2026
- * today, Berlin 2027 tomorrow, etc., with no code changes).
+ * Parser state of one contest year. `requestedYear` is the year the admin
+ * picked (the page defaults it to the game year, live_contest_year()); null
+ * or a year without parse_jobs rows falls back to the latest year in
+ * parse_jobs. Every card, Finalize included, acts on the returned year.
  */
-export function useParserState(pollMs = 5000): UseParserState {
+export function useParserState(requestedYear: number | null = null, pollMs = 5000): UseParserState {
   // Hydrate from the module-level cache so a tab switch back into the
   // Parser dashboard renders the last-known state instantly instead of
   // flashing the "Loading parser state…" placeholder.
   const [jobs, setJobs] = useState<JobsByKind>(cachedJobs);
   const [runs, setRuns] = useState<ParseRun[]>(cachedRuns);
   const [year, setYear] = useState<number | null>(cachedYear);
+  const [years, setYears] = useState<number[]>(cachedYears);
   // Loading is false the moment we have ANY cached data — show stale
   // first, refresh in the background. Only the very first ever fetch
   // (cold cache) shows the loading placeholder.
@@ -109,7 +114,7 @@ export function useParserState(pollMs = 5000): UseParserState {
 
   const refresh = useCallback(async () => {
     try {
-      // 1. Pull every parse_jobs row, pick the latest year as "active".
+      // 1. Pull every parse_jobs row; show the requested year, else the latest.
       const jobsRes = await withTimeout(
         supabase.from("parse_jobs").select("*").order("year", { ascending: false }),
         FETCH_TIMEOUT_MS,
@@ -123,7 +128,13 @@ export function useParserState(pollMs = 5000): UseParserState {
       }
 
       const allJobs    = (jobsRes.data ?? []) as ParseJob[];
-      const activeYear = allJobs[0]?.year ?? null;
+      const allYears   = [...new Set(allJobs.map((j) => j.year))];
+      const activeYear =
+        requestedYear != null && allYears.includes(requestedYear)
+          ? requestedYear
+          : (allYears[0] ?? null);
+      setYears(allYears);
+      cachedYears = allYears;
 
       const next: JobsByKind = {};
       for (const j of allJobs) {
@@ -170,7 +181,7 @@ export function useParserState(pollMs = 5000): UseParserState {
       setError(e instanceof Error ? e.message : String(e));
       setLoading(false);
     }
-  }, []);
+  }, [requestedYear]);
 
   useEffect(() => {
     refresh();
@@ -188,5 +199,5 @@ export function useParserState(pollMs = 5000): UseParserState {
     };
   }, [refresh, pollMs]);
 
-  return { jobs, runs, year, loading, error, refresh };
+  return { jobs, runs, year, years, loading, error, refresh };
 }
