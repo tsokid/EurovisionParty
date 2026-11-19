@@ -24,7 +24,7 @@
         "q": "Τρέχει στην τηλεόραση;"
       },
       {
-        "a": "Ο μεγάλος τελικός μεταδίδεται το {finalDay} {cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Οι ώρες έναρξης διαφέρουν ανά χώρα (21:00 CEST / 20:00 BST / 22:00 EEST).",
+        "a": "Ο μεγάλος τελικός είναι το {finalDay} {cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Οι ώρες έναρξης διαφέρουν ανά χώρα (21:00 CEST / 20:00 BST / 22:00 EEST).",
         "q": "Πότε είναι η Eurovision {year};"
       }
     ],
@@ -89,7 +89,7 @@
           "title": "Πώς παίζεις"
         },
         {
-          "blurb": "Μορφή Top 5 και Worst 5, βαθμολογία και στρατηγική για τον φετινό τελικό.",
+          "blurb": "Μορφή Top 5 και Worst 5, βαθμολογία και στρατηγική για τον τελικό της Eurovision {current.year}.",
           "href": "/eurovision-predictions",
           "title": "Παιχνίδι προβλέψεων"
         },
@@ -193,7 +193,7 @@
       },
       "what": {
         "bodyAfter": " {cityFrom}, με τους ημιτελικούς νωρίτερα μέσα στην εβδομάδα. Σε όλη την Ευρώπη (και την Αυστραλία) είναι ένα ενιαίο τηλεοπτικό ζωντανό γεγονός που παρακολουθούν περίπου 160 εκατομμύρια άνθρωποι· στα σπίτια έχει γίνει ταυτόχρονα ανταγωνιστική κοινωνική εκδήλωση, costume party και drinking game.",
-        "bodyBefore": "Η βραδιά Eurovision είναι η ζωντανή μετάδοση του μεγάλου τελικού της Eurovision Song Contest, που γίνεται κάθε χρόνο ένα Σάββατο στα μέσα Μαΐου. Το {year} ο μεγάλος τελικός μεταδίδεται το ",
+        "bodyBefore": "Η βραδιά Eurovision είναι η ζωντανή μετάδοση του μεγάλου τελικού της Eurovision Song Contest, που γίνεται κάθε χρόνο ένα Σάββατο στα μέσα Μαΐου. Το {year} ο μεγάλος τελικός είναι το ",
         "bodyDate": "{finalDay}",
         "title": "Τι είναι η βραδιά Eurovision;"
       }
@@ -224,7 +224,7 @@
         "q": "Does it run on TV?"
       },
       {
-        "a": "The grand final airs on {finalDay} {cityFrom}, with semi-finals earlier that week. Start times vary by country (21:00 CEST / 20:00 BST / 22:00 EEST).",
+        "a": "The grand final is on {finalDay} {cityFrom}, with semi-finals earlier that week. Start times vary by country (21:00 CEST / 20:00 BST / 22:00 EEST).",
         "q": "When is Eurovision {year}?"
       }
     ],
@@ -393,7 +393,7 @@
       },
       "what": {
         "bodyAfter": " {cityFrom}, with semi-finals earlier that week. Across Europe (and Australia) it is a single televised live event watched by ~160 million people; in homes it has become a competitive social event, a costume party, and a drinking game all at once.",
-        "bodyBefore": "Eurovision night is the live grand-final broadcast of the Eurovision Song Contest, held on a Saturday in mid-May each year. In {year} the grand final airs on ",
+        "bodyBefore": "Eurovision night is the live grand-final broadcast of the Eurovision Song Contest, held on a Saturday in mid-May each year. In {year} the grand final is on ",
         "bodyDate": "{finalDay}",
         "title": "What is Eurovision night?"
       }

@@ -34,6 +34,7 @@ export const STATS_FIELDS = [
   'recordSong',
   'noWinCountry', // most participations without a win: country (list on a tie)
   'noWinEntries', // … its participations
+  'countries', // countries that have ever competed (cancelled years excluded)
 ] as const;
 
 export type YearField = (typeof YEAR_FIELDS)[number];

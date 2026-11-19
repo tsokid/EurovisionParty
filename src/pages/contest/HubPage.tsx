@@ -1,3 +1,4 @@
+import { NotAnnounced, lineupAnnounced, notAnnouncedTitle } from './NotAnnounced';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
@@ -45,6 +46,8 @@ function HubBody({ hub }: { hub: Hub }) {
     { header: c.headers.semi, value: (e) => (e.semi ? c.values.semi(e.semi) : f.semisKnown ? c.values.direct : null) },
   ]);
   const winnerEntry = results ? finalists[0] : null;
+  // No entry with its artist and song yet: "not announced" and every country that ever competed.
+  const announced = lineupAnnounced(contest.entries);
 
   const glance: [string, string | number | null][] = [
     [c.glance.hostCity, f.city],
@@ -92,9 +95,15 @@ function HubBody({ hub }: { hub: Hub }) {
             <DataTable {...resultsTable} />
           </Section>
         ) : (
-          <Section id="entries" title={c.hub.lineup(f)}>
-            <DataTable {...lineupTable} />
-            <p><LocaleLink to={`${base}/songs`} className="text-euro-pink-light hover:underline">{c.hub.songsLink} →</LocaleLink></p>
+          <Section id="entries" title={announced ? c.hub.lineup(f) : notAnnouncedTitle(contest.year, locale)}>
+            {announced ? (
+              <>
+                <DataTable {...lineupTable} />
+                <p><LocaleLink to={`${base}/songs`} className="text-euro-pink-light hover:underline">{c.hub.songsLink} →</LocaleLink></p>
+              </>
+            ) : (
+              <NotAnnounced year={contest.year} locale={locale} />
+            )}
           </Section>
         )}
 

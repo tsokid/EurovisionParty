@@ -31,6 +31,8 @@ export interface CurrentContest {
   lineupSize: number;
   /** Countries in the grand final (0 until known). */
   finalists: number;
+  /** False until at least one entry has its artist and song. */
+  lineupAnnounced: boolean;
 }
 
 const cache = new WeakMap<SiteCurrentContest, CurrentContest>();
@@ -51,6 +53,8 @@ export function toCurrentContest(c: SiteCurrentContest): CurrentContest {
       stage: c.stage,
       lineupSize: c.entry_count,
       finalists: c.finalist_count,
+      // Snapshots written before announced_count existed: any entry counts.
+      lineupAnnounced: (c.announced_count ?? c.entry_count) > 0,
     };
     cache.set(c, cc);
   }

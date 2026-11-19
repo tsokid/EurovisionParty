@@ -142,8 +142,8 @@ export interface ArchiveCopy {
     lede: (f: ArchiveIndexFacts) => string;
     tableTitle: string;
     listName: string;
-    /** Link to the live contest's hub, above the table. */
-    liveLink: (year: number) => string;
+    /** Link to the featured contest (its hub, or its archive page), above the table. */
+    liveLink: (year: number, cityIn: string) => string;
     headers: { year: string; city: string; winner: string; song: string; points: string };
     cancelled: string;
     shared: string;
@@ -225,7 +225,7 @@ const en: ArchiveCopy = {
       `${f.count} contests, newest first. Pick a year for the full ranking, the semi-finals where there were any, and every song that competed.`,
     tableTitle: 'Every contest',
     listName: 'Past Eurovision Song Contests',
-    liveLink: (y) => `This year's contest: Eurovision ${y}`,
+    liveLink: (y, cityIn) => `Eurovision ${y} ${cityIn}`,
     headers: { year: 'Year', city: 'Host city', winner: 'Winner', song: 'Song', points: 'Points' },
     cancelled: 'Cancelled',
     shared: 'shared',
@@ -312,7 +312,7 @@ const el: ArchiveCopy = {
       `${f.count} διαγωνισμοί, από τον πιο πρόσφατο. Διαλέξτε χρονιά για την πλήρη κατάταξη, τους ημιτελικούς όπου υπήρξαν και όλα τα τραγούδια.`,
     tableTitle: 'Όλοι οι διαγωνισμοί',
     listName: 'Προηγούμενοι διαγωνισμοί Eurovision',
-    liveLink: (y) => `Ο φετινός διαγωνισμός: Eurovision ${y}`,
+    liveLink: (y, cityIn) => `Eurovision ${y} ${cityIn}`,
     headers: { year: 'Έτος', city: 'Πόλη', winner: 'Νικητής', song: 'Τραγούδι', points: 'Βαθμοί' },
     cancelled: 'Ακυρώθηκε',
     shared: 'ισοβαθμία',

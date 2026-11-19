@@ -20,7 +20,8 @@ import { countryName, hubCopy } from '../contest/content/hubCopy';
 import { byCountry, countryCell, numCell, songCell } from '../contest/hub';
 import { visibleTable } from '../contest/table';
 import LocaleLink from '../../components/seo/LocaleLink';
-import { hubPath } from '../../lib/seo/dynamicPages';
+import { archivePath, hubPath } from '../../lib/seo/dynamicPages';
+import { NotAnnounced, lineupAnnounced } from '../contest/NotAnnounced';
 import { contestTexts } from './content/contestText';
 import { usePageContent } from '../../lib/cms/usePageContent';
 import ExtraBlocks from '../../components/cms/ExtraBlocks';
@@ -45,9 +46,10 @@ const reload = () => window.location.reload();
 function Lineup({ cc, locale, c }: { cc: CurrentContest; locale: Locale; c: PredictionsText['sections']['lineup'] }) {
   const h = hubCopy[locale].headers;
   const file = useContent<ContestSnapshot>(contestPath(cc.year));
-  // Crawlable link to the live hub, in every state of the block.
+  // Crawlable link to the featured contest's page (its archive page once archived: no redirect hop).
+  const contestHref = cc.stage === 'archived' ? archivePath(cc.year, cc.citySlug) : hubPath(cc.year);
   const hubLink = (
-    <p><LocaleLink to={hubPath(cc.year)} className="text-euro-pink-light hover:underline">{c.hubLink} →</LocaleLink></p>
+    <p><LocaleLink to={contestHref} className="text-euro-pink-light hover:underline">{c.hubLink} →</LocaleLink></p>
   );
 
   if (file.status !== 'ready') {
@@ -61,10 +63,11 @@ function Lineup({ cc, locale, c }: { cc: CurrentContest; locale: Locale; c: Pred
   }
   const entries = file.data.entries;
 
-  if (entries.length === 0) {
+  // Not announced yet (no entry has its artist and song): every country that ever competed.
+  if (!lineupAnnounced(entries)) {
     return (
       <Section id="lineup" title={c.title}>
-        <p>{c.empty}</p>
+        <NotAnnounced year={cc.year} locale={locale} />
         {hubLink}
       </Section>
     );

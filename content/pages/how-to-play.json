@@ -62,7 +62,7 @@
     "related": {
       "items": [
         {
-          "blurb": "Μηχανική Top 5 και Worst 5, βαθμολογία και η φετινή λίστα χωρών.",
+          "blurb": "Μηχανική Top 5 και Worst 5, βαθμολογία και η λίστα χωρών της Eurovision {current.year}.",
           "href": "/eurovision-predictions",
           "title": "Προβλέψεις"
         },
@@ -293,7 +293,7 @@
     "related": {
       "items": [
         {
-          "blurb": "Top 5 and Worst 5 mechanics, scoring, and this year's country list.",
+          "blurb": "Top 5 and Worst 5 mechanics, scoring, and the Eurovision {current.year} country list.",
           "href": "/eurovision-predictions",
           "title": "Predictions explained"
         },

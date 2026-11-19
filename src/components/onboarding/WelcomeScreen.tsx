@@ -44,7 +44,10 @@ export default function WelcomeScreen({
   const { t } = useTranslation();
   const locale = useLocale();
   // The live contest's facts from site.json (bundled on the client: always ready).
-  const live = contestTexts(useCurrentContest())[locale];
+  const contest = useCurrentContest();
+  const live = contestTexts(contest)[locale];
+  // The pulsing "live" dot only while the featured contest is running.
+  const running = contest.stage === 'current';
 
   return (
     <div className="min-h-[calc(100svh-5rem)] sm:min-h-[calc(100svh-6rem)] bg-euro-gradient flex flex-col items-center px-4 sm:px-6 py-3 sm:py-5 lg:py-8 relative overflow-hidden">
@@ -111,7 +114,7 @@ export default function WelcomeScreen({
 
             {/* Location pill */}
             <div className="mt-2 sm:mt-4 inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-xs sm:text-sm font-semibold text-white/65">
-              <span className="w-1.5 h-1.5 rounded-full bg-euro-green shadow-[0_0_8px_#34d399] animate-pulse" />
+              {running && <span className="w-1.5 h-1.5 rounded-full bg-euro-green shadow-[0_0_8px_#34d399] animate-pulse" />}
               {t('welcome.location', { city: live.city, month: live.finalMonth, year: live.year, flag: live.flag })}
             </div>
           </motion.div>

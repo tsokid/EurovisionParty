@@ -16,7 +16,7 @@
       "body": "Στήσε μια βραδιά Eurovision σε 60 δευτερόλεπτα. Φτιάξε ιδιωτικό δωμάτιο, μοιράσου τον κωδικό και βάλε τους φίλους σου στο παιχνίδι πριν από το πρώτο postcard.",
       "primaryLabel": "Δημιουργία δωματίου",
       "secondaryLabel": "Πώς παίζεις",
-      "title": "Δοκίμασε το Eurovision Games απόψε"
+      "title": "Δοκίμασε το Eurovision Games"
     },
     "ebu": {
       "body": "Το Eurovision Games είναι ένα ανεξάρτητο fan project. Δεν συνδεόμαστε με την European Broadcasting Union, τον Διαγωνισμό Τραγουδιού Eurovision, τον φιλοξενούντα ραδιοτηλεοπτικό φορέα ή οποιονδήποτε συμμετέχοντα φορέα, ούτε υποστηριζόμαστε ή χρηματοδοτούμαστε από αυτούς. Η λέξη «Eurovision» είναι εμπορικό σήμα της EBU· τη χρησιμοποιούμε περιγραφικά μόνο για να υποδείξουμε τη μετάδοση που το παιχνίδι αυτό έχει σχεδιαστεί να συνοδεύει. Ονόματα χωρών, τίτλοι τραγουδιών, ονόματα καλλιτεχνών και σχετικά σήματα παραμένουν ιδιοκτησία των αντίστοιχων κατόχων τους.",
@@ -96,7 +96,7 @@
           "bold": "Προβλέψεις",
           "lead": " — φτιάξε το Top 5 και το Worst 5 σου· κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία. Οι πόντοι στοιβάζονται καθώς έρχονται τα αποτελέσματα. Δες ",
           "linkHref": "/eurovision-predictions",
-          "linkLabel": "τη φετινή σελίδα προβλέψεων",
+          "linkLabel": "τη σελίδα προβλέψεων της Eurovision {current.year}",
           "tail": "."
         },
         {
@@ -164,7 +164,7 @@
       "body": "Set up a watch party in 60 seconds. Spin up a private room, share the code, and have your friends locked in before the first postcard.",
       "primaryLabel": "Create room",
       "secondaryLabel": "How to play",
-      "title": "Try Eurovision Games tonight"
+      "title": "Try Eurovision Games"
     },
     "ebu": {
       "body": "Eurovision Games is an independent fan project. We are not affiliated with, endorsed by, or sponsored by the European Broadcasting Union, the Eurovision Song Contest, the host broadcaster, or any participating broadcaster. \"Eurovision\" is a trademark of the EBU; we use it descriptively only to indicate the broadcast this game is designed to accompany. Country names, song titles, artist names, and related marks remain the property of their respective owners.",
@@ -244,7 +244,7 @@
           "bold": "Predictions",
           "lead": " — build your Top 5 and Worst 5; they lock automatically when voting opens. Points stack as the results come in. See ",
           "linkHref": "/eurovision-predictions",
-          "linkLabel": "this year's predictions page",
+          "linkLabel": "the Eurovision {current.year} predictions page",
           "tail": "."
         },
         {

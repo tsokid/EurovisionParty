@@ -119,7 +119,7 @@ describe('buildSnapshotFiles', () => {
     // Sorted keys, 2-space indent, trailing newline.
     const site = a['content/site.json'];
     expect(site.endsWith('}\n')).toBe(true);
-    expect(site.startsWith('{\n  "current": {\n    "city": "Vienna",\n')).toBe(true);
+    expect(site.startsWith('{\n  "current": {\n    "announced_count": 2,\n    "city": "Vienna",\n')).toBe(true);
     expect(site).toContain('\n  "current_year": 2026,\n  "generated_at": "2026-11-01T12:00:00Z",\n  "live_stage": "finalized"\n}\n');
     const keys = Object.keys(JSON.parse(a['content/contests/2025.json']));
     expect(keys).toEqual([...keys].sort());
@@ -150,7 +150,7 @@ describe('buildSnapshotFiles', () => {
     expect(ma.participations).toEqual([]);
   });
 
-  it('site.json current_year is the live contest', () => {
+  it('site.json current_year is the featured contest (the newest)', () => {
     const files = buildSnapshotFiles(input());
     const site = JSON.parse(files['content/site.json']) as SiteSnapshot;
     expect(site).toEqual({
@@ -166,34 +166,24 @@ describe('buildSnapshotFiles', () => {
         host: { iso: 'AT', name_en: 'Austria', name_el: 'Αυστρία' },
         entry_count: 2,
         finalist_count: 1,
+        announced_count: 2,
       },
     });
 
-    // 'current' counts as live too, even when it is not the latest year.
-    const current = buildSnapshotFiles({
+    // The featured contest is the newest one, whatever the stages (owner,
+    // 19 Nov 2026): adding a contest moves the site to it at once...
+    const added = buildSnapshotFiles({
       ...input(),
       contests: [contest(2025, 'Basel', 'AT', 'current'), contest(2026, 'Vienna', 'AT', 'upcoming'), ...contests.filter((c) => c.year < 2025)],
     });
-    expect(JSON.parse(current['content/site.json'])).toMatchObject({
-      current_year: 2025,
-      live_stage: 'current',
-      current: { year: 2025, city: 'Basel', stage: 'current', entry_count: 3, finalist_count: 3 },
-    });
+    expect(JSON.parse(added['content/site.json'])).toMatchObject({ current_year: 2026, live_stage: 'upcoming' });
 
-    // Archiving the live year does not move the site to an upcoming one (078).
+    // ...and archiving the newest contest leaves it featured.
     const afterArchive = buildSnapshotFiles({
       ...input(),
-      contests: [contest(2026, 'Vienna', 'AT', 'archived'), contest(2027, 'Burgas', 'BG', 'upcoming'), ...contests.filter((c) => c.year < 2026)],
+      contests: [contest(2026, 'Vienna', 'AT', 'archived'), ...contests.filter((c) => c.year < 2026)],
     });
     expect(JSON.parse(afterArchive['content/site.json'])).toMatchObject({ current_year: 2026, live_stage: 'archived' });
-
-    // Two live contests break the one_live_contest invariant.
-    expect(() =>
-      buildSnapshotFiles({
-        ...input(),
-        contests: [contest(2025, 'Basel', 'AT', 'current'), contest(2026, 'Vienna', 'AT', 'finalized'), ...contests.filter((c) => c.year < 2025)],
-      }),
-    ).toThrow(/live/);
   });
 
   it('entries carry Greek names', () => {

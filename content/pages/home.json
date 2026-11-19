@@ -14,7 +14,7 @@
         "nightTitle": "Βραδιά Eurovision",
         "partyDesc": "Πλήρης οδηγός διοργάνωσης με ροή της βραδιάς.",
         "partyTitle": "Πάρτι Eurovision",
-        "predictionsDesc": "Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.",
+        "predictionsDesc": "Φόρμα Top 5 / Worst 5 και οι συμμετοχές της Eurovision {current.year}.",
         "predictionsTitle": "Παιχνίδι προβλέψεων",
         "triviaDesc": "10 ενδεικτικές ερωτήσεις και πώς λειτουργούν οι μονομαχίες.",
         "triviaTitle": "Trivia Eurovision"
@@ -43,7 +43,7 @@
         "nightTitle": "Eurovision night",
         "partyDesc": "Full hosting playbook with run-of-show.",
         "partyTitle": "Eurovision party",
-        "predictionsDesc": "Top 5 / Worst 5 format and this year's line-up.",
+        "predictionsDesc": "Top 5 / Worst 5 format and the Eurovision {current.year} line-up.",
         "predictionsTitle": "Predictions game",
         "triviaDesc": "10 sample questions and how duels work.",
         "triviaTitle": "Eurovision trivia"

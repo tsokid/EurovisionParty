@@ -26,7 +26,8 @@ function contest(year: number, city_slug: string, stage: ContestRow['stage']): C
 }
 
 const archived2026 = [contest(2025, 'basel', 'archived'), contest(2026, 'vienna', 'archived'), contest(2027, 'burgas', 'current')];
-const live2026 = [contest(2025, 'basel', 'archived'), contest(2026, 'vienna', 'finalized'), contest(2027, 'burgas', 'upcoming')];
+// 2026 featured (the newest contest), its hub live.
+const live2026 = [contest(2025, 'basel', 'archived'), contest(2026, 'vienna', 'finalized')];
 
 // The hub shape only: static flat-slug redirects such as /eurovision-2026-songs
 // (Task 9) share the prefix but are not generated.
@@ -56,15 +57,14 @@ describe('generatedRedirects', () => {
     ]);
   });
 
-  it('live hub: the site year (siteContest) unless it is archived', () => {
+  it('live hub: the featured contest (the newest) unless it is archived', () => {
     const live = (cs: ContestRow[]) =>
       generatedRedirects(cs).filter((r) => !r.destination.includes('past-contests')).map((r) => r.destination);
     expect(live(live2026)).toEqual(['/el/eurovision-2026', '/en/eurovision-2026', '/el/eurovision-2026/:sub', '/en/eurovision-2026/:sub']);
-    // Archiving leaves the site on the archived year until the next contest starts: no hub (078).
-    expect(live([contest(2025, 'basel', 'archived'), contest(2026, 'x', 'upcoming'), contest(2027, 'y', 'upcoming')])).toEqual([]);
-    expect(live([contest(2026, 'vienna', 'archived'), contest(2027, 'burgas', 'upcoming')])).toEqual([]);
-    // Nothing started yet: the latest upcoming.
-    expect(live([contest(2026, 'x', 'upcoming'), contest(2027, 'y', 'upcoming')])[0]).toBe('/el/eurovision-2027');
+    // Adding a contest makes it featured at once, whatever its stage.
+    expect(live([contest(2026, 'vienna', 'archived'), contest(2027, 'burgas', 'upcoming')])[1]).toBe('/en/eurovision-2027');
+    expect(live([contest(2026, 'vienna', 'finalized'), contest(2027, 'burgas', 'upcoming')])[1]).toBe('/en/eurovision-2027');
+    // The newest contest archived: no hub.
     expect(live([contest(2025, 'basel', 'archived')])).toEqual([]);
   });
 

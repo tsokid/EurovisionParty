@@ -83,8 +83,8 @@ export const FIRST_SEMI_YEAR = 2004;
 const byIso = (a: { iso: string }, b: { iso: string }) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0);
 
 /**
- * The site's current year (siteContest: the live contest, else the latest
- * started one, else the latest) plus that contest's facts (`current`).
+ * The site's featured contest (siteContest: the newest one) plus its facts
+ * (`current`).
  */
 function siteSnapshot(
   contests: ContestRow[],
@@ -108,6 +108,7 @@ function siteSnapshot(
       host: host ? { iso: host.iso, name_en: host.name_en, name_el: host.name_el } : null,
       entry_count: entries.length,
       finalist_count: entries.filter((e) => e.in_final).length,
+      announced_count: entries.filter((e) => (e.artist ?? '').trim() !== '' && (e.song ?? '').trim() !== '').length,
     },
     generated_at,
   };

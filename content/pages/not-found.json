@@ -46,7 +46,7 @@
         "title": "Βραδιά Eurovision"
       },
       "predictions": {
-        "blurb": "Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.",
+        "blurb": "Φόρμα Top 5 / Worst 5 και οι συμμετοχές της Eurovision {current.year}.",
         "title": "Παιχνίδι προβλέψεων"
       },
       "scoring": {
@@ -106,7 +106,7 @@
         "title": "Eurovision night"
       },
       "predictions": {
-        "blurb": "Top 5 / Worst 5 format and this year's line-up.",
+        "blurb": "Top 5 / Worst 5 format and the Eurovision {current.year} line-up.",
         "title": "Predictions game"
       },
       "scoring": {

@@ -86,6 +86,13 @@ describe('fact values', () => {
     expect(factNeeds({ a: 'no tokens' })).toEqual({ any: false, countries: false });
     expect(factNeeds({ a: ['{stats.topWins}'] })).toEqual({ any: true, countries: false });
     expect(factNeeds({ a: '{stats.noWinCountry}' })).toEqual({ any: true, countries: true });
+    expect(factNeeds({ a: '{stats.countries}' })).toEqual({ any: true, countries: true });
+  });
+
+  it('stats.countries counts the countries that have ever competed', () => {
+    const c = (iso: string, participations: number) => ({ iso, name_en: iso, name_el: iso, participations, wins: 0, best_place: null, indexable: participations >= 3 });
+    const withCountries = factValues({ ...t, countries: { a: c('AT', 60), b: c('MA', 1), z: c('XX', 0) } }, 'en');
+    expect(resolveFacts('{stats.countries} countries', withCountries)).toBe('2 countries');
   });
 
   it('every published page doc resolves all its tokens in both locales', () => {

@@ -1,3 +1,4 @@
+import { NotAnnounced, lineupAnnounced, notAnnouncedTitle } from './NotAnnounced';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
@@ -39,9 +40,15 @@ function SongsBody({ hub }: { hub: Hub }) {
       <PageHero crumbs={crumbs} chip={c.chip[contest.stage]} chipTone="gold" title={c.songs.h1(f)} lede={c.songs.lede(f)} />
 
       <ContentLayout wide>
-        <Section id="songs" title={c.songs.listTitle(f)}>
-          <DataTable {...table} />
-        </Section>
+        {lineupAnnounced(contest.entries) ? (
+          <Section id="songs" title={c.songs.listTitle(f)}>
+            <DataTable {...table} />
+          </Section>
+        ) : (
+          <Section id="songs" title={notAnnouncedTitle(contest.year, locale)}>
+            <NotAnnounced year={contest.year} locale={locale} />
+          </Section>
+        )}
 
         <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub, 'songs')} />
       </ContentLayout>

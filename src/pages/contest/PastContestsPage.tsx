@@ -10,7 +10,7 @@ import { useLocale } from '../../lib/seo/LocaleContext';
 import { useContent } from '../../lib/seo/useContent';
 import { absoluteUrl } from '../../lib/seo/registry';
 import { ARCHIVE_INDEX_PATH, archivePath, hubPath } from '../../lib/seo/dynamicPages';
-import { useCurrentYear } from '../../lib/currentContest';
+import { useCurrentContest } from '../../lib/currentContest';
 import LocaleLink from '../../components/seo/LocaleLink';
 import type { Locale } from '../../lib/seo/locale';
 import { NotFoundPage } from '../NotFoundPage';
@@ -26,7 +26,11 @@ const winners = (c: IndexedContest): IndexWinner[] => (c.winner ? [c.winner, ...
 function PastContestsBody({ index, locale }: { index: ContestIndex; locale: Locale }) {
   const a = archiveCopy[locale];
   const x = a.index;
-  const liveYear = useCurrentYear();
+  // The featured contest: its hub while it is live, its archive page once archived (no redirect hop).
+  const featured = useCurrentContest();
+  const featuredHref =
+    featured.stage === 'archived' ? archivePath(featured.year, featured.citySlug) : hubPath(featured.year);
+  const featuredIn = cityName(locale, featured.citySlug, featured.city).in;
   const contests = archivedContests(index).reverse(); // newest first
   if (contests.length === 0) return <NotFoundPage />;
   const facts = { first: contests[contests.length - 1].year, last: contests[0].year, count: contests.length };
@@ -79,7 +83,7 @@ function PastContestsBody({ index, locale }: { index: ContestIndex; locale: Loca
       <PageHero crumbs={crumbs} chip={a.chip.archive} chipTone="gold" title={x.h1} lede={x.lede(facts)} />
       <ContentLayout wide>
         <p>
-          <LocaleLink to={hubPath(liveYear)} className="text-euro-pink-light hover:underline">{x.liveLink(liveYear)} →</LocaleLink>
+          <LocaleLink to={featuredHref} className="text-euro-pink-light hover:underline">{x.liveLink(featured.year, featuredIn)} →</LocaleLink>
         </p>
         <Section id="contests" title={x.tableTitle}>
           <DataTable {...table} />

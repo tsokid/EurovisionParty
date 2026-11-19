@@ -119,11 +119,17 @@ export type SiteCurrentContest = {
   entry_count: number;
   /** Countries in the grand final (0 until known). */
   finalist_count: number;
+  /**
+   * Entries whose artist and song are both known. 0: the line-up is not
+   * announced yet (pages say so and list every country that ever competed).
+   * Optional for snapshots written before it existed.
+   */
+  announced_count?: number;
 };
 
 /** content/site.json. */
 export type SiteSnapshot = {
-  /** The contest in stage current or finalized (else the latest started one, else the latest); see siteYear.ts. */
+  /** The featured contest: the newest one, whatever its stage; see siteYear.ts. */
   current_year: number;
   /** That contest's stage. */
   live_stage: ContestStage;

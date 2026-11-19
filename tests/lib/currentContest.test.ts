@@ -27,6 +27,7 @@ describe('live contest from site.json (snapshot: current_year 2026)', () => {
       stage: 'finalized',
       lineupSize: 35,
       finalists: 25,
+      lineupAnnounced: true,
     });
   });
 

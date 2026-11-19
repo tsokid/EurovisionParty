@@ -15,7 +15,8 @@ export type FactTables = { contests: ContestIndex; countries: CountryIndex | nul
 /** What resolving a value needs: any fact tokens at all, and whether one needs countries/index.json. */
 export type FactNeeds = { any: boolean; countries: boolean };
 
-const needsCountries = (f: Fact) => (f.scope === 'stats' ? f.field.startsWith('noWin') : f.field === 'host' && f.scope !== 'current');
+const needsCountries = (f: Fact) =>
+  f.scope === 'stats' ? f.field.startsWith('noWin') || f.field === 'countries' : f.field === 'host' && f.scope !== 'current';
 
 function* strings(v: unknown): Generator<string> {
   if (typeof v === 'string') yield v;
@@ -148,6 +149,7 @@ export function factValues(t: FactTables, locale: Locale): (fact: Fact) => strin
         s.noWinCountry = joinList(winless.filter((c) => c.participations === most).map(name).sort(), locale);
         s.noWinEntries = String(most);
       }
+      s.countries = String(Object.values(t.countries).filter((c) => c.participations > 0).length);
     }
     return s;
   }

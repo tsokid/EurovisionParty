@@ -6,7 +6,7 @@
       "winners": "Νικητές"
     },
     "cta": {
-      "body": "Κλείδωσε το Top 5 σου πριν ανοίξει η ψηφοφορία, σκόραρε ζωντανά με βάση τις επίσημες ψήφους κριτικής επιτροπής + televote και δες αν μπορείς να μαντέψεις τον φετινό πρωταθλητή πριν από όλους.",
+      "body": "Κλείδωσε το Top 5 σου πριν ανοίξει η ψηφοφορία, σκόραρε ζωντανά με βάση τις επίσημες ψήφους κριτικής επιτροπής + televote και δες αν μπορείς να μαντέψεις τον νικητή της Eurovision {current.year} πριν από όλους.",
       "primary": "Φτιάξε δωμάτιο",
       "secondary": "Πώς παίζεται",
       "title": "Μάντεψε τον επόμενο νικητή"
@@ -57,7 +57,7 @@
       "heading": "Συνέχισε να διαβάζεις",
       "items": [
         {
-          "blurb": "Φόρμα Top 5 / Worst 5 και οι φετινές συμμετοχές.",
+          "blurb": "Φόρμα Top 5 / Worst 5 και οι συμμετοχές της Eurovision {current.year}.",
           "href": "/eurovision-predictions",
           "title": "Παιχνίδι προβλέψεων"
         },
@@ -152,7 +152,7 @@
       "winners": "Winners"
     },
     "cta": {
-      "body": "Lock your Top 5 before voting opens, score live against the official jury + televote, and see if you can pick this year's champion before everyone else.",
+      "body": "Lock your Top 5 before voting opens, score live against the official jury + televote, and see if you can pick the Eurovision {current.year} winner before everyone else.",
       "primary": "Create room",
       "secondary": "How to play",
       "title": "Predict the next winner"
@@ -204,7 +204,7 @@
       "heading": "Keep reading",
       "items": [
         {
-          "blurb": "Top 5 / Worst 5 format and this year's line-up.",
+          "blurb": "Top 5 / Worst 5 format and the Eurovision {current.year} line-up.",
           "href": "/eurovision-predictions",
           "title": "Predictions game"
         },
