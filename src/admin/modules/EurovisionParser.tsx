@@ -11,6 +11,7 @@ import { FinalizeCard } from "./parser/FinalizeCard";
 import { ResetContestCard } from "./parser/ResetContestCard";
 import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
+import { GamePhaseCard } from "./parser/GamePhaseCard";
 
 export default function EurovisionParser() {
   // The page opens on the game year (the contest new rooms play), not on the
@@ -75,10 +76,10 @@ export default function EurovisionParser() {
           </select>
         </h2>
         <p className="text-xs text-white/50 mt-1">
-          Parse, manual ranking and Finalize below all act on {year} and its rooms only.
+          Game phase, parse, manual ranking and Finalize below all act on {year} and its rooms only.
         </p>
         <p className="text-sm text-white/60 mt-1">
-          Manual host control with cron fallbacks. Each parser has its own
+          Parsing only fetches data. You move the rooms with Game phase and Finalize. Each parser has its own
           schedule (start, end, poll interval) editable below — all times in
           Athens (Europe/Athens) timezone.
         </p>
@@ -100,6 +101,7 @@ export default function EurovisionParser() {
         </div>
       )}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <GamePhaseCard year={year} />
         <ParticipantsCard
           job={jobs.participants}
           recentRun={lastParticipantsRun}

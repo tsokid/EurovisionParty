@@ -2,7 +2,7 @@
 // At-a-glance KPI of where every active room currently sits in the
 // game phase progression. Used to verify the parser triggers landed
 // each room in the expected phase, and to spot stragglers that need
-// manual advancement (the Room Phases module handles bulk flipping).
+// manual advancement (the Game phase card on the Parser page moves a year's rooms).
 
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
@@ -261,7 +261,7 @@ export default function PhaseMonitor() {
           <p className="text-sm font-bold text-amber-300 mb-2">
             ⚠️ {stragglers.length} room{stragglers.length === 1 ? "" : "s"} not in expected phase
             <span className="text-white/55 font-normal ml-1">
-              (use Room Phases to bulk-advance)
+              (use Game phase on the Parser page)
             </span>
           </p>
           <ul className="text-xs sm:text-sm text-white/80 space-y-0.5 max-h-48 overflow-y-auto">

@@ -251,3 +251,27 @@ export async function fetchParticipants(
   const entries = primary.httpStatus === 200 ? extractEurovision(primary.html) : [];
   return { entries, httpStatus: primary.httpStatus, source: 'eurovision' };
 }
+
+// ---------------------------------------------------------------------------
+// participantsProblem — the write gate for a participants parse (owner rule
+// C, 19 Nov 2026). The game takes only the grand-final line-up, so a parse is
+// blocked, with nothing written, unless it looks like one: 20–27 countries,
+// each with an artist and a song. Before the semi-finals the official
+// grand-final page lists every entrant without songs (2027 on 19 Nov 2026:
+// 35 countries, no artists), which this refuses. Countries the page names
+// that have no ISO are dropped by the extractor (page titles share the
+// markup); the count check catches a line-up that loses one.
+// ---------------------------------------------------------------------------
+export const MIN_FINALISTS = 20;
+export const MAX_FINALISTS = 27;
+
+/** Why this participants parse must not be written, or null when it may. */
+export function participantsProblem(entries: ParsedEntry[]): string | null {
+  const n = entries.length;
+  if (n < MIN_FINALISTS || n > MAX_FINALISTS) {
+    return `${n} countries parsed; a grand final has ${MIN_FINALISTS}-${MAX_FINALISTS} (line-up not final yet?)`;
+  }
+  const missing = entries.filter((e) => e.artist.trim() === '' || e.song.trim() === '').map((e) => e.iso);
+  if (missing.length > 0) return `no artist or song for ${missing.join(', ')}`;
+  return null;
+}

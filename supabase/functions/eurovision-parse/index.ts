@@ -17,6 +17,7 @@ import {
   fetchHtml,
   fetchParticipants,
   type ParsedEntry,
+  participantsProblem,
 } from "./parse.ts";
 import { parseResults, type ResultRow } from "./parseResults.ts";
 import { participantRows, resultRows, semiRows, type SemiEntryRow } from "./rows.ts";
@@ -197,6 +198,13 @@ async function handleParticipants(): Promise<Response> {
       if (entries.length === 0) {
         runStatus = "blocked";
         err = `no participants extracted from ${sourceUrl} (http ${httpStatus})`;
+      } else {
+        // Rule C: an incomplete or non-final line-up is never written.
+        const problem = participantsProblem(entries);
+        if (problem) {
+          runStatus = "blocked";
+          err = problem;
+        }
       }
     } catch (e) {
       runStatus = "error";

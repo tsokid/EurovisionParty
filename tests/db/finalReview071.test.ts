@@ -1,6 +1,6 @@
 // @vitest-environment node
 // Final-review fixes in 071: I1 (demoted rows never count), I3 (phase
-// triggers year-scoped), M4 (semis keep an existing source), M6 (archive
+// triggers year-scoped; mostly superseded by 079), M4 (semis keep an existing source), M6 (archive
 // requires Y+1 upcoming; superseded by 078).
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import type { PGlite } from '@electric-sql/pglite';
@@ -141,22 +141,8 @@ describe('071 final-review fixes', () => {
 
   // ── I3 ────────────────────────────────────────────────────────────────
   describe('I3 phase triggers only touch rooms of the job year', () => {
-    it('participants done for 2027 opens predictions in 2027 rooms only', async () => {
-      await db.exec(`update public.parse_jobs set status = 'done' where year = 2027 and kind = 'participants'`);
-      expect(await phase(R27)).toBe('predictions_open');
-      expect(await phase(R26)).toBe('pre_night');
-      expect(await notified(R27)).toBe(1);
-      expect(await notified(R26)).toBe(0);
-    });
-
-    it('results running for 2027 opens voting in 2027 rooms only', async () => {
-      await db.exec(`update public.rooms set phase = 'predictions_open' where true`);
-      await db.exec(`update public.parse_jobs set status = 'running' where year = 2027 and kind = 'results'`);
-      expect(await phase(R27)).toBe('voting_live');
-      expect(await phase(R26)).toBe('predictions_open');
-      expect(await notified(R26)).toBe(0);
-    });
-
+    // Participants done / results running no longer move rooms (079, the
+    // owner's phase buttons); see tests/db/ownerPhases079.test.ts.
     it('results finalized for 2027 moves 2027 rooms to final only', async () => {
       await db.exec(`update public.rooms set phase = 'voting_live' where true`);
       await db.exec(`update public.parse_jobs set status = 'finalized' where year = 2027 and kind = 'results'`);
@@ -165,7 +151,7 @@ describe('071 final-review fixes', () => {
       expect(await notified(R26)).toBe(0);
     });
 
-    it('helpers take the year, the zero-argument ones are gone, and no client role can call them', async () => {
+    it('the remaining helper takes the year and no client role can call it (079 dropped the others)', async () => {
       const r = await db.query<Row>(
         `select p.oid::regprocedure::text as sig,
                 has_function_privilege('anon', p.oid, 'execute') as anon,
@@ -177,8 +163,6 @@ describe('071 final-review fixes', () => {
       );
       expect(r.rows).toEqual([
         { sig: '_move_all_to_final(integer)', anon: false, authed: false },
-        { sig: '_open_predictions_for_pre_night_rooms(integer)', anon: false, authed: false },
-        { sig: '_open_voting_for_predictions_rooms(integer)', anon: false, authed: false },
       ]);
     });
 
