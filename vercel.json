@@ -1653,6 +1653,40 @@
       "source": "/eurovision-2026/:sub(schedule|semifinals|songs)",
       "destination": "/en/past-contests/eurovision-2026-vienna",
       "permanent": true
+    },
+    {
+      "source": "/eurovision-2027",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "(?<l>.*\\bel\\b.*)"
+        }
+      ],
+      "destination": "/el/eurovision-2027",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2027",
+      "destination": "/en/eurovision-2027",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2027/:sub(schedule|semifinals|songs)",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "(?<l>.*\\bel\\b.*)"
+        }
+      ],
+      "destination": "/el/eurovision-2027/:sub",
+      "permanent": true
+    },
+    {
+      "source": "/eurovision-2027/:sub(schedule|semifinals|songs)",
+      "destination": "/en/eurovision-2027/:sub",
+      "permanent": true
     }
   ],
   "rewrites": [

@@ -1,23 +1,23 @@
 {
   "current": {
-    "city": "Vienna",
-    "city_slug": "vienna",
+    "city": "Burgas",
+    "city_slug": "burgas",
     "dates": {
-      "final": "2026-05-16",
-      "semi1": "2026-05-12",
-      "semi2": "2026-05-14"
+      "final": "2027-05-15",
+      "semi1": "2027-05-11",
+      "semi2": "2027-05-13"
     },
-    "entry_count": 35,
-    "finalist_count": 25,
+    "entry_count": 0,
+    "finalist_count": 0,
     "host": {
-      "iso": "AT",
-      "name_el": "Αυστρία",
-      "name_en": "Austria"
+      "iso": "BG",
+      "name_el": "Βουλγαρία",
+      "name_en": "Bulgaria"
     },
-    "stage": "archived",
-    "year": 2026
+    "stage": "current",
+    "year": 2027
   },
-  "current_year": 2026,
-  "generated_at": "2026-11-19T11:53:55Z",
-  "live_stage": "archived"
+  "current_year": 2027,
+  "generated_at": "2026-11-20T12:59:45Z",
+  "live_stage": "current"
 }
