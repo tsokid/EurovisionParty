@@ -5,7 +5,7 @@
     "iso": "AL",
     "name_el": "Αλβανία",
     "name_en": "Albania",
-    "participations": 23,
+    "participations": 22,
     "wins": 0
   },
   "andorra": {
@@ -23,7 +23,7 @@
     "iso": "AM",
     "name_el": "Αρμενία",
     "name_en": "Armenia",
-    "participations": 19,
+    "participations": 18,
     "wins": 0
   },
   "australia": {
@@ -32,7 +32,7 @@
     "iso": "AU",
     "name_el": "Αυστραλία",
     "name_en": "Australia",
-    "participations": 12,
+    "participations": 11,
     "wins": 0
   },
   "austria": {
@@ -41,7 +41,7 @@
     "iso": "AT",
     "name_el": "Αυστρία",
     "name_en": "Austria",
-    "participations": 59,
+    "participations": 58,
     "wins": 3
   },
   "azerbaijan": {
@@ -50,7 +50,7 @@
     "iso": "AZ",
     "name_el": "Αζερμπαϊτζάν",
     "name_en": "Azerbaijan",
-    "participations": 19,
+    "participations": 18,
     "wins": 1
   },
   "belarus": {
@@ -68,7 +68,7 @@
     "iso": "BE",
     "name_el": "Βέλγιο",
     "name_en": "Belgium",
-    "participations": 68,
+    "participations": 67,
     "wins": 1
   },
   "bosnia-and-herzegovina": {
@@ -86,7 +86,7 @@
     "iso": "BG",
     "name_el": "Βουλγαρία",
     "name_en": "Bulgaria",
-    "participations": 16,
+    "participations": 15,
     "wins": 1
   },
   "croatia": {
@@ -95,7 +95,7 @@
     "iso": "HR",
     "name_el": "Κροατία",
     "name_en": "Croatia",
-    "participations": 32,
+    "participations": 31,
     "wins": 0
   },
   "cyprus": {
@@ -104,7 +104,7 @@
     "iso": "CY",
     "name_el": "Κύπρος",
     "name_en": "Cyprus",
-    "participations": 43,
+    "participations": 42,
     "wins": 0
   },
   "czechia": {
@@ -113,7 +113,7 @@
     "iso": "CZ",
     "name_el": "Τσεχία",
     "name_en": "Czechia",
-    "participations": 15,
+    "participations": 14,
     "wins": 0
   },
   "denmark": {
@@ -122,7 +122,7 @@
     "iso": "DK",
     "name_el": "Δανία",
     "name_en": "Denmark",
-    "participations": 55,
+    "participations": 54,
     "wins": 3
   },
   "estonia": {
@@ -131,7 +131,7 @@
     "iso": "EE",
     "name_el": "Εσθονία",
     "name_en": "Estonia",
-    "participations": 32,
+    "participations": 31,
     "wins": 1
   },
   "finland": {
@@ -140,7 +140,7 @@
     "iso": "FI",
     "name_el": "Φινλανδία",
     "name_en": "Finland",
-    "participations": 60,
+    "participations": 59,
     "wins": 1
   },
   "france": {
@@ -149,7 +149,7 @@
     "iso": "FR",
     "name_el": "Γαλλία",
     "name_en": "France",
-    "participations": 69,
+    "participations": 68,
     "wins": 5
   },
   "georgia": {
@@ -158,7 +158,7 @@
     "iso": "GE",
     "name_el": "Γεωργία",
     "name_en": "Georgia",
-    "participations": 19,
+    "participations": 18,
     "wins": 0
   },
   "germany": {
@@ -167,7 +167,7 @@
     "iso": "DE",
     "name_el": "Γερμανία",
     "name_en": "Germany",
-    "participations": 70,
+    "participations": 69,
     "wins": 2
   },
   "greece": {
@@ -176,7 +176,7 @@
     "iso": "GR",
     "name_el": "Ελλάδα",
     "name_en": "Greece",
-    "participations": 47,
+    "participations": 46,
     "wins": 1
   },
   "hungary": {
@@ -212,7 +212,7 @@
     "iso": "IL",
     "name_el": "Ισραήλ",
     "name_en": "Israel",
-    "participations": 49,
+    "participations": 48,
     "wins": 4
   },
   "italy": {
@@ -221,7 +221,7 @@
     "iso": "IT",
     "name_el": "Ιταλία",
     "name_en": "Italy",
-    "participations": 52,
+    "participations": 51,
     "wins": 3
   },
   "latvia": {
@@ -230,7 +230,7 @@
     "iso": "LV",
     "name_el": "Λετονία",
     "name_en": "Latvia",
-    "participations": 27,
+    "participations": 26,
     "wins": 1
   },
   "lithuania": {
@@ -239,7 +239,7 @@
     "iso": "LT",
     "name_el": "Λιθουανία",
     "name_en": "Lithuania",
-    "participations": 27,
+    "participations": 26,
     "wins": 0
   },
   "luxembourg": {
@@ -248,7 +248,7 @@
     "iso": "LU",
     "name_el": "Λουξεμβούργο",
     "name_en": "Luxembourg",
-    "participations": 41,
+    "participations": 40,
     "wins": 5
   },
   "malta": {
@@ -257,7 +257,7 @@
     "iso": "MT",
     "name_el": "Μάλτα",
     "name_en": "Malta",
-    "participations": 39,
+    "participations": 38,
     "wins": 0
   },
   "moldova": {
@@ -266,7 +266,7 @@
     "iso": "MD",
     "name_el": "Μολδαβία",
     "name_en": "Moldova",
-    "participations": 21,
+    "participations": 20,
     "wins": 0
   },
   "monaco": {
@@ -284,7 +284,7 @@
     "iso": "ME",
     "name_el": "Μαυροβούνιο",
     "name_en": "Montenegro",
-    "participations": 15,
+    "participations": 14,
     "wins": 0
   },
   "morocco": {
@@ -320,7 +320,7 @@
     "iso": "NO",
     "name_el": "Νορβηγία",
     "name_en": "Norway",
-    "participations": 65,
+    "participations": 64,
     "wins": 3
   },
   "poland": {
@@ -329,7 +329,7 @@
     "iso": "PL",
     "name_el": "Πολωνία",
     "name_en": "Poland",
-    "participations": 29,
+    "participations": 28,
     "wins": 0
   },
   "portugal": {
@@ -338,7 +338,7 @@
     "iso": "PT",
     "name_el": "Πορτογαλία",
     "name_en": "Portugal",
-    "participations": 58,
+    "participations": 57,
     "wins": 1
   },
   "romania": {
@@ -347,7 +347,7 @@
     "iso": "RO",
     "name_el": "Ρουμανία",
     "name_en": "Romania",
-    "participations": 25,
+    "participations": 24,
     "wins": 0
   },
   "russia": {
@@ -365,7 +365,7 @@
     "iso": "SM",
     "name_el": "Άγιος Μαρίνος",
     "name_en": "San Marino",
-    "participations": 17,
+    "participations": 16,
     "wins": 0
   },
   "serbia": {
@@ -374,7 +374,7 @@
     "iso": "RS",
     "name_el": "Σερβία",
     "name_en": "Serbia",
-    "participations": 19,
+    "participations": 18,
     "wins": 1
   },
   "serbia-and-montenegro": {
@@ -419,7 +419,7 @@
     "iso": "SE",
     "name_el": "Σουηδία",
     "name_en": "Sweden",
-    "participations": 66,
+    "participations": 65,
     "wins": 7
   },
   "switzerland": {
@@ -428,7 +428,7 @@
     "iso": "CH",
     "name_el": "Ελβετία",
     "name_en": "Switzerland",
-    "participations": 67,
+    "participations": 66,
     "wins": 3
   },
   "turkey": {
@@ -446,7 +446,7 @@
     "iso": "UA",
     "name_el": "Ουκρανία",
     "name_en": "Ukraine",
-    "participations": 22,
+    "participations": 21,
     "wins": 3
   },
   "united-kingdom": {
@@ -455,7 +455,7 @@
     "iso": "GB",
     "name_el": "Ηνωμένο Βασίλειο",
     "name_en": "United Kingdom",
-    "participations": 69,
+    "participations": 68,
     "wins": 5
   },
   "yugoslavia": {

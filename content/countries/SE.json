@@ -860,19 +860,6 @@
       "semi_points": 96,
       "song": "My System",
       "year": 2026
-    },
-    {
-      "artist": "",
-      "cancelled": false,
-      "city_slug": "burgas",
-      "final_place": null,
-      "points": null,
-      "qualified": null,
-      "semi": null,
-      "semi_place": null,
-      "semi_points": null,
-      "song": "",
-      "year": 2027
     }
   ],
   "related_iso": [],
