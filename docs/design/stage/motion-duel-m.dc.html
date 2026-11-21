@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>Motion · Αποτέλεσμα μονομαχίας — κινητό</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/b1e4c09d3fc83f2ff0a2c05a37204232">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Bebas+Neue&amp;display=swap">
+<style>
+body{margin:0}
+.dl-av{display:block;border-radius:50%;overflow:hidden;flex:none}
+.dl-av svg{display:block;width:100%;height:100%}
+.dl-chip{position:absolute;width:96px;height:26px;margin:-13px 0 0 -48px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:4px;font:700 12px/1 'Space Grotesk',sans-serif;white-space:nowrap;pointer-events:none;z-index:4}
+.gx-phone{position:relative;width:390px;overflow:hidden;border-radius:28px;border:1px solid rgba(255,255,255,.16);background:#0B0416;display:flex;flex-direction:column}
+.gx-bar{display:flex;align-items:center;gap:10px;height:60px;padding:0 12px 0 16px;background:#110721;border-bottom:1px solid rgba(255,255,255,.09);flex:none}
+.gx-code{display:flex;flex-direction:column;gap:2px;line-height:1;color:#F6F1FF}
+.gx-code small{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A497BC}
+.gx-step{display:flex;align-items:center;gap:10px;height:34px;padding:0 16px;background:#110721;border-bottom:1px solid rgba(255,255,255,.09);font-size:12px;color:#A497BC;flex:none}
+.gx-step b{color:#CFC4E3;font-weight:600}
+.mo-stage{position:relative;flex:1;overflow:hidden}
+.mo-dock{flex:none;height:68px;display:flex;align-items:center;gap:10px;padding:0 12px;background:#07020F;border-top:1px dashed rgba(255,255,255,.18);position:relative;z-index:8}
+.mo-dock .lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A497BC;line-height:1.2}
+.mo-switch{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;background:transparent;border:0;color:#CFC4E3;font:600 12px/1.25 'Space Grotesk',sans-serif;text-align:left;cursor:pointer}
+.mo-track{position:relative;width:38px;height:22px;flex:none;border-radius:11px;border:1px solid rgba(255,255,255,.16)}
+.mo-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#F6F1FF}
+.mo-skip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:#211238;color:#F6F1FF;font:600 13px 'Space Grotesk',sans-serif;cursor:pointer}
+.dl-vs{position:absolute;left:16px;top:12px;width:358px;height:240px;border-radius:22px;background:radial-gradient(60% 80% at 50% 20%,rgba(163,91,255,.22),transparent 70%),#170B2B;border:1px solid rgba(255,255,255,.09)}
+.dl-col{position:absolute;top:0;width:144px;height:240px;display:flex;flex-direction:column;align-items:center}
+.dl-pill{position:absolute;top:188px;left:22px;width:100px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:6px;background:#211238;border:1px solid rgba(255,255,255,.12);font-size:12px;color:#A497BC}
+.dl-flash{position:absolute;inset:-1px;border-radius:999px;opacity:0}
+.dl-glow{position:absolute;top:-6px;left:26px;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle,rgba(255,197,61,.65),rgba(255,197,61,0) 68%);opacity:0}
+.dl-badge{position:absolute;left:144px;top:30px;width:70px;height:56px;display:grid;place-items:center}
+.dl-ring{position:absolute;width:56px;height:56px;border-radius:50%;border:3px solid #FF7AB8;opacity:0}
+.dl-row{position:absolute;left:16px;width:358px;height:46px;display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr);align-items:center;gap:6px}
+.dl-cell{height:46px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:12px;background:#170B2B;border:1px solid rgba(255,255,255,.09)}
+.dl-mark{width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center}
+.dl-choice{position:absolute;top:474px;width:171px;height:140px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:16px;border-radius:18px;background:#170B2B;border:1px solid rgba(255,255,255,.16);color:#F6F1FF;font-family:'Space Grotesk',sans-serif;text-align:left;cursor:pointer}
+.dl-coin{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFE08A,#FFC53D 60%,#B8860B);box-shadow:0 0 12px rgba(255,197,61,.7);opacity:0;pointer-events:none}
+.dl-toast{position:absolute;left:16px;right:16px;bottom:8px;min-height:44px;display:flex;align-items:center;gap:10px;padding:6px 14px;line-height:1.3;border-radius:14px;background:#211238;border:1px solid rgba(255,197,61,.45);box-shadow:0 12px 30px -10px rgba(0,0,0,.7);font-weight:600;font-size:14px}
+@keyframes clash-l{0%{opacity:0;transform:translateX(-200px)}20%{opacity:1}55%{transform:translateX(30px)}72%{transform:translateX(-10px)}100%{opacity:1;transform:translateX(0)}}
+@keyframes clash-r{0%{opacity:0;transform:translateX(200px)}20%{opacity:1}55%{transform:translateX(-30px)}72%{transform:translateX(10px)}100%{opacity:1;transform:translateX(0)}}
+@keyframes vs-pop{0%{opacity:0;transform:scale(2.4) rotate(-12deg)}60%{opacity:1;transform:scale(.9) rotate(3deg)}100%{opacity:1;transform:scale(1) rotate(0deg)}}
+@keyframes ring-out{0%{opacity:1;transform:scale(.6)}100%{opacity:0;transform:scale(2.6)}}
+@keyframes glow-pulse{0%{opacity:0;transform:scale(.6)}35%{opacity:1;transform:scale(1.25)}100%{opacity:.85;transform:scale(1.1)}}
+@keyframes glow-breathe{0%,100%{opacity:.85;transform:scale(1.1)}50%{opacity:.5;transform:scale(1.25)}}
+@keyframes steal-fly{0%{opacity:0;transform:translate(0,0) scale(.5)}15%{opacity:1;transform:translate(-22px,-44px) scale(1.1)}55%{transform:translate(-110px,-92px) scale(1)}90%{opacity:1}100%{opacity:0;transform:translate(-214px,0) scale(.6)}}
+@keyframes bank-fly{0%{opacity:0;transform:translate(0,0) scale(.5)}15%{opacity:1;transform:translate(-10px,-20px) scale(1.1)}90%{opacity:1}100%{opacity:0;transform:translate(-107px,147px) scale(.6)}}
+@keyframes flash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; overflow: hidden; background: #0B0416; color: #F6F1FF; font-family: 'Space Grotesk', system-ui, sans-serif">
+<div class="gx-phone" style="height: 844px">
+<header class="gx-bar"><div class="gx-code"><small>Δωμάτιο</small><span class="num" style="font-size: 26px; letter-spacing: .08em">PARTY</span></div><span class="chip chip-pink" style="margin-left: 4px">Μονομαχία</span><span style="flex: 1"></span><sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}"><button class="mo-skip" type="button" onClick="{{ skip }}">Παράλειψη<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5l8 7-8 7zM17 5v14"/></svg></button></sc-if></header>
+<div class="gx-step"><span style="white-space: nowrap"><b>Μονομαχίες</b> · Αντίπαλος: Douze Points</span><span style="flex: 1"></span><span style="white-space: nowrap" aria-live="polite">{{ stepLabel }}</span></div>
+<main class="mo-stage">
+<section class="dl-vs" aria-label="Lady Televote εναντίον Douze Points">
+<div class="dl-col" style="{{ colL }}">
+<div class="dl-glow" style="{{ glowStyle }}"></div>
+<span class="dl-av" style="{{ avL }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span>
+<span style="font-weight: 700; font-size: 14px; margin-top: 8px; white-space: nowrap">Lady Televote</span>
+<span class="num" style="font-size: 52px; line-height: 1; margin-top: 6px; color: #FFC53D">{{ scoreL }}</span>
+<div class="dl-pill"><span class="dl-flash" style="{{ flashL }}"></span><span style="position: relative">Σύνολο</span><span class="num" style="position: relative; font-size: 22px; color: #F6F1FF">{{ totalL }}</span></div>
+</div>
+<div class="dl-badge"><span class="dl-ring" style="{{ ringStyle }}"></span><span class="num" style="{{ vsStyle }}">VS</span></div>
+<div class="dl-col" style="{{ colR }}">
+<span class="dl-av" style="{{ avR }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span>
+<span style="font-weight: 700; font-size: 14px; margin-top: 8px; white-space: nowrap">Douze Points</span>
+<span class="num" style="font-size: 52px; line-height: 1; margin-top: 6px; color: #CFC4E3">{{ scoreR }}</span>
+<div class="dl-pill"><span class="dl-flash" style="{{ flashR }}"></span><span style="position: relative">Σύνολο</span><span class="num" style="position: relative; font-size: 22px; color: #F6F1FF">{{ totalR }}</span></div>
+</div>
+</section>
+<div style="{{ qHead }}"><span class="t-eyebrow">Ίδιες 3 ερωτήσεις</span><span class="t-meta" style="margin-left: 8px">σωστή: 12 − δευτ. · λάθος: 0</span></div>
+<sc-for list="{{ rows }}" as="q" hint-placeholder-count="3"><div class="dl-row" style="{{ q.top }}"><div class="dl-cell" style="{{ q.lStyle }}"><span class="dl-mark" style="{{ q.lMark }}"><sc-if value="{{ q.lOk }}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{ q.lBad }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></sc-if></span><span class="num" style="font-size: 22px">{{ q.lPts }}</span><span class="t-meta" style="margin-left: auto">{{ q.lTime }}</span></div><span class="t-meta" style="text-align: center; font-weight: 600">{{ q.label }}</span><div class="dl-cell" style="{{ q.rStyle }}"><span class="t-meta">{{ q.rTime }}</span><span class="num" style="font-size: 22px; margin-left: auto">{{ q.rPts }}</span><span class="dl-mark" style="{{ q.rMark }}"><sc-if value="{{ q.rOk }}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{ q.rBad }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></sc-if></span></div></div></sc-for>
+<div style="{{ resultStyle }}"><h1 class="t-h3" style="font-size: 15px; line-height: 1.25">Κλέψε ή διπλασίασε τους πόντους που κέρδισες</h1></div>
+<button class="dl-choice" type="button" style="{{ cardSteal }}" onClick="{{ chooseSteal }}"><span class="t-eyebrow" style="color: #FF7AB8">Κλέψε</span><span class="num" style="font-size: 56px; line-height: 1; margin-top: 4px">24</span><span class="t-meta" style="color: #CFC4E3; line-height: 1.35; margin-top: auto">Εσύ +24<br>Douze Points −24</span></button>
+<button class="dl-choice" type="button" style="{{ cardDouble }}" onClick="{{ chooseDouble }}"><span class="t-eyebrow" style="color: #FFE08A">Διπλασίασε</span><span class="num" style="font-size: 56px; line-height: 1; margin-top: 4px">48</span><span class="t-meta" style="color: #CFC4E3; line-height: 1.35; margin-top: auto">Εσύ +48 (24×2)<br>Douze Points ±0</span></button>
+<sc-for list="{{ chips }}" as="c" hint-placeholder-count="6"><span class="dl-chip" style="{{ c.style }}" aria-hidden="true"><b style="font: 400 17px/1 'Bebas Neue', sans-serif">{{ c.label }}</b>{{ c.why }}</span></sc-for>
+<sc-for list="{{ coins }}" as="c" hint-placeholder-count="6"><span class="dl-coin" style="{{ c.style }}" aria-hidden="true"></span></sc-for>
+<div class="dl-toast" role="status" style="{{ toastStyle }}"><span style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255,197,61,.16); color: #FFC53D; display: grid; place-items: center; flex: none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span>{{ toastText }}</div>
+</main>
+<div class="mo-dock" aria-label="Έλεγχοι πρωτοτύπου">
+<span class="lbl">Πρωτό-<br>τυπο</span>
+<button class="btn btn-secondary btn-sm" type="button" onClick="{{ replay }}" style="padding: 0 14px; min-height: 44px">&#9654;&#65038; Παίξε ξανά</button>
+<button class="mo-switch" type="button" role="switch" aria-checked="{{ reducedAria }}" onClick="{{ toggleReduced }}"><span class="mo-track" style="{{ trackStyle }}"><span class="mo-knob" style="{{ knobStyle }}"></span></span><span>Χωρίς κίνηση<br><span style="font-weight: 500; color: #A497BC">(reduced motion)</span></span></button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+// real rule (calcDuelPoints): correct = max(0, 12 - floor(seconds)); wrong / timeout = 0
+function pts(t) { return t ? Math.max(0, 12 - Math.floor(t)) : 0; }
+function fmtT(t) { return t ? String(t.toFixed(1)).replace('.', ',') + '″' : 'λάθος'; }
+var RAW = [[2.1, 3.4], [4.0, 0], [6.2, 8.9]];
+var Q = RAW.map(function (r) { return { l: { ok: !!r[0], p: pts(r[0]), t: fmtT(r[0]), s: r[0] }, r: { ok: !!r[1], p: pts(r[1]), t: fmtT(r[1]), s: r[1] } }; });
+var SL = Q.reduce(function (a, q) { return a + q.l.p; }, 0), SR = Q.reduce(function (a, q) { return a + q.r.p; }, 0);
+var TL0 = 128, TR0 = 88;
+var EASE = 'cubic-bezier(.2,.8,.2,1)';
+var POP = 'cubic-bezier(.34,1.56,.64,1)';
+var INIT = { chips: [0, 0, 0, 0, 0, 0], reduced: false, still: true, intro: false, vs: false, qhead: false, cells: 0, scoreL: 0, scoreR: 0, win: false, cards: false, ready: false, choice: '', fly: false, totalL: TL0, totalR: TR0, flashL: false, flashR: false, toast: false };
+
+class Component extends DCLogic {
+  componentDidMount() { this.play(false); }
+  componentWillUnmount() { this.clear(); }
+  clear() { (this._t || []).forEach(clearTimeout); this._t = []; }
+  at(ms, fn) { this._t.push(setTimeout(fn, ms)); }
+  st() { return Object.assign({}, INIT, this.state || {}); }
+  count(key, from, to, dur, start) {
+    var n = Math.max(1, Math.round(dur / 40));
+    for (var i = 1; i <= n; i++) {
+      (function (self, i) {
+        var e = 1 - Math.pow(1 - i / n, 3);
+        self.at(start + dur * i / n, function () { var o = {}; o[key] = Math.round(from + (to - from) * e); self.setState(o); });
+      })(this, i);
+    }
+  }
+  play(r) {
+    var self = this;
+    this.clear();
+    this.setState(Object.assign({}, INIT, { reduced: r }));
+    var k = r ? 0.4 : 1;
+    var at = function (ms, o) { self.at(Math.round(ms * k), function () { self.setState(o); }); };
+    this.at(30, function () { self.setState({ still: false }); });
+    at(80, { intro: true });
+    at(440, { vs: true });
+    at(1000, { qhead: true });
+    this._chips = [0, 0, 0, 0, 0, 0];
+    var sl = 0, sr = 0;
+    Q.forEach(function (q, i) {
+      var t = 1200 + i * 650;
+      sl += q.l.p; sr += q.r.p;
+      var a = sl, b = sr;
+      at(t, { cells: i * 2 + 1 });
+      at(t + 180, { cells: i * 2 + 2 });
+      if (r) { at(t + 200, { scoreL: a, scoreR: b }); return; }
+      [0, 1].forEach(function (side) {
+        var ci = i * 2 + side, d = side ? 180 : 0;
+        self.at(t + d + 80, function () { self.setChip(ci, 1); });
+        self.at(t + d + 420, function () { self.setChip(ci, 2); });
+        self.at(t + d + 820, function () { self.setState(side ? { scoreR: b } : { scoreL: a }); });
+      });
+    });
+    at(3700, { win: true });
+    at(4200, { cards: true });
+    at(4800, { ready: true });
+  }
+  setChip(i, v) { this._chips[i] = v; this.setState({ chips: this._chips.slice() }); }
+  skip() { this.clear(); this._chips = [2, 2, 2, 2, 2, 2]; this.setState({ chips: this._chips.slice(), still: false, intro: true, vs: true, qhead: true, cells: 6, scoreL: SL, scoreR: SR, win: true, cards: true, ready: true }); }
+  choose(kind) {
+    var s = this.st(), self = this;
+    if (!s.ready || s.choice) return;
+    var R = s.reduced;
+    this.setState({ choice: kind, fly: !R });
+    var gain = kind === 'steal' ? Math.min(SL, TR0) : SL * 2;
+    if (R) {
+      this.at(120, function () { self.setState({ totalL: TL0 + gain, totalR: kind === 'steal' ? TR0 - gain : TR0, flashL: true, flashR: kind === 'steal' }); });
+      this.at(360, function () { self.setState({ toast: true }); });
+      return;
+    }
+    if (kind === 'steal') { this.count('totalR', TR0, TR0 - gain, 700, 150); this.at(150, function () { self.setState({ flashR: true }); }); }
+    this.count('totalL', TL0, TL0 + gain, 700, 520);
+    this.at(560, function () { self.setState({ flashL: true }); });
+    this.at(1300, function () { self.setState({ toast: true }); });
+  }
+  renderVals() {
+    var self = this;
+    var s = this.st(), R = s.reduced, still = s.still;
+    function mv(on, offT, onT, dur, delay, ease) {
+      delay = delay || 0;
+      if (R) return 'opacity:' + (on ? 1 : 0) + ';transition:' + (still ? 'none' : 'opacity 200ms ease') + ';';
+      return 'opacity:' + (on ? 1 : 0) + ';transform:' + (on ? onT : offT) + ';transition:' + (still ? 'none' : 'opacity ' + Math.min(dur, 300) + 'ms ease ' + delay + 'ms, transform ' + dur + 'ms ' + (ease || EASE) + ' ' + delay + 'ms') + ';';
+    }
+    function kf(on, anim) { if (!on) return 'opacity:0;'; if (R) return 'opacity:1;transition:opacity 200ms ease;'; return 'animation:' + anim + ';'; }
+    var rows = Q.map(function (q, i) {
+      var lOn = s.cells >= i * 2 + 1, rOn = s.cells >= i * 2 + 2;
+      var cell = function (on, side) { return mv(on, 'perspective(600px) rotateX(-90deg)', 'perspective(600px) rotateX(0deg)', 320, 0, POP) + 'transform-origin:50% 0;'; };
+      var mark = function (ok) { return ok ? 'background:#3EE08F;color:#0B0416;' : 'background:rgba(255,107,107,.16);color:#FF6B6B;'; };
+      return {
+        label: 'Ε' + (i + 1),
+        top: 'top:' + (290 + i * 52) + 'px;',
+        lStyle: cell(lOn) + (q.l.ok ? 'border-color:rgba(62,224,143,.35);' : ''),
+        rStyle: cell(rOn) + (q.r.ok ? 'border-color:rgba(62,224,143,.35);' : ''),
+        lMark: mark(q.l.ok), rMark: mark(q.r.ok), lOk: q.l.ok, lBad: !q.l.ok, rOk: q.r.ok, rBad: !q.r.ok,
+        lPts: '+' + q.l.p, rPts: q.r.p ? '+' + q.r.p : '0', lTime: q.l.t, rTime: q.r.t
+      };
+    });
+    var cardBase = function (left, on, delay, picked, other) {
+      var base = 'left:' + left + 'px;';
+      if (picked) base += 'border-color:#FFC53D;box-shadow:0 0 0 1px #FFC53D,0 14px 34px -12px rgba(255,197,61,.6);';
+      if (R) return base + 'opacity:' + (on ? (other ? 0.4 : 1) : 0) + ';transition:' + (still ? 'none' : 'opacity 200ms ease') + ';';
+      var t = on ? 'perspective(900px) rotateY(0deg) scale(' + (picked ? 1.04 : other ? 0.96 : 1) + ')' : 'perspective(900px) rotateY(' + (left < 100 ? -100 : 100) + 'deg) scale(1)';
+      return base + 'opacity:' + (on ? (other ? 0.4 : 1) : 0) + ';transform:' + t + ';transition:' + (still ? 'none' : 'opacity 250ms ease ' + (picked || other ? 0 : delay) + 'ms, transform ' + (picked || other ? 250 : 650) + 'ms cubic-bezier(.3,1.25,.5,1) ' + (picked || other ? 0 : delay) + 'ms') + ';';
+    };
+    var chips = [];
+    Q.forEach(function (q, i) {
+      [q.l, q.r].forEach(function (c, side) {
+        var st = s.chips[i * 2 + side], x = side ? 301 : 89, y = 313 + i * 52, dy = 168 - y;
+        var css = 'left:' + x + 'px;top:' + y + 'px;' + (c.p ? 'background:#FFC53D;color:#0B0416;' : 'background:#2C1A4A;color:#FF9B9B;');
+        if (R || st === 0) css += 'opacity:0;transform:translateY(0px) scale(.6);transition:none;';
+        else if (st === 1) css += 'opacity:1;transform:translateY(-30px) scale(1);transition:opacity 120ms ease, transform 200ms ' + POP + ';';
+        else css += 'opacity:0;transform:translateY(' + dy + 'px) scale(.7);transition:transform 400ms cubic-bezier(.5,0,.3,1), opacity 140ms ease 280ms;';
+        chips.push({ label: c.p ? '+' + c.p : '0', why: c.s ? '· 12−' + Math.floor(c.s) : '· λάθος', style: css });
+      });
+    });
+    var coins = [];
+    for (var i = 0; i < 6; i++) {
+      var steal = s.choice === 'steal';
+      var on = s.fly && !!s.choice;
+      coins.push({ style: (steal ? 'left:302px;top:217px;' : 'left:195px;top:70px;') + (on ? 'animation:' + (steal ? 'steal-fly' : 'bank-fly') + ' 700ms cubic-bezier(.45,0,.35,1) ' + (100 + i * 70) + 'ms forwards;' : 'animation:none;') });
+    }
+    var label = !s.cards ? (s.cells < 6 ? 'Αποτελέσματα…' : 'Νίκη ' + SL + '–' + SR) : (s.choice ? 'Ολοκληρώθηκε' : 'Διάλεξε ανταμοιβή');
+    return {
+      playing: !s.ready, stepLabel: label, rows: rows, coins: coins, chips: chips,
+      scoreL: s.scoreL, scoreR: s.scoreR, totalL: s.totalL, totalR: s.totalR,
+      colL: 'left:0;' + (R ? mv(s.intro, '', '', 200, 0) : (s.intro ? 'animation:clash-l 650ms cubic-bezier(.3,.9,.4,1) forwards;' : 'opacity:0;')),
+      colR: 'left:214px;' + (R ? 'opacity:' + (s.intro ? (s.win ? 0.55 : 1) : 0) + ';transition:opacity 200ms ease;' : (s.intro ? 'animation:clash-r 650ms cubic-bezier(.3,.9,.4,1) forwards;' : 'opacity:0;')),
+      avL: 'width:80px;height:80px;margin-top:16px;background:#A35BFF;color:#F0469C;position:relative;' + (s.win ? 'box-shadow:0 0 0 4px #FFC53D;' : 'box-shadow:0 0 0 3px rgba(255,255,255,.12);'),
+      avR: 'width:80px;height:80px;margin-top:16px;background:#BE185D;color:#2EE6D6;box-shadow:0 0 0 3px rgba(255,255,255,.12);transition:opacity 300ms ease;opacity:' + (s.win && !R ? 0.5 : 1) + ';',
+      glowStyle: s.win ? (R ? 'opacity:.8;transition:opacity 200ms;' : 'animation:glow-pulse 700ms ease-out forwards, glow-breathe 1800ms ease-in-out 700ms infinite;') : 'opacity:0;',
+      vsStyle: 'position:relative;font-size:34px;color:#FF7AB8;' + kf(s.vs, 'vs-pop 420ms cubic-bezier(.3,1.3,.5,1) forwards'),
+      ringStyle: R ? 'opacity:0;' : (s.vs ? 'animation:ring-out 600ms ease-out forwards;' : 'opacity:0;'),
+      qHead: 'position:absolute;left:16px;top:262px;' + mv(s.qhead, 'translateY(6px)', 'translateY(0px)', 260, 0),
+      resultStyle: 'position:absolute;left:16px;right:16px;top:446px;' + mv(s.win, 'translateY(8px)', 'translateY(0px)', 280, 200),
+      cardSteal: cardBase(16, s.cards, 0, s.choice === 'steal', s.choice === 'double'),
+      cardDouble: cardBase(203, s.cards, 150, s.choice === 'double', s.choice === 'steal'),
+      flashL: s.flashL ? (R ? 'opacity:0;' : 'background:rgba(62,224,143,.35);animation:flash 900ms ease-out forwards;') : 'opacity:0;',
+      flashR: s.flashR ? (R ? 'opacity:0;' : 'background:rgba(255,107,107,.4);animation:flash 900ms ease-out forwards;') : 'opacity:0;',
+      toastText: s.choice === 'double' ? 'Διπλασιάστηκαν σε +' + (SL * 2) + ' πόντους · Douze Points ±0' : 'Έκλεψες ' + Math.min(SL, TR0) + ' πόντους · Douze Points −' + Math.min(SL, TR0),
+      toastStyle: mv(s.toast, 'translateY(70px)', 'translateY(0px)', 340, 0, POP),
+      reducedAria: R ? 'true' : 'false',
+      trackStyle: 'background:' + (R ? '#A35BFF' : '#2C1A4A') + ';transition:background 160ms ease;',
+      knobStyle: 'transform:translateX(' + (R ? 16 : 0) + 'px);transition:transform 160ms ease;',
+      replay: function () { self.play(self.st().reduced); },
+      toggleReduced: function () { self.play(!self.st().reduced); },
+      skip: function () { self.skip(); },
+      chooseSteal: function () { self.choose('steal'); },
+      chooseDouble: function () { self.choose('double'); }
+    };
+  }
+}
+</script>
+</body>
+</html>

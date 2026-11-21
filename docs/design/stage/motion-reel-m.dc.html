@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>Motion · Η βραδιά σου (reel) — κινητό</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/b1e4c09d3fc83f2ff0a2c05a37204232">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Bebas+Neue&amp;display=swap">
+<style>
+body{margin:0}
+.rl-top{position:relative;z-index:9;height:52px;flex:none;display:flex;align-items:center;gap:10px;padding:0 12px 0 16px;background:#07020F}
+.rl-segs{position:absolute;left:12px;right:12px;top:4px;display:flex;gap:3px}
+.rl-segs i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.14)}
+.rl-stage{position:relative;flex:1;overflow:hidden;background:radial-gradient(90% 60% at 50% 40%,#1D0B36,#07020F 75%)}
+.rl-shake{position:absolute;inset:0}
+.rl-scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 20px}
+.rl-kick{font:700 13px/1 'Space Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#FF7AB8}
+.rl-big{font-family:'Bebas Neue',Impact,sans-serif;line-height:.86;letter-spacing:.01em}
+.rl-sub{font-size:16px;color:#CFC4E3;margin-top:10px}
+.rl-av{position:relative;display:block;border-radius:50%;overflow:hidden;flex:none}
+.rl-av svg{display:block;width:100%;height:100%}
+.rl-flash{position:absolute;inset:0;background:#FFF6E0;opacity:0;pointer-events:none;z-index:8}
+.rl-boom{position:absolute;left:50%;top:44%;width:220px;height:220px;margin:-110px 0 0 -110px;border-radius:50%;background:radial-gradient(circle,#FFF6E0 0,#FFC53D 22%,rgba(240,70,156,.7) 45%,rgba(163,91,255,0) 70%);opacity:0;pointer-events:none;z-index:2}
+.rl-ring{position:absolute;left:50%;top:44%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;border:4px solid #FFE08A;opacity:0;pointer-events:none;z-index:2}
+.rl-sparks{position:absolute;left:50%;top:44%;width:0;height:0;z-index:3;pointer-events:none}
+.rl-sparks span{position:absolute;left:0;top:0;width:0;height:0}
+.rl-sparks i{position:absolute;left:-2px;top:-8px;width:4px;height:16px;border-radius:2px;opacity:0}
+.rl-conf{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:7}
+.rl-conf i{position:absolute;top:-24px;display:block;border-radius:2px;opacity:0}
+.rl-flare{position:absolute;left:-50%;top:30%;width:200%;height:140px;background:radial-gradient(closest-side,rgba(255,250,230,.95),rgba(255,197,61,.35) 30%,transparent 70%) 50% 50%/240px 140px no-repeat,linear-gradient(90deg,transparent 20%,rgba(255,240,210,.55) 50%,transparent 80%) 50% 50%/100% 3px no-repeat;opacity:0;pointer-events:none;z-index:4;mix-blend-mode:screen}
+.rl-beam{position:absolute;left:50%;bottom:-40px;width:120px;height:900px;margin-left:-60px;transform-origin:50% 100%;background:linear-gradient(0deg,rgba(201,162,255,.55),rgba(240,70,156,.12) 60%,transparent);clip-path:polygon(40% 100%,60% 100%,100% 0,0 0);opacity:0;pointer-events:none}
+.rl-cue{position:absolute;left:12px;top:12px;z-index:9;display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;background:rgba(0,0,0,.55);border:1px dashed rgba(255,255,255,.3);font:600 11px/1 ui-monospace,Consolas,monospace;color:#FFE08A;letter-spacing:.04em}
+.rl-chip{display:inline-flex;align-items:center;height:40px;padding:0 14px;border-radius:999px;background:#211238;border:1px solid rgba(255,255,255,.16);font:400 26px/1 'Bebas Neue',sans-serif}
+.rl-badge{display:flex;align-items:center;gap:12px;width:300px;padding:14px 16px;border-radius:18px;background:linear-gradient(120deg,rgba(255,197,61,.20),rgba(240,70,156,.12)),#170B2B;border:1px solid rgba(255,197,61,.5);text-align:left}
+.rl-tag{position:absolute;right:12px;top:12px;z-index:9;height:24px;padding:0 10px;display:inline-flex;align-items:center;border-radius:999px;background:#FFC53D;color:#0B0416;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.rl-un{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:center;width:330px;height:58px;padding:0 14px;border-radius:14px;background:#170B2B;border:1px solid rgba(255,255,255,.09);text-align:left}
+.rl-flip{position:relative;height:40px}
+.rl-flip>span{position:absolute;left:0;right:0;top:0;height:40px;display:flex;flex-direction:column;justify-content:center;transform-origin:50% 50%}
+.mo-dock{flex:none;height:112px;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 12px;background:#07020F;border-top:1px dashed rgba(255,255,255,.18);position:relative;z-index:9}
+.mo-dock .lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A497BC;line-height:1.2}
+.mo-switch{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;background:transparent;border:0;color:#CFC4E3;font:600 12px/1.25 'Space Grotesk',sans-serif;text-align:left;cursor:pointer}
+.mo-track{position:relative;width:38px;height:22px;flex:none;border-radius:11px;border:1px solid rgba(255,255,255,.16)}
+.mo-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#F6F1FF}
+.mo-skip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(33,18,56,.9);color:#F6F1FF;font:600 13px 'Space Grotesk',sans-serif;cursor:pointer}
+.mo-pick{display:flex;align-items:center;gap:5px;min-height:44px;padding:0 8px 0 3px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#170B2B;color:#CFC4E3;font:600 11px 'Space Grotesk',sans-serif;cursor:pointer;white-space:nowrap}
+@keyframes slam{0%{opacity:0;transform:scale(3.2)}55%{opacity:1;transform:scale(.92)}75%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+@keyframes rise{0%{opacity:0;transform:translateY(18px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes shake-a{0%,100%{transform:translate(0,0)}15%{transform:translate(-9px,5px) rotate(-.8deg)}30%{transform:translate(8px,-6px) rotate(.6deg)}45%{transform:translate(-6px,3px)}60%{transform:translate(5px,-2px)}80%{transform:translate(-2px,1px)}}
+@keyframes shake-b{0%,100%{transform:translate(0,0)}15%{transform:translate(9px,-5px) rotate(.8deg)}30%{transform:translate(-8px,6px) rotate(-.6deg)}45%{transform:translate(6px,-3px)}60%{transform:translate(-5px,2px)}80%{transform:translate(2px,-1px)}}
+@keyframes flash-a{0%{opacity:.9}100%{opacity:0}}
+@keyframes flash-b{0%{opacity:.9}100%{opacity:0}}
+@keyframes boom-a{0%{opacity:1;transform:scale(.1)}100%{opacity:0;transform:scale(3.4)}}
+@keyframes boom-b{0%{opacity:1;transform:scale(.1)}100%{opacity:0;transform:scale(3.4)}}
+@keyframes ring-a{0%{opacity:1;transform:scale(.2)}100%{opacity:0;transform:scale(2.8)}}
+@keyframes ring-b{0%{opacity:1;transform:scale(.2)}100%{opacity:0;transform:scale(2.8)}}
+@keyframes spark-a{0%{opacity:1;transform:translateY(0) scaleY(1)}70%{opacity:1}100%{opacity:0;transform:translateY(-190px) scaleY(.3)}}
+@keyframes spark-b{0%{opacity:1;transform:translateY(0) scaleY(1)}70%{opacity:1}100%{opacity:0;transform:translateY(-190px) scaleY(.3)}}
+@keyframes flare{0%{opacity:0;transform:translateX(-45%)}25%{opacity:1}75%{opacity:1}100%{opacity:0;transform:translateX(45%)}}
+@keyframes beam-l{0%{opacity:0;transform:rotate(-38deg)}20%{opacity:.8}100%{opacity:.6;transform:rotate(-8deg)}}
+@keyframes beam-r{0%{opacity:0;transform:rotate(38deg)}20%{opacity:.8}100%{opacity:.6;transform:rotate(8deg)}}
+@keyframes slowzoom{0%{transform:scale(.9)}100%{transform:scale(1.18)}}
+@keyframes merge-l{0%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(110px) scale(.4)}}
+@keyframes merge-c{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(60px) scale(.4)}}
+@keyframes merge-r{0%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(-110px) scale(.4)}}
+@keyframes cue-a{0%{opacity:0;transform:translateY(-6px)}20%{opacity:1;transform:translateY(0)}100%{opacity:1}}
+@keyframes cue-b{0%{opacity:0;transform:translateY(-6px)}20%{opacity:1;transform:translateY(0)}100%{opacity:1}}
+@keyframes conf-a{0%{opacity:0;transform:translate3d(0,0,0) rotate(0deg)}6%{opacity:1}50%{transform:translate3d(34px,360px,0) rotate(300deg)}100%{opacity:1;transform:translate3d(-12px,760px,0) rotate(620deg)}}
+@keyframes conf-b{0%{opacity:0;transform:translate3d(0,0,0) rotate(0deg)}6%{opacity:1}50%{transform:translate3d(-40px,380px,0) rotate(-280deg)}100%{opacity:1;transform:translate3d(16px,760px,0) rotate(-560deg)}}
+@keyframes conf-c{0%{opacity:0;transform:translate3d(0,0,0) rotateX(0deg)}6%{opacity:1}100%{opacity:1;transform:translate3d(22px,760px,0) rotateX(720deg) rotate(200deg)}}
+@keyframes un-out{0%{opacity:1;transform:perspective(500px) rotateX(0deg)}100%{opacity:0;transform:perspective(500px) rotateX(90deg)}}
+@keyframes un-in{0%{opacity:0;transform:perspective(500px) rotateX(-90deg)}60%{opacity:1;transform:perspective(500px) rotateX(12deg)}100%{opacity:1;transform:perspective(500px) rotateX(0deg)}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; overflow: hidden; background: #07020F; color: #F6F1FF; font-family: 'Space Grotesk', system-ui, sans-serif">
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; border-radius: 28px; border: 1px solid rgba(255,255,255,.16); display: flex; flex-direction: column">
+<header class="rl-top"><div class="rl-segs" aria-hidden="true"><sc-for list="{{ segs }}" as="g" hint-placeholder-count="9"><i style="{{ g.style }}"></i></sc-for></div><span class="rl-av" style="{{ topAv }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span><div style="display: flex; flex-direction: column; line-height: 1.15; min-width: 0"><span class="t-eyebrow" style="font-size: 10px">Η βραδιά σου</span><span style="font-weight: 700; font-size: 15px; white-space: nowrap">{{ stage }}</span></div><span style="flex: 1"></span><sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}"><button class="mo-skip" type="button" onClick="{{ skip }}">Παράλειψη<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5l8 7-8 7zM17 5v14"/></svg></button></sc-if></header>
+<main class="rl-stage" aria-live="polite">
+<div class="rl-shake" style="{{ shakeStyle }}">
+<div class="rl-beam" style="{{ beamL }}"></div><div class="rl-beam" style="{{ beamR }}"></div><div class="rl-beam" style="{{ beamC }}"></div>
+<div class="rl-boom" style="{{ boomStyle }}"></div><div class="rl-ring" style="{{ ringStyle }}"></div>
+<div class="rl-sparks" aria-hidden="true"><sc-for list="{{ sparks }}" as="k" hint-placeholder-count="28"><span style="{{ k.wrap }}"><i style="{{ k.style }}"></i></span></sc-for></div>
+<section class="rl-scene" style="{{ sc0 }}"><div class="rl-flare" style="{{ flare0 }}"></div><span class="rl-kick" style="{{ s0a }}">Eurovision 2026 · Δωμάτιο PARTY</span><span class="rl-av" style="{{ heroAv }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span><h1 class="rl-big" style="{{ s0c }}">{{ stageUp }}</h1><span class="rl-sub" style="{{ s0d }}">Καλλιτεχνικό όνομα · η βραδιά σε 20″</span></section>
+<section class="rl-scene" style="{{ sc1 }}"><span class="rl-kick" style="{{ kick1 }}">01 · Trivia</span><span class="rl-big" style="{{ num1 }}">{{ n1 }}</span><span class="rl-sub" style="{{ sub1 }}">πόντοι από 3 γύρους κουίζ</span></section>
+<section class="rl-scene" style="{{ sc2 }}"><span class="rl-kick" style="{{ kick2 }}">02 · Μονομαχίες</span><span class="rl-big" style="{{ num2 }}">{{ n2 }}</span><span class="rl-sub" style="{{ sub2 }}">καθαρό: κέρδη μείον απώλειες</span></section>
+<section class="rl-scene" style="{{ sc3 }}"><span class="rl-kick" style="{{ kick3 }}">03 · Προβλέψεις</span><span class="rl-big" style="{{ num3 }}">{{ n3 }}</span><span class="rl-sub" style="{{ sub3 }}">Top 5 + Worst 5</span></section>
+<section class="rl-scene" style="{{ sc4 }}"><span class="rl-kick" style="color: #FFE08A">Σύνολο</span><div style="display: flex; gap: 8px; margin: 16px 0 6px"><span class="rl-chip" style="{{ mergeL }}">{{ c1 }}</span><span class="rl-chip" style="{{ mergeC }}">{{ c2 }}</span><span class="rl-chip" style="{{ mergeR }}">{{ c3 }}</span></div><span class="rl-big" style="{{ num4 }}">{{ n4 }}</span><span class="rl-sub">πόντοι</span></section>
+<section class="rl-scene" style="{{ sc5 }}"><div class="rl-flare" style="{{ flare5 }}"></div><span class="rl-kick" style="{{ kick5 }}">Τελική θέση</span><span class="rl-big" style="{{ num5 }}">{{ placeBig }}</span><span class="rl-sub" style="{{ sub5 }}">{{ placeSub }}</span></section>
+<section class="rl-scene" style="{{ sc6 }}"><span class="rl-kick" style="color: #FFE08A; margin-bottom: 14px">{{ titlesKick }}</span><div style="display: flex; flex-direction: column; gap: 12px; align-items: center"><sc-for list="{{ titles }}" as="t" hint-placeholder-count="2"><div class="rl-badge" style="{{ t.style }}"><span style="width: 44px; height: 44px; flex: none; border-radius: 12px; display: grid; place-items: center; background: rgba(255,197,61,.16); color: #FFC53D"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></span><span><span style="display: block; font-weight: 700; font-size: 20px">{{ t.k }}</span><span class="t-meta">{{ t.why }}</span></span></div></sc-for></div><span class="rl-sub" style="{{ noTitle }}">Χωρίς τίτλο αυτή τη φορά — του χρόνου.</span></section>
+<section class="rl-scene" style="{{ sc7 }}"><span class="rl-av" style="{{ sumAv }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span><span style="font-weight: 700; font-size: 24px; margin-top: 10px">{{ stage }}</span><span class="t-meta">{{ placeSub }}</span><div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 330px; margin-top: 16px"><div class="stat" style="padding: 10px"><div class="v num" style="font-size: 28px">{{ c1 }}</div><div class="k">Trivia</div></div><div class="stat" style="padding: 10px"><div class="v num" style="font-size: 28px">{{ c2 }}</div><div class="k">Μονομαχίες</div></div><div class="stat" style="padding: 10px"><div class="v num" style="font-size: 28px">{{ c3 }}</div><div class="k">Προβλέψεις</div></div></div><div style="display: flex; align-items: baseline; gap: 8px; margin-top: 12px"><span class="num" style="font-size: 64px; color: #FFC53D">{{ total }}</span><span class="t-small">πόντοι</span></div><div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center"><sc-for list="{{ titles }}" as="t" hint-placeholder-count="2"><span class="chip chip-gold">{{ t.k }}</span></sc-for></div><button class="btn btn-primary" type="button" style="margin-top: 18px; width: 330px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/></svg>Μοιράσου το reel</button></section>
+<section class="rl-scene" style="{{ sc8 }}"><span class="rl-tag">Πρόταση</span><span class="rl-kick" style="color: #FFE08A">Τέλος ανωνυμίας</span><h2 class="t-h2" style="font-size: 30px; margin: 6px 0 14px">Ποιος ήταν ποιος;</h2><div style="display: flex; flex-direction: column; gap: 8px"><sc-for list="{{ unmask }}" as="u" hint-placeholder-count="6"><div class="rl-un" style="{{ u.row }}"><span class="rl-av" style="{{ u.av }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span><div class="rl-flip"><span style="{{ u.front }}"><b style="font-size: 16px">{{ u.stage }}</b><span class="t-meta">Καλλιτεχνικό όνομα</span></span><span style="{{ u.back }}"><b style="font-size: 18px; color: #FFE08A">{{ u.real }}</b><span class="t-meta">{{ u.stage }}</span></span></div></div></sc-for></div></section>
+<div class="rl-conf" aria-hidden="true"><sc-for list="{{ confetti }}" as="c" hint-placeholder-count="40"><i style="{{ c.style }}"></i></sc-for></div>
+</div>
+<div class="rl-flash" style="{{ flashStyle }}"></div>
+<sc-if value="{{ hasCue }}" hint-placeholder-val="{{ true }}"><span class="rl-cue" style="{{ cueStyle }}" aria-hidden="true">{{ cue }}</span></sc-if>
+</main>
+<div class="mo-dock" aria-label="Έλεγχοι πρωτοτύπου">
+<div style="display: flex; align-items: center; gap: 10px"><span class="lbl">Πρωτό-<br>τυπο</span><button class="btn btn-secondary btn-sm" type="button" onClick="{{ replay }}" style="padding: 0 14px; min-height: 44px">&#9654;&#65038; Παίξε ξανά</button><button class="mo-switch" type="button" role="switch" aria-checked="{{ reducedAria }}" onClick="{{ toggleReduced }}"><span class="mo-track" style="{{ trackStyle }}"><span class="mo-knob" style="{{ knobStyle }}"></span></span><span>Χωρίς κίνηση<br><span style="font-weight: 500; color: #A497BC">(reduced motion)</span></span></button></div>
+<div style="display: flex; align-items: center; gap: 6px"><button class="mo-pick" type="button" style="{{ pick0 }}" onClick="{{ choose0 }}"><span class="rl-av" style="{{ pickAv0 }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/></svg></span>Lady Televote</button><button class="mo-pick" type="button" style="{{ pick1 }}" onClick="{{ choose1 }}"><span class="rl-av" style="{{ pickAv1 }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/></svg></span>Disco Μπαμπέσα</button><button class="mo-pick" type="button" style="{{ pick2 }}" onClick="{{ choose2 }}"><span class="rl-av" style="{{ pickAv2 }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/></svg></span>Douze Points</button></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+var PL = [
+  { stage: 'Lady Televote', up: 'LADY TELEVOTE', real: 'Ελένη', bg: '#A35BFF', cos: '#F0469C', tri: 184, duel: 24, pred: 140, total: 348, place: 1, titles: [{ k: 'Πρωταθλητής', why: 'Περισσότεροι πόντοι' }, { k: 'Μάντης', why: 'Περισσότεροι πόντοι προβλέψεων' }] },
+  { stage: 'Disco Μπαμπέσα', up: 'DISCO ΜΠΑΜΠΕΣΑ', real: 'Μαρία', bg: '#2B9C8F', cos: '#FFC53D', tri: 156, duel: 36, pred: 120, total: 312, place: 2, titles: [{ k: 'Κλέφτης', why: 'Περισσότεροι κλεμμένοι πόντοι' }, { k: 'Μονομάχος', why: 'Περισσότερες νίκες σε μονομαχίες' }] },
+  { stage: 'Douze Points', up: 'DOUZE POINTS', real: 'Νίκος', bg: '#BE185D', cos: '#2EE6D6', tri: 212, duel: -12, pred: 90, total: 290, place: 3, titles: [{ k: 'Γκουρού', why: 'Περισσότερες σωστές απαντήσεις' }] },
+  { stage: 'Wind Machine', real: 'Γιάννης', bg: '#B45309', cos: '#C9A2FF' },
+  { stage: 'Glitter Bomb', real: 'Σοφία', bg: '#2563EB', cos: '#FF7AB8' },
+  { stage: 'Key Change', real: 'Τάσος', bg: '#0E7490', cos: '#FFE08A' }
+];
+var CONF = ['#F0469C', '#A35BFF', '#FFC53D', '#2EE6D6', '#FF7AB8', '#FFE08A'];
+var SPARK = ['#FFE08A', '#FFC53D', '#FF7AB8', '#F6F1FF'];
+var SCENES = 9;
+function rnd(i) { var x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+function sign(v) { return v > 0 ? '+' + v : (v < 0 ? '−' + Math.abs(v) : '0'); }
+function av(p, size, extra) { return 'width:' + size + 'px;height:' + size + 'px;background:' + p.bg + ';color:' + p.cos + ';' + (extra || ''); }
+var INIT = { reduced: false, still: true, pi: 0, scene: 0, num: 0, impact: 0, burst: 0, cueN: 0, cue: '', conf: false, done: false };
+
+class Component extends DCLogic {
+  componentDidMount() { this.play(false, 0); }
+  componentWillUnmount() { this.clear(); }
+  clear() { (this._t || []).forEach(clearTimeout); this._t = []; }
+  at(ms, fn) { this._t.push(setTimeout(fn, ms)); }
+  st() { return Object.assign({}, INIT, this.state || {}); }
+  count(from, to, dur, start, lin) {
+    var self = this, n = Math.max(1, Math.round(dur / 40));
+    for (var i = 1; i <= n; i++) {
+      (function (i) {
+        var x = i / n, e = lin ? (x < .85 ? x * .9 / .85 : .9 + (x - .85) / .15 * .1) : 1 - Math.pow(1 - x, 3);
+        self.at(start + dur * i / n, function () { self.setState({ num: Math.round(from + (to - from) * e) }); });
+      })(i);
+    }
+  }
+  play(r, pi) {
+    var self = this, p = PL[pi];
+    this.clear(); this._imp = 0; this._burst = 0; this._cue = 0;
+    this.setState({ reduced: r, pi: pi, still: true, scene: 0, num: 0, impact: 0, burst: 0, cueN: 0, cue: '', conf: false, done: false });
+    this.at(30, function () { self.setState({ still: false }); });
+    var k = r ? 0.45 : 1, T = function (ms) { return Math.round(ms * k); };
+    var cue = function (ms, txt) { self.at(T(ms), function () { self._cue++; self.setState({ cue: txt, cueN: self._cue }); }); };
+    var cut = function (ms, sc) { self.at(T(ms), function () { self.setState({ scene: sc, num: 0 }); }); };
+    var hit = function (ms, burst) { if (r) return; self.at(ms, function () { self._imp++; var o = { impact: self._imp }; if (burst) { self._burst++; o.burst = self._burst; } self.setState(o); }); };
+    var cnt = function (ms, to, dur, lin) { if (r) { self.at(T(ms), function () { self.setState({ num: to }); }); return; } self.count(0, to, dur, ms, lin); };
+    cut(0, 0); cue(60, '♪ riser');
+    hit(950, true); cue(950, '♪ boom');
+    cut(2300, 1); cue(2300, '♪ whoosh'); cnt(2700, p.tri, 1100); hit(3800, true); cue(3800, '♪ boom');
+    cut(4900, 2); cue(4900, '♪ clash'); hit(5100, true); cnt(5400, p.duel, 800); hit(6200, false); cue(6200, '♪ hit');
+    cut(7200, 3); cue(7200, '♪ riser'); cnt(7600, p.pred, 1100); hit(8700, true); cue(8700, '♪ boom');
+    cut(9700, 4); cue(9700, '♪ slow-mo drone'); cnt(10500, p.total, 2400, true);
+    cut(13100, 5); hit(13100, true); cue(13100, '♪ BOOM · hard cut'); if (!r) this.at(13100, function () { self.setState({ conf: true }); });
+    var t = 14900;
+    cut(t, 6); cue(t, p.titles.length ? '♪ hit ×' + p.titles.length : '♪ sting');
+    p.titles.forEach(function (x, i) { hit(t + 350 + i * 450, false); });
+    t += 900 + p.titles.length * 450;
+    cut(t, 7); cue(t, '♪ outro');
+    cut(t + 2600, 8); cue(t + 2600, '♪ drumroll');
+    this.at(T(t + 2600 + 3200), function () { self.setState({ done: true }); });
+  }
+  skip() { this.clear(); var p = PL[this.st().pi]; this.setState({ scene: 7, num: p.total, done: false, conf: false, still: false, cue: '', cueN: 0 }); var self = this; this._t.push(setTimeout(function () { self.setState({ scene: 8 }); }, 2600)); this._t.push(setTimeout(function () { self.setState({ done: true }); }, 5800)); }
+  renderVals() {
+    var self = this;
+    var s = this.st(), R = s.reduced, still = s.still, sc = s.scene, p = PL[s.pi], fx = !R;
+    var par = function (n) { return n % 2 ? 'a' : 'b'; };
+    function scene(i) { var on = sc === i; return 'opacity:' + (on ? 1 : 0) + ';pointer-events:' + (on ? 'auto' : 'none') + ';transition:' + (R && !still ? 'opacity 200ms ease' : 'none') + ';z-index:' + (on ? 5 : 1) + ';'; }
+    function an(i, anim) { if (sc !== i) return 'opacity:0;'; return R ? 'opacity:1;' : 'animation:' + anim + ';'; }
+    function big(i, size, color, anim) { return 'font-size:' + size + 'px;color:' + color + ';margin:8px 0 0;' + an(i, anim); }
+    var SLAM = 'slam 600ms cubic-bezier(.2,1.3,.4,1) both';
+    var sparks = [];
+    for (var i = 0; i < 28; i++) {
+      var ang = Math.round(i * (360 / 28) + rnd(i) * 8), scl = (0.6 + rnd(i + 5) * 0.8).toFixed(2);
+      sparks.push({ wrap: 'transform:rotate(' + ang + 'deg) scale(' + scl + ');', style: 'background:' + SPARK[i % 4] + ';' + (fx && s.burst > 0 ? 'animation:spark-' + par(s.burst) + ' 700ms cubic-bezier(.1,.7,.3,1) ' + Math.round(rnd(i + 2) * 80) + 'ms both;' : 'opacity:0;') });
+    }
+    var confetti = [];
+    for (var j = 0; j < 40; j++) {
+      var kf = ['conf-a', 'conf-b', 'conf-c'][j % 3];
+      confetti.push({ style: 'left:' + Math.round(rnd(j + 21) * 380) + 'px;width:' + (6 + Math.round(rnd(j) * 6)) + 'px;height:' + (10 + Math.round(rnd(j + 50) * 8)) + 'px;background:' + CONF[j % 6] + ';transform:rotate(' + Math.round(rnd(j + 7) * 360) + 'deg);animation:' + (fx && s.conf ? kf + ' ' + (2300 + Math.round(rnd(j + 9) * 1500)) + 'ms cubic-bezier(.25,.6,.45,1) ' + Math.round(rnd(j + 3) * 700) + 'ms forwards' : 'none') + ';' });
+    }
+    var titles = p.titles.map(function (t, i) { return { k: t.k, why: t.why, style: an(6, 'slam 600ms cubic-bezier(.2,1.3,.4,1) ' + (350 + i * 450) + 'ms both') }; });
+    var unmask = PL.map(function (u, i) {
+      return { stage: u.stage, real: u.real, av: av(u, 40), row: an(8, 'rise 300ms cubic-bezier(.2,.8,.2,1) ' + (i * 80) + 'ms both'), front: sc !== 8 ? '' : (R ? 'opacity:0;' : 'animation:un-out 200ms ease-in ' + (900 + i * 300) + 'ms both;'), back: sc !== 8 ? 'opacity:0;' : (R ? 'opacity:1;' : 'animation:un-in 420ms cubic-bezier(.2,.8,.2,1) ' + (1100 + i * 300) + 'ms both;') };
+    });
+    var segs = []; for (var g = 0; g < SCENES; g++) segs.push({ style: 'background:' + (g < sc ? '#A35BFF' : g === sc ? '#F0469C' : 'rgba(255,255,255,.14)') + ';' });
+    var beams = function (side) { var on = fx && (sc === 0 || sc === 3 || sc === 5); return on ? 'animation:' + side + ' 1400ms ease-out both;' : 'opacity:0;'; };
+    var numVal = function (i, final) { return sc === i ? s.num : final; };
+    var pickSt = function (i) { return s.pi === i ? 'border-color:#F0469C;color:#F6F1FF;background:#211238;' : ''; };
+    return {
+      segs: segs, sparks: sparks, confetti: confetti, titles: titles, unmask: unmask,
+      stage: p.stage, stageUp: p.up, playing: !s.done && sc < 7,
+      topAv: av(p, 34), heroAv: av(p, 150, 'box-shadow:0 0 0 4px #F0469C,0 0 60px rgba(240,70,156,.6);margin-top:16px;' + an(0, 'slam 700ms cubic-bezier(.2,1.3,.4,1) 300ms both')),
+      sumAv: av(p, 96, 'box-shadow:0 0 0 3px #FFC53D;' + an(7, SLAM)),
+      sc0: scene(0), sc1: scene(1), sc2: scene(2), sc3: scene(3), sc4: scene(4), sc5: scene(5), sc6: scene(6), sc7: scene(7), sc8: scene(8),
+      s0a: an(0, 'rise 300ms ease 100ms both'), s0c: big(0, 70, '#F6F1FF', 'slam 600ms cubic-bezier(.2,1.3,.4,1) 900ms both'), s0d: an(0, 'rise 300ms ease 1400ms both'),
+      flare0: fx && sc === 0 ? 'animation:flare 900ms ease-in-out 250ms both;' : 'opacity:0;',
+      flare5: fx && sc === 5 ? 'animation:flare 800ms ease-in-out 150ms both;' : 'opacity:0;',
+      kick1: an(1, SLAM), kick2: an(2, SLAM), kick3: an(3, SLAM), kick5: an(5, 'rise 250ms ease 400ms both'),
+      num1: big(1, 190, '#F6F1FF', 'rise 250ms ease 300ms both'), num2: big(2, 190, p.duel < 0 ? '#FF9B9B' : '#3EE08F', 'slam 600ms cubic-bezier(.2,1.3,.4,1) 300ms both'), num3: big(3, 190, '#2EE6D6', 'rise 250ms ease 300ms both'),
+      num4: 'display:inline-block;font-size:160px;color:#FFC53D;' + (sc === 4 && fx ? 'animation:slowzoom 3200ms linear both;' : ''),
+      num5: big(5, 260, '#FFC53D', 'slam 650ms cubic-bezier(.2,1.3,.4,1) both'),
+      sub1: an(1, 'rise 300ms ease 1500ms both'), sub2: an(2, 'rise 300ms ease 1400ms both'), sub3: an(3, 'rise 300ms ease 1500ms both'), sub5: an(5, 'rise 300ms ease 700ms both'),
+      n1: numVal(1, p.tri), n2: sign(numVal(2, p.duel)), n3: numVal(3, p.pred), n4: numVal(4, p.total),
+      c1: String(p.tri), c2: sign(p.duel), c3: String(p.pred), total: p.total,
+      mergeL: sc === 4 && fx ? 'animation:merge-l 500ms cubic-bezier(.5,0,.3,1) 500ms both;' : '', mergeC: sc === 4 && fx ? 'animation:merge-c 500ms cubic-bezier(.5,0,.3,1) 650ms both;' : '', mergeR: sc === 4 && fx ? 'animation:merge-r 500ms cubic-bezier(.5,0,.3,1) 800ms both;' : '',
+      placeBig: '#' + p.place, placeSub: p.place + 'η θέση από 6 παίκτες',
+      titlesKick: p.titles.length ? 'Οι τίτλοι σου' : 'Τίτλοι', noTitle: p.titles.length ? 'display:none;' : '',
+      shakeStyle: fx && s.impact > 0 ? 'animation:shake-' + par(s.impact) + ' 380ms ease-out;' : '',
+      flashStyle: fx && s.impact > 0 ? 'animation:flash-' + par(s.impact) + ' 220ms ease-out both;' : 'opacity:0;',
+      boomStyle: fx && s.burst > 0 ? 'animation:boom-' + par(s.burst) + ' 700ms cubic-bezier(.1,.6,.3,1) both;' : 'opacity:0;',
+      ringStyle: fx && s.burst > 0 ? 'animation:ring-' + par(s.burst) + ' 650ms ease-out both;' : 'opacity:0;',
+      beamL: beams('beam-l'), beamR: beams('beam-r'), beamC: fx && (sc === 0 || sc === 3 || sc === 5) ? 'opacity:.45;transition:opacity 300ms;' : 'opacity:0;',
+      hasCue: !!s.cue, cue: s.cue, cueStyle: R ? '' : 'animation:cue-' + par(s.cueN) + ' 300ms ease both;',
+      pick0: pickSt(0), pick1: pickSt(1), pick2: pickSt(2), pickAv0: av(PL[0], 26), pickAv1: av(PL[1], 26), pickAv2: av(PL[2], 26),
+      reducedAria: R ? 'true' : 'false',
+      trackStyle: 'background:' + (R ? '#A35BFF' : '#2C1A4A') + ';transition:background 160ms ease;',
+      knobStyle: 'transform:translateX(' + (R ? 16 : 0) + 'px);transition:transform 160ms ease;',
+      replay: function () { var x = self.st(); self.play(x.reduced, x.pi); },
+      toggleReduced: function () { var x = self.st(); self.play(!x.reduced, x.pi); },
+      choose0: function () { self.play(self.st().reduced, 0); }, choose1: function () { self.play(self.st().reduced, 1); }, choose2: function () { self.play(self.st().reduced, 2); },
+      skip: function () { self.skip(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

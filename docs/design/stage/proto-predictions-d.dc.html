@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>Προβλέψεις — πρωτότυπο επιλογής, desktop</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/b1e4c09d3fc83f2ff0a2c05a37204232">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Bebas+Neue&amp;display=swap">
+<style>
+body{margin:0}
+.px-root{position:relative;overflow:hidden;background:#0B0416;color:#F6F1FF;font-family:'Space Grotesk',system-ui,sans-serif;display:flex;flex-direction:column;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.px-root button{font-family:'Space Grotesk',system-ui,sans-serif}
+.px-root h1,.px-root h2,.px-root p{margin:0}
+.px-top{display:flex;align-items:center;gap:10px;padding:8px 12px 8px 16px;background:#110721;border-bottom:1px solid rgba(255,255,255,.09);flex:none}
+.px-tl{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A497BC;flex:none}
+.px-modes{display:flex;gap:4px;padding:3px;background:#170B2B;border:1px solid rgba(255,255,255,.09);border-radius:14px;flex:1;min-width:0}
+.px-mode{flex:1;min-width:0;min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;border-radius:11px;background:transparent;color:#CFC4E3;cursor:pointer;padding:4px 2px}
+.px-mode .num{font-size:20px}
+.px-ml{font-size:10.5px;font-weight:600;white-space:nowrap;line-height:1}
+.px-mode:hover{color:#F6F1FF}
+.px-mode.on{background:#2C1A4A;color:#F6F1FF;box-shadow:inset 0 -2px 0 #F0469C}
+.px-hint{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 4px 0 16px;font-size:13px;line-height:1.35;color:#CFC4E3;background:#110721;border-bottom:1px solid rgba(255,255,255,.09);flex:none}
+.px-ib{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;border:0;background:transparent;color:#A497BC;cursor:pointer;flex:none;margin-left:auto}
+.px-ib:hover{color:#F6F1FF;background:#211238}
+.px-main{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:12px 16px 0;overflow:hidden}
+.px-main>*{flex-shrink:0}
+.px-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding-bottom:16px}
+.px-scroll>*{flex-shrink:0}
+.px-h1{font-size:19px;line-height:1.2;font-weight:700;letter-spacing:-.01em}
+.px-meta{font-size:12.5px;line-height:1.4;color:#A497BC;margin-top:3px}
+.px-board{display:flex;flex-direction:column;gap:10px;padding:10px;border-radius:16px;background:#170B2B;border:1px solid rgba(240,70,156,.25)}
+.px-bh{display:flex;align-items:center;gap:8px;min-height:18px;font-size:12px;color:#A497BC}
+.px-bh .t-eyebrow{font-size:11px}
+.px-chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.px-chip{position:relative;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;touch-action:manipulation;min-width:0}
+.px-chip.e{border:1.5px dashed rgba(255,255,255,.2)}
+.px-chip.e .px-cn{font-size:20px;color:#A497BC}
+.px-chip.f{background:#2C1A4A;border:1px solid rgba(255,255,255,.14)}
+.px-chip.f .px-cn{position:absolute;top:4px;left:6px;font-size:13px;color:#CFC4E3}
+.px-chip .flag{width:24px;height:16px;border-radius:3px;margin-top:8px}
+.px-cc{font-size:11px;font-weight:700;letter-spacing:.06em;color:#CFC4E3;line-height:1}
+.px-chip.t.next,.px-slot.t.next{border-color:#FFE08A;background:rgba(255,224,138,.07)}
+.px-chip.w.next,.px-slot.w.next{border-color:#FF9B9B;background:rgba(255,155,155,.07)}
+.px-chip.next .px-cn{color:#F6F1FF}
+.over{outline:2px solid #2EE6D6;outline-offset:2px;background:rgba(46,230,214,.12)!important}
+.sel{outline:2px solid #F0469C;outline-offset:2px}
+.grab{touch-action:none;cursor:grab}
+@keyframes pxPopA{0%{transform:scale(.82);opacity:.35}100%{transform:scale(1);opacity:1}}
+@keyframes pxPopB{0%{transform:scale(.82);opacity:.35}100%{transform:scale(1);opacity:1}}
+.popA{animation:pxPopA 150ms cubic-bezier(.34,1.56,.64,1)}
+.popB{animation:pxPopB 150ms cubic-bezier(.34,1.56,.64,1)}
+@keyframes pxUp{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pxFade{from{opacity:0}to{opacity:1}}
+@keyframes pxSheet{from{transform:translateY(48px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pxPop{from{transform:scale(.97);opacity:0}to{transform:none;opacity:1}}
+.px-sec{display:flex;flex-direction:column;gap:8px}
+.px-sh{display:flex;align-items:baseline;gap:10px}
+.px-sh .t-eyebrow{font-size:12px}
+.px-sh .cnt{margin-left:auto;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#CFC4E3}
+.px-slot{display:flex;align-items:center;gap:12px;min-height:52px;padding:4px 6px 4px 10px;border-radius:12px;background:#211238;border:1px solid rgba(255,255,255,.09);cursor:pointer;flex:none}
+.px-slot.e{background:transparent;border:1.5px dashed rgba(255,255,255,.18)}
+.px-slot.e:hover{border-color:rgba(255,255,255,.36)}
+.px-slot.lg{min-height:64px;padding:6px 8px 6px 14px}
+.px-n{font-family:'Bebas Neue',sans-serif;font-size:22px;width:28px;text-align:center;color:#FFE08A;flex:none;line-height:1}
+.px-slot.w .px-n{color:#FF9B9B}
+.px-slot.e .px-n{color:#A497BC}
+.px-who{display:flex;flex-direction:column;min-width:0;flex:1}
+.px-c{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
+.px-a{font-size:13px;color:#A497BC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.px-c.e{color:#A497BC;font-weight:500;font-size:14px}
+.px-slot.next .px-c.e{color:#F6F1FF}
+.px-plus{width:28px;height:20px;display:grid;place-items:center;color:#A497BC;flex:none}
+.px-ctl{display:flex;gap:2px;flex:none}
+.px-cb{width:44px;height:44px;border-radius:10px;border:0;background:transparent;color:#CFC4E3;display:grid;place-items:center;cursor:pointer;padding:0}
+.px-cb:hover:not(:disabled){background:#2C1A4A;color:#F6F1FF}
+.px-cb:disabled{opacity:.28;cursor:default}
+.px-cb.x{color:#FF9B9B}
+.px-xi{width:36px;height:36px;display:grid;place-items:center;color:#A497BC;flex:none}
+.px-grip{width:44px;height:44px;display:grid;place-items:center;color:#A497BC;touch-action:none;cursor:grab;flex:none;border-radius:10px}
+.px-grip:hover{background:#2C1A4A;color:#F6F1FF}
+.px-tog{display:flex;align-items:center;gap:10px}
+.px-tog .lbl{font-size:13px;color:#A497BC;white-space:nowrap}
+.px-seg2{display:flex;flex:1;gap:4px;padding:3px;background:#170B2B;border:1px solid rgba(255,255,255,.09);border-radius:999px}
+.px-s2{flex:1;height:40px;border:0;border-radius:999px;background:transparent;color:#CFC4E3;font-weight:600;font-size:14px;cursor:pointer}
+.px-s2.on.t{background:rgba(255,197,61,.16);color:#FFE08A}
+.px-s2.on.w{background:rgba(255,107,107,.16);color:#FF9B9B}
+.px-input{display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;border-radius:999px;background:#170B2B;border:1px solid rgba(255,255,255,.16);color:#A497BC;flex:none}
+.px-input input{flex:1;min-width:0;border:0;background:transparent;color:#F6F1FF;font:500 15px 'Space Grotesk',sans-serif;outline:none;user-select:text;-webkit-user-select:text}
+.px-input input::placeholder{color:#A497BC}
+.px-pool{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.09);border-bottom:0;border-radius:16px 16px 0 0;background:#170B2B}
+.px-pr{display:flex;align-items:center;gap:12px;min-height:56px;padding:6px 6px 6px 14px;border-top:1px solid rgba(255,255,255,.09);cursor:pointer;flex:none}
+.px-pr:first-child{border-top:0}
+.px-pr:hover{background:rgba(255,255,255,.03)}
+.px-pr.dim .flag{filter:grayscale(.85);opacity:.6}
+.px-pr.dim .px-c{color:#A497BC}
+.px-pr.here{background:rgba(46,230,214,.06)}
+.px-lb{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;flex:none;margin-right:8px}
+.px-lb.t{color:#FFE08A;border:1px solid rgba(255,224,138,.35);background:rgba(255,197,61,.08)}
+.px-lb.w{color:#FF9B9B;border:1px solid rgba(255,155,155,.35);background:rgba(255,107,107,.08)}
+.px-lb.h{color:#2EE6D6;border:1px solid rgba(46,230,214,.35);background:rgba(46,230,214,.08)}
+.px-none{padding:24px 16px;text-align:center;font-size:14px;color:#A497BC}
+.px-bottom{flex:none;display:flex;align-items:center;gap:12px;padding:12px 16px 18px;background:rgba(17,7,33,.97);border-top:1px solid rgba(255,255,255,.09)}
+.px-prog{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.px-prog .row1{display:flex;align-items:baseline;gap:8px}
+.px-prog .num{font-size:24px}
+.px-prog .t-meta{font-size:12px;white-space:nowrap}
+.px-prog .progress{height:6px}
+.px-prog .progress i{transition:width 250ms cubic-bezier(.2,.8,.2,1)}
+.px-lock{flex:none}
+.px-lock.off{opacity:.42;cursor:not-allowed;box-shadow:none}
+.px-toast{position:absolute;left:16px;right:16px;bottom:96px;z-index:6;display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 4px 4px 16px;border-radius:14px;background:#2C1A4A;border:1px solid rgba(255,255,255,.16);box-shadow:0 12px 32px -12px rgba(0,0,0,.85);font-size:14px;font-weight:500;animation:pxUp 200ms cubic-bezier(.2,.8,.2,1)}
+.px-toast span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.px-undo{margin-left:auto;height:44px;padding:0 14px;border:0;border-radius:10px;background:transparent;color:#FF7AB8;font-weight:700;font-size:14px;cursor:pointer;flex:none}
+.px-undo:hover{background:rgba(255,255,255,.06)}
+.px-back{position:absolute;inset:0;z-index:7;background:rgba(5,2,12,.62);animation:pxFade 180ms ease}
+.px-back.clear{background:rgba(5,2,12,.25)}
+.px-sheet{position:absolute;left:0;right:0;bottom:0;height:640px;z-index:8;display:flex;flex-direction:column;gap:10px;padding:8px 16px 18px;background:#170B2B;border-top:1px solid rgba(255,255,255,.16);border-radius:24px 24px 0 0;animation:pxSheet 220ms cubic-bezier(.2,.8,.2,1)}
+.px-sheet>*,.px-pop>*{flex-shrink:0}
+.px-grabber{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.22);margin:2px auto 0}
+.px-shh{display:flex;align-items:center;gap:10px}
+.px-shh h2{font-size:18px;font-weight:700;line-height:1.2}
+.px-shh .t-eyebrow{font-size:11px}
+.px-shl{flex:1 1 auto!important;min-height:0;overflow-y:auto;border:1px solid rgba(255,255,255,.09);border-radius:14px;background:#110721;display:flex;flex-direction:column}
+.px-pop{position:absolute;z-index:8;width:440px;height:440px;display:flex;flex-direction:column;gap:10px;padding:14px;background:#170B2B;border:1px solid rgba(255,255,255,.16);border-radius:18px;box-shadow:0 24px 60px -20px rgba(0,0,0,.95);animation:pxPop 160ms cubic-bezier(.2,.8,.2,1)}
+.px-ghost{position:absolute;z-index:9;pointer-events:none;display:flex;align-items:center;gap:10px;height:48px;padding:0 16px 0 12px;border-radius:12px;background:#2C1A4A;border:1px solid #F0469C;box-shadow:0 16px 40px -10px rgba(0,0,0,.9);font-weight:600;font-size:15px;white-space:nowrap;transform:translate(-50%,-130%) rotate(-2deg)}
+.px-ghost .px-lb{margin:0}
+.px-done{display:flex;flex-direction:column;gap:12px}
+.px-dl{display:flex;align-items:center;gap:10px;min-height:38px;border-top:1px solid rgba(255,255,255,.09);font-size:14px;font-weight:600}
+.px-dl:first-of-type{border-top:0}
+.px-dl .num{font-size:18px;width:24px;color:#FFE08A}
+.px-dl.w .num{color:#FF9B9B}
+.px-dl .flag{width:22px;height:15px;border-radius:3px}
+.px-dl span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* desktop */
+.px-d .px-top{height:68px;padding:0 24px;gap:16px}
+.px-d .px-modes{flex:none;width:640px}
+.px-d .px-mode{flex-direction:row;gap:8px;padding:0 14px}
+.px-d .px-ml{font-size:14px}
+.px-d .px-hint{padding:0 24px;font-size:14px}
+.px-d .px-main{padding:20px 0 0;align-items:center}
+.px-wrap{width:1200px;display:flex;flex-direction:column;gap:16px;flex:1;min-height:0}
+.px-wrap>*{flex-shrink:0}
+.px-titlerow{display:flex;align-items:center;gap:24px}
+.px-d .px-h1{font-size:26px}
+.px-d .px-meta{font-size:14px}
+.px-dprog{display:flex;align-items:center;gap:16px;margin-left:auto;width:420px}
+.px-ac{display:grid;grid-template-columns:440px minmax(0,1fr);gap:32px;flex:1;min-height:0}
+.px-bd{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.px-panel{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:20px;background:#170B2B;border:1px solid rgba(255,255,255,.09);align-self:start}
+.px-panel.hl{border-color:rgba(240,70,156,.25)}
+.px-panel .px-slot{min-height:48px;padding:2px 6px 2px 10px}
+.px-panel .px-sec{gap:4px}
+.px-panel.big{padding:18px;gap:14px}
+.px-panel.big .px-sec{gap:8px}
+.px-panel.big .px-slot{min-height:64px;padding:6px 8px 6px 14px}
+.px-right{display:flex;flex-direction:column;gap:12px;min-height:0}
+.px-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-content:start}
+.px-card{display:flex;align-items:center;gap:12px;min-height:60px;padding:6px 6px 6px 12px;border-radius:14px;background:#170B2B;border:1px solid rgba(255,255,255,.09);cursor:pointer;min-width:0}
+.px-card:hover{border-color:rgba(255,255,255,.22);background:#1B0E33}
+.px-card.dim .flag{filter:grayscale(.85);opacity:.6}
+.px-card.dim .px-c{color:#A497BC}
+.px-card.grab{cursor:grab}
+.px-d .px-toast{left:50%;right:auto;width:440px;margin-left:-220px;bottom:28px}
+.px-note{font-size:13px;color:#A497BC}
+@media (prefers-reduced-motion: reduce){.px-root *{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div data-proto="1" class="px-root px-d" style="width: 1440px; height: 900px; overflow: hidden" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onPointerCancel="{{ onCancel }}">
+<header class="px-top"><div style="display: flex; flex-direction: column; gap: 2px; line-height: 1; flex: none"><small class="px-tl" style="font-size: 10px">Δωμάτιο</small><span class="num" style="font-size: 26px; letter-spacing: .08em">PARTY</span></div><span class="chip chip-live" style="flex: none"><span class="dot"></span>Προβλέψεις ανοιχτές</span><span style="flex: 1"></span><span class="px-tl">Τρόπος</span><div class="px-modes" role="group" aria-label="Τρόπος επιλογής"><sc-for list="{{ modes }}" as="m" hint-placeholder-count="4"><button type="button" class="{{ m.cls }}" aria-pressed="{{ m.pressed }}" onClick="{{ m.on }}"><span class="num">{{ m.id }}</span><span class="px-ml">{{ m.t }}</span></button></sc-for></div><span style="flex: 1"></span><button class="btn btn-ghost btn-sm" type="button" onClick="{{ reset }}" style="flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Από την αρχή</button></header>
+<div class="px-hint"><span>{{ hint }}</span></div>
+<main class="px-main">
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ true }}"><div class="px-wrap">
+<div class="px-titlerow"><div><h1 class="px-h1">Top 5 και Worst 5 του τελικού</h1><p class="px-meta">Ακριβής θέση +50 · σωστή λίστα σε άλλη θέση +20</p></div><div class="px-dprog"><div class="px-prog"><div class="row1"><span class="num">{{ progTxt }}</span><span class="t-meta">{{ remainTxt }}</span></div><div class="progress"><i style="{{ progSty }}"></i></div></div><button class="{{ lockCls }}" type="button" aria-disabled="{{ lockDis }}" onClick="{{ lock }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Κλείδωσε τις προβλέψεις</button></div></div>
+<sc-if value="{{ isAC }}" hint-placeholder-val="{{ true }}"><div class="px-ac">
+<div class="px-panel hl"><sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}"><div class="px-tog"><span class="lbl">Επόμενη χώρα στο</span><div class="px-seg2" role="group" aria-label="Λίστα που γεμίζει"><button type="button" class="{{ togTopCls }}" aria-pressed="{{ togTopPressed }}" onClick="{{ setTop }}">Top 5</button><button type="button" class="{{ togWorstCls }}" aria-pressed="{{ togWorstPressed }}" onClick="{{ setWorst }}">Worst 5</button></div></div></sc-if><section class="px-sec" aria-label="Top 5"><div class="px-sh"><span class="t-eyebrow" style="color: #FFE08A">{{ topTitle }}</span><span class="cnt">{{ topCount }}</span></div><sc-for list="{{ topRows }}" as="s" hint-placeholder-count="5"><div class="{{ s.cls }}" style="{{ s.sty }}" data-slot="{{ s.key }}" role="button" tabindex="0" aria-label="{{ s.aria }}" onClick="{{ s.onRow }}" onPointerDown="{{ s.onDown }}"><span class="px-n">{{ s.num }}</span><sc-if value="{{ s.filled }}" hint-placeholder-val="{{ true }}"><span class="{{ s.flagCls }}" style="{{ s.flagSty }}"></span><span class="px-who"><span class="px-c">{{ s.name }}</span><span class="px-a">{{ s.sub }}</span></span></sc-if><sc-if value="{{ s.empty }}" hint-placeholder-val="{{ false }}"><span class="px-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span class="px-who"><span class="px-c e">{{ s.emptyText }}</span></span></sc-if><sc-if value="{{ s.showCtl }}" hint-placeholder-val="{{ false }}"><span class="px-ctl"><button class="px-cb" type="button" aria-label="{{ s.upAria }}" disabled="{{ s.upDis }}" onClick="{{ s.onUp }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button><button class="px-cb" type="button" aria-label="{{ s.dnAria }}" disabled="{{ s.dnDis }}" onClick="{{ s.onDn }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="px-cb x" type="button" aria-label="{{ s.xAria }}" onClick="{{ s.onX }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></sc-if><sc-if value="{{ s.showX }}" hint-placeholder-val="{{ false }}"><span class="px-xi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span></sc-if><sc-if value="{{ s.showGrip }}" hint-placeholder-val="{{ false }}"><span class="px-grip" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span></sc-if></div></sc-for></section><section class="px-sec" aria-label="Worst 5"><div class="px-sh"><span class="t-eyebrow" style="color: #FF9B9B">{{ worstTitle }}</span><span class="cnt">{{ worstCount }}</span></div><sc-for list="{{ worstRows }}" as="s" hint-placeholder-count="5"><div class="{{ s.cls }}" style="{{ s.sty }}" data-slot="{{ s.key }}" role="button" tabindex="0" aria-label="{{ s.aria }}" onClick="{{ s.onRow }}" onPointerDown="{{ s.onDown }}"><span class="px-n">{{ s.num }}</span><sc-if value="{{ s.filled }}" hint-placeholder-val="{{ true }}"><span class="{{ s.flagCls }}" style="{{ s.flagSty }}"></span><span class="px-who"><span class="px-c">{{ s.name }}</span><span class="px-a">{{ s.sub }}</span></span></sc-if><sc-if value="{{ s.empty }}" hint-placeholder-val="{{ false }}"><span class="px-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span class="px-who"><span class="px-c e">{{ s.emptyText }}</span></span></sc-if><sc-if value="{{ s.showCtl }}" hint-placeholder-val="{{ false }}"><span class="px-ctl"><button class="px-cb" type="button" aria-label="{{ s.upAria }}" disabled="{{ s.upDis }}" onClick="{{ s.onUp }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button><button class="px-cb" type="button" aria-label="{{ s.dnAria }}" disabled="{{ s.dnDis }}" onClick="{{ s.onDn }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="px-cb x" type="button" aria-label="{{ s.xAria }}" onClick="{{ s.onX }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></sc-if><sc-if value="{{ s.showX }}" hint-placeholder-val="{{ false }}"><span class="px-xi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span></sc-if><sc-if value="{{ s.showGrip }}" hint-placeholder-val="{{ false }}"><span class="px-grip" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span></sc-if></div></sc-for></section></div>
+<div class="px-right" data-pool="1"><label class="px-input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" aria-label="Αναζήτηση χώρας ή τραγουδιού" placeholder="Χώρα, καλλιτέχνης ή τραγούδι" value="{{ q }}" onChange="{{ onQ }}"></label><div class="px-grid"><sc-for list="{{ pool }}" as="r" hint-placeholder-count="12"><div class="{{ r.cardCls }}" role="button" tabindex="0" aria-label="{{ r.aria }}" onClick="{{ r.onTap }}" onPointerDown="{{ r.onDown }}"><span class="{{ r.flagCls }}" style="{{ r.flagSty }}"></span><span class="px-who"><span class="px-c">{{ r.name }}</span><span class="px-a">{{ r.sub }}</span></span><sc-if value="{{ r.picked }}" hint-placeholder-val="{{ false }}"><span class="{{ r.labelCls }}">{{ r.label }}</span></sc-if></div></sc-for></div><sc-if value="{{ poolEmpty }}" hint-placeholder-val="{{ false }}"><p class="px-none">Καμία χώρα δεν ταιριάζει</p></sc-if></div>
+</div></sc-if>
+<sc-if value="{{ isBD }}" hint-placeholder-val="{{ false }}"><div class="px-bd"><div class="px-panel big"><section class="px-sec" aria-label="Top 5"><div class="px-sh"><span class="t-eyebrow" style="color: #FFE08A">{{ topTitle }}</span><span class="cnt">{{ topCount }}</span></div><sc-for list="{{ topRows }}" as="s" hint-placeholder-count="5"><div class="{{ s.cls }}" style="{{ s.sty }}" data-slot="{{ s.key }}" role="button" tabindex="0" aria-label="{{ s.aria }}" onClick="{{ s.onRow }}" onPointerDown="{{ s.onDown }}"><span class="px-n">{{ s.num }}</span><sc-if value="{{ s.filled }}" hint-placeholder-val="{{ true }}"><span class="{{ s.flagCls }}" style="{{ s.flagSty }}"></span><span class="px-who"><span class="px-c">{{ s.name }}</span><span class="px-a">{{ s.sub }}</span></span></sc-if><sc-if value="{{ s.empty }}" hint-placeholder-val="{{ false }}"><span class="px-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span class="px-who"><span class="px-c e">{{ s.emptyText }}</span></span></sc-if><sc-if value="{{ s.showCtl }}" hint-placeholder-val="{{ false }}"><span class="px-ctl"><button class="px-cb" type="button" aria-label="{{ s.upAria }}" disabled="{{ s.upDis }}" onClick="{{ s.onUp }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button><button class="px-cb" type="button" aria-label="{{ s.dnAria }}" disabled="{{ s.dnDis }}" onClick="{{ s.onDn }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="px-cb x" type="button" aria-label="{{ s.xAria }}" onClick="{{ s.onX }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></sc-if><sc-if value="{{ s.showX }}" hint-placeholder-val="{{ false }}"><span class="px-xi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span></sc-if><sc-if value="{{ s.showGrip }}" hint-placeholder-val="{{ false }}"><span class="px-grip" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span></sc-if></div></sc-for></section></div><div class="px-panel big"><section class="px-sec" aria-label="Worst 5"><div class="px-sh"><span class="t-eyebrow" style="color: #FF9B9B">{{ worstTitle }}</span><span class="cnt">{{ worstCount }}</span></div><sc-for list="{{ worstRows }}" as="s" hint-placeholder-count="5"><div class="{{ s.cls }}" style="{{ s.sty }}" data-slot="{{ s.key }}" role="button" tabindex="0" aria-label="{{ s.aria }}" onClick="{{ s.onRow }}" onPointerDown="{{ s.onDown }}"><span class="px-n">{{ s.num }}</span><sc-if value="{{ s.filled }}" hint-placeholder-val="{{ true }}"><span class="{{ s.flagCls }}" style="{{ s.flagSty }}"></span><span class="px-who"><span class="px-c">{{ s.name }}</span><span class="px-a">{{ s.sub }}</span></span></sc-if><sc-if value="{{ s.empty }}" hint-placeholder-val="{{ false }}"><span class="px-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span class="px-who"><span class="px-c e">{{ s.emptyText }}</span></span></sc-if><sc-if value="{{ s.showCtl }}" hint-placeholder-val="{{ false }}"><span class="px-ctl"><button class="px-cb" type="button" aria-label="{{ s.upAria }}" disabled="{{ s.upDis }}" onClick="{{ s.onUp }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button><button class="px-cb" type="button" aria-label="{{ s.dnAria }}" disabled="{{ s.dnDis }}" onClick="{{ s.onDn }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="px-cb x" type="button" aria-label="{{ s.xAria }}" onClick="{{ s.onX }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></sc-if><sc-if value="{{ s.showX }}" hint-placeholder-val="{{ false }}"><span class="px-xi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span></sc-if><sc-if value="{{ s.showGrip }}" hint-placeholder-val="{{ false }}"><span class="px-grip" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span></sc-if></div></sc-for></section></div></div><p class="px-note">{{ bdNote }}</p></sc-if>
+</div></sc-if>
+<sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}"><div class="px-done" style="width: 760px; align-self: center; margin-top: 24px"><section class="card-hero" style="padding: 18px 20px; display: flex; gap: 14px; align-items: center"><span style="width: 48px; height: 48px; border-radius: 50%; flex: none; display: grid; place-items: center; background: rgba(62,224,143,.14); color: #3EE08F"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><div style="flex: 1"><h1 class="t-h3">Κλειδώθηκαν οι προβλέψεις</h1><p class="t-meta" style="margin: 2px 0 0">Βαθμολογούνται όταν βγουν τα αποτελέσματα.</p></div></section><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px"><div class="card" style="padding: 10px 12px; border-radius: 16px; min-width: 0"><div class="t-eyebrow" style="font-size: 11px; color: #FFE08A; margin-bottom: 4px">Top 5</div><sc-for list="{{ topDone }}" as="d" hint-placeholder-count="5"><div class="px-dl"><span class="num">{{ d.num }}</span><span class="{{ d.flagCls }}" style="{{ d.flagSty }}"></span><span>{{ d.name }}</span></div></sc-for></div><div class="card" style="padding: 10px 12px; border-radius: 16px; min-width: 0"><div class="t-eyebrow" style="font-size: 11px; color: #FF9B9B; margin-bottom: 4px">Worst 5</div><sc-for list="{{ worstDone }}" as="d" hint-placeholder-count="5"><div class="px-dl w"><span class="num">{{ d.num }}</span><span class="{{ d.flagCls }}" style="{{ d.flagSty }}"></span><span>{{ d.name }}</span></div></sc-for></div></div><button class="btn btn-secondary btn-block" type="button" onClick="{{ unlock }}">Αλλαγή προβλέψεων</button></div></sc-if>
+</main>
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}"><div class="px-toast" role="status"><span>{{ toastMsg }}</span><sc-if value="{{ toastUndo }}" hint-placeholder-val="{{ true }}"><button class="px-undo" type="button" onClick="{{ undo }}">Αναίρεση</button></sc-if></div></sc-if>
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}"><div class="px-back clear" onClick="{{ closeSheet }}"></div><div class="px-pop" style="{{ popSty }}" role="dialog" aria-label="Επιλογή χώρας"><div class="px-shh"><div style="min-width: 0; flex: 1"><div class="t-eyebrow" style="{{ sheetColor }}">{{ sheetList }}</div><h2>{{ sheetTitle }}</h2></div><button class="px-ib" type="button" aria-label="Κλείσιμο" onClick="{{ closeSheet }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><label class="px-input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" aria-label="Αναζήτηση χώρας" placeholder="Χώρα, καλλιτέχνης ή τραγούδι" value="{{ sq }}" onChange="{{ onSQ }}"></label><div class="px-shl"><sc-for list="{{ sheetRows }}" as="r" hint-placeholder-count="8"><div class="{{ r.cls }}" role="button" tabindex="0" aria-label="{{ r.aria }}" onClick="{{ r.onPick }}"><span class="{{ r.flagCls }}" style="{{ r.flagSty }}"></span><span class="px-who"><span class="px-c">{{ r.name }}</span><span class="px-a">{{ r.sub }}</span></span><sc-if value="{{ r.picked }}" hint-placeholder-val="{{ false }}"><span class="{{ r.labelCls }}">{{ r.label }}</span></sc-if></div></sc-for><sc-if value="{{ sheetEmpty }}" hint-placeholder-val="{{ false }}"><p class="px-none">Καμία χώρα δεν ταιριάζει</p></sc-if></div><sc-if value="{{ sheetFilled }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost btn-block" type="button" onClick="{{ clearSlot }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>Άδειασε τη θέση</button></sc-if></div></sc-if>
+<sc-if value="{{ dragging }}" hint-placeholder-val="{{ false }}"><div class="px-ghost" style="{{ ghostSty }}" aria-hidden="true"><span class="{{ ghost.flagCls }}" style="{{ ghost.flagSty }}"></span><span>{{ ghost.name }}</span><sc-if value="{{ ghost.hasTag }}" hint-placeholder-val="{{ false }}"><span class="{{ ghost.tagCls }}">{{ ghost.tag }}</span></sc-if></div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+var FIN = [{"iso":"al","c":"Αλβανία","a":"Alis","s":"Nân"},{"iso":"au","c":"Αυστραλία","a":"Delta Goodrem","s":"Eclipse"},{"iso":"at","c":"Αυστρία","a":"COSMÓ","s":"Tanzschein"},{"iso":"be","c":"Βέλγιο","a":"ESSYLA","s":"Dancing on the Ice"},{"iso":"bg","c":"Βουλγαρία","a":"DARA","s":"Bangaranga"},{"iso":"fr","c":"Γαλλία","a":"Monroe","s":"Regarde !"},{"iso":"de","c":"Γερμανία","a":"Sarah Engels","s":"Fire"},{"iso":"dk","c":"Δανία","a":"Søren Torpegaard Lund","s":"Før Vi Går Hjem"},{"iso":"gr","c":"Ελλάδα","a":"Akylas","s":"Ferto"},{"iso":"gb","c":"Ηνωμένο Βασίλειο","a":"LOOK MUM NO COMPUTER","s":"Eins, Zwei, Drei"},{"iso":"il","c":"Ισραήλ","a":"Noam Bettan","s":"Michelle"},{"iso":"it","c":"Ιταλία","a":"Sal Da Vinci","s":"Per Sempre Sì"},{"iso":"hr","c":"Κροατία","a":"LELEK","s":"Andromeda"},{"iso":"cy","c":"Κύπρος","a":"Antigoni","s":"JALLA"},{"iso":"lt","c":"Λιθουανία","a":"Lion Ceccah","s":"Sólo Quiero Más"},{"iso":"mt","c":"Μάλτα","a":"AIDAN","s":"Bella"},{"iso":"md","c":"Μολδαβία","a":"Satoshi","s":"Viva, Moldova!"},{"iso":"no","c":"Νορβηγία","a":"JONAS LOVV","s":"YA YA YA"},{"iso":"ua","c":"Ουκρανία","a":"LELÉKA","s":"Ridnym"},{"iso":"pl","c":"Πολωνία","a":"ALICJA","s":"Pray"},{"iso":"ro","c":"Ρουμανία","a":"Alexandra Căpitănescu","s":"Choke Me"},{"iso":"rs","c":"Σερβία","a":"LAVINA","s":"Kraj Mene"},{"iso":"se","c":"Σουηδία","a":"FELICIA","s":"My System"},{"iso":"cz","c":"Τσεχία","a":"Daniel Zizka","s":"CROSSROADS"},{"iso":"fi","c":"Φινλανδία","a":"Linda Lampenius x Pete Parkkonen","s":"Liekinheitin"}];
+var W = 1440, H = 900, DESK = true;
+var K = 5;
+var N = FIN.length;
+var BY = {};
+FIN.forEach(function (f) { BY[f.iso] = f; });
+var FLAG_FB = {
+  be: 'background:linear-gradient(90deg,#000 0 33.3%,#FDDA24 0 66.6%,#EF3340 0);',
+  ro: 'background:linear-gradient(90deg,#002B7F 0 33.3%,#FCD116 0 66.6%,#CE1126 0);',
+  cz: 'background:linear-gradient(90deg,#11457E 0 32%,transparent 0),linear-gradient(#fff 0 50%,#D7141A 0);'
+};
+function flagCls(iso) { return FLAG_FB[iso] ? 'flag' : 'flag f-' + iso; }
+function flagSty(iso) { return FLAG_FB[iso] || ''; }
+function norm(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+FIN.forEach(function (f) { f.k = norm(f.c + ' ' + f.a + ' ' + f.s + ' ' + f.iso); });
+var LISTS = ['top', 'worst'];
+function num(l, i) { return l === 'top' ? i + 1 : N - K + 1 + i; }
+function lab(l, i) { return l === 'top' ? 'Top ' + (i + 1) : 'Worst · ' + num(l, i) + 'η'; }
+function other(l) { return l === 'top' ? 'worst' : 'top'; }
+function blank() { var a = []; for (var i = 0; i < K; i++) a.push(null); return a; }
+function stop(e) { if (e && e.stopPropagation) e.stopPropagation(); }
+var MODES = [
+  { id: 'A', t: 'Πάτα χώρα', h: 'Πάτα μια χώρα και μπαίνει στην επόμενη κενή θέση. Πάτα μια θέση για να αδειάσει.' },
+  { id: 'B', t: 'Πάτα θέση', h: 'Πάτα μια θέση και διάλεξε χώρα. Πάτα γεμάτη θέση για αλλαγή.' },
+  { id: 'C', t: 'Σύρε', h: 'Σύρε μια χώρα σε θέση. Σύρε θέσεις για αλλαγή σειράς ή πίσω στη λίστα για αφαίρεση.' },
+  { id: 'D', t: 'Έλεγχοι', h: 'Βέλη για μία θέση πάνω ή κάτω, Χ για αφαίρεση, + για νέα χώρα.' }
+];
+var EMPTY_TXT = { A: 'Κενή θέση', B: 'Διάλεξε χώρα', C: 'Σύρε χώρα εδώ', D: 'Πρόσθεσε χώρα' };
+var INIT = { mode: 'A', active: 'top', top: blank(), worst: blank(), sheet: null, q: '', sq: '', toast: null, locked: false, drag: null, pop: null, shift: null, flipOn: false };
+
+class Component extends DCLogic {
+  componentWillUnmount() { clearTimeout(this._tt); clearTimeout(this._ft); }
+  s() { return Object.assign({}, INIT, this.state || {}); }
+  where(st, id) { for (var k = 0; k < 2; k++) { var l = LISTS[k], i = st[l].indexOf(id); if (i >= 0) return { l: l, i: i }; } return null; }
+  snap(st) { return { top: st.top.slice(), worst: st.worst.slice(), active: st.active }; }
+  mkToast(msg, undo) {
+    var self = this, id = (this._tn = (this._tn || 0) + 1);
+    clearTimeout(this._tt);
+    this._tt = setTimeout(function () { if (self._tn === id) self.setState({ toast: null }); }, 5000);
+    return { msg: msg, undo: undo, id: id };
+  }
+  mkPop(key) { this._pn = (this._pn || 0) + 1; return { key: key, n: this._pn }; }
+  autoActive(st, L, o) {
+    if (L[st.active].indexOf(null) < 0 && L[other(st.active)].indexOf(null) >= 0) o.active = other(st.active);
+  }
+  removeAt(l, i, extra) {
+    var st = this.s(), id = st[l][i], o = Object.assign({}, extra || {});
+    if (id) {
+      var nx = st[l].slice(); nx[i] = null; o[l] = nx;
+      o.toast = this.mkToast('Αφαιρέθηκε: ' + BY[id].c, this.snap(st));
+      o.pop = null;
+    }
+    this.setState(o);
+  }
+  place(l, i, id, extra) {
+    var st = this.s(), o = Object.assign({}, extra || {});
+    var at = this.where(st, id);
+    if (at && at.l === l && at.i === i) { this.setState(o); return; }
+    var prev = this.snap(st), L = { top: st.top.slice(), worst: st.worst.slice() };
+    var displaced = L[l][i];
+    if (at) L[at.l][at.i] = null;
+    L[l][i] = id;
+    o.top = L.top; o.worst = L.worst; o.pop = this.mkPop(l + '-' + i);
+    if (displaced) o.toast = this.mkToast('Αντικαταστάθηκε: ' + BY[displaced].c, prev);
+    else if (at) o.toast = this.mkToast('Μετακινήθηκε: ' + BY[id].c + ' · ' + lab(l, i), prev);
+    this.autoActive(st, L, o);
+    this.setState(o);
+  }
+  flip(root, k1, k2) {
+    if (!root || !root.querySelector) return null;
+    var a = root.querySelector('[data-slot="' + k1 + '"]'), b = root.querySelector('[data-slot="' + k2 + '"]');
+    if (!a || !b) return null;
+    var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(), rr = root.getBoundingClientRect();
+    var z = rr.width / W || 1, dx = (rb.left - ra.left) / z, dy = (rb.top - ra.top) / z, m = {};
+    m[k1] = 'translate(' + dx + 'px,' + dy + 'px)';
+    m[k2] = 'translate(' + (-dx) + 'px,' + (-dy) + 'px)';
+    return m;
+  }
+  swap(root, l1, i1, l2, i2, extra) {
+    var st = this.s(), o = Object.assign({}, extra || {}), self = this;
+    if (l1 === l2 && i1 === i2) { this.setState(o); return; }
+    var L = { top: st.top.slice(), worst: st.worst.slice() };
+    var a = L[l1][i1], b = L[l2][i2];
+    L[l1][i1] = b; L[l2][i2] = a;
+    var k1 = l1 + '-' + i1, k2 = l2 + '-' + i2;
+    o.top = L.top; o.worst = L.worst;
+    o.shift = this.flip(root, k1, k2); o.flipOn = false; o.pop = o.shift ? null : this.mkPop(k2);
+    if (a && b && l1 !== l2) o.toast = this.mkToast('Αντάλλαξαν θέση: ' + BY[a].c + ', ' + BY[b].c, this.snap(st));
+    this.setState(o);
+    clearTimeout(this._ft);
+    this._ft = setTimeout(function () { self.setState({ shift: null, flipOn: true }); }, 34);
+  }
+  rootOf(e) { var t = e && e.currentTarget; return t && t.closest ? t.closest('[data-proto]') : null; }
+  move(e, l, i, d) {
+    stop(e);
+    var j = i + d; if (j < 0 || j >= K) return;
+    this.swap(this.rootOf(e), l, i, l, j, { toast: null });
+  }
+  tapCountry(id) {
+    var st = this.s(), at = this.where(st, id);
+    if (at) { this.removeAt(at.l, at.i); return; }
+    var l = st.active, i = st[l].indexOf(null);
+    if (i < 0) { l = other(l); i = st[l].indexOf(null); }
+    if (i < 0) { this.setState({ toast: this.mkToast('Γέμισαν όλες οι θέσεις', null) }); return; }
+    this.place(l, i, id, l !== st.active ? { active: l } : null);
+  }
+  openSheet(e, l, i) {
+    var el = e && e.currentTarget, root = this.rootOf(e), a = { x: 0, y: 0, w: 0, h: 0 };
+    if (el && root) {
+      var r = el.getBoundingClientRect(), rr = root.getBoundingClientRect(), z = rr.width / W || 1;
+      a = { x: (r.left - rr.left) / z, y: (r.top - rr.top) / z, w: r.width / z, h: r.height / z };
+    }
+    this.setState({ sheet: { l: l, i: i, a: a }, sq: '' });
+  }
+  pick(id) { var sh = this.s().sheet; if (!sh) return; this.place(sh.l, sh.i, id, { sheet: null }); }
+  down(e, src) {
+    var st = this.s();
+    if (st.mode !== 'C' || st.locked) return;
+    if (e.button != null && e.button !== 0) return;
+    this._d = { src: src, sx: e.clientX, sy: e.clientY, on: false, root: this.rootOf(e) };
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+  }
+  local(root, cx, cy) {
+    if (!root) return { x: cx, y: cy };
+    var r = root.getBoundingClientRect(), z = r.width / W || 1;
+    return { x: (cx - r.left) / z, y: (cy - r.top) / z };
+  }
+  hit(root, cx, cy) {
+    var doc = root && root.getRootNode ? root.getRootNode() : document;
+    if (!doc || !doc.elementFromPoint) doc = document;
+    var el = doc.elementFromPoint(cx, cy);
+    var s = el && el.closest ? el.closest('[data-slot]') : null;
+    var p = el && el.closest ? el.closest('[data-pool]') : null;
+    return { slot: s ? s.getAttribute('data-slot') : '', pool: !!p };
+  }
+  pmove(e) {
+    var d = this._d; if (!d) return;
+    var dx = e.clientX - d.sx, dy = e.clientY - d.sy;
+    if (!d.on && dx * dx + dy * dy < 36) return;
+    d.on = true;
+    var p = this.local(d.root, e.clientX, e.clientY), h = this.hit(d.root, e.clientX, e.clientY);
+    this.setState({ drag: { x: p.x, y: p.y, over: h.slot, out: !!(d.src.slot && !h.slot && h.pool), iso: d.src.iso } });
+  }
+  pup(e) {
+    var d = this._d; if (!d) return;
+    this._d = null;
+    if (!d.on) return;
+    this._jd = Date.now();
+    var h = this.hit(d.root, e.clientX, e.clientY), clear = { drag: null };
+    if (h.slot) {
+      var parts = h.slot.split('-'), l = parts[0], i = +parts[1];
+      if (d.src.slot) this.swap(d.root, d.src.l, d.src.i, l, i, clear);
+      else this.place(l, i, d.src.iso, clear);
+    } else if (d.src.slot && h.pool) this.removeAt(d.src.l, d.src.i, clear);
+    else this.setState(clear);
+  }
+  pcancel() { this._d = null; this.setState({ drag: null }); }
+  renderVals() {
+    var self = this, st = this.s(), M = st.mode;
+    var isA = M === 'A', isB = M === 'B', isC = M === 'C', isD = M === 'D';
+    var noop = function () {};
+    var cnt = { top: st.top.filter(Boolean).length, worst: st.worst.filter(Boolean).length };
+    var filled = cnt.top + cnt.worst, total = 2 * K, ready = filled === total;
+    var nextKey = '';
+    if (isA) { var ni = st[st.active].indexOf(null); if (ni >= 0) nextKey = st.active + '-' + ni; }
+    var justDragged = function () { return self._jd && Date.now() - self._jd < 350; };
+    function rows(l) {
+      return st[l].map(function (id, i) {
+        var key = l + '-' + i, f = id ? BY[id] : null, n = num(l, i);
+        var c = (f ? ' f' : ' e') + (l === 'top' ? ' t' : ' w');
+        if (key === nextKey) c += ' next';
+        if (st.drag && st.drag.over === key) c += ' over';
+        if (st.sheet && st.sheet.l === l && st.sheet.i === i) c += ' sel';
+        if (st.pop && st.pop.key === key) c += st.pop.n % 2 ? ' popA' : ' popB';
+        if (isC && f) c += ' grab';
+        var sty = '';
+        if (st.shift && st.shift[key]) sty = 'transform:' + st.shift[key] + ';transition:none;position:relative;z-index:2';
+        else if (st.flipOn) sty = 'transition:transform 250ms cubic-bezier(.2,.8,.2,1)';
+        var onRow = noop;
+        if (isA) onRow = f ? function () { self.removeAt(l, i); } : function () { self.setState({ active: l }); };
+        else if (isB) onRow = function (e) { self.openSheet(e, l, i); };
+        else if (isD && !f) onRow = function (e) { self.openSheet(e, l, i); };
+        else if (isC && !f) onRow = function () { if (!justDragged()) self.setState({ toast: self.mkToast('Σύρε μια χώρα από τη λίστα σε αυτή τη θέση', null) }); };
+        var et = EMPTY_TXT[M];
+        if (key === nextKey) et = 'Εδώ μπαίνει η επόμενη χώρα';
+        return {
+          key: key, num: n, filled: !!f, empty: !f,
+          code: f ? f.iso.toUpperCase() : '', flagCls: f ? flagCls(f.iso) : 'flag', flagSty: f ? flagSty(f.iso) : '',
+          name: f ? f.c : '', sub: f ? f.a + ' · ' + f.s : '', emptyText: et,
+          cls: 'px-slot' + c, chipCls: 'px-chip' + c, sty: sty,
+          aria: (l === 'top' ? 'Top 5, θέση ' : 'Worst 5, θέση ') + n + (f ? ': ' + f.c : ': κενή'),
+          onRow: onRow,
+          onDown: isC && f ? function (e) { self.down(e, { slot: true, l: l, i: i, iso: id }); } : noop,
+          showCtl: isD && !!f, upDis: i === 0, dnDis: i === K - 1,
+          upAria: f ? 'Μία θέση πάνω: ' + f.c : '', dnAria: f ? 'Μία θέση κάτω: ' + f.c : '', xAria: f ? 'Αφαίρεση: ' + f.c : '',
+          onUp: function (e) { self.move(e, l, i, -1); }, onDn: function (e) { self.move(e, l, i, 1); },
+          onX: function (e) { stop(e); self.removeAt(l, i); },
+          showX: isA && !!f, showGrip: isC && !!f
+        };
+      });
+    }
+    function lbCls(at) { return 'px-lb ' + (at.l === 'top' ? 't' : 'w'); }
+    var qq = norm(st.q.trim());
+    var pool = FIN.filter(function (f) { return !qq || f.k.indexOf(qq) >= 0; }).map(function (f) {
+      var at = self.where(st, f.iso);
+      var onTap = noop;
+      if (isA) onTap = function () { self.tapCountry(f.iso); };
+      else if (isC) onTap = function () { if (!justDragged()) self.setState({ toast: self.mkToast('Σύρε τη χώρα σε μια θέση', null) }); };
+      return {
+        cls: 'px-pr' + (at ? ' dim' : ''), cardCls: 'px-card' + (at ? ' dim' : '') + (isC ? ' grab' : ''),
+        flagCls: flagCls(f.iso), flagSty: flagSty(f.iso), name: f.c, sub: f.a + ' · ' + f.s,
+        picked: !!at, label: at ? lab(at.l, at.i) : '', labelCls: at ? lbCls(at) : 'px-lb',
+        aria: f.c + (at ? ', ' + lab(at.l, at.i) : ''),
+        onTap: onTap,
+        onDown: isC ? function (e) { self.down(e, { iso: f.iso }); } : noop,
+        showGrip: isC
+      };
+    });
+    var sh = st.sheet, sheetRows = [], sheetFilled = false, popSty = '';
+    if (sh) {
+      var sq = norm(st.sq.trim());
+      sheetFilled = !!st[sh.l][sh.i];
+      sheetRows = FIN.filter(function (f) { return !sq || f.k.indexOf(sq) >= 0; }).map(function (f) {
+        var at = self.where(st, f.iso), here = at && at.l === sh.l && at.i === sh.i;
+        return {
+          cls: 'px-pr' + (here ? ' here' : at ? ' dim' : ''), flagCls: flagCls(f.iso), flagSty: flagSty(f.iso),
+          name: f.c, sub: f.a + ' · ' + f.s, picked: !!at,
+          label: here ? 'Εδώ' : at ? lab(at.l, at.i) : '', labelCls: here ? 'px-lb h' : at ? lbCls(at) : 'px-lb',
+          aria: f.c + (here ? ', σε αυτή τη θέση' : at ? ', τώρα ' + lab(at.l, at.i) + ', πάτα για μεταφορά' : ''),
+          onPick: function () { self.pick(f.iso); }
+        };
+      });
+      if (DESK) {
+        var a = sh.a, pw = 440, ph = 440;
+        var left = a.x + a.w / 2 > W / 2 ? a.x - pw - 12 : a.x + a.w + 12; left = Math.max(16, Math.min(left, W - pw - 16));
+        var top = Math.max(80, Math.min(a.y + a.h / 2 - ph / 2, H - ph - 16));
+        popSty = 'left:' + Math.round(left) + 'px;top:' + Math.round(top) + 'px';
+      }
+    }
+    var dg = st.drag, ghost = { flagCls: 'flag', flagSty: '', name: '', hasTag: false, tag: '', tagCls: 'px-lb' };
+    if (dg && BY[dg.iso]) {
+      var gf = BY[dg.iso], tag = '', tcls = 'px-lb h';
+      if (dg.over) { var pp = dg.over.split('-'); tag = lab(pp[0], +pp[1]); }
+      else if (dg.out) { tag = 'Αφαίρεση'; tcls = 'px-lb w'; }
+      ghost = { flagCls: flagCls(gf.iso), flagSty: flagSty(gf.iso), name: gf.c, hasTag: !!tag, tag: tag, tagCls: tcls };
+    }
+    function done(l) { return st[l].map(function (id, i) { var f = BY[id] || { iso: '', c: '' }; return { num: num(l, i), flagCls: id ? flagCls(id) : 'flag', flagSty: id ? flagSty(id) : '', name: f.c }; }); }
+    var modeInfo = MODES.filter(function (m) { return m.id === M; })[0];
+    return {
+      modes: MODES.map(function (m) { return { id: m.id, t: m.t, cls: 'px-mode' + (m.id === M ? ' on' : ''), pressed: m.id === M ? 'true' : 'false', on: function () { self._d = null; self.setState({ mode: m.id, sheet: null, drag: null }); } }; }),
+      hint: st.locked ? 'Οι προβλέψεις είναι κλειδωμένες. Μπορούν να αλλάξουν ως την έναρξη του τελικού.' : modeInfo.h,
+      reset: function () { clearTimeout(self._tt); self._d = null; self.setState(Object.assign({}, INIT, { mode: st.mode, top: blank(), worst: blank() })); },
+      isA: isA, isAC: isA || isC, isBD: isB || isD,
+      editing: !st.locked, locked: st.locked,
+      topRows: rows('top'), worstRows: rows('worst'),
+      topTitle: 'Top 5', worstTitle: 'Worst 5 · θέσεις ' + (N - K + 1) + '–' + N,
+      worstRange: 'θέσεις ' + (N - K + 1) + '–' + N,
+      topCount: cnt.top + '/' + K, worstCount: cnt.worst + '/' + K,
+      togTopCls: 'px-s2 t' + (st.active === 'top' ? ' on' : ''), togWorstCls: 'px-s2 w' + (st.active === 'worst' ? ' on' : ''),
+      togTopPressed: st.active === 'top' ? 'true' : 'false', togWorstPressed: st.active === 'worst' ? 'true' : 'false',
+      setTop: function () { self.setState({ active: 'top' }); }, setWorst: function () { self.setState({ active: 'worst' }); },
+      q: st.q, onQ: function (e) { self.setState({ q: e.target.value }); },
+      pool: pool, poolEmpty: pool.length === 0,
+      progTxt: filled + '/' + total, remainTxt: ready ? 'έτοιμο' : 'λείπουν ' + (total - filled),
+      progSty: 'width:' + Math.round(filled / total * 100) + '%',
+      lockCls: 'btn btn-primary px-lock' + (ready ? '' : ' off'), lockDis: ready ? 'false' : 'true',
+      lock: function () { if (ready) self.setState({ locked: true, sheet: null, toast: null }); else self.setState({ toast: self.mkToast('Γέμισε και τις ' + total + ' θέσεις για κλείδωμα', null) }); },
+      unlock: function () { self.setState({ locked: false }); },
+      topDone: done('top'), worstDone: done('worst'),
+      hasToast: !!st.toast && !dg, toastMsg: st.toast ? st.toast.msg : '', toastUndo: !!(st.toast && st.toast.undo),
+      undo: function () { var u = st.toast && st.toast.undo; if (u) self.setState({ top: u.top, worst: u.worst, active: u.active, toast: null, pop: null }); },
+      sheetOpen: !!sh && !st.locked, sheetRows: sheetRows, sheetEmpty: !!sh && sheetRows.length === 0, sheetFilled: sheetFilled,
+      sheetList: sh ? (sh.l === 'top' ? 'Top 5' : 'Worst 5') : '', sheetColor: sh && sh.l === 'worst' ? 'color:#FF9B9B' : 'color:#FFE08A',
+      sheetTitle: sh ? 'Θέση ' + num(sh.l, sh.i) + (st[sh.l][sh.i] ? ' · ' + BY[st[sh.l][sh.i]].c : '') : '',
+      sq: st.sq, onSQ: function (e) { self.setState({ sq: e.target.value }); },
+      closeSheet: function () { self.setState({ sheet: null }); },
+      clearSlot: function () { var s2 = self.s().sheet; if (s2) self.removeAt(s2.l, s2.i, { sheet: null }); },
+      popSty: popSty,
+      bdNote: isB ? 'Χώρα που είναι ήδη σε θέση φαίνεται γκρι με τη θέση της· αν επιλεγεί, μετακινείται εδώ.' : 'Το + ανοίγει τη λίστα χωρών. Τα βέλη αλλάζουν θέση με τη διπλανή.',
+      dragging: !!dg, ghost: ghost, ghostSty: dg ? 'left:' + Math.round(Math.max(130, Math.min(W - 130, dg.x))) + 'px;top:' + Math.round(dg.y) + 'px' : '',
+      onMove: function (e) { self.pmove(e); }, onUp: function (e) { self.pup(e); }, onCancel: function () { self.pcancel(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

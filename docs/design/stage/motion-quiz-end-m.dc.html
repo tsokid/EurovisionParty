@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>Motion · Τέλος γύρου trivia — κινητό</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/b1e4c09d3fc83f2ff0a2c05a37204232">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Bebas+Neue&amp;display=swap">
+<style>
+body{margin:0}
+.qz-av{display:block;border-radius:50%;overflow:hidden;flex:none}
+.qz-av svg{display:block;width:100%;height:100%}
+.gx-phone{position:relative;width:390px;overflow:hidden;border-radius:28px;border:1px solid rgba(255,255,255,.16);background:#0B0416;display:flex;flex-direction:column}
+.gx-bar{display:flex;align-items:center;gap:10px;height:60px;padding:0 12px 0 16px;background:#110721;border-bottom:1px solid rgba(255,255,255,.09);flex:none}
+.gx-code{display:flex;flex-direction:column;gap:2px;line-height:1;color:#F6F1FF}
+.gx-code small{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A497BC}
+.gx-me{display:flex;align-items:center;gap:8px;min-height:44px;color:#F6F1FF}
+.gx-step{display:flex;align-items:center;gap:10px;height:34px;padding:0 16px;background:#110721;border-bottom:1px solid rgba(255,255,255,.09);font-size:12px;color:#A497BC;flex:none}
+.gx-step b{color:#CFC4E3;font-weight:600}
+.mo-stage{position:relative;flex:1;overflow:hidden}
+.mo-dock{flex:none;height:68px;display:flex;align-items:center;gap:10px;padding:0 12px;background:#07020F;border-top:1px dashed rgba(255,255,255,.18);position:relative;z-index:8}
+.mo-dock .lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#A497BC;line-height:1.2}
+.mo-switch{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;background:transparent;border:0;color:#CFC4E3;font:600 12px/1.25 'Space Grotesk',sans-serif;text-align:left;cursor:pointer}
+.mo-track{position:relative;width:38px;height:22px;flex:none;border-radius:11px;border:1px solid rgba(255,255,255,.16)}
+.mo-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#F6F1FF}
+.mo-skip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:#211238;color:#F6F1FF;font:600 13px 'Space Grotesk',sans-serif;cursor:pointer}
+.qz-card{position:absolute;left:16px;top:12px;width:358px;height:262px;border-radius:20px;background:linear-gradient(120deg,rgba(163,91,255,.18),rgba(240,70,156,.14)),#170B2B;border:1px solid rgba(240,70,156,.25)}
+.qz-dot{position:absolute;top:127px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center}
+.qz-chip{position:absolute;top:128px;width:96px;height:26px;margin-left:-48px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:4px;background:#FFC53D;color:#0B0416;font:700 12px/1 'Space Grotesk',sans-serif;white-space:nowrap;box-shadow:0 6px 18px -4px rgba(255,197,61,.6);pointer-events:none}
+.qz-rows{position:absolute;left:16px;top:316px;width:358px;height:300px;border-radius:18px;background:#170B2B;border:1px solid rgba(255,255,255,.09);overflow:hidden}
+.qz-row{position:absolute;left:0;top:0;width:100%;height:50px;display:grid;grid-template-columns:24px 32px minmax(0,1fr) auto 48px;gap:10px;align-items:center;padding:0 14px 0 12px;border-top:1px solid rgba(255,255,255,.07)}
+.qz-mv{display:inline-flex;align-items:center;justify-content:center;height:22px;padding:0 7px;border-radius:999px;font-size:12px;font-weight:700}
+.qz-toast{position:absolute;left:16px;right:16px;bottom:8px;min-height:44px;display:flex;align-items:center;gap:10px;padding:6px 14px;line-height:1.3;border-radius:14px;background:#211238;border:1px solid rgba(62,224,143,.45);box-shadow:0 12px 30px -10px rgba(0,0,0,.7);font-weight:600;font-size:14px}
+@keyframes bump-a{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes bump-b{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes chip-flash{0%{opacity:0;transform:scale(.4)}35%{opacity:1;transform:scale(1.35)}55%{transform:scale(.95)}70%{opacity:.55}85%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+@keyframes row-shine{0%{opacity:0;transform:translateX(-100%)}30%{opacity:1}100%{opacity:0;transform:translateX(100%)}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; overflow: hidden; background: #0B0416; color: #F6F1FF; font-family: 'Space Grotesk', system-ui, sans-serif">
+<div class="gx-phone" style="height: 844px">
+<header class="gx-bar"><div class="gx-code"><small>Δωμάτιο</small><span class="num" style="font-size: 26px; letter-spacing: .08em">PARTY</span></div><span class="chip chip-live" style="margin-left: 4px"><span class="dot"></span>Trivia</span><span style="flex: 1"></span><sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}"><button class="mo-skip" type="button" onClick="{{ skip }}">Παράλειψη<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5l8 7-8 7zM17 5v14"/></svg></button></sc-if><a class="gx-me" href="#" aria-label="Το προφίλ σου"><span class="num" style="font-size: 24px">{{ total }}</span><span class="qz-av" style="width: 34px; height: 34px; background: #A35BFF; color: #F0469C"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span></a></header>
+<div class="gx-step"><span style="white-space: nowrap"><b>Trivia</b> · Γύρος 2</span><span style="flex: 1"></span><span style="white-space: nowrap">Τέλος γύρου</span></div>
+<main class="mo-stage">
+<section class="qz-card" style="{{ cardStyle }}" aria-label="Αποτέλεσμα γύρου">
+<div style="position: absolute; left: 18px; top: 16px; right: 18px; display: flex; align-items: center"><span class="t-eyebrow" style="flex: 1">Τέλος γύρου · 10 ερωτήσεις</span><span class="t-meta">πόντοι γύρου</span></div>
+<div style="position: absolute; left: 0; right: 0; top: 36px; display: flex; justify-content: center"><span class="num" style="{{ roundStyle }}">{{ roundLabel }}</span></div>
+<sc-for list="{{ dots }}" as="d" hint-placeholder-count="10"><span class="qz-dot" style="{{ d.style }}" aria-label="{{ d.label }}"><sc-if value="{{ d.ok }}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{ d.bad }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></sc-if></span></sc-for>
+<sc-for list="{{ chips }}" as="c" hint-placeholder-count="7"><span class="qz-chip" style="{{ c.style }}" aria-hidden="true"><b style="font: 400 17px/1 'Bebas Neue', sans-serif">{{ c.label }}</b>{{ c.why }}</span></sc-for>
+<div style="{{ sumStyle }}"><span class="num" style="font-size: 20px; color: #FFE08A">4×12 + 2×8 + 1×4 = 68</span><span style="display: block; font-size: 12px; color: #A497BC; margin-top: 2px">Σωστή σε ≤3″ = 12 · ≤7″ = 8 · αργότερα = 4 · λάθος = 0</span></div>
+<div style="position: absolute; left: 18px; right: 18px; bottom: 14px; display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.09)"><span class="t-small" style="flex: 1">Συνολικοί πόντοι</span><span class="num" style="font-size: 22px; color: #A497BC">141</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A497BC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="num" style="{{ totalStyle }}">{{ total }}</span></div>
+</section>
+<div style="position: absolute; left: 16px; right: 16px; top: 280px; height: 32px; display: flex; align-items: center; gap: 8px"><h2 class="t-h3" style="font-size: 16px; flex: 1">Κατάταξη δωματίου</h2><span class="chip chip-live" style="height: 24px; font-size: 12px"><span class="dot"></span>Ζωντανά</span></div>
+<div class="qz-rows" role="list" aria-label="Κατάταξη">
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="6"><div class="qz-row" role="listitem" style="{{ r.style }}"><span class="num" style="{{ r.posStyle }}">{{ r.pos }}</span><span class="qz-av" style="{{ r.av }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span><span style="font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ r.name }}</span><span class="qz-mv" style="{{ r.mvStyle }}">{{ r.mv }}</span><span class="num" style="font-size: 22px; text-align: right">{{ r.pts }}</span></div></sc-for>
+</div>
+<div class="qz-toast" role="status" style="{{ toastStyle }}"><span style="width: 26px; height: 26px; border-radius: 50%; background: rgba(62,224,143,.16); color: #3EE08F; display: grid; place-items: center; flex: none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>Ανέβηκες πάνω από: Key Change, Disco Μπαμπέσα</div>
+</main>
+<div class="mo-dock" aria-label="Έλεγχοι πρωτοτύπου">
+<span class="lbl">Πρωτό-<br>τυπο</span>
+<button class="btn btn-secondary btn-sm" type="button" onClick="{{ replay }}" style="padding: 0 14px; min-height: 44px">&#9654;&#65038; Παίξε ξανά</button>
+<button class="mo-switch" type="button" role="switch" aria-checked="{{ reducedAria }}" onClick="{{ toggleReduced }}"><span class="mo-track" style="{{ trackStyle }}"><span class="mo-knob" style="{{ knobStyle }}"></span></span><span>Χωρίς κίνηση<br><span style="font-weight: 500; color: #A497BC">(reduced motion)</span></span></button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+// real tiers (submit_quiz_answer): correct ≤3s = 12, ≤7s = 8, else 4; wrong = 0
+var TIMES = [2.1, 5.4, 0, 1.8, 9.6, 0, 2.7, 2.9, 0, 6.2];
+var ANS = TIMES.map(function (t) { return !t ? 0 : t <= 3 ? 12 : t <= 7 ? 8 : 4; });
+function fmtT(t) { return String(t).replace('.', ',') + '″'; }
+var START_TOTAL = 141, ROUND = ANS.reduce(function (a, b) { return a + b; }, 0);
+var PLAYERS = [
+  { name: 'Douze Points', col: '#BE185D', cos: '#2EE6D6', pts: 214, r0: 0, r1: 0 },
+  { name: 'Key Change', col: '#0E7490', cos: '#FFE08A', pts: 176, r0: 1, r1: 2, down: true },
+  { name: 'Disco Μπαμπέσα', col: '#2B9C8F', cos: '#FFC53D', pts: 168, r0: 2, r1: 3, down: true },
+  { name: 'Lady Televote · εσύ', col: '#A35BFF', cos: '#F0469C', pts: 0, r0: 3, r1: 1, me: true },
+  { name: 'Glitter Bomb', col: '#2563EB', cos: '#FF7AB8', pts: 120, r0: 4, r1: 4 },
+  { name: 'Wind Machine', col: '#B45309', cos: '#C9A2FF', pts: 98, r0: 5, r1: 5 }
+];
+var ROW_H = 50;
+var EASE = 'cubic-bezier(.2,.8,.2,1)';
+var POP = 'cubic-bezier(.34,1.56,.64,1)';
+var INIT = { reduced: false, shown: false, dots: 0, chips: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], landed: 0, roundPts: 0, summary: false, total: START_TOTAL, moved: false, lift: false, fadeMovers: false, flash: false, toast: false, done: false, still: true };
+function dotX(i) { return 26 + 34 * i; }
+
+class Component extends DCLogic {
+  componentDidMount() { this.play(false); }
+  componentWillUnmount() { this.clear(); }
+  clear() { (this._t || []).forEach(clearTimeout); this._t = []; }
+  at(ms, fn) { this._t.push(setTimeout(fn, ms)); }
+  st() { return Object.assign({}, INIT, this.state || {}); }
+  count(key, from, to, dur, start) {
+    var n = Math.max(1, Math.round(dur / 40));
+    for (var i = 1; i <= n; i++) {
+      (function (self, i) {
+        var e = 1 - Math.pow(1 - i / n, 3);
+        self.at(start + dur * i / n, function () { var o = {}; o[key] = Math.round(from + (to - from) * e); self.setState(o); });
+      })(this, i);
+    }
+  }
+  setChip(i, v) { this._chips[i] = v; this.setState({ chips: this._chips.slice() }); }
+  play(r) {
+    var self = this;
+    this.clear();
+    this._chips = INIT.chips.slice();
+    this.setState(Object.assign({}, INIT, { reduced: r, chips: this._chips.slice() }));
+    this.at(30, function () { self.setState({ still: false }); });
+    if (r) {
+      this.at(80, function () { self.setState({ shown: true }); });
+      this.at(300, function () { self.setState({ dots: 10, roundPts: ROUND, landed: 7 }); });
+      this.at(700, function () { self.setState({ summary: true, total: START_TOTAL + ROUND }); });
+      this.at(1000, function () { self.setState({ fadeMovers: true }); });
+      this.at(1220, function () { self.setState({ moved: true, fadeMovers: false, flash: true }); });
+      this.at(1500, function () { self.setState({ toast: true, done: true }); });
+      return;
+    }
+    this.at(100, function () { self.setState({ shown: true }); });
+    var sum = 0, landed = 0;
+    ANS.forEach(function (p, i) {
+      var t = 500 + i * 220;
+      self.at(t, function () { self.setState({ dots: i + 1 }); });
+      if (p > 0) {
+        sum += p; landed += 1;
+        var cum = sum, ln = landed;
+        self.at(t + 60, function () { self.setChip(i, 1); });
+        self.at(t + 380, function () { self.setChip(i, 2); });
+        self.at(t + 780, function () { self.setState({ roundPts: cum, landed: ln }); });
+      }
+    });
+    this.at(3500, function () { self.setState({ summary: true }); });
+    this.count('total', START_TOTAL, START_TOTAL + ROUND, 900, 3800);
+    this.at(4900, function () { self.setState({ moved: true, lift: true }); });
+    this.at(5550, function () { self.setState({ lift: false, flash: true }); });
+    this.at(5900, function () { self.setState({ toast: true, done: true }); });
+  }
+  skip() { this.clear(); this._chips = ANS.map(function (p) { return p ? 2 : 0; }); this.setState({ shown: true, dots: 10, chips: this._chips.slice(), landed: 7, roundPts: ROUND, summary: true, total: START_TOTAL + ROUND, moved: true, lift: false, flash: true, toast: true, done: true, still: false }); }
+  renderVals() {
+    var self = this;
+    var s = this.st(), R = s.reduced, still = s.still;
+    function mv(on, offT, onT, dur, delay, ease) {
+      delay = delay || 0;
+      if (R) return 'opacity:' + (on ? 1 : 0) + ';transition:' + (still ? 'none' : 'opacity 200ms ease') + ';';
+      return 'opacity:' + (on ? 1 : 0) + ';transform:' + (on ? onT : offT) + ';transition:' + (still ? 'none' : 'opacity ' + Math.min(dur, 300) + 'ms ease ' + delay + 'ms, transform ' + dur + 'ms ' + (ease || EASE) + ' ' + delay + 'ms') + ';';
+    }
+    var dots = ANS.map(function (p, i) {
+      var on = s.dots > i, ok = p > 0;
+      return {
+        label: 'Ερώτηση ' + (i + 1) + ': ' + (ok ? 'σωστή σε ' + fmtT(TIMES[i]) + ', +' + p : 'λάθος, 0'),
+        ok: ok, bad: !ok,
+        style: 'left:' + (dotX(i) - 13) + 'px;' + (ok ? 'background:#3EE08F;color:#0B0416;' : 'background:rgba(255,107,107,.16);color:#FF6B6B;box-shadow:inset 0 0 0 1.5px rgba(255,107,107,.5);') + mv(on, 'scale(0)', 'scale(1)', 180, 0, POP)
+      };
+    });
+    var chips = [];
+    ANS.forEach(function (p, i) {
+      if (!p) return;
+      var cx = Math.max(52, Math.min(306, dotX(i)));
+      var c = s.chips[i], dx = 179 - cx;
+      var st = 'left:' + cx + 'px;';
+      if (R) st += 'opacity:0;';
+      else if (c === 0) st += 'opacity:0;transform:translate(0px,-4px) scale(.6);transition:none;';
+      else if (c === 1) st += 'opacity:1;transform:translate(0px,-34px) scale(1);transition:opacity 120ms ease, transform 200ms ' + POP + ';';
+      else st += 'opacity:0;transform:translate(' + dx + 'px,-63px) scale(.7);transition:transform 420ms cubic-bezier(.5,0,.3,1), opacity 140ms ease 300ms;';
+      chips.push({ label: '+' + p, why: '· ' + fmtT(TIMES[i]), style: st });
+    });
+    var rows = PLAYERS.map(function (p) {
+      var rank = s.moved ? p.r1 : p.r0;
+      var pts = p.me ? s.total : p.pts;
+      var mover = p.r0 !== p.r1;
+      var showMv = s.flash && mover;
+      var bg = p.me ? 'background:#211238;box-shadow:inset 3px 0 0 #F0469C;' : 'background:#170B2B;';
+      var lift = p.me && s.lift && !R;
+      var tr;
+      if (R) tr = 'transform:translateY(' + rank * ROW_H + 'px);opacity:' + (s.fadeMovers && mover ? 0 : 1) + ';transition:' + (still ? 'none' : 'opacity 200ms ease') + ';';
+      else tr = 'transform:translateY(' + rank * ROW_H + 'px) scale(' + (lift ? 1.04 : 1) + ');transition:' + (still ? 'none' : 'transform 620ms cubic-bezier(.3,1.15,.4,1)') + ';';
+      return {
+        name: p.name, pts: pts, pos: rank + 1,
+        mv: p.me ? '↑2' : '↓1',
+        style: bg + 'z-index:' + (p.me ? 3 : 1) + ';' + (lift ? 'box-shadow:inset 3px 0 0 #F0469C,0 14px 30px -10px rgba(0,0,0,.8);border-radius:12px;' : '') + tr,
+        posStyle: 'font-size:22px;text-align:center;color:' + (rank === 0 ? '#FFC53D' : rank === 1 ? '#D5D9E3' : rank === 2 ? '#E8A26B' : '#A497BC') + ';',
+        av: 'width:32px;height:32px;background:' + p.col + ';color:' + p.cos + ';',
+        mvStyle: !showMv ? 'opacity:0;' : (p.me ? 'color:#0B0416;background:#3EE08F;' : 'color:#CFC4E3;background:#2C1A4A;') + (R ? 'opacity:1;transition:opacity 200ms;' : 'animation:chip-flash 900ms ease-out forwards;')
+      };
+    });
+    var bumpName = s.landed % 2 ? 'bump-a' : 'bump-b';
+    return {
+      playing: !s.done, total: s.total, roundLabel: "+" + s.roundPts, dots: dots, chips: chips, rows: rows,
+      cardStyle: mv(s.shown, 'translateY(16px) scale(.97)', 'translateY(0px) scale(1)', 320, 0),
+      roundStyle: 'display:inline-block;font-size:78px;line-height:1;color:#FFC53D;' + (!R && s.landed > 0 ? 'animation:' + bumpName + ' 180ms ease-out;' : ''),
+      sumStyle: 'position:absolute;left:0;right:0;top:164px;text-align:center;font-size:14px;color:#CFC4E3;' + mv(s.summary, 'translateY(6px)', 'translateY(0px)', 260, 0),
+      totalStyle: 'font-size:30px;color:' + (s.total > START_TOTAL ? '#F6F1FF' : '#A497BC') + ';',
+      toastStyle: mv(s.toast, 'translateY(70px)', 'translateY(0px)', 340, 0, POP),
+      reducedAria: R ? 'true' : 'false',
+      trackStyle: 'background:' + (R ? '#A35BFF' : '#2C1A4A') + ';transition:background 160ms ease;',
+      knobStyle: 'transform:translateX(' + (R ? 16 : 0) + 'px);transition:transform 160ms ease;',
+      replay: function () { self.play(self.st().reduced); },
+      toggleReduced: function () { self.play(!self.st().reduced); },
+      skip: function () { self.skip(); }
+    };
+  }
+}
+</script>
+</body>
+</html>
