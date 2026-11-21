@@ -19,10 +19,11 @@ import { useGameStore, type QuizProgress } from '../src/stores/gameStore';
 import type { RoomPhase, TabId } from '../src/lib/types';
 import { setFakeDb, type FakeTables } from './fakeSupabase';
 import * as F from './fixtures';
+import StagePrimitives from './StagePrimitives';
 import '../src/index.css';
 
 // ── Screens ──────────────────────────────────────────────────────────
-type Render = 'room' | 'home' | 'predictions-locked' | 'duel-play' | 'duel-result';
+type Render = 'room' | 'home' | 'predictions-locked' | 'duel-play' | 'duel-result' | 'stage';
 
 interface Scenario {
   id: string;
@@ -72,10 +73,12 @@ const SCENARIOS: Scenario[] = [
   { id: 'final-results', label: 'Final results (predictions)', render: 'room', phase: 'final', tab: 'predictions', prediction: F.PREDICTION_SCORED, dismissCrown: true },
   { id: 'winners-crown', label: 'Winner crown reveal', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED },
   { id: 'winners', label: 'Winners carousel', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED, dismissCrown: true },
+  { id: 'stage-primitives', label: 'Stage primitives (design system)', render: 'stage', phase: 'lobby', note: 'Redesign Task 1: every src/components/stage primitive, in 390px and 1440px iframes.' },
 ];
 
 // ── Seeding ──────────────────────────────────────────────────────────
 function seed(s: Scenario) {
+  if (s.render === 'stage') return; // static sheet, no data
   // Skip first-entry overlays and audio, the same flags the app checks.
   try {
     localStorage.setItem('eurovision-games-intro-seen-DESIGN', '1');
@@ -181,6 +184,8 @@ function Screen({ s }: { s: Scenario }): ReactNode {
           </AppShell>
         </MemoryRouter>
       );
+    case 'stage':
+      return <StagePrimitives frame={new URLSearchParams(location.search).has('frame')} />;
     case 'duel-result':
       return (
         <MemoryRouter initialEntries={['/room/DESIGN']}>

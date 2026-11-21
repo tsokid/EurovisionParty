@@ -1,0 +1,17 @@
+// Stage design-system primitives (docs/design/stage/ds.css → src/index.css).
+export { Button, buttonClass } from './Button';
+export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
+export { Card } from './Card';
+export type { CardProps, CardVariant } from './Card';
+export { Chip } from './Chip';
+export type { ChipProps, ChipVariant } from './Chip';
+export { Flag, flagClass, FLAG_CODES } from './Flag';
+export type { FlagProps } from './Flag';
+export { Entries, EntryRow } from './Entries';
+export type { EntriesProps, EntryRowProps } from './Entries';
+export { Stat, Stats } from './Stat';
+export type { StatProps } from './Stat';
+export { Avatar, avatarInitials, avatarTone, AVATAR_TONES } from './Avatar';
+export type { AvatarProps } from './Avatar';
+export { PointsChip, formatPoints } from './PointsChip';
+export type { PointsChipProps } from './PointsChip';
