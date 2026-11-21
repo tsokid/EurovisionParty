@@ -65,18 +65,18 @@ function Card({ card, cards }: { card: CardDef; cards: SeoCopy['cards'] }) {
 }
 
 // "Plan the night" block of the home page (home board: "Οργάνωσε τη βραδιά"
-// on mobile, the "Οδηγοί" two-column section on desktop). It carries the
-// page's H1 and lede, the CMS doc's `seo` copy (content/pages/home.json),
-// passed in by HomePage; the H1 text is SEO-frozen.
+// on mobile, the "Οδηγοί" two-column section on desktop), led by its own H2.
+// The CMS doc's `seo` headline is the page H1, rendered at the top of the
+// hero (HomeHero); this block keeps the CMS lede, cards and tail link.
 export default function HomeSeoBlock({ copy: c, extraBlocks }: { copy: SeoCopy; extraBlocks?: unknown }) {
   const { t } = useTranslation();
   const year = useCurrentYear();
 
   return (
-    <section className="wrap home-guides" aria-labelledby="home-h1">
+    <section className="wrap home-guides" aria-labelledby="home-guides-h">
       <header className="home-guides-intro">
         <span className="t-eyebrow hidden lg:block">{t('home.guides.eyebrow')}</span>
-        <h1 id="home-h1" className="home-guides-h1">{c.headline}</h1>
+        <h2 id="home-guides-h" className="home-guides-h1">{t('home.guides.title')}</h2>
         <p className="t-body">
           <strong className="text-stage-text font-semibold">{c.leadStrong}</strong>
           {interpolate(c.leadRest, { year })}

@@ -12,6 +12,8 @@ interface Props {
   onCreate: () => void;
   /** Opens the join screen, prefilled with the typed code (may be empty). */
   onJoin: (code: string) => void;
+  /** The page's H1: the CMS headline (SEO-frozen text). Null until the CMS doc is ready. */
+  headline?: string | null;
 }
 
 /**
@@ -19,10 +21,11 @@ interface Props {
  * "create a room" CTA, then the join-by-code form. Desktop adds the stat row
  * and the decorative live-room preview. Rendered in the prerendered HTML too.
  *
- * The tagline is styled as the display heading but is a <p>: the page's H1 is
- * the CMS headline in HomeSeoBlock (SEO-frozen text).
+ * The page's H1 is the CMS headline (SEO-frozen text): the first heading in
+ * DOM order, a compact line under the chip. The tagline below it is the
+ * visual headline but is a <p>.
  */
-export default function HomeHero({ onCreate, onJoin }: Props) {
+export default function HomeHero({ onCreate, onJoin, headline }: Props) {
   const { t } = useTranslation();
   const locale = useLocale();
   const contest = useCurrentContest();
@@ -59,6 +62,7 @@ export default function HomeHero({ onCreate, onJoin }: Props) {
               <span className="hidden lg:inline">· {t('home.hero.chipFinal', { date: formatDay(contest.finalDate, locale) })}</span>
             )}
           </span>
+          {headline && <h1 className="home-h1">{headline}</h1>}
           <p className="home-title">
             {t('welcome.headlineLine1')}
             <br />

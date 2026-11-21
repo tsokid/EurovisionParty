@@ -643,13 +643,14 @@
       "pointsTitle": "Μάζεψε πόντους",
       "pointsBody": "Trivia και μονομαχίες με την παρέα, πριν και όσο τρέχει το σόου.",
       "predictTitle": "Πρόβλεψε τους νικητές",
-      "predictBody": "Top 5 και Worst 5 μόλις ξεκινήσει ο τελικός, πριν κλείσει η ψηφοφορία."
+      "predictBody": "Top 5 και Worst 5 μόλις ξεκινήσει ο τελικός, πριν ανοίξει η ψηφοφορία."
     },
     "titles": {
       "title": "Πέντε τίτλοι στο τέλος της βραδιάς"
     },
     "guides": {
       "eyebrow": "Οδηγοί",
+      "title": "Οργάνωσε την τέλεια βραδιά Eurovision",
       "winnersTitle": "Νικητές Eurovision",
       "winnersDesc": "Όλοι οι νικητές από το 1956."
     },
@@ -710,5 +711,29 @@
       "resultsBody": "Βαθμολογούνται αυτόματα με την επίσημη κατάταξη."
     },
     "detail": "Αναλυτικά: η φόρμα και η βαθμολογία"
+  },
+  "winnersPage": {
+    "statContests": "διαγωνισμοί από το {{first}}",
+    "statRecord": "ρεκόρ βαθμών, {{year}}",
+    "statStreak": "σερί νικών, {{country}}",
+    "wins_one": "νίκη",
+    "wins_other": "νίκες",
+    "lastWin": "Τελευταία {{year}}",
+    "pastBlurb": "Πλήρης κατάταξη κάθε χρονιάς."
+  },
+  "howToGuide": {
+    "statSetup": "στήσιμο",
+    "statPlayers": "παίκτες",
+    "statTrophies": "τρόπαια",
+    "onThisPage": "Σε αυτή τη σελίδα",
+    "haveCode": "Έχεις κωδικό;",
+    "codeLabel": "Κωδικός δωματίου",
+    "codePlaceholder": "Κωδικός",
+    "codeSubmit": "Μπες",
+    "lockTitle": "Ψηφοφορία live",
+    "lockBody": "Προβλέψεις, quiz και μονομαχίες κλειδώνουν αυτόματα.",
+    "exact": "πόντοι για ακριβή θέση",
+    "listOnly": "σωστή λίστα, λάθος θέση",
+    "predictionsLink": "Παιχνίδι προβλέψεων"
   }
 }

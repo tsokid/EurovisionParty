@@ -320,3 +320,97 @@ const el: ArchiveCopy = {
 };
 
 export const archiveCopy: Record<Locale, ArchiveCopy> = { en, el };
+
+// ─── Stage layout labels (past-after / archive-after boards) ────────────────
+
+export interface ArchiveUi {
+  /** "6 contests · 1 cancelled". */
+  decadeCount: (n: number, cancelled: number) => string;
+  decadesNav: string;
+  /** Featured-contest card chip, by its stage. */
+  featured: (stage: 'upcoming' | 'current' | 'finalized' | 'archived') => string;
+  glance: {
+    title: string;
+    contests: string;
+    first: (city: string) => string;
+    mostWins: (names: string) => string;
+    record: (year: number) => string;
+  };
+  links: {
+    winners: { title: string; blurb: string };
+    countries: { title: string; blurb: string };
+  };
+  winner: {
+    chip: string;
+    points: string;
+    jury: string;
+    televote: string;
+    /** "+173 points ahead of 2nd place (Israel, 343)". */
+    margin: (n: number, country: string, pts: number) => string;
+  };
+  resultsNav: string;
+  facts: { title: string; city: string; finalists: string; out: string; entries: string };
+  /** "Greece · 10th place" (EL pages: the Greek entry of that year). */
+  greekEntry: (country: string, place: string) => string;
+  greekOut: (country: string) => string;
+  pointsShort: (n: number) => string;
+}
+
+export const archiveUi: Record<Locale, ArchiveUi> = {
+  en: {
+    decadeCount: (n, c) => `${n} ${n === 1 ? 'contest' : 'contests'}${c ? ` · ${c} cancelled` : ''}`,
+    decadesNav: 'Jump to a decade',
+    featured: (s) => (s === 'upcoming' || s === 'current' ? 'Next contest' : 'Latest contest'),
+    glance: {
+      title: 'At a glance',
+      contests: 'contests',
+      first: (city) => `first, ${city}`,
+      mostWins: (names) => `wins, ${names}`,
+      record: (y) => `winner record, ${y}`,
+    },
+    links: {
+      winners: { title: 'All the winners', blurb: 'Wins by country.' },
+      countries: { title: 'Countries', blurb: 'Every country’s history.' },
+    },
+    winner: {
+      chip: 'Winner',
+      points: 'points',
+      jury: 'juries',
+      televote: 'televote',
+      margin: (n, c, p) => `+${n} points ahead of 2nd place (${c}, ${p})`,
+    },
+    resultsNav: 'Results',
+    facts: { title: 'The contest', city: 'City', finalists: 'Countries in the final', out: 'Out in the semi-finals', entries: 'Entries' },
+    greekEntry: (c, p) => `${c} · ${p} place`,
+    greekOut: (c) => `${c} · out in the semi-final`,
+    pointsShort: (n) => `${n} points`,
+  },
+  el: {
+    decadeCount: (n, c) => `${n} ${n === 1 ? 'διαγωνισμός' : 'διαγωνισμοί'}${c ? ` · ${c} ${c === 1 ? 'ακύρωση' : 'ακυρώσεις'}` : ''}`,
+    decadesNav: 'Πήγαινε σε δεκαετία',
+    featured: (s) => (s === 'upcoming' || s === 'current' ? 'Επόμενος διαγωνισμός' : 'Τελευταίος διαγωνισμός'),
+    glance: {
+      title: 'Με μια ματιά',
+      contests: 'διαγωνισμοί',
+      first: (city) => `πρώτος, ${city}`,
+      mostWins: (names) => `νίκες, ${names}`,
+      record: (y) => `ρεκόρ νικητή, ${y}`,
+    },
+    links: {
+      winners: { title: 'Όλοι οι νικητές', blurb: 'Πίνακας νικών ανά χώρα.' },
+      countries: { title: 'Χώρες', blurb: 'Η ιστορία κάθε χώρας.' },
+    },
+    winner: {
+      chip: 'Νικητής',
+      points: 'βαθμοί',
+      jury: 'επιτροπές',
+      televote: 'κοινό',
+      margin: (n, c, p) => `+${n} βαθμοί από τη 2η θέση (${c}, ${p})`,
+    },
+    resultsNav: 'Αποτελέσματα',
+    facts: { title: 'Ο διαγωνισμός', city: 'Πόλη', finalists: 'Χώρες στον τελικό', out: 'Αποκλείστηκαν στους ημιτελικούς', entries: 'Συμμετοχές' },
+    greekEntry: (c, p) => `${c} · ${p} θέση`,
+    greekOut: (c) => `${c} · εκτός τελικού`,
+    pointsShort: (n) => `${n} βαθμοί`,
+  },
+};

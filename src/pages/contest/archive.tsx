@@ -74,4 +74,9 @@ export function yearCell(year: number, path: string | null): ReactNode {
   return path ? <LocaleLink to={path} className={LINK}>{label}</LocaleLink> : label;
 }
 
+/** Year for a Stage results rail: the rail sets the type (Bebas), the link only carries it. */
+export function yearRail(year: number, path: string | null): ReactNode {
+  return path ? <LocaleLink to={path}>{year}</LocaleLink> : year;
+}
+
 export const linkClass = LINK;

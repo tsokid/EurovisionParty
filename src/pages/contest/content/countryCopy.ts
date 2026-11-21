@@ -186,3 +186,46 @@ const el: CountryCopy = {
 };
 
 export const countryCopy: Record<Locale, CountryCopy> = { en, el };
+
+// ─── Stage layout labels (country-after boards) ─────────────────────────────
+
+export interface CountryUi {
+  place: string;
+  phase: string;
+  final: string;
+  /** "Semi-final 2 · 13th". */
+  semiOut: (p: CountryParticipation) => string;
+  outOfFinal: string;
+  cancelled: string;
+  pointsUnit: string;
+  podiumTitle: string;
+  winsCaption: (years: number[]) => string;
+}
+
+const semiName = (n: 1 | 2 | null, locale: Locale) =>
+  locale === 'el' ? (n === 1 ? 'Α΄ ημιτελικός' : n === 2 ? 'Β΄ ημιτελικός' : 'Ημιτελικοί') : (n ? `Semi-final ${n}` : 'Semi-finals');
+
+export const countryUi: Record<Locale, CountryUi> = {
+  en: {
+    place: 'Place',
+    phase: 'Stage',
+    final: 'Final',
+    semiOut: (p) => `${semiName(p.semi, 'en')}${p.semi_place !== null ? ` · ${ordinal(p.semi_place, 'en')}` : ''}`,
+    outOfFinal: 'Not in the final',
+    cancelled: 'Cancelled',
+    pointsUnit: 'points',
+    podiumTitle: 'Other top-three finishes',
+    winsCaption: (ys) => `Wins: ${joinList(ys.map(String), 'en')}`,
+  },
+  el: {
+    place: 'Θέση',
+    phase: 'Φάση',
+    final: 'Τελικός',
+    semiOut: (p) => `${semiName(p.semi, 'el')}${p.semi_place !== null ? ` · ${ordinal(p.semi_place, 'el')}` : ''}`,
+    outOfFinal: 'Εκτός τελικού',
+    cancelled: 'Ακυρώθηκε',
+    pointsUnit: 'βαθμοί',
+    podiumTitle: 'Στην τριάδα',
+    winsCaption: (ys) => `Νίκες: ${joinList(ys.map(String), 'el')}`,
+  },
+};

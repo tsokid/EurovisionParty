@@ -54,7 +54,9 @@ describe('archive year page', () => {
     expect(h1).toBeGreaterThan(-1);
     expect(intro).toBeGreaterThan(h1);
     expect(img).toBeGreaterThan(intro);
-    expect(intro).toBeLessThan(r.html.indexOf('id="winner"'));
+    // Stage: the winner card sits in the hero; the intro opens the body, before the results.
+    expect(intro).toBeGreaterThan(r.html.indexOf('</header>', h1));
+    expect(intro).toBeLessThan(r.html.indexOf('id="final"'));
     const tag = r.html.slice(img, r.html.indexOf('>', img) + 1);
     expect(tag).toContain('loading="eager"');
     expect(tag).toMatch(/fetchPriority="high"|fetchpriority="high"/);
@@ -124,7 +126,9 @@ describe('country page', () => {
     expect(r.head!.robots).toBeUndefined();
     const intro = r.html.indexOf('Kyiv hosted <strong');
     expect(intro).toBeGreaterThan(r.html.indexOf('<h1'));
-    expect(intro).toBeLessThan(r.html.indexOf('id="summary"'));
+    // Stage: the summary stats sit in the hero; the intro opens the body, before the tables.
+    expect(intro).toBeGreaterThan(r.html.indexOf('</header>', r.html.indexOf('<h1')));
+    expect(intro).toBeLessThan(r.html.indexOf('id="last-10"'));
     const block = r.html.indexOf('Editorial block text.');
     expect(block).toBeGreaterThan(r.html.indexOf('id="history"'));
     // Greece has no related countries: the related link is "All countries".

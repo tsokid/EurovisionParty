@@ -643,13 +643,14 @@
       "pointsTitle": "Collect points",
       "pointsBody": "Trivia and duels with your friends, before and during the show.",
       "predictTitle": "Predict the winners",
-      "predictBody": "Top 5 and Worst 5 as soon as the final starts, before voting closes."
+      "predictBody": "Top 5 and Worst 5 as soon as the final starts, before voting opens."
     },
     "titles": {
       "title": "Five titles at the end of the night"
     },
     "guides": {
       "eyebrow": "Guides",
+      "title": "Plan the perfect Eurovision night",
       "winnersTitle": "Eurovision winners",
       "winnersDesc": "Every winner since 1956."
     },
@@ -710,5 +711,29 @@
       "resultsBody": "Scored automatically against the official ranking."
     },
     "detail": "In detail: the format and the scoring"
+  },
+  "winnersPage": {
+    "statContests": "contests since {{first}}",
+    "statRecord": "points record, {{year}}",
+    "statStreak": "wins in a row, {{country}}",
+    "wins_one": "win",
+    "wins_other": "wins",
+    "lastWin": "Last {{year}}",
+    "pastBlurb": "The full ranking of every year."
+  },
+  "howToGuide": {
+    "statSetup": "setup",
+    "statPlayers": "players",
+    "statTrophies": "trophies",
+    "onThisPage": "On this page",
+    "haveCode": "Got a code?",
+    "codeLabel": "Room code",
+    "codePlaceholder": "Code",
+    "codeSubmit": "Join",
+    "lockTitle": "Voting live",
+    "lockBody": "Predictions, quiz and duels lock automatically.",
+    "exact": "points for the exact place",
+    "listOnly": "right list, wrong place",
+    "predictionsLink": "Predictions game"
   }
 }

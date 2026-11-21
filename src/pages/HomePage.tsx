@@ -69,6 +69,7 @@ export function HomePage() {
       <>
         {seo}
         <HomeHero
+          headline={doc?.seo.headline ?? null}
           onCreate={() => setMode('create')}
           onJoin={(code) => {
             setJoinCode(code);
