@@ -34,10 +34,10 @@ interface Country {
 type EditableKey = Exclude<keyof Entry, 'year' | 'iso'>;
 type Draft = Partial<Pick<Entry, EditableKey>>;
 
-const FINAL_COLS: Array<{ key: 'final_running_order' | 'final_place' | 'total_points'; label: string }> = [
-  { key: 'final_running_order', label: 'Final RO' },
-  { key: 'final_place', label: 'Final place' },
-  { key: 'total_points', label: 'Points' },
+const FINAL_COLS: Array<{ key: 'final_running_order' | 'final_place' | 'total_points'; label: string; example: string }> = [
+  { key: 'final_running_order', label: 'Final RO', example: '12' },
+  { key: 'final_place', label: 'Final place', example: '1' },
+  { key: 'total_points', label: 'Points', example: '436' },
 ];
 
 const INPUT = 'bg-[#1a0a2e] border border-white/15 text-white rounded px-1.5 py-1 text-sm';
@@ -196,7 +196,8 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                       aria-label={`Artist ${e.iso}`}
                       value={valueOf(e, 'artist') ?? ''}
                       onChange={(ev) => edit(e.iso, 'artist', toText(ev.target.value))}
-                      className={`${INPUT} w-36`}
+                      placeholder="Artist name"
+                      className={`${INPUT} w-36 placeholder:text-white/30`}
                     />
                   </td>
                   <td className="px-2 py-1.5">
@@ -204,7 +205,8 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                       aria-label={`Song ${e.iso}`}
                       value={valueOf(e, 'song') ?? ''}
                       onChange={(ev) => edit(e.iso, 'song', toText(ev.target.value))}
-                      className={`${INPUT} w-36`}
+                      placeholder="Song title"
+                      className={`${INPUT} w-36 placeholder:text-white/30`}
                     />
                   </td>
                   <td className="px-2 py-1.5">
@@ -225,7 +227,8 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                       aria-label={`Semi RO ${e.iso}`}
                       value={valueOf(e, 'semi_running_order') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi_running_order', toNum(ev.target.value))}
-                      className={`${INPUT} w-16`}
+                      placeholder="4"
+                      className={`${INPUT} w-16 placeholder:text-white/30`}
                     />
                   </td>
                   <td className="px-2 py-1.5">
@@ -234,7 +237,8 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                       aria-label={`Semi place ${e.iso}`}
                       value={valueOf(e, 'semi_place') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi_place', toNum(ev.target.value))}
-                      className={`${INPUT} w-16`}
+                      placeholder="2"
+                      className={`${INPUT} w-16 placeholder:text-white/30`}
                     />
                   </td>
                   <td className="px-2 py-1.5">
@@ -243,7 +247,8 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                       aria-label={`Semi points ${e.iso}`}
                       value={valueOf(e, 'semi_points') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi_points', toNum(ev.target.value))}
-                      className={`${INPUT} w-16`}
+                      placeholder="180"
+                      className={`${INPUT} w-16 placeholder:text-white/30`}
                     />
                   </td>
                   <td className="px-2 py-1.5">
@@ -273,7 +278,8 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                         aria-label={`${c.label} ${e.iso}`}
                         value={valueOf(e, c.key) ?? ''}
                         onChange={(ev) => edit(e.iso, c.key, toNum(ev.target.value))}
-                        className={`${INPUT} w-16`}
+                        placeholder={c.example}
+                        className={`${INPUT} w-16 placeholder:text-white/30`}
                       />
                     </td>
                   ))}

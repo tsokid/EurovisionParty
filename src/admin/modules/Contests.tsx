@@ -34,14 +34,15 @@ const INPUT = 'bg-[#1a0a2e] border border-white/15 text-white rounded px-2 py-1.
 const EMPTY_FORM = { year: '', city: '', slug: '', host: '', semi1: '', semi2: '', final: '' };
 type Form = typeof EMPTY_FORM;
 
-const FORM_FIELDS: Array<{ key: keyof Form; label: string; type: string }> = [
-  { key: 'year', label: 'Year', type: 'number' },
-  { key: 'city', label: 'City', type: 'text' },
-  { key: 'slug', label: 'Slug', type: 'text' },
-  { key: 'host', label: 'Host ISO', type: 'text' },
-  { key: 'semi1', label: 'Semi 1', type: 'date' },
-  { key: 'semi2', label: 'Semi 2', type: 'date' },
-  { key: 'final', label: 'Final', type: 'date' },
+// `example` is the placeholder; date inputs ignore placeholders, so dates show it as a hint below.
+const FORM_FIELDS: Array<{ key: keyof Form; label: string; type: string; example: string }> = [
+  { key: 'year', label: 'Year', type: 'number', example: 'e.g. 2028' },
+  { key: 'city', label: 'City', type: 'text', example: 'e.g. Burgas' },
+  { key: 'slug', label: 'Slug', type: 'text', example: 'e.g. burgas (lowercase, hyphens)' },
+  { key: 'host', label: 'Host ISO', type: 'text', example: 'e.g. BG' },
+  { key: 'semi1', label: 'Semi 1', type: 'date', example: 'e.g. Tue 11 May 2027' },
+  { key: 'semi2', label: 'Semi 2', type: 'date', example: 'e.g. Thu 13 May 2027' },
+  { key: 'final', label: 'Final', type: 'date', example: 'e.g. Sat 15 May 2027' },
 ];
 
 export default function Contests() {
@@ -170,10 +171,13 @@ export default function Contests() {
                 <span className="text-xs text-white/50 uppercase tracking-wide">{f.label}</span>
                 <input
                   type={f.type}
+                  aria-label={f.label}
                   value={form[f.key]}
                   onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.value }))}
-                  className={INPUT}
+                  placeholder={f.type === 'date' ? undefined : f.example}
+                  className={`${INPUT} placeholder:text-white/30`}
                 />
+                {f.type === 'date' && <span className="text-xs text-white/40">{f.example}</span>}
               </label>
             ))}
           </div>

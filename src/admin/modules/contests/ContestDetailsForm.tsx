@@ -145,7 +145,8 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
             aria-label="City"
             value={form.city}
             onChange={(e) => set('city', e.target.value)}
-            className={INPUT}
+            placeholder="e.g. Burgas"
+            className={`${INPUT} placeholder:text-white/30`}
           />
         </label>
         <label className="text-sm text-white/80 flex flex-col gap-1">
@@ -155,7 +156,8 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
             value={form.city_slug}
             onChange={(e) => set('city_slug', e.target.value)}
             disabled={archived}
-            className={`${INPUT} font-mono disabled:opacity-50`}
+            placeholder="e.g. burgas"
+            className={`${INPUT} font-mono disabled:opacity-50 placeholder:text-white/30`}
           />
           {archived && (
             <span className="text-xs text-white/50">
