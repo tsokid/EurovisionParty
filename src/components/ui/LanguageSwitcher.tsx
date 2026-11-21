@@ -26,9 +26,11 @@ interface LanguageSwitcherProps {
    *  Use 'top' inside containers anchored to the bottom of the screen
    *  (e.g. the mobile burger menu) so the popover stays on-screen. */
   placement?: 'top' | 'bottom';
+  /** `stage`: Stage ghost button with the language code (public site header). */
+  variant?: 'default' | 'stage';
 }
 
-export default function LanguageSwitcher({ placement = 'bottom' }: LanguageSwitcherProps = {}) {
+export default function LanguageSwitcher({ placement = 'bottom', variant = 'default' }: LanguageSwitcherProps = {}) {
   const locale = useLocale();
   const { pathname, search, hash } = useLocation();
   const navigate = useNavigate();
@@ -77,6 +79,54 @@ export default function LanguageSwitcher({ placement = 'bottom' }: LanguageSwitc
     const next = localizePath(code, stripped) + search + hash;
     navigate(next);
   };
+
+  if (variant === 'stage') {
+    return (
+      <div ref={wrapperRef} className="relative">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); prefetch(); setOpen((v) => !v); }}
+          onMouseEnter={prefetch}
+          onFocus={prefetch}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-label="Change language"
+          className="btn btn-ghost btn-sm"
+          style={{ padding: '0 12px', gap: 4 }}
+        >
+          <span aria-hidden>{current.code.toUpperCase()}</span>
+          <svg width="14" height="14" style={{ transform: open ? 'rotate(180deg)' : undefined }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+        {open && (
+          <div role="listbox" aria-label="Language" className={`menu-pop${placement === 'top' ? ' up' : ''}`} style={{ minWidth: 200 }}>
+            {LANGS.map((l) => {
+              const active = l.code === current.code;
+              return (
+                <button
+                  key={l.code}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => select(l.code)}
+                  className="menu-item"
+                >
+                  <span className="t-eyebrow" style={{ width: 22 }} aria-hidden>{l.code.toUpperCase()}</span>
+                  <span className="flex-1">{l.label}</span>
+                  {active && (
+                    <svg width="16" height="16" className="text-stage-ok shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={wrapperRef} className="relative">

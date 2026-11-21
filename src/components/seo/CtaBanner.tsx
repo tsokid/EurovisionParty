@@ -1,4 +1,5 @@
 import LocaleLink from './LocaleLink';
+import { buttonClass } from '../stage';
 
 interface Props {
   title: string;
@@ -7,26 +8,22 @@ interface Props {
   secondary?: { label: string; href: string };
 }
 
+// Closing call to action on the Stage `.card-hero` (FAQ board): left-aligned,
+// full-width buttons on mobile, inline from 768px.
 export default function CtaBanner({ title, body, primary, secondary }: Props) {
   return (
     <aside
-      className="rounded-2xl border border-white/10 bg-gradient-to-br from-euro-purple/30 via-euro-purple-dark/40 to-euro-pink/20 px-6 py-10 sm:px-10 sm:py-12 text-center"
+      className="card-hero flex flex-col gap-3 px-5 py-[22px] md:p-8 text-stage-text"
       role="complementary"
     >
-      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{title}</h2>
-      <p className="text-white/75 max-w-xl mx-auto mb-6">{body}</p>
-      <div className="flex flex-wrap gap-3 justify-center">
-        <LocaleLink
-          to={primary.href}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-euro-purple-light to-euro-pink text-white font-bold hover:opacity-95 transition shadow-lg shadow-euro-pink/20"
-        >
+      <h2 className="t-h2">{title}</h2>
+      <p className="t-body max-w-2xl">{body}</p>
+      <div className="flex flex-col md:flex-row md:flex-wrap gap-2.5 mt-1">
+        <LocaleLink to={primary.href} className={buttonClass({ className: 'w-full md:w-auto' })}>
           ✨ {primary.label}
         </LocaleLink>
         {secondary && (
-          <LocaleLink
-            to={secondary.href}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/[0.06] border border-white/15 text-white font-bold hover:bg-white/10 transition"
-          >
+          <LocaleLink to={secondary.href} className={buttonClass({ variant: 'ghost', className: 'w-full md:w-auto' })}>
             {secondary.label}
           </LocaleLink>
         )}

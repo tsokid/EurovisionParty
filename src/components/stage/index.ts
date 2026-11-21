@@ -5,7 +5,7 @@ export { Card } from './Card';
 export type { CardProps, CardVariant } from './Card';
 export { Chip } from './Chip';
 export type { ChipProps, ChipVariant } from './Chip';
-export { Flag, flagClass, FLAG_CODES } from './Flag';
+export { Flag, flagClass, flagSrc, FLAG_CODES, CSS_ONLY_FLAGS } from './Flag';
 export type { FlagProps } from './Flag';
 export { Entries, EntryRow } from './Entries';
 export type { EntriesProps, EntryRowProps } from './Entries';

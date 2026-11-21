@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useUserRooms, getBadge } from '../../hooks/useUserRooms';
@@ -12,6 +13,7 @@ import LockedBadge from '../ui/LockedBadge';
 import type { SiteSnapshot } from '../../content/contests/types';
 import { useContent } from '../../lib/seo/useContent';
 import { hubPath } from '../../lib/seo/dynamicPages';
+import { buttonClass } from '../stage';
 
 interface NavLink {
   href: string;
@@ -27,25 +29,24 @@ const HOW_TO_PLAY_LINKS: NavLink[] = [
 ];
 
 /**
- * The dropdown links, with "Eurovision {year}" (the live contest hub) after
- * Predictions. The year comes from site.json, which every prerendered page
- * inlines because the header reads it; no hub link while it is unknown or the
- * live contest is archived (the hub then redirects to the archive).
+ * The "How to play" links, plus the live contest hub ("Eurovision {year}").
+ * The year comes from site.json, which every prerendered page inlines because
+ * the header reads it; no hub link while it is unknown or the live contest is
+ * archived (the hub then redirects to the archive).
  */
-function useHowToPlayLinks(): { links: NavLink[]; year: number | null } {
+function useHowToPlayLinks(): { links: NavLink[]; hub: NavLink | null; year: number | null } {
   const site = useContent<SiteSnapshot>('site.json');
   const year = site.status === 'ready' && site.data.live_stage !== 'archived' ? site.data.current_year : null;
-  if (year === null) return { links: HOW_TO_PLAY_LINKS, year };
-  const hub: NavLink = { href: hubPath(year), key: 'hub' };
-  const at = HOW_TO_PLAY_LINKS.findIndex((l) => l.key === 'predictions') + 1;
-  return { links: [...HOW_TO_PLAY_LINKS.slice(0, at), hub, ...HOW_TO_PLAY_LINKS.slice(at)], year };
+  if (year === null) return { links: HOW_TO_PLAY_LINKS, hub: null, year };
+  return { links: HOW_TO_PLAY_LINKS, hub: { href: hubPath(year), key: 'hub' }, year };
 }
-
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg
-      className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`}
+      width="16"
+      height="16"
+      style={{ transform: open ? 'rotate(180deg)' : undefined }}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -59,11 +60,36 @@ function ChevronIcon({ open }: { open: boolean }) {
   );
 }
 
+function MenuIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+      <path d="M6 6l12 12M6 18L18 6" />
+    </svg>
+  );
+}
+
+function Logo() {
+  return (
+    <LocaleLink to="/" className="logo" aria-label="Eurovision Games — home">
+      <img src="/logo.png" alt="eurovision.games" width={866} height={288} draggable={false} />
+    </LocaleLink>
+  );
+}
+
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default function SiteHeader() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [roomsOpen, setRoomsOpen] = useState(false);
-  const [howOpen, setHowOpen] = useState(false);
   const [howDropdownOpen, setHowDropdownOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -72,17 +98,38 @@ export default function SiteHeader() {
   const room = useGameStore((s) => s.room);
   const inRoomBroadcasting = !!room && (room.phase === 'voting_live' || room.phase === 'final');
   const triviaLocked = inRoomBroadcasting;
-  const { links: howLinks, year } = useHowToPlayLinks();
+  const { links: howLinks, hub, year } = useHowToPlayLinks();
   const label = (l: NavLink) => t(`siteNav.${l.key}`, { year });
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setOpen(false); }, [pathname]);
 
+  // Mobile menu = modal dialog: scroll lock, focus moves in, Tab stays in,
+  // Esc closes, focus returns to the menu button.
   useEffect(() => {
-    if (open) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = prev; };
-    }
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const node = dialogRef.current;
+    node?.querySelector<HTMLElement>('[data-autofocus]')?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); return; }
+      if (e.key !== 'Tab' || !node) return;
+      const items = [...node.querySelectorAll<HTMLElement>(FOCUSABLE)];
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', onKey);
+    const trigger = triggerRef.current;
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+      trigger?.focus();
+    };
   }, [open]);
 
   // Close desktop "How to play" dropdown on outside click / esc
@@ -104,35 +151,145 @@ export default function SiteHeader() {
   const liveRooms = rooms.filter((r) => getBadge(r) !== 'ENDED');
   const roomCount = liveRooms.length;
   const cleanPath = stripLocaleFromPath(pathname);
+  const howActive = howDropdownOpen || howLinks.some((l) => l.href === cleanPath) || cleanPath === '/how-to-play';
 
   const handleAction = (action: 'create' | 'join') => {
     setOpen(false);
     navigate(`${localizePath(locale, '/')}?action=${action}`);
   };
 
+  const drawer = open ? (
+    <div
+      ref={dialogRef}
+      id="site-drawer"
+      className="drawer lg:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t('siteNav.menu')}
+    >
+      <div className="drawer-head">
+        <div className="wrap topbar-row">
+          <Logo />
+          <span className="spacer" />
+          <button
+            type="button"
+            data-autofocus
+            onClick={() => setOpen(false)}
+            aria-label={t('siteNav.closeMenu')}
+            className="iconbtn"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+      </div>
+
+      <nav className="wrap drawer-body" aria-label="Mobile">
+        {/* ─── CTAs ─── */}
+        <div className="flex flex-col gap-2.5">
+          <button type="button" onClick={() => handleAction('create')} className={buttonClass({ size: 'lg', block: true })}>
+            {t('siteNav.createRoom')}
+          </button>
+          <button type="button" onClick={() => handleAction('join')} className={buttonClass({ variant: 'secondary', size: 'lg', block: true })}>
+            {t('siteNav.joinRoom')}
+          </button>
+        </div>
+
+        {/* ─── Pages ─── */}
+        <ul className="drawer-links">
+          {hub && (
+            <li>
+              <LocaleLink to={hub.href} className={`drawer-link${cleanPath === hub.href ? ' on' : ''}`}>{label(hub)}</LocaleLink>
+            </li>
+          )}
+          <li>
+            <LocaleLink to="/eurovision-night" className={`drawer-link${cleanPath === '/eurovision-night' ? ' on' : ''}`}>
+              {t('siteNav.eurovisionNight')}
+            </LocaleLink>
+          </li>
+        </ul>
+
+        {/* ─── How to play ─── */}
+        <div>
+          <span className="t-eyebrow">{t('siteNav.howToPlay')}</span>
+          <ul className="drawer-links">
+            {howLinks.map((l) => (
+              <li key={l.href}>
+                {l.key === 'trivia' && triviaLocked ? (
+                  <div className="drawer-link sub"><LockedBadge label={label(l)} /></div>
+                ) : (
+                  <LocaleLink to={l.href} className={`drawer-link sub${cleanPath === l.href ? ' on' : ''}`}>{label(l)}</LocaleLink>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* ─── Your Rooms — collapsible ─── */}
+        <div className="card overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setRoomsOpen((v) => !v)}
+            aria-expanded={roomsOpen}
+            className="w-full flex items-center justify-between gap-3 min-h-[56px] px-4 text-left cursor-pointer text-stage-text"
+          >
+            <span className="flex items-center gap-2.5">
+              <span className="font-semibold">{t('siteNav.yourRooms')}</span>
+              {roomCount > 0 && (
+                <span className="chip chip-pink num">{roomCount}</span>
+              )}
+            </span>
+            <ChevronIcon open={roomsOpen} />
+          </button>
+          {roomsOpen && (
+            <div className="px-2 pb-2 flex flex-col gap-1">
+              {rooms.length === 0 ? (
+                <p className="t-meta px-2.5 py-2 m-0">{t('siteNav.noRooms')}</p>
+              ) : (
+                rooms.map((r) => {
+                  const badge = getBadge(r);
+                  const dotColor =
+                    badge === 'LIVE' ? 'text-stage-live' : badge === 'AWAY' ? 'text-stage-gold' : 'text-stage-text-3';
+                  return (
+                    <Link
+                      key={r.playerId}
+                      to={`/room/${r.roomCode}`}
+                      className="flex items-center justify-between gap-3 px-2.5 min-h-[48px] rounded-xl hover:bg-stage-surface-2 transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className={`dot ${dotColor}`} aria-hidden />
+                        <code className="font-mono text-[0.85rem] text-stage-text shrink-0">{r.roomCode}</code>
+                        <span className="text-stage-text-3 shrink-0">·</span>
+                        <span className="t-small truncate">{r.hostName}</span>
+                      </div>
+                      <span className="t-meta tabular-nums shrink-0">
+                        {r.totalPoints} {t('common.pts')}
+                      </span>
+                    </Link>
+                  );
+                })
+              )}
+            </div>
+          )}
+        </div>
+      </nav>
+    </div>
+  ) : null;
+
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-euro-deep/80 border-b border-white/10">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between">
-        <LocaleLink to="/" className="flex items-center group shrink-0" aria-label="Eurovision Games — home">
-          <img
-            src="/logo.png"
-            alt="eurovision.games"
-            width={866}
-            height={288}
-            className="h-16 sm:h-20 w-auto select-none drop-shadow-[0_0_18px_rgba(236,72,153,0.25)] group-hover:drop-shadow-[0_0_24px_rgba(236,72,153,0.45)] transition"
-            draggable={false}
-          />
-        </LocaleLink>
+    <header className="topbar">
+      <div className="wrap topbar-row">
+        <Logo />
 
         {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-1" aria-label="Primary">
+        <nav className="nav" aria-label="Primary">
+          {hub && (
+            <LocaleLink to={hub.href} className={`nav-item${cleanPath === hub.href ? ' on' : ''}`}>
+              {label(hub)}
+            </LocaleLink>
+          )}
           <LocaleLink
             to="/eurovision-night"
-            className={`px-3 py-1.5 rounded-full text-sm transition ${
-              cleanPath === '/eurovision-night'
-                ? 'text-white bg-white/10'
-                : 'text-white/70 hover:text-white hover:bg-white/5'
-            }`}
+            className={`nav-item${cleanPath === '/eurovision-night' ? ' on' : ''}`}
           >
             {t('siteNav.eurovisionNight')}
           </LocaleLink>
@@ -144,21 +301,17 @@ export default function SiteHeader() {
               onClick={(e) => { e.stopPropagation(); setHowDropdownOpen((v) => !v); }}
               aria-haspopup="menu"
               aria-expanded={howDropdownOpen}
-              className={`px-3 py-1.5 rounded-full text-sm transition flex items-center gap-1 ${
-                howDropdownOpen || howLinks.some((l) => l.href === cleanPath) || cleanPath === '/how-to-play'
-                  ? 'text-white bg-white/10'
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
-              }`}
+              className={`nav-item${howActive ? ' on' : ''}`}
             >
               {t('siteNav.howToPlay')}
               <ChevronIcon open={howDropdownOpen} />
             </button>
             {howDropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 min-w-[220px] rounded-xl border border-white/10 bg-euro-deep/95 backdrop-blur-md shadow-xl shadow-black/40 py-1.5 z-50" role="menu">
+              <div className="menu-pop" style={{ left: 0, right: 'auto' }} role="menu">
                 {howLinks.map((l) => {
                   if (l.key === 'trivia' && triviaLocked) {
                     return (
-                      <div key={l.href} className="px-4 py-2" role="menuitem">
+                      <div key={l.href} className="px-2 py-1" role="menuitem">
                         <LockedBadge label={label(l)} />
                       </div>
                     );
@@ -168,7 +321,7 @@ export default function SiteHeader() {
                       key={l.href}
                       to={l.href}
                       role="menuitem"
-                      className="block px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white transition"
+                      className="menu-item"
                       onClick={() => setHowDropdownOpen(false)}
                     >
                       {label(l)}
@@ -178,168 +331,43 @@ export default function SiteHeader() {
               </div>
             )}
           </div>
-
-          <span className="ml-1 mr-1 h-5 w-px bg-white/10" aria-hidden />
-
-          <MuteToggle />
-          <LanguageSwitcher />
-
-          <button
-            type="button"
-            onClick={() => handleAction('create')}
-            className="ml-2 px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-euro-purple-light to-euro-pink text-white hover:opacity-95 transition cursor-pointer"
-          >
-            {t('siteNav.createRoom')}
-          </button>
         </nav>
 
-        {/* Mobile right cluster: mute + language + hamburger */}
-        <div className="lg:hidden flex items-center gap-1">
-          <MuteToggle />
-          <LanguageSwitcher />
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="site-drawer"
-            aria-label={open ? t('siteNav.closeMenu') : t('siteNav.openMenu')}
-            className="inline-flex items-center justify-center w-10 h-10 rounded-lg border border-white/10 text-white hover:bg-white/5 transition cursor-pointer"
-          >
-            {open ? (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="M6 6l12 12M6 18L18 6" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="M4 7h16M4 12h16M4 17h16" />
-              </svg>
-            )}
-          </button>
-        </div>
+        <span className="spacer" />
+
+        <MuteToggle variant="stage" />
+        <LanguageSwitcher variant="stage" />
+
+        <button
+          type="button"
+          onClick={() => handleAction('join')}
+          className={buttonClass({ variant: 'secondary', size: 'sm', className: 'hidden xl:inline-flex' })}
+        >
+          {t('siteNav.joinRoom')}
+        </button>
+        <button
+          type="button"
+          onClick={() => handleAction('create')}
+          className={buttonClass({ size: 'sm', className: 'hidden lg:inline-flex' })}
+        >
+          {t('siteNav.createRoom')}
+        </button>
+
+        {/* Mobile menu button */}
+        <button
+          ref={triggerRef}
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="site-drawer"
+          aria-label={open ? t('siteNav.closeMenu') : t('siteNav.openMenu')}
+          className="iconbtn lg:hidden"
+        >
+          {open ? <CloseIcon /> : <MenuIcon />}
+        </button>
       </div>
 
-      {/* Mobile drawer */}
-      {open && (
-        <div
-          id="site-drawer"
-          className="lg:hidden border-t border-white/10 bg-euro-deep max-h-[calc(100svh-3.5rem)] overflow-y-auto"
-        >
-          <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-1.5" aria-label="Mobile">
-            {/* ─── Your Rooms — collapsible ─── */}
-            <div className="rounded-xl bg-white/[0.03] border border-white/8">
-              <button
-                type="button"
-                onClick={() => setRoomsOpen((v) => !v)}
-                aria-expanded={roomsOpen}
-                className="w-full flex items-center justify-between px-3.5 py-3 text-left cursor-pointer"
-              >
-                <span className="flex items-center gap-2.5">
-                  <span className="text-white/85 font-semibold">{t('siteNav.yourRooms')}</span>
-                  {roomCount > 0 && (
-                    <span className="text-[0.7rem] font-bold px-2 py-0.5 rounded-full bg-euro-pink/20 text-euro-pink-light tabular-nums">
-                      {roomCount}
-                    </span>
-                  )}
-                </span>
-                <ChevronIcon open={roomsOpen} />
-              </button>
-              {roomsOpen && (
-                <div className="px-2 pb-2 flex flex-col gap-1">
-                  {rooms.length === 0 ? (
-                    <p className="px-2.5 py-2 text-sm text-white/40">{t('siteNav.noRooms')}</p>
-                  ) : (
-                    rooms.map((r) => {
-                      const badge = getBadge(r);
-                      const dotColor =
-                        badge === 'LIVE' ? 'bg-green-400' : badge === 'AWAY' ? 'bg-yellow-400' : 'bg-white/30';
-                      return (
-                        <Link
-                          key={r.playerId}
-                          to={`/room/${r.roomCode}`}
-                          className="flex items-center justify-between gap-3 px-2.5 py-2.5 rounded-lg hover:bg-white/5 transition"
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} aria-hidden />
-                            <code className="font-mono text-[0.8rem] text-white/80 shrink-0">{r.roomCode}</code>
-                            <span className="text-white/30 shrink-0">·</span>
-                            <span className="text-sm text-white/70 truncate">{r.hostName}</span>
-                          </div>
-                          <span className="text-[0.78rem] text-white/45 tabular-nums shrink-0">
-                            {r.totalPoints} {t('common.pts')}
-                          </span>
-                        </Link>
-                      );
-                    })
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* ─── CTAs ─── */}
-            <button
-              type="button"
-              onClick={() => handleAction('create')}
-              className="mt-1 px-4 py-3.5 rounded-xl text-center font-bold bg-gradient-to-r from-euro-purple-light to-euro-pink text-white shadow-[0_4px_20px_rgba(168,85,247,0.3)] hover:brightness-110 transition cursor-pointer"
-            >
-              {t('siteNav.createRoom')}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleAction('join')}
-              className="px-4 py-3 rounded-xl text-center font-semibold bg-white/[0.07] border border-white/[0.18] text-white hover:bg-white/[0.11] transition cursor-pointer"
-            >
-              {t('siteNav.joinRoom')}
-            </button>
-
-            {/* divider */}
-            <div className="h-px bg-white/8 my-2" aria-hidden />
-
-            {/* ─── Eurovision Night ─── */}
-            <LocaleLink
-              to="/eurovision-night"
-              className="px-3.5 py-3 rounded-lg text-white/85 hover:bg-white/5 transition"
-            >
-              {t('siteNav.eurovisionNight')}
-            </LocaleLink>
-
-            {/* ─── How to play — collapsible ─── */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setHowOpen((v) => !v)}
-                aria-expanded={howOpen}
-                className="w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-white/85 hover:bg-white/5 transition cursor-pointer"
-              >
-                <span>{t('siteNav.howToPlay')}</span>
-                <ChevronIcon open={howOpen} />
-              </button>
-              {howOpen && (
-                <div className="ml-3 pl-3 border-l border-white/10 flex flex-col">
-                  {howLinks.map((l) => {
-                    if (l.key === 'trivia' && triviaLocked) {
-                      return (
-                        <div key={l.href} className="px-3 py-2.5">
-                          <LockedBadge label={label(l)} />
-                        </div>
-                      );
-                    }
-                    return (
-                      <LocaleLink
-                        key={l.href}
-                        to={l.href}
-                        className="px-3 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/5 hover:text-white transition"
-                      >
-                        {label(l)}
-                      </LocaleLink>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-          </nav>
-        </div>
-      )}
+      {drawer && typeof document !== 'undefined' ? createPortal(drawer, document.body) : null}
     </header>
   );
 }

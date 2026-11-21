@@ -11,28 +11,21 @@ interface Props {
   items: RelatedCard[];
 }
 
+// "Keep reading" links as Stage `.card-link` rows (home board pattern).
 export default function RelatedCards({ heading = 'Keep reading', items }: Props) {
   return (
-    <section aria-labelledby="related-heading">
-      <h2 id="related-heading" className="text-xl font-bold text-white mb-5">{heading}</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <section aria-labelledby="related-heading" className="flex flex-col gap-3.5">
+      <h2 id="related-heading" className="t-h2 text-stage-text">{heading}</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {items.map((c) => (
-          <LocaleLink
-            key={c.href}
-            to={c.href}
-            className="group relative rounded-xl border border-white/10 hover:border-euro-pink/50 hover:bg-white/[0.04] transition-all duration-200 p-5"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="font-bold text-white group-hover:text-euro-pink-light transition">{c.title}</h3>
-              <svg
-                className="w-4 h-4 text-white/30 group-hover:text-euro-pink-light group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 mt-1"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                aria-hidden
-              >
-                <path d="M7 17L17 7M17 7H8M17 7v9" />
-              </svg>
+          <LocaleLink key={c.href} to={c.href} className="card-link text-stage-text no-underline">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold leading-snug text-stage-text m-0">{c.title}</h3>
+              <p className="t-small mt-1 mb-0">{c.blurb}</p>
             </div>
-            <p className="mt-2 text-sm text-white/60 leading-relaxed">{c.blurb}</p>
+            <svg className="shrink-0 self-center text-stage-text-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M9 6l6 6-6 6" />
+            </svg>
           </LocaleLink>
         ))}
       </div>

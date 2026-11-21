@@ -96,7 +96,7 @@ describe('contest hub pages (SSR)', () => {
 
   it('/en/eurovision-2026/songs lists every entry and emits an ItemList', async () => {
     const r = await render('/en/eurovision-2026/songs');
-    const rows = r.html.match(/<tr /g)?.length ?? 0;
+    const rows = r.html.match(/<tr[\s>]/g)?.length ?? 0;
     expect(rows - 1).toBeGreaterThanOrEqual(30);
     expect(r.html).toContain('Bangaranga');
     const list = jsonLd(r).find((b) => b['@type'] === 'ItemList') as { itemListElement: unknown[] };
@@ -334,7 +334,7 @@ describe('/winners from data (SSR)', () => {
     const r = await render('/en/winners');
     const start = r.html.indexOf('id="recent"');
     const recent = r.html.slice(start, r.html.indexOf('</table>', start));
-    expect((recent.match(/<tr /g) ?? []).length - 1).toBe(15);
+    expect((recent.match(/<tr[\s>]/g) ?? []).length - 1).toBe(15);
   });
 
   it('the leaderboard counts shared wins (1969) and sorts by wins', async () => {

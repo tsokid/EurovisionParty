@@ -14,14 +14,14 @@ function inline(nodes: RichInline[]): ReactNode {
       case 'text':
         return n.value;
       case 'strong':
-        return <strong key={i} className="font-bold text-white">{inline(n.children)}</strong>;
+        return <strong key={i} className="font-semibold text-stage-text">{inline(n.children)}</strong>;
       case 'em':
         return <em key={i}>{inline(n.children)}</em>;
       case 'link':
         return n.href.startsWith('/') ? (
-          <LocaleLink key={i} to={n.href} className="text-euro-pink underline underline-offset-2 hover:opacity-80">{inline(n.children)}</LocaleLink>
+          <LocaleLink key={i} to={n.href} className="text-stage-pink-2 underline underline-offset-[3px] decoration-1 hover:text-stage-text">{inline(n.children)}</LocaleLink>
         ) : (
-          <a key={i} href={n.href} target="_blank" rel="noopener noreferrer" className="text-euro-pink underline underline-offset-2 hover:opacity-80">{inline(n.children)}</a>
+          <a key={i} href={n.href} target="_blank" rel="noopener noreferrer" className="text-stage-pink-2 underline underline-offset-[3px] decoration-1 hover:text-stage-text">{inline(n.children)}</a>
         );
     }
   });
@@ -31,17 +31,17 @@ export default function RichText({ source, className }: { source: string; classN
   const blocks = parseRichText(source);
   if (!blocks.length) return null;
   return (
-    <div className={className ?? 'space-y-4 text-white/80 leading-relaxed'}>
+    <div className={className ?? 'space-y-4 text-stage-text-2 leading-relaxed'}>
       {blocks.map((b, i) => {
         switch (b.type) {
           case 'paragraph':
             return <p key={i}>{inline(b.children)}</p>;
           case 'heading':
-            return <h3 key={i} className="text-xl font-bold text-white pt-2">{inline(b.children)}</h3>;
+            return <h3 key={i} className="t-h3 text-stage-text pt-2">{inline(b.children)}</h3>;
           case 'list': {
             const Tag = b.ordered ? 'ol' : 'ul';
             return (
-              <Tag key={i} className={`${b.ordered ? 'list-decimal' : 'list-disc'} pl-6 space-y-1`}>
+              <Tag key={i} className={`${b.ordered ? 'list-decimal' : 'list-disc'} pl-6 space-y-1 marker:text-stage-pink-2 marker:font-bold`}>
                 {b.items.map((item, j) => <li key={j}>{inline(item)}</li>)}
               </Tag>
             );

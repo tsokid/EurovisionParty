@@ -45,7 +45,8 @@ describe('preview sanitization (I1)', () => {
     const doc = hostileRules();
     inAdmin(<PreviewPane docId="rules" doc={doc} />);
     const pane = screen.getByTestId('preview-pane');
-    expect(pane.querySelector('img')).toBeNull();
+    // The site footer's own logo (static chrome, not draft content) is the only image allowed.
+    expect(pane.querySelector('img:not([src="/logo.png"])')).toBeNull();
     expect(pane.querySelector('[onerror]')).toBeNull();
     for (const a of pane.querySelectorAll('a')) {
       expect((a.getAttribute('href') ?? '').toLowerCase()).not.toContain('javascript:');

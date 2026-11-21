@@ -29,15 +29,11 @@ export default function BetaBanner() {
   if (!open) return null;
 
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="relative z-50 bg-gradient-to-r from-euro-purple/40 via-euro-pink/40 to-euro-purple/40 border-b border-white/10"
-    >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-3 text-[12.5px] sm:text-sm">
-        <span className="text-base shrink-0" aria-hidden>🧪</span>
-        <p className="text-white/90 leading-snug flex-1">
-          <span className="font-bold text-white">{t('betaBanner.label', { defaultValue: 'Beta' })}</span>
+    <div role="status" aria-live="polite" className="betabar">
+      <div className="wrap betabar-row">
+        <span className="dot text-stage-pink-2" aria-hidden />
+        <p className="leading-snug flex-1 m-0">
+          <span className="font-bold text-stage-text">{t('betaBanner.label', { defaultValue: 'Beta' })}</span>
           <span className="hidden sm:inline">
             {' — '}
             {t('betaBanner.body', {
@@ -49,9 +45,9 @@ export default function BetaBanner() {
           type="button"
           onClick={dismiss}
           aria-label={t('betaBanner.dismiss', { defaultValue: 'Dismiss beta banner' })}
-          className="shrink-0 w-6 h-6 rounded-full text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer"
+          className="shrink-0 w-8 h-8 rounded-full text-stage-text-2 hover:text-stage-text hover:bg-stage-surface-2 flex items-center justify-center cursor-pointer"
         >
-          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M6 6l12 12M6 18L18 6" />
           </svg>
         </button>

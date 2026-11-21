@@ -8,8 +8,8 @@ interface Props {
 export default function ChecklistCard({ title, items }: Props) {
   const [done, setDone] = useState<Set<number>>(new Set());
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-      <h3 className="font-bold text-white text-lg mb-4">{title}</h3>
+    <div className="card card-pad">
+      <h3 className="t-h3 text-stage-text mb-4">{title}</h3>
       <ul className="space-y-3">
         {items.map((it, i) => {
           const checked = done.has(i);
@@ -27,11 +27,12 @@ export default function ChecklistCard({ title, items }: Props) {
                 }}
                 aria-pressed={checked}
                 aria-label={`${checked ? 'Uncheck' : 'Check'} ${it}`}
-                className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition ${
+                className={`mt-0.5 w-[22px] h-[22px] rounded-[7px] border flex items-center justify-center shrink-0 cursor-pointer transition-colors ${
                   checked
-                    ? 'bg-euro-pink border-euro-pink text-white'
-                    : 'bg-transparent border-white/30 hover:border-euro-pink-light/60'
+                    ? 'border-transparent text-white'
+                    : 'bg-stage-surface-2 border-stage-line-2 hover:border-stage-pink-2'
                 }`}
+                style={checked ? { background: 'var(--stage-gradient)' } : undefined}
               >
                 {checked && (
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden>
@@ -39,7 +40,7 @@ export default function ChecklistCard({ title, items }: Props) {
                   </svg>
                 )}
               </button>
-              <span className={`${checked ? 'text-white/45 line-through' : 'text-white/85'} leading-relaxed`}>{it}</span>
+              <span className={`${checked ? 'text-stage-text-3 line-through' : 'text-stage-text-2'} leading-relaxed`}>{it}</span>
             </li>
           );
         })}

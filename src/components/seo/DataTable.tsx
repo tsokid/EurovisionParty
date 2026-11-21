@@ -7,18 +7,25 @@ interface Props {
   align?: ('left' | 'center' | 'right')[];
 }
 
+const ALIGN = { left: undefined, center: 'dt-c', right: 'dt-r' } as const;
+
+/**
+ * One semantic `<table>` for every viewport (Stage).
+ * - ≥768px: a real table in a card, eyebrow headers on the bg-2 band.
+ * - <768px: CSS stacks each row like an `.entry`: the first cell leads; a
+ *   right-aligned (numeric) first column becomes the left position rail;
+ *   numeric cells show their header as a small label (`data-label`).
+ */
 export default function DataTable({ caption, headers, rows, align }: Props) {
+  const numericFirst = align?.[0] === 'right';
   return (
-    <div className="overflow-x-auto -mx-4 sm:mx-0">
-      <table className="w-full min-w-[480px] text-sm">
-        {caption && <caption className="text-left text-white/50 text-xs mb-2 px-4 sm:px-0">{caption}</caption>}
+    <div className="dt-card">
+      <table className={`dt${numericFirst ? ' dt-pos' : ''}`}>
+        {caption && <caption>{caption}</caption>}
         <thead>
-          <tr className="border-b border-white/10">
+          <tr>
             {headers.map((h, i) => (
-              <th
-                key={h}
-                className={`py-3 px-4 sm:px-2 text-white/70 font-semibold text-xs uppercase tracking-wider text-${align?.[i] ?? 'left'}`}
-              >
+              <th key={h} className={ALIGN[align?.[i] ?? 'left']}>
                 {h}
               </th>
             ))}
@@ -26,15 +33,16 @@ export default function DataTable({ caption, headers, rows, align }: Props) {
         </thead>
         <tbody>
           {rows.map((r, ri) => (
-            <tr key={ri} className="border-b border-white/5 last:border-b-0">
-              {r.map((cell, ci) => (
-                <td
-                  key={ci}
-                  className={`py-3.5 px-4 sm:px-2 text-white/85 text-${align?.[ci] ?? 'left'}`}
-                >
-                  {cell}
-                </td>
-              ))}
+            <tr key={ri}>
+              {r.map((cell, ci) => {
+                const a = align?.[ci] ?? 'left';
+                const cls = [ALIGN[a], a === 'right' && 'dt-num'].filter(Boolean).join(' ') || undefined;
+                return (
+                  <td key={ci} className={cls} data-label={headers[ci]}>
+                    {cell}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

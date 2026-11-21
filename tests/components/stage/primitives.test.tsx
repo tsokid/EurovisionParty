@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { LocaleProvider } from '../../../src/lib/seo/LocaleContext';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  Avatar, avatarInitials, Button, Chip, Entries, EntryRow, Flag, FLAG_CODES, flagClass, PointsChip, formatPoints, Card, Stat,
+  Avatar, avatarInitials, Button, Chip, Entries, EntryRow, Flag, FLAG_CODES, flagClass, flagSrc, PointsChip, formatPoints, Card, Stat,
 } from '../../../src/components/stage';
 import { COUNTRIES_2026 } from '../../../src/lib/countries2026';
 
@@ -24,7 +26,7 @@ describe('<EntryRow>', () => {
     expect(li.querySelector('.country')!.textContent).toBe('Βουλγαρία');
     expect(li.querySelector('.song')!.textContent).toBe('DARA · Bangaranga');
     expect(li.querySelector('.pts')!.textContent).toBe('516');
-    expect(li.querySelector('.flag')!.classList.contains('f-bg')).toBe(true);
+    expect(li.querySelector('img.flag')!.getAttribute('src')).toBe('https://flagcdn.com/w40/bg.png');
   });
 
   it('highlight adds the .hl class and aria-current', () => {
@@ -108,6 +110,19 @@ describe('<Button>', () => {
     expect(b.className).toBe('btn btn-primary btn-block');
     expect(container.querySelector('a')).toBeNull();
   });
+  it('renders a LocaleLink with `to` (locale prefix added, no <button>)', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <LocaleProvider locale="el">
+          <Button to="/faq" variant="ghost" size="sm">FAQ</Button>
+        </LocaleProvider>
+      </MemoryRouter>,
+    );
+    const a = container.querySelector('a')!;
+    expect(a.getAttribute('href')).toBe('/el/faq');
+    expect(a.className).toBe('btn btn-ghost btn-sm');
+    expect(container.querySelector('button')).toBeNull();
+  });
   it('keeps an explicit submit type', () => {
     const { container } = render(<Button type="submit" variant="ghost" size="sm">Μπες</Button>);
     expect(container.querySelector('button')!.getAttribute('type')).toBe('submit');
@@ -115,22 +130,49 @@ describe('<Button>', () => {
 });
 
 describe('<Flag>', () => {
-  it('unknown code → grey base only (no f-xx class)', () => {
+  it('unknown code → grey box only (a span, no image, no f-xx class)', () => {
     const { container } = render(<><Flag iso="XX" /><Flag iso={null} /><Flag iso="" /></>);
-    for (const el of container.querySelectorAll('.flag')) {
+    const flags = container.querySelectorAll('.flag');
+    expect(flags).toHaveLength(3);
+    for (const el of flags) {
+      expect(el.tagName).toBe('SPAN');
       expect([...el.classList].some((c) => c.startsWith('f-'))).toBe(false);
+      expect(el.getAttribute('aria-hidden')).toBe('true');
     }
-    expect(flagClass('ZZ')).toBeNull();
+    expect(flagSrc('ZZ')).toBeNull();
   });
-  it('known code maps case-insensitively; decorative unless labelled', () => {
-    const { container } = render(<><Flag iso="gr" /><Flag iso="SE" size="lg" label="Σουηδία" /></>);
-    const [gr, se] = container.querySelectorAll('.flag');
-    expect(gr.className).toBe('flag f-gr');
-    expect(gr.getAttribute('aria-hidden')).toBe('true');
-    expect(se.className).toBe('flag flag-lg f-se');
-    expect(se.getAttribute('aria-label')).toBe('Σουηδία');
+  it('known code → flagcdn image (case-insensitive), w80 for 2x, sized, lazy, decorative', () => {
+    const { container } = render(<Flag iso="gr" />);
+    const img = container.querySelector('img')!;
+    expect(img.className).toBe('flag');
+    expect(img.getAttribute('src')).toBe('https://flagcdn.com/w40/gr.png');
+    expect(img.getAttribute('srcset')).toBe('https://flagcdn.com/w40/gr.png 1x, https://flagcdn.com/w80/gr.png 2x');
+    expect(img.getAttribute('width')).toBe('28');
+    expect(img.getAttribute('height')).toBe('20');
+    expect(img.getAttribute('loading')).toBe('lazy');
+    expect(img.getAttribute('alt')).toBe('');
+    expect(img.getAttribute('aria-hidden')).toBe('true');
   });
-  it('every ISO code the app uses has a flag, and a CSS rule exists for each', () => {
+  it('label gives the image its alt text; sizes set the box', () => {
+    const { container } = render(<><Flag iso="SE" size="lg" label="Σουηδία" /><Flag iso="SE" size="sm" /></>);
+    const [lg, sm] = container.querySelectorAll('img');
+    expect(lg.className).toBe('flag flag-lg');
+    expect(lg.getAttribute('alt')).toBe('Σουηδία');
+    expect(lg.hasAttribute('aria-hidden')).toBe(false);
+    expect([lg.getAttribute('width'), lg.getAttribute('height')]).toEqual(['40', '28']);
+    expect([sm.getAttribute('width'), sm.getAttribute('height')]).toEqual(['18', '12']);
+  });
+  it('historic CS / YU (no flagcdn image) → CSS approximation span', () => {
+    const { container } = render(<><Flag iso="YU" /><Flag iso="cs" label="Σερβία και Μαυροβούνιο" /></>);
+    const [yu, cs] = container.querySelectorAll('.flag');
+    expect(yu.tagName).toBe('SPAN');
+    expect(yu.className).toBe('flag f-yu');
+    expect(cs.getAttribute('role')).toBe('img');
+    expect(cs.getAttribute('aria-label')).toBe('Σερβία και Μαυροβούνιο');
+    expect(flagSrc('YU')).toBeNull();
+    expect(flagClass('GR')).toBeNull();
+  });
+  it('every ISO code the app uses is known, and each CSS-only code has a CSS rule', () => {
     const codes = new Set<string>(COUNTRIES_2026.map((c) => c.id.toUpperCase()));
     for (const f of fs.readdirSync(path.join(ROOT, 'content/countries'))) {
       if (/^[A-Z]{2}\.json$/.test(f)) codes.add(f.slice(0, 2));
@@ -142,8 +184,7 @@ describe('<Flag>', () => {
     const missing = [...codes].filter((c) => !FLAG_CODES.has(c));
     expect(missing).toEqual([]);
     const css = fs.readFileSync(path.join(ROOT, 'src/index.css'), 'utf8');
-    const noRule = [...FLAG_CODES].filter((c) => !new RegExp(`\\.f-${c.toLowerCase()}\\b`).test(css));
-    expect(noRule).toEqual([]);
+    for (const c of ['cs', 'yu']) expect(css).toMatch(new RegExp(`\\.f-${c}\\b`));
   });
 });
 

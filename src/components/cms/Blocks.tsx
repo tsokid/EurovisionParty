@@ -5,6 +5,7 @@
 // rendering; `onFaq` reports the same list from an effect for client-only use.
 import { useContext, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import LocaleLink from '../seo/LocaleLink';
+import { buttonClass } from '../stage/Button';
 import { isSafeHref } from '../../../supabase/functions/_shared/cms/html';
 import type { FaqEntry } from '../../lib/seo/schema';
 import CmsImage from './CmsImage';
@@ -15,16 +16,16 @@ import { isPublishedMedia, type CmsBlock } from './mediaTypes';
 import { isDraftMedia, MediaResolverContext } from './MediaResolver';
 
 function Caption({ children }: { children?: string }) {
-  return children ? <figcaption className="mt-2 text-sm text-white/60">{children}</figcaption> : null;
+  return children ? <figcaption className="t-meta mt-2">{children}</figcaption> : null;
 }
 
 function Cta({ block }: { block: Extract<CmsBlock, { type: 'cta' }> }) {
-  const cls = 'inline-block rounded-full bg-euro-pink px-6 py-3 font-bold text-white hover:opacity-90';
+  const cls = buttonClass({ className: 'w-full md:w-auto' });
   const safe = typeof block.href === 'string' && isSafeHref(block.href);
   return (
-    <section className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-      <h2 className="text-2xl font-bold text-white">{block.title}</h2>
-      {block.body ? <p className="mt-2 whitespace-pre-line text-white/80">{block.body}</p> : null}
+    <section className="card-hero px-5 py-[22px] md:p-8 text-stage-text">
+      <h2 className="t-h2">{block.title}</h2>
+      {block.body ? <p className="t-body mt-2 whitespace-pre-line">{block.body}</p> : null}
       {safe && block.label ? (
         <div className="mt-4">
           {block.href.startsWith('/') ? (
@@ -48,7 +49,7 @@ function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
       return (
         <aside
           role="note"
-          className={`rounded-2xl border p-4 ${b.tone === 'warn' ? 'border-yellow-400/40 bg-yellow-400/[0.06]' : 'border-euro-pink/30 bg-euro-pink/[0.04]'}`}
+          className={`card px-5 py-4 ${b.tone === 'warn' ? 'shadow-[inset_3px_0_0_var(--color-stage-gold)] border-stage-gold/35' : 'shadow-[inset_3px_0_0_var(--color-stage-pink)]'}`}
         >
           <RichText source={b.body ?? ''} />
         </aside>
@@ -71,11 +72,11 @@ function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
       );
     case 'faq':
       return (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-3">
           {(Array.isArray(b.items) ? b.items : []).filter((it) => it && typeof it.q === 'string').map((it, i) => (
-            <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-              <h3 className="text-lg font-bold text-white">{it.q}</h3>
-              <RichText source={typeof it.a === 'string' ? it.a : ''} className="mt-2 space-y-3 text-white/80 leading-relaxed" />
+            <div key={i} className="card card-pad">
+              <h3 className="t-h3 text-stage-text">{it.q}</h3>
+              <RichText source={typeof it.a === 'string' ? it.a : ''} className="mt-2 space-y-3 text-stage-text-2 leading-relaxed" />
             </div>
           ))}
         </div>

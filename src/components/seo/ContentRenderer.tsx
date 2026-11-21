@@ -35,7 +35,7 @@ export default function ContentRenderer({ content, crumbs, resolveRelated }: Pro
               );
             case 'definitionBlock':
               return (
-                <div key={i} className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6 text-[17px]">
+                <div key={i} className="card-hero p-5 md:p-6">
                   <div dangerouslySetInnerHTML={{ __html: s.html }} />
                 </div>
               );
@@ -52,14 +52,14 @@ export default function ContentRenderer({ content, crumbs, resolveRelated }: Pro
             case 'steps':
               return (
                 <Section key={i} id={s.id} title={s.title ?? ''}>
-                  <ol className="space-y-4">
+                  <ol className="flex flex-col gap-2.5">
                     {s.steps.map((st, j) => (
-                      <li key={j} className="rounded-xl border border-white/10 p-5">
+                      <li key={j} className="card p-4 md:p-5">
                         <div className="flex items-start gap-4">
-                          <span className="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-euro-purple-light to-euro-pink flex items-center justify-center text-white text-sm font-bold">{j + 1}</span>
+                          <span className="num shrink-0 w-7 text-[30px] text-stage-pink-2">{j + 1}</span>
                           <div>
-                            <h3 className="text-white font-bold">{st.title}</h3>
-                            <p className="mt-1 text-white/75" dangerouslySetInnerHTML={{ __html: st.text }} />
+                            <h3 className="t-h3 text-base text-stage-text">{st.title}</h3>
+                            <p className="t-small mt-1" dangerouslySetInnerHTML={{ __html: st.text }} />
                           </div>
                         </div>
                       </li>
