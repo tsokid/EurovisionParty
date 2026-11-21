@@ -1,4 +1,6 @@
 import clsx from 'clsx';
+import { AvatarArt } from './avatars/AvatarArt';
+import { getAvatar } from './avatars/registry';
 
 /**
  * Initials from a stage name, for Greek and Latin alike:
@@ -21,8 +23,8 @@ export function avatarInitials(name: string | null | undefined): string {
 
 /**
  * Tints from the Stage board (purple, pink, teal) plus three darker steps,
- * all with white initials. The avatar art registry arrives with the identity
- * task; until then an `avatarId` picks a stable tint.
+ * all with white initials. Used when there is no avatar art: no `avatarId`,
+ * or one the registry does not know (an unknown id still picks a stable tint).
  */
 export const AVATAR_TONES = ['#A35BFF', '#F0469C', '#2B9C8F', '#7B3FE4', '#C2367F', '#1F7A8C'] as const;
 
@@ -39,9 +41,9 @@ export function avatarTone(key: string): string {
 export interface AvatarProps {
   /** Stage name: source of the initials and the accessible name. */
   name: string;
-  /** Chosen avatar id (registry pending); falls back to the name for the tint. */
+  /** Chosen avatar id (players.avatar_id). A registry id renders its art; otherwise initials. */
   avatarId?: string | null;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   /**
    * The stage name is shown next to the avatar: hide it from assistive tech
    * so the name is not read twice. Default true (the usual layout).
@@ -52,6 +54,18 @@ export interface AvatarProps {
 
 export function Avatar({ name, avatarId, size = 'md', decorative = true, className }: AvatarProps) {
   const a11y = decorative ? { 'aria-hidden': true as const } : { role: 'img' as const, 'aria-label': name };
+  const art = getAvatar(avatarId);
+  if (art) {
+    return (
+      <span
+        className={clsx('avatar', 'avatar-art', size !== 'md' && `avatar-${size}`, className)}
+        data-avatar-id={art.id}
+        {...a11y}
+      >
+        <AvatarArt spec={art} />
+      </span>
+    );
+  }
   return (
     <span
       className={clsx('avatar', size !== 'md' && `avatar-${size}`, className)}

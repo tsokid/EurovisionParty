@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import NameEntry from '../components/onboarding/NameEntry';
+import NameEntry, { type NameEntryData } from '../components/onboarding/NameEntry';
 import HomeSeoBlock from '../components/seo/HomeSeoBlock';
 import HomeHero from '../components/home/HomeHero';
 import HomeSections from '../components/home/HomeSections';
@@ -14,7 +14,8 @@ import type { HomeContent } from '../../supabase/functions/_shared/cms/schemas/h
 import { interpolate } from '../../supabase/functions/_shared/cms/placeholders';
 import { useCurrentYear } from '../lib/currentContest';
 import { useAuth } from '../hooks/useAuth';
-import { useRoom } from '../hooks/useRoom';
+import { useRoom, SecretSaveError } from '../hooks/useRoom';
+import { useTranslation } from 'react-i18next';
 
 type Mode = 'welcome' | 'create' | 'join';
 
@@ -27,7 +28,10 @@ export function HomePage() {
   // Code typed in the hero's join form (prefills the join screen).
   const [joinCode, setJoinCode] = useState('');
   const { isLoading: authLoading } = useAuth();
-  const { createRoom, joinRoom, isLoading, error } = useRoom();
+  const { createRoom, joinRoom, retryRealName, isLoading, error } = useRoom();
+  const { t } = useTranslation();
+  // The player row exists but the real name is not stored yet: retry only that.
+  const [secretPending, setSecretPending] = useState(false);
   const navigate = useNavigate();
   const locale = useLocale();
   const year = useCurrentYear();
@@ -88,17 +92,29 @@ export function HomePage() {
     );
   }
 
-  const handleSubmit = async (data: { name: string; emoji: string; roomCode?: string; password: string }) => {
+  const handleSubmit = async (data: NameEntryData) => {
+    const identity = { realName: data.realName, avatarId: data.avatarId };
     try {
       if (mode === 'create') {
-        const code = await createRoom(data.name, data.emoji, data.password);
+        const code = await createRoom(data.name, data.emoji, data.password, identity);
         navigate(`/room/${code}`);
       } else if (data.roomCode) {
-        await joinRoom(data.roomCode, data.name, data.emoji, data.password);
+        await joinRoom(data.roomCode, data.name, data.emoji, data.password, identity);
         navigate(`/room/${data.roomCode.toUpperCase()}`);
       }
     } catch (err) {
+      if (err instanceof SecretSaveError) setSecretPending(true);
       console.error('Failed:', err);
+    }
+  };
+
+  const handleRetrySecret = async () => {
+    try {
+      const code = await retryRealName();
+      setSecretPending(false);
+      navigate(`/room/${code.toUpperCase()}`);
+    } catch (err) {
+      console.error('Real name still not saved:', err);
     }
   };
 
@@ -110,8 +126,9 @@ export function HomePage() {
         onSubmit={handleSubmit}
         onBack={() => setMode('welcome')}
         isLoading={isLoading}
-        error={error}
+        error={secretPending ? t('nameEntry.secretFailed') : error}
         initialRoomCode={joinCode || prefillCode}
+        onRetrySecret={secretPending ? handleRetrySecret : undefined}
       />
     </>
   );

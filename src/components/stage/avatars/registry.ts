@@ -1,0 +1,240 @@
+// The Stage avatar set: drag queens, decadent singers, outrageous costumes,
+// divas. Each entry is a recipe for AvatarArt.tsx (inline SVG, no images).
+// Ids are stored in players.avatar_id: never renumber or reuse one.
+// Greek titles are gender-neutral: nouns that fit anyone (Ντίβα, Αστέρι,
+// Είδωλο, Φαινόμενο…) or English loanwords; no articles or gendered
+// adjectives about the player.
+import type { AvatarSpec } from './types';
+
+// Stage palette (src/index.css) plus a few costume colours.
+const PINK = '#F0469C';
+const PINK2 = '#FF7AB8';
+const PURPLE = '#A35BFF';
+const PURPLE2 = '#C9A2FF';
+const GOLD = '#FFC53D';
+const GOLD2 = '#FFE08A';
+const LIVE = '#2EE6D6';
+const OK = '#3EE08F';
+const BAD = '#FF6B6B';
+const SILVER = '#D5D9E3';
+const INK = '#1A0B24';
+const NIGHT = '#2C1A4A';
+const MAGENTA = '#C2367F';
+const BLUE = '#3B6BFF';
+const RED = '#E0245E';
+const WINE = '#8E0E3C';
+const GINGER = '#E8452C';
+const WHITE = '#F6F1FF';
+
+// Skin tones (light → deep) and stage fantasy tones.
+const S1 = '#FBD9C5';
+const S2 = '#F0BE98';
+const S3 = '#D99A6C';
+const S4 = '#B7774B';
+const S5 = '#8C5636';
+const S6 = '#5F3A24';
+const ICE = '#BFE6F5';
+const LILAC = '#E4D9F7';
+const CHROME = '#CBD3E2';
+
+export const AVATARS: readonly AvatarSpec[] = [
+  {
+    id: 'av-01', title: { el: 'Ντίβα των Πούλιων', en: 'Sequin Diva' },
+    bg: [PINK2, '#6E1A4F'], skin: S2, hair: { style: 'beehive', color: GOLD2 },
+    eyes: { style: 'lashes', color: PURPLE }, lips: { style: 'lips', color: RED },
+    head: { style: 'tiara', color: SILVER, accent: PINK }, collar: { style: 'sequins', color: PURPLE, accent: GOLD2 },
+    extras: ['mole', 'earrings'], sparkles: true,
+  },
+  {
+    id: 'av-02', title: { el: 'Αστέρι Ντίσκο', en: 'Disco Star' },
+    bg: [LIVE, '#0E4C5C'], skin: S5, hair: { style: 'afro', color: '#2A1630' },
+    eyes: { style: 'glitter', color: GOLD }, lips: { style: 'lips', color: BAD },
+    head: { style: 'discoball', color: SILVER, accent: PINK2 }, collar: { style: 'pads', color: PINK, accent: GOLD },
+    sparkles: true,
+  },
+  {
+    id: 'av-03', title: { el: 'Είδωλο Beehive', en: 'Beehive Icon' },
+    bg: [GOLD2, '#B5651D'], skin: S1, hair: { style: 'tower', color: BLUE },
+    eyes: { style: 'cateye', color: PINK }, lips: { style: 'sing', color: RED }, brows: false,
+    collar: { style: 'pearls', color: NIGHT, accent: PINK }, extras: ['earrings'],
+  },
+  {
+    id: 'av-04', title: { el: 'Glam Rock Φαινόμενο', en: 'Glam Rock Phenomenon' },
+    bg: ['#4B1F8C', '#0B0416'], skin: CHROME, hair: { style: 'mohawk', color: PINK },
+    eyes: { style: 'star', color: GOLD }, lips: { style: 'smirk', color: '#4B1F8C' }, brows: false,
+    collar: { style: 'pads', color: INK, accent: SILVER }, extras: ['tear'], sparkles: true,
+  },
+  {
+    id: 'av-05', title: { el: 'Drag Superstar', en: 'Drag Superstar' },
+    bg: [PURPLE, '#3A1670'], skin: S3, hair: { style: 'waves', color: GINGER },
+    eyes: { style: 'lashes', color: LIVE }, lips: { style: 'lips', color: '#FF2E6E' },
+    head: { style: 'crown', color: GOLD, accent: LIVE }, collar: { style: 'boa', color: PINK, accent: PINK2 },
+    extras: ['mole', 'drops'],
+  },
+  {
+    id: 'av-06', title: { el: 'Τιάρα και Δράμα', en: 'Tiara & Drama' },
+    bg: [PINK2, MAGENTA], skin: S4, hair: { style: 'bob', color: INK },
+    eyes: { style: 'lashes', color: GOLD }, lips: { style: 'lips', color: WINE },
+    head: { style: 'tiara', color: GOLD, accent: LIVE }, collar: { style: 'cape', color: INK, accent: MAGENTA },
+    extras: ['gem'],
+  },
+  {
+    id: 'av-07', title: { el: 'Φτερά Παγωνιού', en: 'Peacock Plumes' },
+    bg: [OK, '#0B5D4A'], skin: S2, hair: { style: 'curls', color: '#0E7490' },
+    eyes: { style: 'cateye', color: LIVE }, lips: { style: 'smile', color: PINK }, brows: false,
+    head: { style: 'plume', color: '#1FB5A0', accent: BLUE }, collar: { style: 'sequins', color: '#0E7490', accent: OK },
+    sparkles: true,
+  },
+  {
+    id: 'av-08', title: { el: 'Κορόνα από Γκλίτερ', en: 'Glitter Crown' },
+    bg: [GOLD, '#B5651D'], skin: S6, hair: { style: 'buns', color: PINK2 },
+    eyes: { style: 'heart', color: PINK }, lips: { style: 'smile', color: BAD }, brows: false,
+    head: { style: 'crown', color: GOLD2, accent: PINK }, collar: { style: 'ruff', color: PURPLE, accent: '#FFF4FB' },
+  },
+  {
+    id: 'av-09', title: { el: 'Ντίβα Μπαρόκ', en: 'Baroque Diva' },
+    bg: [PURPLE2, '#5B2A9E'], skin: S1, hair: { style: 'tower', color: '#F2EEF8' },
+    eyes: { style: 'lashes', color: PINK2 }, lips: { style: 'lips', color: '#D6246E' },
+    head: { style: 'bow', color: PINK, accent: GOLD }, collar: { style: 'pearls', color: PINK2, accent: PURPLE },
+    extras: ['mole'],
+  },
+  {
+    id: 'av-10', title: { el: 'Αφρό Γκρουβ', en: 'Afro Groove' },
+    bg: [PURPLE, NIGHT], skin: S4, hair: { style: 'afro', color: GINGER },
+    eyes: { style: 'round', color: LIVE }, lips: { style: 'smile', color: MAGENTA },
+    head: { style: 'flowers', color: GOLD, accent: PINK }, collar: { style: 'lapels', color: GOLD, accent: PINK },
+    sparkles: true,
+  },
+  {
+    id: 'av-11', title: { el: 'Ροντέο με Στρας', en: 'Rhinestone Rodeo' },
+    bg: [BAD, '#7A1F3D'], skin: S3, hair: { style: 'long', color: GOLD2 },
+    eyes: { style: 'lashes', color: PINK2 }, lips: { style: 'lips', color: RED },
+    head: { style: 'cowboy', color: PINK, accent: GOLD }, collar: { style: 'stars', color: '#EDE4FF', accent: PINK },
+    extras: ['earrings'],
+  },
+  {
+    id: 'av-12', title: { el: 'Βαμπ Νουάρ', en: 'Vamp Noir' },
+    bg: ['#4B1F8C', '#0B0416'], skin: LILAC, hair: { style: 'waves', color: INK },
+    eyes: { style: 'lashes', color: '#6B21A8' }, lips: { style: 'lips', color: WINE },
+    collar: { style: 'cape', color: INK, accent: MAGENTA }, extras: ['mole'],
+  },
+  {
+    id: 'av-13', title: { el: 'Ηλεκτρο-Ποπ Ρομπότ', en: 'Electro-Pop Bot' },
+    bg: [LIVE, '#173B6B'], skin: SILVER, hair: { style: 'bald', color: SILVER },
+    eyes: { style: 'visor', color: PINK }, lips: { style: 'smile', color: LIVE }, brows: false,
+    head: { style: 'antenna', color: SILVER, accent: GOLD }, collar: { style: 'sequins', color: BLUE, accent: LIVE },
+  },
+  {
+    id: 'av-14', title: { el: 'Σταρ με Γυαλιά-Καρδιές', en: 'Heart-Shades Star' },
+    bg: [PINK2, PURPLE], skin: S2, hair: { style: 'ponytail', color: PURPLE2 },
+    eyes: { style: 'heart', color: '#FF2E6E' }, lips: { style: 'lips', color: PINK }, brows: false,
+    collar: { style: 'boa', color: PINK, accent: WHITE }, sparkles: true,
+  },
+  {
+    id: 'av-15', title: { el: 'Λάμψη Κόκκινου Χαλιού', en: 'Red Carpet Glow' },
+    bg: [BAD, WINE], skin: S5, hair: { style: 'waves', color: '#E8A26B' },
+    eyes: { style: 'glitter', color: GOLD }, lips: { style: 'lips', color: '#FF2E6E' },
+    head: { style: 'tiara', color: SILVER, accent: BAD }, collar: { style: 'pearls', color: INK, accent: BAD },
+    extras: ['drops'],
+  },
+  {
+    id: 'av-16', title: { el: 'Μπαλάντα στο Φεγγάρι', en: 'Moonlight Ballad' },
+    bg: [BLUE, '#140A3A'], skin: S3, hair: { style: 'long', color: '#3B2A7A' },
+    eyes: { style: 'lashes', color: PURPLE2 }, lips: { style: 'sing', color: MAGENTA },
+    head: { style: 'moon', color: GOLD2, accent: '#FFFFFF' }, collar: { style: 'cape', color: NIGHT, accent: BLUE },
+    sparkles: true,
+  },
+  {
+    id: 'av-17', title: { el: 'Φλογερό Φινάλε', en: 'Fiery Finale' },
+    bg: [GOLD, MAGENTA], skin: S4, hair: { style: 'flame', color: '#FF6B3D' },
+    eyes: { style: 'lashes', color: '#FF6B3D' }, lips: { style: 'smirk', color: RED },
+    collar: { style: 'pads', color: RED, accent: GOLD }, extras: ['starpaint'],
+  },
+  {
+    id: 'av-18', title: { el: 'Ανθοστέφανο & Γκλίτερ', en: 'Flower Crown & Glitter' },
+    bg: [OK, '#1F7A8C'], skin: S1, hair: { style: 'long', color: '#8C5636' },
+    eyes: { style: 'glitter', color: PINK2 }, lips: { style: 'smile', color: PINK },
+    head: { style: 'flowers', color: PINK2, accent: GOLD2 }, collar: { style: 'stars', color: PURPLE, accent: GOLD2 },
+  },
+  {
+    id: 'av-19', title: { el: 'Punk σε Μωβ', en: 'Purple Punk' },
+    bg: [GOLD2, PINK2], skin: S5, hair: { style: 'mohawk', color: PURPLE },
+    eyes: { style: 'round', color: INK }, lips: { style: 'lips', color: PURPLE },
+    collar: { style: 'lapels', color: INK, accent: LIVE }, extras: ['earrings'],
+  },
+  {
+    id: 'av-20', title: { el: 'Πομπαντούρ Ρετρό', en: 'Retro Pompadour' },
+    bg: [LIVE, '#0E7490'], skin: S2, hair: { style: 'pompadour', color: INK },
+    eyes: { style: 'wink', color: PURPLE }, lips: { style: 'smirk', color: MAGENTA },
+    collar: { style: 'lapels', color: PINK, accent: INK }, extras: ['mole'],
+  },
+  {
+    id: 'av-21', title: { el: 'Ουράνιο Τόξο σε Σκηνή', en: 'Rainbow on Stage' },
+    bg: [PINK, '#4B1F8C'], skin: S6, hair: { style: 'curls', color: OK },
+    eyes: { style: 'cateye', color: GOLD2 }, lips: { style: 'lips', color: BAD }, brows: false,
+    head: { style: 'halo', color: GOLD }, collar: { style: 'sequins', color: GOLD, accent: PINK },
+  },
+  {
+    id: 'av-22', title: { el: 'Μάσκα Καρναβαλιού', en: 'Carnival Mask' },
+    bg: [GOLD, PURPLE], skin: S4, hair: { style: 'bob', color: PINK },
+    eyes: { style: 'mask', color: GOLD }, lips: { style: 'lips', color: WINE }, brows: false,
+    collar: { style: 'ruff', color: NIGHT, accent: GOLD2 },
+  },
+  {
+    id: 'av-23', title: { el: 'Μαργαριτάρια & Σκάνδαλο', en: 'Pearls & Scandal' },
+    bg: [PURPLE2, MAGENTA], skin: S3, hair: { style: 'beehive', color: GINGER },
+    eyes: { style: 'wink', color: LIVE }, lips: { style: 'lips', color: RED },
+    head: { style: 'bow', color: INK, accent: '#FFFFFF' }, collar: { style: 'pearls', color: PINK, accent: LIVE },
+    extras: ['mole'],
+  },
+  {
+    id: 'av-24', title: { el: 'Αστερόσκονη', en: 'Stardust' },
+    bg: ['#3B2A7A', '#0B0416'], skin: ICE, hair: { style: 'long', color: SILVER },
+    eyes: { style: 'glitter', color: LIVE }, lips: { style: 'lips', color: BLUE },
+    head: { style: 'star', color: GOLD2, accent: PINK }, collar: { style: 'stars', color: NIGHT, accent: GOLD2 },
+    extras: ['tear'], sparkles: true,
+  },
+  {
+    id: 'av-25', title: { el: 'Κρύσταλλο Πάγου', en: 'Ice Crystal' },
+    bg: [ICE, BLUE], skin: S2, hair: { style: 'bob', color: '#EEF7FF' },
+    eyes: { style: 'cateye', color: '#7FC8F0' }, lips: { style: 'lips', color: BLUE }, brows: false,
+    head: { style: 'tiara', color: '#EEF7FF', accent: LIVE }, collar: { style: 'boa', color: BLUE, accent: '#DDF0FF' },
+    sparkles: true,
+  },
+  {
+    id: 'av-26', title: { el: 'Σούπερ Νόβα', en: 'Supernova' },
+    bg: [PINK, '#5B0F3A'], skin: S6, hair: { style: 'afro', color: GOLD },
+    eyes: { style: 'star', color: LIVE }, lips: { style: 'smile', color: PINK2 }, brows: false,
+    collar: { style: 'cape', color: PURPLE, accent: GOLD }, extras: ['earrings'], sparkles: true,
+  },
+  {
+    id: 'av-27', title: { el: 'Ηλεκτρικό Μπλε', en: 'Electric Blue' },
+    bg: [BLUE, '#140A3A'], skin: S3, hair: { style: 'pompadour', color: LIVE },
+    eyes: { style: 'lashes', color: LIVE }, lips: { style: 'lips', color: PINK },
+    collar: { style: 'pads', color: BLUE, accent: LIVE }, extras: ['gem'],
+  },
+  {
+    id: 'av-28', title: { el: 'Δωδεκάρι', en: 'Douze Points' },
+    bg: [OK, '#0E7490'], skin: S5, hair: { style: 'buns', color: GOLD },
+    eyes: { style: 'heart', color: GOLD }, lips: { style: 'sing', color: RED }, brows: false,
+    head: { style: 'star', color: PINK, accent: GOLD2 }, collar: { style: 'sequins', color: PINK, accent: GOLD2 },
+  },
+];
+
+const BY_ID = new Map(AVATARS.map((a) => [a.id, a]));
+
+export const AVATAR_IDS: readonly string[] = AVATARS.map((a) => a.id);
+
+export function getAvatar(id: string | null | undefined): AvatarSpec | undefined {
+  return id ? BY_ID.get(id) : undefined;
+}
+
+export function isAvatarId(id: string | null | undefined): id is string {
+  return !!id && BY_ID.has(id);
+}
+
+/** A random avatar id, different from `except` when there is a choice. */
+export function randomAvatarId(except?: string | null, rand: () => number = Math.random): string {
+  const pool = except && AVATAR_IDS.length > 1 ? AVATAR_IDS.filter((id) => id !== except) : AVATAR_IDS;
+  return pool[Math.floor(rand() * pool.length) % pool.length];
+}

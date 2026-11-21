@@ -67,6 +67,8 @@ export interface Player {
   user_id: string | null;
   name: string;
   avatar_emoji: string;
+  /** Stage avatar id (src/components/stage/avatars); null for players from before 082. */
+  avatar_id?: string | null;
   country_flag: string | null;
   quiz_points: number;
   pred_points: number;

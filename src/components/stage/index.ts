@@ -15,3 +15,5 @@ export { Avatar, avatarInitials, avatarTone, AVATAR_TONES } from './Avatar';
 export type { AvatarProps } from './Avatar';
 export { PointsChip, formatPoints } from './PointsChip';
 export type { PointsChipProps } from './PointsChip';
+export { AVATARS, AVATAR_IDS, AvatarArt, getAvatar, isAvatarId, randomAvatarId } from './avatars';
+export type { AvatarSpec, AvatarArtProps } from './avatars';

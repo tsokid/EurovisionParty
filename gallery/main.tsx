@@ -20,10 +20,11 @@ import type { RoomPhase, TabId } from '../src/lib/types';
 import { setFakeDb, type FakeTables } from './fakeSupabase';
 import * as F from './fixtures';
 import StagePrimitives from './StagePrimitives';
+import AvatarSheet from './AvatarSheet';
 import '../src/index.css';
 
 // ── Screens ──────────────────────────────────────────────────────────
-type Render = 'room' | 'home' | 'predictions-locked' | 'duel-play' | 'duel-result' | 'stage';
+type Render = 'room' | 'home' | 'predictions-locked' | 'duel-play' | 'duel-result' | 'stage' | 'avatars';
 
 interface Scenario {
   id: string;
@@ -42,6 +43,8 @@ interface Scenario {
 const SCENARIOS: Scenario[] = [
   { id: 'welcome', label: 'Welcome (home)', render: 'home', phase: 'lobby', homeUrl: '/el' },
   { id: 'join', label: 'Join room form', render: 'home', phase: 'lobby', homeUrl: '/el?action=join' },
+  { id: 'onboarding-create', label: 'Onboarding: create a room', render: 'home', phase: 'lobby', homeUrl: '/el?action=create', note: 'Redesign Task 4: stage name, secret real name, avatar picker.' },
+  { id: 'onboarding-join', label: 'Onboarding: join a room (code prefilled)', render: 'home', phase: 'lobby', homeUrl: '/el?join=DESIGN', note: 'Redesign Task 4: the invite-link variant.' },
   { id: 'lobby', label: 'Lobby', render: 'room', phase: 'lobby' },
   { id: 'pre-night', label: 'Pre-night (default Quiz tab)', render: 'room', phase: 'pre_night', tab: 'quiz' },
   { id: 'predictions-open', label: 'Predictions picker', render: 'room', phase: 'predictions_open', tab: 'predictions', prediction: F.PREDICTION_PARTIAL },
@@ -73,12 +76,13 @@ const SCENARIOS: Scenario[] = [
   { id: 'final-results', label: 'Final results (predictions)', render: 'room', phase: 'final', tab: 'predictions', prediction: F.PREDICTION_SCORED, dismissCrown: true },
   { id: 'winners-crown', label: 'Winner crown reveal', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED },
   { id: 'winners', label: 'Winners carousel', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED, dismissCrown: true },
+  { id: 'avatars', label: 'Avatar set (96px, 32px, <Avatar>)', render: 'avatars', phase: 'lobby', note: 'Redesign Task 4: src/components/stage/avatars registry.' },
   { id: 'stage-primitives', label: 'Stage primitives (design system)', render: 'stage', phase: 'lobby', note: 'Redesign Task 1: every src/components/stage primitive, in 390px and 1440px iframes.' },
 ];
 
 // ── Seeding ──────────────────────────────────────────────────────────
 function seed(s: Scenario) {
-  if (s.render === 'stage') return; // static sheet, no data
+  if (s.render === 'stage' || s.render === 'avatars') return; // static sheet, no data
   // Skip first-entry overlays and audio, the same flags the app checks.
   try {
     localStorage.setItem('eurovision-games-intro-seen-DESIGN', '1');
@@ -184,6 +188,8 @@ function Screen({ s }: { s: Scenario }): ReactNode {
           </AppShell>
         </MemoryRouter>
       );
+    case 'avatars':
+      return <AvatarSheet />;
     case 'stage':
       return <StagePrimitives frame={new URLSearchParams(location.search).has('frame')} />;
     case 'duel-result':

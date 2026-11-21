@@ -50,7 +50,7 @@
   "nameEntry": {
     "createTitle": "Create Your Room",
     "joinTitle": "Join a Room",
-    "subtitle": "Pick a name to get started",
+    "subtitle": "A stage name, an avatar and one secret: your real name.",
     "roomCodeLabel": "Room Code",
     "roomCodePlaceholder": "e.g. ABCD",
     "nameLabel": "Your Name",
@@ -65,7 +65,25 @@
     "showPassword": "Show",
     "hidePassword": "Hide",
     "submitBtn": "🎶 Let's Party!",
-    "backBtn": "← Back"
+    "backBtn": "Back",
+    "createKicker": "New room",
+    "joinKicker": "Invitation",
+    "stageNameLabel": "Your stage name",
+    "stageNamePlaceholder": "e.g. Disco Ball",
+    "stageNameHint": "Shown everywhere in the game. You rejoin with it.",
+    "realNameLabel": "Your real name",
+    "realNamePlaceholder": "What your friends call you",
+    "realNameHint": "Kept secret until the end, revealed in 'Who was who?'",
+    "avatarLabel": "Avatar",
+    "shuffle": "Random",
+    "secretFailed": "Your real name wasn't saved. Try again.",
+    "retrySecret": "Save again",
+    "errors": {
+      "tooShort": "At least {{min}} characters",
+      "tooLong": "Up to {{max}} characters",
+      "blocked": "Please choose something else",
+      "realNameRequired": "Enter your real name"
+    }
   },
   "lobby": {
     "copyHint": "Tap to copy, or share with friends!",

@@ -50,7 +50,7 @@
   "nameEntry": {
     "createTitle": "Φτιάξε το Δωμάτιό σου",
     "joinTitle": "Μπες σε Δωμάτιο",
-    "subtitle": "Διάλεξε ένα όνομα για να ξεκινήσεις",
+    "subtitle": "Καλλιτεχνικό όνομα, avatar και ένα μυστικό: το πραγματικό σου όνομα.",
     "roomCodeLabel": "Κωδικός Δωματίου",
     "roomCodePlaceholder": "π.χ. ABCD",
     "nameLabel": "Το Όνομά σου",
@@ -61,11 +61,29 @@
     "passwordCreatePlaceholder": "Διάλεξε κωδικό (6+ χαρ.)",
     "passwordJoinPlaceholder": "Εισήγαγε τον κωδικό",
     "passwordCreateHint": "Μοιράσου τον κωδικό με τους φίλους σου για να μπουν",
-    "passwordJoinHint": "Ζήτησε τον κωδικό από αυτόν που έφτιαξε το δωμάτιο",
+    "passwordJoinHint": "Τον κωδικό τον έχει το άτομο που έφτιαξε το δωμάτιο",
     "showPassword": "Εμφάνιση",
     "hidePassword": "Απόκρυψη",
     "submitBtn": "🎶 Πάμε!",
-    "backBtn": "← Πίσω"
+    "backBtn": "Πίσω",
+    "createKicker": "Νέο δωμάτιο",
+    "joinKicker": "Πρόσκληση",
+    "stageNameLabel": "Καλλιτεχνικό όνομα",
+    "stageNamePlaceholder": "π.χ. Ντίσκο Μπάλα",
+    "stageNameHint": "Φαίνεται παντού στο παιχνίδι. Με αυτό ξαναμπαίνεις.",
+    "realNameLabel": "Πραγματικό όνομα",
+    "realNamePlaceholder": "Όπως σε ξέρει η παρέα",
+    "realNameHint": "Μένει μυστικό μέχρι το τέλος. Θα αποκαλυφθεί στο «Ποιος ήταν ποιος;»",
+    "avatarLabel": "Avatar",
+    "shuffle": "Τυχαίο",
+    "secretFailed": "Το πραγματικό όνομα δεν αποθηκεύτηκε. Δοκίμασε ξανά.",
+    "retrySecret": "Αποθήκευση ξανά",
+    "errors": {
+      "tooShort": "Τουλάχιστον {{min}} χαρακτήρες",
+      "tooLong": "Έως {{max}} χαρακτήρες",
+      "blocked": "Διάλεξε κάτι άλλο",
+      "realNameRequired": "Γράψε το πραγματικό σου όνομα"
+    }
   },
   "lobby": {
     "copyHint": "Πάτα για αντιγραφή ή μοιράσου!",

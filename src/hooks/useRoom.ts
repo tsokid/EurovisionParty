@@ -48,10 +48,55 @@ export function cleanupStaleSessions() {
   } catch { /* ignore */ }
 }
 
+/** Stage identity given at create/join (Task 4). */
+export interface PlayerIdentity {
+  /** Secret real name, stored in player_secrets (never in players). */
+  realName: string;
+  /** players.avatar_id */
+  avatarId: string;
+}
+
+/**
+ * The player row exists but its real name could not be stored. The caller
+ * shows an error and calls retryRealName(); the room code is where to go
+ * once that succeeds.
+ */
+export class SecretSaveError extends Error {
+  readonly roomCode: string;
+  constructor(roomCode: string, cause?: unknown) {
+    super('Could not save the real name', { cause });
+    this.name = 'SecretSaveError';
+    this.roomCode = roomCode;
+  }
+}
+
+const SECRET_ATTEMPTS = 3;
+
+/**
+ * Stores the player's real name in player_secrets, retrying transient
+ * failures. Idempotent: an existing secret is kept (ON CONFLICT DO NOTHING),
+ * so a retry after a lost response, or a rejoin through the form, never
+ * fails or overwrites. Writes only; it never reads the table back.
+ */
+export async function saveRealName(playerId: string, realName: string, attempts = SECRET_ATTEMPTS, delayMs = 400): Promise<void> {
+  let lastErr: unknown = null;
+  for (let i = 0; i < attempts; i++) {
+    const { error } = await supabase
+      .from('player_secrets')
+      .upsert({ player_id: playerId, real_name: realName }, { onConflict: 'player_id', ignoreDuplicates: true });
+    if (!error) return;
+    lastErr = error;
+    if (i < attempts - 1 && delayMs > 0) await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+  }
+  throw lastErr ?? new Error('player_secrets insert failed');
+}
+
 interface UseRoomReturn {
   room: Room | null;
-  createRoom: (hostName: string, emoji: string, password: string) => Promise<string>;
-  joinRoom: (code: string, name: string, emoji: string, password: string) => Promise<Room>;
+  createRoom: (hostName: string, emoji: string, password: string, identity?: PlayerIdentity) => Promise<string>;
+  joinRoom: (code: string, name: string, emoji: string, password: string, identity?: PlayerIdentity) => Promise<Room>;
+  /** Retries the real-name save after a SecretSaveError; resolves with the room code. */
+  retryRealName: () => Promise<string>;
   advancePhase: (roomId: string) => Promise<void>;
   leaveRoom: (mode?: 'away' | 'exit') => Promise<void>;
   refetchRoom: () => Promise<void>;
@@ -64,6 +109,19 @@ export function useRoom(): UseRoomReturn {
     useGameStore();
   const channelRef = useRef<RealtimeChannel | null>(null);
   const subscribedRoomIdRef = useRef<string | null>(null);
+  // Real name still to be stored after a SecretSaveError.
+  const pendingSecretRef = useRef<{ playerId: string; realName: string; roomCode: string } | null>(null);
+
+  /** Saves the real name; on failure keeps it pending and throws SecretSaveError. */
+  const storeSecret = useCallback(async (playerId: string, realName: string, roomCode: string) => {
+    pendingSecretRef.current = { playerId, realName, roomCode };
+    try {
+      await saveRealName(playerId, realName);
+      pendingSecretRef.current = null;
+    } catch (err) {
+      throw new SecretSaveError(roomCode, err);
+    }
+  }, []);
 
   // --- Realtime subscription to room row for phase changes ---
   const subscribeToRoom = useCallback(
@@ -147,7 +205,7 @@ export function useRoom(): UseRoomReturn {
 
   // --- Create room ---
   const createRoom = useCallback(
-    async (hostName: string, emoji: string, password: string): Promise<string> => {
+    async (hostName: string, emoji: string, password: string, identity?: PlayerIdentity): Promise<string> => {
       setLoading(true);
       setError(null);
 
@@ -191,6 +249,7 @@ export function useRoom(): UseRoomReturn {
             user_id: user.id,
             name: hostName,
             avatar_emoji: emoji,
+            ...(identity ? { avatar_id: identity.avatarId } : {}),
             is_host: true,
           })
           .select()
@@ -206,8 +265,16 @@ export function useRoom(): UseRoomReturn {
         // Save session to localStorage for rejoin support
         saveRoomSession(code, playerData.id, typedRoom.id, password || undefined);
 
+        // Real name right after the player row; the room is already usable,
+        // so a failure here is retried on its own (retryRealName).
+        if (identity) await storeSecret(playerData.id, identity.realName, code);
+
         return code;
       } catch (err: unknown) {
+        if (err instanceof SecretSaveError) {
+          setError(null); // the caller shows the localized retry message
+          throw err;
+        }
         let message = err instanceof Error ? err.message : ((err as any)?.message ?? 'Failed to create room');
         // Map server errors to friendly messages
         if (message.includes('Rate limit')) message = 'Too many rooms created. Please wait an hour.';
@@ -219,12 +286,12 @@ export function useRoom(): UseRoomReturn {
         setLoading(false);
       }
     },
-    [setRoom, setPlayer, setRoomPassword, setLoading, setError, subscribeToRoom]
+    [setRoom, setPlayer, setRoomPassword, setLoading, setError, subscribeToRoom, storeSecret]
   );
 
   // --- Join room ---
   const joinRoom = useCallback(
-    async (code: string, name: string, emoji: string, password: string): Promise<Room> => {
+    async (code: string, name: string, emoji: string, password: string, identity?: PlayerIdentity): Promise<Room> => {
       setLoading(true);
       setError(null);
 
@@ -275,6 +342,7 @@ export function useRoom(): UseRoomReturn {
               user_id: user.id,
               name,
               avatar_emoji: emoji,
+              ...(identity ? { avatar_id: identity.avatarId } : {}),
             })
             .select()
             .single();
@@ -291,8 +359,15 @@ export function useRoom(): UseRoomReturn {
         // Save session to localStorage for rejoin support
         saveRoomSession(typedRoomData.code, playerData.id, typedRoomData.id, password || undefined);
 
+        // Also for an existing player row: fills a missing secret, keeps an existing one.
+        if (identity) await storeSecret(playerData.id, identity.realName, typedRoomData.code);
+
         return typedRoomData;
       } catch (err: unknown) {
+        if (err instanceof SecretSaveError) {
+          setError(null);
+          throw err;
+        }
         let message = err instanceof Error ? err.message : ((err as any)?.message ?? 'Failed to join room');
         // Map server errors to friendly messages
         if (message.includes('already taken')) message = 'That name is taken in this room. Choose another.';
@@ -303,8 +378,20 @@ export function useRoom(): UseRoomReturn {
         setLoading(false);
       }
     },
-    [setRoom, setPlayer, setRoomPassword, setLoading, setError, subscribeToRoom]
+    [setRoom, setPlayer, setRoomPassword, setLoading, setError, subscribeToRoom, storeSecret]
   );
+
+  const retryRealName = useCallback(async (): Promise<string> => {
+    const pending = pendingSecretRef.current;
+    if (!pending) throw new Error('No real name to save');
+    setLoading(true);
+    try {
+      await storeSecret(pending.playerId, pending.realName, pending.roomCode);
+      return pending.roomCode;
+    } finally {
+      setLoading(false);
+    }
+  }, [setLoading, storeSecret]);
 
   // --- Advance phase (host-only via RPC) ---
   const advancePhase = useCallback(
@@ -394,5 +481,5 @@ export function useRoom(): UseRoomReturn {
     if (data) setRoom(data as Room);
   }, [setRoom]);
 
-  return { room, createRoom, joinRoom, advancePhase, leaveRoom, refetchRoom, isLoading, error };
+  return { room, createRoom, joinRoom, retryRealName, advancePhase, leaveRoom, refetchRoom, isLoading, error };
 }
