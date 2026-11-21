@@ -1,69 +1,75 @@
 import type { CSSProperties, ReactNode } from 'react';
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../../stores/gameStore';
 import Header from './Header';
 import BottomNav from './BottomNav';
+import GameRail from './GameRail';
 
 interface AppShellProps {
   children: ReactNode;
   showHeader?: boolean;
+  /** Game sections: desktop side rail + mobile bottom tab bar. */
   showNav?: boolean;
-  /** When provided, renders a 5th exit tab in BottomNav */
+  /** Mobile bottom tab bar (defaults to showNav). The lobby keeps the
+   *  desktop rail, with every section locked, but no mobile tab bar. */
+  showTabs?: boolean;
+  /** When provided, the menu and the rail get an Exit row. */
   onExitPress?: () => void;
-  /** Current room phase — passed to BottomNav so lock state is authoritative */
+  /** Current room phase — passed to the nav so lock state is authoritative */
   phase?: string;
 }
 
+/**
+ * Game shell. Mobile: sticky game bar + phase strip, content, sticky tab
+ * bar. Desktop (≥ 1024px): 240px side rail + a wide column with the phase
+ * strip on top.
+ */
 export default function AppShell({
   children,
   showHeader = true,
   showNav = true,
+  showTabs,
   onExitPress,
   phase,
 }: AppShellProps) {
   const { t } = useTranslation();
   const isReconnecting = useGameStore((s) => s.isReconnecting);
+  const tabs = showTabs ?? showNav;
 
   return (
-    <div className="min-h-svh bg-euro-gradient flex flex-col">
-      {/* Sticky top block: banner (when reconnecting) + header, stacked vertically.
-          Header no longer has sticky/top-0 of its own — this wrapper handles it.
-          --top-bar-height is read by Header dropdowns to position themselves. */}
-      <div
-        className="sticky top-0 z-40 flex flex-col shrink-0"
-        style={{
-          // Mobile/tablet: header h-14 (56px) + optional 36px reconnect banner
-          '--top-bar-height':    isReconnecting ? '92px'  : '56px',
-          // Desktop:        header h-20 (80px) + optional 36px reconnect banner
-          // Used by Header's dropdown to anchor itself below the bar at lg+
-          '--top-bar-height-lg': isReconnecting ? '116px' : '80px',
-        } as CSSProperties}
-      >
-        {isReconnecting && (
-          <div className="flex items-center gap-2 bg-yellow-400/15 border-b border-yellow-400/30 px-4 py-2.5">
-            <span className="w-2 h-2 rounded-full bg-yellow-400 shrink-0 animate-pulse" />
-            <span className="text-xs font-semibold text-yellow-400">
-              {t('reconnect.banner')}
-            </span>
-          </div>
-        )}
-        {showHeader && <Header onExitPress={onExitPress} />}
+    <div className={clsx('gs', showNav ? 'has-rail' : 'no-rail', tabs && 'has-tabs')}>
+      {showNav && <GameRail phase={phase} onExitPress={onExitPress} />}
+
+      <div className="gs-col">
+        {/* Sticky top block: reconnect banner + game bar + phase strip.
+            --top-bar-height(-lg) anchor the Header dropdowns below it. */}
+        <div
+          className="gs-head"
+          style={{
+            // Mobile/tablet: bar 60 + strip 34 (+ 36 reconnect banner)
+            '--top-bar-height':    isReconnecting ? '130px' : '94px',
+            // Desktop: top bar 52 (+ 36 reconnect banner)
+            '--top-bar-height-lg': isReconnecting ? '88px' : '52px',
+          } as CSSProperties}
+        >
+          {isReconnecting && (
+            <div className="gs-reconnect" role="status">
+              <span className="gs-reconnect-dot" aria-hidden="true" />
+              <span>{t('reconnect.banner')}</span>
+            </div>
+          )}
+          {showHeader && <Header onExitPress={onExitPress} />}
+        </div>
+
+        {/* scrollbar-gutter: stable keeps the layout from jumping
+            horizontally when the content height changes. */}
+        <main className="gs-main" style={{ scrollbarGutter: 'stable' }}>
+          {children}
+        </main>
+
+        {tabs && <BottomNav variant="bar" phase={phase} />}
       </div>
-
-      {/* Consistent breathing room between the sticky header and screen
-          content — applied here so every tabbed screen inherits it
-          instead of each one having to remember its own top padding.
-          scrollbar-gutter: stable reserves space for the scrollbar even
-          when content fits, so the layout doesn't shift horizontally
-          (and visibly "jump") when content height changes. */}
-      <main
-        className="flex-1 overflow-y-auto pt-4 sm:pt-6"
-        style={{ scrollbarGutter: 'stable' }}
-      >
-        {children}
-      </main>
-
-      {showNav && <BottomNav onExitPress={onExitPress} phase={phase} />}
     </div>
   );
 }

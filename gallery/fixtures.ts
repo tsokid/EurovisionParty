@@ -40,6 +40,9 @@ export function makeRoom(phase: RoomPhase): Room {
 
 export const ROOM_PASSWORD = 'douze';
 
+/** The live room row the fake DB serves (gallery phase flips update it). */
+export const ROOM_ROW_REF: { current: Room | null } = { current: null };
+
 // ── Players ──────────────────────────────────────────────────────────
 function player(
   id: string, name: string, emoji: string, quiz: number, pred: number, duel: number, extra: Partial<Player> = {},
@@ -83,6 +86,33 @@ export function makePlayers(phase: RoomPhase): Player[] {
 }
 
 export const ME_ID = 'p-me';
+
+/** Avatar ids for the default cast (Task 5: the game bar shows the art). */
+const CAST_AVATARS: Record<string, string> = {
+  'p-me': 'av-01', 'p-nikos': 'av-04', 'p-maria': 'av-03', 'p-kostas': 'av-05', 'p-sofia': 'av-02', 'p-alex': 'av-06',
+};
+export function withAvatars(players: Player[]): Player[] {
+  return players.map((p) => ({ ...p, avatar_id: p.avatar_id ?? CAST_AVATARS[p.id] ?? null }));
+}
+
+/**
+ * Lobby cast (boards lobby-after-{m,d}): stage names only, joined in order.
+ * `host` picks who created the room, so the same data shows the host and
+ * the guest view.
+ */
+export function makeLobbyPlayers(count: number, host: 'me' | 'other'): Player[] {
+  const cast: [string, string, string][] = [
+    ['p-me', 'Douze Points', 'av-01'],
+    ['p-wind', 'Wind Machine', 'av-07'],
+    ['p-glitter', 'Glitter Bomb', 'av-03'],
+    ['p-key', 'Key Change', 'av-12'],
+    ['p-ballad', 'Μπαλάντα Mode', 'av-09'],
+    ['p-disco', 'Disco Μπαμπέσα', 'av-15'],
+  ];
+  const order = host === 'me' ? cast : [cast[1], cast[0], ...cast.slice(2)];
+  return order.slice(0, count).map(([id, name, avatar], i) =>
+    player(id, name, '🎤', 0, 0, 0, { avatar_id: avatar, is_host: i === 0, joined_at: iso(12 - i * 3) }));
+}
 
 // ── 2026 Grand Final line-up ─────────────────────────────────────────
 interface ContestEntry {

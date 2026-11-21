@@ -16,7 +16,7 @@ import PredictionsScreen from '../src/components/predictions/PredictionsScreen';
 import DuelPlayScreen from '../src/components/duels/DuelPlayScreen';
 import DuelResultCard from '../src/components/duels/DuelResultCard';
 import { useGameStore, type QuizProgress } from '../src/stores/gameStore';
-import type { RoomPhase, TabId } from '../src/lib/types';
+import type { Player, Room, RoomPhase, TabId } from '../src/lib/types';
 import { setFakeDb, type FakeTables } from './fakeSupabase';
 import * as F from './fixtures';
 import StagePrimitives from './StagePrimitives';
@@ -37,6 +37,12 @@ interface Scenario {
   quizProgress?: (roomId: string, playerId: string) => QuizProgress;
   /** Click away the final-phase WinnerCrown overlay. */
   dismissCrown?: boolean;
+  /** Override the cast (default: F.makePlayers + avatars). */
+  players?: () => Player[];
+  /** Move the room to this phase after `phaseChangeAfterMs`, the way a
+   *  realtime update would (store + fake DB), to show the phase banner. */
+  phaseChangeTo?: RoomPhase;
+  phaseChangeAfterMs?: number;
   note?: string;
 }
 
@@ -46,6 +52,15 @@ const SCENARIOS: Scenario[] = [
   { id: 'onboarding-create', label: 'Onboarding: create a room', render: 'home', phase: 'lobby', homeUrl: '/el?action=create', note: 'Redesign Task 4: stage name, secret real name, avatar picker.' },
   { id: 'onboarding-join', label: 'Onboarding: join a room (code prefilled)', render: 'home', phase: 'lobby', homeUrl: '/el?join=DESIGN', note: 'Redesign Task 4: the invite-link variant.' },
   { id: 'lobby', label: 'Lobby', render: 'room', phase: 'lobby' },
+  { id: 'lobby-host', label: 'Lobby as host, 3 players (QR)', render: 'room', phase: 'lobby', players: () => F.makeLobbyPlayers(3, 'me'), note: 'Redesign Task 5: game bar, phase strip, QR, Start.' },
+  { id: 'lobby-host-1', label: 'Lobby as host, alone (Start disabled)', render: 'room', phase: 'lobby', players: () => F.makeLobbyPlayers(1, 'me') },
+  { id: 'lobby-guest', label: 'Lobby as guest, 6 players', render: 'room', phase: 'lobby', players: () => F.makeLobbyPlayers(6, 'other'), note: 'Redesign Task 5: guest sees the waiting line.' },
+  { id: 'shell-pre-night', label: 'Shell · pre_night (Board tab)', render: 'room', phase: 'pre_night', tab: 'leaderboard', note: 'Redesign Task 5: Predictions locked.' },
+  { id: 'shell-predictions-open', label: 'Shell · predictions_open (Board tab)', render: 'room', phase: 'predictions_open', tab: 'leaderboard' },
+  { id: 'shell-voting-live', label: 'Shell · voting_live (Board tab)', render: 'room', phase: 'voting_live', tab: 'leaderboard', prediction: F.PREDICTION_SUBMITTED, note: 'Quiz and Duels locked.' },
+  { id: 'shell-final', label: 'Shell · final (Predictions tab)', render: 'room', phase: 'final', tab: 'predictions', prediction: F.PREDICTION_SCORED, dismissCrown: true },
+  { id: 'phase-banner', label: 'Phase-change banner (pre_night → predictions_open)', render: 'room', phase: 'pre_night', tab: 'quiz', phaseChangeTo: 'predictions_open', phaseChangeAfterMs: 1500, note: 'Redesign Task 5: motion #5, fired from the store phase.' },
+  { id: 'phase-banner-voting', label: 'Phase-change banner (→ voting_live)', render: 'room', phase: 'predictions_open', tab: 'leaderboard', prediction: F.PREDICTION_SUBMITTED, phaseChangeTo: 'voting_live', phaseChangeAfterMs: 1500 },
   { id: 'pre-night', label: 'Pre-night (default Quiz tab)', render: 'room', phase: 'pre_night', tab: 'quiz' },
   { id: 'predictions-open', label: 'Predictions picker', render: 'room', phase: 'predictions_open', tab: 'predictions', prediction: F.PREDICTION_PARTIAL },
   {
@@ -91,12 +106,13 @@ function seed(s: Scenario) {
   } catch { /* ignore */ }
 
   const room = F.makeRoom(s.phase);
-  const players = F.makePlayers(s.phase);
+  const players = s.players ? s.players() : F.withAvatars(F.makePlayers(s.phase));
   const me = players.find((p) => p.id === F.ME_ID)!;
   const final = s.phase === 'final';
 
+  F.ROOM_ROW_REF.current = room;
   const tables: FakeTables = {
-    rooms: [room],
+    get rooms() { return [F.ROOM_ROW_REF.current as unknown as Record<string, unknown>]; },
     players,
     predictions: s.prediction ? [s.prediction as Record<string, unknown>] : [],
     entries_with_names: final ? F.ENTRIES : F.ENTRIES_NO_RESULTS,
@@ -136,6 +152,20 @@ function seed(s: Scenario) {
 }
 
 // ── Views ────────────────────────────────────────────────────────────
+function PhaseFlip({ to, afterMs }: { to: RoomPhase; afterMs: number }) {
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const st = useGameStore.getState();
+      if (!st.room) return;
+      const next: Room = { ...st.room, phase: to, phase_updated_at: new Date().toISOString() };
+      F.ROOM_ROW_REF.current = next; // what the polling fallback reads
+      st.setRoom(next);
+    }, afterMs);
+    return () => clearTimeout(id);
+  }, [to, afterMs]);
+  return null;
+}
+
 function DismissCrown() {
   useEffect(() => {
     let tries = 0;
@@ -167,7 +197,7 @@ function Screen({ s }: { s: Scenario }): ReactNode {
       return (
         <MemoryRouter initialEntries={['/room/DESIGN']}>
           <Routes>
-            <Route path="/room/:roomCode" element={<><RoomPage />{s.dismissCrown && <DismissCrown />}</>} />
+            <Route path="/room/:roomCode" element={<><RoomPage />{s.dismissCrown && <DismissCrown />}{s.phaseChangeTo && <PhaseFlip to={s.phaseChangeTo} afterMs={s.phaseChangeAfterMs ?? 1500} />}</>} />
             <Route path="*" element={<p style={{ color: 'white', padding: 24 }}>Navigated away from the room (gallery).</p>} />
           </Routes>
         </MemoryRouter>

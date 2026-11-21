@@ -96,11 +96,28 @@
     "joinedCount_one": "{{count}} player joined",
     "joinedCount_other": "{{count}} players joined",
     "needMore": "Need {{needed}} more",
-    "startParty": "🚀 Start the Party!",
-    "waitingHost": "⏳ Waiting for the host to start...",
+    "startParty": "Start the party",
+    "waitingHost": "Waiting for the host to start…",
     "inviteText": "🎤✨ Join my Eurovision Games! ✨🎤\n\n🔑 Room Code: {{code}}{{passwordLine}}\n\n👉 Join here:\n{{link}}",
     "invitePasswordLine": "\n\n🔒 Password: {{password}}",
-    "inviteSubject": "🎤 Eurovision Games Invite!"
+    "inviteSubject": "🎤 Eurovision Games Invite!",
+    "title": "Invite your friends and start",
+    "codeLabel": "Room code",
+    "joinHint": "Friends join with the code or by scanning the QR.",
+    "joinHintWide": "Friends join on their phones with the code, or scan the QR on your screen.",
+    "qrLabel": "QR code to join room {{code}}",
+    "copyCode": "Copy code",
+    "copyCodeShort": "Copy",
+    "copyCodeDone": "Copied",
+    "invite": "Invite",
+    "players": "Players",
+    "maxPlayers": "up to {{max}}",
+    "maxPlayersWide": "Room for up to {{max}}",
+    "you": "you",
+    "host": "Host",
+    "startTitle": "What happens when you start",
+    "startInfo": "Starting opens Quiz and Duels. Predictions open once the Grand Final line-up is announced.",
+    "inRoom": "In the room · {{count}}"
   },
   "header": {
     "shareAria": "Share invite",
@@ -131,7 +148,29 @@
     "board": "Board",
     "exit": "Leave",
     "menu": "Menu",
-    "lockedHint": "Locked in this phase"
+    "lockedHint": "Locked in this phase",
+    "opensAtStart": "Opens when the party starts",
+    "sections": "Sections",
+    "sectionsAria": "Game sections"
+  },
+  "game": {
+    "room": "Room",
+    "points_one": "{{count}} point",
+    "points_other": "{{count}} points",
+    "playersCount_one": "{{count}} player · up to {{max}}",
+    "playersCount_other": "{{count}} players · up to {{max}}",
+    "roomAria": "Room",
+    "strip": "Tonight",
+    "stripWide": "Tonight so far",
+    "stripAria": "Where the night is now",
+    "phasesButton": "All phases of the night"
+  },
+  "phaseBanner": {
+    "pre_night": { "title": "The party has started!", "body": "Quiz and Duels are open." },
+    "predictions_open": { "title": "Predictions are open!", "body": "The Grand Final lineup is set. Pick your favourites and least favourites before voting starts!" },
+    "voting_live": { "title": "Voting is live!", "body": "Predictions are locked. Quiz and Duels are closed." },
+    "final": { "title": "Results are in!", "body": "See the final leaderboard." },
+    "dismiss": "Close"
   },
   "phases": {
     "lobby": { "label": "Lobby", "desc": "Players join the room and pick avatars" },

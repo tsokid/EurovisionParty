@@ -22,6 +22,7 @@ import WinnersScreen from '../components/winners/WinnersScreen';
 import ExitGameModal from '../components/room/ExitGameModal';
 import ExitChoiceModal from '../components/room/ExitChoiceModal';
 import RoomIntroOverlay from '../components/room/RoomIntroOverlay';
+import PhaseBanner, { usePhaseBanner } from '../components/layout/PhaseBanner';
 
 const INTRO_SEEN_KEY = (code: string) => `eurovision-games-intro-seen-${code}`;
 
@@ -33,7 +34,6 @@ export function RoomPage() {
   const [showWinner, setShowWinner] = useState(true);
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
-  const [showPredictionsOpenBanner, setShowPredictionsOpenBanner] = useState(false);
 
   // Defense-in-depth: emit noindex,nofollow so even if a room URL leaks
   // into a backlink or sitemap, search engines won't index the live game
@@ -119,17 +119,21 @@ export function RoomPage() {
   }, [storeRoom?.id, currentPhase, setRoom]);
 
   // When the phase transitions from pre_night → predictions_open, auto-switch
-  // the active tab and show a prominent banner so no user misses it.
+  // the active tab so no user misses it (unchanged rule).
   const prevPhaseRef = useRef<string | null>(null);
   useEffect(() => {
     const phase = storeRoom?.phase;
     if (!phase) return;
     if (prevPhaseRef.current === 'pre_night' && phase === 'predictions_open') {
       setActiveTab('predictions');
-      setShowPredictionsOpenBanner(true);
     }
     prevPhaseRef.current = phase;
   }, [storeRoom?.phase, setActiveTab]);
+
+  // Phase-change banner (motion map #5): driven by the store's room phase
+  // (realtime / polling), never by a click, so every phone plays it together.
+  const phaseBanner = usePhaseBanner(storeRoom?.phase);
+  const banner = <PhaseBanner phase={phaseBanner.shown} onDismiss={phaseBanner.dismiss} />;
 
   // Catch-up fetch: when isReconnecting transitions true→false, refetch all state
   const prevReconnectingRef = useRef(false);
@@ -171,12 +175,16 @@ export function RoomPage() {
     );
   }
 
-  // Lobby phase — no nav needed
+  // Lobby phase — game bar + phase strip; the desktop rail shows every
+  // section locked; no mobile tab bar (the Start bar sits there instead).
   if (currentRoom.phase === 'lobby') {
     return (
-      <AppShell showHeader={false} showNav={false}>
-        <LobbyScreen onAdvancePhase={async () => { if (currentRoom) await advancePhase(currentRoom.id); }} />
-      </AppShell>
+      <>
+        <AppShell showHeader showNav showTabs={false} phase="lobby">
+          <LobbyScreen onAdvancePhase={async () => { if (currentRoom) await advancePhase(currentRoom.id); }} />
+        </AppShell>
+        {banner}
+      </>
     );
   }
 
@@ -256,33 +264,7 @@ export function RoomPage() {
         />
       )}
 
-      {/* Predictions-open announcement — fires once when parser unlocks predictions */}
-      {showPredictionsOpenBanner && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-6"
-          style={{ background: 'rgba(10,5,25,0.85)', backdropFilter: 'blur(8px)' }}
-          onClick={() => setShowPredictionsOpenBanner(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-3xl border border-euro-pink/30 p-8 text-center shadow-[0_0_80px_rgba(236,72,153,0.35)]"
-            style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.4),rgba(236,72,153,0.3))' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="text-5xl mb-4">🎯</div>
-            <h2 className="text-2xl font-extrabold text-white mb-2">Predictions are open!</h2>
-            <p className="text-white/70 text-sm leading-relaxed mb-6">
-              The Grand Final lineup is set. Pick your favourites and least favourites before voting starts!
-            </p>
-            <button
-              onClick={() => setShowPredictionsOpenBanner(false)}
-              className="w-full py-3 rounded-xl font-bold text-white"
-              style={{ background: 'linear-gradient(90deg,#7c3aed,#ec4899)' }}
-            >
-              Make my predictions →
-            </button>
-          </div>
-        </div>
-      )}
+      {banner}
 
       {/* Exit choice: Visit Other Rooms OR Exit Game */}
       {showChoiceModal && (

@@ -17,3 +17,7 @@ export { PointsChip, formatPoints } from './PointsChip';
 export type { PointsChipProps } from './PointsChip';
 export { AVATARS, AVATAR_IDS, AvatarArt, getAvatar, isAvatarId, randomAvatarId } from './avatars';
 export type { AvatarSpec, AvatarArtProps } from './avatars';
+export { QrCode } from './QrCode';
+export type { QrCodeProps } from './QrCode';
+export { ScoreChip, useCountUp, SCORE_COUNT_MS } from './ScoreChip';
+export type { ScoreChipProps } from './ScoreChip';
