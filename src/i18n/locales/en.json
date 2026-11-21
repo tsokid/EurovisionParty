@@ -608,5 +608,107 @@
     },
     "disclaimer": "Eurovision Games is an unofficial fan-made party game. Not affiliated with, endorsed by, or operated by the European Broadcasting Union or the Eurovision Song Contest.",
     "contactEmail": "hello@eurovision.games"
+  },
+  "home": {
+    "hero": {
+      "chipFinal": "Final {{date}}",
+      "lede": "The party game for Eurovision night. Free, in the browser, for 2 to 20 friends. No download, no account.",
+      "create": "Create a room",
+      "or": "or"
+    },
+    "join": {
+      "label": "Invited to a room?",
+      "labelShort": "Invited?",
+      "hint": "Type the code you were sent.",
+      "hintShort": "Type the code",
+      "placeholder": "e.g. PARTY",
+      "submit": "Join"
+    },
+    "stats": {
+      "days": "days to the final",
+      "players": "players per room",
+      "titles": "titles at the end"
+    },
+    "countdown": {
+      "final": "Grand final",
+      "semis": "Semi-finals {{dates}}",
+      "days_one": "day",
+      "days_other": "days",
+      "tonight": "Tonight"
+    },
+    "steps": {
+      "title": "How to play, in 3 steps",
+      "createTitle": "Create a room",
+      "createBody": "Send the code to your friends. They join from their phones, no account needed.",
+      "pointsTitle": "Collect points",
+      "pointsBody": "Trivia and duels with your friends, before and during the show.",
+      "predictTitle": "Predict the winners",
+      "predictBody": "Top 5 and Worst 5 as soon as the final starts, before voting closes."
+    },
+    "titles": {
+      "title": "Five titles at the end of the night"
+    },
+    "guides": {
+      "eyebrow": "Guides",
+      "winnersTitle": "Eurovision winners",
+      "winnersDesc": "Every winner since 1956."
+    },
+    "preview": {
+      "phase": "Voting open",
+      "example": "Example",
+      "room": "Room",
+      "board": "Room leaderboard",
+      "you": "you",
+      "event": "duel won · opponent: {{name}}"
+    }
+  },
+  "predictionsGuide": {
+    "chip": "{{chip}} · Eurovision {{year}}",
+    "metaShort": "{{city}} · Final {{finalDay}}",
+    "metaLong": "Eurovision {{year}} {{cityIn}} · Grand final {{finalDay}}",
+    "create": "Create a room",
+    "howTo": "How to play",
+    "stats": {
+      "max": "maximum points",
+      "lists": "countries in two lists",
+      "exact": "points per exact place"
+    },
+    "example": {
+      "phase": "Predictions open",
+      "label": "Example",
+      "top5Hint": "1 = winner",
+      "worst5Hint": "1 = last",
+      "pick": "Pick",
+      "pickTail": " a country",
+      "lockNote": "They lock automatically when voting opens",
+      "pick1": "Sweden",
+      "pick2": "Italy"
+    },
+    "scoring": {
+      "eyebrow": "Scoring",
+      "title": "Same rules for Top 5 and Worst 5",
+      "body": "Both lists are ranked: a #1 that comes true is worth more than a #5. In the Worst 5, last place counts as position 1.",
+      "unit": "points",
+      "max": "maximum",
+      "exactTitle": "Exact place",
+      "exactBody": "The country finished where you put it.",
+      "inListTitle": "Right list, other place",
+      "inListBody": "It made the official Top 5 or Worst 5.",
+      "outsideTitle": "Outside the list",
+      "outsideBody": "It missed the official Top 5 or Worst 5."
+    },
+    "timeline": {
+      "eyebrow": "Timeline",
+      "title": "When the lists open and when they lock",
+      "partyTitle": "Trivia and duels",
+      "partyBody": "From the start of the party you collect points, before and during the show.",
+      "finalTitle": "Grand final",
+      "finalBody": "The lists open. Change them freely while the songs play.",
+      "votingTitle": "Live voting",
+      "votingBody": "The lists lock automatically. No changes after that.",
+      "resultsTitle": "Results",
+      "resultsBody": "Scored automatically against the official ranking."
+    },
+    "detail": "In detail: the format and the scoring"
   }
 }

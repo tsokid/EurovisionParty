@@ -51,7 +51,7 @@ export const flagEmoji = (iso: string | null): string =>
 const NO_DATE: Record<Locale, string> = { en: 'a Saturday in May', el: 'ένα Σάββατο του Μαΐου' };
 
 /** UTC weekday of a `YYYY-MM-DD` date (no Intl, no local time zone: same everywhere). */
-function weekday(iso: string, locale: Locale): string {
+export function weekday(iso: string, locale: Locale): string {
   const [y, m, d] = iso.split('-').map(Number);
   return WEEKDAYS[locale][new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
 }

@@ -253,7 +253,15 @@ export interface HubCopy {
   semis: PageText & { semiTitle: (n: 1 | 2, date: string | null) => string; directTitle: string; direct: (n: number) => string; pending: string };
   songs: PageText & { listTitle: (f: HubFacts) => string; listName: (y: number) => string };
   glance: { hostCity: string; hostCountry: string; countries: string; finalists: string };
-  shows: { semi1: string; semi2: string; final: string };
+  /** Hub sub-nav (HubFrame) shared by the hub, schedule, semi-finals and songs pages. */
+  nav: { label: (y: number) => string; overview: string; schedule: string; semis: string; songs: string };
+  /** Label under the days-to-the-final number (n = days). */
+  daysToFinal: (n: number) => string;
+  /** Entry cards (announced countries). */
+  entry: { runningOrder: (n: number | null) => string; countryPage: string; pending: string };
+  /** "Play it with your friends" card on the hub. */
+  play: { eyebrow: string; title: (y: number) => string; points: string[]; create: string; howTo: string };
+  shows: { semi1: string; semi2: string; final: string; /** Narrow label (mobile host card). */ finalShort: string };
   headers: {
     place: string; country: string; artist: string; song: string; points: string; jury: string; televote: string;
     semi: string; runningOrder: string; result: string; language: string; show: string; date: string; countries: string;
@@ -347,7 +355,21 @@ const en: HubCopy = {
     listName: (y) => `Eurovision ${y} songs`,
   },
   glance: { hostCity: 'Host city', hostCountry: 'Host country', countries: 'Countries', finalists: 'Countries in the final' },
-  shows: { semi1: 'Semi-final 1', semi2: 'Semi-final 2', final: 'Grand final' },
+  nav: { label: (y) => `Eurovision ${y} sections`, overview: 'Overview', schedule: 'Schedule', semis: 'Semi-finals', songs: 'Songs' },
+  daysToFinal: (n) => (n === 1 ? 'day to the final' : 'days to the final'),
+  entry: {
+    runningOrder: (n) => `Running order: ${n ?? 'to be set'}`,
+    countryPage: 'Country page',
+    pending: 'Not announced yet:',
+  },
+  play: {
+    eyebrow: 'For the night of the final',
+    title: (y) => `Play Eurovision ${y} with your friends`,
+    points: ['Live trivia and duels', 'Top 5 and Worst 5 in the final', 'Free, 2 to 20 players'],
+    create: 'Create a room',
+    howTo: 'How to play',
+  },
+  shows: { semi1: 'Semi-final 1', semi2: 'Semi-final 2', final: 'Grand final', finalShort: 'Final' },
   headers: {
     place: 'Place', country: 'Country', artist: 'Artist', song: 'Song', points: 'Points', jury: 'Jury', televote: 'Televote',
     semi: 'Semi-final', runningOrder: 'Running order', result: 'Result', language: 'Language', show: 'Show', date: 'Date', countries: 'Countries',
@@ -441,7 +463,21 @@ const el: HubCopy = {
     listName: (y) => `Τα τραγούδια της Eurovision ${y}`,
   },
   glance: { hostCity: 'Πόλη διεξαγωγής', hostCountry: 'Χώρα διοργάνωσης', countries: 'Χώρες', finalists: 'Χώρες στον τελικό' },
-  shows: { semi1: 'Α΄ ημιτελικός', semi2: 'Β΄ ημιτελικός', final: 'Μεγάλος τελικός' },
+  nav: { label: (y) => `Ενότητες Eurovision ${y}`, overview: 'Συνοπτικά', schedule: 'Πρόγραμμα', semis: 'Ημιτελικοί', songs: 'Τραγούδια' },
+  daysToFinal: (n) => (n === 1 ? 'μέρα ως τον τελικό' : 'μέρες ως τον τελικό'),
+  entry: {
+    runningOrder: (n) => `Σειρά εμφάνισης: ${n ?? 'όταν οριστεί'}`,
+    countryPage: 'Σελίδα χώρας',
+    pending: 'Δεν έχουν ανακοινωθεί ακόμα:',
+  },
+  play: {
+    eyebrow: 'Για τη βραδιά του τελικού',
+    title: (y) => `Παίξε την Eurovision ${y} με την παρέα σου`,
+    points: ['Trivia και μονομαχίες ζωντανά', 'Top 5 και Worst 5 στον τελικό', 'Δωρεάν, 2 έως 20 παίκτες'],
+    create: 'Φτιάξε δωμάτιο',
+    howTo: 'Πώς παίζεται',
+  },
+  shows: { semi1: 'Α΄ ημιτελικός', semi2: 'Β΄ ημιτελικός', final: 'Μεγάλος τελικός', finalShort: 'Τελικός' },
   headers: {
     place: 'Θέση', country: 'Χώρα', artist: 'Καλλιτέχνης', song: 'Τραγούδι', points: 'Βαθμοί', jury: 'Επιτροπές', televote: 'Κοινό',
     semi: 'Ημιτελικός', runningOrder: 'Σειρά εμφάνισης', result: 'Αποτέλεσμα', language: 'Γλώσσα', show: 'Εκπομπή', date: 'Ημερομηνία', countries: 'Χώρες',

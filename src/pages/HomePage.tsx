@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import WelcomeScreen from '../components/onboarding/WelcomeScreen';
 import NameEntry from '../components/onboarding/NameEntry';
 import HomeSeoBlock from '../components/seo/HomeSeoBlock';
+import HomeHero from '../components/home/HomeHero';
+import HomeSections from '../components/home/HomeSections';
+import YourRoomsPanel from '../components/home/YourRoomsPanel';
 import SiteFooter from '../components/seo/SiteFooter';
 import PageSeo from '../components/seo/PageSeo';
 import { useLocale } from '../lib/seo/LocaleContext';
@@ -22,6 +24,8 @@ export function HomePage() {
   const action = searchParams.get('action');
   const initialMode: Mode = prefillCode || action === 'join' ? 'join' : action === 'create' ? 'create' : 'welcome';
   const [mode, setMode] = useState<Mode>(initialMode);
+  // Code typed in the hero's join form (prefills the join screen).
+  const [joinCode, setJoinCode] = useState('');
   const { isLoading: authLoading } = useAuth();
   const { createRoom, joinRoom, isLoading, error } = useRoom();
   const navigate = useNavigate();
@@ -57,32 +61,26 @@ export function HomePage() {
     else if (action === 'join') setMode('join');
   }, [prefillCode, action]);
 
-  // While auth initialises (and in the prerendered HTML) the game panel is a
-  // spinner, but the static SEO content below it still renders.
-  if (authLoading) {
+  // The Stage home (hero, steps, guides) renders while auth initialises too,
+  // so the prerendered HTML is the real page, not a spinner. A deep link to
+  // the create/join screen (?action=…, ?join=…) shows it once auth is ready.
+  if (authLoading || mode === 'welcome') {
     return (
       <>
         {seo}
-        <div className="min-h-svh bg-euro-gradient flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-5xl animate-float mb-4">🎤</div>
-            <p className="text-white/60">Loading...</p>
-          </div>
-        </div>
-        {seoBlock}
-        <SiteFooter />
-      </>
-    );
-  }
-
-  if (mode === 'welcome') {
-    return (
-      <>
-        {seo}
-        <WelcomeScreen
-          onCreateRoom={() => setMode('create')}
-          onJoinRoom={() => setMode('join')}
+        <HomeHero
+          onCreate={() => setMode('create')}
+          onJoin={(code) => {
+            setJoinCode(code);
+            setMode('join');
+          }}
         />
+        {!authLoading && (
+          <div className="wrap home-rooms">
+            <YourRoomsPanel />
+          </div>
+        )}
+        <HomeSections />
         {seoBlock}
         <SiteFooter />
       </>
@@ -112,7 +110,7 @@ export function HomePage() {
         onBack={() => setMode('welcome')}
         isLoading={isLoading}
         error={error}
-        initialRoomCode={prefillCode}
+        initialRoomCode={joinCode || prefillCode}
       />
     </>
   );

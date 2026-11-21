@@ -9,14 +9,16 @@ export interface RelatedCard {
 interface Props {
   heading?: string;
   items: RelatedCard[];
+  /** Desktop columns (the hub boards use 4). */
+  columns?: 3 | 4;
 }
 
 // "Keep reading" links as Stage `.card-link` rows (home board pattern).
-export default function RelatedCards({ heading = 'Keep reading', items }: Props) {
+export default function RelatedCards({ heading = 'Keep reading', items, columns = 3 }: Props) {
   return (
     <section aria-labelledby="related-heading" className="flex flex-col gap-3.5">
       <h2 id="related-heading" className="t-h2 text-stage-text">{heading}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${columns === 4 ? 'lg:grid-cols-4 lg:gap-4' : 'lg:grid-cols-3'}`}>
         {items.map((c) => (
           <LocaleLink key={c.href} to={c.href} className="card-link text-stage-text no-underline">
             <div className="flex-1 min-w-0">

@@ -29,11 +29,14 @@ export default function LocaleRoot() {
 
   return (
     <LocaleProvider locale={params.locale}>
-      <ScrollToTop />
-      <BetaBanner />
-      <SiteHeader />
-      <Outlet />
-      <CookieConsent />
+      {/* Stage ground behind every public page (game screens live outside, under /room). */}
+      <div className="stage-root">
+        <ScrollToTop />
+        <BetaBanner />
+        <SiteHeader />
+        <Outlet />
+        <CookieConsent />
+      </div>
     </LocaleProvider>
   );
 }

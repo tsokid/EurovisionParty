@@ -35,7 +35,7 @@ const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' '
 describe('line-up not announced yet', () => {
   it.each([
     ['en', 'The Eurovision 2026 entries have not been announced yet.', /here are all \d+ countries that have ever taken part/, 'Greece'],
-    ['el', 'Οι συμμετοχές της Eurovision 2026 δεν έχουν ακόμα ανακοινωθεί.', /αυτές είναι και οι \d+ χώρες που έχουν πάρει ποτέ μέρος/, 'Ελλάδα'],
+    ['el', 'Οι συμμετοχές της Eurovision 2026 δεν έχουν ανακοινωθεί ακόμα.', /αυτές είναι και οι \d+ χώρες που έχουν πάρει ποτέ μέρος/, 'Ελλάδα'],
   ] as const)('%s hub, songs and predictions pages', async (locale, notice, intro, greece) => {
     for (const path of [`/${locale}/eurovision-2026`, `/${locale}/eurovision-2026/songs`, `/${locale}/eurovision-predictions`]) {
       const r = await render(path);
