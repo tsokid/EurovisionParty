@@ -1217,6 +1217,27 @@ body { margin: 0; overscroll-behavior: none; }
   }
   .secret-hint svg { flex: none; margin-top: 2px; }
 
+  /* Join from the lobby QR: locked room code + "password filled in" line. */
+  .onb-room {
+    margin: 0; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 16px; border-radius: 14px;
+    font-weight: 600; font-size: 16px; color: var(--color-stage-text-2);
+    background: var(--color-stage-bg); border: 1px solid var(--color-stage-line-2);
+  }
+  .onb-room svg { flex: none; color: var(--color-stage-text-3); }
+  .onb-room-code { font-size: 22px; font-weight: 700; letter-spacing: .2em; color: var(--color-stage-gold); }
+  .onb-qr-pw {
+    margin: 0; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px;
+    font-size: 14px; line-height: 1.4; color: var(--color-stage-text-2);
+    background: rgba(62, 224, 143, .08); border: 1px solid rgba(62, 224, 143, .3);
+  }
+  .onb-qr-pw svg { flex: none; color: var(--color-stage-ok); }
+  .onb-qr-pw span { flex: 1; min-width: 0; }
+  .onb-qr-change {
+    flex: none; min-height: 44px; padding: 0 6px; border: 0; background: transparent; cursor: pointer;
+    font: 600 14px var(--font-stage); color: var(--color-stage-pink-2); text-decoration: underline; text-underline-offset: 3px;
+  }
+  .onb-qr-change:focus-visible { outline: 2px solid var(--color-stage-pink-2); outline-offset: 2px; border-radius: 8px; }
+
   /* Pop-out avatar (AvatarPop): the Stage avatar circle with the cutout drawn
      --pop-s × wider than it and anchored at its bottom (--pop-d of the image,
      the cutouts' empty bottom margin, hangs below). Above the circle's centre

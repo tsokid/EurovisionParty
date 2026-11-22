@@ -29,6 +29,9 @@ import type { Duel, DuelDecision, Notification } from '../src/lib/types';
 import type { WinnerRow } from '../src/lib/winners';
 import '../src/index.css';
 
+/** The password the fake verify_room_password accepts (onboarding-join-qr). */
+const GALLERY_JOIN_PASSWORD = 'douze-points';
+
 // ── Screens ──────────────────────────────────────────────────────────
 type Render = 'room' | 'home' | 'predictions-locked' | 'duel-play' | 'duel-result' | 'duel-moment' | 'stage' | 'avatars';
 
@@ -77,6 +80,7 @@ const SCENARIOS: Scenario[] = [
   { id: 'join', label: 'Join room form', render: 'home', phase: 'lobby', homeUrl: '/el?action=join' },
   { id: 'onboarding-create', label: 'Onboarding: create a room', render: 'home', phase: 'lobby', homeUrl: '/el?action=create', note: 'Redesign Task 4: stage name, secret real name, avatar picker.' },
   { id: 'onboarding-join', label: 'Onboarding: join a room (code prefilled)', render: 'home', phase: 'lobby', homeUrl: '/el?join=DESIGN', note: 'Redesign Task 4: the invite-link variant.' },
+  { id: 'onboarding-join-qr', label: 'Onboarding: join from the lobby QR (password prefilled)', render: 'home', phase: 'lobby', homeUrl: '/el?join=DESIGN', note: 'Open with #k=<password> in the URL (stripped on load). The fake room password is "douze-points"; any other one is rejected.' },
   { id: 'lobby', label: 'Lobby', render: 'room', phase: 'lobby' },
   { id: 'lobby-host', label: 'Lobby as host, 3 players (QR)', render: 'room', phase: 'lobby', players: () => F.makeLobbyPlayers(3, 'me'), note: 'Redesign Task 5: game bar, phase strip, QR, Start.' },
   { id: 'lobby-host-1', label: 'Lobby as host, alone (Start disabled)', render: 'room', phase: 'lobby', players: () => F.makeLobbyPlayers(1, 'me') },
@@ -239,6 +243,11 @@ function seed(s: Scenario) {
     },
     submit_duel_answers: () => null,
     advance_room_phase: () => null,
+    // QR join demo: the room accepts only GALLERY_JOIN_PASSWORD.
+    verify_room_password: (args: Record<string, unknown>) => {
+      if (args.p_password !== GALLERY_JOIN_PASSWORD) throw new Error('Incorrect password');
+      return room;
+    },
   });
 
   const st = useGameStore.getState();

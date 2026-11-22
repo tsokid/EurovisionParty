@@ -29,7 +29,7 @@ function useNow(ms: number): number {
 export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
   const { t, i18n } = useTranslation();
   const { room, player, players } = useGameStore();
-  const { code, joinUrl, shareInvite, copyCode, codeCopied } = useInvite();
+  const { code, qrUrl, shareInvite, copyCode, codeCopied } = useInvite();
   const [advancing, setAdvancing] = useState(false);
   const now = useNow(30_000);
 
@@ -92,7 +92,7 @@ export default function LobbyScreen({ onAdvancePhase }: LobbyScreenProps) {
           {/* Code + QR */}
           <section className="card-hero lb-invite" aria-labelledby="lb-code-label">
             <div className="lb-qr">
-              {joinUrl && <QrCode value={joinUrl} label={t('lobby.qrLabel', { code })} />}
+              {qrUrl && <QrCode value={qrUrl} label={t('lobby.qrLabel', { code })} />}
             </div>
             <div className="lb-code-block">
               <span className="t-eyebrow" id="lb-code-label">{t('lobby.codeLabel')}</span>

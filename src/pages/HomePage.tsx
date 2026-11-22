@@ -14,8 +14,9 @@ import type { HomeContent } from '../../supabase/functions/_shared/cms/schemas/h
 import { interpolate } from '../../supabase/functions/_shared/cms/placeholders';
 import { useCurrentYear } from '../lib/currentContest';
 import { useAuth } from '../hooks/useAuth';
-import { useRoom, SecretSaveError } from '../hooks/useRoom';
+import { useRoom, SecretSaveError, WRONG_PASSWORD_ERROR } from '../hooks/useRoom';
 import { useTranslation } from 'react-i18next';
+import { captureQrPassword, peekQrPassword, clearQrPassword } from '../lib/qrJoin';
 
 type Mode = 'welcome' | 'create' | 'join';
 
@@ -27,6 +28,9 @@ export function HomePage() {
   const [mode, setMode] = useState<Mode>(initialMode);
   // Code typed in the hero's join form (prefills the join screen).
   const [joinCode, setJoinCode] = useState('');
+  // Lobby QR: RoomPage took the password off `#k=` before sending a
+  // non-member here (a direct ?join=CODE#k=… link is read here too).
+  const [qrPassword] = useState(() => captureQrPassword(prefillCode) ?? peekQrPassword(prefillCode));
   const { isLoading: authLoading } = useAuth();
   const { createRoom, joinRoom, retryRealName, isLoading, error } = useRoom();
   const { t } = useTranslation();
@@ -100,6 +104,7 @@ export function HomePage() {
         navigate(`/room/${code}`);
       } else if (data.roomCode) {
         await joinRoom(data.roomCode, data.name, data.emoji, data.password, identity);
+        clearQrPassword();
         navigate(`/room/${data.roomCode.toUpperCase()}`);
       }
     } catch (err) {
@@ -128,6 +133,8 @@ export function HomePage() {
         isLoading={isLoading}
         error={secretPending ? t('nameEntry.secretFailed') : error}
         initialRoomCode={joinCode || prefillCode}
+        qrPassword={mode === 'join' && !joinCode && qrPassword ? qrPassword : undefined}
+        passwordRejected={error === WRONG_PASSWORD_ERROR}
         onRetrySecret={secretPending ? handleRetrySecret : undefined}
       />
     </>

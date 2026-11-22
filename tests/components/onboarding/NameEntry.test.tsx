@@ -108,4 +108,56 @@ describe('<NameEntry>', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     expect(screen.queryByRole('button', { name: 'Πίσω' })).toBeNull();
   });
+
+  describe('join from the lobby QR', () => {
+    const qr = (extra: Partial<React.ComponentProps<typeof NameEntry>> = {}) => (
+      <NameEntry mode="join" onSubmit={vi.fn()} initialRoomCode="abcd" qrPassword="from-qr 1" {...extra} />
+    );
+
+    it('locks the room code, hides the password and says it came from the QR', () => {
+      render(qr());
+      expect(screen.getByTestId('qr-room')).toHaveTextContent('ΔωμάτιοABCD');
+      expect(screen.queryByLabelText('Κωδικός Δωματίου')).toBeNull();
+      expect(screen.queryByLabelText(PASSWORD)).toBeNull();
+      expect(screen.getByRole('status')).toHaveTextContent('Ο κωδικός πρόσβασης συμπληρώθηκε από το QR');
+      expect(screen.getByRole('button', { name: 'Αλλαγή' })).toBeInTheDocument();
+    });
+
+    it('needs only avatar, stage name and real name, then submits the QR password', () => {
+      const onSubmit = vi.fn();
+      render(qr({ onSubmit }));
+      expect(submitBtn()).toBeDisabled();
+      fill('Καλλιτεχνικό όνομα', 'Πούλια');
+      fill('Πραγματικό όνομα', 'Άλεξ');
+      fireEvent.click(submitBtn());
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(onSubmit.mock.calls[0][0]).toMatchObject({ roomCode: 'ABCD', password: 'from-qr 1', name: 'Πούλια', realName: 'Άλεξ' });
+    });
+
+    it('«Αλλαγή» reveals the password field, filled in', () => {
+      render(qr());
+      fireEvent.click(screen.getByRole('button', { name: 'Αλλαγή' }));
+      const input = screen.getByLabelText(PASSWORD) as HTMLInputElement;
+      expect(input.value).toBe('from-qr 1');
+      expect(input).toHaveFocus();
+      expect(screen.queryByText('Ο κωδικός πρόσβασης συμπληρώθηκε από το QR')).toBeNull();
+    });
+
+    it('a wrong password shows the error and reveals the field', () => {
+      const { rerender } = render(qr());
+      expect(screen.queryByLabelText(PASSWORD)).toBeNull();
+      rerender(qr({ error: 'Wrong password. Try again.', passwordRejected: true }));
+      expect(screen.getByRole('alert')).toHaveTextContent('Wrong password. Try again.');
+      expect(screen.getByLabelText(PASSWORD)).toBeInTheDocument();
+      rerender(qr({ error: null, passwordRejected: false }));
+      expect(screen.getByLabelText(PASSWORD)).toBeInTheDocument(); // stays open
+    });
+
+    it('without a QR password the join form is unchanged', () => {
+      render(<NameEntry mode="join" onSubmit={vi.fn()} initialRoomCode="ABCD" />);
+      expect((screen.getByLabelText('Κωδικός Δωματίου') as HTMLInputElement).value).toBe('ABCD');
+      expect(screen.getByLabelText(PASSWORD)).toBeInTheDocument();
+      expect(screen.queryByTestId('qr-room')).toBeNull();
+    });
+  });
 });

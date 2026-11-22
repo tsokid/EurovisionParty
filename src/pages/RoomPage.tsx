@@ -7,6 +7,7 @@ import { useLeaderboard } from '../hooks/useLeaderboard';
 import { useNotifications } from '../hooks/useNotifications';
 import { supabase } from '../lib/supabase';
 import { playIntro } from '../lib/audio';
+import { captureQrPassword, clearQrPassword } from '../lib/qrJoin';
 import type { Room } from '../lib/types';
 import AppShell from '../components/layout/AppShell';
 import LobbyScreen from '../components/lobby/LobbyScreen';
@@ -67,6 +68,11 @@ export function RoomPage() {
     }
     setShowIntro(false);
   };
+
+  // Lobby QR landing (/room/CODE#k=…): take the password out of the fragment
+  // and off the address bar before anything else runs. It waits in memory for
+  // the join form; a member who rejoins never needs it.
+  useState(() => captureQrPassword(roomCode));
 
   // Try to rejoin from DB if store is empty (e.g. page refresh)
   const { status: rejoinStatus } = useRejoin(roomCode);
@@ -146,6 +152,7 @@ export function RoomPage() {
 
   // Redirect based on rejoin status
   useEffect(() => {
+    if (rejoinStatus === 'ready' || rejoinStatus === 'rejoined') clearQrPassword();
     if (rejoinStatus === 'no-auth' || rejoinStatus === 'no-room') {
       navigate('/', { replace: true });
     } else if (rejoinStatus === 'not-member') {

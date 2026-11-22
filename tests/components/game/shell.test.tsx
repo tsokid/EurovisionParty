@@ -7,7 +7,7 @@ import PhaseStrip from '../../../src/components/layout/PhaseStrip';
 import PhaseBanner, { usePhaseBanner, PHASE_BANNER_MS } from '../../../src/components/layout/PhaseBanner';
 import LobbyScreen from '../../../src/components/lobby/LobbyScreen';
 import { ScoreChip } from '../../../src/components/stage';
-import { roomJoinUrl } from '../../../src/hooks/useInvite';
+import { roomJoinUrl, useInvite } from '../../../src/hooks/useInvite';
 import type { Player, Room, RoomPhase } from '../../../src/lib/types';
 
 const reduced = vi.hoisted(() => ({ value: false }));
@@ -219,6 +219,31 @@ describe('<LobbyScreen>', () => {
     expect(qr).toHaveAttribute('data-qr-value', roomJoinUrl('K3PW7X'));
     expect(qr.getAttribute('data-qr-value')).toBe(`${window.location.origin}/room/K3PW7X`);
     expect(screen.getByText('K3PW7X')).toBeInTheDocument();
+  });
+
+  it('host QR carries the password in the #k= fragment; guests and invites never do', async () => {
+    seed(host, [host, guest]);
+    useGameStore.getState().setRoomPassword('ab c/d?');
+    const { unmount } = render(<LobbyScreen onAdvancePhase={vi.fn()} />);
+    const value = screen.getByRole('img', { name: /K3PW7X/ }).getAttribute('data-qr-value')!;
+    expect(value).toBe(`${window.location.origin}/room/K3PW7X#k=${encodeURIComponent('ab c/d?')}`);
+    expect(new URL(value).search).toBe('');
+
+    // Invite text: the link is the plain join link, never the QR fragment.
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    const { result } = renderHook(() => useInvite());
+    await act(() => result.current.copyInvite());
+    const text = writeText.mock.calls[0][0] as string;
+    expect(text).toContain(roomJoinUrl('K3PW7X'));
+    expect(text).not.toContain('#k=');
+    expect(text).not.toContain(encodeURIComponent('ab c/d?'));
+    expect(result.current.joinUrl).toBe(roomJoinUrl('K3PW7X'));
+    unmount();
+
+    seed(guest, [host, guest]);
+    render(<LobbyScreen onAdvancePhase={vi.fn()} />);
+    expect(screen.getByRole('img', { name: /K3PW7X/ })).toHaveAttribute('data-qr-value', roomJoinUrl('K3PW7X'));
   });
 
   it('tiles show avatar + stage name, "εσύ" and the host chip, in join order', () => {

@@ -81,6 +81,9 @@
     "avatarPage": "Page {{n}} of {{total}}",
     "secretFailed": "Your real name wasn't saved. Try again.",
     "retrySecret": "Save again",
+    "qrRoom": "Room",
+    "qrPasswordFilled": "Room password filled in from the QR",
+    "qrPasswordChange": "Change",
     "errors": {
       "tooShort": "At least {{min}} characters",
       "tooLong": "Up to {{max}} characters",

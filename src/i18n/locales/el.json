@@ -81,6 +81,9 @@
     "avatarPage": "Σελίδα {{n}} από {{total}}",
     "secretFailed": "Το πραγματικό όνομα δεν αποθηκεύτηκε. Δοκίμασε ξανά.",
     "retrySecret": "Αποθήκευση ξανά",
+    "qrRoom": "Δωμάτιο",
+    "qrPasswordFilled": "Ο κωδικός πρόσβασης συμπληρώθηκε από το QR",
+    "qrPasswordChange": "Αλλαγή",
     "errors": {
       "tooShort": "Τουλάχιστον {{min}} χαρακτήρες",
       "tooLong": "Έως {{max}} χαρακτήρες",

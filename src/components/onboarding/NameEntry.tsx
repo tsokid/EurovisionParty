@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Eye, EyeOff, Lock } from 'lucide-react';
+import { ArrowLeft, Check, Eye, EyeOff, Lock } from 'lucide-react';
 import {
   checkStageName,
   validateRealName,
@@ -38,6 +38,14 @@ interface NameEntryProps {
    * the error and a retry button that saves only the real name.
    */
   onRetrySecret?: () => void;
+  /**
+   * Join from the host's lobby QR: the room password came in the link's
+   * fragment. The room code is locked and the password field is replaced by
+   * a "filled in from the QR" line with a Change link.
+   */
+  qrPassword?: string;
+  /** The last join failed on the password: reveal the field to fix it. */
+  passwordRejected?: boolean;
 }
 
 export default function NameEntry({
@@ -48,14 +56,32 @@ export default function NameEntry({
   error,
   initialRoomCode = '',
   onRetrySecret,
+  qrPassword,
+  passwordRejected = false,
 }: NameEntryProps) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [realName, setRealName] = useState('');
   const [avatarId, setAvatarId] = useState(() => randomAvatarId());
   const [roomCode, setRoomCode] = useState(initialRoomCode);
-  const [password, setPassword] = useState('');
+  const fromQr = mode === 'join' && !!qrPassword && !!initialRoomCode;
+  const [password, setPassword] = useState(fromQr ? qrPassword : '');
   const [showPassword, setShowPassword] = useState(false);
+  // QR join hides the password until the player asks to change it, or the
+  // room rejects it (e.g. the host changed it).
+  const [editPassword, setEditPassword] = useState(false);
+  const passwordShown = !fromQr || editPassword;
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const focusPassword = useRef(false);
+  useEffect(() => {
+    if (fromQr && passwordRejected) setEditPassword(true);
+  }, [fromQr, passwordRejected]);
+  useEffect(() => {
+    if (editPassword && focusPassword.current) {
+      focusPassword.current = false;
+      passwordRef.current?.focus();
+    }
+  }, [editPassword]);
   const [touched, setTouched] = useState({ name: false, realName: false });
 
   const nameError = checkStageName(name);
@@ -63,7 +89,8 @@ export default function NameEntry({
   const canSubmit =
     nameError === null &&
     realNameError === null &&
-    password.trim().length >= 6 &&
+    // A QR password is the host's own: the server checks it, whatever its length.
+    (fromQr ? password.trim().length > 0 : password.trim().length >= 6) &&
     (mode === 'create' || roomCode.trim().length >= 4);
   const retrying = !!onRetrySecret;
 
@@ -110,7 +137,14 @@ export default function NameEntry({
         </div>
         <div className="onb-fields">
         {/* Room code (join only) */}
-        {mode === 'join' && (
+        {fromQr && (
+          <p className="onb-room" data-testid="qr-room">
+            <Lock size={16} aria-hidden />
+            <span>{t('nameEntry.qrRoom')}</span>
+            <span className="num onb-room-code">{initialRoomCode.toUpperCase()}</span>
+          </p>
+        )}
+        {mode === 'join' && !fromQr && (
           <div className="field">
             <label htmlFor="room-code" className="field-label">{t('nameEntry.roomCodeLabel')}</label>
             <input
@@ -174,13 +208,32 @@ export default function NameEntry({
           {realNameMsg && <span className="field-err">{realNameMsg}</span>}
         </div>
 
-        {/* Password */}
+        {/* Password (QR join: filled in, shown only on Change or a rejection) */}
+        {!passwordShown && (
+          <p className="onb-qr-pw" role="status">
+            <Check size={16} strokeWidth={2.6} aria-hidden />
+            <span>{t('nameEntry.qrPasswordFilled')}</span>
+            <button
+              type="button"
+              className="onb-qr-change"
+              onClick={() => {
+                focusPassword.current = true;
+                setEditPassword(true);
+              }}
+              disabled={retrying}
+            >
+              {t('nameEntry.qrPasswordChange')}
+            </button>
+          </p>
+        )}
+        {passwordShown && (
         <div className="field">
           <label htmlFor="room-password" className="field-label">
             {mode === 'create' ? t('nameEntry.passwordCreateLabel') : t('nameEntry.passwordJoinLabel')}
           </label>
           <div className="field-pw">
             <input
+              ref={passwordRef}
               id="room-password"
               type={showPassword ? 'text' : 'password'}
               value={password}
@@ -205,6 +258,7 @@ export default function NameEntry({
             {mode === 'create' ? t('nameEntry.passwordCreateHint') : t('nameEntry.passwordJoinHint')}
           </span>
         </div>
+        )}
 
         {error && <p className="onb-error" role="alert">{error}</p>}
 

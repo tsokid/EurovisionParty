@@ -5,6 +5,9 @@ import { generateRoomCode } from '../lib/roomCode';
 import type { Room } from '../lib/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
+/** joinRoom's error for a wrong room password (the join form keys off it). */
+export const WRONG_PASSWORD_ERROR = 'Wrong password. Try again.';
+
 // --- localStorage helpers for multi-room rejoin ---
 const STORAGE_KEY = 'europarty_rooms';
 
@@ -312,7 +315,7 @@ export function useRoom(): UseRoomReturn {
         if (roomErr) {
           // Map Postgres exceptions to user-friendly messages
           const msg = roomErr.message || '';
-          if (msg.includes('Incorrect password')) throw new Error('Wrong password. Try again.');
+          if (msg.includes('Incorrect password')) throw new Error(WRONG_PASSWORD_ERROR);
           if (msg.includes('Room not found')) throw new Error('Room not found. Check the code.');
           throw roomErr;
         }

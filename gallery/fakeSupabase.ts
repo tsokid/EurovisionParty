@@ -215,7 +215,14 @@ class RpcBuilder implements PromiseLike<any> {
       warnOnce(`rpc:${this.name}`, `no fixture for rpc "${this.name}" — returning null`);
       return { data: null, error: null, status: 200 };
     }
-    let data = structuredClone(fn(this.args) ?? null) as any;
+    let raw: unknown;
+    try {
+      raw = fn(this.args);
+    } catch (e) {
+      // A fixture throws to stand in for a Postgres exception.
+      return { data: null, error: { message: e instanceof Error ? e.message : String(e) }, status: 400 };
+    }
+    let data = structuredClone(raw ?? null) as any;
     if (this.mode !== 'many' && Array.isArray(data)) data = data[0] ?? null;
     return { data, error: null, status: 200 };
   }
