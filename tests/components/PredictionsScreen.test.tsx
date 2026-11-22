@@ -108,7 +108,7 @@ describe('PredictionsScreen (tap-to-assign)', () => {
     // After a save: the submitted summary, still editable while open.
     expect(await screen.findByRole('heading', { name: 'Οι προβλέψεις υποβλήθηκαν' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Αλλαγή προβλέψεων' })).toBeTruthy();
-  });
+  }, 20_000); // many sequential taps; slow under the full parallel suite
 
   it('a saved prediction loads into its slots (worst5[0] shown as last place)', async () => {
     h.saved = { top5: ['C01', 'C02', 'C03', 'C04', 'C05'], worst5: ['C26', 'C25', 'C24', 'C23', 'C22'], top5_points: null, worst5_points: null, scored_at: null };

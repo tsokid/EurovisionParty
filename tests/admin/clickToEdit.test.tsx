@@ -128,7 +128,7 @@ describe('click-to-edit on every static page doc', () => {
         const hero = els.find((e) => e.getAttribute('data-cms-path') === `${docId}:${locale}:hero.title`);
         await roundTrip(hero ?? els[0]);
       }
-    }, 30_000);
+    }, 90_000); // the largest pages take ~25 s alone; more in the full parallel suite
   }
 });
 
