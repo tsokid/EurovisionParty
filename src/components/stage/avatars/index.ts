@@ -3,6 +3,8 @@ export { IMAGE_AVATARS } from './images.generated';
 export { AvatarArt, shade } from './AvatarArt';
 export type { AvatarArtProps } from './AvatarArt';
 export { AvatarVisual } from './AvatarVisual';
+export { AvatarPop } from './AvatarPop';
+export type { AvatarPopProps } from './AvatarPop';
 export type { AvatarVisualProps } from './AvatarVisual';
 export { isImageAvatar } from './types';
 export type { AvatarSpec, ImageAvatarSpec, AvatarEntry } from './types';

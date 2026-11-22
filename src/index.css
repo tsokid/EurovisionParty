@@ -1217,39 +1217,85 @@ body { margin: 0; overscroll-behavior: none; }
   }
   .secret-hint svg { flex: none; margin-top: 2px; }
 
-  /* Avatar picker: two-row swipe strip on mobile, grid from 768px. */
-  .avp { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-  .avp-head { display: flex; align-items: center; gap: 14px; }
-  .avp-preview {
-    width: 76px; height: 76px; flex: none; border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--color-stage-gold), 0 0 28px rgba(240, 70, 156, .45);
+  /* Pop-out avatar (AvatarPop): the Stage avatar circle with the cutout drawn
+     --pop-s × wider than it and anchored at its bottom (--pop-d of the image,
+     the cutouts' empty bottom margin, hangs below). Above the circle's centre
+     line the image is unclipped within the circle's width (full width above
+     the circle's top), so the head and hair break out of the frame; below it
+     the mask follows the circle's curve. 100cqw = circle width. */
+  .avpop {
+    --pop-s: 1.75; --pop-d: .15;
+    position: relative; display: block; width: 100%; aspect-ratio: 1 / 1.32;
+    container-type: inline-size; transform-origin: 50% 100%;
   }
-  .avp-preview svg { display: block; width: 100%; height: 100%; }
-  .avp-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-  .avp-title { font-weight: 700; font-size: 17px; line-height: 1.25; color: var(--color-stage-gold-2); }
-  .avp-shuffle { flex: none; gap: 6px; }
-  .avp-grid {
-    display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, 58px); grid-auto-columns: 58px; gap: 10px;
-    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: none;
-    margin: 0 -20px; padding: 4px 20px 6px; scroll-padding: 0 20px;
+  .avpop-disc {
+    position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    background: radial-gradient(circle at 50% 28%, rgba(240, 70, 156, .38), transparent 62%), linear-gradient(160deg, #3A2266, var(--color-stage-surface));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07);
   }
-  .avp-grid::-webkit-scrollbar { display: none; }
+  .avpop-disc > svg { display: block; width: 100%; height: 100%; }
+  .avpop-img {
+    --pop-cy: calc(var(--pop-s) * (1 - var(--pop-d)) * 100cqw - 50cqw);
+    position: absolute; left: calc(50cqw - var(--pop-s) * 50cqw); bottom: calc(var(--pop-s) * var(--pop-d) * -100cqw);
+    width: calc(var(--pop-s) * 100cqw); max-width: none; height: auto; pointer-events: none; user-select: none;
+    -webkit-mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000), radial-gradient(circle 50cqw at 50% var(--pop-cy), #000 calc(50cqw - .5px), transparent 50cqw);
+    mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000), radial-gradient(circle 50cqw at 50% var(--pop-cy), #000 calc(50cqw - .5px), transparent 50cqw);
+    -webkit-mask-size: 100% calc(var(--pop-cy) - 50cqw), 100cqw var(--pop-cy), 100% 100%; mask-size: 100% calc(var(--pop-cy) - 50cqw), 100cqw var(--pop-cy), 100% 100%;
+    -webkit-mask-position: 0 0, 50% 0, 0 0; mask-position: 0 0, 50% 0, 0 0;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  }
+
+  /* Avatar picker: big hero + a swipeable 3 × 3 grid of pop-out avatars. */
+  .avp { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .avp-head { display: flex; align-items: flex-end; gap: 16px; }
+  .avp-preview { width: 140px; flex: none; }
+  .avp-hero .avpop-disc { box-shadow: 0 0 0 3px var(--color-stage-gold), 0 0 36px rgba(240, 70, 156, .5); }
+  .avp-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; flex: 1; padding-bottom: 6px; }
+  .avp-title { font-weight: 700; font-size: 20px; line-height: 1.2; color: var(--color-stage-gold-2); overflow-wrap: anywhere; }
+  .avp-shuffle { flex: none; gap: 6px; margin-top: 8px; }
+  /* Native scroll-snap paging: the platform's own swipe momentum and snap. */
+  .avp-strip {
+    display: flex; margin: 0 -8px; overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+  }
+  .avp-strip::-webkit-scrollbar { display: none; }
+  .avp-page {
+    flex: 0 0 100%; min-width: 0; box-sizing: border-box; overflow: hidden;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 10px; align-content: start;
+    padding: 18px 8px 8px; scroll-snap-align: start; scroll-snap-stop: always;
+  }
   .avp-item {
-    width: 58px; height: 58px; padding: 0; border-radius: 50%; border: 0; background: none; cursor: pointer;
-    scroll-snap-align: start; opacity: .82; transition: transform .15s ease, opacity .15s ease;
+    display: block; width: 100%; min-height: 44px; padding: 0; border: 0; border-radius: 16px; background: none;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
-  .avp-item svg { display: block; width: 100%; height: 100%; }
-  .avp-item:hover { opacity: 1; transform: translateY(-2px); }
-  .avp-item[aria-checked="true"] { opacity: 1; box-shadow: 0 0 0 3px var(--color-stage-bg), 0 0 0 5px var(--color-stage-gold); }
-  .avp-item:focus-visible { outline: 2px solid var(--color-stage-pink-2); outline-offset: 4px; }
+  .avp-item .avpop { transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
+  .avp-item .avpop-disc { transition: box-shadow .2s ease; }
+  .avp-item[aria-checked="true"] .avpop { transform: translateY(-4px) scale(1.06); }
+  .avp-item[aria-checked="true"] .avpop-disc { box-shadow: 0 0 0 3px var(--color-stage-gold), 0 0 22px rgba(255, 197, 61, .45); }
+  .avp-item:focus-visible { outline: none; }
+  .avp-item:focus-visible .avpop-disc { outline: 2px solid var(--color-stage-pink-2); outline-offset: 5px; }
+  .avp-nav { display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .avp-arrow { display: none; }
+  .avp-arrow:disabled { opacity: .35; cursor: default; }
+  .avp-dots { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+  .avp-dot {
+    position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; cursor: pointer;
+    background: var(--color-stage-line-2); transition: width .2s ease, background-color .2s ease;
+  }
+  .avp-dot::before { content: ''; position: absolute; inset: -8px -4px; }
+  .avp-dot.on { width: 22px; background: var(--color-stage-gold); }
+  /* Arrows only where there is a mouse; touch devices swipe. */
+  @media (hover: hover) and (pointer: fine) {
+    .avp-arrow { display: grid; }
+    .avp-item:hover .avpop { transform: translateY(-3px); }
+    .avp-item[aria-checked="true"]:hover .avpop { transform: translateY(-4px) scale(1.06); }
+  }
   @media (min-width: 768px) {
     .onb { padding: 48px 32px 64px; }
     .onb-card { max-width: 640px; padding: 28px 32px; gap: 22px; }
-    .avp-grid {
-      grid-auto-flow: row; grid-template-rows: none; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-auto-columns: auto;
-      overflow: visible; margin: 0; padding: 4px; gap: 12px;
-    }
-    .avp-item { width: 100%; height: auto; aspect-ratio: 1; }
+    /* 3 × 120px tiles, centred. */
+    .avp-strip { width: 404px; max-width: calc(100% + 16px); margin: 0 auto; }
+    .avp-page { column-gap: 14px; }
   }
   /* Desktop uses the width: avatar wall on the left, the form on the right. */
   @media (min-width: 1024px) {
@@ -1257,9 +1303,12 @@ body { margin: 0; overscroll-behavior: none; }
     .onb-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
     .onb-avatar { position: sticky; top: 96px; padding-right: 40px; border-right: 1px solid var(--color-stage-line); }
     .onb-card { padding: 32px 40px; }
+    .avp-preview { width: 160px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .avp-item, .avp-item:hover { transition: none; transform: none; }
+    .avp-item .avpop, .avp-item .avpop-disc, .avp-dot { transition: none; }
+    .avp-item[aria-checked="true"] .avpop, .avp-item:hover .avpop, .avp-item[aria-checked="true"]:hover .avpop { transform: none; }
+    .avp-strip { scroll-behavior: auto; }
     .onb-spinner { animation-duration: 2.4s; }
   }
 }
@@ -1704,7 +1753,7 @@ body { margin: 0; overscroll-behavior: none; }
 @layer components {
   /* Image avatars: transparent cutouts on the Stage avatar circle. */
   .avatar-img { display: block; border-radius: 50%; object-fit: cover; background: radial-gradient(circle at 50% 28%, rgba(240, 70, 156, .38), transparent 62%), linear-gradient(160deg, #3A2266, var(--color-stage-surface)); }
-  .avatar-art > .avatar-img, .avp-preview > .avatar-img, .avp-item > .avatar-img, .avv-art > .avatar-img { width: 100%; height: 100%; }
+  .avatar-art > .avatar-img, .avv-art > .avatar-img { width: 100%; height: 100%; }
 
   /* Clickable avatar + viewer */
   .avv-btn { position: relative; display: inline-grid; place-items: center; flex: none; padding: 0; border: 0; background: none; border-radius: 50%; cursor: zoom-in; }
@@ -1718,6 +1767,9 @@ body { margin: 0; overscroll-behavior: none; }
   .avv-close { position: absolute; top: 10px; right: 10px; }
   .avv-art { width: min(320px, 72vw); aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 4px var(--color-stage-surface-2), 0 18px 40px -12px rgba(240, 70, 156, .45); margin-bottom: 10px; }
   .avv-art > svg { display: block; width: 100%; height: 100%; }
+  /* Image avatars: the big pop-out sticker, head breaking out of the circle. */
+  .avv-pop { width: min(240px, 60vw); margin-bottom: 12px; }
+  .avv-pop .avpop-disc { box-shadow: 0 0 0 4px var(--color-stage-surface-2), 0 18px 40px -12px rgba(240, 70, 156, .45); }
   .avv-initials { display: grid; place-items: center; width: 100%; height: 100%; color: #fff; font-weight: 700; font-size: clamp(56px, 18vw, 110px); }
   .avv-name { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
   .avv-title { margin: 0; }

@@ -6,6 +6,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Avatar, avatarInitials, avatarTone, type AvatarProps } from './Avatar';
 import { AvatarVisual } from './avatars/AvatarVisual';
+import { AvatarPop } from './avatars/AvatarPop';
+import { isImageAvatar } from './avatars/types';
 import { getAvatar } from './avatars/registry';
 import { isTopDialog, useDialogFocus } from '../../hooks/useDialogFocus';
 
@@ -75,15 +77,19 @@ export function AvatarModal({ open, onClose, name, avatarId }: AvatarModalProps)
             <button ref={closeRef} type="button" className="iconbtn avv-close" onClick={onClose} aria-label={t('avatarViewer.close')}>
               <X aria-hidden="true" strokeWidth={2.2} />
             </button>
-            <div className="avv-art">
-              {entry ? (
-                <AvatarVisual entry={entry} variant="full" />
-              ) : (
-                <span className="avv-initials" style={{ background: avatarTone(avatarId || name) }} aria-hidden="true">
-                  {avatarInitials(name)}
-                </span>
-              )}
-            </div>
+            {isImageAvatar(entry) ? (
+              <AvatarPop entry={entry} sizes="420px" loading="eager" className="avv-pop" />
+            ) : (
+              <div className="avv-art">
+                {entry ? (
+                  <AvatarVisual entry={entry} variant="full" />
+                ) : (
+                  <span className="avv-initials" style={{ background: avatarTone(avatarId || name) }} aria-hidden="true">
+                    {avatarInitials(name)}
+                  </span>
+                )}
+              </div>
+            )}
             <p className="avv-name">{name}</p>
             <p className="t-meta avv-title" id={titleId}>
               {entry ? entry.title[lang] : t('avatarViewer.noArt')}

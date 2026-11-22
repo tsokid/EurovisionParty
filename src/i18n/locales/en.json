@@ -76,6 +76,9 @@
     "realNameHint": "Your first name or what your friends call you is enough. Kept secret until the end, revealed in 'Who was who?'",
     "avatarLabel": "Avatar",
     "shuffle": "Random",
+    "avatarPrev": "Previous",
+    "avatarNext": "Next",
+    "avatarPage": "Page {{n}} of {{total}}",
     "secretFailed": "Your real name wasn't saved. Try again.",
     "retrySecret": "Save again",
     "errors": {
