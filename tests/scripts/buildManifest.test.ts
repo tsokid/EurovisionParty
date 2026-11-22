@@ -44,11 +44,12 @@ describe('moveBuildManifest', () => {
     expect(() => moveBuildManifest(dist, meta)).toThrow(/manifest/);
   });
 
-  it('runs as the last step of npm run build, after check-prerender and the SEO guard', () => {
+  it('runs as the last step of npm run build, after check-prerender, the cms marker check and the SEO guard', () => {
     const steps = pkg.scripts.build.split('&&').map((s) => s.trim());
     expect(steps.at(-1)).toBe('tsx scripts/move-build-manifest.ts');
     expect(steps.at(-2)).toBe('tsx scripts/seo/guard.ts');
-    expect(steps.at(-3)).toBe('tsx scripts/seo/check-prerender.ts');
+    expect(steps.at(-3)).toBe('tsx scripts/cms/check-no-cms-markers.ts');
+    expect(steps.at(-4)).toBe('tsx scripts/seo/check-prerender.ts');
   });
 
   it('dist-meta is git-ignored like dist', () => {
