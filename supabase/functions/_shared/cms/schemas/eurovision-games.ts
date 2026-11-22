@@ -2,7 +2,7 @@
 // live contest's year is the {year} placeholder.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, extraBlocks } from './common.ts';
+import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, pageLayout } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
@@ -47,7 +47,16 @@ export const eurovisionGamesSchema = group({
   faq: list(qa),
   cta,
   related: group({ heading: text(), items: list(relatedItem) }),
-  extraBlocks,
+  layout: pageLayout([
+    { key: 'inside', title: 'sections.inside.title', fields: ['sections.inside'] },
+    { key: 'predictions', title: 'sections.predictions.title', fields: ['sections.predictions'] },
+    { key: 'quiz', title: 'sections.quiz.title', fields: ['sections.quiz'] },
+    { key: 'duels', title: 'sections.duels.title', fields: ['sections.duels'] },
+    { key: 'dashboard', title: 'sections.dashboard.title', fields: ['sections.dashboard'] },
+    { key: 'trophies', title: 'sections.trophies.title', fields: ['sections.trophies'] },
+    { key: 'free', title: 'sections.free.title', fields: ['sections.free'] },
+    { key: 'faq', title: 'sections.faq.title', fields: ['sections.faq', 'faq'], locked: true },
+  ]),
 });
 
 export type EurovisionGamesContent = z.infer<typeof eurovisionGamesSchema>;

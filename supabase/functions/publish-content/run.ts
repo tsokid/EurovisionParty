@@ -55,6 +55,7 @@ import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
 import { draftRefsLeft, imagesWithoutAlt, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
 import type { BlobRef, CommitResult, DerivedFiles, FileTransforms } from './github.ts';
 import { appendIntent, buildIntentEntry, SEO_INTENT_FILE } from '../_shared/cms/seoIntent.ts';
+import { upgradeDocument } from '../_shared/cms/layoutUpgrade.ts';
 
 /** One doc a run shipped: its draft version and the data committed (end_publish's p_shipped). */
 export type ShippedDoc = { doc_id: string; updated_at: string | null; data: unknown };
@@ -254,7 +255,8 @@ export async function runPublish(deps: PublishDeps, options: PublishOptions = { 
     const input = await deps.rpc.publishInput({ docIds: scope?.docIds ?? null, skipSiteWide: target === 'main' && !docScoped });
     // All built before anything is committed: a bad draft, a bad media
     // reference or bad contest data refuses it all.
-    const drafts = cms ? input.cms_documents ?? [] : [];
+    // A draft saved before the P6 page layouts ships with its extraBlocks folded into the layout.
+    const drafts = cms ? (input.cms_documents ?? []).map((d) => ({ ...d, data: upgradeDocument(d.doc_id, d.data) as typeof d.data })) : [];
     const committed = drafts.length ? await deps.readCommittedPages() : {};
     // The drafts as saved are validated first, so media is only resolved for valid drafts.
     let pages = cmsFiles(drafts, committed);

@@ -1,7 +1,7 @@
 // /privacy. Mirrors the former PrivacyCopy interface.
 import type { z } from 'zod';
 import { group, list, text } from '../fields.ts';
-import { boldRest, headers3, hero, legalMeta, relatedItem, titleBody, extraBlocks } from './common.ts';
+import { boldRest, headers3, hero, legalMeta, relatedItem, titleBody, pageLayout } from './common.ts';
 
 export const privacySchema = group({
   meta: legalMeta,
@@ -42,7 +42,16 @@ export const privacySchema = group({
     tail: text(),
   }),
   related: list(relatedItem),
-  extraBlocks,
+  layout: pageLayout([
+    { key: 'whatCollect', title: 'whatCollect.title', fields: ['whatCollect'] },
+    { key: 'notCollect', title: 'notCollect.title', fields: ['notCollect'] },
+    { key: 'whoHasAccess', title: 'whoHasAccess.title', fields: ['whoHasAccess'] },
+    { key: 'rights', title: 'rights.title', fields: ['rights'] },
+    { key: 'deletion', title: 'deletion.title', fields: ['deletion'] },
+    { key: 'cookies', title: 'cookies.title', fields: ['cookies'] },
+    { key: 'children', title: 'children.title', fields: ['children'] },
+    { key: 'changes', title: 'changes.title', fields: ['changes'] },
+  ]),
 });
 
 export type PrivacyContent = z.infer<typeof privacySchema>;

@@ -1,5 +1,6 @@
 // The cms_* RPCs of migration 076 and the published copy of a page, for the
 // Pages module. Every call throws on failure (show it with formatError).
+import { upgradeDocument } from '../../../../supabase/functions/_shared/cms/layoutUpgrade';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
 import type { DocValue } from './form/SchemaForm';
@@ -25,7 +26,9 @@ export async function cmsList(): Promise<CmsListRow[]> {
 export async function cmsGet(docId: string): Promise<CmsDraft | null> {
   const { data, error } = await supabase.rpc('cms_get', { p_doc_id: docId });
   if (error) throw error;
-  return (data ?? null) as CmsDraft | null;
+  const row = (data ?? null) as CmsDraft | null;
+  // A draft saved before the P6 page layouts: its extraBlocks become the layout.
+  return row ? { ...row, data: upgradeDocument(docId, row.data) as CmsDraft['data'] } : null;
 }
 
 /** Saves the draft; returns its new updated_at (the next save's expected value). */
@@ -51,7 +54,7 @@ export async function fetchPublished(docId: string): Promise<DocValue> {
   const res = await fetch(`/content/pages/${docId}.json`, { cache: 'no-store' });
   const json = (res.headers.get('content-type') ?? '').includes('json');
   if (!res.ok || !json) throw new Error(`Could not load the published ${docId} page (HTTP ${res.status}${res.ok ? ', not JSON' : ''})`);
-  return (await res.json()) as DocValue;
+  return upgradeDocument(docId, await res.json()) as DocValue;
 }
 
 // The published copies of the other site pages, for the cross-page SEO

@@ -1,7 +1,7 @@
 // /cookies. Mirrors the former CookiesCopy interface.
 import type { z } from 'zod';
-import { choice, group, list, optional, text, tuple } from '../fields.ts';
-import { boldRest, headers3, hero, legalMeta, relatedItem, extraBlocks } from './common.ts';
+import { choice, group, list, optional, text } from '../fields.ts';
+import { boldRest, headers3, hero, legalMeta, relatedItem, pageLayout } from './common.ts';
 
 const tableRow = group({
   category: text(),
@@ -18,7 +18,8 @@ export const cookiesSchema = group({
     title: text(),
     intro: text(),
     headers: headers3,
-    rows: tuple([tableRow, tableRow]),
+    // A list since P6 (was a tuple of two): rows can be added and removed.
+    rows: list(tableRow),
   }),
   notUsed: group({ title: text(), items: list(boldRest) }),
   changeConsent: group({
@@ -46,7 +47,13 @@ export const cookiesSchema = group({
     }),
   }),
   related: list(relatedItem),
-  extraBlocks,
+  layout: pageLayout([
+    { key: 'whatWeUse', title: 'whatWeUse.title', fields: ['whatWeUse'] },
+    { key: 'notUsed', title: 'notUsed.title', fields: ['notUsed'] },
+    { key: 'changeConsent', title: 'changeConsent.title', fields: ['changeConsent'] },
+    { key: 'whereDataLives', title: 'whereDataLives.title', fields: ['whereDataLives'] },
+    { key: 'banner', title: 'banner.title', fields: ['banner'] },
+  ]),
 });
 
 export type CookiesContent = z.infer<typeof cookiesSchema>;

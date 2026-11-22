@@ -1,7 +1,7 @@
 // /dashboard. Mirrors the former DashboardCopy interface.
 import type { z } from 'zod';
 import { flag, group, list, text } from '../fields.ts';
-import { crumbs, cta, headers3, hero, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody, extraBlocks } from './common.ts';
+import { crumbs, cta, headers3, hero, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody, pageLayout } from './common.ts';
 
 export const dashboardSchema = group({
   meta: group({
@@ -37,7 +37,14 @@ export const dashboardSchema = group({
   faq: list(qa),
   cta,
   related: group({ heading: text(), items: list(relatedItem) }),
-  extraBlocks,
+  layout: pageLayout([
+    { key: 'shows', title: 'sections.shows.title', fields: ['sections.shows'] },
+    { key: 'sources', title: 'sections.sources.title', fields: ['sections.sources'] },
+    { key: 'activity', title: 'sections.activity.title', fields: ['sections.activity'] },
+    { key: 'notShown', title: 'sections.notShown.title', fields: ['sections.notShown'] },
+    { key: 'hostVsPlayer', title: 'sections.hostVsPlayer.title', fields: ['sections.hostVsPlayer'] },
+    { key: 'faq', title: 'sections.faq.title', fields: ['sections.faq', 'faq'], locked: true },
+  ]),
 });
 
 export type DashboardContent = z.infer<typeof dashboardSchema>;

@@ -92,11 +92,13 @@ function renderBlock(b: CmsBlock, preview: boolean, at: At = NO_AT): ReactNode {
   }
 }
 
-export default function Blocks({ value, onFaq, cms }: {
+export default function Blocks({ value, onFaq, cms, start = 0 }: {
   value: readonly CmsBlock[];
   onFaq?: (entries: FaqEntry[]) => void;
   /** The doc path of this zone ("extraBlocks"), for the admin preview's click-to-edit (nothing on the site). */
   cms?: string;
+  /** The index of the first block inside the `cms` list (a run of blocks in a page layout). */
+  start?: number;
 }) {
   const list = Array.isArray(value) ? value : [];
   const attrs = useCmsAttrs();
@@ -114,8 +116,8 @@ export default function Blocks({ value, onFaq, cms }: {
     if (key !== '[]') onFaqRef.current?.(JSON.parse(key));
   }, [key]);
 
-  const at = (i: number): At => (cms ? (p) => attrs(`${cms}.${i}.${p}`) : NO_AT);
+  const at = (i: number): At => (cms ? (p) => attrs(`${cms}.${start + i}.${p}`) : NO_AT);
   const rendered = list.map((b, i) => ({ i, node: renderBlock(b, preview, at(i)) })).filter((x) => x.node !== null);
   if (!rendered.length) return null;
-  return <div className="space-y-8">{rendered.map((x) => <div key={x.i} {...(cms ? attrs(`${cms}.${x.i}`) : undefined)}>{x.node}</div>)}</div>;
+  return <div className="space-y-8">{rendered.map((x) => <div key={x.i} {...(cms ? attrs(`${cms}.${start + x.i}`) : undefined)}>{x.node}</div>)}</div>;
 }

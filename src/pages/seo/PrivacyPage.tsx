@@ -8,7 +8,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { PrivacyContent } from '../../../supabase/functions/_shared/cms/schemas/privacy';
 import { PageContentFallback } from './PageContentFallback';
@@ -70,7 +70,7 @@ export default function PrivacyPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <LegalFrame
@@ -86,80 +86,89 @@ export default function PrivacyPage() {
         }))}
       >
 
-        <Section title={c.whatCollect.title}>
-          <p>{c.whatCollect.intro}</p>
-          <DataTable
-            headers={c.whatCollect.headers as unknown as string[]}
-            align={['left', 'left', 'left']}
-            rows={c.whatCollect.rows.map((row, i) => [
-              <strong key={`type-${i}`}>{row.type}</strong>,
-              row.purpose,
-              row.retention,
-            ])}
-          />
-        </Section>
-
-        <Section title={c.notCollect.title}>
-          <ul className="legal-list">
-            {c.notCollect.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.whoHasAccess.title}>
-          <p>{c.whoHasAccess.intro}</p>
-          <ul className="legal-list">
-            {c.whoHasAccess.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.rights.title}>
-          <p>{c.rights.intro}</p>
-          <ul className="legal-list">
-            {c.rights.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.deletion.title}>
-          <div className="card-hero card-pad legal-card">
-            <h3 className="t-h3">{c.deletion.cardTitle}</h3>
-            <p className="t-small">
-              {c.deletion.cardBody}
-            </p>
-          </div>
-          <p>{c.deletion.note}</p>
-        </Section>
-
-        <Section title={c.cookies.title}>
-          <p>
-            {c.cookies.lead}
-            <a href="/cookies">
-              {c.cookies.linkLabel}
-            </a>
-            {c.cookies.tail}
-          </p>
-        </Section>
-
-        <Section title={c.children.title}>
-          <p>{c.children.body}</p>
-        </Section>
-
-        <Section title={c.changes.title}>
-          <p>{c.changes.body}</p>
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+        {pageSections(c.layout, {
+            whatCollect: () => (
+              <Section cms="whatCollect.title" title={c.whatCollect.title}>
+                <p>{c.whatCollect.intro}</p>
+                <DataTable
+                  headers={c.whatCollect.headers as unknown as string[]}
+                  align={['left', 'left', 'left']}
+                  rows={c.whatCollect.rows.map((row, i) => [
+                    <strong key={`type-${i}`}>{row.type}</strong>,
+                    row.purpose,
+                    row.retention,
+                  ])}
+                />
+              </Section>
+            ),
+            notCollect: () => (
+              <Section cms="notCollect.title" title={c.notCollect.title}>
+                <ul className="legal-list">
+                  {c.notCollect.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            whoHasAccess: () => (
+              <Section cms="whoHasAccess.title" title={c.whoHasAccess.title}>
+                <p>{c.whoHasAccess.intro}</p>
+                <ul className="legal-list">
+                  {c.whoHasAccess.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            rights: () => (
+              <Section cms="rights.title" title={c.rights.title}>
+                <p>{c.rights.intro}</p>
+                <ul className="legal-list">
+                  {c.rights.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            deletion: () => (
+              <Section cms="deletion.title" title={c.deletion.title}>
+                <div className="card-hero card-pad legal-card">
+                  <h3 className="t-h3">{c.deletion.cardTitle}</h3>
+                  <p className="t-small">
+                    {c.deletion.cardBody}
+                  </p>
+                </div>
+                <p>{c.deletion.note}</p>
+              </Section>
+            ),
+            cookies: () => (
+              <Section cms="cookies.title" title={c.cookies.title}>
+                <p>
+                  {c.cookies.lead}
+                  <a href="/cookies">
+                    {c.cookies.linkLabel}
+                  </a>
+                  {c.cookies.tail}
+                </p>
+              </Section>
+            ),
+            children: () => (
+              <Section cms="children.title" title={c.children.title}>
+                <p>{c.children.body}</p>
+              </Section>
+            ),
+            changes: () => (
+              <Section cms="changes.title" title={c.changes.title}>
+                <p>{c.changes.body}</p>
+              </Section>
+            ),
+        })}
 
         <RelatedCards items={c.related} />
       </LegalFrame>

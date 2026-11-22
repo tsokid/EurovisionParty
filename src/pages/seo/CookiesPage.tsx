@@ -8,7 +8,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { CookiesContent } from '../../../supabase/functions/_shared/cms/schemas/cookies';
 import { PageContentFallback } from './PageContentFallback';
@@ -70,7 +70,7 @@ export default function CookiesPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <LegalFrame
@@ -81,85 +81,91 @@ export default function CookiesPage() {
         lede={c.hero.lede}
       >
 
-        <Section title={c.whatWeUse.title}>
-          <p>{c.whatWeUse.intro}</p>
-          <DataTable
-            headers={c.whatWeUse.headers as unknown as string[]}
-            align={['left', 'left', 'left']}
-            rows={c.whatWeUse.rows.map((row, i) => [
-              <strong key={`cat-${i}`}>{row.category}</strong>,
-              row.purpose,
-              <span
-                key={`def-${i}`}
-                className={row.defaultTone === 'pink' ? 'text-stage-pink-2' : 'text-stage-text-3'}
-              >
-                {row.defaultText}
-              </span>,
-            ])}
-          />
-        </Section>
-
-        <Section title={c.notUsed.title}>
-          <ul className="legal-list">
-            {c.notUsed.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.changeConsent.title}>
-          <p>
-            {c.changeConsent.intro.lead}
-            <em>{c.changeConsent.intro.emphasis}</em>
-            {c.changeConsent.intro.tail}
-          </p>
-          <div className="card-hero card-pad legal-card">
-            <h3 className="t-h3">{c.changeConsent.cardTitle}</h3>
-            <p className="t-small">
-              {c.changeConsent.cardBody}
-            </p>
-            <button
-              type="button"
-              data-cc="show-preferencesModal"
-              className="btn btn-primary btn-sm"
-            >
-              {c.changeConsent.buttonLabel}
-            </button>
-          </div>
-        </Section>
-
-        <Section title={c.whereDataLives.title}>
-          <p>
-            {c.whereDataLives.intro.lead}
-            <a href="/privacy">
-              {c.whereDataLives.intro.linkLabel}
-            </a>
-            {c.whereDataLives.intro.tail}
-          </p>
-          <ul className="legal-list">
-            {c.whereDataLives.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.banner.title}>
-          <p>
-            {c.banner.intro.lead}
-            <em>{c.banner.intro.accept}</em>
-            {c.banner.intro.mid1}
-            <em>{c.banner.intro.reject}</em>
-            {c.banner.intro.mid2}
-            <em>{c.banner.intro.manage}</em>
-            {c.banner.intro.tail}
-          </p>
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+        {pageSections(c.layout, {
+            whatWeUse: () => (
+              <Section cms="whatWeUse.title" title={c.whatWeUse.title}>
+                <p>{c.whatWeUse.intro}</p>
+                <DataTable
+                  headers={c.whatWeUse.headers as unknown as string[]}
+                  align={['left', 'left', 'left']}
+                  rows={c.whatWeUse.rows.map((row, i) => [
+                    <strong key={`cat-${i}`}>{row.category}</strong>,
+                    row.purpose,
+                    <span
+                      key={`def-${i}`}
+                      className={row.defaultTone === 'pink' ? 'text-stage-pink-2' : 'text-stage-text-3'}
+                    >
+                      {row.defaultText}
+                    </span>,
+                  ])}
+                />
+              </Section>
+            ),
+            notUsed: () => (
+              <Section cms="notUsed.title" title={c.notUsed.title}>
+                <ul className="legal-list">
+                  {c.notUsed.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            changeConsent: () => (
+              <Section cms="changeConsent.title" title={c.changeConsent.title}>
+                <p>
+                  {c.changeConsent.intro.lead}
+                  <em>{c.changeConsent.intro.emphasis}</em>
+                  {c.changeConsent.intro.tail}
+                </p>
+                <div className="card-hero card-pad legal-card">
+                  <h3 className="t-h3">{c.changeConsent.cardTitle}</h3>
+                  <p className="t-small">
+                    {c.changeConsent.cardBody}
+                  </p>
+                  <button
+                    type="button"
+                    data-cc="show-preferencesModal"
+                    className="btn btn-primary btn-sm"
+                  >
+                    {c.changeConsent.buttonLabel}
+                  </button>
+                </div>
+              </Section>
+            ),
+            whereDataLives: () => (
+              <Section cms="whereDataLives.title" title={c.whereDataLives.title}>
+                <p>
+                  {c.whereDataLives.intro.lead}
+                  <a href="/privacy">
+                    {c.whereDataLives.intro.linkLabel}
+                  </a>
+                  {c.whereDataLives.intro.tail}
+                </p>
+                <ul className="legal-list">
+                  {c.whereDataLives.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            banner: () => (
+              <Section cms="banner.title" title={c.banner.title}>
+                <p>
+                  {c.banner.intro.lead}
+                  <em>{c.banner.intro.accept}</em>
+                  {c.banner.intro.mid1}
+                  <em>{c.banner.intro.reject}</em>
+                  {c.banner.intro.mid2}
+                  <em>{c.banner.intro.manage}</em>
+                  {c.banner.intro.tail}
+                </p>
+              </Section>
+            ),
+        })}
 
         <RelatedCards items={c.related} />
       </LegalFrame>

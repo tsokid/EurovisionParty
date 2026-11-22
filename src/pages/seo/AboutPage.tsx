@@ -8,7 +8,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { AboutContent } from '../../../supabase/functions/_shared/cms/schemas/about';
 import { PageContentFallback } from './PageContentFallback';
@@ -57,7 +57,7 @@ export default function AboutPage() {
         ogType="website"
         ogImage="https://eurovision.games/logo.png"
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([organization, aboutPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([organization, aboutPage, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <LegalFrame
@@ -68,68 +68,75 @@ export default function AboutPage() {
         lede={c.hero.lede}
       >
 
-        <Section title={c.whatIs.title}>
-          <p>
-            {c.whatIs.parts.lead}
-            <strong>{c.whatIs.parts.predictionsBold}</strong>
-            {c.whatIs.parts.mid1}
-            <strong>{c.whatIs.parts.triviaBold}</strong>
-            {c.whatIs.parts.mid2}
-            <strong>{c.whatIs.parts.trophiesBold}</strong>
-            {c.whatIs.parts.tail}
-          </p>
-        </Section>
-
-        <Section title={c.why.title}>
-          <p>{c.why.body}</p>
-          <div className="card-hero card-pad legal-card">
-            <h3 className="t-h3">{c.why.cardTitle}</h3>
-            <ul className="legal-list">
-              {c.why.items.map((item, i) => (
-                <li key={i}>
-                  <strong>{item.bold}</strong>{item.rest}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Section>
-
-        <Section title={c.whatsIn.title}>
-          <ul className="legal-list">
-            {c.whatsIn.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>
-                {item.lead}
-                {item.linkLabel && item.linkHref && (
-                  <a
-                    href={item.linkHref}
+        {pageSections(c.layout, {
+            whatIs: () => (
+              <Section cms="whatIs.title" title={c.whatIs.title}>
+                <p>
+                  {c.whatIs.parts.lead}
+                  <strong>{c.whatIs.parts.predictionsBold}</strong>
+                  {c.whatIs.parts.mid1}
+                  <strong>{c.whatIs.parts.triviaBold}</strong>
+                  {c.whatIs.parts.mid2}
+                  <strong>{c.whatIs.parts.trophiesBold}</strong>
+                  {c.whatIs.parts.tail}
+                </p>
+              </Section>
+            ),
+            why: () => (
+              <Section cms="why.title" title={c.why.title}>
+                <p>{c.why.body}</p>
+                <div className="card-hero card-pad legal-card">
+                  <h3 className="t-h3">{c.why.cardTitle}</h3>
+                  <ul className="legal-list">
+                    {c.why.items.map((item, i) => (
+                      <li key={i}>
+                        <strong>{item.bold}</strong>{item.rest}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Section>
+            ),
+            whatsIn: () => (
+              <Section cms="whatsIn.title" title={c.whatsIn.title}>
+                <ul className="legal-list">
+                  {c.whatsIn.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>
+                      {item.lead}
+                      {item.linkLabel && item.linkHref && (
+                        <a
+                          href={item.linkHref}
                    
-                  >
-                    {item.linkLabel}
-                  </a>
-                )}
-                {item.tail}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.freeNoAccount.title}>
-          <p>{c.freeNoAccount.body}</p>
-        </Section>
-
-        <Section title={c.ebu.title}>
-          <div className="card-hero card-pad legal-card">
-            <h3 className="t-h3">{c.ebu.cardTitle}</h3>
-            <p className="t-small">{c.ebu.body}</p>
-          </div>
-        </Section>
-
-        <Section title={c.builtBy.title}>
-          <p>{c.builtBy.lead}</p>
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+                        >
+                          {item.linkLabel}
+                        </a>
+                      )}
+                      {item.tail}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            freeNoAccount: () => (
+              <Section cms="freeNoAccount.title" title={c.freeNoAccount.title}>
+                <p>{c.freeNoAccount.body}</p>
+              </Section>
+            ),
+            ebu: () => (
+              <Section cms="ebu.title" title={c.ebu.title}>
+                <div className="card-hero card-pad legal-card">
+                  <h3 className="t-h3">{c.ebu.cardTitle}</h3>
+                  <p className="t-small">{c.ebu.body}</p>
+                </div>
+              </Section>
+            ),
+            builtBy: () => (
+              <Section cms="builtBy.title" title={c.builtBy.title}>
+                <p>{c.builtBy.lead}</p>
+              </Section>
+            ),
+        })}
 
         <CtaBanner
           title={c.cta.title}

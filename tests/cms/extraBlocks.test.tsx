@@ -10,6 +10,7 @@ import { validateDocument } from '../../supabase/functions/_shared/cms/validate'
 import { emptyValue } from '../../supabase/functions/_shared/cms/emptyValue';
 import { fieldMeta } from '../../supabase/functions/_shared/cms/fields';
 import { mergeFaqJsonLd } from '../../src/components/cms/extraFaq';
+import { layoutSections, upgradeDocument } from '../../supabase/functions/_shared/cms/layoutUpgrade';
 import { PAGE_REGISTRY } from '../../src/lib/seo/registry';
 
 const PAGES = resolve(__dirname, '../../content/pages');
@@ -33,17 +34,19 @@ describe('extraBlocks in every static page schema', () => {
     expect(STATIC_IDS).toHaveLength(18);
   });
 
-  it.each(STATIC_IDS)('%s: optional blocks field; absent is valid and not added to a new draft', (id) => {
+  it.each(STATIC_IDS)('%s: optional blocks field (extraBlocks, or the P6 layout); absent is valid and not added to a new draft', (id) => {
     const type = docTypeFor(id);
     const shape = (CMS_DOC_TYPES[type].schema as unknown as { shape: Record<string, never> }).shape;
-    expect(fieldMeta(shape.extraBlocks)).toMatchObject({ kind: 'blocks', optional: true });
-    expect(Object.keys(emptyValue(CMS_DOC_TYPES[type].schema) as object)).not.toContain('extraBlocks');
+    const zone = layoutSections(type) ? 'layout' : 'extraBlocks';
+    expect(fieldMeta(shape[zone])).toMatchObject({ kind: 'blocks', optional: true });
+    expect(Object.keys(emptyValue(CMS_DOC_TYPES[type].schema) as object)).not.toContain(zone);
     const raw = JSON.parse(readFileSync(resolve(PAGES, `${id}.json`), 'utf8')) as { en: object; el: object };
     expect(Object.keys(raw.en)).not.toContain('extraBlocks');
+    expect(Object.keys(raw.en)).not.toContain('layout');
     expect(validateDocument(type, raw).ok).toBe(true);
-    const withBlocks = { en: { ...raw.en, extraBlocks: [TEXT_BLOCK, FAQ_BLOCK] }, el: { ...raw.el, extraBlocks: [TEXT_BLOCK, FAQ_BLOCK] } };
+    const withBlocks = upgradeDocument(id, { en: { ...raw.en, extraBlocks: [TEXT_BLOCK, FAQ_BLOCK] }, el: { ...raw.el, extraBlocks: [TEXT_BLOCK, FAQ_BLOCK] } });
     expect(validateDocument(type, withBlocks).ok).toBe(true);
-    const bad = { en: { ...raw.en, extraBlocks: [{ type: 'nope' }] }, el: raw.el };
+    const bad = upgradeDocument(id, { en: { ...raw.en, extraBlocks: [{ type: 'nope' }] }, el: { ...raw.el, extraBlocks: [{ type: 'nope' }] } });
     expect(validateDocument(type, bad).ok).toBe(false);
   });
 });
@@ -88,7 +91,8 @@ describe('rendering extraBlocks', { timeout: 60_000 }, () => {
   }
   const withExtra = (id: string, blocks: unknown[]) => {
     const raw = JSON.parse(readFileSync(resolve(PAGES, `${id}.json`), 'utf8')) as { en: object; el: object };
-    overrides.docs.set(`pages/${id}.json`, { en: { ...raw.en, extraBlocks: blocks }, el: { ...raw.el, extraBlocks: blocks } });
+    // A section-based page takes them as its layout (the P6 upgrade: sections, then the blocks).
+    overrides.docs.set(`pages/${id}.json`, upgradeDocument(id, { en: { ...raw.en, extraBlocks: blocks }, el: { ...raw.el, extraBlocks: blocks } }));
   };
 
   it('about: renders the blocks before the related cards and adds one FAQPage', async () => {

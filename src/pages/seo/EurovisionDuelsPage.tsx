@@ -10,7 +10,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { EurovisionDuelsContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-duels';
 import { PageContentFallback } from './PageContentFallback';
@@ -79,7 +79,7 @@ export default function EurovisionDuelsPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <ArticleFrame
@@ -91,109 +91,116 @@ export default function EurovisionDuelsPage() {
         actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/how-to-play' } }}
       >
 
-        <Section title={c.sections.whatIs.title}>
-          <p>
-            {c.sections.whatIs.bodyPre}
-            <em>{c.sections.whatIs.bodyEm}</em>
-            {c.sections.whatIs.bodyPost}
-          </p>
-          <ul className="legal-list">
-            {c.sections.whatIs.bullets.map((b, i) => (
-              <li key={i}>
-                <strong>{b.strong}</strong>{b.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.sections.when.title}>
-          <p>
-            {c.sections.when.body1Pre}
-            <strong>{c.sections.when.body1Strong1}</strong>
-            {c.sections.when.body1Mid}
-            <strong>{c.sections.when.body1Strong2}</strong>
-            {c.sections.when.body1Post}
-          </p>
-          <div className="card-hero card-pad legal-card">
-            <p className="text-stage-text-2">
-              <strong>{c.sections.when.ruleOfThumbStrong}</strong>
-              {c.sections.when.ruleOfThumbBody}
-            </p>
-          </div>
-        </Section>
-
-        <Section title={c.sections.scoring.title}>
-          <p>{c.sections.scoring.intro}</p>
-          <DataTable
-            headers={[c.sections.scoring.headers.scenario, c.sections.scoring.headers.points]}
-            align={['left', 'right']}
-            rows={[
-              [c.sections.scoring.rows.zeroToOne, <strong key="a" className="num sc-v">11–12</strong>],
-              [c.sections.scoring.rows.five, <strong key="b" className="num sc-v">7</strong>],
-              [c.sections.scoring.rows.eleven, <strong key="c" className="num sc-v">1</strong>],
-              [c.sections.scoring.rows.wrong, <span key="d" className="text-stage-text-3">0</span>],
-            ]}
-          />
-          <p>
-            {c.sections.scoring.winnerScorePre}
-            <em>{c.sections.scoring.winnerScoreEm}</em>
-            {c.sections.scoring.winnerScorePost}
-          </p>
-          <ul className="legal-list">
-            <li>
-              <strong>{c.sections.scoring.stealLabel}</strong>
-              {c.sections.scoring.stealBodyPre}
-              <em>{c.sections.scoring.stealBodyEm}</em>
-              {c.sections.scoring.stealBodyPost}
-            </li>
-            <li>
-              <strong>{c.sections.scoring.doubleLabel}</strong>
-              {c.sections.scoring.doubleBodyPre}
-              <em>{c.sections.scoring.doubleBodyEm}</em>
-              {c.sections.scoring.doubleBodyPost}
-            </li>
-          </ul>
-        </Section>
-
-        <Section title={c.sections.stealVsDouble.title}>
-          <div className="kit-grid c2">
-            <div className="card-hero card-pad legal-card">
-              <h3 className="t-h3">{c.sections.stealVsDouble.stealHeading}</h3>
-              <p className="t-small">
-                {c.sections.stealVsDouble.stealBody}
-              </p>
-            </div>
-            <div className="card-hero card-pad legal-card">
-              <h3 className="t-h3">{c.sections.stealVsDouble.doubleHeading}</h3>
-              <p className="t-small">
-                {c.sections.stealVsDouble.doubleBodyPre}
-                <em>{c.sections.stealVsDouble.doubleBodyEm}</em>
-                {c.sections.stealVsDouble.doubleBodyPost}
-              </p>
-            </div>
-          </div>
-        </Section>
-
-        <Section title={c.sections.trophies.title}>
-          <p>{c.sections.trophies.intro}</p>
-          <ul className="legal-list">
-            <li><strong>{c.sections.trophies.duelistLabel}</strong>{c.sections.trophies.duelistBody}</li>
-            <li><strong>{c.sections.trophies.thiefLabel}</strong>{c.sections.trophies.thiefBody}</li>
-          </ul>
-          <p>
-            {c.sections.trophies.seePre}
-            <a href="/scoring">{c.sections.trophies.scoringLink}</a>
-            {c.sections.trophies.seeMid}
-            <a href="/rules">{c.sections.trophies.rulesLink}</a>
-            {c.sections.trophies.seePost}
-          </p>
-        </Section>
-
-        <Section title={c.sections.faqTitle}>
-          <FaqAccordion items={c.faq} />
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+        {pageSections(c.layout, {
+            whatIs: () => (
+              <Section cms="sections.whatIs.title" title={c.sections.whatIs.title}>
+                <p>
+                  {c.sections.whatIs.bodyPre}
+                  <em>{c.sections.whatIs.bodyEm}</em>
+                  {c.sections.whatIs.bodyPost}
+                </p>
+                <ul className="legal-list">
+                  {c.sections.whatIs.bullets.map((b, i) => (
+                    <li key={i}>
+                      <strong>{b.strong}</strong>{b.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            when: () => (
+              <Section cms="sections.when.title" title={c.sections.when.title}>
+                <p>
+                  {c.sections.when.body1Pre}
+                  <strong>{c.sections.when.body1Strong1}</strong>
+                  {c.sections.when.body1Mid}
+                  <strong>{c.sections.when.body1Strong2}</strong>
+                  {c.sections.when.body1Post}
+                </p>
+                <div className="card-hero card-pad legal-card">
+                  <p className="text-stage-text-2">
+                    <strong>{c.sections.when.ruleOfThumbStrong}</strong>
+                    {c.sections.when.ruleOfThumbBody}
+                  </p>
+                </div>
+              </Section>
+            ),
+            scoring: () => (
+              <Section cms="sections.scoring.title" title={c.sections.scoring.title}>
+                <p>{c.sections.scoring.intro}</p>
+                <DataTable
+                  headers={[c.sections.scoring.headers.scenario, c.sections.scoring.headers.points]}
+                  align={['left', 'right']}
+                  rows={[
+                    [c.sections.scoring.rows.zeroToOne, <strong key="a" className="num sc-v">11–12</strong>],
+                    [c.sections.scoring.rows.five, <strong key="b" className="num sc-v">7</strong>],
+                    [c.sections.scoring.rows.eleven, <strong key="c" className="num sc-v">1</strong>],
+                    [c.sections.scoring.rows.wrong, <span key="d" className="text-stage-text-3">0</span>],
+                  ]}
+                />
+                <p>
+                  {c.sections.scoring.winnerScorePre}
+                  <em>{c.sections.scoring.winnerScoreEm}</em>
+                  {c.sections.scoring.winnerScorePost}
+                </p>
+                <ul className="legal-list">
+                  <li>
+                    <strong>{c.sections.scoring.stealLabel}</strong>
+                    {c.sections.scoring.stealBodyPre}
+                    <em>{c.sections.scoring.stealBodyEm}</em>
+                    {c.sections.scoring.stealBodyPost}
+                  </li>
+                  <li>
+                    <strong>{c.sections.scoring.doubleLabel}</strong>
+                    {c.sections.scoring.doubleBodyPre}
+                    <em>{c.sections.scoring.doubleBodyEm}</em>
+                    {c.sections.scoring.doubleBodyPost}
+                  </li>
+                </ul>
+              </Section>
+            ),
+            stealVsDouble: () => (
+              <Section cms="sections.stealVsDouble.title" title={c.sections.stealVsDouble.title}>
+                <div className="kit-grid c2">
+                  <div className="card-hero card-pad legal-card">
+                    <h3 className="t-h3">{c.sections.stealVsDouble.stealHeading}</h3>
+                    <p className="t-small">
+                      {c.sections.stealVsDouble.stealBody}
+                    </p>
+                  </div>
+                  <div className="card-hero card-pad legal-card">
+                    <h3 className="t-h3">{c.sections.stealVsDouble.doubleHeading}</h3>
+                    <p className="t-small">
+                      {c.sections.stealVsDouble.doubleBodyPre}
+                      <em>{c.sections.stealVsDouble.doubleBodyEm}</em>
+                      {c.sections.stealVsDouble.doubleBodyPost}
+                    </p>
+                  </div>
+                </div>
+              </Section>
+            ),
+            trophies: () => (
+              <Section cms="sections.trophies.title" title={c.sections.trophies.title}>
+                <p>{c.sections.trophies.intro}</p>
+                <ul className="legal-list">
+                  <li><strong>{c.sections.trophies.duelistLabel}</strong>{c.sections.trophies.duelistBody}</li>
+                  <li><strong>{c.sections.trophies.thiefLabel}</strong>{c.sections.trophies.thiefBody}</li>
+                </ul>
+                <p>
+                  {c.sections.trophies.seePre}
+                  <a href="/scoring">{c.sections.trophies.scoringLink}</a>
+                  {c.sections.trophies.seeMid}
+                  <a href="/rules">{c.sections.trophies.rulesLink}</a>
+                  {c.sections.trophies.seePost}
+                </p>
+              </Section>
+            ),
+            faq: () => (
+              <Section cms="sections.faqTitle" title={c.sections.faqTitle}>
+                <FaqAccordion items={c.faq} />
+              </Section>
+            ),
+        })}
 
         <CtaBanner
           title={c.cta.title}

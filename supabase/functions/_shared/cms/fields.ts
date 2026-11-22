@@ -89,7 +89,24 @@ export type FieldMeta = {
    * width and height, from the media rows). The admin form does not draw it.
    */
   derived?: boolean;
+  /** Not drawn by the admin form, which writes it itself (a block's stable id). */
+  hidden?: boolean;
+  /**
+   * blocks only, a page layout (layout()): the page's own sections an item
+   * of type `section` can place, in their default order. Without a layout
+   * value the page renders them in this order.
+   */
+  sections?: LayoutSection[];
 };
+
+/**
+ * One of a page's own sections in its layout (Q4 = B): its `key` (the value
+ * a `section` item holds), the dotted path of its `title` field, the dotted
+ * paths of the `fields` its content is made of (the admin draws them inside
+ * the section), and whether it is `locked`: it feeds JSON-LD (such as the FAQ
+ * list behind a FAQPage), so it can move but never leave the page.
+ */
+export type LayoutSection = { key: string; title: string; fields: string[]; locked?: boolean };
 
 export type StringFieldOptions = {
   label?: string;
@@ -356,6 +373,49 @@ function variant<const T extends string, S extends Record<string, z.ZodType>>(ty
   return group({ type: choice([type] as [T]), ...shape });
 }
 
+/** A block's stable id ("b-k3x9q2"): written by the admin when it adds or duplicates a block. */
+const BLOCK_ID = /^[a-z0-9][a-z0-9-]{0,39}$/;
+
+function blockId() {
+  const schema = z.string().regex(BLOCK_ID, 'Not a block id');
+  schema.register(cmsFields, { kind: 'text', label: 'Block id', required: false, shared: true, hidden: true, placeholders: [] });
+  return optional(schema);
+}
+
+/** The six block types of the design system (text, image, video, callout, faq, cta), each with an optional stable id. */
+function blockOptions() {
+  const id = blockId();
+  return [
+    variant('text', { id, body: richText({ label: 'Text' }) }),
+    variant('image', { id, image: image(), caption: optional(text({ label: 'Caption' })) }),
+    variant('video', { id, video: video(), caption: optional(text({ label: 'Caption' })) }),
+    variant('callout', { id, tone: choice(['info', 'warn'], { label: 'Tone' }), body: richText({ label: 'Text' }) }),
+    variant('faq', { id, items: list(group({ q: text({ label: 'Question' }), a: richText({ label: 'Answer' }) }), { label: 'Questions' }) }),
+    variant('cta', {
+      id,
+      title: text({ label: 'Title' }),
+      body: multiline({ label: 'Text' }),
+      label: text({ label: 'Button label' }),
+      href: href({ label: 'Button link', localeLink: true }),
+    }),
+  ] as const;
+}
+
+/** Positions whose id an earlier item already uses ({ id? } items). */
+function duplicateIds(items: readonly unknown[]): number[] {
+  const seen = new Set<string>();
+  const out: number[] = [];
+  items.forEach((it, i) => {
+    const id = it && typeof it === 'object' ? (it as { id?: unknown }).id : undefined;
+    if (typeof id !== 'string') return;
+    if (seen.has(id)) out.push(i);
+    seen.add(id);
+  });
+  return out;
+}
+
+const DUPLICATE_ID = 'Two blocks have the same id: duplicate the block again';
+
 /**
  * The flexible zone of a page: an ordered list of blocks, each a group of one
  * of six `type`s (text, image, video, callout, faq, cta). The `type` is shared,
@@ -364,25 +424,67 @@ function variant<const T extends string, S extends Record<string, z.ZodType>>(ty
  * matches each value's type) and get one variant's schema from blockVariants().
  */
 export function blocks(opts: ContainerFieldOptions = {}) {
-  const options = [
-    variant('text', { body: richText({ label: 'Text' }) }),
-    variant('image', { image: image(), caption: optional(text({ label: 'Caption' })) }),
-    variant('video', { video: video(), caption: optional(text({ label: 'Caption' })) }),
-    variant('callout', { tone: choice(['info', 'warn'], { label: 'Tone' }), body: richText({ label: 'Text' }) }),
-    variant('faq', { items: list(group({ q: text({ label: 'Question' }), a: richText({ label: 'Answer' }) }), { label: 'Questions' }) }),
-    variant('cta', {
-      title: text({ label: 'Title' }),
-      body: multiline({ label: 'Text' }),
-      label: text({ label: 'Button label' }),
-      href: href({ label: 'Button link', localeLink: true }),
-    }),
-  ] as const;
+  const options = blockOptions();
   const names = options.map((o) => fieldMeta(o.shape.type).options![0]);
   const union = z.discriminatedUnion(BLOCK_DISCRIMINATOR, options);
   union.register(cmsFields, { kind: 'union', discriminator: BLOCK_DISCRIMINATOR, variants: names });
-  const schema = z.array(union);
+  const schema = z.array(union).superRefine((items, ctx) => {
+    for (const i of duplicateIds(items)) ctx.addIssue({ code: 'custom', path: [i, 'id'], message: DUPLICATE_ID });
+  });
   schema.register(cmsFields, { kind: 'blocks', ...opts, discriminator: BLOCK_DISCRIMINATOR, variants: names });
   return schema;
+}
+
+/** The `type` of a layout item that places one of the page's own sections. */
+export const SECTION_TYPE = 'section';
+
+/**
+ * A page's body as a list (owner decision Q4 = B): its own sections, placed by
+ * `{ type: 'section', key }` items, and blocks of the design system's set
+ * (the six of blocks()) between them. Editors add, remove, reorder and
+ * duplicate blocks, and reorder or remove sections; a removed section's
+ * content stays in the doc, so it can be put back. A `locked` section (one
+ * that feeds JSON-LD) cannot be removed. Every section appears at most once,
+ * and the page keeps at least one item, so it is never empty. The hero (the
+ * H1), the breadcrumbs and the meta are not in the layout: they never move.
+ *
+ * The page schema wraps it in optional(): a doc without `layout` renders its
+ * sections in their default order, so the committed docs render exactly as
+ * before.
+ */
+export function layout(sections: readonly LayoutSection[], opts: ContainerFieldOptions = {}) {
+  const keys = sections.map((s) => s.key);
+  if (!keys.length || new Set(keys).size !== keys.length) throw new Error('layout: section keys must be unique and at least one');
+  const locked = sections.filter((s) => s.locked).map((s) => s.key);
+  const sectionItem = variant(SECTION_TYPE, { key: choice(keys as [string, ...string[]], { label: 'Section' }) });
+  const options = [sectionItem, ...blockOptions()] as const;
+  const names = options.map((o) => fieldMeta(o.shape.type).options![0]);
+  const union = z.discriminatedUnion(BLOCK_DISCRIMINATOR, options);
+  union.register(cmsFields, { kind: 'union', discriminator: BLOCK_DISCRIMINATOR, variants: names });
+  const schema = z.array(union).superRefine((items, ctx) => {
+    if (!items.length) ctx.addIssue({ code: 'custom', message: 'The page needs at least one section or block' });
+    const placed = new Set<string>();
+    items.forEach((it, i) => {
+      if (it.type !== SECTION_TYPE) return;
+      const key = (it as { key: string }).key;
+      if (placed.has(key)) ctx.addIssue({ code: 'custom', path: [i, 'key'], message: `The section "${key}" is already on the page` });
+      placed.add(key);
+    });
+    for (const key of locked) {
+      if (!placed.has(key)) ctx.addIssue({ code: 'custom', message: `The section "${key}" feeds the search-engine data (JSON-LD) and cannot be removed` });
+    }
+    for (const i of duplicateIds(items)) ctx.addIssue({ code: 'custom', path: [i, 'id'], message: DUPLICATE_ID });
+  });
+  schema.register(cmsFields, {
+    kind: 'blocks', label: 'Page sections', ...opts, discriminator: BLOCK_DISCRIMINATOR, variants: names,
+    sections: sections.map((s) => ({ ...s })),
+  });
+  return schema;
+}
+
+/** The layout of a page without one: its sections, in their default order. */
+export function defaultLayout(sections: readonly LayoutSection[]): Array<{ type: 'section'; key: string }> {
+  return sections.map((s) => ({ type: SECTION_TYPE, key: s.key }));
 }
 
 /**

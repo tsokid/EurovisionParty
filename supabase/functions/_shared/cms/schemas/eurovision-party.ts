@@ -2,7 +2,7 @@
 // live contest's year and final date are placeholders.
 import type { z } from 'zod';
 import { group, list, optional, text, tuple } from '../fields.ts';
-import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody, extraBlocks } from './common.ts';
+import { crumbs, cta, headers3, hero, href, META_LABEL, metaDescription, qa, relatedItem, seoTitle, strongRest, titleBody, pageLayout } from './common.ts';
 
 const YEAR = { placeholders: ['year'] };
 
@@ -61,7 +61,16 @@ export const eurovisionPartySchema = group({
   faq: list(qa),
   cta,
   related: group({ heading: text(), items: list(relatedItem) }),
-  extraBlocks,
+  layout: pageLayout([
+    { key: 'what', title: 'sections.what.title', fields: ['sections.what'] },
+    { key: 'headcount', title: 'sections.headcount.title', fields: ['sections.headcount'] },
+    { key: 'theme', title: 'sections.theme.title', fields: ['sections.theme'] },
+    { key: 'food', title: 'sections.food.title', fields: ['sections.food'] },
+    { key: 'runOfShow', title: 'sections.runOfShow.title', fields: ['sections.runOfShow'] },
+    { key: 'games', title: 'sections.games.title', fields: ['sections.games'] },
+    { key: 'timezone', title: 'sections.timezone.title', fields: ['sections.timezone'] },
+    { key: 'faq', title: 'sections.faq.title', fields: ['sections.faq', 'faq'], locked: true },
+  ]),
 });
 
 export type EurovisionPartyContent = z.infer<typeof eurovisionPartySchema>;

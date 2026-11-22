@@ -9,7 +9,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { EurovisionTriviaContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-trivia';
 import { PageContentFallback } from './PageContentFallback';
@@ -77,7 +77,7 @@ export default function EurovisionTriviaPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, quizSchema, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([article, quizSchema, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <ArticleFrame
@@ -89,76 +89,83 @@ export default function EurovisionTriviaPage() {
         actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/how-to-play' } }}
       >
 
-        <Section title={c.sections.whatIs.title}>
-          <p>{c.sections.whatIs.body}</p>
-        </Section>
-
-        <Section title={c.sections.samples.title}>
-          <p>{c.sections.samples.intro}</p>
-          <ol className="tq-list">
-            {c.questions.map((s, i) => (
-              <li
-                key={i}
-                className="card card-pad tq"
-              >
-                <p className="tq-q">
-                  <span className="tq-n">{c.sections.samples.questionPrefix}{i + 1}.</span>
-                  {s.q}
-                </p>
-                <ul className="tq-opts">
-                  {s.options.map((o) => (
+        {pageSections(c.layout, {
+            whatIs: () => (
+              <Section cms="sections.whatIs.title" title={c.sections.whatIs.title}>
+                <p>{c.sections.whatIs.body}</p>
+              </Section>
+            ),
+            samples: () => (
+              <Section cms="sections.samples.title" title={c.sections.samples.title}>
+                <p>{c.sections.samples.intro}</p>
+                <ol className="tq-list">
+                  {c.questions.map((s, i) => (
                     <li
-                      key={o}
-                      className="tq-opt"
+                      key={i}
+                      className="card card-pad tq"
                     >
-                      {o}
+                      <p className="tq-q">
+                        <span className="tq-n">{c.sections.samples.questionPrefix}{i + 1}.</span>
+                        {s.q}
+                      </p>
+                      <ul className="tq-opts">
+                        {s.options.map((o) => (
+                          <li
+                            key={o}
+                            className="tq-opt"
+                          >
+                            {o}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="t-small tq-a">
+                        <em className="tq-a-k">{c.sections.samples.answerLabel} </em>
+                        {s.answer}
+                      </p>
                     </li>
                   ))}
+                </ol>
+                {c.sections.disclaimer && (
+                  <p className="t-meta">{c.sections.disclaimer}</p>
+                )}
+              </Section>
+            ),
+            categories: () => (
+              <Section cms="sections.categories.title" title={c.sections.categories.title}>
+                <ul className="legal-list">
+                  <li><strong>{c.sections.categories.easyLabel}</strong> {c.sections.categories.easyBody}</li>
+                  <li><strong>{c.sections.categories.mediumLabel}</strong> {c.sections.categories.mediumBody}</li>
+                  <li><strong>{c.sections.categories.hardLabel}</strong> {c.sections.categories.hardBody}</li>
                 </ul>
-                <p className="t-small tq-a">
-                  <em className="tq-a-k">{c.sections.samples.answerLabel} </em>
-                  {s.answer}
+              </Section>
+            ),
+            duels: () => (
+              <Section cms="sections.duels.title" title={c.sections.duels.title}>
+                <p>
+                  {c.sections.duels.body1Pre}<em>{c.sections.duels.body1Em}</em>{c.sections.duels.body1Post}
                 </p>
-              </li>
-            ))}
-          </ol>
-          {c.sections.disclaimer && (
-            <p className="t-meta">{c.sections.disclaimer}</p>
-          )}
-        </Section>
-
-        <Section title={c.sections.categories.title}>
-          <ul className="legal-list">
-            <li><strong>{c.sections.categories.easyLabel}</strong> {c.sections.categories.easyBody}</li>
-            <li><strong>{c.sections.categories.mediumLabel}</strong> {c.sections.categories.mediumBody}</li>
-            <li><strong>{c.sections.categories.hardLabel}</strong> {c.sections.categories.hardBody}</li>
-          </ul>
-        </Section>
-
-        <Section title={c.sections.duels.title}>
-          <p>
-            {c.sections.duels.body1Pre}<em>{c.sections.duels.body1Em}</em>{c.sections.duels.body1Post}
-          </p>
-          <p>
-            {c.sections.duels.body2Pre}
-            <a href="/duels">{c.sections.duels.body2LinkLabel}</a>
-            {c.sections.duels.body2Post}
-          </p>
-        </Section>
-
-        <Section title={c.sections.play.title}>
-          <p>
-            {c.sections.play.pre}
-            <a href="/">{c.sections.play.linkLabel}</a>
-            {c.sections.play.post}
-          </p>
-        </Section>
-
-        <Section title={c.sections.faqTitle}>
-          <FaqAccordion items={c.faq} />
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+                <p>
+                  {c.sections.duels.body2Pre}
+                  <a href="/duels">{c.sections.duels.body2LinkLabel}</a>
+                  {c.sections.duels.body2Post}
+                </p>
+              </Section>
+            ),
+            play: () => (
+              <Section cms="sections.play.title" title={c.sections.play.title}>
+                <p>
+                  {c.sections.play.pre}
+                  <a href="/">{c.sections.play.linkLabel}</a>
+                  {c.sections.play.post}
+                </p>
+              </Section>
+            ),
+            faq: () => (
+              <Section cms="sections.faqTitle" title={c.sections.faqTitle}>
+                <FaqAccordion items={c.faq} />
+              </Section>
+            ),
+        })}
 
         <CtaBanner
           title={c.cta.title}

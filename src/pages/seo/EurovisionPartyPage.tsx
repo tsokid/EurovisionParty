@@ -10,7 +10,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { EurovisionPartyContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-party';
 import { PageContentFallback } from './PageContentFallback';
@@ -100,7 +100,7 @@ export default function EurovisionPartyPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, faqJsonLd, ...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([article, faqJsonLd, ...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <ArticleFrame
@@ -112,107 +112,116 @@ export default function EurovisionPartyPage() {
         actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/eurovision-night' } }}
       >
 
-        <Section title={c.sections.what.title}>
-          <p>
-            {c.sections.what.intro}
-            <strong>{c.sections.what.b1}</strong>
-            {c.sections.what.b1Suffix}
-            <strong>{c.sections.what.b2}</strong>
-            {c.sections.what.b2Suffix}
-            <strong>{c.sections.what.b3}</strong>
-            {c.sections.what.outro}
-          </p>
-        </Section>
-
-        <Section title={c.sections.headcount.title}>
-          <ul className="legal-list">
-            {c.sections.headcount.bullets.map((b) => (
-              <li key={b.strong}>
-                <strong>{b.strong}</strong>
-                {b.rest}
-                {b.link && (
-                  <>
-                    <a
-                      href="/dashboard"
+        {pageSections(c.layout, {
+            what: () => (
+              <Section cms="sections.what.title" title={c.sections.what.title}>
+                <p>
+                  {c.sections.what.intro}
+                  <strong>{c.sections.what.b1}</strong>
+                  {c.sections.what.b1Suffix}
+                  <strong>{c.sections.what.b2}</strong>
+                  {c.sections.what.b2Suffix}
+                  <strong>{c.sections.what.b3}</strong>
+                  {c.sections.what.outro}
+                </p>
+              </Section>
+            ),
+            headcount: () => (
+              <Section cms="sections.headcount.title" title={c.sections.headcount.title}>
+                <ul className="legal-list">
+                  {c.sections.headcount.bullets.map((b) => (
+                    <li key={b.strong}>
+                      <strong>{b.strong}</strong>
+                      {b.rest}
+                      {b.link && (
+                        <>
+                          <a
+                            href="/dashboard"
                      
-                    >
-                      {b.link.label}
-                    </a>
-                    {b.link.after}
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.sections.theme.title}>
-          <ul className="legal-list">
-            {c.sections.theme.bullets.map((b) => (
-              <li key={b.strong}>
-                <strong>{b.strong}</strong>
-                {b.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.sections.food.title}>
-          <p>{c.sections.food.intro}</p>
-          <ul className="legal-list">
-            {c.sections.food.bullets.map((b) => (
-              <li key={b.strong}>
-                <strong>{b.strong}</strong>
-                {b.rest}
-              </li>
-            ))}
-          </ul>
-          <p>{c.sections.food.drinks}</p>
-        </Section>
-
-        <Section title={c.sections.runOfShow.title}>
-          <p>{c.sections.runOfShow.intro}</p>
-          <DataTable
-            headers={c.sections.runOfShow.tableHeaders}
-            align={['left', 'left', 'left']}
-            rows={c.sections.runOfShow.rows.map((r) => [r[0], r[1], r[2]])}
-          />
-        </Section>
-
-        <Section title={c.sections.games.title}>
-          <p>
-            {c.sections.games.introBefore}
-            <a
-              href="/eurovision-games"
+                          >
+                            {b.link.label}
+                          </a>
+                          {b.link.after}
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            theme: () => (
+              <Section cms="sections.theme.title" title={c.sections.theme.title}>
+                <ul className="legal-list">
+                  {c.sections.theme.bullets.map((b) => (
+                    <li key={b.strong}>
+                      <strong>{b.strong}</strong>
+                      {b.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            food: () => (
+              <Section cms="sections.food.title" title={c.sections.food.title}>
+                <p>{c.sections.food.intro}</p>
+                <ul className="legal-list">
+                  {c.sections.food.bullets.map((b) => (
+                    <li key={b.strong}>
+                      <strong>{b.strong}</strong>
+                      {b.rest}
+                    </li>
+                  ))}
+                </ul>
+                <p>{c.sections.food.drinks}</p>
+              </Section>
+            ),
+            runOfShow: () => (
+              <Section cms="sections.runOfShow.title" title={c.sections.runOfShow.title}>
+                <p>{c.sections.runOfShow.intro}</p>
+                <DataTable
+                  headers={c.sections.runOfShow.tableHeaders}
+                  align={['left', 'left', 'left']}
+                  rows={c.sections.runOfShow.rows.map((r) => [r[0], r[1], r[2]])}
+                />
+              </Section>
+            ),
+            games: () => (
+              <Section cms="sections.games.title" title={c.sections.games.title}>
+                <p>
+                  {c.sections.games.introBefore}
+                  <a
+                    href="/eurovision-games"
              
-            >
-              {c.sections.games.introLink}
-            </a>
-            {c.sections.games.introAfter}
-          </p>
-          <ul className="legal-list">
-            {c.sections.games.bullets.map((b) => (
-              <li key={b.href}>
-                <strong>
-                  <a href={b.href}>
-                    {b.label}
+                  >
+                    {c.sections.games.introLink}
                   </a>
-                </strong>
-                {b.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.sections.timezone.title}>
-          <p>{c.sections.timezone.body}</p>
-        </Section>
-
-        <Section title={c.sections.faq.title}>
-          <FaqAccordion items={c.faq} />
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+                  {c.sections.games.introAfter}
+                </p>
+                <ul className="legal-list">
+                  {c.sections.games.bullets.map((b) => (
+                    <li key={b.href}>
+                      <strong>
+                        <a href={b.href}>
+                          {b.label}
+                        </a>
+                      </strong>
+                      {b.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            timezone: () => (
+              <Section cms="sections.timezone.title" title={c.sections.timezone.title}>
+                <p>{c.sections.timezone.body}</p>
+              </Section>
+            ),
+            faq: () => (
+              <Section cms="sections.faq.title" title={c.sections.faq.title}>
+                <FaqAccordion items={c.faq} />
+              </Section>
+            ),
+        })}
 
         <CtaBanner
           title={c.cta.title}

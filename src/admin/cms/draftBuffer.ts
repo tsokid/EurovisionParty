@@ -5,6 +5,8 @@
 // lost. Storage can be missing or full (private windows, quota): every
 // access is guarded, and the editor works without it.
 
+import { upgradeDocument } from '../../../supabase/functions/_shared/cms/layoutUpgrade';
+
 const PREFIX = 'cms:unsent:';
 
 export type BufferedDraft = {
@@ -38,7 +40,9 @@ export const localDraftStore: DraftStore = {
       const raw = storage()?.getItem(PREFIX + docId);
       if (!raw) return null;
       const parsed = JSON.parse(raw) as BufferedDraft;
-      return parsed && typeof parsed === 'object' && 'value' in parsed ? parsed : null;
+      if (!parsed || typeof parsed !== 'object' || !('value' in parsed)) return null;
+      // Written before the P6 page layouts: fold extraBlocks into the layout.
+      return { ...parsed, value: upgradeDocument(docId, parsed.value), ...(parsed.base !== undefined ? { base: upgradeDocument(docId, parsed.base) } : {}) };
     } catch {
       return null;
     }

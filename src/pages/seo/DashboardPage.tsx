@@ -10,7 +10,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { DashboardContent } from '../../../supabase/functions/_shared/cms/schemas/dashboard';
 import { PageContentFallback } from './PageContentFallback';
@@ -67,7 +67,7 @@ export default function DashboardPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <ArticleFrame
@@ -79,74 +79,81 @@ export default function DashboardPage() {
         actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/how-to-play' } }}
       >
 
-        <Section title={c.sections.shows.title}>
-          <p>{c.sections.shows.intro}</p>
-          <ul className="legal-list">
-            {c.sections.shows.bullets.map((b) => (
-              <li key={b.strong}>
-                <strong>{b.strong}</strong>
-                {b.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.sections.sources.title}>
-          <p>{c.sections.sources.intro}</p>
-          <DataTable
-            headers={c.sections.sources.tableHeaders}
-            align={['left', 'left', 'right']}
-            rows={c.sections.sources.rows.map((r, i) => [
-              r.source,
-              r.when,
-              r.capIsOpen ? (
-                <span key={`cap-${i}`} className="text-stage-text-2">{r.capLabel}</span>
-              ) : (
-                <strong key={`cap-${i}`} className="num sc-v">{r.capLabel}</strong>
-              ),
-            ])}
-          />
-          <p>
-            {c.sections.sources.footer.before}
-            <a href="/scoring">
-              {c.sections.sources.footer.linkLabel}
-            </a>
-            {c.sections.sources.footer.after}
-          </p>
-        </Section>
-
-        <Section title={c.sections.activity.title}>
-          <ul className="legal-list">
-            {c.sections.activity.bullets.map((b) => (
-              <li key={b.strong}>
-                <strong>{b.strong}</strong>
-                {b.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.sections.notShown.title}>
-          <p>{c.sections.notShown.intro}</p>
-          <ul className="legal-list">
-            {c.sections.notShown.bullets.map((b) => (
-              <li key={b.strong}>
-                <strong>{b.strong}</strong>
-                {b.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.sections.hostVsPlayer.title}>
-          <p>{c.sections.hostVsPlayer.body}</p>
-        </Section>
-
-        <Section title={c.sections.faq.title}>
-          <FaqAccordion items={c.faq} />
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+        {pageSections(c.layout, {
+            shows: () => (
+              <Section cms="sections.shows.title" title={c.sections.shows.title}>
+                <p>{c.sections.shows.intro}</p>
+                <ul className="legal-list">
+                  {c.sections.shows.bullets.map((b) => (
+                    <li key={b.strong}>
+                      <strong>{b.strong}</strong>
+                      {b.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            sources: () => (
+              <Section cms="sections.sources.title" title={c.sections.sources.title}>
+                <p>{c.sections.sources.intro}</p>
+                <DataTable
+                  headers={c.sections.sources.tableHeaders}
+                  align={['left', 'left', 'right']}
+                  rows={c.sections.sources.rows.map((r, i) => [
+                    r.source,
+                    r.when,
+                    r.capIsOpen ? (
+                      <span key={`cap-${i}`} className="text-stage-text-2">{r.capLabel}</span>
+                    ) : (
+                      <strong key={`cap-${i}`} className="num sc-v">{r.capLabel}</strong>
+                    ),
+                  ])}
+                />
+                <p>
+                  {c.sections.sources.footer.before}
+                  <a href="/scoring">
+                    {c.sections.sources.footer.linkLabel}
+                  </a>
+                  {c.sections.sources.footer.after}
+                </p>
+              </Section>
+            ),
+            activity: () => (
+              <Section cms="sections.activity.title" title={c.sections.activity.title}>
+                <ul className="legal-list">
+                  {c.sections.activity.bullets.map((b) => (
+                    <li key={b.strong}>
+                      <strong>{b.strong}</strong>
+                      {b.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            notShown: () => (
+              <Section cms="sections.notShown.title" title={c.sections.notShown.title}>
+                <p>{c.sections.notShown.intro}</p>
+                <ul className="legal-list">
+                  {c.sections.notShown.bullets.map((b) => (
+                    <li key={b.strong}>
+                      <strong>{b.strong}</strong>
+                      {b.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            hostVsPlayer: () => (
+              <Section cms="sections.hostVsPlayer.title" title={c.sections.hostVsPlayer.title}>
+                <p>{c.sections.hostVsPlayer.body}</p>
+              </Section>
+            ),
+            faq: () => (
+              <Section cms="sections.faq.title" title={c.sections.faq.title}>
+                <FaqAccordion items={c.faq} />
+              </Section>
+            ),
+        })}
 
         <CtaBanner
           title={c.cta.title}

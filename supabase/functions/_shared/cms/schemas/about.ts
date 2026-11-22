@@ -1,7 +1,7 @@
 // /about. Mirrors the former AboutCopy interface.
 import type { z } from 'zod';
 import { group, list, optional, text } from '../fields.ts';
-import { boldRest, CTA_LABEL, hero, href, META_LABEL, metaDescription, relatedItem, seoTitle, titleBody, extraBlocks } from './common.ts';
+import { boldRest, CTA_LABEL, hero, href, META_LABEL, metaDescription, relatedItem, seoTitle, titleBody, pageLayout } from './common.ts';
 
 export const aboutSchema = group({
   meta: group({
@@ -51,7 +51,14 @@ export const aboutSchema = group({
   }),
   cta: group({ title: text(), body: text(), primaryLabel: text(), secondaryLabel: text() }, CTA_LABEL),
   related: list(relatedItem),
-  extraBlocks,
+  layout: pageLayout([
+    { key: 'whatIs', title: 'whatIs.title', fields: ['whatIs'] },
+    { key: 'why', title: 'why.title', fields: ['why'] },
+    { key: 'whatsIn', title: 'whatsIn.title', fields: ['whatsIn'] },
+    { key: 'freeNoAccount', title: 'freeNoAccount.title', fields: ['freeNoAccount'] },
+    { key: 'ebu', title: 'ebu.title', fields: ['ebu'] },
+    { key: 'builtBy', title: 'builtBy.title', fields: ['builtBy'] },
+  ]),
 });
 
 export type AboutContent = z.infer<typeof aboutSchema>;

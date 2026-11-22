@@ -7,7 +7,7 @@ import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
-import ExtraBlocks from '../../components/cms/ExtraBlocks';
+import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { TermsContent } from '../../../supabase/functions/_shared/cms/schemas/terms';
 import { PageContentFallback } from './PageContentFallback';
@@ -69,7 +69,7 @@ export default function TermsPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
+        jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <LegalFrame
@@ -80,92 +80,102 @@ export default function TermsPage() {
         lede={c.hero.lede}
       >
 
-        <Section title={c.whoWeAre.title}>
-          <p>{c.whoWeAre.lead}</p>
-        </Section>
-
-        <Section title={c.free.title}>
-          <p>{c.free.intro}</p>
-          <ul className="legal-list">
-            {c.free.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title={c.conduct.title}>
-          <p>{c.conduct.intro}</p>
-          <ul className="legal-list">
-            {c.conduct.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-          </ul>
-          <p>{c.conduct.closer}</p>
-        </Section>
-
-        <Section title={c.account.title}>
-          <p>{c.account.intro}</p>
-          <ul className="legal-list">
-            {c.account.items.map((item, i) => (
-              <li key={i}>
-                <strong>{item.bold}</strong>{item.rest}
-              </li>
-            ))}
-            <li>
-              <strong>{c.account.deletionItem.bold}</strong>
-              {c.account.deletionItem.lead}
-              <a href="/privacy">
-                {c.account.deletionItem.linkLabel}
-              </a>
-              {c.account.deletionItem.tail}
-            </li>
-          </ul>
-        </Section>
-
-        <Section title={c.userContent.title}>
-          <p>
-            {c.userContent.lead}
-            <a href="/privacy">
-              {c.userContent.linkLabel}
-            </a>
-            {c.userContent.tail}
-          </p>
-        </Section>
-
-        <Section title={c.warranties.title}>
-          <p>
-            {c.warranties.lead}
-            <strong>{c.warranties.asIs}</strong>
-            {c.warranties.mid}
-            <strong>{c.warranties.asAvailable}</strong>
-            {c.warranties.tail}
-          </p>
-        </Section>
-
-        <Section title={c.liability.title}>
-          <p>{c.liability.body}</p>
-        </Section>
-
-        <Section title={c.ebu.title}>
-          <div className="card-hero card-pad legal-card">
-            <h3 className="t-h3">{c.ebu.cardTitle}</h3>
-            <p className="t-small">
-              {c.ebu.body}
-              <strong>{c.ebu.bodyBold}</strong>
-              {c.ebu.bodyTail}
-            </p>
-          </div>
-        </Section>
-
-        <Section title={c.changes.title}>
-          <p>{c.changes.body}</p>
-        </Section>
-
-        <ExtraBlocks value={c.extraBlocks} />
+        {pageSections(c.layout, {
+            whoWeAre: () => (
+              <Section cms="whoWeAre.title" title={c.whoWeAre.title}>
+                <p>{c.whoWeAre.lead}</p>
+              </Section>
+            ),
+            free: () => (
+              <Section cms="free.title" title={c.free.title}>
+                <p>{c.free.intro}</p>
+                <ul className="legal-list">
+                  {c.free.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            ),
+            conduct: () => (
+              <Section cms="conduct.title" title={c.conduct.title}>
+                <p>{c.conduct.intro}</p>
+                <ul className="legal-list">
+                  {c.conduct.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                </ul>
+                <p>{c.conduct.closer}</p>
+              </Section>
+            ),
+            account: () => (
+              <Section cms="account.title" title={c.account.title}>
+                <p>{c.account.intro}</p>
+                <ul className="legal-list">
+                  {c.account.items.map((item, i) => (
+                    <li key={i}>
+                      <strong>{item.bold}</strong>{item.rest}
+                    </li>
+                  ))}
+                  <li>
+                    <strong>{c.account.deletionItem.bold}</strong>
+                    {c.account.deletionItem.lead}
+                    <a href="/privacy">
+                      {c.account.deletionItem.linkLabel}
+                    </a>
+                    {c.account.deletionItem.tail}
+                  </li>
+                </ul>
+              </Section>
+            ),
+            userContent: () => (
+              <Section cms="userContent.title" title={c.userContent.title}>
+                <p>
+                  {c.userContent.lead}
+                  <a href="/privacy">
+                    {c.userContent.linkLabel}
+                  </a>
+                  {c.userContent.tail}
+                </p>
+              </Section>
+            ),
+            warranties: () => (
+              <Section cms="warranties.title" title={c.warranties.title}>
+                <p>
+                  {c.warranties.lead}
+                  <strong>{c.warranties.asIs}</strong>
+                  {c.warranties.mid}
+                  <strong>{c.warranties.asAvailable}</strong>
+                  {c.warranties.tail}
+                </p>
+              </Section>
+            ),
+            liability: () => (
+              <Section cms="liability.title" title={c.liability.title}>
+                <p>{c.liability.body}</p>
+              </Section>
+            ),
+            ebu: () => (
+              <Section cms="ebu.title" title={c.ebu.title}>
+                <div className="card-hero card-pad legal-card">
+                  <h3 className="t-h3">{c.ebu.cardTitle}</h3>
+                  <p className="t-small">
+                    {c.ebu.body}
+                    <strong>{c.ebu.bodyBold}</strong>
+                    {c.ebu.bodyTail}
+                  </p>
+                </div>
+              </Section>
+            ),
+            changes: () => (
+              <Section cms="changes.title" title={c.changes.title}>
+                <p>{c.changes.body}</p>
+              </Section>
+            ),
+        })}
 
         <RelatedCards items={c.related} />
       </LegalFrame>

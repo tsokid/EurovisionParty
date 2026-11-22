@@ -1,6 +1,6 @@
 // Building blocks shared by the static-page schemas. Each mirrors a small
 // interface that the former src/pages/seo/content/*Copy.ts files repeated.
-import { blocks, group, href as hrefField, list, optional, text, tuple, type GroupFieldOptions, type StringFieldOptions } from '../fields.ts';
+import { blocks, group, href as hrefField, layout, list, optional, text, tuple, type GroupFieldOptions, type LayoutSection, type StringFieldOptions } from '../fields.ts';
 
 /** An internal path such as `/faq`: the same in every locale. */
 export const href = () => hrefField({ help: 'Internal path (/faq) or https:// URL (same in both languages)' });
@@ -32,6 +32,17 @@ export const metaDescription = (opts: StringFieldOptions = {}) =>
 export const extraBlocks = optional(blocks({
   label: 'Extra blocks',
   help: 'Shown near the end of the page, before the related links. Leave empty for none.',
+}));
+
+/**
+ * The body of a section-based page (CMS P6, Q4 = B): its own sections and
+ * blocks between them, reordered, added, duplicated and removed by editors
+ * (fields.ts layout()). Absent from the committed docs: a page without it
+ * renders its sections in the order listed here, exactly as before.
+ */
+export const pageLayout = (sections: LayoutSection[]) => optional(layout(sections, {
+  label: 'Page sections',
+  help: 'The order of the sections on the page, with blocks between them. The title, breadcrumbs and meta stay where they are.',
 }));
 
 /** A related-page card: internal path, card title and one-line blurb. */
