@@ -152,7 +152,7 @@ begin
   res := public.submit_duel_answers('30000000-0000-4000-8000-000000000083', 'aaaaaaaa-0000-4000-8000-0000000000a3',
     ans, 999, array[2100, 400, 11999]);
   perform pg_temp.expect(res ->> 'score', '23', 'duel A: (12−2) + (12−0) + (12−11) = 23');
-  perform pg_temp.expect(res ->> 'status', 'completed', 'duel A: status while B has not answered');
+  perform pg_temp.expect(res ->> 'status', 'answering', 'duel A: status while B has not answered (084: as stored)');
   perform pg_temp.expect(res ->> 'opponent_answered', 'false', 'duel A: B not answered yet');
 end $$;
 

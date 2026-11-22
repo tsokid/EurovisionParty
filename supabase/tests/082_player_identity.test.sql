@@ -15,12 +15,14 @@
 --   B  other member of R1                               (player pB)
 --   C  non-member of R1, host of R2 (already final)     (player pC)
 --   D  joins R1 only after it reached 'final'           (player pD)
+--   E  like D, but inserts its own row with a backdated joined_at (pE)
 
 begin;
 
 -- Supabase grants table privileges to `authenticated` by default; a bare
 -- Postgres does not. Rolled back with the rest.
 grant select on public.players, public.rooms to authenticated;
+grant insert on public.players to authenticated;
 
 -- expect_rows(sql, n, label): the query, run as the current role, must
 -- return exactly n rows.
@@ -52,7 +54,8 @@ insert into auth.users (id) values
   ('a0000000-0000-4000-8000-00000000000a'),
   ('b0000000-0000-4000-8000-00000000000b'),
   ('c0000000-0000-4000-8000-00000000000c'),
-  ('d0000000-0000-4000-8000-00000000000d');
+  ('d0000000-0000-4000-8000-00000000000d'),
+  ('e0000000-0000-4000-8000-00000000000e');
 
 insert into public.rooms (id, code, host_id, host_name, phase, phase_updated_at) values
   ('10000000-0000-4000-8000-000000000001', 'RLS082', 'a0000000-0000-4000-8000-00000000000a', 'Ντίσκο', 'predictions_open', now() - interval '3 hours'),
@@ -125,6 +128,16 @@ select pg_temp.expect_rows($q$select 1 from public.player_secrets where player_i
 select set_config('request.jwt.claims', '{"sub":"d0000000-0000-4000-8000-00000000000d"}', true);
 select pg_temp.expect_rows($q$select 1 from public.player_secrets where player_id in ('aaaaaaaa-0000-4000-8000-00000000000a', 'bbbbbbbb-0000-4000-8000-00000000000b')$q$, 0,
   'late joiner D reads R1 at final');
+
+-- E joins after the end as a client and backdates joined_at to pass the
+-- member arm. 084 forces joined_at = now() on a client insert.
+select set_config('request.jwt.claims', '{"sub":"e0000000-0000-4000-8000-00000000000e"}', true);
+insert into public.players (id, room_id, user_id, name, joined_at, is_active) values
+  ('eeeeeeee-0000-4000-8000-00000000000e', '10000000-0000-4000-8000-000000000001', 'e0000000-0000-4000-8000-00000000000e', 'Πίσω', '2000-01-01', true);
+select pg_temp.expect_rows($q$select 1 from public.players where id = 'eeeeeeee-0000-4000-8000-00000000000e' and joined_at = now()$q$, 1,
+  'E''s backdated joined_at was replaced by now()');
+select pg_temp.expect_rows($q$select 1 from public.player_secrets where player_id in ('aaaaaaaa-0000-4000-8000-00000000000a', 'bbbbbbbb-0000-4000-8000-00000000000b')$q$, 0,
+  'late joiner E with a backdated joined_at reads R1 at final');
 
 -- ── anon has no access at all ───────────────────────────────────────────
 reset role;
