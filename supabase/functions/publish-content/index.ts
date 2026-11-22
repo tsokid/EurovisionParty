@@ -7,7 +7,9 @@
 // commits the media those drafts reference (Storage bucket cms-media) to
 // public/media/<sha12>.<ext> with the references rewritten to /media/...,
 // regenerates the archived-year redirects in vercel.json, and commits it all
-// to GITHUB_BRANCH of GITHUB_REPO as one commit (Git Data API). Files are
+// to GITHUB_BRANCH of GITHUB_REPO as one commit (Git Data API), with the
+// commit's SEO intent appended to seo-intent.json for the build's SEO guard
+// (_shared/cms/seoIntent.ts). Files are
 // added or updated, never deleted. After a successful CMS publish the media
 // rows are marked published and cms-media objects with no cms_media row,
 // older than a day, are deleted from Storage.
@@ -138,7 +140,7 @@ Deno.serve(async (req) => {
       },
       readCommittedPages: async () =>
         pagesFromFiles(await readFiles({ ...github, match: (path) => path.startsWith("content/pages/") })),
-      commitFiles: (files, message, transforms, limits) => commitFiles({ ...github, files, message, transforms, ...limits }),
+      commitFiles: (files, message, transforms, limits, derived) => commitFiles({ ...github, files, message, transforms, derived, ...limits }),
       media: {
         async download(storagePath) {
           const { data, error } = await service.storage.from(BUCKET).download(storagePath);

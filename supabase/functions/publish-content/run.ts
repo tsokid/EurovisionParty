@@ -7,6 +7,9 @@
 // refuses the whole publish) + vercel.json (merged against the commit's
 // parent tree, so a push in between is never reverted) → one commit →
 // end_publish. CMS warnings never block; they come back as `warnings`.
+// The same commit appends this publish's SEO intent to seo-intent.json
+// (_shared/cms/seoIntent.ts): the docs and contest data it changes, with
+// the hard SEO fields each may change, for the build's SEO guard.
 //
 // CMS drafts (I3): publish_input returns only the drafts saved since the
 // last publish that shipped CMS drafts, so a published draft is never
@@ -34,7 +37,8 @@ import { buildSnapshotFiles, type SnapshotInput } from './snapshot.ts';
 import { cmsFiles, CmsValidationError, type CmsIssue } from './cmsFiles.ts';
 import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
 import { draftRefsLeft, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
-import type { CommitResult, FileTransforms } from './github.ts';
+import type { CommitResult, DerivedFiles, FileTransforms } from './github.ts';
+import { appendIntent, buildIntentEntry, SEO_INTENT_FILE } from '../_shared/cms/seoIntent.ts';
 
 export type EndPublishArgs = {
   id: number;
@@ -64,12 +68,15 @@ export type PublishDeps = {
    * commit. Each transform gets its path's content in the commit's parent
    * tree and returns the new text. Refuses, writing nothing, when the binary
    * files new to the tree total more than limits.maxNewBinaryBytes.
+   * `derived` files (seo-intent.json) are computed from the changed paths
+   * and added only when something else changed (github.ts).
    */
   commitFiles(
     files: Record<string, string | Uint8Array>,
     message: (changedPaths: string[]) => string,
     transforms: FileTransforms,
     limits: { maxNewBinaryBytes: number },
+    derived?: DerivedFiles,
   ): Promise<CommitResult>;
   /** CMS media: Storage (bucket cms-media, service role) and cms_media. */
   media: StorageSweepDeps & {
@@ -163,12 +170,20 @@ export async function runPublish(deps: PublishDeps, { cms }: PublishOptions = { 
     const left = draftRefsLeft(files);
     if (left.length) throw new MediaError(left);
     const redirects = generatedRedirects(input.contests);
+    const shipped = Object.fromEntries((media.rewritten ? media.drafts : drafts).map((d) => [d.doc_id, d.data]));
+    const createdAt = (deps.now ?? (() => new Date()))().toISOString();
     result = await deps.commitFiles(files, commitMessage, {
       'vercel.json': (current) => {
         if (current === null) throw new Error('vercel.json is missing from the branch');
         return mergeVercelRedirects(current, redirects);
       },
-    }, { maxNewBinaryBytes: MEDIA_MAX_NEW_BYTES });
+    }, { maxNewBinaryBytes: MEDIA_MAX_NEW_BYTES }, {
+      // The SEO intent of this commit (spec §6): what the build's SEO guard may see change.
+      [SEO_INTENT_FILE]: (current, changedPaths) => {
+        const entry = buildIntentEntry({ id: `publish-${id}`, createdAt, changedPaths, drafts: shipped, committed });
+        return entry ? appendIntent(current, entry) : null;
+      },
+    });
   } catch (e) {
     if (e instanceof CmsValidationError && e.warnings.length) found = { warnings: e.warnings };
     const error = message(e);

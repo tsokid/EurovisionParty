@@ -41,6 +41,14 @@ export type CommitFilesOpts = GitHubOpts & {
    * already in the tree with the same content do not count; text never does.
    */
   maxNewBinaryBytes?: number;
+  /**
+   * Text files derived from the commit itself, computed only once something
+   * else changed: each gets its path's text in the parent tree (null if
+   * absent) and the other changed paths (sorted), and returns the new text
+   * or null to leave the file alone. publish-content writes seo-intent.json
+   * with it. A derived file alone never makes a commit.
+   */
+  derived?: DerivedFiles;
 };
 
 /** The refusal when a publish would add more new media than allowed (also checked before downloading). */
@@ -48,6 +56,8 @@ export const tooMuchNewMedia = (added: number, max: number) =>
   `Publish would add ${added} bytes of new media (max ${max}); publish fewer media at a time`;
 
 export type FileTransforms = Record<string, (current: string | null) => string>;
+
+export type DerivedFiles = Record<string, (current: string | null, changedPaths: string[]) => string | null>;
 
 export type CommitResult = {
   /** The new commit, or null when nothing changed. */
@@ -159,6 +169,16 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
     changed.push({ path, content, mode: prev?.mode ?? '100644' });
   }
   if (changed.length === 0) return { sha: null, changed: 0, paths: [] };
+
+  const contentPaths = changed.map((f) => f.path);
+  for (const [path, derive] of Object.entries(opts.derived ?? {})) {
+    if (path in files) throw new Error(`derived file ${path} is also a committed file`);
+    const prev = existing.get(path);
+    const text = derive(prev ? await readBlob(call, repo, prev.sha) : null, contentPaths);
+    if (text === null || (prev && prev.sha === (await gitBlobSha(text)))) continue;
+    changed.push({ path, content: text, mode: prev?.mode ?? '100644' });
+  }
+  changed.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
 
   if (opts.maxNewBinaryBytes !== undefined) {
     const added = changed.reduce((n, f) => n + (typeof f.content === 'string' ? 0 : f.content.byteLength), 0);
