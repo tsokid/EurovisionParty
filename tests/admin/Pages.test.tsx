@@ -251,9 +251,9 @@ describe('Pages module: editor', () => {
 
   it('Extra blocks: + Add, a FAQ block; the autosave keeps extraBlocks in both languages', async () => {
     await openEditor();
-    fireEvent.click(screen.getByRole('button', { name: 'Add Extra blocks' }));
-    fireEvent.change(screen.getByRole('combobox', { name: 'Block type for Extra blocks' }), { target: { value: 'faq' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Add block to Extra blocks' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη: Extra blocks' }));
+    fireEvent.change(screen.getByRole('combobox', { name: 'Τύπος ενότητας: Extra blocks' }), { target: { value: 'faq' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη ενότητας: Extra blocks' }));
     await waitFor(() => expect(saves()).toHaveLength(1), { timeout: 4000 });
     const data = saves()[0].p_data;
     expect(data.en.extraBlocks).toEqual([{ type: 'faq', items: [] }]);

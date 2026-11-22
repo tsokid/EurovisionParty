@@ -9,12 +9,13 @@ import { childLabel, joinName, joinPath, schemaInfo } from '../formModel';
 import { Field, type FieldProps } from './Field';
 import { IssueList } from './IssueList';
 import { FIELDSET, HELP, LEGEND } from './styles';
+import { t } from '../../../../i18n';
 
 const at = (v: unknown, key: string | number) => (v && typeof v === 'object' ? (v as Record<string | number, unknown>)[key] : undefined);
 
 const isBlank = (v: unknown) => typeof v !== 'string' || v.trim() === '';
 
-export const POSTER_REQUIRED_TEXT = 'A poster image is required: it shows until the video plays.';
+export const POSTER_REQUIRED_TEXT: string = t.form.poster;
 
 export function GroupField({ schema, segments, path, name, label, en, el, hasEn, hasEl, shared, bare }: FieldProps) {
   const issues = useIssues(path);

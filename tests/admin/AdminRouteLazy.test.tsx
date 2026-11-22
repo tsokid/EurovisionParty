@@ -17,6 +17,6 @@ describe('/admin lazy route', () => {
   it('renders the admin through lazy + Suspense', async () => {
     const router = createMemoryRouter(routes, { initialEntries: ['/admin'] });
     render(<RouterProvider router={router} />);
-    expect(await screen.findByText('Admin access', {}, { timeout: 5000 })).toBeTruthy();
+    expect(await screen.findByText('Πρόσβαση διαχείρισης', {}, { timeout: 5000 })).toBeTruthy();
   });
 });

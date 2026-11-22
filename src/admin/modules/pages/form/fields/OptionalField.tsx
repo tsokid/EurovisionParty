@@ -8,6 +8,7 @@ import { editLocales, getIn, LOCALES, removeIn, schemaInfo, setIn } from '../for
 import { Field, type FieldProps } from './Field';
 import { IssueList } from './IssueList';
 import { FIELD_LABEL, SMALL_BUTTON } from './styles';
+import { t } from '../../../../i18n';
 
 export function OptionalField(props: FieldProps) {
   const { schema, segments, path, name, label, en, el, hasEn, hasEl } = props;
@@ -26,8 +27,8 @@ export function OptionalField(props: FieldProps) {
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           {!props.bare && <span className={FIELD_LABEL}>{label}</span>}
-          <span className="text-xs text-white/40">(optional, not set)</span>
-          <button type="button" aria-label={`Add ${name}`} onClick={add} className={SMALL_BUTTON}>+ Add</button>
+          <span className="text-xs text-white/40">{t.form.optionalUnset}</span>
+          <button type="button" aria-label={t.form.addOf(name)} onClick={add} className={SMALL_BUTTON}>{t.form.add}</button>
         </div>
         <IssueList issues={issues} withLocale />
       </div>
@@ -36,8 +37,8 @@ export function OptionalField(props: FieldProps) {
   return (
     <div className="space-y-1">
       <Field {...props} schema={inner} />
-      <button type="button" aria-label={`Remove ${name}`} onClick={remove} className={`${SMALL_BUTTON} text-red-300`}>
-        Remove {label.toLowerCase()}
+      <button type="button" aria-label={t.form.removeOf(name)} onClick={remove} className={`${SMALL_BUTTON} text-red-300`}>
+        {t.form.removeLabel(label)}
       </button>
     </div>
   );

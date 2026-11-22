@@ -15,15 +15,9 @@ import type { z } from 'zod';
 import { Field, type FieldProps } from './Field';
 import { IssueList } from './IssueList';
 import { FIELDSET, HELP, INPUT, LEGEND, SMALL_BUTTON } from './styles';
+import { t } from '../../../../i18n';
 
-const TYPE_LABEL: Record<string, string> = {
-  text: 'Text',
-  image: 'Image',
-  video: 'Video',
-  callout: 'Callout',
-  faq: 'FAQ',
-  cta: 'Call to action',
-};
+const TYPE_LABEL: Record<string, string> = t.form.blockTypes;
 
 const blockTypeLabel = (type: string) => TYPE_LABEL[type] ?? humanize(type);
 
@@ -69,14 +63,14 @@ export function BlocksField({ schema, segments, path, name, label, en, el, hasEn
           onRemove={() => change((arr) => arr.filter((_, n) => n !== i))}
         />
       ))}
-      {count === 0 && <p className="text-xs text-white/40">No blocks yet.</p>}
+      {count === 0 && <p className="text-xs text-white/40">{t.form.noBlocks}</p>}
       <div className="flex flex-wrap items-center gap-2">
-        <select aria-label={`Block type for ${name}`} value={pick} onChange={(e) => setPick(e.target.value)} className={`${INPUT} w-auto`}>
-          {types.map((t) => (
-            <option key={t} value={t} className="bg-[#1a0a2e]">{blockTypeLabel(t)}</option>
+        <select aria-label={t.form.blockTypeFor(name)} value={pick} onChange={(e) => setPick(e.target.value)} className={`${INPUT} w-auto`}>
+          {types.map((ty) => (
+            <option key={ty} value={ty} className="bg-[#1a0a2e]">{blockTypeLabel(ty)}</option>
           ))}
         </select>
-        <button type="button" aria-label={`Add block to ${name}`} onClick={() => add(pick)} className={SMALL_BUTTON}>+ Add block</button>
+        <button type="button" aria-label={t.form.addBlockTo(name)} onClick={() => add(pick)} className={SMALL_BUTTON}>{t.form.addBlock}</button>
       </div>
     </>
   );
@@ -111,31 +105,31 @@ function BlockItem({ index: i, count, variants, discriminator, segments, path, n
   const issues = useIssues(itemPath);
   const typeIssues = useIssues(joinPath(itemPath, discriminator));
   const typeOf = (v: unknown, has: boolean) => {
-    const t = has ? at(v, discriminator) : undefined;
-    return typeof t === 'string' ? t : undefined;
+    const ty = has ? at(v, discriminator) : undefined;
+    return typeof ty === 'string' ? ty : undefined;
   };
   const tEn = typeOf(en, hasEn);
   const tEl = typeOf(el, hasEl);
   const type = tEn ?? tEl;
   const variant = type !== undefined && Object.prototype.hasOwnProperty.call(variants, type) ? variants[type] : undefined;
   const mismatch = tEn !== undefined && tEl !== undefined && tEn !== tEl;
-  const itemName = joinName(name, `Block ${i + 1}`);
-  const title = type === undefined ? 'No type' : blockTypeLabel(type);
+  const itemName = joinName(name, t.form.block(i + 1));
+  const title = type === undefined ? t.form.noType : blockTypeLabel(type);
 
   return (
     <fieldset className="rounded border border-white/10 p-2 space-y-2">
-      <legend className="px-1 text-xs text-white/60">{`Block ${i + 1}: ${title}`}</legend>
+      <legend className="px-1 text-xs text-white/60">{t.form.blockTitle(i + 1, title)}</legend>
       <div className="flex items-center gap-1">
-        <button type="button" aria-label={`Move ${itemName} up`} disabled={i === 0} onClick={() => onMove(i - 1)} className={SMALL_BUTTON}>↑</button>
-        <button type="button" aria-label={`Move ${itemName} down`} disabled={i >= count - 1} onClick={() => onMove(i + 1)} className={SMALL_BUTTON}>↓</button>
-        <button type="button" aria-label={`Remove ${itemName}`} onClick={onRemove} className={`${SMALL_BUTTON} text-red-300`}>Remove</button>
+        <button type="button" aria-label={t.form.moveUp(itemName)} disabled={i === 0} onClick={() => onMove(i - 1)} className={SMALL_BUTTON}>↑</button>
+        <button type="button" aria-label={t.form.moveDown(itemName)} disabled={i >= count - 1} onClick={() => onMove(i + 1)} className={SMALL_BUTTON}>↓</button>
+        <button type="button" aria-label={t.form.removeOf(itemName)} onClick={onRemove} className={`${SMALL_BUTTON} text-red-300`}>{t.form.remove}</button>
       </div>
       {mismatch && (
         <p role="alert" className="text-xs text-red-300">
-          {`EN is a ${blockTypeLabel(tEn)} block, EL a ${blockTypeLabel(tEl)} block: remove this block and add it again`}
+          {t.form.mismatch(blockTypeLabel(tEn), blockTypeLabel(tEl))}
         </p>
       )}
-      {!variant && <p role="alert" className="text-xs text-red-300">Unknown block type: remove this block</p>}
+      {!variant && <p role="alert" className="text-xs text-red-300">{t.form.unknownType}</p>}
       <IssueList issues={issues} withLocale />
       <IssueList issues={typeIssues} withLocale />
       {variant && schemaInfo(variant).children

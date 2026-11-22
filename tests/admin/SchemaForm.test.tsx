@@ -106,7 +106,7 @@ describe('SchemaForm: string kinds', () => {
 
   it('edits a shared href once, for both locales', () => {
     const f = setup({ schema, initial });
-    expect(screen.queryByLabelText('Link (EN)')).toBeNull();
+    expect(screen.queryByLabelText('Σύνδεσμος (EN)')).toBeNull();
     type('Link (EN + EL)', '/rules');
     expect(f.value().en).toMatchObject({ link: '/rules' });
     expect(f.value().el).toMatchObject({ link: '/rules' });
@@ -126,7 +126,7 @@ describe('SchemaForm: string kinds', () => {
     const ta = screen.getByLabelText('Rest (EN)');
     expect(ta.tagName).toBe('TEXTAREA');
     expect(ta.className).toContain('font-mono');
-    expect(screen.getAllByText('Allowed: <strong>, <em>, <b>, <i>, <br>, <a href="/…">').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Επιτρέπονται: <strong>, <em>, <b>, <i>, <br>, <a href="/…">').length).toBeGreaterThan(0);
   });
 });
 
@@ -153,9 +153,9 @@ describe('SchemaForm: choice, flag, tuple, group, optional', () => {
   it('a tuple renders fixed rows with no add or remove', () => {
     const s = group({ headers: tuple([text(), text()]) });
     const f = setup({ schema: s, initial: { en: { headers: ['A', 'B'] }, el: { headers: ['Α', 'Β'] } } });
-    expect(screen.getByLabelText('Headers › Item 2 (EL)')).toHaveValue('Β');
+    expect(screen.getByLabelText('Headers › Στοιχείο 2 (EL)')).toHaveValue('Β');
     expect(screen.queryByRole('button', { name: /add|remove/i })).toBeNull();
-    type('Headers › Item 1 (EN)', 'Z');
+    type('Headers › Στοιχείο 1 (EN)', 'Z');
     expect(f.value().en).toEqual({ headers: ['Z', 'B'] });
     f.assertImmutable();
   });
@@ -172,10 +172,10 @@ describe('SchemaForm: choice, flag, tuple, group, optional', () => {
     const s = group({ title: text(), linkLabel: optional(text()) });
     const f = setup({ schema: s, initial: { en: { title: 't' }, el: { title: 'τ' } } });
     expect(screen.queryByLabelText('Link label (EN)')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: 'Add Link label' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη: Link label' }));
     expect(f.value()).toEqual({ en: { title: 't', linkLabel: '' }, el: { title: 'τ', linkLabel: '' } });
     type('Link label (EL)', 'σύνδεσμος');
-    fireEvent.click(screen.getByRole('button', { name: 'Remove Link label' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Αφαίρεση: Link label' }));
     expect(f.value()).toEqual({ en: { title: 't' }, el: { title: 'τ' } });
     expect('linkLabel' in (f.value().en as object)).toBe(false);
     f.assertImmutable();
@@ -184,7 +184,7 @@ describe('SchemaForm: choice, flag, tuple, group, optional', () => {
   it('an optional group is added with its empty value', () => {
     const s = group({ link: optional(group({ before: text(), label: text() })) });
     const f = setup({ schema: s, initial: { en: {}, el: {} } });
-    fireEvent.click(screen.getByRole('button', { name: 'Add Link' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη: Link' }));
     expect(f.value()).toEqual({ en: { link: { before: '', label: '' } }, el: { link: { before: '', label: '' } } });
     expect(screen.getByLabelText('Link › Label (EN)')).toHaveValue('');
   });
@@ -204,13 +204,13 @@ describe('SchemaForm: lists', () => {
 
   it('labels items "Item n" under the list label', () => {
     setup({ schema: anchored, initial });
-    expect(screen.getByLabelText('FAQ › Item 2 › Question (EL)')).toHaveValue('Σ?');
-    expect(screen.getByLabelText('FAQ › Item 1 › Id (EN + EL)')).toHaveValue('create');
+    expect(screen.getByLabelText('FAQ › Στοιχείο 2 › Question (EL)')).toHaveValue('Σ?');
+    expect(screen.getByLabelText('FAQ › Στοιχείο 1 › Id (EN + EL)')).toHaveValue('create');
   });
 
   it('shared list: add appends the empty item to both locales', () => {
     const f = setup({ schema: anchored, initial });
-    fireEvent.click(screen.getByRole('button', { name: 'Add item to FAQ' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη στοιχείου: FAQ' }));
     expect(qs(f.value(), 'en')).toEqual(['C?', 'J?', '']);
     expect(qs(f.value(), 'el')).toEqual(['Δ?', 'Σ?', '']);
     expect(ids(f.value(), 'en')).toEqual(['create', 'join', 'create']);
@@ -220,13 +220,13 @@ describe('SchemaForm: lists', () => {
 
   it('shared list: remove and reorder apply to both locales at the same index', () => {
     const f = setup({ schema: anchored, initial });
-    fireEvent.click(screen.getByRole('button', { name: 'Move FAQ › Item 2 up' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Μετακίνηση πάνω: FAQ › Στοιχείο 2' }));
     expect(qs(f.value(), 'en')).toEqual(['J?', 'C?']);
     expect(qs(f.value(), 'el')).toEqual(['Σ?', 'Δ?']);
     expect(ids(f.value(), 'el')).toEqual(['join', 'create']);
-    fireEvent.click(screen.getByRole('button', { name: 'Move FAQ › Item 1 down' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Μετακίνηση κάτω: FAQ › Στοιχείο 1' }));
     expect(qs(f.value(), 'el')).toEqual(['Δ?', 'Σ?']);
-    fireEvent.click(screen.getByRole('button', { name: 'Remove FAQ › Item 1' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Αφαίρεση: FAQ › Στοιχείο 1' }));
     expect(qs(f.value(), 'en')).toEqual(['J?']);
     expect(qs(f.value(), 'el')).toEqual(['Σ?']);
     expect(ids(f.value(), 'en')).toEqual(['join']);
@@ -236,20 +236,20 @@ describe('SchemaForm: lists', () => {
 
   it('shared list: the first item cannot move up, the last cannot move down', () => {
     setup({ schema: anchored, initial });
-    expect(screen.getByRole('button', { name: 'Move FAQ › Item 1 up' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Move FAQ › Item 2 down' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Μετακίνηση πάνω: FAQ › Στοιχείο 1' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Μετακίνηση κάτω: FAQ › Στοιχείο 2' })).toBeDisabled();
   });
 
   it('free list (no shared fields): each locale is edited on its own', () => {
     const s = group({ keywords: list(text()) });
     const f = setup({ schema: s, initial: { en: { keywords: ['a', 'b'] }, el: { keywords: ['α'] } } });
-    expect(screen.getByLabelText('Keywords › Item 2 (EN)')).toHaveValue('b');
-    expect(screen.queryByLabelText('Keywords › Item 2 (EL)')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: 'Add item to Keywords (EL)' }));
+    expect(screen.getByLabelText('Keywords › Στοιχείο 2 (EN)')).toHaveValue('b');
+    expect(screen.queryByLabelText('Keywords › Στοιχείο 2 (EL)')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη στοιχείου: Keywords (EL)' }));
     expect(f.value()).toEqual({ en: { keywords: ['a', 'b'] }, el: { keywords: ['α', ''] } });
-    fireEvent.click(screen.getByRole('button', { name: 'Move Keywords › Item 2 (EN) up' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Μετακίνηση πάνω: Keywords › Στοιχείο 2 (EN)' }));
     expect(f.value()).toEqual({ en: { keywords: ['b', 'a'] }, el: { keywords: ['α', ''] } });
-    fireEvent.click(screen.getByRole('button', { name: 'Remove Keywords › Item 1 (EL)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Αφαίρεση: Keywords › Στοιχείο 1 (EL)' }));
     expect(f.value()).toEqual({ en: { keywords: ['b', 'a'] }, el: { keywords: [''] } });
     f.assertImmutable();
   });
@@ -257,9 +257,9 @@ describe('SchemaForm: lists', () => {
   it('a list of tuples (table rows) adds a row of empties', () => {
     const s = group({ rows: list(tuple([text(), text()])) });
     const f = setup({ schema: s, initial: { en: { rows: [] }, el: { rows: [] } } });
-    fireEvent.click(screen.getByRole('button', { name: 'Add item to Rows (EN)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη στοιχείου: Rows (EN)' }));
     expect(f.value().en).toEqual({ rows: [['', '']] });
-    expect(screen.getByLabelText('Rows › Item 1 › Item 2 (EN)')).toHaveValue('');
+    expect(screen.getByLabelText('Rows › Στοιχείο 1 › Στοιχείο 2 (EN)')).toHaveValue('');
   });
 });
 
@@ -269,7 +269,7 @@ describe('SchemaForm: counters', () => {
   it('counts characters against the soft limit', () => {
     setup({ schema: s, initial: { en: { title: 'Short' }, el: { title: 'Μικρό' } } });
     expect(screen.getAllByText('5 / 10')).toHaveLength(2);
-    expect(screen.queryByText('Search engines may cut this off')).toBeNull();
+    expect(screen.queryByText('Οι μηχανές αναζήτησης ίσως το κόψουν')).toBeNull();
   });
 
   it('turns amber above the soft limit, without blocking the input', () => {
@@ -277,7 +277,7 @@ describe('SchemaForm: counters', () => {
     type('SEO title (EN)', 'Much too long a title');
     const counter = screen.getByText('21 / 10');
     expect(counter.className).toContain('amber');
-    expect(screen.getByText('Search engines may cut this off')).toBeInTheDocument();
+    expect(screen.getByText('Οι μηχανές αναζήτησης ίσως το κόψουν')).toBeInTheDocument();
     expect(screen.getByLabelText('SEO title (EN)')).not.toBeDisabled();
     expect(screen.getByLabelText('SEO title (EN)')).not.toHaveAttribute('maxLength');
     type('SEO title (EN)', 'Even longer than that one');
@@ -312,17 +312,17 @@ describe('SchemaForm: placeholder chips', () => {
 
   it('shows one chip per placeholder, with its help as the title', () => {
     setup({ schema: s, initial: { en: { title: '' }, el: { title: '' } } });
-    const chips = screen.getAllByRole('button', { name: 'Insert {year} into Title (EN)' });
+    const chips = screen.getAllByRole('button', { name: 'Εισαγωγή {year} στο Title (EN)' });
     expect(chips).toHaveLength(1);
     expect(chips[0]).toHaveAttribute('title', 'The live contest year, e.g. 2026');
-    expect(screen.getByRole('button', { name: 'Insert {city} into Title (EL)' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Εισαγωγή {city} στο Title (EL)' })).toBeInTheDocument();
   });
 
   it('inserts the placeholder at the cursor', () => {
     const f = setup({ schema: s, initial: { en: { title: 'Eurovision final' }, el: { title: '' } } });
     const input = screen.getByLabelText('Title (EN)') as HTMLInputElement;
     input.setSelectionRange(10, 10);
-    fireEvent.click(screen.getByRole('button', { name: 'Insert {year} into Title (EN)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Εισαγωγή {year} στο Title (EN)' }));
     expect(f.value().en).toEqual({ title: 'Eurovision{year} final' });
     expect(f.value().el).toEqual({ title: '' });
   });
@@ -331,7 +331,7 @@ describe('SchemaForm: placeholder chips', () => {
     const f = setup({ schema: s, initial: { en: { title: 'In Vienna' }, el: { title: '' } } });
     const input = screen.getByLabelText('Title (EN)') as HTMLInputElement;
     input.setSelectionRange(3, 9);
-    fireEvent.click(screen.getByRole('button', { name: 'Insert {city} into Title (EN)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Εισαγωγή {city} στο Title (EN)' }));
     expect(f.value().en).toEqual({ title: 'In {city}' });
   });
 });
@@ -355,10 +355,10 @@ describe('SchemaForm: errors and warnings', () => {
         { path: 'meta.title', locale: 'el', message: 'Too long: 99 characters, max 60' },
       ],
     });
-    const enA = screen.getByLabelText('FAQ › Item 1 › A (EN)');
+    const enA = screen.getByLabelText('FAQ › Στοιχείο 1 › A (EN)');
     expect(enA).toHaveAttribute('aria-invalid', 'true');
     expect(enA).toHaveAccessibleDescription(/Required: must not be empty/);
-    expect(screen.getByLabelText('FAQ › Item 1 › A (EL)')).not.toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText('FAQ › Στοιχείο 1 › A (EL)')).not.toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByLabelText('Page meta (SEO) › Title (EL)')).toHaveAccessibleDescription(/Too long/);
     expect(screen.getByLabelText('Page meta (SEO) › Title (EN)')).not.toHaveAccessibleDescription(/Too long/);
   });
@@ -395,7 +395,7 @@ describe('SchemaForm: performance', () => {
     const before = new Map(renders);
     expect(before.get('b')).toBeGreaterThan(0);
     type('A (EN)', 'xx');
-    type('Items › Item 1 › Q (EL)', 'αα');
+    type('Items › Στοιχείο 1 › Q (EL)', 'αα');
     expect(renders.get('a')).toBeGreaterThan(before.get('a')!);
     expect(renders.get('items.0.q')).toBeGreaterThan(before.get('items.0.q')!);
     expect(renders.get('b')).toBe(before.get('b'));

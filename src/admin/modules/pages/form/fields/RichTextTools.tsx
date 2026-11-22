@@ -8,19 +8,20 @@ import { DetachedMemoryRouter } from '../../DetachedMemoryRouter';
 import type { Locale } from '../formModel';
 import type { MarkdownAction } from './markdownToolbar';
 import { SMALL_BUTTON } from './styles';
+import { t as tr } from '../../../../i18n';
 
 const TOOLS: { action: MarkdownAction; label: string; text: string; className?: string }[] = [
-  { action: 'bold', label: 'Bold', text: 'B', className: 'font-bold' },
-  { action: 'italic', label: 'Italic', text: 'I', className: 'italic' },
-  { action: 'link', label: 'Link', text: 'Link' },
-  { action: 'list', label: 'List', text: '• List' },
-  { action: 'heading', label: 'Heading', text: 'Heading' },
+  { action: 'bold', label: tr.form.md.bold, text: tr.form.mdText.bold, className: 'font-bold' },
+  { action: 'italic', label: tr.form.md.italic, text: tr.form.mdText.italic, className: 'italic' },
+  { action: 'link', label: tr.form.md.link, text: tr.form.mdText.link },
+  { action: 'list', label: tr.form.md.list, text: tr.form.mdText.list },
+  { action: 'heading', label: tr.form.md.heading, text: tr.form.mdText.heading },
 ];
 
 /** `name` is the textarea's accessible name, e.g. "Story (EN)". */
 export function RichTextToolbar({ name, onAction }: { name: string; onAction: (a: MarkdownAction) => void }) {
   return (
-    <div role="toolbar" aria-label={`Formatting for ${name}`} className="flex flex-wrap gap-1">
+    <div role="toolbar" aria-label={`Μορφοποίηση: ${name}`} className="flex flex-wrap gap-1">
       {TOOLS.map((t) => (
         <button
           key={t.action}

@@ -66,7 +66,7 @@ describe('/admin/* access', () => {
   it.each(ADMIN_URLS)('%s renders the noindex meta (and the sign-in when signed out)', async (url) => {
     const router = createMemoryRouter(routes, { initialEntries: [url] });
     render(<RouterProvider router={router} />);
-    expect(await screen.findByText('Admin access', {}, { timeout: 5000 })).toBeTruthy();
+    expect(await screen.findByText('Πρόσβαση διαχείρισης', {}, { timeout: 5000 })).toBeTruthy();
     // Set in an effect, which may land just after the first paint under load.
     await waitFor(() => {
       const metas = [...document.head.querySelectorAll('meta[name="robots"]')] as HTMLMetaElement[];

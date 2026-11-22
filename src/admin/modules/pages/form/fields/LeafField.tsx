@@ -15,8 +15,9 @@ import { IssueList } from './IssueList';
 import { applyMarkdown, type MarkdownAction } from './markdownToolbar';
 import { RichTextPreview, RichTextToolbar } from './RichTextTools';
 import { FIELD_LABEL, HELP, INPUT } from './styles';
+import { t } from '../../../../i18n';
 
-const RAW_HTML_HINT = 'Allowed: <strong>, <em>, <b>, <i>, <br>, <a href="/…">';
+const RAW_HTML_HINT: string = t.form.rawHtml;
 
 const isString = (kind: FieldMeta['kind']) => kind === 'text' || kind === 'multiline' || kind === 'richText' || kind === 'href';
 
@@ -185,7 +186,7 @@ function LocaleControl({ meta, locale, field, name, tag, value, issues, withLoca
             <button
               key={p}
               type="button"
-              aria-label={`Insert {${p}} into ${name}`}
+              aria-label={t.form.insertInto(p, name)}
               title={meta.placeholderHelp?.[p]}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => insert(`{${p}}`)}
@@ -225,7 +226,7 @@ function Counter({ id, text, limit, soft, placeholders, vars }: CounterProps) {
   return (
     <div id={id} className="flex items-center gap-2 text-[11px]">
       <span className={over ? (soft ? 'text-amber-300' : 'text-red-300') : 'text-white/40'}>{`${shown.length} / ${limit}`}</span>
-      {over && soft && <span className="text-amber-300">Search engines may cut this off</span>}
+      {over && soft && <span className="text-amber-300">{t.form.cutOff}</span>}
     </div>
   );
 }

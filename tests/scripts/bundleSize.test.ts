@@ -44,8 +44,8 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
   const entryKey = Object.keys(manifest).find((k) => manifest[k] === entry);
   if (entryKey) walk(entryKey);
   const publicNames = [...publicFiles].map((f) => f.replace(/^assets\//, ''));
-  // Only the admin UI contains this (src/admin/AdminLogin.tsx).
-  const ADMIN_MARKER = 'Admin access';
+  // Only the admin UI contains this (the unsent-draft buffer key, src/admin/cms/draftBuffer.ts).
+  const ADMIN_MARKER = 'cms:unsent:';
   // The page preview (src/admin/modules/pages/PreviewPane.tsx) is admin-only too.
   const PREVIEW_MARKER = 'Preview — links are disabled';
   // The schema form (src/admin/modules/pages/form/fields/LeafField.tsx) is admin-only too.

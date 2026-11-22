@@ -11,6 +11,7 @@ import { asArray, editLocales, joinName, joinPath, LOCALES, moveItem, schemaInfo
 import { Field, type FieldProps } from './Field';
 import { IssueList } from './IssueList';
 import { FIELDSET, HELP, LEGEND, SMALL_BUTTON } from './styles';
+import { t } from '../../../../i18n';
 
 export function ListField({ schema, segments, path, name, label, en, el, hasEn, hasEl, shared, bare }: FieldProps) {
   const { edit } = useFormApi();
@@ -30,14 +31,14 @@ export function ListField({ schema, segments, path, name, label, en, el, hasEn, 
   const move = (locales: readonly Locale[], i: number, to: number) => change(locales, (arr) => moveItem(arr, i, to));
 
   const rows = Array.from({ length: count }, (_, i) => {
-    const itemLabel = `Item ${i + 1}`;
+    const itemLabel = t.form.item(i + 1);
     const itemName = joinName(name, itemLabel);
     const controls = (locales: readonly Locale[], suffix: string, len: number) => (
       <div className="flex items-center gap-1">
         {suffix && <span className="text-[10px] font-bold text-white/40">{suffix.trim().slice(1, -1)}</span>}
-        <button type="button" aria-label={`Move ${itemName}${suffix} up`} disabled={i === 0} onClick={() => move(locales, i, i - 1)} className={SMALL_BUTTON}>↑</button>
-        <button type="button" aria-label={`Move ${itemName}${suffix} down`} disabled={i >= len - 1} onClick={() => move(locales, i, i + 1)} className={SMALL_BUTTON}>↓</button>
-        <button type="button" aria-label={`Remove ${itemName}${suffix}`} onClick={() => remove(locales, i)} className={`${SMALL_BUTTON} text-red-300`}>Remove</button>
+        <button type="button" aria-label={t.form.moveUp(`${itemName}${suffix}`)} disabled={i === 0} onClick={() => move(locales, i, i - 1)} className={SMALL_BUTTON}>↑</button>
+        <button type="button" aria-label={t.form.moveDown(`${itemName}${suffix}`)} disabled={i >= len - 1} onClick={() => move(locales, i, i + 1)} className={SMALL_BUTTON}>↓</button>
+        <button type="button" aria-label={t.form.removeOf(`${itemName}${suffix}`)} onClick={() => remove(locales, i)} className={`${SMALL_BUTTON} text-red-300`}>{t.form.remove}</button>
       </div>
     );
     return (
@@ -74,11 +75,11 @@ export function ListField({ schema, segments, path, name, label, en, el, hasEn, 
       {rows}
       <div className="flex flex-wrap gap-2">
         {aligned ? (
-          <button type="button" aria-label={`Add item to ${name}`} onClick={() => add(present)} className={SMALL_BUTTON}>+ Add item</button>
+          <button type="button" aria-label={t.form.addItemTo(name)} onClick={() => add(present)} className={SMALL_BUTTON}>{t.form.addItem}</button>
         ) : (
           present.map((l) => (
-            <button key={l} type="button" aria-label={`Add item to ${name} (${l.toUpperCase()})`} onClick={() => add([l])} className={SMALL_BUTTON}>
-              + Add {l.toUpperCase()} item
+            <button key={l} type="button" aria-label={t.form.addItemTo(`${name} (${l.toUpperCase()})`)} onClick={() => add([l])} className={SMALL_BUTTON}>
+              {t.form.addLocaleItem(l.toUpperCase())}
             </button>
           ))
         )}

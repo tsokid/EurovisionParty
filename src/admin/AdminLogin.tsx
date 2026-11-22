@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AdminAuth } from './useAdminAuth';
+import { t } from './i18n';
 
 interface Props {
   auth: AdminAuth;
@@ -96,8 +97,8 @@ export default function AdminLogin({ auth }: Props) {
               🛡️
             </div>
             <div>
-              <h1 className="text-xl font-bold leading-tight">Admin access</h1>
-              <p className="text-xs text-white/50">Restricted area · sign in with email code</p>
+              <h1 className="text-xl font-bold leading-tight">{t.login.title}</h1>
+              <p className="text-xs text-white/50">{t.login.lede}</p>
             </div>
           </div>
 
@@ -124,10 +125,10 @@ export default function AdminLogin({ auth }: Props) {
                 disabled={!email || cooldown > 0 || sending}
                 className="w-full bg-gradient-to-r from-euro-purple-light to-euro-pink text-white rounded-lg py-2.5 font-bold disabled:opacity-40 hover:brightness-110 transition shadow-lg shadow-euro-pink/20"
               >
-                {sending ? 'Sending…' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Send 6-digit code'}
+                {sending ? t.login.sending : cooldown > 0 ? t.login.resendIn(cooldown) : t.login.send}
               </button>
               <p className="text-xs text-white/40 leading-relaxed">
-                If your email isn't on the allowlist, no code is sent — but the response looks the same to keep the list private.
+                {t.login.allowlist}
               </p>
             </div>
           )}
@@ -136,11 +137,11 @@ export default function AdminLogin({ auth }: Props) {
             <div className="space-y-5">
               <div>
                 <p className="text-sm text-white/70">
-                  We sent a 6-digit code to{' '}
+                  {t.login.sentTo}{' '}
                   <span className="text-white font-semibold">{email}</span>.
                 </p>
                 <p className="text-xs text-white/40 mt-1">
-                  Enter the code below, or tap the magic-link button in the email. Both expire in 10 minutes.
+                  {t.login.expires}
                 </p>
               </div>
 
@@ -156,7 +157,7 @@ export default function AdminLogin({ auth }: Props) {
                     onChange={(e) => setDigit(i, e.target.value)}
                     onKeyDown={(e) => onKey(e, i)}
                     className="w-11 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-bold bg-white/5 border border-white/15 focus:border-euro-pink focus:bg-white/[0.08] rounded-lg outline-none transition"
-                    aria-label={`Digit ${i + 1}`}
+                    aria-label={t.login.digit(i + 1)}
                   />
                 ))}
               </div>
@@ -166,7 +167,7 @@ export default function AdminLogin({ auth }: Props) {
                 disabled={token.length !== 6 || verifying}
                 className="w-full bg-gradient-to-r from-euro-purple-light to-euro-pink text-white rounded-lg py-2.5 font-bold disabled:opacity-40 hover:brightness-110 transition shadow-lg shadow-euro-pink/20"
               >
-                {verifying ? 'Verifying…' : 'Verify and sign in'}
+                {verifying ? t.login.verifying : t.login.verify}
               </button>
 
               <div className="flex items-center justify-between text-xs">
@@ -174,31 +175,31 @@ export default function AdminLogin({ auth }: Props) {
                   onClick={() => { setDigits(['', '', '', '', '', '']); }}
                   className="text-white/50 hover:text-white/80 transition"
                 >
-                  Clear code
+                  {t.login.clear}
                 </button>
                 <button
                   onClick={send}
                   disabled={cooldown > 0 || sending}
                   className="text-euro-pink-light hover:text-euro-pink disabled:text-white/30 disabled:cursor-not-allowed transition font-semibold"
                 >
-                  {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
+                  {cooldown > 0 ? t.login.resendIn(cooldown) : t.login.resend}
                 </button>
               </div>
             </div>
           )}
 
           {error && !denied && (
-            <p className="mt-4 text-red-400 text-sm">Invalid or expired code. Try again or resend.</p>
+            <p className="mt-4 text-red-400 text-sm">{t.login.invalid}</p>
           )}
           {denied && (
             <p className="mt-4 text-red-400 text-sm">
-              Your email isn't authorized for admin access.
+              {t.login.denied}
             </p>
           )}
         </div>
 
         <p className="text-center text-xs text-white/30 mt-4">
-          eurovision.games · admin
+          eurovision.games · {t.shell.brandSuffix}
         </p>
       </div>
     </div>

@@ -5,6 +5,7 @@ import type { z } from 'zod';
 import { blockVariants, holdsField, walkSchema, type Segment } from '../../../../../supabase/functions/_shared/cms/walk';
 import type { FieldMeta } from '../../../../../supabase/functions/_shared/cms/fields';
 import type { Locale, ValidationError } from '../../../../../supabase/functions/_shared/cms/validate';
+import { t } from '../../../i18n';
 
 export type { Locale, Segment };
 
@@ -67,7 +68,7 @@ export function schemaInfo(schema: z.ZodType): SchemaInfo {
 
 /** "camelCase" -> "Camel case"; a list/tuple index 2 -> "Item 3". */
 export function humanize(key: Segment): string {
-  if (typeof key === 'number' || /^\d+$/.test(key)) return `Item ${Number(key) + 1}`;
+  if (typeof key === 'number' || /^\d+$/.test(key)) return t.form.item(Number(key) + 1);
   const words = key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ').toLowerCase().trim();
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
