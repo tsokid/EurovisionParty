@@ -77,6 +77,35 @@ describe('diffSnapshots', () => {
   ])('%s change -> exit 1', (_n, fn) => {
     expect(diffSnapshots(base(), mod(fn)).exitCode).toBe(1);
   });
+  describe('JSON-LD dateModified (build-date derived) is a warning only', () => {
+    const ld = (o: object) => JSON.stringify(o);
+    const article = (extra: object) => ld({ '@type': 'Article', headline: 'H', datePublished: '2026-04-30T00:00:00Z', ...extra });
+    const withLd = (entries: string[]) => mod((p) => { p.jsonLd = entries; });
+    const before = () => withLd([article({ dateModified: '2026-11-21T00:00:00Z' })]);
+
+    it('dateModified moving to another date -> warning, exit 0', () => {
+      const r = diffSnapshots(before(), withLd([article({ dateModified: '2026-11-22T00:00:00Z' })]));
+      expect(r.exitCode).toBe(0);
+      expect(r.errors).toEqual([]);
+      expect(r.warnings.join('\n')).toMatch(/jsonLd dateModified changed:[\s\S]*2026-11-21[\s\S]*2026-11-22/);
+    });
+    it('also when nested (e.g. inside @graph)', () => {
+      const g = (d: string) => ld({ '@graph': [{ '@type': 'WebPage', dateModified: d }] });
+      expect(diffSnapshots(withLd([g('2026-11-21')]), withLd([g('2026-11-22')])).exitCode).toBe(0);
+    });
+    it.each([
+      ['datePublished changes', [article({ dateModified: '2026-11-21T00:00:00Z', datePublished: '2026-05-01T00:00:00Z' })]],
+      ['another field changes with it', [article({ dateModified: '2026-11-22T00:00:00Z', headline: 'X' })]],
+      ['dateModified removed', [article({})]],
+      ['dateModified becomes a non-date', [article({ dateModified: 'soon' })]],
+      ['an entry is dropped', []],
+    ])('%s -> still exit 1', (_n, entries) => {
+      const r = diffSnapshots(before(), withLd(entries as string[]));
+      expect(r.exitCode).toBe(1);
+      expect(r.errors.join('\n')).toMatch(/jsonLd changed/);
+    });
+  });
+
   it('link and h2 changes -> warnings only', () => {
     const r = diffSnapshots(base(), mod((p) => { p.internalLinks = ['/new']; p.h2Count = 9; }));
     expect(r.exitCode).toBe(0);

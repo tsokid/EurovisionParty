@@ -16,6 +16,7 @@ import {
 import type { QuizAnswer, QuizQuestion } from '../../lib/types';
 import type { Standing } from '../../lib/roundStandings';
 import { quizAnswerChip } from '../../lib/answerPoints';
+import { createReactionTimer } from '../../lib/reactionTimer';
 import { quizChipView } from './chipText';
 import type { AnswerChipView } from './QuestionCard';
 import { Trophy, Flame, Zap, Swords, BarChart3, Music, Sparkles, ListChecks, Clock, Activity } from 'lucide-react';
@@ -29,7 +30,8 @@ import RoundResults from './RoundResults';
 type QuizPhase = 'waiting' | 'intro' | 'playing' | 'results' | 'complete';
 
 /** How long the answer's "+N · 2,1″" chip stays before the next question
- *  (presentation only: the next question's clock starts after it). */
+ *  (presentation only: the next question's clock starts only once its
+ *  answers are tappable, see QuestionCard onInteractive). */
 export const CHIP_HOLD_MS = 900;
 
 export default function QuizScreen() {
@@ -42,9 +44,11 @@ export default function QuizScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [roundAnswers, setRoundAnswers] = useState<QuizAnswer[]>([]);
   const [roundQuestions, setRoundQuestions] = useState<QuizQuestion[]>([]);
-  const [questionOpenedAt, setQuestionOpenedAt] = useState<string>(
-    new Date().toISOString(),
-  );
+  // Wall-clock moment the answers became tappable. Still sent as
+  // p_question_opened_at (the row needs it); the score uses p_response_ms.
+  const questionOpenedAtRef = useRef<string>(new Date().toISOString());
+  // Reaction time on this device: from "answers tappable" to the tap.
+  const reactionRef = useRef(createReactionTimer());
   const [usedQuestionIds, setUsedQuestionIds] = useState<number[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
   // Room totals when the round started: the round-end leaderboard reorders from these.
@@ -225,9 +229,10 @@ export default function QuizScreen() {
   // Use a ref for handleAnswer to avoid stale closures in the timer effect
   const handleAnswerRef = useRef<(answerIndex: number, isCorrect: boolean) => void>(() => {});
 
-  // Stop the running countdown without resetting its displayed value.
-  // Used by onSelect (when the user picks) and on unmount.
+  // Stop the running countdown without resetting its displayed value, and
+  // freeze the reaction time. Used by onSelect (the tap) and on unmount.
   const stopCountdown = useCallback(() => {
+    reactionRef.current.stop();
     if (countdownRef.current) {
       clearInterval(countdownRef.current);
       countdownRef.current = null;
@@ -236,35 +241,43 @@ export default function QuizScreen() {
     autoSubmittedRef.current = true;
   }, []);
 
+  // New question: full timer, nothing running until its answers are tappable.
   useEffect(() => {
     if (phase !== 'playing') {
       if (countdownRef.current) clearInterval(countdownRef.current);
+      countdownRef.current = null;
       return;
     }
 
     autoSubmittedRef.current = false;
+    reactionRef.current.reset();
     setCountdown(TIMER_SECONDS);
 
-    // Defer the actual interval until the question card has finished its
-    // entrance animation (~500ms spring) so the clock isn't already
-    // counting down before the user can read or click an answer.
-    const startDelay = setTimeout(() => {
-      countdownRef.current = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            if (countdownRef.current) clearInterval(countdownRef.current);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }, 500);
-
     return () => {
-      clearTimeout(startDelay);
       if (countdownRef.current) clearInterval(countdownRef.current);
+      countdownRef.current = null;
     };
   }, [phase, questionIndex]);
+
+  // QuestionCard: the answers are now visible and enabled. Start the reaction
+  // timer and the visible countdown together, so the 15″ ring and the score
+  // measure the same span.
+  const handleQuestionInteractive = useCallback(() => {
+    if (reactionRef.current.started) return;
+    reactionRef.current.start();
+    questionOpenedAtRef.current = new Date().toISOString();
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    countdownRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current);
+          countdownRef.current = null;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
 
   // Auto-submit wrong answer when timer hits 0 (uses ref to avoid stale closure)
   useEffect(() => {
@@ -285,13 +298,11 @@ export default function QuizScreen() {
     setQuestionIndex(0);
     setRoundAnswers([]);
     setRoundStartStandings(players.map((p) => ({ id: p.id, total: p.total_points ?? 0 })));
-    setQuestionOpenedAt(new Date().toISOString());
     setPhase('intro');
   }, [room, player, players, usedQuestionIds]);
 
   // Handle intro dismiss
   const handleIntroDismiss = useCallback(() => {
-    setQuestionOpenedAt(new Date().toISOString());
     setPhase('playing');
   }, []);
 
@@ -302,6 +313,10 @@ export default function QuizScreen() {
 
       const question = roundQuestions[questionIndex];
       setSubmitError(null);
+      // Tap → reveal → advance takes 2.5 s before we get here; the reaction
+      // time was frozen at the tap (onSelect). A timeout stops it now.
+      const responseMs = reactionRef.current.stop();
+      const questionOpenedAt = questionOpenedAtRef.current;
 
       let recorded: QuizAnswer;
       try {
@@ -313,6 +328,7 @@ export default function QuizScreen() {
           questionOpenedAt,
           room?.id,
           roundNumber,
+          responseMs,
         );
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Failed to submit answer';
@@ -343,12 +359,11 @@ export default function QuizScreen() {
       // Advance to next question or results
       if (questionIndex + 1 < QUESTIONS_PER_ROUND && questionIndex + 1 < roundQuestions.length) {
         setQuestionIndex((prev) => prev + 1);
-        setQuestionOpenedAt(new Date().toISOString());
       } else {
         setPhase('results');
       }
     },
-    [player, room, roundNumber, roundQuestions, questionIndex, questionOpenedAt, quiz, t, i18n.language],
+    [player, room, roundNumber, roundQuestions, questionIndex, quiz, t, i18n.language],
   );
 
   // Keep the ref in sync with the latest handleAnswer
@@ -521,6 +536,7 @@ export default function QuizScreen() {
               totalQuestions={roundQuestions.length}
               onAnswer={handleAnswer}
               onSelect={stopCountdown}
+              onInteractive={handleQuestionInteractive}
               timeRemaining={countdown}
               roundNumber={roundNumber}
               history={roundAnswers.map((a) => !!a.is_correct)}

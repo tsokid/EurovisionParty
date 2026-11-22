@@ -181,12 +181,21 @@ function seed(s: Scenario) {
     compute_winners: () => F.WINNERS.length,
     get_intel_reveal: ({ p_reveal_type }) =>
       p_reveal_type === 'top3' ? { available: true, data: top3 } : { available: false },
-    // Mirrors submit_quiz_answer: seconds from p_question_opened_at to now (capped at 16), tiers 12/8/4.
+    // Mirrors submit_quiz_answer (083): p_response_ms clamped to [0, 16000] and
+    // rounded up to the hundredth; without it, the legacy NOW() − opened_at
+    // (capped at 16, negative → 16). Tiers 12/8/4. No artificial delay.
     submit_quiz_answer: (args) => {
-      const secs = Math.min(16, Math.max(0, (Date.now() - Date.parse(String(args.p_question_opened_at))) / 1000));
+      const ms = args.p_response_ms;
+      let secs: number;
+      if (typeof ms === 'number') {
+        secs = Math.ceil(Math.min(16000, Math.max(0, ms)) / 10) / 100;
+      } else {
+        const raw = (Date.now() - Date.parse(String(args.p_question_opened_at))) / 1000;
+        secs = raw < 0 ? 16 : Math.min(16, Math.round(raw * 100) / 100);
+      }
       const ok = !!args.p_is_correct;
       const points = !ok ? 0 : secs <= 3 ? 12 : secs <= 7 ? 8 : 4;
-      return { id: `fake-${Date.now()}`, points_awarded: points, response_seconds: Math.round(secs * 100) / 100, is_correct: ok };
+      return { id: `fake-${Date.now()}`, points_awarded: points, response_seconds: secs, is_correct: ok };
     },
     submit_duel_answers: () => null,
     advance_room_phase: () => null,

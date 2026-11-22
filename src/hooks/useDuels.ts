@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { selectRoundQuestions } from '../lib/questionRandomizer';
 import { fetchSeenQuestionIdsForDuel } from '../lib/usedQuestions';
+import { isMissingRpcSignature } from '../lib/reactionTimer';
 import { useGameStore } from '../stores/gameStore';
 import type { Duel, DuelAnswer, DuelDecision } from '../lib/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
@@ -181,12 +182,22 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
     try {
       const totalScore = answers.reduce((sum, a) => sum + a.points, 0);
 
-      const { error: rpcErr } = await supabase.rpc('submit_duel_answers', {
+      const legacyArgs = {
         p_duel_id: duelId,
         p_player_id: playerId,
         p_answers: answers,
         p_total_score: totalScore,
+      };
+      // Per-answer reaction times measured on the device (migration 083): the
+      // server clamps them and scores 12 − s itself.
+      let { error: rpcErr } = await supabase.rpc('submit_duel_answers', {
+        ...legacyArgs,
+        p_response_ms: answers.map((a) => Math.max(0, Math.round(a.responseMs))),
       });
+      if (rpcErr && isMissingRpcSignature(rpcErr)) {
+        // Database without 083 yet: submit the client-scored answers as before.
+        ({ error: rpcErr } = await supabase.rpc('submit_duel_answers', legacyArgs));
+      }
 
       if (rpcErr) throw rpcErr;
 

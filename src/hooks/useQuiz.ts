@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { QuizRound, QuestionAssignment, QuizAnswer } from '../lib/types';
+import { isMissingRpcSignature } from '../lib/reactionTimer';
 
 interface UseQuizReturn {
   currentRound: QuizRound | null;
@@ -14,7 +15,8 @@ interface UseQuizReturn {
     isCorrect: boolean,
     questionOpenedAt: string,
     roomId?: string,
-    roundNum?: number
+    roundNum?: number,
+    responseMs?: number | null
   ) => Promise<QuizAnswer>;
   openRound: (
     roomId: string,
@@ -167,7 +169,8 @@ export function useQuiz(): UseQuizReturn {
       isCorrect: boolean,
       questionOpenedAt: string,
       roomId?: string,
-      roundNum?: number
+      roundNum?: number,
+      responseMs?: number | null
     ): Promise<QuizAnswer> => {
       setError(null);
       try {
@@ -194,7 +197,7 @@ export function useQuiz(): UseQuizReturn {
         }
 
         // Use server-side RPC for validated scoring
-        const { data: rpcResult, error: rpcErr } = await supabase.rpc('submit_quiz_answer', {
+        const legacyArgs = {
           p_room_id: effectiveRoomId,
           p_player_id: playerId,
           p_round_number: effectiveRoundNum,
@@ -202,7 +205,16 @@ export function useQuiz(): UseQuizReturn {
           p_answer_index: answerIndex,
           p_is_correct: isCorrect,
           p_question_opened_at: questionOpenedAt,
-        });
+        };
+        // Reaction time measured on the device (migration 083). The server
+        // clamps it and scores by it; without it, NOW() − opened_at is used.
+        let { data: rpcResult, error: rpcErr } = await supabase.rpc('submit_quiz_answer', responseMs == null
+          ? legacyArgs
+          : { ...legacyArgs, p_response_ms: Math.max(0, Math.round(responseMs)) });
+        if (rpcErr && responseMs != null && isMissingRpcSignature(rpcErr)) {
+          // Database without 083 yet: score the old way rather than lose the answer.
+          ({ data: rpcResult, error: rpcErr } = await supabase.rpc('submit_quiz_answer', legacyArgs));
+        }
 
         if (rpcErr) throw rpcErr;
 

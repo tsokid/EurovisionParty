@@ -4,6 +4,12 @@
 // in-memory fixture tables set by gallery/main.tsx (setFakeDb). Unknown
 // tables / RPCs / client members resolve to empty results and log a warning
 // so gaps in the fixtures are visible in the console.
+//
+// Timing: every query and RPC resolves on the next microtask, with no
+// artificial latency, and the fake shares the page's clock. So gallery
+// timings show the app's own delays only (no network, no clock skew). RPC
+// fixtures such as submit_quiz_answer (honours p_response_ms, migration 083)
+// live in gallery/main.tsx (setFakeDb).
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

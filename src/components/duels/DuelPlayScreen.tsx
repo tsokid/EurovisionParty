@@ -6,13 +6,15 @@ import { QUESTIONS_BY_ID } from '../../lib/questions';
 import { getLocalizedQuestion } from '../../lib/questionLocale';
 import { calcDuelPoints } from '../../hooks/useDuels';
 import { duelAnswerChip } from '../../lib/answerPoints';
+import { createReactionTimer } from '../../lib/reactionTimer';
 import QuestionCard, { type AnswerChipView } from '../quiz/QuestionCard';
 import { duelChipView } from '../quiz/chipText';
 import { PointsChip } from '../stage';
 import type { Duel, DuelAnswer, QuizQuestion } from '../../lib/types';
 
 /** How long the "+N · 12−s" chip stays before the next duel question
- *  (presentation only: the next question's clock starts after it). */
+ *  (presentation only: the next question's clock starts only once its
+ *  answers are tappable, see QuestionCard onInteractive). */
 export const DUEL_CHIP_HOLD_MS = 900;
 
 const DUEL_TIMER = 12; // 12 seconds per question
@@ -43,7 +45,8 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<DuelAnswer[]>([]);
   const [countdown, setCountdown] = useState(DUEL_TIMER);
-  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  // Reaction time on this device: from "answers tappable" to the tap.
+  const reactionRef = useRef(createReactionTimer());
   const [finished, setFinished] = useState(false);
   const [chip, setChip] = useState<AnswerChipView | null>(null);
   const holdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -52,6 +55,7 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
   const autoSubmittedRef = useRef(false);
 
   const stopCountdown = useCallback(() => {
+    reactionRef.current.stop();
     if (countdownRef.current) {
       clearInterval(countdownRef.current);
       countdownRef.current = null;
@@ -59,47 +63,51 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
     autoSubmittedRef.current = true;
   }, []);
 
-  // Reset timer for each question
+  // New question: full timer, nothing running until its answers are tappable.
   useEffect(() => {
     if (finished) return;
 
     autoSubmittedRef.current = false;
+    reactionRef.current.reset();
     setCountdown(DUEL_TIMER);
-    setQuestionStartTime(Date.now());
-
-    // Defer the interval until the question card has finished its entrance
-    // animation so the clock isn't already counting down before the user
-    // can read or click an answer.
-    const startDelay = setTimeout(() => {
-      countdownRef.current = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            if (countdownRef.current) clearInterval(countdownRef.current);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }, 500);
 
     return () => {
-      clearTimeout(startDelay);
       if (countdownRef.current) clearInterval(countdownRef.current);
+      countdownRef.current = null;
     };
   }, [questionIndex, finished]);
+
+  // QuestionCard: the answers are visible and enabled. Start the reaction
+  // timer and the 12″ ring together.
+  const handleQuestionInteractive = useCallback(() => {
+    if (reactionRef.current.started) return;
+    reactionRef.current.start();
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    countdownRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current);
+          countdownRef.current = null;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
 
   const handleAnswer = useCallback((answerIndex: number, isCorrect: boolean) => {
     const currentQuestion = questions[questionIndex];
     if (!currentQuestion) return; // guard against bounds / missing-ID edge cases
 
-    const now = Date.now();
-    const responseMs = now - questionStartTime;
+    // Frozen at the tap (onSelect); a timeout stops it here. The 2.5 s
+    // reveal / advance before this call is not reaction time.
+    const responseMs = reactionRef.current.stop() ?? DUEL_TIMER * 1000;
     const points = calcDuelPoints(responseMs, isCorrect);
 
     const answer: DuelAnswer = {
       questionId: currentQuestion.id,
       answerIndex,
-      answeredAt: new Date(now).toISOString(),
+      answeredAt: new Date().toISOString(),
       responseMs,
       points,
     };
@@ -121,7 +129,7 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
         onComplete(updatedAnswers);
       }
     }, DUEL_CHIP_HOLD_MS);
-  }, [questionIndex, questions, answers, questionStartTime, onComplete, t]);
+  }, [questionIndex, questions, answers, onComplete, t]);
 
   // Auto-submit wrong answer when timer hits 0
   useEffect(() => {
@@ -176,6 +184,7 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
         totalQuestions={localizedQuestions.length}
         onAnswer={handleAnswer}
         onSelect={stopCountdown}
+        onInteractive={handleQuestionInteractive}
         timeRemaining={countdown}
         timerSeconds={DUEL_TIMER}
         mode="duel"

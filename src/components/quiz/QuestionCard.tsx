@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
@@ -40,8 +40,12 @@ interface QuestionCardProps {
   totalQuestions: number;
   onAnswer: (answerIndex: number, isCorrect: boolean) => void;
   /** Fires the moment the user picks an option — before reveal/advance delay.
-   *  Parent uses this to stop the countdown so the clock doesn't keep ticking. */
+   *  Parent uses this to stop the countdown and the reaction timer at the tap. */
   onSelect?: (answerIndex: number) => void;
+  /** Fires once per question when the answers become tappable: the entrance
+   *  animation has finished and the buttons are enabled. Parent starts the
+   *  reaction timer and the visible countdown here. */
+  onInteractive?: () => void;
   timeRemaining: number;
   /** Seconds per question: quiz 15 (default), duels 12. */
   timerSeconds?: number;
@@ -56,6 +60,12 @@ interface QuestionCardProps {
 
 const FEEDBACK_DELAY_MS = 500;
 const ADVANCE_DELAY_MS = 2000;
+/** If the entrance animation never reports completion (interrupted, or an
+ *  environment without animation frames), the answers unlock after this. */
+export const ENTRANCE_FALLBACK_MS = 1200;
+
+const ENTER = { enter: { opacity: 0, x: 40 }, shown: { opacity: 1, x: 0 }, gone: { opacity: 0, x: -40 } };
+const ENTER_REDUCED = { enter: { opacity: 0 }, shown: { opacity: 1 }, gone: { opacity: 0 } };
 
 export default function QuestionCard({
   question,
@@ -63,6 +73,7 @@ export default function QuestionCard({
   totalQuestions,
   onAnswer,
   onSelect,
+  onInteractive,
   timeRemaining,
   timerSeconds = TIMER_SECONDS,
   mode = 'quiz',
@@ -83,13 +94,32 @@ export default function QuestionCard({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
+  // Answers stay disabled until the question has finished entering, so the
+  // reaction clock (started in onInteractive) never runs while they cannot
+  // be read or tapped, and no tap can land before it starts.
+  const [interactive, setInteractive] = useState(false);
+  const interactiveForRef = useRef<number | null>(null);
+  const onInteractiveRef = useRef(onInteractive);
+  onInteractiveRef.current = onInteractive;
 
-  // Reset state when question changes
+  const markInteractive = useCallback((qid: number) => {
+    if (interactiveForRef.current === qid) return;
+    interactiveForRef.current = qid;
+    setInteractive(true);
+    onInteractiveRef.current?.();
+  }, []);
+
+  // Reset state when question changes; unlock after the entrance (fallback timer)
   useEffect(() => {
     setSelectedIndex(null);
     setRevealed(false);
     setHasAnswered(false);
-  }, [question?.id]);
+    setInteractive(false);
+    if (question?.id == null) return;
+    const qid = question.id;
+    const id = setTimeout(() => markInteractive(qid), ENTRANCE_FALLBACK_MS);
+    return () => clearTimeout(id);
+  }, [question?.id, markInteractive]);
 
   // Show timeout state when timer expires (parent handles auto-submit)
   useEffect(() => {
@@ -101,7 +131,7 @@ export default function QuestionCard({
 
   const handleSelect = useCallback(
     (index: number) => {
-      if (hasAnswered || revealed || !question) return;
+      if (hasAnswered || revealed || !question || !interactive) return;
 
       setSelectedIndex(index);
       setHasAnswered(true);
@@ -123,12 +153,13 @@ export default function QuestionCard({
         }, ADVANCE_DELAY_MS);
       }, FEEDBACK_DELAY_MS);
     },
-    [hasAnswered, revealed, question, onAnswer, onSelect, shuffledCorrectIndex],
+    [hasAnswered, revealed, question, interactive, onAnswer, onSelect, shuffledCorrectIndex, originalIndexAt],
   );
 
   // Nothing to render if the parent hasn't provided a question (transient state,
   // e.g. AnimatePresence exit frames, bounds overrun, or a missing-from-bank ID).
   if (!question) return null;
+  const qid = question.id;
 
   const answeredCorrectly = revealed && selectedIndex === shuffledCorrectIndex;
   const timedOut = revealed && (selectedIndex === null || selectedIndex === -1);
@@ -153,11 +184,23 @@ export default function QuestionCard({
     <AnimatePresence mode="wait">
       <motion.div
         key={question.id}
-        initial={reduce ? { opacity: 0 } : { opacity: 0, x: 40 }}
-        animate={reduce ? { opacity: 1 } : { opacity: 1, x: 0 }}
-        exit={reduce ? { opacity: 0 } : { opacity: 0, x: -40 }}
-        transition={reduce ? { duration: 0.2 } : { type: 'spring', damping: 25, stiffness: 250 }}
+        variants={reduce ? ENTER_REDUCED : ENTER}
+        initial="enter"
+        animate="shown"
+        exit="gone"
+        // Completion must coincide with "visibly in place", because it unlocks
+        // the answers: the slide spring rests at < 1 px (not its sub-pixel
+        // tail), and opacity is a plain 0.25 s tween (as a spring it finishes
+        // ~0.2 s after it already looks opaque).
+        transition={reduce ? { duration: 0.2 } : {
+          x: { type: 'spring', damping: 25, stiffness: 250, restDelta: 1, restSpeed: 30 },
+          opacity: { duration: 0.25, ease: 'easeOut' },
+        }}
+        // Only the entrance of the current question unlocks it; the exit of
+        // the previous one (same callback, other variant) must not.
+        onAnimationComplete={(def) => { if (def === 'shown') markInteractive(qid); }}
         className="qz-q"
+        data-interactive={interactive || undefined}
       >
         {/* Header: where we are + timer */}
         <div className="qz-q-head">
@@ -227,7 +270,7 @@ export default function QuestionCard({
               isCorrect={idx === shuffledCorrectIndex}
               revealed={revealed}
               onSelect={() => handleSelect(idx)}
-              disabled={hasAnswered}
+              disabled={hasAnswered || !interactive}
             />
           ))}
         </div>
