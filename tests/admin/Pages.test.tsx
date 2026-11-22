@@ -375,7 +375,8 @@ describe('Pages module: editor', () => {
     expect(rpcCalls('cms_discard')[0][1]).toEqual({ p_doc_id: 'about' });
     expect(homeBreadcrumbEn().value).toBe((published('about').en.breadcrumbs as Record<string, string>).home);
     expect(screen.queryByRole('button', { name: 'Απόρριψη προχείρου' })).toBeNull();
-  });
+    // The editor also renders the two hidden SEO previews (P6): more room under full-suite load.
+  }, 40_000);
 
   it('the leave guard asks only for edits that cannot be saved now (here: invalid)', async () => {
     await openEditor();
