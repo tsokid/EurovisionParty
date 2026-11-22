@@ -10,6 +10,13 @@ import { FAKE_USER, setFakeDb } from './fakeSupabase';
 import { IMAGE_AVATARS } from '../src/components/stage/avatars/images.generated';
 import { CmsRealtimeContext, type DocChannelFactory, type DocChannelHandlers } from '../src/admin/cms/docChannel';
 import rulesDoc from '../content/pages/rules.json';
+import { PreviewTransportContext, previewSrc, type PreviewTransport } from '../src/admin/preview/transport';
+
+// The editor's preview iframe loads the gallery too (same fake session and fixtures).
+const galleryPreview: PreviewTransport = {
+  kind: 'iframe',
+  src: (docId, locale) => `/?screen=admin&path=${encodeURIComponent(previewSrc(docId, locale))}`,
+};
 
 // CMS drafts (P3): a stateful cms_get / cms_save with the real optimistic
 // concurrency, a short history, and a fake second editor ("elena") on every
@@ -134,7 +141,9 @@ export function AdminGallery({ path }: { path: string }) {
   });
   return (
     <CmsRealtimeContext.Provider value={galleryChannel}>
-      <RouterProvider router={router} />
+      <PreviewTransportContext.Provider value={galleryPreview}>
+        <RouterProvider router={router} />
+      </PreviewTransportContext.Provider>
     </CmsRealtimeContext.Provider>
   );
 }
