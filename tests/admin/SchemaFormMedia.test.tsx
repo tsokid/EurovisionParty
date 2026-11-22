@@ -327,6 +327,6 @@ describe('blocks widget', () => {
       en: { zone: [{ type: 'text', body: 'A' }] },
       el: { zone: [{ type: 'cta', title: '', body: '', label: '', href: '' }] },
     });
-    expect(screen.getByRole('alert')).toHaveTextContent('Στα EN είναι ενότητα «Κείμενο», στα EL «Κάλεσμα σε δράση»: αφαιρέστε την και προσθέστε τη ξανά');
+    expect(screen.getByRole('alert')).toHaveTextContent('Στα EN είναι ενότητα «Κείμενο», στα EL «Κάλεσμα σε δράση»: αφαίρεσέ την και πρόσθεσέ τη ξανά');
   });
 });

@@ -36,7 +36,7 @@ vi.mock('../../src/lib/supabase', () => {
 
 import { ContestDetailsForm } from '../../src/admin/modules/contests/ContestDetailsForm';
 
-const NOTE = 'Ενεργοποιήστε το αφού προσθέσετε δικό σας κείμενο ή εικόνα για αυτή τη χρονιά.';
+const NOTE = 'Ενεργοποίησέ το αφού προσθέσεις δικό σου κείμενο ή εικόνα για αυτή τη χρονιά.';
 
 describe('ContestDetailsForm', () => {
   beforeEach(() => {
