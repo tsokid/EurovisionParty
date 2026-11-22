@@ -7,7 +7,8 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, copyFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { runGuard, CACHE_PATH, SNAPSHOT_PATH, type GuardEnv } from '../../scripts/seo/guard';
+import { runGuard, CACHE_PATH, COMMITTED_BASELINE, SNAPSHOT_PATH, type GuardEnv } from '../../scripts/seo/guard';
+import { committedBaselineOf } from '../../scripts/seo/write-baseline';
 import { collectSnapshot, LIVE_SNAPSHOT_FORMAT, type LiveSnapshot } from '../../scripts/seo/snapshot';
 import { intentContext } from '../../scripts/seo/intent';
 import { appendIntent, buildIntentEntry, SEO_INTENT_FILE, type IntentEntry } from '../../supabase/functions/_shared/cms/seoIntent';
@@ -78,11 +79,13 @@ const newTitle = () => {
   return d;
 };
 
+const NOW = new Date('2027-01-31T12:00:00Z');
+
 async function guard(env: GuardEnv, fetchImpl: typeof fetch) {
   const lines: string[] = [];
   const code = await runGuard({
     root, distDir: dist, env, fetch: fetchImpl, log: (l) => lines.push(l), retryDelayMs: 0,
-    context: () => intentContext(REPO),
+    context: () => intentContext(REPO), now: () => NOW,
   });
   return { code, out: lines.join('\n') };
 }
@@ -260,7 +263,7 @@ describe('SEO guard: SEO_GUARD_BOOTSTRAP', () => {
     expect(r.code).toBe(1);
   });
 
-  it('without the flag, production never skips', async () => {
+  it('without the flag and without a committed baseline, production never skips', async () => {
     writeDist(BASE);
     expect((await guard({ VERCEL_ENV: 'production' }, serve('', 404))).code).toBe(2);
   });
@@ -290,5 +293,68 @@ describe('build wiring', () => {
     const groups = robots.split(/\n(?=User-agent:)/).filter((g) => g.startsWith('User-agent:'));
     expect(groups.length).toBeGreaterThan(1);
     for (const g of groups) expect(g, g.split('\n')[0]).toMatch(/^Disallow: \/_seo\/$/m);
+  });
+});
+
+describe('SEO guard: the committed baseline (docs/design/stage/seo-baseline.json)', () => {
+  /** Commits BASE as the baseline, built `days` before NOW (npm run seo:baseline). */
+  function commitBaseline(days: number | null) {
+    writeDist(BASE);
+    const snap = committedBaselineOf(dist, root, new Date(NOW.getTime() - (days ?? 0) * 86_400_000), 'abc');
+    const file = join(root, COMMITTED_BASELINE);
+    mkdirSync(join(file, '..'), { recursive: true });
+    writeFileSync(file, JSON.stringify(days === null ? snap.routes : snap));
+  }
+
+  it('live 404 (not published yet): compares against the committed baseline, whatever its age, with a warning', async () => {
+    commitBaseline(400);
+    writeDist(BASE);
+    const ok = await guard({ VERCEL_ENV: 'production' }, serve('', 404));
+    expect(ok.out).toMatch(/WARNING: .*404.*committed baseline docs\/design\/stage\/seo-baseline\.json/);
+    expect(ok.code).toBe(0);
+    writeDist({ ...BASE, '/en/faq': { title: 'Unannounced' } });
+    expect((await guard({ VERCEL_ENV: 'production' }, serve('', 404))).code).toBe(1);
+  });
+
+  it('live 5xx or unreachable, nothing cached: uses a committed baseline under 30 days old', async () => {
+    commitBaseline(10);
+    writeDist(BASE);
+    const r = await guard({ VERCEL_ENV: 'production' }, serve('oops', 503));
+    expect(r.out).toMatch(/WARNING: live baseline unavailable .*HTTP 503.*committed baseline/);
+    expect(r.code).toBe(0);
+    expect((await guard({}, offline)).code).toBe(0);
+    writeDist({ ...BASE, '/en/faq': { title: 'Unannounced' } });
+    expect((await guard({}, serve('oops', 503))).code).toBe(1);
+  });
+
+  it('live 5xx with a stale (over 30 days) or undated committed baseline: fails closed', async () => {
+    commitBaseline(31);
+    writeDist(BASE);
+    const stale = await guard({ VERCEL_ENV: 'production' }, serve('oops', 503));
+    expect(stale.out).toMatch(/31 days old \(max 30/);
+    expect(stale.code).toBe(2);
+    commitBaseline(null);
+    writeDist(BASE);
+    const undated = await guard({}, offline);
+    expect(undated.out).toMatch(/no built_at date/);
+    expect(undated.code).toBe(2);
+  });
+
+  it('the build-cache copy still comes before the committed baseline after a network error', async () => {
+    commitBaseline(5);
+    writeDist({ ...BASE, '/en/faq': { title: 'Changed after the baseline' } });
+    mkdirSync(join(root, CACHE_PATH, '..'), { recursive: true });
+    writeFileSync(join(root, CACHE_PATH), JSON.stringify({ format: LIVE_SNAPSHOT_FORMAT, built_at: 'x', commit: null, intents: [], routes: collectSnapshot(dist) }));
+    const r = await guard({}, offline);
+    expect(r.out).toMatch(/using the build-cache copy/);
+    expect(r.code).toBe(0);
+  });
+
+  it('npm run seo:baseline records built_at, commit and the intent ids', () => {
+    writeIntent([faqIntent('publish-9', newTitle())]);
+    writeDist(BASE);
+    const snap = committedBaselineOf(dist, root, NOW, 'abc');
+    expect(snap).toMatchObject({ format: LIVE_SNAPSHOT_FORMAT, built_at: NOW.toISOString(), commit: 'abc', intents: ['publish-9'] });
+    expect(Object.keys(snap.routes)).toHaveLength(3);
   });
 });

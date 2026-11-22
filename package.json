@@ -16,6 +16,7 @@
     "seo:snapshot": "tsx scripts/seo/snapshot.ts",
     "seo:diff": "tsx scripts/seo/snapshot-diff.ts",
     "seo:guard": "tsx scripts/seo/guard.ts",
+    "seo:baseline": "tsx scripts/seo/write-baseline.ts",
     "prebuild": "npm run sitemap && npm run llms-txt",
     "test": "vitest run",
     "test:watch": "vitest",

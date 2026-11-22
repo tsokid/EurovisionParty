@@ -131,16 +131,18 @@ export interface LiveSnapshot {
  * like a real snapshot with at least one route, so a wrong or truncated
  * response can never pass as an empty baseline.
  */
-export function readBaseline(value: unknown): { routes: Snapshot; intents: string[] | null } {
+export function readBaseline(value: unknown): { routes: Snapshot; intents: string[] | null; builtAt: string | null } {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('baseline is not a JSON object');
   const v = value as Record<string, unknown>;
   let routes: unknown = value;
   let intents: string[] | null = null;
+  let builtAt: string | null = null;
   if ('format' in v) {
     if (v.format !== LIVE_SNAPSHOT_FORMAT) throw new Error(`baseline format ${JSON.stringify(v.format)} is not ${LIVE_SNAPSHOT_FORMAT}`);
     if (!Array.isArray(v.intents) || !v.intents.every((x) => typeof x === 'string')) throw new Error('baseline intents is not a list of ids');
     routes = v.routes;
     intents = v.intents as string[];
+    builtAt = typeof v.built_at === 'string' ? v.built_at : null;
   }
   if (!routes || typeof routes !== 'object' || Array.isArray(routes)) throw new Error('baseline routes is not an object');
   const entries = Object.entries(routes as Record<string, unknown>);
@@ -151,7 +153,7 @@ export function readBaseline(value: unknown): { routes: Snapshot; intents: strin
       throw new Error(`baseline route ${route} is not a page snapshot`);
     }
   }
-  return { routes: routes as Snapshot, intents };
+  return { routes: routes as Snapshot, intents, builtAt };
 }
 
 const isMain = !!process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);

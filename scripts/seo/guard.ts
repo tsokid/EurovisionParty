@@ -8,9 +8,14 @@
  * 2. Loads the baseline: what is live.
  *    - default: GET https://eurovision.games/_seo/snapshot.json
  *      (SEO_BASELINE_URL overrides the URL), 3 tries;
- *    - if that fails: the copy the last passing build left in the build
- *      cache (node_modules/.cache/seo-guard/snapshot.json, which Vercel
- *      restores between builds);
+ *    - HTTP 404 (nothing published yet, e.g. the first guarded deploy):
+ *      the committed baseline docs/design/stage/seo-baseline.json, with a
+ *      warning;
+ *    - network error, timeout, 5xx or a response that is not a snapshot:
+ *      the copy the last passing build left in the build cache
+ *      (node_modules/.cache/seo-guard/snapshot.json, which Vercel restores
+ *      between builds), else the committed baseline if its built_at is
+ *      under 30 days old;
  *    - SEO_BASELINE=<file> uses that file instead (local checks; ignored on
  *      Vercel production, which always compares against live).
  *    No baseline: the build fails (fail closed), except under the bootstrap
@@ -24,8 +29,8 @@
  *    step 2 for the next build).
  *
  * SEO_GUARD_BOOTSTRAP=1 skips the diff (the snapshot is still written).
- * For the first deploy, before any /_seo/snapshot.json is live, and for
- * local builds without network. On Vercel production it applies only while
+ * For local builds without network; the first deploy does not need it
+ * (the committed baseline covers it). On Vercel production it applies only while
  * no baseline can be loaded: once one is live, a forgotten flag is ignored.
  * Never set it permanently in Vercel.
  *
@@ -45,6 +50,10 @@ export const LIVE_SNAPSHOT_URL = 'https://eurovision.games/_seo/snapshot.json';
 export const SNAPSHOT_PATH = '_seo/snapshot.json';
 /** Build-cache copy, relative to the repo root (Vercel restores node_modules/.cache). */
 export const CACHE_PATH = 'node_modules/.cache/seo-guard/snapshot.json';
+/** The committed baseline, refreshed by `npm run seo:baseline` (repo-relative). */
+export const COMMITTED_BASELINE = 'docs/design/stage/seo-baseline.json';
+/** After a network error the committed baseline is used only while younger than this. */
+export const COMMITTED_MAX_AGE_DAYS = 30;
 
 export type GuardEnv = {
   SEO_BASELINE?: string;
@@ -67,11 +76,12 @@ export type GuardOptions = {
   now?: () => Date;
 };
 
-type Baseline = { routes: Snapshot; intents: string[] | null; source: string };
+type Baseline = { routes: Snapshot; intents: string[] | null; builtAt: string | null; source: string };
 
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
-async function fetchLive(url: string, opts: GuardOptions): Promise<Baseline | string> {
+/** The live snapshot, or why not: `missing` (HTTP 404, nothing published yet) or `error` (network, timeout, 5xx, not a snapshot). */
+async function fetchLive(url: string, opts: GuardOptions): Promise<Baseline | { kind: 'missing' | 'error'; reason: string }> {
   let last = '';
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
@@ -79,7 +89,7 @@ async function fetchLive(url: string, opts: GuardOptions): Promise<Baseline | st
         headers: { accept: 'application/json', 'user-agent': 'eurovision-games-seo-guard' },
         signal: AbortSignal.timeout(30_000),
       });
-      if (res.status === 404) return `${url}: 404 (no live snapshot yet)`;
+      if (res.status === 404) return { kind: 'missing', reason: `${url}: 404 (no live snapshot published yet)` };
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const parsed = readBaseline(JSON.parse(await res.text()));
       return { ...parsed, source: url };
@@ -89,16 +99,44 @@ async function fetchLive(url: string, opts: GuardOptions): Promise<Baseline | st
       if (attempt < 3) await new Promise((r) => setTimeout(r, opts.retryDelayMs ?? 2000));
     }
   }
-  return last;
+  return { kind: 'error', reason: last };
 }
 
-function readFileBaseline(path: string): Baseline {
-  return { ...readBaseline(JSON.parse(readFileSync(path, 'utf8'))), source: path };
+function readFileBaseline(path: string, source = path): Baseline {
+  return { ...readBaseline(JSON.parse(readFileSync(path, 'utf8'))), source };
+}
+
+/** Age of the committed baseline in days (from its built_at), or null when it has no date (a bare snapshot). */
+function ageDays(b: Baseline, now: Date): number | null {
+  const t = b.builtAt ? Date.parse(b.builtAt) : NaN;
+  return Number.isNaN(t) ? null : (now.getTime() - t) / 86_400_000;
+}
+
+/**
+ * The committed baseline (COMMITTED_BASELINE, refreshed by `npm run
+ * seo:baseline`). After a 404 it is used whatever its age (nothing is live
+ * to compare against; it is the best record of what was). After a network
+ * error only while fresher than COMMITTED_MAX_AGE_DAYS.
+ */
+function committedBaseline(opts: GuardOptions, requireFresh: boolean): Baseline | string {
+  const path = resolve(opts.root, COMMITTED_BASELINE);
+  if (!existsSync(path)) return `${COMMITTED_BASELINE}: not found`;
+  let b: Baseline;
+  try {
+    b = readFileBaseline(path, COMMITTED_BASELINE);
+  } catch (e) {
+    return `${COMMITTED_BASELINE}: ${message(e)}`;
+  }
+  if (!requireFresh) return b;
+  const age = ageDays(b, (opts.now ?? (() => new Date()))());
+  if (age === null) return `${COMMITTED_BASELINE}: has no built_at date, cannot prove it is fresh (run npm run seo:baseline)`;
+  if (age > COMMITTED_MAX_AGE_DAYS) return `${COMMITTED_BASELINE}: ${Math.floor(age)} days old (max ${COMMITTED_MAX_AGE_DAYS}; run npm run seo:baseline)`;
+  return b;
 }
 
 /** The baseline, or the reasons none could be loaded. */
 async function loadBaseline(opts: GuardOptions, production: boolean): Promise<Baseline | string[]> {
-  const { env, root } = opts;
+  const { env, root, log } = opts;
   if (env.SEO_BASELINE && !production) {
     // Explicit file: no fallback, a missing or bad file is an error.
     try {
@@ -107,17 +145,34 @@ async function loadBaseline(opts: GuardOptions, production: boolean): Promise<Ba
       return [`SEO_BASELINE ${env.SEO_BASELINE}: ${message(e)}`];
     }
   }
-  if (env.SEO_BASELINE) opts.log('seo-guard: SEO_BASELINE is ignored on Vercel production (the baseline is always live)');
+  if (env.SEO_BASELINE) log('seo-guard: SEO_BASELINE is ignored on Vercel production (the baseline is always live)');
   const live = await fetchLive(env.SEO_BASELINE_URL || LIVE_SNAPSHOT_URL, opts);
-  if (typeof live !== 'string') return live;
-  const cache = resolve(root, CACHE_PATH);
-  if (!existsSync(cache)) return [live, `${CACHE_PATH}: not in the build cache`];
-  try {
-    opts.log(`seo-guard: live baseline unavailable (${live}); using the build-cache copy`);
-    return readFileBaseline(cache);
-  } catch (e) {
-    return [live, `${CACHE_PATH}: ${message(e)}`];
+  if (!('kind' in live)) return live;
+
+  if (live.kind === 'missing') {
+    const b = committedBaseline(opts, false);
+    if (typeof b === 'string') return [live.reason, b];
+    log(`seo-guard: WARNING: ${live.reason}; comparing against the committed baseline ${COMMITTED_BASELINE} (built ${b.builtAt ?? 'undated'})`);
+    return b;
   }
+
+  const reasons = [live.reason];
+  const cache = resolve(root, CACHE_PATH);
+  if (existsSync(cache)) {
+    try {
+      const b = readFileBaseline(cache, CACHE_PATH);
+      log(`seo-guard: WARNING: live baseline unavailable (${live.reason}); using the build-cache copy`);
+      return b;
+    } catch (e) {
+      reasons.push(`${CACHE_PATH}: ${message(e)}`);
+    }
+  } else {
+    reasons.push(`${CACHE_PATH}: not in the build cache`);
+  }
+  const b = committedBaseline(opts, true);
+  if (typeof b === 'string') return [...reasons, b];
+  log(`seo-guard: WARNING: live baseline unavailable (${live.reason}); comparing against the committed baseline ${COMMITTED_BASELINE} (built ${b.builtAt})`);
+  return b;
 }
 
 function writeJson(path: string, value: unknown): void {
