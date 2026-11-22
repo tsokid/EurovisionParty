@@ -13,6 +13,9 @@ import rulesDoc from '../content/pages/rules.json';
 import faqDoc from '../content/pages/faq.json';
 import headerDoc from '../content/pages/site-header.json';
 import footerDoc from '../content/pages/site-footer.json';
+import aboutDoc from '../content/pages/about.json';
+import termsDoc from '../content/pages/terms.json';
+import privacyDoc from '../content/pages/privacy.json';
 import { PreviewTransportContext, previewSrc, type PreviewTransport } from '../src/admin/preview/transport';
 
 // The editor's preview iframe loads the gallery too (same fake session and fixtures).
@@ -154,8 +157,56 @@ const PARSE_RUNS = [
     rows: [{ iso: 'AT', name: 'Austria', artist: 'JJ', song: 'Wasted Love' }, { iso: 'GR', name: 'Greece', artist: 'Klavdia', song: 'Asteromata' }, { iso: 'SE', name: 'Sweden', artist: 'KAJ', song: '' }, { iso: 'UA', name: 'Ukraine', artist: 'Ziferblat', song: 'Bird of Pray' }] },
 ];
 
+// CMS P6: the media library (alt per language, one image missing its Greek alt,
+// one missing both), page layouts with blocks, missing translations, and a
+// page whose SEO checks fail.
+const media = (n: number, alt: Record<string, string>, title: string | null, extra: Record<string, unknown> = {}) => {
+  const id = `${String(n).padStart(8, '0')}-6a1e-4c2e-9f10-1234567890ab`;
+  return {
+    id, kind: 'image', storage_path: `${id}.webp`, variant_of: null, mime: 'image/webp', bytes: 180_000 + n * 9_000,
+    width: 1600, height: 900, sha256: 'a'.repeat(64), published_path: n === 1 ? '/media/0a1b2c3d4e5f.webp' : null,
+    created_at: ago(60 * 24 * n), alt, title, ...extra,
+  };
+};
+const MEDIA = [
+  media(1, { en: 'The stage at the Eurovision final, lights on the crowd', el: 'Η σκηνή του τελικού της Eurovision, φώτα πάνω στο κοινό' }, 'Τελικός · σκηνή'),
+  media(2, { en: 'Friends holding up score cards on the sofa' }, 'Πάρτι στο σαλόνι'),
+  media(3, {}, null),
+  media(4, { en: 'A phone showing the live dashboard', el: 'Ένα κινητό με τον ζωντανό πίνακα' }, 'Dashboard σε κινητό'),
+  { ...media(5, {}, 'Trailer 2027'), kind: 'video', storage_path: '00000005-6a1e-4c2e-9f10-1234567890ab.mp4', mime: 'video/mp4', width: null, height: null },
+];
+
+function seedLayouts() {
+  const sections = ['whatIs', 'why', 'whatsIn', 'freeNoAccount', 'ebu', 'builtBy'].map((key) => ({ type: 'section', key }));
+  seedChanged('about', aboutDoc, '2026-11-22T10:02:00.000Z', (d) => {
+    const blocks = (l: 'en' | 'el') => [
+      sections[0],
+      { type: 'callout', id: 'b-k3x9q2', tone: 'info', body: l === 'en' ? 'New for 2027: rooms open the moment the running order is out.' : 'Νέο για το 2027: τα δωμάτια ανοίγουν μόλις βγει η σειρά εμφάνισης.' },
+      sections[2], sections[1],
+      { type: 'text', id: 'b-7mz1pa', body: l === 'en' ? 'Two people built it, for their own Eurovision nights.' : 'Το έφτιαξαν δύο άνθρωποι, για τις δικές τους βραδιές Eurovision.' },
+      sections[3], sections[5],
+    ];
+    d.en.layout = blocks('en');
+    d.el.layout = blocks('el');
+  });
+  // Missing translations: three Greek fields left empty.
+  seedChanged('terms', termsDoc, '2026-11-22T10:05:00.000Z', (d) => {
+    d.el.hero.lede = '';
+    d.el.free.title = '';
+    d.el.changes.body = '';
+  });
+  // SEO: no H1 in English, and a block linking to a page that does not exist.
+  seedChanged('privacy', privacyDoc, '2026-11-22T10:07:00.000Z', (d) => {
+    d.en.hero.title = '';
+    const keys = ['whatCollect', 'notCollect', 'whoHasAccess', 'rights', 'deletion', 'cookies', 'children', 'changes'].map((key) => ({ type: 'section', key }));
+    d.en.layout = [...keys, { type: 'text', id: 'b-q8w2er', body: 'Questions? See [the old rules page](/rules-2019).' }];
+    d.el.layout = [...keys, { type: 'text', id: 'b-q8w2er', body: 'Ερωτήσεις; Δες [την παλιά σελίδα κανόνων](/rules-2019).' }];
+  });
+}
+
 function seedAdmin() {
   seedDraft('rules');
+  seedLayouts();
   seedChanged('faq', faqDoc, '2026-11-22T09:52:00.000Z', (d) => {
     d.en.hero.title = 'Eurovision Games: your questions, answered';
     d.en.meta.title = 'Eurovision Games FAQ: rooms, scoring and the live show';
@@ -223,9 +274,17 @@ function seedAdmin() {
       cms_revision: (a) => ({ id: a.p_rev_id, doc_id: 'rules', doc_type: 'rules', kind: 'checkpoint', data: revisionData(Number(a.p_rev_id)), created_at: '', updated_at: '' }),
       cms_restore: () => nextStamp(),
       avatar_usage: () => AVATAR_USAGE,
+      media_list: () => MEDIA,
+      media_usage: (a) => (String(a.p_id).startsWith('00000001') ? ['about'] : String(a.p_id).startsWith('00000002') ? ['faq'] : []),
+      media_set_meta: (a) => {
+        const row = MEDIA.find((m) => m.id === a.p_id)!;
+        const alt = Object.fromEntries(Object.entries((a.p_alt ?? {}) as Record<string, string>).map(([k, v]) => [k, v.trim()]).filter(([, v]) => v));
+        Object.assign(row, { alt, title: String(a.p_title ?? '').trim() || null });
+        return { ...row };
+      },
       avatars_reorder: () => null,
       avatar_purge: () => [],
-      unpublished_summary: () => ({ changed_years: [2026], changed_docs: ['faq', 'site-footer', 'site-header'], since: '2026-11-18T09:00:00Z' }),
+      unpublished_summary: () => ({ changed_years: [2026], changed_docs: ['about', 'faq', 'privacy', 'site-footer', 'site-header', 'terms'], since: '2026-11-18T09:00:00Z' }),
       last_publish_run: () => PUBLISH_RUNS[0] ?? null,
       live_contest_year: () => 2026,
     },

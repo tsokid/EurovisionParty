@@ -316,6 +316,17 @@ const client = {
       warnOnce(`storage:${bucket}`, `storage.from("${bucket}") — not modelled`);
       return {
         getPublicUrl: (p: string) => ({ data: { publicUrl: `/${p}` } }),
+        // CMS P6: the media library's thumbnails. A cms-media object shows one of the
+        // static avatar images (by its name), so the library has real pictures.
+        createSignedUrls: async (paths: string[]) => ({
+          data: paths.map((path) => {
+            let h = 0;
+            for (const ch of path) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+            const pics = ['01', '02', '03', '04', '05', '06'];
+            return { path, signedUrl: `/avatars/img-${pics[h % pics.length]}-512.webp`, error: null };
+          }),
+          error: null,
+        }),
         upload: async () => ({ data: null, error: null }),
         list: async () => ({ data: [], error: null }),
         remove: async () => ({ data: null, error: null }),
