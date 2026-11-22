@@ -8,6 +8,52 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { routes } from '../src/routeConfig';
 import { FAKE_USER, setFakeDb } from './fakeSupabase';
 import { IMAGE_AVATARS } from '../src/components/stage/avatars/images.generated';
+import { CmsRealtimeContext, type DocChannelFactory, type DocChannelHandlers } from '../src/admin/cms/docChannel';
+import rulesDoc from '../content/pages/rules.json';
+
+// CMS drafts (P3): a stateful cms_get / cms_save with the real optimistic
+// concurrency, a short history, and a fake second editor ("elena") on every
+// doc. window.__cmsRemoteSave(docId, mutate) makes elena save, so the
+// gallery can show the auto-rebase toast and the conflict dialog.
+type DraftRow = { doc_id: string; doc_type: string; data: unknown; updated_at: string };
+const drafts: Record<string, DraftRow> = {};
+let stamp = 0;
+const nextStamp = () => `2026-11-22T10:${String(10 + (stamp++ % 49)).padStart(2, '0')}:00.${String(stamp).padStart(3, '0')}Z`;
+const channels = new Map<string, DocChannelHandlers>();
+const ELENA = { key: 'tab-elena', userId: 'u-elena', email: 'elena@example.com' };
+const galleryChannel: DocChannelFactory = (docId, _me, handlers) => {
+  channels.set(docId, handlers);
+  handlers.onStatus?.(true);
+  setTimeout(() => handlers.onPeers([{ ...ELENA, field: 'el.hero.title', fieldLabel: 'Hero › Title (EL)' }]), 300);
+  return { focus() {}, announceSaved() {}, close() { channels.delete(docId); } };
+};
+function seedDraft(docId: string) {
+  const data = JSON.parse(JSON.stringify(rulesDoc));
+  drafts[docId] = { doc_id: docId, doc_type: docId, data, updated_at: '2026-11-22T09:58:00.000Z' };
+}
+(window as unknown as Record<string, unknown>).__cmsRemoteSave = (docId: string, mutate: (d: { en: Record<string, unknown>; el: Record<string, unknown> }) => void) => {
+  const row = drafts[docId];
+  if (!row) return;
+  const data = JSON.parse(JSON.stringify(row.data));
+  mutate(data);
+  drafts[docId] = { ...row, data, updated_at: nextStamp() };
+  channels.get(docId)?.onRemoteSave({ updatedAt: drafts[docId].updated_at, by: 'elena@example.com' });
+};
+const HISTORY = [
+  { id: 31, kind: 'checkpoint', author: 'user-me', author_email: 'owner@example.com', created_at: '2026-11-22T09:40:00Z', updated_at: '2026-11-22T09:58:00Z', run_id: null, commit_sha: null, restored_from: null },
+  { id: 27, kind: 'restored', author: 'u-elena', author_email: 'elena@example.com', created_at: '2026-11-21T19:12:00Z', updated_at: '2026-11-21T19:12:00Z', run_id: null, commit_sha: null, restored_from: 19 },
+  { id: 24, kind: 'published', author: 'u-elena', author_email: 'elena@example.com', created_at: '2026-11-21T18:02:00Z', updated_at: '2026-11-21T18:02:00Z', run_id: 41, commit_sha: '3e1f0a9c55e1', restored_from: null },
+  { id: 19, kind: 'checkpoint', author: 'u-elena', author_email: 'elena@example.com', created_at: '2026-11-21T17:30:00Z', updated_at: '2026-11-21T17:51:00Z', run_id: null, commit_sha: null, restored_from: null },
+  { id: 4, kind: 'seed', author: null, author_email: null, created_at: '2026-11-20T09:00:00Z', updated_at: '2026-11-20T09:00:00Z', run_id: null, commit_sha: null, restored_from: null },
+];
+function revisionData(id: number) {
+  const data = JSON.parse(JSON.stringify(rulesDoc));
+  if (id === 19 && data.en?.hero) {
+    data.en.hero.title = 'Rules: the complete Eurovision Games rule book';
+    data.el.hero.lede = 'Όλα όσα χρειάζεται ο host ή ένας παίκτης για να λυθεί μια διαφωνία την ώρα του σόου.';
+  }
+  return data;
+}
 
 // The avatars table (089): the shipped set, a few unpublished, one deleted.
 const AVATAR_ROWS = IMAGE_AVATARS.map((a, i) => ({
@@ -37,6 +83,7 @@ const entry = (year: number, iso: string, artist: string, song: string, place: n
 });
 
 function seedAdmin() {
+  seedDraft('rules');
   (FAKE_USER as Record<string, unknown>).email = 'owner@example.com';
   setFakeDb(
     {
@@ -60,8 +107,16 @@ function seedAdmin() {
     {
       contest_summaries: () => CONTESTS,
       cms_list: () => [{ doc_id: 'faq', doc_type: 'faq', updated_at: '2026-11-20T10:00:00Z', published: false }],
-      cms_get: () => null,
-      cms_save: () => new Date().toISOString(),
+      cms_get: (a) => drafts[String(a.p_doc_id)] ?? null,
+      cms_save: (a) => {
+        const id = String(a.p_doc_id);
+        if ((drafts[id]?.updated_at ?? null) !== (a.p_expected_updated_at ?? null)) throw { message: 'document changed by someone else; reload' };
+        drafts[id] = { doc_id: id, doc_type: String(a.p_doc_type), data: a.p_data, updated_at: nextStamp() };
+        return drafts[id].updated_at;
+      },
+      cms_history: () => HISTORY,
+      cms_revision: (a) => ({ id: a.p_rev_id, doc_id: 'rules', doc_type: 'rules', kind: 'checkpoint', data: revisionData(Number(a.p_rev_id)), created_at: '', updated_at: '' }),
+      cms_restore: () => nextStamp(),
       avatar_usage: () => AVATAR_USAGE,
       avatars_reorder: () => null,
       avatar_purge: () => [],
@@ -77,5 +132,9 @@ export function AdminGallery({ path }: { path: string }) {
     seedAdmin();
     return createMemoryRouter(routes, { initialEntries: [path] });
   });
-  return <RouterProvider router={router} />;
+  return (
+    <CmsRealtimeContext.Provider value={galleryChannel}>
+      <RouterProvider router={router} />
+    </CmsRealtimeContext.Provider>
+  );
 }
