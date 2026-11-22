@@ -257,15 +257,19 @@ describe('blocks widget', () => {
   const empty = () => ({ en: { zone: [] as unknown[] }, el: { zone: [] as unknown[] } });
 
   const addBlock = (type: string) => {
-    fireEvent.change(screen.getByLabelText('Τύπος ενότητας: Zone'), { target: { value: type } });
-    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη ενότητας: Zone' }));
+    fireEvent.change(screen.getByLabelText('Τύπος μπλοκ: Zone'), { target: { value: type } });
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη μπλοκ: Zone' }));
   };
 
   it('adds a block of the chosen type at the same index in both locales', () => {
     const form = setup(schema, empty());
     addBlock('text');
     addBlock('cta');
-    expect(form.value().en.zone).toEqual([{ type: 'text', body: '' }, { type: 'cta', title: '', body: '', label: '', href: '' }]);
+    expect(form.value().en.zone).toMatchObject([{ type: 'text', body: '' }, { type: 'cta', title: '', body: '', label: '', href: '' }]);
+    // Each new block gets a stable id, the same in both locales.
+    const ids = (form.value().en.zone as { id: string }[]).map((b) => b.id);
+    expect(ids.every((id) => /^b-[a-z0-9]+$/.test(id))).toBe(true);
+    expect(new Set(ids).size).toBe(2);
     expect(form.value().el.zone).toEqual(form.value().en.zone);
     expect(form.value().el.zone).not.toBe(form.value().en.zone);
   });
@@ -275,15 +279,15 @@ describe('blocks widget', () => {
       en: { zone: [{ type: 'text', body: 'Rich' }, { type: 'cta', title: 'T', body: 'Plain', label: 'Go', href: '/faq' }] },
       el: { zone: [{ type: 'text', body: 'Πλούσιο' }, { type: 'cta', title: 'Τ', body: 'Απλό', label: 'Πάμε', href: '/faq' }] },
     });
-    expect(screen.getByRole('group', { name: 'Ενότητα 1: Κείμενο' })).toBeInTheDocument();
-    expect(screen.getByRole('group', { name: 'Ενότητα 2: Κάλεσμα σε δράση' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Μπλοκ 1: Κείμενο' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Μπλοκ 2: Κάλεσμα σε δράση' })).toBeInTheDocument();
     // text.body is richText (toolbar), cta.body is multiline (none).
-    expect(screen.getByRole('button', { name: 'Έντονα (Zone › Ενότητα 1 › Text (EN))' })).toBeInTheDocument();
-    expect(screen.getByLabelText('Zone › Ενότητα 2 › Text (EN)')).toHaveValue('Plain');
-    expect(screen.queryByRole('button', { name: 'Έντονα (Zone › Ενότητα 2 › Text (EN))' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Έντονα (Zone › Μπλοκ 1 › Text (EN))' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Zone › Μπλοκ 2 › Text (EN)')).toHaveValue('Plain');
+    expect(screen.queryByRole('button', { name: 'Έντονα (Zone › Μπλοκ 2 › Text (EN))' })).toBeNull();
     // The shared type is not an editable field.
     expect(screen.queryByLabelText(/› Type/)).toBeNull();
-    expect(screen.getByLabelText('Zone › Ενότητα 2 › Button link (EN + EL)')).toHaveValue('/faq');
+    expect(screen.getByLabelText('Zone › Μπλοκ 2 › Button link (EN + EL)')).toHaveValue('/faq');
   });
 
   it('reorder and remove keep the locales aligned', () => {
@@ -291,16 +295,16 @@ describe('blocks widget', () => {
       en: { zone: [{ type: 'text', body: 'A' }, { type: 'callout', tone: 'info', body: 'B' }, { type: 'text', body: 'C' }] },
       el: { zone: [{ type: 'text', body: 'Α' }, { type: 'callout', tone: 'info', body: 'Β' }, { type: 'text', body: 'Γ' }] },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Μετακίνηση κάτω: Zone › Ενότητα 1' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Μετακίνηση κάτω: Zone › Μπλοκ 1' }));
     expect(form.value().en.zone).toEqual([{ type: 'callout', tone: 'info', body: 'B' }, { type: 'text', body: 'A' }, { type: 'text', body: 'C' }]);
     expect((form.value().el.zone as { body: string }[]).map((b) => b.body)).toEqual(['Β', 'Α', 'Γ']);
-    fireEvent.click(screen.getByRole('button', { name: 'Μετακίνηση πάνω: Zone › Ενότητα 3' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Μετακίνηση πάνω: Zone › Μπλοκ 3' }));
     expect((form.value().el.zone as { body: string }[]).map((b) => b.body)).toEqual(['Β', 'Γ', 'Α']);
-    fireEvent.click(screen.getByRole('button', { name: 'Αφαίρεση: Zone › Ενότητα 1' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Αφαίρεση: Zone › Μπλοκ 1' }));
     expect((form.value().en.zone as { body: string }[]).map((b) => b.body)).toEqual(['C', 'A']);
     expect((form.value().el.zone as { body: string }[]).map((b) => b.body)).toEqual(['Γ', 'Α']);
-    expect(screen.getByRole('button', { name: 'Μετακίνηση πάνω: Zone › Ενότητα 1' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Μετακίνηση κάτω: Zone › Ενότητα 2' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Μετακίνηση πάνω: Zone › Μπλοκ 1' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Μετακίνηση κάτω: Zone › Μπλοκ 2' })).toBeDisabled();
   });
 
   it('a shared field inside a block writes both locales', () => {
@@ -308,7 +312,7 @@ describe('blocks widget', () => {
       en: { zone: [{ type: 'callout', tone: 'info', body: 'B' }] },
       el: { zone: [{ type: 'callout', tone: 'info', body: 'Β' }] },
     });
-    fireEvent.change(screen.getByLabelText('Zone › Ενότητα 1 › Tone (EN + EL)'), { target: { value: 'warn' } });
+    fireEvent.change(screen.getByLabelText('Zone › Μπλοκ 1 › Tone (EN + EL)'), { target: { value: 'warn' } });
     expect((form.value().en.zone as { tone: string }[])[0].tone).toBe('warn');
     expect((form.value().el.zone as { tone: string }[])[0].tone).toBe('warn');
   });
@@ -318,8 +322,8 @@ describe('blocks widget', () => {
       en: { zone: [{ type: 'image', image: { media: `cms-media/${IMG}`, alt: 'Stage' } }] },
       el: { zone: [{ type: 'image', image: { media: `cms-media/${IMG}`, alt: 'Σκηνή' } }] },
     });
-    expect(await screen.findByRole('img', { name: 'Zone › Ενότητα 1 › Image › Image' })).toHaveAttribute('src', `https://signed.test/${IMG}-800.webp`);
-    expect(screen.getByLabelText('Zone › Ενότητα 1 › Image › Alt text (EL)')).toHaveValue('Σκηνή');
+    expect(await screen.findByRole('img', { name: 'Zone › Μπλοκ 1 › Image › Image' })).toHaveAttribute('src', `https://signed.test/${IMG}-800.webp`);
+    expect(screen.getByLabelText('Zone › Μπλοκ 1 › Image › Alt text (EL)')).toHaveValue('Σκηνή');
   });
 
   it('blocks whose types differ between locales are flagged, not merged', () => {
@@ -327,6 +331,6 @@ describe('blocks widget', () => {
       en: { zone: [{ type: 'text', body: 'A' }] },
       el: { zone: [{ type: 'cta', title: '', body: '', label: '', href: '' }] },
     });
-    expect(screen.getByRole('alert')).toHaveTextContent('Στα EN είναι ενότητα «Κείμενο», στα EL «Κάλεσμα σε δράση»: αφαίρεσέ την και πρόσθεσέ τη ξανά');
+    expect(screen.getByRole('alert')).toHaveTextContent('Στα EN είναι μπλοκ «Κείμενο», στα EL «Κάλεσμα σε δράση»: αφαίρεσέ το και πρόσθεσέ το ξανά');
   });
 });

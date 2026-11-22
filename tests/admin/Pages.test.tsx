@@ -249,15 +249,16 @@ describe('Pages module: editor', () => {
     expect(fetchesOf('faq')).toHaveLength(1);
   });
 
-  it('Extra blocks: + Add, a FAQ block; the autosave keeps extraBlocks in both languages', async () => {
+  it('Page sections (P6): add a FAQ block; the autosave writes the layout, the sections then the block, in both languages', async () => {
     await openEditor();
-    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη: Extra blocks' }));
-    fireEvent.change(screen.getByRole('combobox', { name: 'Τύπος ενότητας: Extra blocks' }), { target: { value: 'faq' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη ενότητας: Extra blocks' }));
+    fireEvent.change(screen.getByRole('combobox', { name: 'Τύπος μπλοκ: Page sections' }), { target: { value: 'faq' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη μπλοκ: Page sections' }));
     await waitFor(() => expect(saves()).toHaveLength(1), { timeout: 4000 });
     const data = saves()[0].p_data;
-    expect(data.en.extraBlocks).toEqual([{ type: 'faq', items: [] }]);
-    expect(data.el.extraBlocks).toEqual([{ type: 'faq', items: [] }]);
+    const keys = ['whatIs', 'why', 'whatsIn', 'freeNoAccount', 'ebu', 'builtBy'];
+    expect(data.en.layout).toEqual([...keys.map((key) => ({ type: 'section', key })), { type: 'faq', items: [], id: expect.stringMatching(/^b-/) }]);
+    expect(data.el.layout).toEqual(data.en.layout);
+    expect('extraBlocks' in data.en).toBe(false);
   });
 
   it('a save refused because someone else saved merges their version (disjoint fields) and saves again', async () => {
