@@ -54,7 +54,6 @@ const RAW_HTML: Record<string, { component: string; raw: Raw[] }> = {
 
 /** Files that render raw HTML but never CMS document content, with the reason. */
 const NOT_CMS: Record<string, string> = {
-  'components/seo/ContentRenderer.tsx': 'renders the legacy src/content PageContent type, not a CMS document',
 };
 
 /** Every .tsx file under src/, recursively (paths relative to src/). */

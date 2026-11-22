@@ -24,7 +24,6 @@ const FILES = [
   ...walk(path.join(root, 'src/i18n/locales')).filter((f) => f.endsWith('.json')),
   path.join(root, 'src/components/seo/SiteHeader.tsx'),
   path.join(root, 'src/components/seo/SiteFooter.tsx'),
-  path.join(root, 'src/components/onboarding/WelcomeScreen.tsx'),
 ];
 
 describe('no hardcoded live-contest year or city', () => {
