@@ -68,8 +68,8 @@ export default function WinnersPage() {
 
   const name = (w: IndexWinner) => (locale === 'el' ? w.name_el : w.name_en);
   const countryCell = (y: WinnerYear) =>
-    y.cancelled ? <span className="text-white/55">{c.sections.all.cancelled}</span> : (
-      <strong className="text-white">
+    y.cancelled ? <span className="text-stage-text-3">{c.sections.all.cancelled}</span> : (
+      <strong className="text-stage-text">
         {y.winners.map(name).join(', ')}{y.winners.length > 1 ? ` (${c.sections.all.shared})` : ''}
       </strong>
     );
@@ -80,8 +80,8 @@ export default function WinnersPage() {
       yearCell(y.year, yearPath(y.year, y)),
       countryCell(y),
       solo?.artist ?? '—',
-      solo?.song ? <em className="text-white/75">{solo.song}</em> : '—',
-      points !== null ? <strong className="text-euro-pink-light tabular-nums">{points}</strong> : '—',
+      solo?.song ? <em className="text-stage-text-2">{solo.song}</em> : '—',
+      points !== null ? <strong className="text-stage-pink-2 tabular-nums">{points}</strong> : '—',
     ];
   };
   const h = c.sections.recent.headers;

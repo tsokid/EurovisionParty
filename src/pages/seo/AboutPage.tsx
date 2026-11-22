@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import LegalFrame from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
@@ -61,35 +60,34 @@ export default function AboutPage() {
         jsonLd={mergeFaqJsonLd([organization, aboutPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <LegalFrame
+        current="about"
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="gold"
         title={c.hero.title}
         lede={c.hero.lede}
-      />
+      >
 
-      <ContentLayout>
         <Section title={c.whatIs.title}>
           <p>
             {c.whatIs.parts.lead}
-            <strong className="text-white">{c.whatIs.parts.predictionsBold}</strong>
+            <strong>{c.whatIs.parts.predictionsBold}</strong>
             {c.whatIs.parts.mid1}
-            <strong className="text-white">{c.whatIs.parts.triviaBold}</strong>
+            <strong>{c.whatIs.parts.triviaBold}</strong>
             {c.whatIs.parts.mid2}
-            <strong className="text-white">{c.whatIs.parts.trophiesBold}</strong>
+            <strong>{c.whatIs.parts.trophiesBold}</strong>
             {c.whatIs.parts.tail}
           </p>
         </Section>
 
         <Section title={c.why.title}>
           <p>{c.why.body}</p>
-          <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-            <h3 className="text-white font-bold text-lg mb-2">{c.why.cardTitle}</h3>
-            <ul className="list-disc pl-6 space-y-1.5 text-white/85 text-[15px]">
+          <div className="card-hero card-pad legal-card">
+            <h3 className="t-h3">{c.why.cardTitle}</h3>
+            <ul className="legal-list">
               {c.why.items.map((item, i) => (
                 <li key={i}>
-                  <strong className="text-white">{item.bold}</strong>{item.rest}
+                  <strong>{item.bold}</strong>{item.rest}
                 </li>
               ))}
             </ul>
@@ -97,15 +95,15 @@ export default function AboutPage() {
         </Section>
 
         <Section title={c.whatsIn.title}>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.whatsIn.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>
+                <strong>{item.bold}</strong>
                 {item.lead}
                 {item.linkLabel && item.linkHref && (
                   <a
                     href={item.linkHref}
-                    className="text-euro-pink-light hover:text-white underline underline-offset-2"
+                   
                   >
                     {item.linkLabel}
                   </a>
@@ -121,9 +119,9 @@ export default function AboutPage() {
         </Section>
 
         <Section title={c.ebu.title}>
-          <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-            <h3 className="text-white font-bold text-lg mb-2">{c.ebu.cardTitle}</h3>
-            <p className="text-white/85 text-[15px] leading-relaxed">{c.ebu.body}</p>
+          <div className="card-hero card-pad legal-card">
+            <h3 className="t-h3">{c.ebu.cardTitle}</h3>
+            <p className="t-small">{c.ebu.body}</p>
           </div>
         </Section>
 
@@ -141,7 +139,7 @@ export default function AboutPage() {
         />
 
         <RelatedCards items={c.related} />
-      </ContentLayout>
+      </LegalFrame>
       <SiteFooter />
     </>
   );

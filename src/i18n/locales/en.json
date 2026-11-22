@@ -993,5 +993,102 @@
     "youMinus": "You −{{points}}",
     "youZero": "You ±0",
     "namePlusDouble": "{{name}} +{{points}} ({{score}}×2)"
+  },
+  "faqPage": {
+    "topicsNav": "Topics",
+    "top3": "The three most asked",
+    "details": "In more detail",
+    "related": "Keep reading",
+    "topics": {
+      "start": "Getting started",
+      "devices": "Devices and connection",
+      "during": "During the game",
+      "scoring": "Scoring and trophies",
+      "results": "Results and data"
+    }
+  },
+  "nightPage": {
+    "guide": "Guide",
+    "inRoom": "Inside the room",
+    "inGame": "In the game",
+    "finalLabel": "Grand final · {{city}}",
+    "days": "days"
+  },
+  "rulesPage": {
+    "statPlayers": "players",
+    "statPhases": "phases",
+    "statTrophies": "trophies",
+    "glanceTitle": "The rules at a glance",
+    "quiz": "Quiz",
+    "quizSub": "3 rounds × 10 questions, 15″ each",
+    "quizFast": "Correct ≤ {{s}}″",
+    "quizSlow": "Correct, slower",
+    "duels": "Duels",
+    "duelSub": "3 questions × 12″. Tie: no points.",
+    "duelCorrect": "Correct answer",
+    "duelPts": "12 − sec",
+    "duelSteal": "Steal, up to the opponent's total",
+    "duelDouble": "Double your score",
+    "predictions": "Predictions",
+    "predSub": "Top 5 and Worst 5. Editable until voting opens.",
+    "predExact": "Exact position",
+    "predList": "Right list, wrong position",
+    "predOut": "Not in the list",
+    "trophies": "Trophies",
+    "trophySub": "Only at the end of the game.",
+    "onThisPage": "On this page",
+    "related": "Keep reading"
+  },
+  "scoringPage": {
+    "statQuiz": "quiz maximum",
+    "statPred": "predictions maximum",
+    "statDouble": "or Steal in duels",
+    "kQuiz": "Quiz",
+    "kPred": "Predictions",
+    "kDuels": "Duels",
+    "kEdge": "Edge cases",
+    "duelFormula": "12 − sec",
+    "totalLabel": "points at the end of the night",
+    "related": "Keep reading"
+  },
+  "legalPage": {
+    "updated": "Last updated:",
+    "tabs": "Legal and about",
+    "onThisPage": "On this page",
+    "tab": {
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies",
+      "about": "About"
+    }
+  },
+  "countriesPage": {
+    "statCountries": "countries",
+    "statWinners": "with at least one win",
+    "statRecord": "wins, the record",
+    "top": "The most successful",
+    "wins_one": "{{count}} win",
+    "wins_other": "{{count}} wins",
+    "part": "entries"
+  },
+  "hubSub": {
+    "pending": "To come"
+  },
+  "notFoundPage": {
+    "countriesBlurb": "Every country and its history.",
+    "month": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    }
   }
 }

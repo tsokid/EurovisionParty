@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import { ArticleFrame } from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import FaqAccordion from '../../components/seo/FaqAccordion';
@@ -83,25 +82,25 @@ export default function EurovisionDuelsPage() {
         jsonLd={mergeFaqJsonLd([article, howTo, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <ArticleFrame
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="purple"
         title={c.hero.title}
+        grad="dash"
         lede={c.hero.lede}
-      />
+        actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/how-to-play' } }}
+      >
 
-      <ContentLayout>
         <Section title={c.sections.whatIs.title}>
           <p>
             {c.sections.whatIs.bodyPre}
             <em>{c.sections.whatIs.bodyEm}</em>
             {c.sections.whatIs.bodyPost}
           </p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.whatIs.bullets.map((b, i) => (
               <li key={i}>
-                <strong className="text-white">{b.strong}</strong>{b.rest}
+                <strong>{b.strong}</strong>{b.rest}
               </li>
             ))}
           </ul>
@@ -110,14 +109,14 @@ export default function EurovisionDuelsPage() {
         <Section title={c.sections.when.title}>
           <p>
             {c.sections.when.body1Pre}
-            <strong className="text-white">{c.sections.when.body1Strong1}</strong>
+            <strong>{c.sections.when.body1Strong1}</strong>
             {c.sections.when.body1Mid}
-            <strong className="text-white">{c.sections.when.body1Strong2}</strong>
+            <strong>{c.sections.when.body1Strong2}</strong>
             {c.sections.when.body1Post}
           </p>
-          <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6 text-[16px]">
-            <p className="text-white/85">
-              <strong className="text-white">{c.sections.when.ruleOfThumbStrong}</strong>
+          <div className="card-hero card-pad legal-card">
+            <p className="text-stage-text-2">
+              <strong>{c.sections.when.ruleOfThumbStrong}</strong>
               {c.sections.when.ruleOfThumbBody}
             </p>
           </div>
@@ -129,10 +128,10 @@ export default function EurovisionDuelsPage() {
             headers={[c.sections.scoring.headers.scenario, c.sections.scoring.headers.points]}
             align={['left', 'right']}
             rows={[
-              [c.sections.scoring.rows.zeroToOne, <strong key="a" className="text-white">11–12</strong>],
-              [c.sections.scoring.rows.five, <strong key="b" className="text-white">7</strong>],
-              [c.sections.scoring.rows.eleven, <strong key="c" className="text-white">1</strong>],
-              [c.sections.scoring.rows.wrong, <span key="d" className="text-white/50">0</span>],
+              [c.sections.scoring.rows.zeroToOne, <strong key="a" className="num sc-v">11–12</strong>],
+              [c.sections.scoring.rows.five, <strong key="b" className="num sc-v">7</strong>],
+              [c.sections.scoring.rows.eleven, <strong key="c" className="num sc-v">1</strong>],
+              [c.sections.scoring.rows.wrong, <span key="d" className="text-stage-text-3">0</span>],
             ]}
           />
           <p>
@@ -140,15 +139,15 @@ export default function EurovisionDuelsPage() {
             <em>{c.sections.scoring.winnerScoreEm}</em>
             {c.sections.scoring.winnerScorePost}
           </p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             <li>
-              <strong className="text-white">{c.sections.scoring.stealLabel}</strong>
+              <strong>{c.sections.scoring.stealLabel}</strong>
               {c.sections.scoring.stealBodyPre}
               <em>{c.sections.scoring.stealBodyEm}</em>
               {c.sections.scoring.stealBodyPost}
             </li>
             <li>
-              <strong className="text-white">{c.sections.scoring.doubleLabel}</strong>
+              <strong>{c.sections.scoring.doubleLabel}</strong>
               {c.sections.scoring.doubleBodyPre}
               <em>{c.sections.scoring.doubleBodyEm}</em>
               {c.sections.scoring.doubleBodyPost}
@@ -157,16 +156,16 @@ export default function EurovisionDuelsPage() {
         </Section>
 
         <Section title={c.sections.stealVsDouble.title}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.05] p-6">
-              <h3 className="text-white font-bold text-lg mb-2">{c.sections.stealVsDouble.stealHeading}</h3>
-              <p className="text-white/80 text-[15px] leading-relaxed">
+          <div className="kit-grid c2">
+            <div className="card-hero card-pad legal-card">
+              <h3 className="t-h3">{c.sections.stealVsDouble.stealHeading}</h3>
+              <p className="t-small">
                 {c.sections.stealVsDouble.stealBody}
               </p>
             </div>
-            <div className="rounded-2xl border border-euro-purple-light/30 bg-euro-purple-light/[0.05] p-6">
-              <h3 className="text-white font-bold text-lg mb-2">{c.sections.stealVsDouble.doubleHeading}</h3>
-              <p className="text-white/80 text-[15px] leading-relaxed">
+            <div className="card-hero card-pad legal-card">
+              <h3 className="t-h3">{c.sections.stealVsDouble.doubleHeading}</h3>
+              <p className="t-small">
                 {c.sections.stealVsDouble.doubleBodyPre}
                 <em>{c.sections.stealVsDouble.doubleBodyEm}</em>
                 {c.sections.stealVsDouble.doubleBodyPost}
@@ -177,15 +176,15 @@ export default function EurovisionDuelsPage() {
 
         <Section title={c.sections.trophies.title}>
           <p>{c.sections.trophies.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">{c.sections.trophies.duelistLabel}</strong>{c.sections.trophies.duelistBody}</li>
-            <li><strong className="text-white">{c.sections.trophies.thiefLabel}</strong>{c.sections.trophies.thiefBody}</li>
+          <ul className="legal-list">
+            <li><strong>{c.sections.trophies.duelistLabel}</strong>{c.sections.trophies.duelistBody}</li>
+            <li><strong>{c.sections.trophies.thiefLabel}</strong>{c.sections.trophies.thiefBody}</li>
           </ul>
           <p>
             {c.sections.trophies.seePre}
-            <a href="/scoring" className="text-euro-pink-light hover:text-white underline underline-offset-2">{c.sections.trophies.scoringLink}</a>
+            <a href="/scoring">{c.sections.trophies.scoringLink}</a>
             {c.sections.trophies.seeMid}
-            <a href="/rules" className="text-euro-pink-light hover:text-white underline underline-offset-2">{c.sections.trophies.rulesLink}</a>
+            <a href="/rules">{c.sections.trophies.rulesLink}</a>
             {c.sections.trophies.seePost}
           </p>
         </Section>
@@ -213,7 +212,7 @@ export default function EurovisionDuelsPage() {
             { href: '/faq#leave', title: c.related.leave.title, blurb: c.related.leave.blurb },
           ]}
         />
-      </ContentLayout>
+      </ArticleFrame>
       <SiteFooter />
     </>
   );

@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import LegalFrame from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import RelatedCards from '../../components/seo/RelatedCards';
@@ -74,22 +73,26 @@ export default function PrivacyPage() {
         jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <LegalFrame
+        current="privacy"
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="purple"
         title={c.hero.title}
         lede={c.hero.lede}
-      />
+        highlights={[3, 1, 2].map((i) => c.notCollect.items[i]).filter(Boolean).map((it, i) => ({
+          icon: (['shield', 'x', 'lock'] as const)[i],
+          title: it.bold.replace(/\.$/, ''),
+          body: it.rest.trim(),
+        }))}
+      >
 
-      <ContentLayout>
         <Section title={c.whatCollect.title}>
           <p>{c.whatCollect.intro}</p>
           <DataTable
             headers={c.whatCollect.headers as unknown as string[]}
             align={['left', 'left', 'left']}
             rows={c.whatCollect.rows.map((row, i) => [
-              <strong key={`type-${i}`} className="text-white">{row.type}</strong>,
+              <strong key={`type-${i}`}>{row.type}</strong>,
               row.purpose,
               row.retention,
             ])}
@@ -97,10 +100,10 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title={c.notCollect.title}>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.notCollect.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
           </ul>
@@ -108,10 +111,10 @@ export default function PrivacyPage() {
 
         <Section title={c.whoHasAccess.title}>
           <p>{c.whoHasAccess.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.whoHasAccess.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
           </ul>
@@ -119,19 +122,19 @@ export default function PrivacyPage() {
 
         <Section title={c.rights.title}>
           <p>{c.rights.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.rights.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
           </ul>
         </Section>
 
         <Section title={c.deletion.title}>
-          <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-            <h3 className="text-white font-bold text-lg mb-2">{c.deletion.cardTitle}</h3>
-            <p className="text-white/80 text-[15px] leading-relaxed">
+          <div className="card-hero card-pad legal-card">
+            <h3 className="t-h3">{c.deletion.cardTitle}</h3>
+            <p className="t-small">
               {c.deletion.cardBody}
             </p>
           </div>
@@ -141,7 +144,7 @@ export default function PrivacyPage() {
         <Section title={c.cookies.title}>
           <p>
             {c.cookies.lead}
-            <a href="/cookies" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <a href="/cookies">
               {c.cookies.linkLabel}
             </a>
             {c.cookies.tail}
@@ -159,7 +162,7 @@ export default function PrivacyPage() {
         <ExtraBlocks value={c.extraBlocks} />
 
         <RelatedCards items={c.related} />
-      </ContentLayout>
+      </LegalFrame>
       <SiteFooter />
     </>
   );

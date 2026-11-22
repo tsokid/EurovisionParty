@@ -1,11 +1,9 @@
 import { NotAnnounced, lineupAnnounced, notAnnouncedTitle } from './NotAnnounced';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import { HubRelatedAside, HubSubHero, ShowDates } from './HubSubBits';
 import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
-import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd } from '../../components/seo/Breadcrumbs';
 import { visibleTable } from './table';
 import { HubGate } from './HubFrame';
@@ -37,21 +35,24 @@ function SongsBody({ hub }: { hub: Hub }) {
         jsonLd={[itemList, breadcrumbJsonLd(crumbs, locale)]}
       />
 
-      <PageHero crumbs={crumbs} chip={c.chip[contest.stage]} chipTone="gold" title={c.songs.h1(f)} lede={c.songs.lede(f)} />
+      <HubSubHero hub={hub} crumbs={crumbs} title={c.songs.h1(f)} lede={c.songs.lede(f)} aside={<ShowDates hub={hub} />} />
 
-      <ContentLayout wide>
-        {lineupAnnounced(contest.entries) ? (
-          <Section id="songs" title={c.songs.listTitle(f)}>
-            <DataTable {...table} />
-          </Section>
-        ) : (
-          <Section id="songs" title={notAnnouncedTitle(contest.year, locale)}>
-            <NotAnnounced year={contest.year} locale={locale} />
-          </Section>
-        )}
-
-        <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub, 'songs')} />
-      </ContentLayout>
+      <div className="wrap pg-body hs-body">
+        <div className="pg-main stage-prose hs-main">
+          {lineupAnnounced(contest.entries) ? (
+            <Section id="songs" title={c.songs.listTitle(f)}>
+              <DataTable {...table} />
+            </Section>
+          ) : (
+            <Section id="songs" title={notAnnouncedTitle(contest.year, locale)}>
+              <NotAnnounced year={contest.year} locale={locale} />
+            </Section>
+          )}
+        </div>
+        <aside className="pg-aside">
+          <HubRelatedAside heading={c.related.heading(contest.year)} items={hubRelated(hub, 'songs')} />
+        </aside>
+      </div>
       <SiteFooter />
     </>
   );

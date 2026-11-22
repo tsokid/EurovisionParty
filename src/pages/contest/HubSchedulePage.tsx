@@ -1,13 +1,10 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
-import Section from '../../components/seo/Section';
-import DataTable from '../../components/seo/DataTable';
+import { DaysCard, HubPlayCard, HubSubHero } from './HubSubBits';
+import { weekday } from '../seo/content/contestText';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd } from '../../components/seo/Breadcrumbs';
 import { countryName, formatDate } from './content/hubCopy';
-import { visibleTable } from './table';
 import { HubGate } from './HubFrame';
 import { byCountry, hubCrumbs, hubRelated, type Hub } from './hub';
 
@@ -18,15 +15,10 @@ function ScheduleBody({ hub }: { hub: Hub }) {
   const direct = f.semisKnown ? byCountry(contest.entries.filter((e) => e.semi == null), locale) : [];
 
   const shows = [
-    { show: c.shows.semi1, date: contest.dates.semi1, countries: f.semi1 },
-    { show: c.shows.semi2, date: contest.dates.semi2, countries: f.semi2 },
-    { show: c.shows.final, date: contest.dates.final, countries: f.finalists },
+    { show: c.shows.semi1, date: contest.dates.semi1, countries: f.semi1, final: false },
+    { show: c.shows.semi2, date: contest.dates.semi2, countries: f.semi2, final: false },
+    { show: c.shows.final, date: contest.dates.final, countries: f.finalists, final: true },
   ];
-  const table = visibleTable(shows, [
-    { header: c.headers.show, value: (s) => <strong className="text-white">{s.show}</strong> },
-    { header: c.headers.date, value: (s) => (s.date ? formatDate(s.date, locale) : null) },
-    { header: c.headers.countries, value: (s) => (s.countries || null), align: 'right' },
-  ]);
 
   return (
     <>
@@ -39,25 +31,52 @@ function ScheduleBody({ hub }: { hub: Hub }) {
         jsonLd={[breadcrumbJsonLd(crumbs, locale)]}
       />
 
-      <PageHero crumbs={crumbs} chip={c.chip[contest.stage]} chipTone="gold" title={c.schedule.h1(f)} lede={c.schedule.lede(f)} />
+      <HubSubHero
+        hub={hub}
+        crumbs={crumbs}
+        title={c.schedule.h1(f)}
+        lede={c.schedule.lede(f)}
+        aside={<DaysCard hub={hub} label={(d) => contest.dates.final ? `${c.daysToFinal(d)}, ${weekday(contest.dates.final, locale)} ${formatDate(contest.dates.final, locale)}` : c.daysToFinal(d)} />}
+      />
 
-      <ContentLayout>
-        <Section id="shows" title={c.schedule.showsTitle}>
-          <DataTable {...table} />
-        </Section>
+      <div className="wrap pg-body hs-body">
+        <div className="pg-main">
+          <section id="shows" className="cs" aria-labelledby="shows-h">
+            <h2 id="shows-h" className="t-h2">{c.schedule.showsTitle}</h2>
+            <ul className="kit-grid c3 hs-shows">
+              {shows.map((s) => (
+                <li key={s.show} className={s.final ? 'card hs-show final' : 'card hs-show'}>
+                  <h3 className="t-eyebrow">{s.show}</h3>
+                  {s.date ? (
+                    <div className="hs-show-date">
+                      <time dateTime={s.date} className="num">{Number(s.date.slice(8, 10))}</time>
+                      <span><strong>{weekday(s.date, locale)}</strong><span className="t-meta">{formatDate(s.date, locale)}</span></span>
+                    </div>
+                  ) : <p className="t-meta m-0">—</p>}
+                  {s.countries ? <p className="t-small m-0">{c.headers.countries}: <strong>{s.countries}</strong></p> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <Section id="how" title={c.schedule.howTitle}>
-          <p>{c.schedule.how}</p>
-        </Section>
+          <section id="how" className="cs" aria-labelledby="how-h">
+            <h2 id="how-h" className="t-h2">{c.schedule.howTitle}</h2>
+            <p className="t-body">{c.schedule.how}</p>
+          </section>
 
-        {direct.length > 0 && (
-          <Section id="direct" title={c.schedule.directTitle}>
-            <p>{c.schedule.direct(direct.length, direct.map((e) => countryName(e, locale)).join(', '))}</p>
-          </Section>
-        )}
+          {direct.length > 0 && (
+            <section id="direct" className="cs" aria-labelledby="direct-h">
+              <h2 id="direct-h" className="t-h2">{c.schedule.directTitle}</h2>
+              <p className="t-body">{c.schedule.direct(direct.length, direct.map((e) => countryName(e, locale)).join(', '))}</p>
+            </section>
+          )}
 
-        <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub, 'schedule')} />
-      </ContentLayout>
+          <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub, 'schedule')} columns={2} />
+        </div>
+        <aside className="pg-aside">
+          <HubPlayCard hub={hub} />
+        </aside>
+      </div>
       <SiteFooter />
     </>
   );

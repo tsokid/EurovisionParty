@@ -19,12 +19,12 @@ export function ContentPending({ locale, retry, inline = false }: { locale: Loca
   const layout = inline ? 'py-6 flex flex-col items-start gap-3' : 'min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4';
   const body = (
     <Tag className={layout} aria-busy={!error} data-content-state={error ? 'error' : 'pending'}>
-      <p className="text-white/70 text-lg" role={error ? 'alert' : 'status'}>{error ? c.error : c.loading}</p>
+      <p className="t-body" role={error ? 'alert' : 'status'}>{error ? c.error : c.loading}</p>
       {error && (
         <button
           type="button"
           onClick={retry}
-          className="rounded-full border border-white/20 px-5 py-2 text-white hover:bg-white/10 transition"
+          className="btn btn-ghost btn-sm"
         >
           {c.retry}
         </button>

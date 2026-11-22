@@ -106,14 +106,14 @@ export function songsItemList(entries: EntrySnapshot[], name: string) {
 }
 
 export const countryCell = (e: EntrySnapshot, locale: Locale): ReactNode => (
-  <strong className="text-white">{countryName(e, locale)}</strong>
+  <strong className="text-stage-text">{countryName(e, locale)}</strong>
 );
 
 export const songCell = (song: string | null): ReactNode =>
-  song ? <em className="text-white/75">{song}</em> : null;
+  song ? <em className="text-stage-text-2">{song}</em> : null;
 
 /** Points/place cell; null (column may hide) when unknown. */
 export const numCell = (n: number | null, strong = false): ReactNode =>
   n == null ? null : strong
-    ? <strong className="text-euro-pink-light tabular-nums">{n}</strong>
+    ? <strong className="text-stage-pink-2 tabular-nums">{n}</strong>
     : <span className="tabular-nums">{n}</span>;

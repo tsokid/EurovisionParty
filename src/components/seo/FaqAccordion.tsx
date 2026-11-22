@@ -1,18 +1,26 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 export interface FaqItem {
   q: string;
   a: string;
+  /** Rich answer (replaces the plain `a` paragraph). */
+  body?: ReactNode;
+  /** Anchor id on the item (e.g. /faq#leave). */
+  id?: string;
 }
 
 interface Props {
   items: FaqItem[];
   // singleOpen=true → expanding one closes the others (matches inspiration)
   singleOpen?: boolean;
+  /** Prefix of the panel ids; must be unique per page when there are several accordions. */
+  idPrefix?: string;
+  /** Indexes open on first render (and in the prerendered HTML). */
+  defaultOpen?: number[];
 }
 
-export default function FaqAccordion({ items, singleOpen = true }: Props) {
-  const [open, setOpen] = useState<Set<number>>(new Set());
+export default function FaqAccordion({ items, singleOpen = true, idPrefix = 'faq', defaultOpen }: Props) {
+  const [open, setOpen] = useState<Set<number>>(() => new Set(defaultOpen ?? []));
 
   const toggle = (i: number) => {
     setOpen((prev) => {
@@ -31,12 +39,12 @@ export default function FaqAccordion({ items, singleOpen = true }: Props) {
       {items.map((it, i) => {
         const isOpen = open.has(i);
         return (
-          <div key={it.q} className={`acc-item${isOpen ? ' open' : ''}`}>
+          <div key={it.q} id={it.id} className={`acc-item${isOpen ? ' open' : ''}`}>
             <button
               type="button"
               onClick={() => toggle(i)}
               aria-expanded={isOpen}
-              aria-controls={`faq-${i}`}
+              aria-controls={`${idPrefix}-${i}`}
               className="acc-btn"
             >
               <span className="acc-q">{it.q}</span>
@@ -47,8 +55,8 @@ export default function FaqAccordion({ items, singleOpen = true }: Props) {
               </span>
             </button>
             {isOpen && (
-              <div id={`faq-${i}`} className="acc-panel">
-                <p>{it.a}</p>
+              <div id={`${idPrefix}-${i}`} className="acc-panel">
+                {it.body ?? <p>{it.a}</p>}
               </div>
             )}
           </div>

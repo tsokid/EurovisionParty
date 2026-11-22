@@ -63,7 +63,8 @@ describe('PreviewPane', () => {
     const headBefore = document.head.innerHTML;
     const doc = published('eurovision-night');
     const { router } = inAdmin(<PreviewPane docId="eurovision-night" doc={doc} />);
-    expect(screen.getAllByText(String((doc.en.hero as Record<string, unknown>).title)).length).toBeGreaterThan(0);
+    // The H1 carries the title text; the Stage hero splits it into a gradient span.
+    expect(screen.getAllByRole('heading', { level: 1, name: String((doc.en.hero as Record<string, unknown>).title) }).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole('button', { name: 'EL' }));
     fireEvent.click(screen.getByRole('button', { name: 'EN' }));
     expect(document.title).toBe('admin');

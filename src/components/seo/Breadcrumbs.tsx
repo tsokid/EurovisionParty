@@ -20,7 +20,7 @@ export default function Breadcrumbs({ items }: Props) {
         {items.map((c, i) => {
           const last = i === items.length - 1;
           return (
-            <li key={c.href}>
+            <li key={`${i}-${c.href}`}>
               {last ? (
                 <span aria-current="page">{c.label}</span>
               ) : (

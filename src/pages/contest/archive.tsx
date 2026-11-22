@@ -61,7 +61,7 @@ export function countrySlugsByIso(index: CountryIndex): Map<string, string> {
   return new Map(Object.entries(index).map(([slug, c]) => [c.iso, slug]));
 }
 
-const LINK = 'text-white font-semibold hover:text-euro-pink-light hover:underline';
+const LINK = 'text-stage-text font-semibold hover:text-stage-pink-2 hover:underline';
 
 /** Country name linking to its country page. */
 export const countryLinkCell = (e: EntrySnapshot, locale: Locale): ReactNode => (

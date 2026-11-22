@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import { ArticleFrame } from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import FaqAccordion from '../../components/seo/FaqAccordion';
@@ -71,21 +70,21 @@ export default function DashboardPage() {
         jsonLd={mergeFaqJsonLd([article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <ArticleFrame
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="purple"
         title={c.hero.title}
+        grad="dash"
         lede={c.hero.lede}
-      />
+        actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/how-to-play' } }}
+      >
 
-      <ContentLayout>
         <Section title={c.sections.shows.title}>
           <p>{c.sections.shows.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.shows.bullets.map((b) => (
               <li key={b.strong}>
-                <strong className="text-white">{b.strong}</strong>
+                <strong>{b.strong}</strong>
                 {b.rest}
               </li>
             ))}
@@ -101,15 +100,15 @@ export default function DashboardPage() {
               r.source,
               r.when,
               r.capIsOpen ? (
-                <span key={`cap-${i}`} className="text-white/70">{r.capLabel}</span>
+                <span key={`cap-${i}`} className="text-stage-text-2">{r.capLabel}</span>
               ) : (
-                <strong key={`cap-${i}`} className="text-white">{r.capLabel}</strong>
+                <strong key={`cap-${i}`} className="num sc-v">{r.capLabel}</strong>
               ),
             ])}
           />
           <p>
             {c.sections.sources.footer.before}
-            <a href="/scoring" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <a href="/scoring">
               {c.sections.sources.footer.linkLabel}
             </a>
             {c.sections.sources.footer.after}
@@ -117,10 +116,10 @@ export default function DashboardPage() {
         </Section>
 
         <Section title={c.sections.activity.title}>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.activity.bullets.map((b) => (
               <li key={b.strong}>
-                <strong className="text-white">{b.strong}</strong>
+                <strong>{b.strong}</strong>
                 {b.rest}
               </li>
             ))}
@@ -129,10 +128,10 @@ export default function DashboardPage() {
 
         <Section title={c.sections.notShown.title}>
           <p>{c.sections.notShown.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.notShown.bullets.map((b) => (
               <li key={b.strong}>
-                <strong className="text-white">{b.strong}</strong>
+                <strong>{b.strong}</strong>
                 {b.rest}
               </li>
             ))}
@@ -157,7 +156,7 @@ export default function DashboardPage() {
         />
 
         <RelatedCards heading={c.related.heading} items={c.related.items} />
-      </ContentLayout>
+      </ArticleFrame>
       <SiteFooter />
     </>
   );

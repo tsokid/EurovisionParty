@@ -97,67 +97,83 @@
     "more": [
       {
         "a": "Ναι — εντελώς δωρεάν. Χωρίς συνδρομές, χωρίς in-app αγορές, χωρίς διαφημίσεις.",
-        "q": "Είναι το Eurovision Games δωρεάν;"
+        "q": "Είναι το Eurovision Games δωρεάν;",
+        "topic": "start"
       },
       {
         "a": "Όχι. Κανείς δεν κάνει εγγραφή, ούτε όποιος φτιάχνει το δωμάτιο. Οι παίκτες μπαίνουν με κωδικό δωματίου και ένα όνομα.",
-        "q": "Χρειάζομαι λογαριασμό;"
+        "q": "Χρειάζομαι λογαριασμό;",
+        "topic": "start"
       },
       {
         "a": "2 έως 20. Τα ζευγάρια μπορούν να μοιραστούν μία συσκευή.",
-        "q": "Πόσοι παίκτες μπορούν να μπουν σε ένα δωμάτιο;"
+        "q": "Πόσοι παίκτες μπορούν να μπουν σε ένα δωμάτιο;",
+        "topic": "start"
       },
       {
         "a": "Ναι. Η εφαρμογή είναι mobile-first και εγκαθίσταται ως PWA σε iOS και Android.",
-        "q": "Δουλεύει σε κινητό;"
+        "q": "Δουλεύει σε κινητό;",
+        "topic": "devices"
       },
       {
         "a": "Chrome 120+, Safari 17+, Firefox 121+, Edge 120+. Παλαιότεροι browsers μπορεί να δουλεύουν αλλά δεν έχουν δοκιμαστεί.",
-        "q": "Ποιοι browsers υποστηρίζονται;"
+        "q": "Ποιοι browsers υποστηρίζονται;",
+        "topic": "devices"
       },
       {
         "a": "Ναι — οποιαδήποτε στιγμή. Μέχρι να ανοίξει η ψηφοφορία μπορούν ακόμα να κάνουν προβλέψεις και να παίξουν quiz και μονομαχίες· μετά, όλα είναι κλειδωμένα.",
-        "q": "Μπορούν να μπουν παίκτες αργότερα;"
+        "q": "Μπορούν να μπουν παίκτες αργότερα;",
+        "topic": "during"
       },
       {
         "a": "Εμφανίζεται ένα banner επανασύνδεσης· με ένα tap επιστρέφεις στο δωμάτιο όπως το άφησες. Προβλέψεις και πόντοι δεν χάνονται.",
-        "q": "Τι γίνεται αν αποσυνδεθεί ένας παίκτης;"
+        "q": "Τι γίνεται αν αποσυνδεθεί ένας παίκτης;",
+        "topic": "devices"
       },
       {
         "a": "Όχι. Δεν υπάρχει τρόπος να αφαιρεθεί μεμονωμένος παίκτης, γι’ αυτό μοίρασε τον κωδικό δωματίου και τον κωδικό πρόσβασης μόνο σε άτομα που εμπιστεύεσαι. Αν μπει κάποιος που δεν θα έπρεπε, όποιος έφτιαξε το δωμάτιο μπορεί να το διαγράψει και να φτιάξει νέο.",
-        "q": "Μπορεί να αποβληθεί παίκτης από το δωμάτιο;"
+        "q": "Μπορεί να αποβληθεί παίκτης από το δωμάτιο;",
+        "topic": "during"
       },
       {
         "a": "Trivia 3 ερωτήσεων ένας προς έναν. Αν κερδίσεις, κλέβεις το σκορ της μονομαχίας σου από την άλλη πλευρά ή το διπλασιάζεις — δεν υπάρχει σταθερό μπόνους νίκης. Κάθε ζευγάρι έχει μία πρόκληση προς κάθε κατεύθυνση, συν μία ρεβάνς για όποιον χάσει.",
-        "q": "Πώς δουλεύουν οι μονομαχίες;"
+        "q": "Πώς δουλεύουν οι μονομαχίες;",
+        "topic": "during"
       },
       {
         "a": "Δες τη σελίδα Βαθμολογίας για τις πλήρεις φόρμουλες. Οι επιλογές Top-5 και Worst-5 βαθμολογούνται με τον ίδιο τρόπο: 50 πόντοι για την ακριβή θέση, 20 αν η χώρα είναι στη σωστή λίστα αλλά σε άλλη θέση. Οι απαντήσεις quiz παίρνουν 12, 8 ή 4 πόντους ανάλογα με την ταχύτητα, και οι μονομαχίες μετακινούν πόντους με Κλοπή ή Διπλασιασμό.",
-        "q": "Πώς υπολογίζεται η βαθμολογία;"
+        "q": "Πώς υπολογίζεται η βαθμολογία;",
+        "topic": "scoring"
       },
       {
         "a": "Πρωταθλητής (περισσότεροι συνολικοί πόντοι), Κλέφτης (περισσότεροι πόντοι κλεμμένοι σε μονομαχίες), Μονομάχος (περισσότερες κερδισμένες μονομαχίες), Μάντης (υψηλότερη βαθμολογία προβλέψεων, Top 5 + Worst 5), Γκουρού (περισσότερες σωστές απαντήσεις quiz).",
-        "q": "Ποια είναι τα πέντε τρόπαια;"
+        "q": "Ποια είναι τα πέντε τρόπαια;",
+        "topic": "scoring"
       },
       {
         "a": "Ένα προαιρετικό tiebreak: το δωμάτιο ψηφίζει Αποδοχή (όλοι οι ισόπαλοι μοιράζονται το τρόπαιο) ή Sudden Death. Αν νικήσει το Sudden Death με αρκετές ψήφους, οι ισόπαλοι παίκτες απαντούν σε 3 ερωτήσεις trivia — κερδίζει όποιος απαντήσει σωστά στις περισσότερες· σε ισοπαλία κερδίζει ο γρηγορότερος.",
-        "q": "Τι είναι το sudden death;"
+        "q": "Τι είναι το sudden death;",
+        "topic": "scoring"
       },
       {
         "a": "Τα επίσημα αποτελέσματα έρχονται αυτόματα από την επίσημη πηγή τη βραδιά του τελικού, μόλις ανακοινωθούν — κανείς δεν χρειάζεται να καταχωρήσει τίποτα.",
-        "q": "Πώς διαχειρίζεστε τα αποτελέσματα της Eurovision;"
+        "q": "Πώς διαχειρίζεστε τα αποτελέσματα της Eurovision;",
+        "topic": "results"
       },
       {
         "a": "Όχι. Δεν συνδεόμαστε με την Ευρωπαϊκή Ραδιοτηλεοπτική Ένωση (EBU), με κανέναν ραδιοτηλεοπτικό φορέα-οικοδεσπότη ή με τη μάρκα Eurovision Song Contest.",
-        "q": "Είναι το Eurovision Games επίσημο;"
+        "q": "Είναι το Eurovision Games επίσημο;",
+        "topic": "results"
       },
       {
         "a": "Αποθηκεύονται στο Supabase (Postgres + auth). Δες τη σελίδα Απορρήτου για λεπτομέρειες διατήρησης.",
-        "q": "Πού πάνε τα δεδομένα μου;"
+        "q": "Πού πάνε τα δεδομένα μου;",
+        "topic": "results"
       },
       {
         "a": "Ναι. Μπορείς να φτιάξεις έως 10 δωμάτια την ώρα και καθένα εμφανίζεται στην ενότητα \"Τα Δωμάτιά σου\" στην αρχική σελίδα.",
-        "q": "Μπορώ να φιλοξενήσω παραπάνω από ένα δωμάτιο;"
+        "q": "Μπορώ να φιλοξενήσω παραπάνω από ένα δωμάτιο;",
+        "topic": "start"
       }
     ],
     "moreTitle": "Περισσότερες ερωτήσεις",
@@ -298,67 +314,83 @@
     "more": [
       {
         "a": "Yes — completely free. No subscriptions, no in-app purchases, no ads.",
-        "q": "Is Eurovision Games free?"
+        "q": "Is Eurovision Games free?",
+        "topic": "start"
       },
       {
         "a": "No. Nobody signs up, not even the host. Players join with a room code and a name.",
-        "q": "Do I need an account?"
+        "q": "Do I need an account?",
+        "topic": "start"
       },
       {
         "a": "2 to 20. Couples can share a single device.",
-        "q": "How many players can join a room?"
+        "q": "How many players can join a room?",
+        "topic": "start"
       },
       {
         "a": "Yes. The app is mobile-first and installs as a PWA on iOS and Android.",
-        "q": "Does it work on mobile?"
+        "q": "Does it work on mobile?",
+        "topic": "devices"
       },
       {
         "a": "Chrome 120+, Safari 17+, Firefox 121+, Edge 120+. Older browsers may work but are not tested.",
-        "q": "What browsers are supported?"
+        "q": "What browsers are supported?",
+        "topic": "devices"
       },
       {
         "a": "Yes — at any point. Until voting opens they can still make predictions, play quiz and duel; after that everything is locked.",
-        "q": "Can players join late?"
+        "q": "Can players join late?",
+        "topic": "during"
       },
       {
         "a": "A reconnect banner appears; one tap rejoins them with state preserved. Predictions and points are not lost.",
-        "q": "What happens if a player disconnects?"
+        "q": "What happens if a player disconnects?",
+        "topic": "devices"
       },
       {
         "a": "No. There is no way to remove a single player, so share the room code and password only with people you trust. If someone joins who shouldn’t, the host can delete the room and start a new one.",
-        "q": "Can the host eject a player?"
+        "q": "Can the host eject a player?",
+        "topic": "during"
       },
       {
         "a": "3-question head-to-head trivia. The winner steals their duel score from the loser or doubles it — there is no flat win bonus. Each of you can challenge the other once, plus one rematch for the loser.",
-        "q": "How do duels work?"
+        "q": "How do duels work?",
+        "topic": "during"
       },
       {
         "a": "See the Scoring page for full formulas. Top-5 and Worst-5 picks score the same way: 50 points for the exact position, 20 if the country is in the right list at a different position. Quiz answers score 12, 8 or 4 points by speed, and duels move points through Steal or Double.",
-        "q": "How is scoring calculated?"
+        "q": "How is scoring calculated?",
+        "topic": "scoring"
       },
       {
         "a": "Champion (most total points), Thief (most points stolen in duels), Duelist (most duels won), Oracle (highest prediction score, Top 5 + Worst 5), Guru (most correct quiz answers).",
-        "q": "What are the five winner categories?"
+        "q": "What are the five winner categories?",
+        "topic": "scoring"
       },
       {
         "a": "An optional tiebreak: the room votes on Accept (all tied players share the trophy) or Sudden Death. If Sudden Death wins with enough votes, the tied players answer 3 trivia questions — most correct wins, speed breaks ties.",
-        "q": "What is sudden death?"
+        "q": "What is sudden death?",
+        "topic": "scoring"
       },
       {
         "a": "Official results are pulled in automatically from the official source on grand-final night, once they are announced — the host doesn’t need to enter anything.",
-        "q": "How do you handle Eurovision results?"
+        "q": "How do you handle Eurovision results?",
+        "topic": "results"
       },
       {
         "a": "No. We are not affiliated with the European Broadcasting Union, any host broadcaster, or the Eurovision Song Contest brand.",
-        "q": "Is Eurovision Games official?"
+        "q": "Is Eurovision Games official?",
+        "topic": "results"
       },
       {
         "a": "Stored on Supabase (Postgres + auth). See the Privacy page for retention details.",
-        "q": "Where does my data go?"
+        "q": "Where does my data go?",
+        "topic": "results"
       },
       {
         "a": "Yes. You can create up to 10 rooms an hour, and each one appears under \"Your Rooms\" on the home page.",
-        "q": "Can I host more than one room?"
+        "q": "Can I host more than one room?",
+        "topic": "start"
       }
     ],
     "moreTitle": "More questions",

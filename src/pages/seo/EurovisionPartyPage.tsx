@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import { ArticleFrame } from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import FaqAccordion from '../../components/seo/FaqAccordion';
@@ -104,38 +103,38 @@ export default function EurovisionPartyPage() {
         jsonLd={mergeFaqJsonLd([article, faqJsonLd, ...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <ArticleFrame
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="gold"
         title={c.hero.title}
+        grad="dash"
         lede={c.hero.lede}
-      />
+        actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/eurovision-night' } }}
+      >
 
-      <ContentLayout>
         <Section title={c.sections.what.title}>
           <p>
             {c.sections.what.intro}
-            <strong className="text-white">{c.sections.what.b1}</strong>
+            <strong>{c.sections.what.b1}</strong>
             {c.sections.what.b1Suffix}
-            <strong className="text-white">{c.sections.what.b2}</strong>
+            <strong>{c.sections.what.b2}</strong>
             {c.sections.what.b2Suffix}
-            <strong className="text-white">{c.sections.what.b3}</strong>
+            <strong>{c.sections.what.b3}</strong>
             {c.sections.what.outro}
           </p>
         </Section>
 
         <Section title={c.sections.headcount.title}>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.headcount.bullets.map((b) => (
               <li key={b.strong}>
-                <strong className="text-white">{b.strong}</strong>
+                <strong>{b.strong}</strong>
                 {b.rest}
                 {b.link && (
                   <>
                     <a
                       href="/dashboard"
-                      className="text-euro-pink-light hover:text-white underline underline-offset-2"
+                     
                     >
                       {b.link.label}
                     </a>
@@ -148,10 +147,10 @@ export default function EurovisionPartyPage() {
         </Section>
 
         <Section title={c.sections.theme.title}>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.theme.bullets.map((b) => (
               <li key={b.strong}>
-                <strong className="text-white">{b.strong}</strong>
+                <strong>{b.strong}</strong>
                 {b.rest}
               </li>
             ))}
@@ -160,10 +159,10 @@ export default function EurovisionPartyPage() {
 
         <Section title={c.sections.food.title}>
           <p>{c.sections.food.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.food.bullets.map((b) => (
               <li key={b.strong}>
-                <strong className="text-white">{b.strong}</strong>
+                <strong>{b.strong}</strong>
                 {b.rest}
               </li>
             ))}
@@ -185,17 +184,17 @@ export default function EurovisionPartyPage() {
             {c.sections.games.introBefore}
             <a
               href="/eurovision-games"
-              className="text-euro-pink-light hover:text-white underline underline-offset-2"
+             
             >
               {c.sections.games.introLink}
             </a>
             {c.sections.games.introAfter}
           </p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.sections.games.bullets.map((b) => (
               <li key={b.href}>
-                <strong className="text-white">
-                  <a href={b.href} className="text-euro-pink-light hover:text-white underline underline-offset-2">
+                <strong>
+                  <a href={b.href}>
                     {b.label}
                   </a>
                 </strong>
@@ -223,7 +222,7 @@ export default function EurovisionPartyPage() {
         />
 
         <RelatedCards heading={c.related.heading} items={c.related.items} />
-      </ContentLayout>
+      </ArticleFrame>
       <SiteFooter />
     </>
   );

@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import LegalFrame from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
@@ -73,25 +72,24 @@ export default function TermsPage() {
         jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <LegalFrame
+        current="terms"
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="purple"
         title={c.hero.title}
         lede={c.hero.lede}
-      />
+      >
 
-      <ContentLayout>
         <Section title={c.whoWeAre.title}>
           <p>{c.whoWeAre.lead}</p>
         </Section>
 
         <Section title={c.free.title}>
           <p>{c.free.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.free.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
           </ul>
@@ -99,10 +97,10 @@ export default function TermsPage() {
 
         <Section title={c.conduct.title}>
           <p>{c.conduct.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.conduct.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
           </ul>
@@ -111,16 +109,16 @@ export default function TermsPage() {
 
         <Section title={c.account.title}>
           <p>{c.account.intro}</p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.account.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
             <li>
-              <strong className="text-white">{c.account.deletionItem.bold}</strong>
+              <strong>{c.account.deletionItem.bold}</strong>
               {c.account.deletionItem.lead}
-              <a href="/privacy" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+              <a href="/privacy">
                 {c.account.deletionItem.linkLabel}
               </a>
               {c.account.deletionItem.tail}
@@ -131,7 +129,7 @@ export default function TermsPage() {
         <Section title={c.userContent.title}>
           <p>
             {c.userContent.lead}
-            <a href="/privacy" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <a href="/privacy">
               {c.userContent.linkLabel}
             </a>
             {c.userContent.tail}
@@ -141,9 +139,9 @@ export default function TermsPage() {
         <Section title={c.warranties.title}>
           <p>
             {c.warranties.lead}
-            <strong className="text-white">{c.warranties.asIs}</strong>
+            <strong>{c.warranties.asIs}</strong>
             {c.warranties.mid}
-            <strong className="text-white">{c.warranties.asAvailable}</strong>
+            <strong>{c.warranties.asAvailable}</strong>
             {c.warranties.tail}
           </p>
         </Section>
@@ -153,11 +151,11 @@ export default function TermsPage() {
         </Section>
 
         <Section title={c.ebu.title}>
-          <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-            <h3 className="text-white font-bold text-lg mb-2">{c.ebu.cardTitle}</h3>
-            <p className="text-white/85 text-[15px] leading-relaxed">
+          <div className="card-hero card-pad legal-card">
+            <h3 className="t-h3">{c.ebu.cardTitle}</h3>
+            <p className="t-small">
               {c.ebu.body}
-              <strong className="text-white">{c.ebu.bodyBold}</strong>
+              <strong>{c.ebu.bodyBold}</strong>
               {c.ebu.bodyTail}
             </p>
           </div>
@@ -170,7 +168,7 @@ export default function TermsPage() {
         <ExtraBlocks value={c.extraBlocks} />
 
         <RelatedCards items={c.related} />
-      </ContentLayout>
+      </LegalFrame>
       <SiteFooter />
     </>
   );

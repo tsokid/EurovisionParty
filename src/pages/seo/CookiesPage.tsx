@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import LegalFrame from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
 import RelatedCards from '../../components/seo/RelatedCards';
@@ -74,26 +73,25 @@ export default function CookiesPage() {
         jsonLd={mergeFaqJsonLd([article, webPage, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <LegalFrame
+        current="cookies"
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="purple"
         title={c.hero.title}
         lede={c.hero.lede}
-      />
+      >
 
-      <ContentLayout>
         <Section title={c.whatWeUse.title}>
           <p>{c.whatWeUse.intro}</p>
           <DataTable
             headers={c.whatWeUse.headers as unknown as string[]}
             align={['left', 'left', 'left']}
             rows={c.whatWeUse.rows.map((row, i) => [
-              <strong key={`cat-${i}`} className="text-white">{row.category}</strong>,
+              <strong key={`cat-${i}`}>{row.category}</strong>,
               row.purpose,
               <span
                 key={`def-${i}`}
-                className={row.defaultTone === 'pink' ? 'text-euro-pink-light' : 'text-white/70'}
+                className={row.defaultTone === 'pink' ? 'text-stage-pink-2' : 'text-stage-text-3'}
               >
                 {row.defaultText}
               </span>,
@@ -102,10 +100,10 @@ export default function CookiesPage() {
         </Section>
 
         <Section title={c.notUsed.title}>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.notUsed.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
           </ul>
@@ -117,15 +115,15 @@ export default function CookiesPage() {
             <em>{c.changeConsent.intro.emphasis}</em>
             {c.changeConsent.intro.tail}
           </p>
-          <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/[0.04] p-6">
-            <h3 className="text-white font-bold text-lg mb-2">{c.changeConsent.cardTitle}</h3>
-            <p className="text-white/80 text-[15px] leading-relaxed mb-4">
+          <div className="card-hero card-pad legal-card">
+            <h3 className="t-h3">{c.changeConsent.cardTitle}</h3>
+            <p className="t-small">
               {c.changeConsent.cardBody}
             </p>
             <button
               type="button"
               data-cc="show-preferencesModal"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-euro-purple-light to-euro-pink text-white font-bold text-sm hover:opacity-95 transition shadow-lg shadow-euro-pink/20"
+              className="btn btn-primary btn-sm"
             >
               {c.changeConsent.buttonLabel}
             </button>
@@ -135,15 +133,15 @@ export default function CookiesPage() {
         <Section title={c.whereDataLives.title}>
           <p>
             {c.whereDataLives.intro.lead}
-            <a href="/privacy" className="text-euro-pink-light hover:text-white underline underline-offset-2">
+            <a href="/privacy">
               {c.whereDataLives.intro.linkLabel}
             </a>
             {c.whereDataLives.intro.tail}
           </p>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
+          <ul className="legal-list">
             {c.whereDataLives.items.map((item, i) => (
               <li key={i}>
-                <strong className="text-white">{item.bold}</strong>{item.rest}
+                <strong>{item.bold}</strong>{item.rest}
               </li>
             ))}
           </ul>
@@ -164,7 +162,7 @@ export default function CookiesPage() {
         <ExtraBlocks value={c.extraBlocks} />
 
         <RelatedCards items={c.related} />
-      </ContentLayout>
+      </LegalFrame>
       <SiteFooter />
     </>
   );

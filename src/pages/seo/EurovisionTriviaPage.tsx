@@ -1,7 +1,6 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import { ArticleFrame } from '../../components/seo/LegalFrame';
 import Section from '../../components/seo/Section';
 import FaqAccordion from '../../components/seo/FaqAccordion';
 import CtaBanner from '../../components/seo/CtaBanner';
@@ -81,58 +80,58 @@ export default function EurovisionTriviaPage() {
         jsonLd={mergeFaqJsonLd([article, quizSchema, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], c.extraBlocks)}
       />
 
-      <PageHero
+      <ArticleFrame
         crumbs={crumbs}
         chip={c.hero.chip}
-        chipTone="purple"
         title={c.hero.title}
+        grad="dash"
         lede={c.hero.lede}
-      />
+        actions={{ primary: { label: c.cta.primary, href: '/?action=create' }, secondary: { label: c.cta.secondary, href: '/how-to-play' } }}
+      >
 
-      <ContentLayout>
         <Section title={c.sections.whatIs.title}>
           <p>{c.sections.whatIs.body}</p>
         </Section>
 
         <Section title={c.sections.samples.title}>
           <p>{c.sections.samples.intro}</p>
-          <ol className="space-y-4 list-none pl-0">
+          <ol className="tq-list">
             {c.questions.map((s, i) => (
               <li
                 key={i}
-                className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6"
+                className="card card-pad tq"
               >
-                <p className="font-semibold text-white text-[16px] mb-3">
-                  <span className="text-euro-pink-light mr-2">{c.sections.samples.questionPrefix}{i + 1}.</span>
+                <p className="tq-q">
+                  <span className="tq-n">{c.sections.samples.questionPrefix}{i + 1}.</span>
                   {s.q}
                 </p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3 list-none pl-0">
+                <ul className="tq-opts">
                   {s.options.map((o) => (
                     <li
                       key={o}
-                      className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white/80"
+                      className="tq-opt"
                     >
                       {o}
                     </li>
                   ))}
                 </ul>
-                <p className="text-sm text-white/70">
-                  <em className="text-euro-pink-light not-italic font-semibold">{c.sections.samples.answerLabel} </em>
+                <p className="t-small tq-a">
+                  <em className="tq-a-k">{c.sections.samples.answerLabel} </em>
                   {s.answer}
                 </p>
               </li>
             ))}
           </ol>
           {c.sections.disclaimer && (
-            <p className="text-xs text-white/40 italic mt-4">{c.sections.disclaimer}</p>
+            <p className="t-meta">{c.sections.disclaimer}</p>
           )}
         </Section>
 
         <Section title={c.sections.categories.title}>
-          <ul className="list-disc pl-6 space-y-1.5 text-white/80">
-            <li><strong className="text-white">{c.sections.categories.easyLabel}</strong> {c.sections.categories.easyBody}</li>
-            <li><strong className="text-white">{c.sections.categories.mediumLabel}</strong> {c.sections.categories.mediumBody}</li>
-            <li><strong className="text-white">{c.sections.categories.hardLabel}</strong> {c.sections.categories.hardBody}</li>
+          <ul className="legal-list">
+            <li><strong>{c.sections.categories.easyLabel}</strong> {c.sections.categories.easyBody}</li>
+            <li><strong>{c.sections.categories.mediumLabel}</strong> {c.sections.categories.mediumBody}</li>
+            <li><strong>{c.sections.categories.hardLabel}</strong> {c.sections.categories.hardBody}</li>
           </ul>
         </Section>
 
@@ -142,7 +141,7 @@ export default function EurovisionTriviaPage() {
           </p>
           <p>
             {c.sections.duels.body2Pre}
-            <a href="/duels" className="text-euro-pink-light hover:text-white underline underline-offset-2">{c.sections.duels.body2LinkLabel}</a>
+            <a href="/duels">{c.sections.duels.body2LinkLabel}</a>
             {c.sections.duels.body2Post}
           </p>
         </Section>
@@ -150,7 +149,7 @@ export default function EurovisionTriviaPage() {
         <Section title={c.sections.play.title}>
           <p>
             {c.sections.play.pre}
-            <a href="/" className="text-euro-pink-light hover:text-white underline underline-offset-2">{c.sections.play.linkLabel}</a>
+            <a href="/">{c.sections.play.linkLabel}</a>
             {c.sections.play.post}
           </p>
         </Section>
@@ -178,7 +177,7 @@ export default function EurovisionTriviaPage() {
             { href: '/eurovision-night', title: c.related.night.title, blurb: c.related.night.blurb },
           ]}
         />
-      </ContentLayout>
+      </ArticleFrame>
       <SiteFooter />
     </>
   );

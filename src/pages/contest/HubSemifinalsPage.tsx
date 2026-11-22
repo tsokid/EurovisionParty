@@ -1,10 +1,11 @@
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
-import PageHero from '../../components/seo/PageHero';
-import ContentLayout from '../../components/seo/ContentLayout';
+import { useTranslation } from 'react-i18next';
+import { Icon } from '../../components/seo/StageKit';
+import { HubRelatedAside, HubSubHero, ShowDates } from './HubSubBits';
+import { weekday } from '../seo/content/contestText';
 import Section from '../../components/seo/Section';
 import DataTable from '../../components/seo/DataTable';
-import RelatedCards from '../../components/seo/RelatedCards';
 import { breadcrumbJsonLd } from '../../components/seo/Breadcrumbs';
 import type { EntrySnapshot } from '../../content/contests/types';
 import { countryName, formatDate } from './content/hubCopy';
@@ -23,6 +24,7 @@ function semiOrder(entries: EntrySnapshot[], hub: Hub): EntrySnapshot[] {
 
 function SemisBody({ hub }: { hub: Hub }) {
   const { contest, locale, facts: f, copy: c, base } = hub;
+  const { t } = useTranslation();
   const crumbs = hubCrumbs(hub, 'semis');
   // Unknown split: nobody is listed as a direct qualifier.
   const direct = f.semisKnown ? byCountry(contest.entries.filter((e) => e.semi == null), locale) : [];
@@ -46,53 +48,81 @@ function SemisBody({ hub }: { hub: Hub }) {
         jsonLd={[breadcrumbJsonLd(crumbs, locale)]}
       />
 
-      <PageHero crumbs={crumbs} chip={c.chip[contest.stage]} chipTone="gold" title={c.semis.h1(f)} lede={c.semis.lede(f)} />
+      <HubSubHero hub={hub} crumbs={crumbs} title={c.semis.h1(f)} lede={c.semis.lede(f)} aside={<ShowDates hub={hub} />} />
 
-      <ContentLayout wide>
-        {!f.semisKnown && (
-          <Section id="semis-pending" title={c.hub.semisTitle}>
-            <p>{c.semis.pending}</p>
-          </Section>
-        )}
+      <div className="wrap pg-body hs-body">
+        <div className="pg-main stage-prose hs-main">
+          {!f.semisKnown && (
+            <Section id="semis-pending" title={c.hub.semisTitle}>
+              <div className="notice">
+                <span className="notice-ico" aria-hidden><Icon name="clock" size={22} /></span>
+                <p className="t-small notice-body m-0">{c.semis.pending}</p>
+              </div>
+            </Section>
+          )}
 
-        {semis.map(({ n, date, entries }) => (
-          <Section key={n} id={`semi-${n}`} title={c.semis.semiTitle(n, date ? formatDate(date, locale) : null)}>
-            <DataTable
-              {...visibleTable(entries, [
-                { header: c.headers.place, value: (e) => numCell(e.semi_place), align: 'right' },
-                { header: c.headers.runningOrder, value: (e) => numCell(e.semi_running_order), align: 'right' },
-                { header: c.headers.country, value: (e) => countryCell(e, locale) },
-                { header: c.headers.artist, value: (e) => e.artist },
-                { header: c.headers.song, value: (e) => songCell(e.song) },
-                { header: c.headers.points, value: (e) => numCell(e.semi_points, true), align: 'right' },
-                {
-                  header: c.headers.result,
-                  value: (e) => e.qualified == null ? null : e.qualified
-                    ? <span className="text-euro-gold font-semibold">{c.values.qualified}</span>
-                    : <span className="text-white/55">{c.values.notQualified}</span>,
-                },
-              ])}
-            />
-          </Section>
-        ))}
+          {semis.map(({ n, date, entries }) => (
+            <Section key={n} id={`semi-${n}`} title={c.semis.semiTitle(n, date ? formatDate(date, locale) : null)}>
+              <DataTable
+                {...visibleTable(entries, [
+                  { header: c.headers.place, value: (e) => numCell(e.semi_place), align: 'right' },
+                  { header: c.headers.runningOrder, value: (e) => numCell(e.semi_running_order), align: 'right' },
+                  { header: c.headers.country, value: (e) => countryCell(e, locale) },
+                  { header: c.headers.artist, value: (e) => e.artist },
+                  { header: c.headers.song, value: (e) => songCell(e.song) },
+                  { header: c.headers.points, value: (e) => numCell(e.semi_points, true), align: 'right' },
+                  {
+                    header: c.headers.result,
+                    value: (e) => e.qualified == null ? null : e.qualified
+                      ? <span className="chip chip-gold rt-chip">{c.values.qualified}</span>
+                      : <span className="chip rt-chip">{c.values.notQualified}</span>,
+                  },
+                ])}
+              />
+            </Section>
+          ))}
 
-        {direct.length > 0 && (
-          <Section id="direct" title={c.semis.directTitle}>
-            <p>{c.semis.direct(direct.length)}</p>
-            <ul className="list-disc pl-6 space-y-1.5">
-              {direct.map((e) => (
-                <li key={e.iso}>
-                  <strong className="text-white">{countryName(e, locale)}</strong>
-                  {e.artist ? ` – ${e.artist}` : ''}
-                  {e.song ? <>, <em>{e.song}</em></> : null}
-                </li>
-              ))}
+          {direct.length > 0 && (
+            <Section id="direct" title={c.semis.directTitle}>
+              <p>{c.semis.direct(direct.length)}</p>
+              <ul className="legal-list">
+                {direct.map((e) => (
+                  <li key={e.iso}>
+                    <strong>{countryName(e, locale)}</strong>
+                    {e.artist ? ` – ${e.artist}` : ''}
+                    {e.song ? <>, <em>{e.song}</em></> : null}
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
+          {semis.length === 0 && (
+            <ul className="kit-grid c2 hs-semis">
+              {([1, 2] as const).map((n) => {
+                const date = n === 1 ? contest.dates.semi1 : contest.dates.semi2;
+                return (
+                  <li key={n} className="card hs-show">
+                    <div className="hs-show-top">
+                      <h3 className="t-eyebrow">{n === 1 ? c.shows.semi1 : c.shows.semi2}</h3>
+                      <span className="chip">{t('hubSub.pending')}</span>
+                    </div>
+                    {date && (
+                      <div className="hs-show-date">
+                        <time dateTime={date} className="num">{Number(date.slice(8, 10))}</time>
+                        <span><strong>{weekday(date, locale)}</strong><span className="t-meta">{formatDate(date, locale)}</span></span>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
-          </Section>
-        )}
-
-        <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub, 'semis')} />
-      </ContentLayout>
+          )}
+        </div>
+        <aside className="pg-aside">
+          <HubRelatedAside heading={c.related.heading(contest.year)} items={hubRelated(hub, 'semis')} />
+        </aside>
+      </div>
       <SiteFooter />
     </>
   );
