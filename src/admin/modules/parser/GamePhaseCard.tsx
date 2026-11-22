@@ -9,31 +9,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
+import { t } from "../../i18n";
 
 type GamePhase = "pre_night" | "predictions_open" | "voting_live" | "final";
 type Target = "pre_night" | "predictions_open" | "voting_live";
 
-const PHASE_LABEL: Record<string, string> = {
-  lobby: "Lobby",
-  pre_night: "Before predictions",
-  predictions_open: "Predictions open",
-  voting_live: "Voting",
-  final: "Final",
-};
+const T = t.parserUi.phase;
+const PHASE_LABEL: Record<string, string> = T.labels;
 
 const ACTION: Record<Target, { button: string; confirm: (y: number) => string }> = {
-  predictions_open: {
-    button: "Open predictions",
-    confirm: (y) => `Open predictions in every room of ${y}?`,
-  },
-  voting_live: {
-    button: "Close predictions",
-    confirm: (y) => `Close predictions and start voting in every room of ${y}?`,
-  },
-  pre_night: {
-    button: "↺ Back to before predictions",
-    confirm: (y) => `Move every room of ${y} back to before predictions (for testing)?`,
-  },
+  predictions_open: { button: T.open, confirm: T.openConfirm },
+  voting_live: { button: T.close, confirm: T.closeConfirm },
+  pre_night: { button: T.back, confirm: T.backConfirm },
 };
 
 interface Props {
@@ -100,16 +87,16 @@ export function GamePhaseCard({ year, pollMs = 5000 }: Props) {
 
   return (
     <section className="rounded-xl border border-sky-400/30 bg-sky-500/5 p-4">
-      <h3 className="font-semibold text-sky-300 mb-2">Game phase · {year}</h3>
+      <h3 className="font-semibold text-sky-300 mb-2">{T.title(year)}</h3>
       <p className="text-sm text-white/70 mb-1">
-        Now: <span className="text-white font-semibold">{gamePhase ? PHASE_LABEL[gamePhase] : "…"}</span>
+        {T.now} <span className="text-white font-semibold">{gamePhase ? PHASE_LABEL[gamePhase] : "…"}</span>
       </p>
       <p className="text-xs text-white/50 mb-3">
-        Rooms of {year}: {summary || "none"}. Parsing never moves rooms; these buttons do.
+        {T.rooms(year, summary)}
       </p>
       {isFinal && (
         <p className="text-xs text-amber-300/80 mb-3">
-          {year} is finalized: rooms already in Final stay there. New rooms can still be tested.
+          {T.finalized(year)}
         </p>
       )}
 
@@ -122,7 +109,7 @@ export function GamePhaseCard({ year, pollMs = 5000 }: Props) {
             disabled={busy}
             className="px-3 py-1.5 rounded bg-sky-500 text-black font-bold text-sm disabled:opacity-40"
           >
-            {busy ? "Working…" : "Yes"}
+            {busy ? t.parserUi.working : t.parserUi.yes}
           </button>
           <button
             type="button"
@@ -130,7 +117,7 @@ export function GamePhaseCard({ year, pollMs = 5000 }: Props) {
             disabled={busy}
             className="px-3 py-1.5 rounded bg-white/10 text-white text-sm disabled:opacity-40"
           >
-            Cancel
+            {t.parserUi.cancel}
           </button>
         </div>
       ) : (
@@ -165,7 +152,7 @@ export function GamePhaseCard({ year, pollMs = 5000 }: Props) {
 
       {moved !== null && (
         <p className="text-sm text-emerald-300 mt-3">
-          ✅ Moved {moved} room{moved === 1 ? "" : "s"}. Their players got a notification.
+          {T.moved(moved)}
         </p>
       )}
       {err && <p className="text-sm text-red-300 mt-3">{err}</p>}

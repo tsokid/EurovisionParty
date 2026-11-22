@@ -10,6 +10,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
+import { t } from "../../i18n";
 
 const TEST_DEFAULT =
   "https://www.eurovision.com/eurovision-song-contest/basel-2025/basel-2025-grand-final/";
@@ -34,18 +35,8 @@ const COLUMN_ORDER = [
   'total_points', 'jury_points', 'televote_points',
   'runningOrder', 'source',
 ];
-const COLUMN_LABEL: Record<string, string> = {
-  iso: 'ISO',
-  name: 'Country',
-  ranking: 'Rank',
-  artist: 'Artist',
-  song: 'Song',
-  total_points: 'Total',
-  jury_points: 'Jury',
-  televote_points: 'Televote',
-  runningOrder: 'Running order',
-  source: 'Source',
-};
+const T = t.parserUi.test;
+const COLUMN_LABEL: Record<string, string> = T.cols;
 const NUMERIC_COLS = new Set(['ranking', 'total_points', 'jury_points', 'televote_points', 'runningOrder']);
 
 function buildHeaders(rows: Row[]): string[] {
@@ -138,7 +129,7 @@ function ResultsModal({
 }) {
   const headers = buildHeaders(resp.rows);
   const isResults = resp._action === 'test-results-2025';
-  const title = isResults ? 'Results — Final Scoreboard (Basel 2025)' : 'Participants — Grand Final lineup (Basel 2025)';
+  const title = isResults ? T.modalResults : T.modalParticipants;
 
   // Esc closes
   useEffect(() => {
@@ -158,7 +149,7 @@ function ResultsModal({
       <button
         type="button"
         onClick={onClose}
-        aria-label="Close"
+        aria-label={T.close}
         className="absolute inset-0 bg-black/75 backdrop-blur-sm cursor-default"
       />
 
@@ -169,15 +160,15 @@ function ResultsModal({
           <div className="min-w-0">
             <h3 className="text-base sm:text-lg font-bold text-white truncate">{title}</h3>
             <p className="text-xs text-white/50 mt-0.5 truncate">
-              {resp.count} rows
-              {resp.source ? ` · source: ${resp.source}` : ''}
+              {T.rows(resp.count)}
+              {resp.source ? T.source(resp.source) : ''}
               {resp.http_status ? ` · http ${resp.http_status}` : ''}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close modal"
+            aria-label={T.closeModal}
             className="shrink-0 w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-white/70 hover:text-white text-lg flex items-center justify-center transition cursor-pointer"
           >
             ×
@@ -188,7 +179,7 @@ function ResultsModal({
         <div className="px-5 py-4 overflow-hidden flex-1">
           {resp.rows.length === 0 ? (
             <p className="text-white/50 text-sm py-8 text-center">
-              No rows returned. Either the page markup changed or the URL didn&apos;t hit a populated grand final.
+              {T.empty}
             </p>
           ) : (
             <ResultsTable rows={resp.rows} headers={headers} />
@@ -197,7 +188,7 @@ function ResultsModal({
 
         {/* Footer */}
         <div className="px-5 py-3 border-t border-white/10 text-xs text-white/40 shrink-0">
-          Tip — these rows are NOT written to the database. This is a read-only verification of what the parser would extract on live night.
+          {T.tip}
         </div>
       </div>
     </div>
@@ -239,12 +230,8 @@ export function TestCard() {
   return (
     <>
       <section className="rounded-xl border border-white/10 bg-white/5 p-4">
-        <h3 className="font-semibold text-white mb-2">Test Parsers (2025)</h3>
-        <p className="text-xs text-white/50 mb-3">
-          Override URL is optional. If empty, the test hits the Basel 2025 grand
-          final. Output is for verification only — nothing is written to the DB.
-          Results auto-open in a full-screen view.
-        </p>
+        <h3 className="font-semibold text-white mb-2">{T.title}</h3>
+        <p className="text-xs text-white/50 mb-3">{T.lede}</p>
         <input
           type="url"
           value={url}
@@ -259,7 +246,7 @@ export function TestCard() {
             disabled={busy !== null}
             className="px-3 py-1.5 rounded bg-white/10 hover:bg-white/15 text-white text-sm disabled:opacity-40 cursor-pointer"
           >
-            {busy === "test-participants-2025" ? "Running…" : "Test Participants"}
+            {busy === "test-participants-2025" ? T.running : T.participants}
           </button>
           <button
             type="button"
@@ -267,15 +254,15 @@ export function TestCard() {
             disabled={busy !== null}
             className="px-3 py-1.5 rounded bg-white/10 hover:bg-white/15 text-white text-sm disabled:opacity-40 cursor-pointer"
           >
-            {busy === "test-results-2025" ? "Running…" : "Test Results"}
+            {busy === "test-results-2025" ? T.running : T.results}
           </button>
         </div>
         {err && <p className="text-sm text-red-300 mb-2">{err}</p>}
         {resp && (
           <div className="text-xs text-white/60 mb-2 flex items-center gap-3 flex-wrap">
             <span>
-              {resp.count} rows
-              {resp.source ? ` · source: ${resp.source}` : ""}
+              {T.rows(resp.count)}
+              {resp.source ? T.source(resp.source) : ""}
               {resp.http_status ? ` · http ${resp.http_status}` : ""}
             </span>
             <button
@@ -283,7 +270,7 @@ export function TestCard() {
               onClick={() => setModalOpen(true)}
               className="text-euro-pink-light hover:text-white underline underline-offset-2 cursor-pointer"
             >
-              View full table →
+              {T.viewAll}
             </button>
           </div>
         )}

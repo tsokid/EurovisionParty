@@ -33,28 +33,28 @@ describe('GamePhaseCard', () => {
 
   it('opens predictions for its year after a confirm', async () => {
     render(<GamePhaseCard year={2026} pollMs={60_000} />);
-    await screen.findByText('Before predictions');
-    expect(await screen.findByText(/Lobby: 1 · Before predictions: 2./)).toBeTruthy();
-    expect((screen.getByText('Close predictions') as HTMLButtonElement).disabled).toBe(true);
+    await screen.findByText('Πριν τις προβλέψεις');
+    expect(await screen.findByText(/Αναμονή: 1 · Πριν τις προβλέψεις: 2./)).toBeTruthy();
+    expect((screen.getByText('Κλείσιμο προβλέψεων') as HTMLButtonElement).disabled).toBe(true);
 
-    fireEvent.click(screen.getByText('Open predictions'));
+    fireEvent.click(screen.getByText('Άνοιγμα προβλέψεων'));
     expect(h.rpc).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByText('Yes'));
+    fireEvent.click(screen.getByText('Ναι'));
 
     await waitFor(() =>
       expect(h.rpc).toHaveBeenCalledWith('set_game_phase', { p_year: 2026, p_phase: 'predictions_open' }),
     );
-    expect(await screen.findByText(/Moved 2 rooms/)).toBeTruthy();
+    expect(await screen.findByText(/Μετακινήθηκαν 2 δωμάτια/)).toBeTruthy();
   });
 
   it('closes predictions once they are open', async () => {
     h.gamePhase = 'predictions_open';
     render(<GamePhaseCard year={2027} pollMs={60_000} />);
-    await screen.findByText('Predictions open');
-    expect((screen.getByText('Open predictions') as HTMLButtonElement).disabled).toBe(true);
+    await screen.findByText('Προβλέψεις ανοιχτές');
+    expect((screen.getByText('Άνοιγμα προβλέψεων') as HTMLButtonElement).disabled).toBe(true);
 
-    fireEvent.click(screen.getByText('Close predictions'));
-    fireEvent.click(screen.getByText('Yes'));
+    fireEvent.click(screen.getByText('Κλείσιμο προβλέψεων'));
+    fireEvent.click(screen.getByText('Ναι'));
 
     await waitFor(() =>
       expect(h.rpc).toHaveBeenCalledWith('set_game_phase', { p_year: 2027, p_phase: 'voting_live' }),

@@ -12,6 +12,10 @@ import { SourceUrlEditor } from "./SourceUrlEditor";
 import { ScheduleEditor } from "./ScheduleEditor";
 import { ParseReport } from "./ParseReport";
 import type { ParseJob, ParseRun } from "./useParserState";
+import { t } from "../../i18n";
+
+const J = t.parserUi.job;
+const P = t.parserUi.participants;
 
 interface Props {
   job?: ParseJob;
@@ -29,7 +33,7 @@ export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props
   if (!job) {
     return (
       <section className="rounded-xl border border-white/10 bg-white/5 p-4 text-white/60">
-        Loading participants job…
+        {P.loading}
       </section>
     );
   }
@@ -43,9 +47,9 @@ export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props
   const startInPast = Number.isFinite(startMs) && startMs <= Date.now();
   const respectOff  = !job.respect_schedule;
   const armBlockReason =
-    respectOff      ? 'Enable "Respect schedule" first.' :
-    !job.scheduled_start_at ? 'No scheduled start — set one above.' :
-    startInPast     ? 'Scheduled start is in the past — pick a future time or use Start Now.' :
+    respectOff      ? J.blockRespect :
+    !job.scheduled_start_at ? J.blockNoStart :
+    startInPast     ? J.blockStartPast :
     null;
 
   // Per-button enablement. Aimed at being conservative — only enable
@@ -129,7 +133,7 @@ export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props
 
   const hardStop = () => {
     if (!window.confirm(
-      "Hard Stop forces the job back to 'idle' and clears in-flight state. Use when stuck. Doesn't delete any participants data.",
+      P.hardStopConfirm,
     )) return;
     return wrap(async () => {
       const { error } = await supabase.rpc("hard_stop_parse_job", {
@@ -143,11 +147,11 @@ export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props
   return (
     <section className="rounded-xl border border-white/10 bg-white/5 p-4">
       <header className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-white">Participants Parser</h3>
+        <h3 className="font-semibold text-white">{P.title}</h3>
         <StatusPill status={status} />
       </header>
       <p className="text-sm text-white/60 mb-3">
-        Last fetch:{" "}
+        {P.lastFetch}{" "}
         {job.last_poll_at ? new Date(job.last_poll_at).toLocaleString() : "—"}
       </p>
       <SourceUrlEditor
@@ -165,25 +169,25 @@ export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props
 
       {status === "idle" && job.scheduled_start_at && (
         <p className="text-[11px] text-emerald-400/80 mb-2 leading-snug">
-          ✅ Armed — cron will fire at{" "}
+          ✅ {P.armedAt}{" "}
           <span className="text-white font-medium">
             {new Date(job.scheduled_start_at).toLocaleString()}
-          </span>. Nothing else to do.
+          </span>{P.armedEnd}
         </p>
       )}
       {status === "done" && (
         <p className="text-[11px] text-white/55 mb-2 leading-snug">
-          ✅ Already ran. Click <span className="text-white">Start on Schedule</span> to allow the next scheduled time to fire it again, or <span className="text-white">Start Now</span> for an immediate re-run.
+          {P.done1}<span className="text-white">{J.startOnSchedule}</span>{P.done2}<span className="text-white">{J.startNow}</span>{P.done3}
         </p>
       )}
       {status === "running" && (
         <p className="text-[11px] text-amber-300/80 mb-2 leading-snug">
-          ⚠️ Stuck in <span className="text-white">running</span>? Use <span className="text-white">Hard Stop</span> to force the job back to idle.
+          {P.stuck1}<span className="text-white">{t.parserUi.status.running}</span>{P.stuck2}<span className="text-white">{J.hardStop}</span>{P.stuck3}
         </p>
       )}
       {status === "stopped" && (
         <p className="text-[11px] text-white/55 mb-2 leading-snug">
-          ⏸ Paused. <span className="text-white">Resume</span> puts it back in line for the schedule. <span className="text-white">Start Now</span> fires it immediately.
+          {P.paused1}<span className="text-white">{J.resume}</span>{P.paused2}<span className="text-white">{J.startNow}</span>{P.paused3}
         </p>
       )}
 
@@ -193,51 +197,51 @@ export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props
           onClick={startOnSchedule}
           disabled={!canArm || busy}
           className={`px-3 py-1.5 rounded text-sm disabled:opacity-40 cursor-pointer transition-colors ${armed ? "bg-emerald-600 text-white" : "bg-white/10 text-white"}`}
-          title={armBlockReason ?? "Arm the job so the next scheduled time fires it. Clears any Hard Stop block."}
+          title={armBlockReason ?? J.armTitle}
         >
-          {armed ? "✓ Armed" : "Start on Schedule"}
+          {armed ? J.armed : J.startOnSchedule}
         </button>
         <button
           type="button"
           onClick={startNow}
           disabled={!canStartNow || busy}
           className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
-          title="Run the parser right now (ignores schedule)."
+          title={P.startNowTitle}
         >
-          Start Now
+          {J.startNow}
         </button>
         <button
           type="button"
           onClick={pause}
           disabled={!canPause || busy}
           className="px-3 py-1.5 rounded bg-amber-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
-          title="Pause an actively-running job."
+          title={P.pauseTitle}
         >
-          ⏸ Pause
+          {J.pause}
         </button>
         <button
           type="button"
           onClick={resume}
           disabled={!canResume || busy}
           className="px-3 py-1.5 rounded bg-yellow-400 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
-          title="Resume a paused job — goes back to idle so the next scheduled time fires it."
+          title={P.resumeTitle}
         >
-          ▶ Resume
+          {J.resume}
         </button>
         <button
           type="button"
           onClick={hardStop}
           disabled={!canHardStop || busy}
           className="px-3 py-1.5 rounded bg-red-500/90 hover:bg-red-500 text-white font-bold text-sm disabled:opacity-40 cursor-pointer"
-          title="Force the job back to idle from any state. Use when stuck."
+          title={J.hardStopTitle}
         >
-          🛑 Hard Stop
+          {J.hardStop}
         </button>
       </div>
 
       {armBlockReason && (
         <p className="text-[11px] text-amber-300/80 mb-2 leading-snug">
-          ⚠️ <span className="text-white font-semibold">Start on Schedule</span> blocked: {armBlockReason}
+          ⚠️ <span className="text-white font-semibold">{J.startOnSchedule}</span> {J.blocked(armBlockReason)}
         </p>
       )}
 
@@ -246,10 +250,10 @@ export function ParticipantsCard({ job, recentRun, runs = [], onRefresh }: Props
       )}
       {recentRun && (
         <div className="text-xs text-white/60">
-          Last run: {new Date(recentRun.finished_at).toLocaleString()} · http{" "}
+          {J.lastRun} {new Date(recentRun.finished_at).toLocaleString('el-GR')} · http{" "}
           {recentRun.http_status ?? "—"} ·{" "}
           {recentRun.status === "ok"
-            ? `${recentRun.rows_upserted ?? 0} rows`
+            ? J.rows(recentRun.rows_upserted ?? 0)
             : recentRun.error ?? recentRun.status}
         </div>
       )}

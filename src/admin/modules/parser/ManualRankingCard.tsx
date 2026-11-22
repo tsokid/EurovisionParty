@@ -26,6 +26,9 @@ import clsx from "clsx";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
 import type { ParseJob } from "./useParserState";
+import { t } from "../../i18n";
+
+const M = t.parserUi.manual;
 
 interface Props {
   job?: ParseJob;
@@ -90,7 +93,7 @@ function SortableRankedRow({
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); onRemove(); }}
         className="opacity-0 group-hover:opacity-100 w-5 h-5 rounded text-white/50 hover:bg-red-400/30 hover:text-white text-xs"
-        aria-label={`Remove from rank ${rank}`}
+        aria-label={M.removeFrom(rank)}
       >
         ×
       </button>
@@ -138,7 +141,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
   // other parser cards and Finalize act on.
   const year = job?.year ?? null;
   const requireYear = useCallback((): number => {
-    if (year == null) throw new Error("Contest year not loaded yet");
+    if (year == null) throw new Error(M.noYear);
     return year;
   }, [year]);
 
@@ -259,13 +262,10 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
       <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
         <div>
           <h3 className="font-semibold text-white flex items-center gap-2">
-            🔧 Manual Override — Rankings
+            {M.title}
           </h3>
           <p className="text-xs text-white/50 mt-1 max-w-prose">
-            Fallback for live night. When ON, the Results parser is disabled (cron
-            + on-demand both skip). Drag-drop the finalists into rank order, then{" "}
-            <span className="text-white">Finalize</span> to push the table to every
-            room as the final scoreboard.
+            {M.lede1}<span className="text-white">{M.finalizeWord}</span>{" "}{M.lede2}
           </p>
         </div>
         <button
@@ -288,29 +288,29 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
             )}
             aria-hidden
           />
-          {overrideOn ? "ON" : "OFF"}
+          {overrideOn ? M.on : M.off}
         </button>
       </div>
 
       {finalized && (
         <p className="text-xs text-emerald-300 mb-3">
-          ✅ Results finalized. Use Reset Rankings to start over (testing) or leave as-is.
+          {M.finalized}
         </p>
       )}
 
       {!overrideOn && !finalized && (
         <p className="text-xs text-white/40">
-          Toggle ON to disable auto-parsing and enter rankings manually.
+          {M.offHint}
         </p>
       )}
 
       {overrideOn && (
         <>
           <div className="text-xs text-white/60 mb-3 tabular-nums">
-            {ranked.length} / {total || "?"} placed
+            {M.placed(ranked.length, total || "?")}
             {total > 0 && !allPlaced && (
               <span className="ml-2 text-white/40">
-                (need all {total} before Finalize is enabled)
+                {M.needAll(total)}
               </span>
             )}
           </div>
@@ -320,12 +320,12 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
             {/* LEFT: Unranked countries */}
             <div>
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">
-                Unranked ({unranked.length})
+                {M.unranked(unranked.length)}
               </h4>
               <div className="space-y-1 max-h-[480px] overflow-y-auto pr-1">
                 {unranked.length === 0 ? (
                   <p className="text-xs text-white/30 italic px-2 py-3">
-                    All countries placed.
+                    {M.allPlaced}
                   </p>
                 ) : (
                   unranked.map((p) => (
@@ -338,12 +338,12 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
             {/* RIGHT: Ranked slots (drag-reorderable) */}
             <div>
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">
-                Final order ({ranked.length})
+                {M.order(ranked.length)}
               </h4>
               <div className="space-y-1 max-h-[480px] overflow-y-auto pr-1">
                 {ranked.length === 0 ? (
                   <p className="text-xs text-white/30 italic px-2 py-3">
-                    Click an unranked country (or drag) to add it to rank {ranked.length + 1}.
+                    {M.addHint(ranked.length + 1)}
                   </p>
                 ) : (
                   <DndContext
@@ -398,7 +398,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
                 disabled={!allPlaced || busy !== null || finalized}
                 className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40"
               >
-                {finalized ? "Already finalized" : "Finalize Manual Rankings"}
+                {finalized ? M.already : M.finalize}
               </button>
             ) : (
               <>
@@ -408,7 +408,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
                   disabled={busy !== null}
                   className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40"
                 >
-                  {busy === "finalize" ? "Finalizing…" : "Yes, push to all rooms"}
+                  {busy === "finalize" ? M.finalizing : M.yesPush}
                 </button>
                 <button
                   type="button"
@@ -416,7 +416,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
                   disabled={busy !== null}
                   className="px-3 py-1.5 rounded bg-white/10 text-white text-sm"
                 >
-                  Cancel
+                  {t.parserUi.cancel}
                 </button>
               </>
             )}
@@ -428,9 +428,9 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
                 onClick={() => setConfirm("reset")}
                 disabled={busy !== null}
                 className="ml-auto px-3 py-1.5 rounded bg-white/10 border border-white/15 text-white/80 text-sm font-bold hover:bg-white/15 disabled:opacity-40"
-                title="Wipes the scoreboard + un-finalizes the job. For testing."
+                title={M.resetTitle}
               >
-                Reset Rankings
+                {M.reset}
               </button>
             ) : (
               <div className="ml-auto flex gap-2">
@@ -440,7 +440,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
                   disabled={busy !== null}
                   className="px-3 py-1.5 rounded bg-red-500 text-white font-bold text-sm disabled:opacity-40"
                 >
-                  {busy === "reset" ? "Resetting…" : "Yes, wipe results"}
+                  {busy === "reset" ? M.resetting : M.yesWipe}
                 </button>
                 <button
                   type="button"
@@ -448,7 +448,7 @@ export function ManualRankingCard({ job, onRefresh }: Props) {
                   disabled={busy !== null}
                   className="px-3 py-1.5 rounded bg-white/10 text-white text-sm"
                 >
-                  Cancel
+                  {t.parserUi.cancel}
                 </button>
               </div>
             )}

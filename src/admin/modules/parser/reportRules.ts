@@ -1,6 +1,10 @@
 // Parse confirmation report (owner, 19 Nov 2026): what a parse run found,
 // what changed since the previous run of the same kind, and warnings.
-// Pure; the rows come from parse_runs.rows (migration 080).
+// Pure; the rows come from parse_runs.rows (migration 080). The warnings are
+// in Greek (src/admin/i18n.ts).
+import { t } from "../../i18n";
+
+const R = t.parserUi.report;
 
 export type ParseKind = "participants" | "results";
 
@@ -65,22 +69,22 @@ export function runWarnings(
   const out: string[] = [];
   if (sourceUrl) {
     const years = [...sourceUrl.matchAll(/(?:^|\D)((?:19|20)\d{2})(?!\d)/g)].map((m) => Number(m[1]));
-    if (years.some((y) => y !== year)) out.push(`The page is for another year (${[...new Set(years)].join(", ")}), not ${year}.`);
-    if (!/grand-final/i.test(sourceUrl)) out.push("The page is not the grand-final page: rows may be from a semi-final or the full entry list.");
+    if (years.some((y) => y !== year)) out.push(R.otherYear([...new Set(years)].join(", "), year));
+    if (!/grand-final/i.test(sourceUrl)) out.push(R.notFinal);
   }
   if (kind === "participants") {
     const missing = rows.filter((r) => !r.artist?.trim() || !r.song?.trim()).map((r) => r.iso);
-    if (missing.length) out.push(`No artist or song: ${missing.join(", ")}.`);
+    if (missing.length) out.push(R.noArtist(missing.join(", ")));
     if (rows.length && (rows.length < MIN_FINALISTS || rows.length > MAX_FINALISTS)) {
-      out.push(`${rows.length} countries: a grand final has ${MIN_FINALISTS}–${MAX_FINALISTS}. This looks like the full entry list, not the finalists.`);
+      out.push(R.count(rows.length, MIN_FINALISTS, MAX_FINALISTS));
     }
   } else {
     if (finalists.length) {
       const final = new Set(finalists);
       const outside = rows.filter((r) => !final.has(r.iso)).map((r) => r.iso);
-      if (outside.length) out.push(`Not in the ${year} grand final (ignored): ${outside.join(", ")}.`);
+      if (outside.length) out.push(R.outside(year, outside.join(", ")));
       if (rows.length && rows.length !== finalists.length) {
-        out.push(`${rows.length} results for ${finalists.length} finalists.`);
+        out.push(R.resultsCount(rows.length, finalists.length));
       }
     }
     const seen = new Set<number>();
@@ -90,7 +94,7 @@ export function runWarnings(
       if (seen.has(r.place)) dup.add(r.place);
       seen.add(r.place);
     }
-    if (dup.size) out.push(`Place used twice: ${[...dup].sort((a, b) => a - b).join(", ")}.`);
+    if (dup.size) out.push(R.dupPlace([...dup].sort((a, b) => a - b).join(", ")));
   }
   return out;
 }

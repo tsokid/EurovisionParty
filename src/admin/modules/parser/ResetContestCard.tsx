@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
+import { t } from "../../i18n";
 
 interface Props {
   year: number;
@@ -20,12 +21,8 @@ interface Options {
   deleteRooms: boolean;
 }
 
-const CORE_ITEMS = [
-  "Clears parsed participants & results",
-  "Un-scores predictions (keeps them, unlocks them)",
-  "Resets pred_points, recalculates total_points",
-  "Both parse jobs → idle",
-];
+const R = t.parserUi.reset;
+const CORE_ITEMS: readonly string[] = R.core;
 
 export function ResetContestCard({ year, onRefresh }: Props) {
   const [step, setStep] = useState<Step>("idle");
@@ -68,19 +65,16 @@ export function ResetContestCard({ year, onRefresh }: Props) {
   // Build a plain-language summary of what will happen
   const summary: string[] = [...CORE_ITEMS];
   if (opts.deleteRooms) {
-    summary.push("⚠ Deletes ALL rooms → cascades to players, predictions, results, quiz, duels, winners");
+    summary.push(R.cAll);
   } else {
-    if (opts.deletePredictions) summary.push("Deletes all predictions (cannot be re-entered)");
-    if (opts.resetPoints) summary.push("Zeros quiz + duel + pred points on every player");
+    if (opts.deletePredictions) summary.push(R.aAll);
+    if (opts.resetPoints) summary.push(R.bAll);
   }
 
   return (
     <section className="rounded-xl border border-orange-400/30 bg-orange-500/5 p-4">
-      <h3 className="font-semibold text-orange-300 mb-1">Reset for New Contest</h3>
-      <p className="text-sm text-white/60 mb-3">
-        Always clears parsed data and returns parser jobs to idle.
-        Choose how deep to wipe game state below.
-      </p>
+      <h3 className="font-semibold text-orange-300 mb-1">{R.title}</h3>
+      <p className="text-sm text-white/60 mb-3">{R.lede}</p>
 
       {/* ── Idle ── */}
       {step === "idle" && (
@@ -89,7 +83,7 @@ export function ResetContestCard({ year, onRefresh }: Props) {
           onClick={() => setStep("options")}
           className="px-3 py-1.5 rounded bg-orange-500/80 hover:bg-orange-500 text-white font-bold text-sm transition-colors"
         >
-          ↺ Reset Contest…
+          {R.start}
         </button>
       )}
 
@@ -97,7 +91,7 @@ export function ResetContestCard({ year, onRefresh }: Props) {
       {step === "options" && (
         <div className="space-y-4">
           <div className="rounded-lg bg-white/5 border border-white/10 p-3 space-y-1.5">
-            <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-2">Always included</p>
+            <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-2">{R.always}</p>
             {CORE_ITEMS.map((item) => (
               <p key={item} className="text-xs text-white/55 flex gap-2">
                 <span className="text-emerald-400 flex-shrink-0">✓</span> {item}
@@ -106,7 +100,7 @@ export function ResetContestCard({ year, onRefresh }: Props) {
           </div>
 
           <div className="space-y-2">
-            <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest">Also wipe…</p>
+            <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest">{R.also}</p>
 
             <label className={`flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${opts.deletePredictions && !opts.deleteRooms ? "border-orange-400/40 bg-orange-500/10" : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]"} ${opts.deleteRooms ? "opacity-40 pointer-events-none" : ""}`}>
               <input
@@ -117,8 +111,8 @@ export function ResetContestCard({ year, onRefresh }: Props) {
                 className="mt-0.5 accent-orange-400"
               />
               <div>
-                <p className="text-sm font-semibold text-white">A — Delete all predictions</p>
-                <p className="text-xs text-white/50 mt-0.5">Removes every player's picks. They'd have to re-submit for the new contest.</p>
+                <p className="text-sm font-semibold text-white">{R.aTitle}</p>
+                <p className="text-xs text-white/50 mt-0.5">{R.aText}</p>
               </div>
             </label>
 
@@ -131,8 +125,8 @@ export function ResetContestCard({ year, onRefresh }: Props) {
                 className="mt-0.5 accent-orange-400"
               />
               <div>
-                <p className="text-sm font-semibold text-white">B — Reset all player points</p>
-                <p className="text-xs text-white/50 mt-0.5">Zeros quiz, duel, and prediction points on every player across all rooms.</p>
+                <p className="text-sm font-semibold text-white">{R.bTitle}</p>
+                <p className="text-xs text-white/50 mt-0.5">{R.bText}</p>
               </div>
             </label>
 
@@ -144,8 +138,8 @@ export function ResetContestCard({ year, onRefresh }: Props) {
                 className="mt-0.5 accent-red-400"
               />
               <div>
-                <p className="text-sm font-semibold text-white">C — Delete all rooms / games</p>
-                <p className="text-xs text-white/50 mt-0.5">Nuclear option. Deletes every room and cascades to players, predictions, results, winners, quiz sessions, duels — everything. Implies A + B.</p>
+                <p className="text-sm font-semibold text-white">{R.cTitle}</p>
+                <p className="text-xs text-white/50 mt-0.5">{R.cText}</p>
               </div>
             </label>
           </div>
@@ -156,10 +150,10 @@ export function ResetContestCard({ year, onRefresh }: Props) {
               onClick={() => setStep("confirm")}
               className="px-3 py-1.5 rounded bg-orange-500 text-white font-bold text-sm"
             >
-              Continue →
+              {R.continue}
             </button>
             <button type="button" onClick={cancel} className="px-3 py-1.5 rounded bg-white/10 text-white text-sm">
-              Cancel
+              {t.parserUi.cancel}
             </button>
           </div>
         </div>
@@ -169,24 +163,24 @@ export function ResetContestCard({ year, onRefresh }: Props) {
       {step === "confirm" && (
         <div className="space-y-3">
           <div className="rounded-lg bg-white/5 border border-white/10 p-3 space-y-1">
-            <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-1.5">Will execute</p>
+            <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-1.5">{R.willRun}</p>
             {summary.map((item) => (
               <p key={item} className="text-xs text-white/70 flex gap-2">
                 <span className={item.startsWith("⚠") ? "text-red-400" : "text-orange-400"}>→</span> {item}
               </p>
             ))}
           </div>
-          <p className="text-sm font-semibold text-red-300">This cannot be undone. Proceed?</p>
+          <p className="text-sm font-semibold text-red-300">{R.sure}</p>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={reset}
               className="px-3 py-1.5 rounded bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-colors"
             >
-              Yes, reset everything
+              {R.yes}
             </button>
             <button type="button" onClick={cancel} className="px-3 py-1.5 rounded bg-white/10 text-white text-sm">
-              Cancel
+              {t.parserUi.cancel}
             </button>
           </div>
           {err && <p className="text-sm text-red-300 break-all">{err}</p>}
@@ -195,21 +189,21 @@ export function ResetContestCard({ year, onRefresh }: Props) {
 
       {/* ── Busy ── */}
       {step === "busy" && (
-        <p className="text-sm text-orange-300 animate-pulse">Resetting…</p>
+        <p className="text-sm text-orange-300 animate-pulse">{R.busy}</p>
       )}
 
       {/* ── Done ── */}
       {step === "done" && (
         <div className="rounded bg-emerald-500/10 border border-emerald-400/30 p-3 text-sm space-y-1">
-          <p className="font-semibold text-emerald-300">✅ Reset complete.</p>
+          <p className="font-semibold text-emerald-300">{R.done}</p>
           <ul className="text-xs text-white/55 space-y-0.5">
             {summary.map((item) => (
               <li key={item}>· {item.replace(/^⚠ /, "")}</li>
             ))}
           </ul>
-          <p className="text-xs text-white/40 pt-1">Update source URLs if needed, then run Participants first.</p>
+          <p className="text-xs text-white/40 pt-1">{R.next}</p>
           <button type="button" onClick={cancel} className="mt-1 px-3 py-1 rounded bg-white/10 text-white text-xs">
-            Dismiss
+            {R.dismiss}
           </button>
         </div>
       )}

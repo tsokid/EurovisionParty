@@ -25,12 +25,12 @@ describe('ParseReport', () => {
       'blocked', '2 countries parsed; a grand final has 20-27 (line-up not final yet?)');
     render(<ParseReport kind="participants" year={2027} runs={[last, prev]} />);
 
-    expect(screen.getByText(/Parse report · 2 countries/)).toBeTruthy();
-    expect(screen.getByText(/not written \(blocked\)/)).toBeTruthy();
-    expect(screen.getByText(/Blocked: 2 countries parsed/)).toBeTruthy();
-    expect(screen.getByText(/No artist or song: SE\./)).toBeTruthy();
+    expect(screen.getByText(/Αναφορά ανάγνωσης · 2 χώρες/)).toBeTruthy();
+    expect(screen.getByText(/δεν γράφτηκε \(blocked\)/)).toBeTruthy();
+    expect(screen.getByText(/Σταμάτησε: 2 countries parsed/)).toBeTruthy();
+    expect(screen.getByText(/Χωρίς καλλιτέχνη ή τραγούδι: SE\./)).toBeTruthy();
     expect(screen.getByText('New')).toBeTruthy();
-    expect(screen.getByText('missing')).toBeTruthy();
+    expect(screen.getByText('λείπει')).toBeTruthy();
     expect(screen.getByText(/\(SE\)/)).toBeTruthy(); // added
     expect(screen.getByText(/\(CY\)/)).toBeTruthy(); // removed
   });

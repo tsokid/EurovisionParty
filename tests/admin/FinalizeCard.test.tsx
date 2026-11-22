@@ -46,55 +46,55 @@ describe('FinalizeCard', () => {
 
   it('explains the contest finalize for the job year', () => {
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
-    expect(screen.getByText('Finalize 2027: locks results, scores all rooms of 2027, computes winners.')).toBeTruthy();
+    expect(screen.getByText('Ολοκλήρωση 2027: κλειδώνει τα αποτελέσματα, βαθμολογεί όλα τα δωμάτια του 2027 και βγάζει νικητές.')).toBeTruthy();
   });
 
   it('calls finalize_contest (not finalize_results) and reports rooms with winners', async () => {
     const onRefresh = vi.fn();
     render(<FinalizeCard job={job('done')} onRefresh={onRefresh} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ολοκλήρωση 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ναι, ολοκλήρωση 2027' }));
 
     await waitFor(() => expect(h.rpc).toHaveBeenCalledWith('finalize_contest', { p_year: 2027 }));
     expect(h.rpc).not.toHaveBeenCalledWith('finalize_results', expect.anything());
-    await waitFor(() => expect(screen.getByText(/Rooms of 2027 with winners computed:/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/Δωμάτια του 2027 με νικητές:/)).toBeTruthy());
     expect(screen.getByText('3')).toBeTruthy();
     expect(onRefresh).toHaveBeenCalled();
   });
 
   it('never publishes: Finalize changes only the game (081)', async () => {
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
-    await waitFor(() => expect(screen.getByText(/2027 finalized\./)).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: 'Ολοκλήρωση 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ναι, ολοκλήρωση 2027' }));
+    await waitFor(() => expect(screen.getByText(/Το 2027 ολοκληρώθηκε\./)).toBeTruthy());
     expect(h.invoke).not.toHaveBeenCalled();
   });
 
   it('offers Copy to public once finalized and calls copy_game_to_public after a confirm', async () => {
     h.result = { data: 25, error: null };
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
-    expect(screen.queryByText('Copy 2027 results to public')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Copy 2027 results to public' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Yes, copy' }));
+    expect(screen.queryByText('Αντιγραφή αποτελεσμάτων 2027 στα δημόσια')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Ολοκλήρωση 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ναι, ολοκλήρωση 2027' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Αντιγραφή αποτελεσμάτων 2027 στα δημόσια' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ναι, αντιγραφή' }));
     await waitFor(() => expect(h.rpc).toHaveBeenCalledWith('copy_game_to_public', { p_year: 2027 }));
-    expect(await screen.findByText(/25 finalists copied\. Review them in Contests → Edit, then Publish\./)).toBeTruthy();
+    expect(await screen.findByText(/Αντιγράφηκαν 25 φιναλίστ\. Έλεγξε τις συμμετοχές στους Διαγωνισμούς → Επεξεργασία και μετά κάνε «Δημοσίευση»\./)).toBeTruthy();
     expect(h.invoke).not.toHaveBeenCalled();
   });
 
   it('keeps Reset Finalized for a finalized job whose contest is still current', async () => {
     h.stage = 'current';
     render(<FinalizeCard job={job('finalized')} onRefresh={() => {}} />);
-    expect(await screen.findByRole('button', { name: /Reset Finalized/ })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: /Επαναφορά ολοκλήρωσης/ })).toBeTruthy();
     expect(h.from).toHaveBeenCalledWith('contests');
   });
 
   it('shows the RPC error', async () => {
     h.result = { data: null, error: { message: 'contest 2027 has no results; finalize refused' } };
     render(<FinalizeCard job={job('done')} onRefresh={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Finalize 2027' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Yes, finalize 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ολοκλήρωση 2027' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Ναι, ολοκλήρωση 2027' }));
     await waitFor(() => expect(screen.getByText(/has no results; finalize refused/)).toBeTruthy());
     expect(h.invoke).not.toHaveBeenCalled();
   });

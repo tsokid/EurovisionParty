@@ -9,6 +9,9 @@ import { supabase } from "../../../lib/supabase";
 import { flagEmoji } from "../../../pages/seo/content/contestText";
 import type { ParseRun } from "./useParserState";
 import { diffRuns, runWarnings, type ParseKind, type ReportRow } from "./reportRules";
+import { t } from "../../i18n";
+
+const R = t.parserUi.report;
 
 interface Props {
   kind: ParseKind;
@@ -48,19 +51,19 @@ export function ParseReport({ kind, year, runs }: Props) {
   return (
     <details className="mt-3 rounded-lg border border-white/10 bg-black/20 p-3 text-xs" open={!written || warnings.length > 0}>
       <summary className="cursor-pointer text-white/80 font-semibold">
-        Parse report · {rows.length} {rows.length === 1 ? "country" : "countries"} ·{" "}
+        {R.title} · {R.countries(rows.length)} ·{" "}
         {written ? (
-          <span className="text-emerald-300">written to the game</span>
+          <span className="text-emerald-300">{R.written}</span>
         ) : (
-          <span className="text-amber-300">not written ({last.status})</span>
+          <span className="text-amber-300">{R.notWritten(last.status)}</span>
         )}
       </summary>
 
       <p className="mt-2 text-white/50 break-all">
-        {new Date(last.finished_at).toLocaleString()}
-        {last.source_url && <> · source: <span className="text-white/70">{last.source_url}</span></>}
+        {new Date(last.finished_at).toLocaleString('el-GR')}
+        {last.source_url && <> · {R.source} <span className="text-white/70">{last.source_url}</span></>}
       </p>
-      {!written && last.error && <p className="mt-1 text-amber-300">Blocked: {last.error}</p>}
+      {!written && last.error && <p className="mt-1 text-amber-300">{R.blocked} {last.error}</p>}
 
       {warnings.length > 0 && (
         <ul className="mt-2 space-y-1 text-amber-300">
@@ -71,14 +74,14 @@ export function ParseReport({ kind, year, runs }: Props) {
       <p className="mt-2 text-white/60">
         {prev ? (
           <>
-            Since the previous run: <span className="text-emerald-300">+{diff.added.length} added</span>
+            {R.since} <span className="text-emerald-300">{R.added(diff.added.length)}</span>
             {diff.added.length > 0 && ` (${diff.added.join(", ")})`} ·{" "}
-            <span className="text-red-300">−{diff.removed.length} removed</span>
+            <span className="text-red-300">{R.removed(diff.removed.length)}</span>
             {diff.removed.length > 0 && ` (${diff.removed.join(", ")})`} ·{" "}
-            <span className="text-sky-300">{diff.changed.length} changed</span>
+            <span className="text-sky-300">{R.changed(diff.changed.length)}</span>
           </>
         ) : (
-          "First run with a report: nothing to compare yet."
+          R.first
         )}
       </p>
 
@@ -88,14 +91,14 @@ export function ParseReport({ kind, year, runs }: Props) {
             <thead className="text-white/40">
               <tr>
                 {kind === "results" && <th className="py-1 pr-2">#</th>}
-                <th className="py-1 pr-2">Country</th>
+                <th className="py-1 pr-2">{R.country}</th>
                 {kind === "participants" ? (
                   <>
-                    <th className="py-1 pr-2">Artist</th>
-                    <th className="py-1">Song</th>
+                    <th className="py-1 pr-2">{R.artist}</th>
+                    <th className="py-1">{R.song}</th>
                   </>
                 ) : (
-                  <th className="py-1">Points</th>
+                  <th className="py-1">{R.points}</th>
                 )}
               </tr>
             </thead>
@@ -105,7 +108,7 @@ export function ParseReport({ kind, year, runs }: Props) {
                 const isNew = diff.added.includes(r.iso);
                 const cell = (field: string, value: string | number | undefined) => (
                   <span className={changed.includes(field) ? "text-sky-300 font-semibold" : undefined}>
-                    {value === undefined || value === "" ? <span className="text-red-300">missing</span> : value}
+                    {value === undefined || value === "" ? <span className="text-red-300">{R.missing}</span> : value}
                   </span>
                 );
                 return (

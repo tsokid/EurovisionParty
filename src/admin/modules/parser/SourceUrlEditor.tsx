@@ -12,6 +12,9 @@ import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
 import { useUnsavedGuard } from "../../unsavedGuard";
 import type { JobKind } from "./useParserState";
+import { t } from "../../i18n";
+
+const S = t.parserUi.source;
 
 interface Props {
   year: number;
@@ -47,7 +50,7 @@ export function SourceUrlEditor({ year, kind, currentUrl, onSaved }: Props) {
         p_url: value.trim(),
       });
       if (error) throw error;
-      setMsg({ kind: "ok", text: "Saved." });
+      setMsg({ kind: "ok", text: S.ok });
       setEditing(false);
       onSaved();
     } catch (e) {
@@ -62,7 +65,7 @@ export function SourceUrlEditor({ year, kind, currentUrl, onSaved }: Props) {
     return (
       <div className="mb-3 pb-3 border-b border-white/5">
         <label className="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1.5">
-          Source URL · saved
+          {S.saved}
         </label>
         <div className="flex items-center gap-2">
           <code
@@ -75,17 +78,17 @@ export function SourceUrlEditor({ year, kind, currentUrl, onSaved }: Props) {
             type="button"
             onClick={() => { setEditing(true); setValue(currentUrl); setMsg(null); }}
             className="shrink-0 px-2.5 py-1.5 rounded bg-white/5 hover:bg-white/15 text-white/70 hover:text-white text-xs font-semibold cursor-pointer"
-            aria-label="Edit source URL"
+            aria-label={S.editAria}
           >
-            Edit
+            {S.edit}
           </button>
           <button
             type="button"
             onClick={() => { setEditing(true); setValue(""); setMsg(null); }}
             className="shrink-0 px-2.5 py-1.5 rounded bg-white/5 hover:bg-red-500/20 text-white/60 hover:text-red-300 text-xs font-semibold cursor-pointer"
-            aria-label="Remove saved URL"
+            aria-label={S.removeAria}
           >
-            Remove
+            {S.remove}
           </button>
         </div>
         {msg && (
@@ -101,7 +104,7 @@ export function SourceUrlEditor({ year, kind, currentUrl, onSaved }: Props) {
   return (
     <div className="mb-3 pb-3 border-b border-white/5">
       <label className="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1.5">
-        Source URL
+        {S.label}
       </label>
       <div className="flex gap-2">
         <input
@@ -118,7 +121,7 @@ export function SourceUrlEditor({ year, kind, currentUrl, onSaved }: Props) {
           disabled={!dirty || busy !== null || !value.trim()}
           className="shrink-0 px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-xs disabled:opacity-40 cursor-pointer"
         >
-          {busy === "save" ? "Saving…" : "Save"}
+          {busy === "save" ? S.saving : S.save}
         </button>
         {currentUrl && (
           <button
@@ -126,7 +129,7 @@ export function SourceUrlEditor({ year, kind, currentUrl, onSaved }: Props) {
             onClick={() => { setEditing(false); setValue(currentUrl); setMsg(null); }}
             className="shrink-0 px-2.5 py-1.5 rounded bg-white/5 hover:bg-white/10 text-white/60 text-xs cursor-pointer"
           >
-            Cancel
+            {t.parserUi.cancel}
           </button>
         )}
       </div>

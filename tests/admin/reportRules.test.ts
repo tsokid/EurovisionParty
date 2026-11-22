@@ -35,15 +35,15 @@ describe('runWarnings', () => {
   it('flags the pre-semi list: no songs and 35 countries', () => {
     const rows = many(35).map((r) => ({ ...r, artist: '', song: '' }));
     const w = runWarnings('participants', 2027, URL27, rows);
-    expect(w[0]).toMatch(/^No artist or song: C00, C01/);
-    expect(w[1]).toMatch(/35 countries/);
+    expect(w[0]).toMatch(/^Χωρίς καλλιτέχνη ή τραγούδι: C00, C01/);
+    expect(w[1]).toMatch(/35 χώρες/);
   });
 
   it('flags a page of another year and a non-final page', () => {
     const w = runWarnings('participants', 2027, 'https://www.eurovision.com/eurovision-song-contest/basel-2025/basel-2025-first-semi-final/', many(25));
     expect(w).toEqual([
-      'The page is for another year (2025), not 2027.',
-      'The page is not the grand-final page: rows may be from a semi-final or the full entry list.',
+      'Η σελίδα είναι για άλλη χρονιά (2025), όχι για το 2027.',
+      'Η σελίδα δεν είναι του τελικού: οι γραμμές μπορεί να είναι από ημιτελικό ή από όλη τη λίστα συμμετοχών.',
     ]);
   });
 
@@ -54,9 +54,9 @@ describe('runWarnings', () => {
       { iso: 'XK', place: 3, points: 10 },
     ];
     expect(runWarnings('results', 2027, URL27, rows, ['GR', 'SE', 'CY', 'IT'])).toEqual([
-      'Not in the 2027 grand final (ignored): XK.',
-      '3 results for 4 finalists.',
-      'Place used twice: 1.',
+      'Δεν είναι στον τελικό του 2027 (αγνοούνται): XK.',
+      '3 αποτελέσματα για 4 φιναλίστ.',
+      'Η ίδια θέση δύο φορές: 1.',
     ]);
   });
 });

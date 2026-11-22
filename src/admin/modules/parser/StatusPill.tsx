@@ -1,6 +1,7 @@
 // src/admin/modules/parser/StatusPill.tsx
 // Small colored pill that renders a parse_jobs.status value.
 import type { JobStatus } from "./useParserState";
+import { t } from "../../i18n";
 
 const COLORS: Record<JobStatus, string> = {
   idle: "bg-white/10 text-white/70",
@@ -15,9 +16,10 @@ export function StatusPill({ status }: { status: JobStatus }) {
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${COLORS[status]}`}
+      title={status}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {status}
+      {t.parserUi.status[status] ?? status}
     </span>
   );
 }

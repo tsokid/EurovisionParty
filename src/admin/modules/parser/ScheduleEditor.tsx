@@ -14,6 +14,9 @@ import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
 import { useUnsavedGuard } from "../../unsavedGuard";
 import type { JobKind, ParseJob } from "./useParserState";
+import { t } from "../../i18n";
+
+const S = t.parserUi.schedule;
 
 interface Props {
   year: number;
@@ -89,7 +92,7 @@ function DateTimePair({
           inputMode="numeric"
           value={date}
           onChange={(e) => onDateChange(e.target.value)}
-          placeholder="dd/mm/yyyy"
+          placeholder={S.datePh}
           maxLength={10}
           pattern="\d{2}/\d{2}/\d{4}"
           className="w-32 bg-black/30 border border-white/10 rounded px-2.5 py-1.5 text-xs text-white font-mono placeholder-white/25 tabular-nums"
@@ -99,12 +102,12 @@ function DateTimePair({
           inputMode="numeric"
           value={time}
           onChange={(e) => onTimeChange(e.target.value)}
-          placeholder="HH:mm"
+          placeholder={S.timePh}
           maxLength={5}
           pattern="\d{2}:\d{2}"
           className="w-20 bg-black/30 border border-white/10 rounded px-2.5 py-1.5 text-xs text-white font-mono placeholder-white/25 tabular-nums"
         />
-        <span className="self-center text-[10px] text-white/35 uppercase tracking-wider">24h</span>
+        <span className="self-center text-[10px] text-white/35 uppercase tracking-wider">{S.h24}</span>
       </div>
     </div>
   );
@@ -182,10 +185,10 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
 
       // If both fields populated but parsing failed, error out
       if ((startDate || startTime) && !startRpc) {
-        throw new Error('Start date/time invalid. Use dd/mm/yyyy and HH:mm (24h).');
+        throw new Error(S.startInvalid);
       }
       if (isResults && (endDate || endTime) && !endRpc) {
-        throw new Error('End date/time invalid. Use dd/mm/yyyy and HH:mm (24h).');
+        throw new Error(S.endInvalid);
       }
 
       const { error } = await supabase.rpc('set_parse_schedule', {
@@ -196,7 +199,7 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
         p_poll_interval_min: isResults ? interval : null,
       });
       if (error) throw error;
-      setMsg({ kind: 'ok', text: 'Schedule saved.' });
+      setMsg({ kind: 'ok', text: S.saved });
       // Allow the form to re-sync from server again now that the user's
       // edits have been persisted.
       setUserTouched(false);
@@ -244,20 +247,17 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
           className="mt-0.5 w-4 h-4 accent-emerald-500 cursor-pointer"
         />
         <div>
-          <span className="text-xs font-bold text-white">Respect schedule</span>
-          <p className="text-[11px] text-white/50 leading-snug">
-            When ON, the cron may auto-fire {isResults ? 'and poll within the window' : 'once at the scheduled time'}.
-            When OFF, the parser only runs from a manual click. Required to use Start on Schedule.
-          </p>
+          <span className="text-xs font-bold text-white">{S.respect}</span>
+          <p className="text-[11px] text-white/50 leading-snug">{S.respectOn(isResults)}</p>
         </div>
       </label>
 
       <label className="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">
-        Schedule · Athens (Europe/Athens) time
+        {S.title}
       </label>
       <div className="space-y-2.5">
         <DateTimePair
-          label="Start"
+          label={S.start}
           date={startDate}
           time={startTime}
           onDateChange={onStartDateChange}
@@ -267,14 +267,14 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
         {isResults && (
           <>
             <DateTimePair
-              label="End (poller stops after this)"
+              label={S.end}
               date={endDate}
               time={endTime}
               onDateChange={onEndDateChange}
               onTimeChange={onEndTimeChange}
             />
             <div>
-              <label className="block text-[10px] text-white/50 mb-0.5">Poll interval (minutes)</label>
+              <label className="block text-[10px] text-white/50 mb-0.5">{S.interval}</label>
               <input
                 type="number"
                 min={1}
@@ -294,7 +294,7 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
             disabled={!dirty || busy}
             className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-xs disabled:opacity-40 cursor-pointer"
           >
-            {busy ? 'Saving…' : 'Save schedule'}
+            {busy ? S.saving : S.save}
           </button>
           {msg && (
             <span className={`text-[11px] ${msg.kind === 'ok' ? 'text-emerald-300' : 'text-red-300'}`}>
