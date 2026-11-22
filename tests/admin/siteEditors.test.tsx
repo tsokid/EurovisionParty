@@ -1,9 +1,9 @@
 // The header and footer editors (Track 3 P2): EN/EL side by side, add a link
 // by picking a page, hide, delete with undo, reorder, inline validation, Save
-// keeps a draft, Publish says it reaches every page and uses the pipeline.
+// keeps a draft, Publish opens the site-wide publish screen (P5: preview first).
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { ToastHost } from '../../src/admin/ui/kit';
 
@@ -27,7 +27,11 @@ vi.mock('../../src/admin/modules/contests/publish', () => ({
 import FooterEditor from '../../src/admin/modules/site/FooterEditor';
 import HeaderEditor from '../../src/admin/modules/site/HeaderEditor';
 
-const wrap = (ui: ReactNode) => render(<MemoryRouter><ToastHost>{ui}</ToastHost></MemoryRouter>);
+function Where() {
+  const l = useLocation();
+  return <output data-testid="where">{l.pathname}</output>;
+}
+const wrap = (ui: ReactNode) => render(<MemoryRouter><ToastHost>{ui}<Where /></ToastHost></MemoryRouter>);
 const enInputs = () => screen.getAllByRole('textbox', { name: 'Κείμενο · English' }) as HTMLInputElement[];
 const elInputs = () => screen.getAllByRole('textbox', { name: 'Κείμενο · Ελληνικά' }) as HTMLInputElement[];
 
@@ -126,11 +130,10 @@ describe('footer editor', () => {
     await screen.findByText('Πρόχειρο, χωρίς δημοσίευση');
     expect(screen.getByRole('link', { name: 'Ιστορικό' }).getAttribute('href')).toBe('/admin/footer/history');
 
+    // P5: Publish saves, then opens the doc's publish screen (diff, Vercel preview, go live); nothing ships from here.
     fireEvent.click(screen.getByRole('button', { name: 'Δημοσίευση' }));
-    const confirm = screen.getByRole('alertdialog', { name: 'Δημοσίευση σε όλο το site;' });
-    expect(confirm.textContent).toMatch(/Επηρεάζει κάθε σελίδα του site/);
-    fireEvent.click(within(confirm).getByRole('button', { name: 'Δημοσίευση' }));
-    await waitFor(() => expect(api.publish).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.getByTestId('where').textContent).toBe('/admin/footer/publish'));
+    expect(api.publish).not.toHaveBeenCalled();
   });
 
   it('an invalid edit is kept locally and never sent', async () => {

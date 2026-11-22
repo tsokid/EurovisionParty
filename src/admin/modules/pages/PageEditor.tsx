@@ -20,7 +20,7 @@
 
 import FactTokensHelp from './FactTokensHelp';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { History } from 'lucide-react';
+import { History, Rocket } from 'lucide-react';
 import { CMS_DOC_TYPES, docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationError, type ValidationWarning } from '../../../../supabase/functions/_shared/cms/validate';
 import { seoDuplicates } from '../../../../supabase/functions/_shared/cms/seo';
@@ -198,6 +198,11 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
               <button type="button" onClick={() => setDiscarding(true)} className="btn btn-ghost btn-sm">
                 {t.editor.discard}
               </button>
+            )}
+            {hasDraft && (
+              <AdminLink to={adminPaths.docPublish(docId)} className="btn btn-primary btn-sm">
+                <Rocket size={15} aria-hidden />{t.publishFlow.publishOne}
+              </AdminLink>
             )}
           </div>
         </div>

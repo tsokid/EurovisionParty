@@ -1,15 +1,16 @@
 // The frame of a site-wide doc editor (header, footer, settings): title, where
-// the doc stands, the editor, and a sticky bar with Save and Publish. Publish
-// first says plainly that the change reaches every page of the site.
+// the doc stands, the editor, and a sticky bar with Discard and Publish.
+// Publish saves what waits and opens the doc's publish screen (CMS P5): the
+// diff, then the Vercel preview, then «Βγάλ' το live» (owner Q3 = C).
 import { useRef, useState, type ReactNode } from 'react';
-import { Globe2, History } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { History } from 'lucide-react';
 import { AdminLink, ConfirmDialog, StatusChip } from '../../ui/kit';
 import { CmsDocStatus } from '../../cms/CmsDocUi';
 import { adminPaths } from '../../paths';
 import { t } from '../../i18n';
 import { outcomeText } from '../contests/publish';
 import type { SiteDraft } from './useSiteDraft';
-import { docLabel } from '../../siteStructure';
 import PreviewPane from '../pages/PreviewPane';
 import { useClickToEdit } from '../../preview/useClickToEdit';
 
@@ -43,7 +44,7 @@ export function SiteDocFrame({ draft, title, lede, preview, children }: {
     beforeFocus: () => setTab('edit'),
     screenFor: preview?.screenFor,
   });
-  const [confirming, setConfirming] = useState(false);
+  const navigate = useNavigate();
   const [discarding, setDiscarding] = useState(false);
   const status = STATUS[draft.status];
   const blocked = draft.errors.length > 0;
@@ -120,28 +121,16 @@ export function SiteDocFrame({ draft, title, lede, preview, children }: {
               Απόρριψη
             </button>
           )}
-          <button type="button" className="btn btn-primary btn-sm max-sm:flex-1" disabled={!canPublish} onClick={() => setConfirming(true)}>
-            {draft.publishing ? 'Δημοσίευση…' : 'Δημοσίευση'}
+          <button
+            type="button"
+            className="btn btn-primary btn-sm max-sm:flex-1"
+            disabled={!canPublish}
+            onClick={() => { void draft.save().then((ok) => { if (ok) navigate(adminPaths.docPublish(draft.docId)); }); }}
+          >
+            {t.publishFlow.publishOne}
           </button>
         </div>
       </div>
-
-      <ConfirmDialog
-        open={confirming}
-        title="Δημοσίευση σε όλο το site;"
-        confirmLabel="Δημοσίευση"
-        onCancel={() => setConfirming(false)}
-        onConfirm={() => { setConfirming(false); void draft.publish(); }}
-      >
-        <p className="flex gap-2 items-start text-stage-text">
-          <Globe2 size={18} aria-hidden className="shrink-0 mt-0.5 text-stage-gold" />
-          <span>Επηρεάζει κάθε σελίδα του site, σε English και Ελληνικά.</span>
-        </p>
-        <p>Το site ενημερώνεται περίπου 2 λεπτά μετά.</p>
-        {draft.otherDrafts.length > 0 && (
-          <p>Μαζί δημοσιεύονται και οι αποθηκευμένες αλλαγές σε: {draft.otherDrafts.map(docLabel).join(', ')}.</p>
-        )}
-      </ConfirmDialog>
 
       <ConfirmDialog
         open={discarding}

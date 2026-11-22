@@ -7,10 +7,16 @@
 
 import { COMMIT_URL, formatRunTime, outcomeText, warningText, yearRanges, type Publisher } from './publish';
 import { t } from '../../i18n';
+import { AdminLink } from '../../ui/kit';
+import { DeployChip, FailureNotice } from '../../publish/DeployState';
+import { SITE_WIDE_DOC_IDS } from '../../../../supabase/functions/_shared/cms/siteLinks';
+
+/** The page drafts the full Publish ships: the site-wide docs go through a preview instead (Q3 = C). */
+const pageDrafts = (p: Publisher) => (p.summary?.changed_docs ?? []).filter((d) => !(SITE_WIDE_DOC_IDS as readonly string[]).includes(d));
 
 /** "Publish", or "Publish (contests + N page drafts)" when the manual Publish will ship page drafts too. */
 function publishLabel(p: Publisher): string {
-  const docs = p.summary?.changed_docs?.length ?? 0;
+  const docs = pageDrafts(p).length;
   return docs ? t.publish.buttonWithDocs(docs) : t.publish.button;
 }
 
@@ -41,7 +47,11 @@ const OUTCOME_STYLE = {
   error: 'text-red-300',
 } as const;
 
-export function PublishBar({ publisher: p }: { publisher: Publisher }) {
+/**
+ * `reviewTo`: the Pages and Overview screens send people to the publish
+ * screen (the diff, one page at a time) instead of publishing everything here.
+ */
+export function PublishBar({ publisher: p, reviewTo }: { publisher: Publisher; reviewTo?: string }) {
   const pending = unpublishedText(p);
   const run = p.lastRun;
   const hasChanges = !!p.summary && (p.summary.since === null || changeCount(p) > 0);
@@ -50,14 +60,18 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
   return (
     <section className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-2">
       <div className="flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={() => { p.publish().catch(() => {}); }}
-          disabled={p.publishing}
-          className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
-        >
-          {p.publishing ? t.publish.publishing : publishLabel(p)}
-        </button>
+        {reviewTo ? (
+          <AdminLink to={reviewTo} className="btn btn-primary btn-sm">{t.publishFlow.pageList}</AdminLink>
+        ) : (
+          <button
+            type="button"
+            onClick={() => { p.publish().catch(() => {}); }}
+            disabled={p.publishing}
+            className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
+          >
+            {p.publishing ? t.publish.publishing : publishLabel(p)}
+          </button>
+        )}
         {pending && (
           <span className={`text-sm font-semibold ${hasChanges ? 'text-amber-200' : 'text-white/60'}`}>{pending}</span>
         )}
@@ -80,8 +94,10 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
             </>
           )}
           {run.finished_at && ` · ${formatRunTime(run.finished_at)}`}
+          {run.status === 'ok' && run.commit_sha && <>{' '}<DeployChip run={run} /></>}
         </p>
       )}
+      {run && <FailureNotice run={run} />}
       {run?.status === 'error' && run.error && <p className="text-xs text-red-300 break-all">{run.error}</p>}
 
       {p.outcome && (

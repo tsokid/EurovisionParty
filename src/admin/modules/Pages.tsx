@@ -29,6 +29,7 @@ import { editorialPreviewPath, editorialTargets, editorialTitle, emptyEditorialD
 import { docTypeFor } from '../../../supabase/functions/_shared/cms/registry';
 import { isEditorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
 import { t } from '../i18n';
+import { adminPaths } from '../paths';
 
 type EditorialData = { targets: EditorialTarget[]; published: string[] };
 
@@ -123,7 +124,7 @@ export default function Pages({ docId, onOpen }: PagesProps = {}) {
         <p className="t-small mt-1.5 max-w-2xl">{t.pageList.lede}</p>
       </header>
 
-      <PublishBar publisher={publisher} />
+      <PublishBar publisher={publisher} reviewTo={adminPaths.publish(selected && page ? [page.docId] : undefined)} />
       <p className="text-xs text-white/50 max-w-2xl">{PUBLISH_PAGES_TEXT}</p>
 
       {err && <p className="text-sm text-red-300">{err}</p>}
