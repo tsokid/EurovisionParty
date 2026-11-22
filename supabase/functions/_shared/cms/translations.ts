@@ -30,8 +30,8 @@ const STRING_KINDS = new Set<FieldMeta['kind']>(['text', 'multiline', 'richText'
 /** Whether a string field with this metadata is translated (not shared, not hidden). */
 export const isTranslated = (meta: FieldMeta) => STRING_KINDS.has(meta.kind) && !meta.shared && !meta.hidden;
 
-/** Whether `value` (this locale) is a missing translation (`_other`, the other locale's value, is for callers that show both). */
-export function missingHere(meta: FieldMeta, value: unknown, _other?: unknown): boolean {
+/** Whether `value` (this locale's) is a missing translation of a field with this metadata. */
+export function missingHere(meta: FieldMeta, value: unknown): boolean {
   return isTranslated(meta) && meta.required !== false && blank(value);
 }
 
@@ -49,8 +49,8 @@ export function missingTranslations(schema: z.ZodType, doc: unknown): MissingTra
       return;
     }
     if (n.type !== 'string') return;
-    if (missingHere(n.meta, en, el)) out.en.push(n.path);
-    if (missingHere(n.meta, el, en)) out.el.push(n.path);
+    if (missingHere(n.meta, en)) out.en.push(n.path);
+    if (missingHere(n.meta, el)) out.el.push(n.path);
   }, [doc.en, doc.el]);
   return out;
 }

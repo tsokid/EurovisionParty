@@ -62,7 +62,7 @@ export function LeafField({ schema, segments, path, name, label, en, el, hasEn, 
                 name={`${name} (${l.toUpperCase()})`}
                 tag={l.toUpperCase()}
                 value={l === 'en' ? en : el}
-                missing={hasEn && hasEl && missingHere(meta, l === 'en' ? en : el, l === 'en' ? el : en)}
+                missing={hasEn && hasEl && missingHere(meta, l === 'en' ? en : el)}
                 issues={issues.filter((i) => i.locale === l)}
                 onValue={(v) => write([l], v)}
               />
