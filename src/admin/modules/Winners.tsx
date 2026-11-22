@@ -1,15 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
+import { t } from '../i18n';
 
 const CATEGORIES = ['champion', 'thief', 'duelist', 'oracle', 'guru'] as const;
 type Category = typeof CATEGORIES[number];
 
 const CAT_LABELS: Record<Category, { emoji: string; label: string; metric: string }> = {
-  champion: { emoji: '👑', label: 'Champion', metric: 'Total points' },
-  thief:    { emoji: '🦹', label: 'Thief',    metric: 'Points stolen' },
-  duelist:  { emoji: '⚔️', label: 'Duelist',  metric: 'Duels won' },
-  oracle:   { emoji: '🔮', label: 'Oracle',   metric: 'Prediction points' },
-  guru:     { emoji: '🧠', label: 'Guru',     metric: 'Correct trivia' },
+  champion: { emoji: '👑', ...t.winners.cats.champion },
+  thief:    { emoji: '🦹', ...t.winners.cats.thief },
+  duelist:  { emoji: '⚔️', ...t.winners.cats.duelist },
+  oracle:   { emoji: '🔮', ...t.winners.cats.oracle },
+  guru:     { emoji: '🧠', ...t.winners.cats.guru },
 };
 
 interface Room {
@@ -114,7 +115,7 @@ export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: Wi
     const { data, error } = await supabase.rpc('compute_winners', { p_room_id: roomId });
     setBusy(false);
     if (error) { setMsg({ kind: 'err', text: error.message }); return; }
-    setMsg({ kind: 'ok', text: `Computed ${data ?? 0} winner row(s).` });
+    setMsg({ kind: 'ok', text: t.winners.computed(Number(data ?? 0)) });
     await loadRoom(roomId);
   }
 
@@ -124,7 +125,7 @@ export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: Wi
     const { error } = await supabase.rpc('admin_clear_winners', { p_room_id: roomId });
     setBusy(false);
     if (error) { setMsg({ kind: 'err', text: error.message }); return; }
-    setMsg({ kind: 'ok', text: 'Cleared all winners for this room.' });
+    setMsg({ kind: 'ok', text: t.winners.cleared });
     await loadRoom(roomId);
   }
 
@@ -152,34 +153,34 @@ export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: Wi
   return (
     <div className="space-y-6 max-w-4xl">
       <header>
-        <h2 className="text-xl font-bold text-white">🏆 Winners</h2>
+        <h2 className="text-2xl font-bold text-stage-text m-0">{t.winners.title}</h2>
         <p className="text-sm text-white/60 mt-1">
-          Compute or override the five winner categories for any room. Co-winners are supported (multiple rows per category).
+          {t.winners.lede}
         </p>
       </header>
 
       <section className="rounded-xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
         <div>
-          <label className="text-xs text-white/50 uppercase tracking-wider font-semibold block mb-2">Room</label>
+          <label className="text-xs text-white/50 uppercase tracking-wider font-semibold block mb-2">{t.winners.room}</label>
           <select
             value={roomId ?? ''}
             onChange={(e) => (onSelectRoom ? onSelectRoom(e.target.value) : setRoomId(e.target.value))}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white"
           >
-            {rooms.length === 0 && <option>No rooms yet</option>}
+            {rooms.length === 0 && <option>{t.winners.noRooms}</option>}
             {rooms.map((r) => (
               <option key={r.id} value={r.id} className="bg-euro-purple-dark">
-                {r.code} · host: {hostMap[r.id] ?? r.host_name ?? '—'} · {r.phase} · {new Date(r.created_at).toLocaleDateString()}
+                {r.code} · host: {hostMap[r.id] ?? r.host_name ?? '—'} · {t.monitor.phases[r.phase] ?? r.phase} · {new Date(r.created_at).toLocaleDateString('el-GR')}
               </option>
             ))}
           </select>
           {room && (
             <p className="text-xs text-white/40 mt-2">
-              Host: <span className="text-white/85 font-semibold">{hostMap[room.id] ?? room.host_name ?? '—'}</span>
+              {t.winners.host}: <span className="text-white/85 font-semibold">{hostMap[room.id] ?? room.host_name ?? '—'}</span>
               {' · '}
               ID: <span className="font-mono">{room.id.slice(0, 8)}…</span>
               {' · '}
-              Players: {players.length}
+              {t.winners.players}: {players.length}
             </p>
           )}
         </div>
@@ -189,14 +190,14 @@ export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: Wi
             disabled={busy || !roomId}
             className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg disabled:opacity-40 transition"
           >
-            Compute winners
+            {t.winners.compute}
           </button>
           <button
             onClick={clearAll}
             disabled={busy || !roomId || winners.length === 0}
             className="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white/70 font-bold rounded-lg disabled:opacity-40 transition"
           >
-            Clear all
+            {t.winners.clearAll}
           </button>
           {msg && (
             <span className={`self-center text-sm ${msg.kind === 'ok' ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -217,10 +218,10 @@ export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: Wi
                   <h3 className="font-bold text-white text-lg flex items-center gap-2">
                     <span className="text-xl" aria-hidden>{meta.emoji}</span> {meta.label}
                   </h3>
-                  <p className="text-xs text-white/40">Metric: {meta.metric}</p>
+                  <p className="text-xs text-white/40">{t.winners.metric}: {meta.metric}</p>
                 </div>
                 <div>
-                  {ws.length === 0 && <span className="text-white/40 text-sm italic">— no winner —</span>}
+                  {ws.length === 0 && <span className="text-white/40 text-sm italic">{t.winners.noWinner}</span>}
                   {ws.map((w) => (
                     <span
                       key={w.id}
@@ -237,8 +238,8 @@ export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: Wi
                 <div className="mt-3">
                   <details className="group">
                     <summary className="text-xs text-white/50 cursor-pointer hover:text-white/80 list-none">
-                      <span className="group-open:hidden">Override winner →</span>
-                      <span className="hidden group-open:inline">Hide override</span>
+                      <span className="group-open:hidden">{t.winners.override}</span>
+                      <span className="hidden group-open:inline">{t.winners.hideOverride}</span>
                     </summary>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {players.map((p) => (
@@ -261,9 +262,8 @@ export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: Wi
       </section>
 
       <p className="text-xs text-white/40">
-        <strong>Compute</strong> runs the deterministic algorithm against jury+televote and quiz/duel data.{' '}
-        <strong>Override</strong> wipes the category for the room and pins your chosen player. Use overrides only when the
-        algorithm produces a wrong result (e.g. tied metric the deterministic logic can't break).
+        <strong>{t.winners.noteCompute}</strong>{t.winners.noteCompute2}
+        <strong>{t.winners.noteOverride}</strong>{t.winners.noteOverride2}
       </p>
     </div>
   );

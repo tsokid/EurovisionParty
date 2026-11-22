@@ -8,13 +8,14 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { formatError } from "../lib/formatError";
 import { fetchLiveContestYear } from "../../lib/liveContestYear";
+import { t } from '../i18n';
 
 const PHASES = [
-  { id: "lobby", label: "Lobby", color: "bg-white/15 text-white" },
-  { id: "pre_night", label: "Pre-Night", color: "bg-blue-500/20 text-blue-300" },
-  { id: "predictions_open", label: "Predictions Open", color: "bg-violet-500/25 text-violet-200" },
-  { id: "voting_live", label: "Voting Live", color: "bg-pink-500/25 text-pink-200" },
-  { id: "final", label: "Final", color: "bg-emerald-500/25 text-emerald-200" },
+  { id: "lobby", label: t.monitor.phases.lobby, color: "bg-white/15 text-white" },
+  { id: "pre_night", label: t.monitor.phases.pre_night, color: "bg-blue-500/20 text-blue-300" },
+  { id: "predictions_open", label: t.monitor.phases.predictions_open, color: "bg-violet-500/25 text-violet-200" },
+  { id: "voting_live", label: t.monitor.phases.voting_live, color: "bg-pink-500/25 text-pink-200" },
+  { id: "final", label: t.monitor.phases.final, color: "bg-emerald-500/25 text-emerald-200" },
 ] as const;
 
 interface RoomRow {
@@ -130,7 +131,7 @@ export default function PhaseMonitor() {
       .filter((r) => selected.has(r.id))
       .map((r) => r.code)
       .join(", ");
-    if (!window.confirm(`Delete ${selected.size} room(s): ${codes}?\n\nThis cannot be undone.`)) return;
+    if (!window.confirm(t.monitor.confirmDelete(selected.size, codes))) return;
 
     setDeleting(true);
     setErr(null);
@@ -188,7 +189,7 @@ export default function PhaseMonitor() {
       )}
       <span className="font-mono tracking-wide w-20 shrink-0">{r.code}</span>
       <span className="text-white/55 truncate flex-1 min-w-0 text-xs">
-        {r.host_name ?? <span className="text-white/25 italic">no host</span>}
+        {r.host_name ?? <span className="text-white/25 italic">{t.monitor.noHost}</span>}
       </span>
       <span className="text-white/55 tabular-nums text-xs shrink-0">{r.player_count}p</span>
       <span className="text-white/85 capitalize text-xs shrink-0 w-28 text-right">
@@ -198,14 +199,14 @@ export default function PhaseMonitor() {
   );
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4">
       <header>
-        <h2 className="text-xl font-bold text-white">📊 Phase Monitor</h2>
+        <h2 className="text-2xl font-bold text-stage-text m-0">{t.monitor.title}</h2>
         <p className="text-sm text-white/60 mt-1">
-          Live count of rooms per phase. Refreshes every 15s.{" "}
+          {t.monitor.lede}{" "}
           {refreshedAt && (
             <span className="text-white/40">
-              · last updated {refreshedAt.toLocaleTimeString()}
+              {t.monitor.updated(refreshedAt.toLocaleTimeString('el-GR', { hourCycle: 'h23' }))}
             </span>
           )}
         </p>
@@ -214,19 +215,19 @@ export default function PhaseMonitor() {
       {/* Parser status strip */}
       <section className="rounded-xl border border-white/10 bg-white/5 p-3 flex flex-wrap items-center gap-3 text-sm">
         <div>
-          <span className="text-white/55 text-xs uppercase tracking-wide mr-2">Participants</span>
+          <span className="text-white/55 text-xs uppercase tracking-wide mr-2">{t.monitor.participants}</span>
           <span className="font-bold text-white tabular-nums">
             {parser.participants ?? "—"}
           </span>
         </div>
         <div>
-          <span className="text-white/55 text-xs uppercase tracking-wide mr-2">Results</span>
+          <span className="text-white/55 text-xs uppercase tracking-wide mr-2">{t.monitor.results}</span>
           <span className="font-bold text-white tabular-nums">
             {parser.results ?? "—"}
           </span>
         </div>
         <div className="ml-auto text-xs text-white/55">
-          Expected phase from parser state:{" "}
+          {t.monitor.expected}{" "}
           <span className="font-bold text-white">
             {PHASES.find((p) => p.id === expectedPhase)?.label ?? expectedPhase}
           </span>
@@ -249,7 +250,7 @@ export default function PhaseMonitor() {
                 {p.label}
               </p>
               <p className="text-3xl font-extrabold text-white mt-2 tabular-nums">{p.n}</p>
-              <p className="text-xs text-white/55 tabular-nums">{pct}% of {total}</p>
+              <p className="text-xs text-white/55 tabular-nums">{t.monitor.pctOf(pct, total)}</p>
             </div>
           );
         })}
@@ -259,9 +260,9 @@ export default function PhaseMonitor() {
       {stragglers.length > 0 && (
         <section className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3">
           <p className="text-sm font-bold text-amber-300 mb-2">
-            ⚠️ {stragglers.length} room{stragglers.length === 1 ? "" : "s"} not in expected phase
+            ⚠️ {t.monitor.stragglers(stragglers.length)}
             <span className="text-white/55 font-normal ml-1">
-              (use Game phase on the Parser page)
+              {t.monitor.stragglersHint}
             </span>
           </p>
           <ul className="text-xs sm:text-sm text-white/80 space-y-0.5 max-h-48 overflow-y-auto">
@@ -281,10 +282,10 @@ export default function PhaseMonitor() {
             ref={(el) => { if (el) el.indeterminate = someChecked; }}
             onChange={toggleSelectAll}
             className="accent-red-400 cursor-pointer"
-            aria-label="Select all rooms"
+            aria-label={t.monitor.selectAll}
           />
           <p className="text-sm font-bold text-white/80 flex-1">
-            All rooms · most recent first
+            {t.monitor.all}
           </p>
           {selected.size > 0 && (
             <button
@@ -292,7 +293,7 @@ export default function PhaseMonitor() {
               disabled={deleting}
               className="px-3 py-1 rounded bg-red-500/80 hover:bg-red-500 text-white text-xs font-bold transition-colors disabled:opacity-50"
             >
-              {deleting ? "Deleting…" : `Delete ${selected.size} room${selected.size === 1 ? "" : "s"}`}
+              {deleting ? t.monitor.deleting : t.monitor.deleteN(selected.size)}
             </button>
           )}
           <button
@@ -300,12 +301,12 @@ export default function PhaseMonitor() {
             disabled={loading}
             className="text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-40"
           >
-            ↻ refresh
+            {t.monitor.refresh}
           </button>
         </div>
 
         {loading && rooms.length === 0 ? (
-          <p className="text-sm text-white/50">Loading…</p>
+          <p className="text-sm text-white/50">{t.common.loading}</p>
         ) : (
           <ul className="text-xs sm:text-sm text-white/80 space-y-0.5 max-h-96 overflow-y-auto">
             {rooms.slice(0, 100).map((r) => (
