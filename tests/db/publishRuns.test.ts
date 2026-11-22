@@ -42,6 +42,9 @@ describe('074 publish_runs', () => {
   const begin = async () => (await db.query<{ id: string }>(`select public.begin_publish() as id`)).rows[0].id;
   const end = (id: string | number, status: string, sha: string | null, files: number | null, error: string | null) =>
     asService(() => db.query(`select public.end_publish($1, $2, $3, $4, $5)`, [id, status, sha, files, error]));
+  /** The deploy of a committed run finished (publish-status, 086): the next main publish may start. */
+  const deployed = (id: string | number) =>
+    asService(() => db.query(`select public.set_deploy_state($1, 'ready', null, null, null)`, [id]));
   const summary = async () =>
     (await db.query<{ s: Summary }>(`select public.unpublished_summary() as s`)).rows[0].s;
   const run = async (id: string | number) =>
@@ -142,6 +145,7 @@ describe('074 publish_runs', () => {
   it('unpublished_summary: a contest edit counts too, and an error run does not reset since', async () => {
     const id = await begin();
     await end(id, 'ok', 'deadbeef', 3, null);
+    await deployed(id);
     await asUser(db, null);
     await db.exec(`update public.contests set updated_at = now() where year = 1974`);
     await asUser(db, ADMIN);
@@ -163,6 +167,7 @@ describe('074 publish_runs', () => {
   it('unpublished_summary: a noop run counts as published', async () => {
     const id = await begin();
     await end(id, 'ok', 'deadbeef', 3, null);
+    await deployed(id);
     await asUser(db, null);
     await db.exec(`update public.contests set updated_at = now() where year = 1974`);
     await asUser(db, ADMIN);
@@ -270,11 +275,12 @@ describe('074 publish_runs', () => {
 // A database where an earlier 074 already ran: publish_runs without cms and
 // the 0-arg begin_publish(). Re-applying the current 074 must add the column
 // and replace the function (no overload, so begin_publish() stays unambiguous).
+// Up to 085: 086 replaces begin_publish with its per-doc signature.
 describe('074 re-applied over the old 074', () => {
   let db: PGlite;
 
   beforeAll(async () => {
-    db = await createDb();
+    db = await createDb({ upTo: '085' });
     await makeAdmin(db, ADMIN, 'admin@example.test');
     await db.exec(`
       drop function public.begin_publish(boolean);

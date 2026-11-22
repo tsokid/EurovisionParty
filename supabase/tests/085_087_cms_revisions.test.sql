@@ -131,13 +131,13 @@ select pg_temp.expect_rows($q$select 1 from public.cms_documents where doc_id = 
 select pg_temp.expect_rows($q$select 1 from (select public.cms_revision((select max(id) from public.cms_revisions where doc_id = 't085-faq')) as r) x where (r->'data'->'en'->>'t') = 'six'$q$, 1, 'cms_revision returns the data');
 reset role;
 
--- ── Published revisions from a successful publish run ───────────────────
+-- ── Published revisions from a successful publish run (end_publish, 086) ──
 update public.cms_documents set updated_at = now() - interval '1 minute' where doc_id = 't085-faq';
 insert into public.publish_runs (id, started_at, status, cms) values (908501, now(), 'running', true);
-update public.publish_runs set status = 'ok', commit_sha = 'abc0850', finished_at = now() where id = 908501;
+select public.end_publish(908501, 'ok', 'abc0850', 1, null);
 select pg_temp.expect_rows($q$select 1 from public.cms_revisions where doc_id = 't085-faq' and kind = 'published' and run_id = 908501 and commit_sha = 'abc0850'$q$, 1, 'an ok run records what it shipped');
 insert into public.publish_runs (id, started_at, status, cms) values (908502, now(), 'running', true);
-update public.publish_runs set status = 'error', finished_at = now() where id = 908502;
+select public.end_publish(908502, 'error', null, null, 'boom');
 select pg_temp.expect_rows($q$select 1 from public.cms_revisions where run_id = 908502$q$, 0, 'a failed run records nothing');
 
 -- ── 087: who can read ───────────────────────────────────────────────────

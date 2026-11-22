@@ -234,7 +234,7 @@ describe('076 cms_documents', () => {
     expect(Object.keys(s).sort()).toEqual(['changed_docs', 'changed_years', 'since']);
   });
 
-  it('publish_input includes the documents as [{doc_id, doc_type, data}]', async () => {
+  it('publish_input includes the documents as [{doc_id, doc_type, data, updated_at}]', async () => {
     const read = () =>
       asService(async () => (await db.query<{ i: Record<string, unknown> }>(`select public.publish_input() as i`)).rows[0].i);
     expect((await read()).cms_documents).toEqual([]);
@@ -243,9 +243,10 @@ describe('076 cms_documents', () => {
     await save('about', 'about', doc('A'), null);
     const input = await read();
     expect(Object.keys(input).sort()).toEqual(['cms_documents', 'contests', 'countries', 'entries', 'generated_at', 'media']);
+    // 086: each draft carries its updated_at (end_publish stamps exactly that version).
     expect(input.cms_documents).toEqual([
-      { doc_id: 'about', doc_type: 'about', data: doc('A') },
-      { doc_id: 'home', doc_type: 'home', data: doc('H') },
+      { doc_id: 'about', doc_type: 'about', data: doc('A'), updated_at: (await get('about'))!.updated_at },
+      { doc_id: 'home', doc_type: 'home', data: doc('H'), updated_at: (await get('home'))!.updated_at },
     ]);
   });
 
