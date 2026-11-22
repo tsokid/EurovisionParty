@@ -29,9 +29,18 @@ import SettingsEditor from './modules/site/SettingsEditor';
 import AvatarsLibrary from './modules/avatars/AvatarsLibrary';
 import { FOOTER_COLUMN_KEYS, type FooterColumnKey } from './paths';
 import { footerColumn } from './siteStructure';
+import { t } from './i18n';
+import { DocHistory } from './cms/DocHistory';
+import { CMS_DOC_TYPES, docTypeFor } from '../../supabase/functions/_shared/cms/registry';
+import { cmsGet, cmsSave } from './modules/pages/cmsApi';
+import { pageBase, pageRemote } from './modules/pages/PageEditor';
+import { publishedSiteDoc } from '../lib/cms/siteChrome';
+import type { SiteWideDocId } from '../../supabase/functions/_shared/cms/siteLinks';
+import type { DocValue } from './modules/pages/form/SchemaForm';
+import { useCallback } from 'react';
 
 const LINK = 'text-stage-pink-2 hover:underline';
-const NOT_FOUND: Crumb[] = [{ label: 'Not found' }];
+const NOT_FOUND: Crumb[] = [{ label: t.nav.notFound }];
 
 function ScreenTitle({ title, lede }: { title: string; lede?: ReactNode }) {
   return (
@@ -49,7 +58,7 @@ function Later({ title, phase, crumbs, children }: { title: string; phase: strin
     <div className="max-w-2xl">
       <div className="flex flex-wrap items-center gap-3 mb-5">
         <h1 className="text-2xl font-bold text-stage-text m-0">{title}</h1>
-        <span className="chip">Coming in {phase}</span>
+        <span className="chip">{t.shell.comingIn(phase)}</span>
       </div>
       <div className="card card-pad space-y-3 t-small">{children}</div>
     </div>
@@ -57,21 +66,19 @@ function Later({ title, phase, crumbs, children }: { title: string; phase: strin
 }
 
 // ── Overview ─────────────────────────────────────────────────────────
-const START: Array<{ to: string; title: string; text: string }> = [
-  { to: adminPaths.pages(), title: 'Pages', text: 'The copy of every site page, in English and Greek.' },
-  { to: adminPaths.contests(), title: 'Contests', text: 'Contest years, their lifecycle and entries.' },
-  { to: adminPaths.parser(), title: 'Parser & controls', text: 'Parse participants and results, move the rooms.' },
-  { to: adminPaths.monitor(), title: 'Room phases', text: 'Every room and the phase it is in.' },
-];
+const START_TO: Record<string, string> = {
+  pages: adminPaths.pages(), contests: adminPaths.contests(), parser: adminPaths.parser(), monitor: adminPaths.monitor(),
+};
+const START = t.overview.start.map((s) => ({ to: START_TO[s.key], title: s.title, text: s.text }));
 
 function Overview() {
-  useAdminCrumbs([{ label: 'Overview' }]);
+  useAdminCrumbs([{ label: t.nav.overview }]);
   const publisher = usePublisher();
   return (
     <div className="max-w-4xl space-y-5">
-      <ScreenTitle title="Overview" />
+      <ScreenTitle title={t.overview.title} />
       <PublishBar publisher={publisher} />
-      <p className="text-xs text-white/50 max-w-2xl">{PUBLISH_PAGES_TEXT}</p>
+      <p className="t-meta max-w-2xl">{PUBLISH_PAGES_TEXT}</p>
       <ul className="grid gap-3 sm:grid-cols-2">
         {START.map((s) => (
           <li key={s.to}>
@@ -87,21 +94,101 @@ function Overview() {
 }
 
 // ── Site ─────────────────────────────────────────────────────────────
-function HeaderScreen() {
-  useAdminCrumbs([{ label: 'Site' }, { label: 'Header' }]);
-  useAdminLive('/');
+type ScreenProps = { splat?: string };
+
+/** "history" or "history/:revId" after an editor's path: the selected revision ('' for none); null: no history; undefined: invalid. */
+function historyOf(parts: string[]): string | null | undefined {
+  if (parts.length === 0) return null;
+  if (parts[0] !== 'history' || parts.length > 2) return undefined;
+  return parts[1] ?? '';
+}
+
+const HISTORY_CRUMB: Crumb = { label: t.nav.history };
+
+/** The history screen of a site-wide doc (header, footer, settings). */
+function SiteDocHistory({ docId, rev }: { docId: SiteWideDocId; rev: string }) {
+  const navigate = useNavigate();
+  const loadCurrent = useCallback(async () => {
+    const row = await cmsGet(docId);
+    return row ? { value: row.data, updatedAt: row.updated_at } : { value: publishedSiteDoc(docId), updatedAt: null };
+  }, [docId]);
+  const loadLive = useCallback(async () => publishedSiteDoc(docId), [docId]);
+  const saveDraft = useCallback((v: unknown, exp: string | null) => cmsSave(docId, docId, v as DocValue, exp), [docId]);
+  return (
+    <DocHistory
+      docId={docId}
+      label={t.docs[docId]}
+      schema={CMS_DOC_TYPES[docId]?.schema}
+      loadCurrent={loadCurrent}
+      loadLive={loadLive}
+      saveDraft={saveDraft}
+      selected={rev || null}
+      onSelect={(sel) => navigate(adminPaths.history(docId, sel), { replace: true })}
+      editorPath={adminPaths.editorOf(docId)}
+      onRestored={() => navigate(adminPaths.editorOf(docId))}
+    />
+  );
+}
+
+/** The history screen of a page or editorial doc. */
+function PageDocHistory({ docId, label, rev }: { docId: string; label: string; rev: string }) {
+  const navigate = useNavigate();
+  const docType = docTypeFor(docId);
+  const loadCurrent = useCallback(() => pageRemote(docId), [docId]);
+  const loadLive = useCallback(async () => (await pageBase(docId)).value, [docId]);
+  const saveDraft = useCallback((v: unknown, exp: string | null) => cmsSave(docId, docType, v as DocValue, exp), [docId, docType]);
+  return (
+    <DocHistory
+      docId={docId}
+      label={label}
+      schema={CMS_DOC_TYPES[docType]?.schema}
+      loadCurrent={loadCurrent}
+      loadLive={loadLive}
+      saveDraft={saveDraft}
+      selected={rev || null}
+      onSelect={(sel) => navigate(adminPaths.history(docId, sel), { replace: true })}
+      editorPath={adminPaths.pages(docId)}
+      onRestored={() => navigate(adminPaths.pages(docId))}
+    />
+  );
+}
+
+const SITE_CRUMB: Crumb = { label: t.nav.site };
+
+function HeaderScreen({ splat }: ScreenProps) {
+  const hist = historyOf(splatSegments(splat));
+  const crumbs: Crumb[] = hist == null
+    ? [SITE_CRUMB, { label: t.nav.header }]
+    : [SITE_CRUMB, { label: t.nav.header, to: adminPaths.header() }, HISTORY_CRUMB];
+  useAdminCrumbs(hist === undefined ? NOT_FOUND : crumbs);
+  useAdminLive(hist === undefined ? null : '/');
+  if (hist === undefined) return <NotFound />;
+  if (hist !== null) return <SiteDocHistory docId="site-header" rev={hist} />;
   return <HeaderEditor />;
 }
 
-type ScreenProps = { splat?: string };
 
 function FooterScreen({ splat }: ScreenProps) {
-  const [key, ...rest] = splatSegments(splat);
+  const parts = splatSegments(splat);
+  if (parts[0] === 'history') return <FooterHistoryScreen parts={parts} />;
+  return <FooterColumnScreen parts={parts} />;
+}
+
+function FooterHistoryScreen({ parts }: { parts: string[] }) {
+  const hist = historyOf(parts);
+  useAdminCrumbs(hist == null ? NOT_FOUND : [SITE_CRUMB, { label: t.nav.footer, to: adminPaths.footer() }, HISTORY_CRUMB]);
+  useAdminLive(hist == null ? null : '/');
+  if (hist == null) return <NotFound />;
+  return <SiteDocHistory docId="site-footer" rev={hist} />;
+}
+
+function FooterColumnScreen({ parts }: { parts: string[] }) {
+  const [key, ...rest] = parts;
   const column = key === undefined ? null : (FOOTER_COLUMN_KEYS as readonly string[]).includes(key) ? (key as FooterColumnKey) : undefined;
   const valid = column !== undefined && rest.length === 0;
   useAdminCrumbs(!valid ? NOT_FOUND : column
-    ? [{ label: 'Site' }, { label: 'Footer', to: adminPaths.footer() }, { label: footerColumn(column)?.title ?? COLUMN_TITLE[column] }]
-    : [{ label: 'Site' }, { label: 'Footer' }]);
+    ? [SITE_CRUMB, { label: t.nav.footer, to: adminPaths.footer() }, { label: footerColumn(column)?.title ?? COLUMN_TITLE[column] }]
+    : [SITE_CRUMB, { label: t.nav.footer }]);
   useAdminLive(valid ? '/' : null);
   if (!valid) return <NotFound />;
   return <FooterEditor key={column ?? 'all'} column={column} />;
@@ -114,13 +201,17 @@ function PagesScreen({ splat }: ScreenProps) {
   const known = docId === null || SITE_PAGES.some((p) => p.docId === docId) || isEditorialDocId(docId);
   const site = SITE_PAGES.find((p) => p.docId === docId);
   const label = docId ? site?.label ?? editorialTitle(docId) : null;
-  const valid = known && parts.length <= 1;
-  useAdminCrumbs(
-    !valid ? NOT_FOUND : docId
-      ? [{ label: 'Site' }, { label: 'Pages', to: adminPaths.pages() }, { label: label ?? docId }]
-      : [{ label: 'Site' }, { label: 'Pages' }],
-  );
+  const hist = historyOf(parts.slice(1));
+  const valid = known && hist !== undefined;
+  const inHistory = valid && docId !== null && hist != null;
+  const crumbs: Crumb[] = !docId
+    ? [SITE_CRUMB, { label: t.nav.pages }]
+    : inHistory
+      ? [SITE_CRUMB, { label: t.nav.pages, to: adminPaths.pages() }, { label: label ?? docId, to: adminPaths.pages(docId) }, HISTORY_CRUMB]
+      : [SITE_CRUMB, { label: t.nav.pages, to: adminPaths.pages() }, { label: label ?? docId }];
+  useAdminCrumbs(valid ? crumbs : NOT_FOUND);
   if (!valid) return <NotFound />;
+  if (inHistory) return <PageDocHistory key={docId} docId={docId!} label={label ?? docId!} rev={hist!} />;
   return <Pages docId={docId} onOpen={(next) => navigate(adminPaths.pages(next))} />;
 }
 
@@ -129,10 +220,10 @@ function ContestsScreen({ splat }: ScreenProps) {
   const navigate = useNavigate();
   const route = parseContestRoute(splat);
   const { year, section, iso } = route;
-  const crumbs: Crumb[] = [{ label: 'Contests', to: year === null ? undefined : adminPaths.contests() }];
+  const crumbs: Crumb[] = [{ label: t.nav.contests, to: year === null ? undefined : adminPaths.contests() }];
   if (year !== null) {
     crumbs.push({ label: String(year), to: section === 'details' ? undefined : adminPaths.contests(year) });
-    if (section === 'entries') crumbs.push({ label: 'Entries', to: iso ? adminPaths.contests(year, 'entries') : undefined });
+    if (section === 'entries') crumbs.push({ label: t.nav.entries, to: iso ? adminPaths.contests(year, 'entries') : undefined });
     if (iso) crumbs.push({ label: iso });
   }
   useAdminCrumbs(route.valid ? crumbs : NOT_FOUND);
@@ -150,7 +241,7 @@ function ContestsScreen({ splat }: ScreenProps) {
 
 // ── Game ─────────────────────────────────────────────────────────────
 function MonitorScreen() {
-  useAdminCrumbs([{ label: 'Game' }, { label: 'Room phases' }]);
+  useAdminCrumbs([{ label: t.nav.game }, { label: t.nav.monitor }]);
   return <PhaseMonitor />;
 }
 
@@ -161,8 +252,8 @@ function ParserScreen({ splat }: ScreenProps) {
   const valid = parts.length === 0 || (parts.length === 1 && year !== null);
   useAdminCrumbs(
     !valid ? NOT_FOUND : year === null
-      ? [{ label: 'Game' }, { label: 'Parser & controls' }]
-      : [{ label: 'Game' }, { label: 'Parser & controls', to: adminPaths.parser() }, { label: String(year) }],
+      ? [{ label: t.nav.game }, { label: t.nav.parser }]
+      : [{ label: t.nav.game }, { label: t.nav.parser, to: adminPaths.parser() }, { label: String(year) }],
   );
   if (!valid) return <NotFound />;
   return <EurovisionParser year={year} onPickYear={(y) => navigate(adminPaths.parser(y))} />;
@@ -174,39 +265,43 @@ function WinnersScreen({ splat }: ScreenProps) {
   const roomId = parts[0] ?? null;
   useAdminCrumbs(
     parts.length > 1 ? NOT_FOUND : roomId
-      ? [{ label: 'Game' }, { label: 'Winners', to: adminPaths.winners() }, { label: 'Room' }]
-      : [{ label: 'Game' }, { label: 'Winners' }],
+      ? [{ label: t.nav.game }, { label: t.nav.winners, to: adminPaths.winners() }, { label: t.nav.room }]
+      : [{ label: t.nav.game }, { label: t.nav.winners }],
   );
   if (parts.length > 1) return <NotFound />;
   return <Winners roomId={roomId} onSelectRoom={(id) => navigate(adminPaths.winners(id))} />;
 }
 
 function AvatarsScreen() {
-  useAdminCrumbs([{ label: 'Game' }, { label: 'Avatars' }]);
+  useAdminCrumbs([{ label: t.nav.game }, { label: t.nav.avatars }]);
   return <AvatarsLibrary />;
 }
 
 // ── Media, settings ──────────────────────────────────────────────────
 function MediaScreen() {
   return (
-    <Later title="Media library" phase="P6" crumbs={[{ label: 'Media' }]}>
-      <p>
-        A library of every uploaded image and video, with alt text in English and Greek, comes in P6.
-      </p>
+    <Later title={t.media.title} phase="P6" crumbs={[{ label: t.nav.media }]}>
+      <p>{t.media.p1}</p>
       <p className="text-stage-text-3">
-        Today you upload and pick media inside a page editor, under <Link to={adminPaths.pages()} className={LINK}>Pages</Link>.
+        {t.media.p2a}<Link to={adminPaths.pages()} className={LINK}>{t.media.p2b}</Link>.
       </p>
     </Later>
   );
 }
 
-function SettingsScreen() {
-  useAdminCrumbs([{ label: 'Settings' }, { label: 'Site settings' }]);
+function SettingsScreen({ splat }: ScreenProps) {
+  const hist = historyOf(splatSegments(splat));
+  const crumbs: Crumb[] = hist == null
+    ? [{ label: t.nav.settings }, { label: t.nav.siteSettings }]
+    : [{ label: t.nav.settings }, { label: t.nav.siteSettings, to: adminPaths.settings() }, HISTORY_CRUMB];
+  useAdminCrumbs(hist === undefined ? NOT_FOUND : crumbs);
+  if (hist === undefined) return <NotFound />;
+  if (hist !== null) return <SiteDocHistory docId="site-settings" rev={hist} />;
   return <SettingsEditor />;
 }
 
 function AdminsScreen() {
-  useAdminCrumbs([{ label: 'Settings' }, { label: 'Super admins' }]);
+  useAdminCrumbs([{ label: t.nav.settings }, { label: t.nav.admins }]);
   return <SuperAdmins />;
 }
 
@@ -215,15 +310,15 @@ function NotFound() {
   useAdminLive(null);
   return (
     <div className="max-w-xl">
-      <ScreenTitle title="Nothing here" lede="No admin screen has this address. It may have been mistyped, or the item no longer exists." />
-      <Link to={adminPaths.overview()} className={LINK}>Go to the overview</Link>
+      <ScreenTitle title={t.notFound.title} lede={t.notFound.lede} />
+      <Link to={adminPaths.overview()} className={LINK}>{t.notFound.back}</Link>
     </div>
   );
 }
 
 const SCREENS: Array<{ pattern: string; Screen: ComponentType<ScreenProps> }> = [
   { pattern: '/admin', Screen: Overview },
-  { pattern: '/admin/header', Screen: HeaderScreen },
+  { pattern: '/admin/header/*', Screen: HeaderScreen },
   { pattern: '/admin/footer/*', Screen: FooterScreen },
   { pattern: '/admin/pages/*', Screen: PagesScreen },
   { pattern: '/admin/contests/*', Screen: ContestsScreen },
@@ -232,7 +327,7 @@ const SCREENS: Array<{ pattern: string; Screen: ComponentType<ScreenProps> }> = 
   { pattern: '/admin/game/winners/*', Screen: WinnersScreen },
   { pattern: '/admin/game/avatars', Screen: AvatarsScreen },
   { pattern: '/admin/media', Screen: MediaScreen },
-  { pattern: '/admin/settings', Screen: SettingsScreen },
+  { pattern: '/admin/settings/*', Screen: SettingsScreen },
   { pattern: '/admin/system/admins', Screen: AdminsScreen },
 ];
 

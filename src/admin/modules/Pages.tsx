@@ -28,6 +28,7 @@ import { PageEditor } from './pages/PageEditor';
 import { editorialPreviewPath, editorialTargets, editorialTitle, emptyEditorialDoc, loadEditorialSources, type EditorialTarget } from './pages/editorialPages';
 import { docTypeFor } from '../../../supabase/functions/_shared/cms/registry';
 import { isEditorialDocId } from '../../../supabase/functions/_shared/cms/pagesIndex';
+import { t } from '../i18n';
 
 type EditorialData = { targets: EditorialTarget[]; published: string[] };
 
@@ -116,13 +117,10 @@ export default function Pages({ docId, onOpen }: PagesProps = {}) {
   useAdminLive(site ? sitePagePath(site.docId) : previewPath);
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4">
       <header>
-        <h2 className="text-xl font-bold text-white">📝 Pages</h2>
-        <p className="text-sm text-white/60 mt-1 max-w-2xl">
-          The copy of the site pages, in English and Greek, and the optional editorial text of the contest years,
-          countries and live hub. Save keeps a draft; nothing goes live until Publish.
-        </p>
+        <h2 className="text-2xl font-bold text-stage-text m-0">{t.pageList.title}</h2>
+        <p className="t-small mt-1.5 max-w-2xl">{t.pageList.lede}</p>
       </header>
 
       <PublishBar publisher={publisher} />
@@ -132,8 +130,8 @@ export default function Pages({ docId, onOpen }: PagesProps = {}) {
 
       {page ? (
         <div className="space-y-3">
-          <button type="button" onClick={() => open(null)} className="text-sm text-sky-300 hover:underline cursor-pointer">
-            ← All pages
+          <button type="button" onClick={() => open(null)} className="text-sm text-stage-pink-2 hover:underline cursor-pointer">
+            {t.pageList.allPages}
           </button>
           <PageEditor
             key={page.docId}

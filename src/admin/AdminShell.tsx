@@ -18,6 +18,8 @@ import { AdminNavContext, type AdminNav } from './adminNav';
 import { AdminMetaContext, type AdminMetaApi, type Crumb } from './adminMeta';
 import { adminPaths, screenKey } from './paths';
 import { localizePath } from '../lib/seo/locale';
+import { AdminUserContext, type Me } from './cms/docChannel';
+import { t } from './i18n';
 
 interface Props {
   auth: AdminAuth;
@@ -27,7 +29,7 @@ function Brand() {
   return (
     <Link to={adminPaths.overview()} className="flex items-center gap-2 px-5 h-14 shrink-0 border-b border-stage-line">
       <span className="grad font-bold text-lg leading-none">eurovision.games</span>
-      <span className="t-meta">admin</span>
+      <span className="t-meta">{t.shell.brandSuffix}</span>
     </Link>
   );
 }
@@ -35,7 +37,7 @@ function Brand() {
 function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   if (crumbs.length === 0) return <span className="flex-1" />;
   return (
-    <nav aria-label="Breadcrumb" className="min-w-0 flex-1">
+    <nav aria-label={t.shell.breadcrumb} className="min-w-0 flex-1">
       <ol className="flex items-center gap-1.5 text-sm min-w-0">
         {crumbs.map((c, i) => {
           const last = i === crumbs.length - 1;
@@ -65,9 +67,9 @@ function LiveLinks({ path }: { path: string | null }) {
   const link = 'inline-flex items-center gap-1 rounded-stage-pill border border-stage-line-2 px-2.5 h-8 text-xs font-semibold text-stage-text-2 hover:text-stage-text hover:border-stage-text-3';
   return (
     <div className="flex items-center gap-1.5 shrink-0">
-      <span className="t-meta hidden sm:inline">View live</span>
+      <span className="t-meta hidden sm:inline">{t.shell.viewLive}</span>
       {(['en', 'el'] as const).map((l) => (
-        <a key={l} href={localizePath(l, path)} target="_blank" rel="noopener noreferrer" className={link} aria-label={`View live (${l.toUpperCase()}), opens a new tab`}>
+        <a key={l} href={localizePath(l, path)} target="_blank" rel="noopener noreferrer" className={link} aria-label={t.shell.viewLiveAria(l.toUpperCase())}>
           {l.toUpperCase()}
           <ExternalLink size={12} aria-hidden />
         </a>
@@ -80,6 +82,8 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
 
 export default function AdminShell({ auth }: Props) {
   const { email, logout } = auth;
+  const userId = auth.userId ?? null;
+  const me = useMemo<Me | null>(() => (userId ? { userId, email } : null), [userId, email]);
   const [guard] = useState(createUnsavedGuard);
   useRouteLeaveGuard(guard, screenKey);
   const navigate = useNavigate();
@@ -92,7 +96,7 @@ export default function AdminShell({ auth }: Props) {
 
   useEffect(() => {
     const last = crumbs[crumbs.length - 1]?.label;
-    document.title = last ? `${last} · admin` : 'admin';
+    document.title = t.shell.docTitle(last);
   }, [crumbs]);
 
   // Mobile drawer: open for the path it was opened on, so any navigation
@@ -141,13 +145,14 @@ export default function AdminShell({ auth }: Props) {
         className="inline-flex items-center gap-1.5 rounded-stage-pill border border-stage-line-2 px-3 h-8 text-xs font-semibold text-stage-text-2 hover:text-stage-text cursor-pointer shrink-0"
       >
         <LogOut size={13} aria-hidden />
-        Sign out
+        {t.shell.signOut}
       </button>
     </div>
   );
 
   return (
     <UnsavedGuardContext.Provider value={guard}>
+      <AdminUserContext.Provider value={me}>
       <AdminNavContext.Provider value={nav}>
         <AdminMetaContext.Provider value={meta}>
           <div className="min-h-dvh flex bg-stage-bg text-stage-text">
@@ -167,7 +172,7 @@ export default function AdminShell({ auth }: Props) {
                   ref={drawerRef}
                   role="dialog"
                   aria-modal="true"
-                  aria-label="Admin menu"
+                  aria-label={t.shell.menu}
                   className="absolute inset-y-0 left-0 w-[86vw] max-w-80 flex flex-col bg-stage-bg-2 border-r border-stage-line shadow-stage"
                 >
                   <div className="flex items-center justify-between border-b border-stage-line pr-2">
@@ -175,7 +180,7 @@ export default function AdminShell({ auth }: Props) {
                     <button
                       type="button"
                       onClick={closeDrawer}
-                      aria-label="Close menu"
+                      aria-label={t.shell.closeMenu}
                       className="grid place-items-center w-10 h-10 rounded-stage-pill text-stage-text-2 hover:text-stage-text cursor-pointer"
                     >
                       <X size={20} aria-hidden />
@@ -195,7 +200,7 @@ export default function AdminShell({ auth }: Props) {
                   ref={menuRef}
                   type="button"
                   onClick={() => setDrawer(true)}
-                  aria-label="Open menu"
+                  aria-label={t.shell.openMenu}
                   aria-expanded={drawer}
                   className="lg:hidden grid place-items-center w-10 h-10 -ml-2 rounded-stage-pill text-stage-text-2 hover:text-stage-text cursor-pointer"
                 >
@@ -214,6 +219,7 @@ export default function AdminShell({ auth }: Props) {
           </div>
         </AdminMetaContext.Provider>
       </AdminNavContext.Provider>
+      </AdminUserContext.Provider>
     </UnsavedGuardContext.Provider>
   );
 }

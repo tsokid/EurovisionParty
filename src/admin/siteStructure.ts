@@ -10,6 +10,7 @@ import type { FooterColumnId, LinkTarget, NavLink } from '../../supabase/functio
 import { PAGE_REGISTRY } from '../lib/seo/registry';
 import { publishedSiteDoc } from '../lib/cms/siteChrome';
 import type { FooterColumnKey } from './paths';
+import { docName, t } from './i18n';
 
 export interface PageGroup {
   /** Stable key: 'header', 'footer:<column>', 'none', 'system'. */
@@ -55,11 +56,12 @@ export interface FooterColumnInfo {
   docIds: string[];
 }
 
-/** The footer's four columns: admin key, heading (English) and the pages they link to. */
+/** The footer's four columns: admin key, heading (as the Greek site shows it) and the pages they link to. */
 export function footerColumns(): FooterColumnInfo[] {
-  return publishedSiteDoc('site-footer').en.columns.map((c) => ({
+  const el = publishedSiteDoc('site-footer').el.columns;
+  return publishedSiteDoc('site-footer').en.columns.map((c, i) => ({
     key: columnKey(c.id as FooterColumnId),
-    title: c.heading,
+    title: el[i]?.heading || c.heading,
     docIds: linkedPageIds(c.links as NavLink[]),
   }));
 }
@@ -84,15 +86,15 @@ function systemDocs(): string[] {
 
 export function pageGroups(): PageGroup[] {
   return [
-    { key: 'header', title: 'Header', docIds: headerDocIds() },
-    ...footerColumns().map((c) => ({ key: `footer:${c.key}`, title: `Footer · ${c.title}`, docIds: c.docIds })),
-    { key: 'none', title: 'Not in any menu', docIds: pagesInNoMenu() },
-    { key: 'system', title: 'System', docIds: systemDocs() },
+    { key: 'header', title: t.tree.header, docIds: headerDocIds() },
+    ...footerColumns().map((c) => ({ key: `footer:${c.key}`, title: t.tree.footer(c.title), docIds: c.docIds })),
+    { key: 'none', title: t.tree.none, docIds: pagesInNoMenu() },
+    { key: 'system', title: t.tree.system, docIds: systemDocs() },
   ].filter((g) => g.docIds.length > 0);
 }
 
 export function docLabel(docId: string): string {
-  return CMS_DOC_TYPES[docId as keyof typeof CMS_DOC_TYPES]?.label ?? docId;
+  return docName(docId, CMS_DOC_TYPES[docId as keyof typeof CMS_DOC_TYPES]?.label);
 }
 
 /** Public path (unlocalized) of a site page doc, or null (e.g. the 404 page). */

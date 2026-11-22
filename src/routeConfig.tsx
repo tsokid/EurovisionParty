@@ -48,6 +48,7 @@ import CountryPage from './pages/contest/CountryPage';
 export const ADMIN_ROUTE_PATTERNS = [
   '/admin',
   '/admin/header',
+  '/admin/header/*',
   '/admin/footer/*',
   '/admin/pages/*',
   '/admin/contests/*',

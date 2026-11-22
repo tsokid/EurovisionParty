@@ -250,7 +250,7 @@ describe('Contests module', () => {
 
   it('the publish bar sits at the top of the module', async () => {
     render(<Contests />);
-    expect(await screen.findByRole('button', { name: 'Publish' })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: 'Δημοσίευση' })).toBeTruthy();
     await waitFor(() => expect(h.rpc).toHaveBeenCalledWith('unpublished_summary', undefined));
     expect(h.rpc).toHaveBeenCalledWith('last_publish_run', undefined);
   });
@@ -268,7 +268,7 @@ describe('Contests module', () => {
     await waitFor(() => expect(h.rpc).toHaveBeenCalledWith(rpc, { p_year: year }));
     // Contests only (I3): CMS page drafts ship only from an explicit Publish click.
     await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: { cms: false } }));
-    expect(await screen.findByText(/Published: 3 files changed/)).toBeTruthy();
+    expect(await screen.findByText(/Δημοσιεύτηκε: άλλαξαν 3 αρχεία/)).toBeTruthy();
     const order = h.rpc.mock.invocationCallOrder[h.rpc.mock.calls.findIndex(([n]) => n === rpc)];
     expect(h.invoke.mock.invocationCallOrder[0]).toBeGreaterThan(order);
   });
@@ -285,9 +285,9 @@ describe('Contests module', () => {
     render(<Contests />);
     fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Archive' }));
     expect(await screen.findByText('Archive 2026 done.')).toBeTruthy();
-    expect(await screen.findByText('Publish failed: GitHub 401: Bad credentials')).toBeTruthy();
+    expect(await screen.findByText('Η δημοσίευση απέτυχε: GitHub 401: Bad credentials')).toBeTruthy();
     expect(h.rpc).not.toHaveBeenCalledWith('unarchive_contest', expect.anything());
-    expect((screen.getByRole('button', { name: 'Publish' }) as HTMLButtonElement).disabled).toBe(false);
+    expect((screen.getByRole('button', { name: 'Δημοσίευση' }) as HTMLButtonElement).disabled).toBe(false);
   });
 
   it('a busy auto-publish keeps the lifecycle change and asks to try again', async () => {
@@ -302,8 +302,8 @@ describe('Contests module', () => {
     render(<Contests />);
     fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Archive' }));
     expect(await screen.findByText('Archive 2026 done.')).toBeTruthy();
-    expect(await screen.findByText('Another publish is running — try again in a minute')).toBeTruthy();
-    expect((screen.getByRole('button', { name: 'Publish' }) as HTMLButtonElement).disabled).toBe(false);
+    expect(await screen.findByText('Τρέχει ήδη άλλη δημοσίευση· δοκιμάστε ξανά σε ένα λεπτό.')).toBeTruthy();
+    expect((screen.getByRole('button', { name: 'Δημοσίευση' }) as HTMLButtonElement).disabled).toBe(false);
   });
 
   it('Publish followed by Archive: the auto-publish runs after the earlier publish, so it covers the archive', async () => {
@@ -312,7 +312,7 @@ describe('Contests module', () => {
     h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
     render(<Contests />);
     const r26 = await rowFor(2026);
-    fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Δημοσίευση' }));
     fireEvent.click(r26.getByRole('button', { name: 'Archive' }));
     expect(await screen.findByText('Archive 2026 done.')).toBeTruthy();
     expect(h.invoke).toHaveBeenCalledTimes(1); // no parallel run
@@ -321,8 +321,8 @@ describe('Contests module', () => {
     const archiveOrder = h.rpc.mock.invocationCallOrder[h.rpc.mock.calls.findIndex(([n]) => n === 'archive_contest')];
     expect(h.invoke.mock.invocationCallOrder[1]).toBeGreaterThan(archiveOrder);
     resolvers[1]({ data: { status: 'ok', run_id: 2, sha: 'abc1234ffff', files_changed: 3 }, error: null });
-    expect(await screen.findByText(/Published: 3 files changed/)).toBeTruthy();
-    expect(screen.queryByText('Nothing to publish: the site is already up to date.')).toBeNull();
+    expect(await screen.findByText(/Δημοσιεύτηκε: άλλαξαν 3 αρχεία/)).toBeTruthy();
+    expect(screen.queryByText('Τίποτα για δημοσίευση: το site είναι ήδη ενημερωμένο.')).toBeNull();
     expect(h.invoke).toHaveBeenCalledTimes(2);
   });
 

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { adminPaths } from './paths';
 import { docLabel, footerColumns, pageGroups } from './siteStructure';
+import { t } from './i18n';
 
 type Icon = ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean }>;
 
@@ -27,27 +28,27 @@ interface Item {
 
 const SECTIONS: Array<{ title: string; items: Item[] }> = [
   {
-    title: 'Contests',
-    items: [{ label: 'Years & entries', to: adminPaths.contests(), icon: CalendarDays }],
+    title: t.nav.contests,
+    items: [{ label: t.nav.yearsEntries, to: adminPaths.contests(), icon: CalendarDays }],
   },
   {
-    title: 'Game',
+    title: t.nav.game,
     items: [
-      { label: 'Room phases', to: adminPaths.monitor(), icon: Activity },
-      { label: 'Parser & controls', to: adminPaths.parser(), icon: Radar },
-      { label: 'Winners', to: adminPaths.winners(), icon: Award },
-      { label: 'Avatars', to: adminPaths.avatars(), icon: Smile },
+      { label: t.nav.monitor, to: adminPaths.monitor(), icon: Activity },
+      { label: t.nav.parser, to: adminPaths.parser(), icon: Radar },
+      { label: t.nav.winners, to: adminPaths.winners(), icon: Award },
+      { label: t.nav.avatars, to: adminPaths.avatars(), icon: Smile },
     ],
   },
   {
-    title: 'Media',
-    items: [{ label: 'Media library', to: adminPaths.media(), icon: Image, later: 'P6' }],
+    title: t.nav.media,
+    items: [{ label: t.nav.mediaLibrary, to: adminPaths.media(), icon: Image, later: 'P6' }],
   },
   {
-    title: 'Settings',
+    title: t.nav.settings,
     items: [
-      { label: 'Site settings', to: adminPaths.settings(), icon: Settings, end: true },
-      { label: 'Super admins', to: adminPaths.admins(), icon: Shield },
+      { label: t.nav.siteSettings, to: adminPaths.settings(), icon: Settings, end: true },
+      { label: t.nav.admins, to: adminPaths.admins(), icon: Shield },
     ],
   },
 ];
@@ -63,7 +64,7 @@ const rowClass = ({ isActive }: { isActive: boolean }) =>
 
 function Later({ phase }: { phase: string }) {
   return (
-    <span className="ml-auto rounded-stage-pill border border-stage-line px-1.5 text-[11px] leading-5 text-stage-text-3" title={`Coming in ${phase}`}>
+    <span className="ml-auto rounded-stage-pill border border-stage-line px-1.5 text-[11px] leading-5 text-stage-text-3" title={t.shell.comingIn(phase)}>
       {phase}
     </span>
   );
@@ -88,7 +89,7 @@ function SectionTitle({ children }: { children: string }) {
 function PagesTree() {
   const { pathname } = useLocation();
   const groups = pageGroups();
-  const activeDoc = /^\/admin\/pages\/([^/]+)$/.exec(pathname)?.[1];
+  const activeDoc = /^\/admin\/pages\/([^/]+)(?:\/history(?:\/[^/]+)?)?$/.exec(pathname)?.[1];
   const active = activeDoc ? decodeURIComponent(activeDoc) : null;
   // A group is open when the user opened it, or (until they close it) when it holds the open page.
   const [toggled, setToggled] = useState<ReadonlyMap<string, boolean>>(new Map());
@@ -137,16 +138,16 @@ export default function AdminSidebar() {
   const inFooter = pathname === adminPaths.footer() || pathname.startsWith(`${adminPaths.footer()}/`);
 
   return (
-    <nav aria-label="Admin" className="px-3 pb-6">
+    <nav aria-label={t.shell.nav} className="px-3 pb-6">
       <div className="pt-3">
-        <NavItem item={{ label: 'Overview', to: adminPaths.overview(), icon: LayoutDashboard, end: true }} />
+        <NavItem item={{ label: t.nav.overview, to: adminPaths.overview(), icon: LayoutDashboard, end: true }} />
       </div>
 
-      <SectionTitle>Site</SectionTitle>
+      <SectionTitle>{t.nav.site}</SectionTitle>
       <ul className="space-y-0.5">
-        <li><NavItem item={{ label: 'Header', to: adminPaths.header(), icon: PanelTop }} /></li>
+        <li><NavItem item={{ label: t.nav.header, to: adminPaths.header(), icon: PanelTop }} /></li>
         <li>
-          <NavItem item={{ label: 'Footer', to: adminPaths.footer(), icon: PanelBottom, end: true }} />
+          <NavItem item={{ label: t.nav.footer, to: adminPaths.footer(), icon: PanelBottom, end: true }} />
           {inFooter && (
             <ul className="ml-[18px] border-l border-stage-line pl-2 mt-0.5 space-y-0.5">
               {footerColumns().map((c) => (
@@ -160,7 +161,7 @@ export default function AdminSidebar() {
           )}
         </li>
         <li>
-          <NavItem item={{ label: 'Pages', to: adminPaths.pages(), icon: FileText, end: true }} />
+          <NavItem item={{ label: t.nav.pages, to: adminPaths.pages(), icon: FileText, end: true }} />
           <PagesTree />
         </li>
       </ul>

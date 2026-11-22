@@ -13,6 +13,13 @@ export type ContestSection = 'details' | 'entries';
 
 const seg = (s: string | number) => encodeURIComponent(String(s));
 
+/** The screens of the site-wide docs. */
+const SITE_DOC_SCREEN: Record<string, string> = {
+  'site-header': `${ADMIN_ROOT}/header`,
+  'site-footer': `${ADMIN_ROOT}/footer`,
+  'site-settings': `${ADMIN_ROOT}/settings`,
+};
+
 export const adminPaths = {
   overview: () => ADMIN_ROOT,
   header: () => `${ADMIN_ROOT}/header`,
@@ -31,6 +38,13 @@ export const adminPaths = {
   media: () => `${ADMIN_ROOT}/media`,
   settings: () => `${ADMIN_ROOT}/settings`,
   admins: () => `${ADMIN_ROOT}/system/admins`,
+  /** The history of a CMS doc (spec §3 …/history[/:revId]); site-wide docs live under their own screens. */
+  history: (docId: string, revId?: string | number | null) => {
+    const base = SITE_DOC_SCREEN[docId] ?? `${ADMIN_ROOT}/pages/${seg(docId)}`;
+    return revId == null ? `${base}/history` : `${base}/history/${seg(revId)}`;
+  },
+  /** The editor a history screen goes back to. */
+  editorOf: (docId: string) => SITE_DOC_SCREEN[docId] ?? `${ADMIN_ROOT}/pages/${seg(docId)}`,
 };
 
 /** Splits the part of a path after a module's base into decoded segments ("2027/entries" → ["2027", "entries"]). */

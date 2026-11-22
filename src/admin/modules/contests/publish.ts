@@ -25,11 +25,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
+import { t } from '../../i18n';
 
 export const COMMIT_URL = 'https://github.com/tsokid/EurovisionParty/commit/';
-export const BUSY_TEXT = 'Another publish is running — try again in a minute';
+export const BUSY_TEXT: string = t.publish.busy;
 export const PUBLISH_TIMEOUT_MS = 90_000;
-export const TIMEOUT_TEXT = 'Publish timed out — check the last run below and try again';
+export const TIMEOUT_TEXT: string = t.publish.timeout;
 
 /** Advice from validating the CMS drafts at publish; never blocks it. */
 export type ContentWarning = {
@@ -201,14 +202,14 @@ export function outcomeText(o: PublishOutcome): string {
   switch (o.status) {
     case 'ok': {
       const n = o.files_changed ?? 0;
-      return `Published: ${n} file${n === 1 ? '' : 's'} changed.`;
+      return t.publish.ok(n);
     }
     case 'noop':
-      return 'Nothing to publish: the site is already up to date.';
+      return t.publish.noop;
     case 'busy':
       return BUSY_TEXT;
     case 'error':
-      return `Publish failed: ${o.error ?? 'unknown error'}`;
+      return t.publish.failed(o.error ?? t.publish.unknownError);
   }
 }
 

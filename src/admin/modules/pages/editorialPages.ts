@@ -14,14 +14,15 @@ import { archivePath, countryPath, hubPath } from '../../../lib/seo/dynamicPages
 import { compareText } from '../../../lib/seo/textSort';
 import type { DocValue } from './form/SchemaForm';
 import { cmsGet, fetchPublished, fetchPublishedEditorialIds } from './cmsApi';
+import { t } from '../../i18n';
 
 export type EditorialGroup = { family: EditorialFamily; title: string; noun: string };
 
 /** The Pages list groups, in display order. */
 export const EDITORIAL_GROUPS: readonly EditorialGroup[] = [
-  { family: 'archive', title: 'Contest years', noun: 'year' },
-  { family: 'country', title: 'Countries', noun: 'country' },
-  { family: 'hub', title: 'Live hub', noun: 'live hub' },
+  { family: 'archive', title: t.pageList.groups.archive, noun: t.pageList.nouns.archive },
+  { family: 'country', title: t.pageList.groups.country, noun: t.pageList.nouns.country },
+  { family: 'hub', title: t.pageList.groups.hub, noun: t.pageList.nouns.hub },
 ];
 
 /** A page that can take an editorial doc. `path` is its unprefixed public path (the preview opens it). */
@@ -73,12 +74,12 @@ export function editorialRef(docId: string): { family: EditorialFamily; key: str
   if (!family || type !== `${family}-editorial`) return null;
   const key = docId.slice(family.length + 1);
   const year = /^\d{4}$/.test(key) ? Number(key) : null;
-  if (family === 'archive') return { family, key, title: `Contest year ${key}` };
-  if (family === 'country') return { family, key, title: `Country ${key.toUpperCase()}` };
-  return { family, key, title: `Live hub ${key}`, ...(year !== null && { path: hubPath(year) }) };
+  if (family === 'archive') return { family, key, title: `${t.pageList.kinds.archive} ${key}` };
+  if (family === 'country') return { family, key, title: `${t.pageList.kinds.country} ${key.toUpperCase()}` };
+  return { family, key, title: `${t.pageList.kinds.hub} ${key}`, ...(year !== null && { path: hubPath(year) }) };
 }
 
-const KIND: Record<EditorialFamily, string> = { archive: 'Contest year', country: 'Country', hub: 'Live hub' };
+const KIND: Record<EditorialFamily, string> = { archive: t.pageList.kinds.archive, country: t.pageList.kinds.country, hub: t.pageList.kinds.hub };
 
 /**
  * The editor heading: from the id alone ("Contest year 2005", "Country GR"),
@@ -86,7 +87,7 @@ const KIND: Record<EditorialFamily, string> = { archive: 'Contest year', country
  */
 export function editorialTitle(docId: string, targets: readonly EditorialTarget[] = []): string {
   const ref = editorialRef(docId);
-  const target = targets.find((t) => t.docId === docId);
+  const target = targets.find((x) => x.docId === docId);
   if (!ref) return docId;
   return target ? `${KIND[ref.family]} ${target.label}` : ref.title;
 }

@@ -2,8 +2,11 @@
 // the doc stands, the editor, and a sticky bar with Save and Publish. Publish
 // first says plainly that the change reaches every page of the site.
 import { useState, type ReactNode } from 'react';
-import { Globe2 } from 'lucide-react';
-import { ConfirmDialog, StatusChip } from '../../ui/kit';
+import { Globe2, History } from 'lucide-react';
+import { AdminLink, ConfirmDialog, StatusChip } from '../../ui/kit';
+import { CmsDocStatus } from '../../cms/CmsDocUi';
+import { adminPaths } from '../../paths';
+import { t } from '../../i18n';
 import { outcomeText } from '../contests/publish';
 import type { SiteDraft } from './useSiteDraft';
 import { docLabel } from '../../siteStructure';
@@ -28,8 +31,12 @@ export function SiteDocFrame({ draft, title, lede, children }: { draft: SiteDraf
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <h1 className="text-2xl font-bold text-stage-text m-0">{title}</h1>
           {!draft.loading && <StatusChip tone={status.tone}>{status.text}</StatusChip>}
+          <AdminLink to={adminPaths.history(draft.docId)} className="btn btn-ghost btn-sm ml-auto">
+            <History size={15} aria-hidden />{t.history.open}
+          </AdminLink>
         </div>
         <p className="t-small mt-1.5 max-w-2xl">{lede}</p>
+        {!draft.loading && <div className="mt-3"><CmsDocStatus doc={draft.cms} /></div>}
       </header>
 
       {draft.loadError && (
@@ -38,23 +45,20 @@ export function SiteDocFrame({ draft, title, lede, children }: { draft: SiteDraf
         </p>
       )}
 
-      {draft.loading ? <p className="t-small">Φόρτωση…</p> : children}
+      {draft.loading ? <p className="t-small">{t.common.loading}</p> : <div {...draft.cms.rootProps}>{children}</div>}
 
       <div className="fixed bottom-0 inset-x-0 lg:left-64 z-40 border-t border-stage-line bg-stage-bg/95 backdrop-blur">
         <div className="max-w-4xl px-4 sm:px-6 py-3 flex flex-wrap items-center gap-2">
           <p className={`t-meta flex-1 basis-full sm:basis-auto min-w-[12rem] m-0 ${blocked || draft.saveError || draft.outcome ? '' : 'hidden sm:block'}`}>
             {blocked
               ? `Διορθώστε ${draft.errors.length === 1 ? 'το σημείο' : `τα ${draft.errors.length} σημεία`} με κόκκινο για να γίνει δημοσίευση.`
-              : draft.saveError ?? (draft.outcome ? outcomeText(draft.outcome) : 'Η αποθήκευση κρατά πρόχειρο· το site αλλάζει μόνο με «Δημοσίευση».')}
+              : draft.saveError ?? (draft.outcome ? outcomeText(draft.outcome) : 'Οι αλλαγές αποθηκεύονται μόνες τους ως πρόχειρο· το site αλλάζει μόνο με «Δημοσίευση».')}
           </p>
           {draft.status !== 'live' && (
             <button type="button" className="btn btn-ghost btn-sm max-sm:flex-1 max-sm:!px-2" disabled={busy} onClick={() => setDiscarding(true)}>
               Απόρριψη
             </button>
           )}
-          <button type="button" className="btn btn-secondary btn-sm max-sm:flex-1" disabled={busy || !draft.dirty} onClick={() => { void draft.save(); }}>
-            {draft.saving ? 'Αποθήκευση…' : 'Αποθήκευση'}
-          </button>
           <button type="button" className="btn btn-primary btn-sm max-sm:flex-1" disabled={!canPublish} onClick={() => setConfirming(true)}>
             {draft.publishing ? 'Δημοσίευση…' : 'Δημοσίευση'}
           </button>

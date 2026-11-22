@@ -8,7 +8,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useBlocker } from 'react-router-dom';
 
-export const UNSAVED_TEXT = 'You have unsaved edits. Leave without saving?';
+import { t } from './i18n';
+
+export const UNSAVED_TEXT: string = t.unsaved.leave;
 
 export type UnsavedGuard = {
   /** Marks the holder of `token` dirty or clean. */

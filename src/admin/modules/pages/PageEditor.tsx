@@ -9,21 +9,22 @@
 //   context, plus the cross-page check: the SEO title and meta description
 //   must differ from every other published page's, the editorial docs'
 //   metaDescription overrides included (seo.ts; the build fails on a
-//   duplicate). Errors block Save; warnings never do. Save re-validates what it
-//   sends: inside the 300 ms window an invalid draft shows SAVE_BLOCKED_TEXT.
-// - Save: cms_save against the updated_at of what was loaded or last saved.
-//   A save over someone else's newer save is refused: the banner offers a
-//   reload, and the user's edits stay in the form until they take it.
-// - Discard draft: cms_discard, then back to the published version.
-// - Unsaved edits arm the admin's leave guard (unsavedGuard.ts).
+//   duplicate). Warnings never block anything.
+// - Autosave (CMS P3, src/admin/cms): every edit is buffered locally and
+//   saved ~1.5 s after typing stops, or when a field loses focus. A draft
+//   with errors is kept locally and not sent until it validates. The status
+//   pill says where things stand; the other editor's presence and saves
+//   show live (disjoint changes merge, the same field opens a dialog).
+// - Discard draft: cms_discard, then back to the published version (the
+//   draft stays in the history).
 
 import FactTokensHelp from './FactTokensHelp';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { History } from 'lucide-react';
 import { CMS_DOC_TYPES, docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationError, type ValidationWarning } from '../../../../supabase/functions/_shared/cms/validate';
 import { seoDuplicates } from '../../../../supabase/functions/_shared/cms/seo';
 import { formatError } from '../../lib/formatError';
-import { useUnsavedGuard } from '../../unsavedGuard';
 import { formatRunTime } from '../contests/publish';
 import { cmsDiscard, cmsGet, cmsSave, fetchPublished, fetchPublishedEditorialIds, fetchPublishedPages, isConflict } from './cmsApi';
 import { isEditorialDocId } from '../../../../supabase/functions/_shared/cms/pagesIndex';
@@ -33,18 +34,14 @@ import { useContestContext } from './contestContext';
 import { SchemaForm, type DocValue } from './form/SchemaForm';
 import PreviewPane from './PreviewPane';
 import { useDebounced } from './useDebounced';
+import { useCmsDoc } from '../../cms/useCmsDoc';
+import { CmsDocStatus } from '../../cms/CmsDocUi';
+import type { RemoteDoc } from '../../cms/docSession';
+import { AdminLink, ConfirmDialog, useToast } from '../../ui/kit';
+import { adminPaths } from '../../paths';
+import { t } from '../../i18n';
 
 export const VALIDATE_DELAY_MS = 300;
-export const CONFLICT_TEXT = 'Someone else changed this page — Reload';
-export const RELOAD_CONFIRM = 'Discard your edits and load the latest?';
-/** Save clicked before the debounced errors show, on an invalid draft. */
-export const SAVE_BLOCKED_TEXT = 'Fix the errors below before saving';
-
-/** Where the editor's base came from: a saved draft, the published file, or nothing yet (a new editorial doc). */
-type Base = { source: 'draft' | 'published' | 'new'; updatedAt: string | null };
-
-/** The edited document; `fromLoad` (not a keystroke) skips the debounce. */
-type Draft = { value: DocValue; fromLoad: boolean };
 
 type Tab = 'edit' | 'preview';
 
@@ -57,10 +54,6 @@ function seoErrors(docId: string, value: unknown, others: Record<string, unknown
   return seoDuplicates({ ...others, [docId]: value }, [docId]).map(({ locale, path, message }) => ({ locale, path, message }));
 }
 
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
-
-const BUTTON = 'px-3 py-1.5 rounded font-bold text-sm disabled:opacity-40 cursor-pointer';
-
 interface Props {
   docId: string;
   label: string;
@@ -68,29 +61,39 @@ interface Props {
   previewPath?: string | null;
   /** A draft was saved or discarded: refresh the list and the publish count. */
   onChanged: () => void;
+  /** Test hook: the autosave debounce. */
+  autosaveMs?: number;
 }
 
 /** The published editorial ids; [] when the index cannot be read (the SEO check then skips them; Publish checks again). */
 const editorialIdsOrNone = () => fetchPublishedEditorialIds().catch(() => [] as string[]);
 
-export function PageEditor({ docId, label, previewPath, onChanged }: Props) {
+/** The base of a doc without a saved draft: the published file, or (an editorial doc never published) the empty doc. */
+export async function pageBase(docId: string): Promise<{ value: DocValue; fresh: boolean }> {
+  const fresh = isEditorialDocId(docId) && !(await fetchPublishedEditorialIds()).includes(docId);
+  return { value: fresh ? emptyEditorialDoc() : await fetchPublished(docId), fresh };
+}
+
+/** The server's version of a page: the saved draft, else its base. */
+export async function pageRemote(docId: string): Promise<RemoteDoc & { fresh: boolean }> {
+  const row = await cmsGet(docId);
+  if (row) return { value: row.data, updatedAt: row.updated_at, fresh: false };
+  const base = await pageBase(docId);
+  return { value: base.value, updatedAt: null, fresh: base.fresh };
+}
+
+export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }: Props) {
   const docType = docTypeFor(docId);
   const schema = CMS_DOC_TYPES[docType]?.schema;
   const { vars, context } = useContestContext();
+  const toast = useToast();
 
-  const [base, setBase] = useState<Base | null>(null);
-  const [draft, setDraft] = useState<Draft | null>(null);
-  // The value last loaded or saved: the draft is dirty when it differs.
-  const [saved, setSaved] = useState<DocValue | null>(null);
-  const [busy, setBusy] = useState<'load' | 'save' | 'discard' | null>('load');
-  const [conflict, setConflict] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
-  const [blocked, setBlocked] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>('edit');
+  const [fresh, setFresh] = useState(false);
+  const [discarding, setDiscarding] = useState(false);
+  const [discardErr, setDiscardErr] = useState<string | null>(null);
   // The other site pages as published, for the cross-page SEO check.
   const [others, setOthers] = useState<Record<string, unknown> | null>(null);
-  const loadSeq = useRef(0);
 
   useEffect(() => {
     let live = true;
@@ -103,33 +106,27 @@ export function PageEditor({ docId, label, previewPath, onChanged }: Props) {
     return () => { live = false; };
   }, [docId]);
 
-  const load = useCallback(async () => {
-    const seq = ++loadSeq.current;
-    setBusy('load');
-    setErr(null);
-    try {
-      const row = await cmsGet(docId);
-      const fresh = !row && isEditorialDocId(docId) && !(await fetchPublishedEditorialIds()).includes(docId);
-      const value = row ? row.data : fresh ? emptyEditorialDoc() : await fetchPublished(docId);
-      if (seq !== loadSeq.current) return;
-      setBase(row ? { source: 'draft', updatedAt: row.updated_at } : { source: fresh ? 'new' : 'published', updatedAt: null });
-      setDraft({ value, fromLoad: true });
-      setBlocked(false);
-      setSaved(value);
-      setConflict(false);
-    } catch (e) {
-      if (seq === loadSeq.current) setErr(formatError(e));
-    } finally {
-      if (seq === loadSeq.current) setBusy(null);
-    }
+  const checks = useRef({ context, others });
+  checks.current = { context, others };
+
+  const loadRemote = useCallback(async () => {
+    const r = await pageRemote(docId);
+    setFresh(r.fresh);
+    return { value: r.value, updatedAt: r.updatedAt };
   }, [docId]);
 
-  useEffect(() => { load(); }, [load]);
+  const doc = useCmsDoc({
+    docId,
+    loadRemote,
+    save: (v, exp) => cmsSave(docId, docType, v as DocValue, exp),
+    isConflictError: isConflict,
+    validate: (v) => validateDocument(docType, v, checks.current.context).ok && seoErrors(docId, v, checks.current.others).length === 0,
+    onSaved: onChanged,
+    delayMs: autosaveMs,
+  });
 
-  const dirty = !!draft && draft.value !== saved;
-  useUnsavedGuard(dirty);
-
-  const shown = useDebounced(draft?.value ?? null, VALIDATE_DELAY_MS, draft?.fromLoad ?? true);
+  const value = doc.value as DocValue | null;
+  const shown = useDebounced(value, VALIDATE_DELAY_MS, doc.origin !== 'local');
   const validation = useMemo(
     () => (shown ? validateDocument(docType, shown, context) : null),
     [docType, shown, context],
@@ -141,151 +138,109 @@ export function PageEditor({ docId, label, previewPath, onChanged }: Props) {
   );
   const warnings = validation?.warnings ?? NO_WARNINGS;
 
-  const onChange = useCallback((next: DocValue) => {
-    setDraft({ value: next, fromLoad: false });
-    setNotice(null);
-    setBlocked(false);
-  }, []);
-
-  const save = async () => {
-    if (!draft || !base) return;
-    const value = draft.value;
-    // The debounced result may be up to 300 ms old: check what is being saved.
-    if (!validateDocument(docType, value, context).ok || seoErrors(docId, value, others).length) {
-      setNotice(null);
-      setBlocked(true);
-      return;
-    }
-    setBlocked(false);
-    setBusy('save');
-    setErr(null);
-    setNotice(null);
-    try {
-      const updatedAt = await cmsSave(docId, docType, value, base.updatedAt);
-      setBase({ source: 'draft', updatedAt });
-      setSaved(value);
-      setNotice('Saved');
-      onChanged();
-    } catch (e) {
-      if (isConflict(e)) setConflict(true);
-      else setErr(formatError(e));
-    } finally {
-      setBusy(null);
-    }
-  };
-
-  const reloadLatest = () => {
-    if (dirty && !window.confirm(RELOAD_CONFIRM)) return;
-    setNotice(null);
-    load();
-  };
+  const onChange = useCallback((next: DocValue) => doc.edit(next), [doc]);
 
   const discard = async () => {
-    const lost = dirty ? ' Your unsaved edits are lost too.' : '';
-    if (!window.confirm(`Discard the saved draft of "${label}"? The editor goes back to the published version.${lost}`)) return;
-    setBusy('discard');
-    setErr(null);
-    setNotice(null);
+    setDiscarding(false);
+    setDiscardErr(null);
     try {
       await cmsDiscard(docId);
+      const base = await pageBase(docId);
+      doc.reset({ value: base.value, updatedAt: null });
+      setFresh(base.fresh);
       onChanged();
-      await load();
-      setNotice('Draft discarded');
+      toast.show(t.editor.discarded);
     } catch (e) {
-      setErr(formatError(e));
-      setBusy(null);
+      setDiscardErr(formatError(e));
     }
   };
 
-  if (!schema) return <p className="text-sm text-red-300">No schema for {docId}.</p>;
+  if (!schema) return <p className="text-sm text-stage-bad">{t.editor.noSchema(docId)}</p>;
 
-  if (!draft || !base) {
+  if (!doc.ready || !value) {
     return (
       <section className="space-y-2">
-        <h3 className="text-lg font-bold text-white">{label}</h3>
-        {err ? (
+        <h3 className="text-lg font-bold text-stage-text">{label}</h3>
+        {doc.loadError ? (
           <>
-            <p className="text-sm text-red-300">{err}</p>
-            <button type="button" onClick={() => load()} className={`${BUTTON} bg-white/15 text-white`}>
-              Retry
-            </button>
+            <p className="text-sm text-stage-bad">{t.editor.loadError}: {doc.loadError}</p>
+            <button type="button" onClick={doc.reload} className="btn btn-ghost btn-sm">{t.common.retry}</button>
           </>
         ) : (
-          <p className="text-sm text-white/50">Loading…</p>
+          <p className="t-small">{t.common.loading}</p>
         )}
       </section>
     );
   }
 
   const hasErrors = errors.length > 0;
-  const saveDisabled = !dirty || hasErrors || conflict || busy !== null;
-  const source = base.source === 'draft' && base.updatedAt
-    ? `Draft saved ${formatRunTime(base.updatedAt)}`
-    : base.source === 'new' ? 'New: not saved yet' : 'Published version';
+  const hasDraft = doc.baseUpdatedAt !== null;
+  const source = hasDraft
+    ? t.editor.sourceDraft(formatRunTime(doc.baseUpdatedAt!))
+    : fresh ? t.editor.sourceNew : t.editor.sourcePublished;
 
   return (
-    <section className="space-y-3">
-      <div className="sticky top-0 z-10 -mx-1 space-y-2 rounded-xl border border-white/10 bg-[rgb(10,5,25)]/95 px-3 py-2 backdrop-blur">
-        <div className="flex flex-wrap items-center gap-3">
-          <h3 className="text-lg font-bold text-white">{label}</h3>
-          <span className="text-xs text-white/60">{source}</span>
-          {dirty && <span className="rounded-full border border-amber-400/30 bg-amber-500/20 px-2 py-0.5 text-xs text-amber-200">Unsaved edits</span>}
+    <section className="space-y-3" {...doc.rootProps}>
+      <div className="sticky top-14 z-10 -mx-1 space-y-2 rounded-stage border border-stage-line bg-stage-bg/95 px-3 py-2.5 backdrop-blur">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <h3 className="text-lg font-bold text-stage-text m-0">{label}</h3>
+          <span className="t-meta">{source}</span>
           <div className="ml-auto flex flex-wrap items-center gap-2">
-            {base.source === 'draft' && (
-              <button type="button" onClick={discard} disabled={busy !== null} className={`${BUTTON} bg-white/15 text-white`}>
-                Discard draft
+            <AdminLink to={adminPaths.history(docId)} className="btn btn-ghost btn-sm">
+              <History size={15} aria-hidden />{t.history.open}
+            </AdminLink>
+            {hasDraft && (
+              <button type="button" onClick={() => setDiscarding(true)} className="btn btn-ghost btn-sm">
+                {t.editor.discard}
               </button>
             )}
-            <button type="button" onClick={save} disabled={saveDisabled} className={`${BUTTON} bg-emerald-500 text-black`}>
-              {busy === 'save' ? 'Saving…' : 'Save draft'}
-            </button>
           </div>
         </div>
-        {blocked && !hasErrors && <p role="alert" className="text-xs text-red-300">{SAVE_BLOCKED_TEXT}</p>}
-        {hasErrors && <p className="text-xs text-red-300">{plural(errors.length, 'error')}. Fix the errors to save.</p>}
-        {!hasErrors && warnings.length > 0 && (
-          <p className="text-xs text-amber-300">{plural(warnings.length, 'warning')}: saving is allowed.</p>
-        )}
-        {notice && <p className="text-xs text-emerald-300">{notice}</p>}
-        {err && <p className="text-xs text-red-300 break-words">{err}</p>}
-        {conflict && (
-          <div role="alert" className="flex flex-wrap items-center gap-3 rounded border border-red-400/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-            <span>{CONFLICT_TEXT}</span>
-            <button type="button" onClick={reloadLatest} disabled={busy !== null} className={`${BUTTON} bg-red-400 text-black`}>
-              Reload
-            </button>
-          </div>
-        )}
+        <CmsDocStatus doc={doc} />
+        {hasErrors && <p className="text-xs text-stage-bad m-0">{t.editor.errors(errors.length)}</p>}
+        {!hasErrors && warnings.length > 0 && <p className="text-xs text-stage-gold m-0">{t.editor.warnings(warnings.length)}</p>}
+        {discardErr && <p role="alert" className="text-xs text-stage-bad break-words m-0">{discardErr}</p>}
       </div>
 
       <FactTokensHelp />
 
-      <div role="tablist" aria-label="Editor view" className="flex gap-1 xl:hidden">
-        {(['edit', 'preview'] as const).map((t) => (
+      <div role="tablist" aria-label={t.editor.tabsLabel} className="flex gap-1 xl:hidden">
+        {(['edit', 'preview'] as const).map((tb) => (
           <button
-            key={t}
+            key={tb}
             type="button"
             role="tab"
-            aria-selected={tab === t}
-            onClick={() => setTab(t)}
-            className={`rounded px-3 py-1 text-sm font-semibold ${tab === t ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white'}`}
+            aria-selected={tab === tb}
+            onClick={() => setTab(tb)}
+            className={`rounded-stage-sm px-3 py-1 text-sm font-semibold cursor-pointer ${tab === tb ? 'bg-stage-surface-2 text-stage-text' : 'text-stage-text-3 hover:text-stage-text'}`}
           >
-            {t === 'edit' ? 'Edit' : 'Preview'}
+            {tb === 'edit' ? t.common.edit : t.common.preview}
           </button>
         ))}
       </div>
 
       <div className="xl:grid xl:grid-cols-2 xl:items-start xl:gap-4">
         <div data-testid="form-panel" className={`${tab === 'edit' ? 'block' : 'hidden'} xl:block min-w-0`}>
-          <SchemaForm schema={schema} value={draft.value} onChange={onChange} errors={errors} warnings={warnings} vars={vars} />
+          <SchemaForm schema={schema} value={value} onChange={onChange} errors={errors} warnings={warnings} vars={vars} />
         </div>
         <div
           data-testid="preview-panel"
-          className={`${tab === 'preview' ? 'block' : 'hidden'} xl:block min-w-0 xl:sticky xl:top-28 xl:max-h-[calc(100dvh-8rem)] xl:overflow-auto`}
+          className={`${tab === 'preview' ? 'block' : 'hidden'} xl:block min-w-0 xl:sticky xl:top-44 xl:max-h-[calc(100dvh-12rem)] xl:overflow-auto`}
         >
           <PreviewPane docId={docId} doc={shown} path={previewPath} />
         </div>
       </div>
+
+      <ConfirmDialog
+        open={discarding}
+        title={t.editor.discardTitle}
+        confirmLabel={t.editor.discard}
+        danger
+        onCancel={() => setDiscarding(false)}
+        onConfirm={() => { void discard(); }}
+      >
+        <p>{t.editor.discardText(label)}</p>
+      </ConfirmDialog>
     </section>
   );
 }

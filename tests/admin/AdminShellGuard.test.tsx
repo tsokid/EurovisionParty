@@ -85,8 +85,8 @@ const beforeUnload = () => {
   return e.defaultPrevented;
 };
 
-const desktopNav = () => screen.getAllByRole('navigation', { name: 'Admin' })[0];
-const crumbs = () => within(screen.getByRole('navigation', { name: 'Breadcrumb' })).getAllByRole('listitem').map((li) => li.textContent?.replace(/^\//, ''));
+const desktopNav = () => screen.getAllByRole('navigation', { name: 'Διαχείριση' })[0];
+const crumbs = () => within(screen.getByRole('navigation', { name: 'Διαδρομή' })).getAllByRole('listitem').map((li) => li.textContent?.replace(/^\//, ''));
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -94,26 +94,26 @@ afterEach(() => {
 
 describe('admin URLs', () => {
   it.each([
-    ['/admin', 'Publish bar', ['Overview']],
-    ['/admin/header', 'Header editor', ['Site', 'Header']],
-    ['/admin/footer', 'Footer editor: null', ['Site', 'Footer']],
-    ['/admin/footer/help', 'Footer editor: help', ['Site', 'Footer', 'Help']],
-    ['/admin/pages', 'Pages module: null', ['Site', 'Pages']],
-    ['/admin/pages/faq', 'Pages module: faq', ['Site', 'Pages', 'FAQ']],
-    ['/admin/pages/archive-2004', 'Pages module: archive-2004', ['Site', 'Pages', 'Contest year 2004']],
-    ['/admin/contests', 'Contests module: null details null', ['Contests']],
-    ['/admin/contests/2027', 'Contests module: 2027 details null', ['Contests', '2027']],
-    ['/admin/contests/2027/entries', 'Contests module: 2027 entries null', ['Contests', '2027', 'Entries']],
-    ['/admin/contests/2027/entries/se', 'Contests module: 2027 entries SE', ['Contests', '2027', 'Entries', 'SE']],
-    ['/admin/game/monitor', 'Monitor module', ['Game', 'Room phases']],
-    ['/admin/game/parser', 'Parser module: null', ['Game', 'Parser & controls']],
-    ['/admin/game/parser/2026', 'Parser module: 2026', ['Game', 'Parser & controls', '2026']],
-    ['/admin/game/winners', 'Winners module: null', ['Game', 'Winners']],
-    ['/admin/game/winners/room-1', 'Winners module: room-1', ['Game', 'Winners', 'Room']],
-    ['/admin/game/avatars', 'Avatars library', ['Game', 'Avatars']],
-    ['/admin/media', 'Media library', ['Media']],
-    ['/admin/settings', 'Settings editor', ['Settings', 'Site settings']],
-    ['/admin/system/admins', 'Super admins module', ['Settings', 'Super admins']],
+    ['/admin', 'Publish bar', ['Επισκόπηση']],
+    ['/admin/header', 'Header editor', ['Ιστότοπος', 'Κεφαλίδα']],
+    ['/admin/footer', 'Footer editor: null', ['Ιστότοπος', 'Υποσέλιδο']],
+    ['/admin/footer/help', 'Footer editor: help', ['Ιστότοπος', 'Υποσέλιδο', 'Βοήθεια']],
+    ['/admin/pages', 'Pages module: null', ['Ιστότοπος', 'Σελίδες']],
+    ['/admin/pages/faq', 'Pages module: faq', ['Ιστότοπος', 'Σελίδες', 'Συχνές ερωτήσεις']],
+    ['/admin/pages/archive-2004', 'Pages module: archive-2004', ['Ιστότοπος', 'Σελίδες', 'Χρονιά 2004']],
+    ['/admin/contests', 'Contests module: null details null', ['Διαγωνισμοί']],
+    ['/admin/contests/2027', 'Contests module: 2027 details null', ['Διαγωνισμοί', '2027']],
+    ['/admin/contests/2027/entries', 'Contests module: 2027 entries null', ['Διαγωνισμοί', '2027', 'Συμμετοχές']],
+    ['/admin/contests/2027/entries/se', 'Contests module: 2027 entries SE', ['Διαγωνισμοί', '2027', 'Συμμετοχές', 'SE']],
+    ['/admin/game/monitor', 'Monitor module', ['Παιχνίδι', 'Φάσεις δωματίων']],
+    ['/admin/game/parser', 'Parser module: null', ['Παιχνίδι', 'Parser και χειρισμοί']],
+    ['/admin/game/parser/2026', 'Parser module: 2026', ['Παιχνίδι', 'Parser και χειρισμοί', '2026']],
+    ['/admin/game/winners', 'Winners module: null', ['Παιχνίδι', 'Νικητές']],
+    ['/admin/game/winners/room-1', 'Winners module: room-1', ['Παιχνίδι', 'Νικητές', 'Δωμάτιο']],
+    ['/admin/game/avatars', 'Avatars library', ['Παιχνίδι', 'Avatars']],
+    ['/admin/media', 'Βιβλιοθήκη πολυμέσων', ['Πολυμέσα']],
+    ['/admin/settings', 'Settings editor', ['Ρυθμίσεις', 'Ρυθμίσεις ιστότοπου']],
+    ['/admin/system/admins', 'Super admins module', ['Ρυθμίσεις', 'Διαχειριστές']],
   ])('%s renders its screen', async (path, text, trail) => {
     show(path);
     expect(await screen.findAllByText(text)).not.toHaveLength(0);
@@ -124,27 +124,27 @@ describe('admin URLs', () => {
     '%s says there is nothing there',
     async (path) => {
       show(path);
-      expect(await screen.findByRole('heading', { name: 'Nothing here' })).toBeTruthy();
+      expect(await screen.findByRole('heading', { name: 'Δεν υπάρχει κάτι εδώ' })).toBeTruthy();
     },
   );
 
   it('placeholders are honest: no buttons, and they name their phase', async () => {
     show('/admin/media');
-    expect(await screen.findByText('Coming in P6')).toBeTruthy();
+    expect(await screen.findByText('Έρχεται στη φάση P6')).toBeTruthy();
     expect(within(screen.getByRole('main')).queryAllByRole('button')).toHaveLength(0);
   });
 
   it('header, footer, settings and avatars are no longer marked as coming later', async () => {
     show('/admin/header');
     await screen.findByText('Header editor');
-    for (const name of ['Header', 'Footer', 'Avatars', 'Site settings']) {
+    for (const name of ['Κεφαλίδα', 'Υποσέλιδο', 'Avatars', 'Ρυθμίσεις ιστότοπου']) {
       expect(within(desktopNav()).getByRole('link', { name }).textContent).not.toMatch(/P2/);
     }
   });
 
   it('nav links, module selections, back and forward all move the URL', async () => {
     const router = show('/admin');
-    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Years & entries' }));
+    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Χρονιές και συμμετοχές' }));
     expect(router.state.location.pathname).toBe('/admin/contests');
     fireEvent.click(screen.getByRole('button', { name: 'Edit 2026' }));
     expect(router.state.location.pathname).toBe('/admin/contests/2026');
@@ -163,24 +163,24 @@ describe('admin URLs', () => {
   it('the Pages tree groups pages by where they appear and marks the open one', async () => {
     show('/admin/pages/eurovision-party');
     const nav = desktopNav();
-    const none = within(nav).getByRole('button', { name: /Not in any menu/ });
+    const none = within(nav).getByRole('button', { name: /Σε κανένα μενού/ });
     expect(none.getAttribute('aria-expanded')).toBe('true');
-    const link = within(nav).getByRole('link', { name: 'Eurovision party' });
+    const link = within(nav).getByRole('link', { name: 'Eurovision πάρτι' });
     expect(link.getAttribute('aria-current')).toBe('page');
-    const header = within(nav).getByRole('button', { name: /^Header/ });
+    const header = within(nav).getByRole('button', { name: /^Κεφαλίδα/ });
     expect(header.getAttribute('aria-expanded')).toBe('false');
     fireEvent.click(header);
-    expect(within(nav).getByRole('link', { name: 'Eurovision night' }).getAttribute('href')).toBe('/admin/pages/eurovision-night');
+    expect(within(nav).getByRole('link', { name: 'Βραδιά Eurovision' }).getAttribute('href')).toBe('/admin/pages/eurovision-night');
   });
 
   it('"View live" links to the public page in both locales when the screen has one', async () => {
     show('/admin/pages/faq');
-    const en = await screen.findByRole('link', { name: /View live \(EN\)/ });
+    const en = await screen.findByRole('link', { name: /Άνοιγμα στο site \(EN\)/ });
     expect(en.getAttribute('href')).toBe('/en/faq');
     expect(en.getAttribute('target')).toBe('_blank');
-    expect(screen.getByRole('link', { name: /View live \(EL\)/ }).getAttribute('href')).toBe('/el/faq');
+    expect(screen.getByRole('link', { name: /Άνοιγμα στο site \(EL\)/ }).getAttribute('href')).toBe('/el/faq');
     fireEvent.click(screen.getByRole('button', { name: 'Open about' }));
-    expect(screen.queryByRole('link', { name: /View live/ })).toBeNull();
+    expect(screen.queryByRole('link', { name: /Άνοιγμα στο site/ })).toBeNull();
   });
 
   it('shows the signed-in user', () => {
@@ -190,9 +190,9 @@ describe('admin URLs', () => {
 
   it('below lg the nav opens as a drawer that closes on navigation', async () => {
     const router = show('/admin');
-    fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
-    const dialog = screen.getByRole('dialog', { name: 'Admin menu' });
-    fireEvent.click(within(dialog).getByRole('link', { name: 'Winners' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Άνοιγμα μενού' }));
+    const dialog = screen.getByRole('dialog', { name: 'Μενού διαχείρισης' });
+    fireEvent.click(within(dialog).getByRole('link', { name: 'Νικητές' }));
     expect(router.state.location.pathname).toBe('/admin/game/winners');
     expect(screen.queryByRole('dialog')).toBeNull();
   });
@@ -202,7 +202,7 @@ describe('unsaved-edits guard', () => {
   it('moves freely while nothing is dirty', () => {
     const confirm = vi.spyOn(window, 'confirm');
     const router = show('/admin/pages/faq');
-    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Years & entries' }));
+    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Χρονιές και συμμετοχές' }));
     expect(router.state.location.pathname).toBe('/admin/contests');
     expect(confirm).not.toHaveBeenCalled();
   });
@@ -211,7 +211,7 @@ describe('unsaved-edits guard', () => {
     const confirm = vi.spyOn(window, 'confirm').mockReturnValue(false);
     const router = show('/admin/pages/faq');
     fireEvent.click(screen.getByLabelText('Dirty'));
-    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Years & entries' }));
+    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Χρονιές και συμμετοχές' }));
     expect(confirm).toHaveBeenCalledWith(UNSAVED_TEXT);
     expect(router.state.location.pathname).toBe('/admin/pages/faq');
     expect((screen.getByLabelText('Dirty') as HTMLInputElement).checked).toBe(true);
@@ -229,14 +229,14 @@ describe('unsaved-edits guard', () => {
     fireEvent.click(screen.getByLabelText('Dirty'));
     expect(beforeUnload()).toBe(false);
     confirm.mockClear();
-    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Winners' }));
+    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Νικητές' }));
     expect(confirm).not.toHaveBeenCalled();
   });
 
   it('back/forward asks too', async () => {
     const confirm = vi.spyOn(window, 'confirm').mockReturnValue(false);
     const router = show('/admin');
-    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Years & entries' }));
+    fireEvent.click(within(desktopNav()).getByRole('link', { name: 'Χρονιές και συμμετοχές' }));
     fireEvent.click(screen.getByLabelText('Dirty'));
     await act(() => router.navigate(-1));
     expect(confirm).toHaveBeenCalledWith(UNSAVED_TEXT);
@@ -259,7 +259,7 @@ describe('unsaved-edits guard', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(false);
     show('/admin/pages/faq');
     fireEvent.click(screen.getByLabelText('Dirty'));
-    fireEvent.click(screen.getAllByRole('button', { name: 'Sign out' })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Αποσύνδεση' })[0]);
     expect(auth.logout).not.toHaveBeenCalled();
   });
 

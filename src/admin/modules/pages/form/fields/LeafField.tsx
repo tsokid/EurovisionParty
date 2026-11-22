@@ -40,6 +40,7 @@ export function LeafField({ schema, segments, path, name, label, en, el, hasEn, 
         <LocaleControl
           meta={meta}
           locale={hasEn ? 'en' : 'el'}
+          field={`${hasEn ? 'en' : 'el'}${path ? `.${path}` : ''}`}
           name={`${name} (EN + EL)`}
           tag="EN + EL"
           value={hasEn ? en : el}
@@ -55,6 +56,7 @@ export function LeafField({ schema, segments, path, name, label, en, el, hasEn, 
                 key={l}
                 meta={meta}
                 locale={l}
+                field={`${l}${path ? `.${path}` : ''}`}
                 name={`${name} (${l.toUpperCase()})`}
                 tag={l.toUpperCase()}
                 value={l === 'en' ? en : el}
@@ -75,6 +77,8 @@ type ControlProps = {
   meta: FieldMeta;
   /** The locale whose live-contest vars the counter uses (EN for a shared field). */
   locale: Locale;
+  /** The doc path this control edits ("el.blocks.3.items.1.a"): presence hints and highlights. */
+  field: string;
   /** Accessible name: full path and locale, e.g. "FAQ › Item 1 › Question (EL)". */
   name: string;
   tag: string;
@@ -84,7 +88,7 @@ type ControlProps = {
   onValue: (v: unknown) => void;
 };
 
-function LocaleControl({ meta, locale, name, tag, value, issues, withLocale, onValue }: ControlProps) {
+function LocaleControl({ meta, locale, field, name, tag, value, issues, withLocale, onValue }: ControlProps) {
   const id = useId();
   const vars = useContext(VarsContext)?.[locale];
   const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
@@ -109,6 +113,7 @@ function LocaleControl({ meta, locale, name, tag, value, issues, withLocale, onV
     id,
     'aria-invalid': hasErrors || undefined,
     'aria-describedby': describedBy,
+    'data-cms-field': field,
   };
 
   const selection = () => {

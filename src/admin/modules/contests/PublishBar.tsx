@@ -6,13 +6,12 @@
 // auto-publish shares it.
 
 import { COMMIT_URL, formatRunTime, outcomeText, warningText, yearRanges, type Publisher } from './publish';
-
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+import { t } from '../../i18n';
 
 /** "Publish", or "Publish (contests + N page drafts)" when the manual Publish will ship page drafts too. */
 function publishLabel(p: Publisher): string {
   const docs = p.summary?.changed_docs?.length ?? 0;
-  return docs ? `Publish (contests + ${plural(docs, 'page draft')})` : 'Publish';
+  return docs ? t.publish.buttonWithDocs(docs) : t.publish.button;
 }
 
 function changeCount(p: Publisher): number {
@@ -21,16 +20,16 @@ function changeCount(p: Publisher): number {
 
 function unpublishedText(p: Publisher): string | null {
   if (!p.summary) return null;
-  if (p.summary.since === null) return 'Never published';
+  if (p.summary.since === null) return t.publish.never;
   const years = p.summary.changed_years;
   const docs = p.summary.changed_docs ?? [];
   const n = years.length + docs.length;
-  if (n === 0) return 'No unpublished changes';
-  const head = `${n} unpublished change${n === 1 ? '' : 's'}`;
-  if (docs.length === 0) return `${head} (year${n === 1 ? '' : 's'} ${yearRanges(years)})`;
+  if (n === 0) return t.publish.none;
+  const head = t.publish.pending(n);
+  if (docs.length === 0) return `${head} ${t.publish.yearsOnly(yearRanges(years))}`;
   const parts = [
-    years.length > 0 && `${plural(years.length, 'year')} (${yearRanges(years)})`,
-    `${plural(docs.length, 'page')} (${docs.join(', ')})`,
+    years.length > 0 && t.publish.years(years.length, yearRanges(years)),
+    t.publish.pages(docs.length, docs.join(', ')),
   ].filter(Boolean);
   return `${head}: ${parts.join(', ')}`;
 }
@@ -57,7 +56,7 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
           disabled={p.publishing}
           className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
         >
-          {p.publishing ? 'Publishing…' : publishLabel(p)}
+          {p.publishing ? t.publish.publishing : publishLabel(p)}
         </button>
         {pending && (
           <span className={`text-sm font-semibold ${hasChanges ? 'text-amber-200' : 'text-white/60'}`}>{pending}</span>
@@ -66,7 +65,7 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
 
       {run && (
         <p className="text-xs text-white/60">
-          Last publish: {run.status}
+          {t.publish.lastRun}: {t.publish.runStatus[run.status] ?? run.status}
           {run.commit_sha && (
             <>
               {' · '}
@@ -90,7 +89,7 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
           {outcomeText(p.outcome)}
           {p.outcome.status === 'ok' && p.outcome.sha && (
             <>
-              {' Commit '}
+              {` ${t.publish.commit} `}
               <a
                 href={`${COMMIT_URL}${p.outcome.sha}`}
                 target="_blank"
@@ -104,10 +103,10 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
           )}
         </p>
       )}
-      {p.outcome?.warning && <p className="text-xs text-amber-300 break-all">Warning: {p.outcome.warning}</p>}
+      {p.outcome?.warning && <p className="text-xs text-amber-300 break-all">{t.publish.warning}: {p.outcome.warning}</p>}
       {warnings.length > 0 && (
         <details className="text-xs text-amber-200">
-          <summary className="cursor-pointer font-semibold">{plural(warnings.length, 'content warning')}</summary>
+          <summary className="cursor-pointer font-semibold">{t.publish.contentWarnings(warnings.length)}</summary>
           <ul className="mt-1 space-y-0.5 pl-4 list-disc break-words">
             {warnings.map((w, i) => (
               <li key={i}>{warningText(w)}</li>
@@ -117,7 +116,7 @@ export function PublishBar({ publisher: p }: { publisher: Publisher }) {
       )}
       {p.loadError && <p className="text-xs text-red-300">{p.loadError}</p>}
 
-      <p className="text-xs text-white/40">The site updates about 2 minutes after a successful publish.</p>
+      <p className="text-xs text-white/40">{t.publish.siteUpdates}</p>
     </section>
   );
 }

@@ -117,18 +117,18 @@ describe('editorialPages', () => {
       ['country-gr', 'Greece', '/countries/greece'],
       ['hub-2026', '2026 · Vienna', '/eurovision-2026'],
     ]);
-    expect(editorialTitle('archive-2005', t)).toBe('Contest year 2005 · Kyiv');
-    expect(editorialTitle('country-gr', t)).toBe('Country Greece');
-    expect(editorialTitle('hub-2031', t)).toBe('Live hub 2031');
+    expect(editorialTitle('archive-2005', t)).toBe('Χρονιά 2005 · Kyiv');
+    expect(editorialTitle('country-gr', t)).toBe('Χώρα Greece');
+    expect(editorialTitle('hub-2031', t)).toBe('Ζωντανός διαγωνισμός 2031');
   });
 
   it('the id alone gives the kind, key, heading and (for the hub) the path: the editor is right before the targets load', () => {
-    expect(editorialRef('archive-2005')).toEqual({ family: 'archive', key: '2005', title: 'Contest year 2005' });
-    expect(editorialRef('country-gr')).toEqual({ family: 'country', key: 'gr', title: 'Country GR' });
-    expect(editorialRef('hub-2026')).toEqual({ family: 'hub', key: '2026', title: 'Live hub 2026', path: '/eurovision-2026' });
+    expect(editorialRef('archive-2005')).toEqual({ family: 'archive', key: '2005', title: 'Χρονιά 2005' });
+    expect(editorialRef('country-gr')).toEqual({ family: 'country', key: 'gr', title: 'Χώρα GR' });
+    expect(editorialRef('hub-2026')).toEqual({ family: 'hub', key: '2026', title: 'Ζωντανός διαγωνισμός 2026', path: '/eurovision-2026' });
     expect(editorialRef('faq')).toBeNull();
-    expect(editorialTitle('archive-2005')).toBe('Contest year 2005');
-    expect(editorialTitle('country-gr')).toBe('Country GR');
+    expect(editorialTitle('archive-2005')).toBe('Χρονιά 2005');
+    expect(editorialTitle('country-gr')).toBe('Χώρα GR');
     // Paths: the hub's from the id; archive and country wait for the targets (null), then resolve or are unlisted.
     const t = editorialTargets({ contests: CONTESTS, countries: COUNTRIES });
     expect(editorialPreviewPath('hub-2026', null)).toBe('/eurovision-2026');
@@ -175,42 +175,42 @@ describe('Pages module: editorial groups', () => {
     h.list = [{ doc_id: 'archive-2005', doc_type: 'archive-editorial', updated_at: '2026-10-30T09:15:00Z', published: false }] satisfies Row[];
     h.index = { editorial: ['hub-2026'] };
     render(<Pages />);
-    const years = await screen.findByRole('table', { name: 'Contest years' });
+    const years = await screen.findByRole('table', { name: 'Χρονιές διαγωνισμού' });
     expect(within(years).getByRole('row', { name: /2005 · Kyiv/ })).toBeTruthy();
-    expect(within(years).getByText('Draft (unpublished)')).toBeTruthy();
-    const hub = screen.getByRole('table', { name: 'Live hub' });
+    expect(within(years).getByText('Πρόχειρο, χωρίς δημοσίευση')).toBeTruthy();
+    const hub = screen.getByRole('table', { name: 'Ζωντανός διαγωνισμός' });
     expect(within(hub).getByRole('row', { name: /2026 · Vienna/ })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'Countries' })).toBeTruthy();
-    expect(screen.queryByRole('table', { name: 'Countries' })).toBeNull();
+    expect(screen.getByRole('heading', { name: 'Χώρες' })).toBeTruthy();
+    expect(screen.queryByRole('table', { name: 'Χώρες' })).toBeNull();
     // The selects offer only the pages without a doc.
-    const yearSelect = screen.getByRole('combobox', { name: 'Add editorial for a year' });
+    const yearSelect = screen.getByRole('combobox', { name: 'Προσθήκη κειμένου για χρονιά' });
     expect([...yearSelect.querySelectorAll('option')].map((o) => o.value)).toEqual(['', 'archive-2026', 'archive-2004']);
-    const countrySelect = screen.getByRole('combobox', { name: 'Add editorial for a country' });
-    expect([...countrySelect.querySelectorAll('option')].map((o) => o.textContent)).toEqual(['Add editorial for …', 'Andorra', 'Greece']);
-    expect(screen.queryByRole('combobox', { name: 'Add editorial for a live hub' })).toBeNull();
+    const countrySelect = screen.getByRole('combobox', { name: 'Προσθήκη κειμένου για χώρα' });
+    expect([...countrySelect.querySelectorAll('option')].map((o) => o.textContent)).toEqual(['Προσθήκη κειμένου για …', 'Andorra', 'Greece']);
+    expect(screen.queryByRole('combobox', { name: 'Προσθήκη κειμένου για ζωντανό διαγωνισμό' })).toBeNull();
   });
 
   it('"Add editorial for …" saves a new draft from the empty value through cms_save, then opens it', async () => {
     render(<Pages />);
-    const select = await screen.findByRole('combobox', { name: 'Add editorial for a country' });
+    const select = await screen.findByRole('combobox', { name: 'Προσθήκη κειμένου για χώρα' });
     fireEvent.change(select, { target: { value: 'country-gr' } });
     h.drafts['country-gr'] = { doc_id: 'country-gr', doc_type: 'country-editorial', data: emptyEditorialDoc(), updated_at: '2026-10-31T12:00:00.001+00:00' };
-    fireEvent.click(within(select.parentElement!).getByRole('button', { name: 'Add' }));
-    await screen.findByRole('button', { name: 'Save draft' });
+    fireEvent.click(within(select.parentElement!).getByRole('button', { name: 'Προσθήκη' }));
+    await screen.findByTestId('autosave-pill');
     expect(h.rpc.mock.calls.filter(([n]) => n === 'cms_save').map(([, a]) => a)).toEqual([{
       p_doc_id: 'country-gr',
       p_doc_type: 'country-editorial',
       p_data: { en: { intro: '', blocks: [] }, el: { intro: '', blocks: [] } },
       p_expected_updated_at: null,
     }]);
-    expect(screen.getByRole('heading', { name: 'Country Greece' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Χώρα Greece' })).toBeTruthy();
   });
 
   it('a doc opened by its URL shows its editor; one never saved nor published starts empty', async () => {
     render(<Pages docId="archive-2004" onOpen={vi.fn()} />);
-    expect(await screen.findByText('New: not saved yet')).toBeTruthy();
+    expect(await screen.findByText('Νέο: δεν έχει αποθηκευτεί ακόμη')).toBeTruthy();
     expect(fetchSpy.mock.calls.map(([u]) => String(u))).not.toContain('/content/pages/archive-2004.json');
-    expect(await screen.findByRole('heading', { name: 'Contest year 2004 · Istanbul' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Χρονιά 2004 · Istanbul' })).toBeTruthy();
   });
 
   it('first paint, before the targets load: the heading comes from the id, the preview waits for the path', async () => {
@@ -223,9 +223,9 @@ describe('Pages module: editorial groups', () => {
     });
     h.drafts['archive-2005'] = { doc_id: 'archive-2005', doc_type: 'archive-editorial', data: { en: editorial({ intro: 'Hi' }), el: editorial() }, updated_at: '2026-10-30T09:15:00Z' };
     render(<Pages docId="archive-2005" onOpen={vi.fn()} />);
-    expect(await screen.findByRole('heading', { name: 'Contest year 2005' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Χρονιά 2005' })).toBeTruthy();
     release();
-    expect(await screen.findByRole('heading', { name: 'Contest year 2005 · Kyiv' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Χρονιά 2005 · Kyiv' })).toBeTruthy();
   });
 
   it('the preview shows a wait message, not an error, while the path is looked up', () => {
@@ -243,7 +243,7 @@ describe('Pages module: editorial groups', () => {
     };
     render(<Pages docId="archive-2005" onOpen={vi.fn()} />);
     expect(await screen.findByText(/Same meta description as "faq"/)).toBeTruthy();
-    expect((screen.getByRole('button', { name: 'Save draft' }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByText(/1 λάθος/)).toBeTruthy();
   });
 });
 

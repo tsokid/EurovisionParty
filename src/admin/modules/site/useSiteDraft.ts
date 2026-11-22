@@ -1,13 +1,14 @@
 // One site-wide doc (site-header, site-footer, site-settings) being edited:
 // its draft (cms_documents, migration 076) or, without one, the published
-// doc this build shipped with; Save keeps a draft (cms_save, with the usual
-// optimistic concurrency), Discard drops it, Publish saves then runs the
-// existing publish pipeline (publish-content). Validation runs on every edit.
+// doc this build shipped with. Every edit autosaves (CMS P3, src/admin/cms:
+// buffered locally, saved ~1.5 s after the last change, merged with the
+// other editor's saves); Discard drops the draft, Publish saves what waits
+// then runs the existing publish pipeline (publish-content). Validation
+// runs on every edit, and an invalid doc is kept locally, not sent.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { cmsDiscard, cmsGet, cmsList, cmsSave, isConflict } from '../pages/cmsApi';
-import { formatError } from '../../lib/formatError';
 import { usePublisher, type PublishOutcome } from '../contests/publish';
-import { useUnsavedGuard } from '../../unsavedGuard';
+import { useCmsDoc, type CmsDoc } from '../../cms/useCmsDoc';
 import { publishedSiteDoc } from '../../../lib/cms/siteChrome';
 import { validateDocument, type ValidationError } from '../../../../supabase/functions/_shared/cms/validate';
 import type { SiteWideDocId } from '../../../../supabase/functions/_shared/cms/siteLinks';
@@ -35,7 +36,10 @@ export interface SiteDraft {
   errorAt: (path: string, locale?: Locale) => string | null;
   saving: boolean;
   saveError: string | null;
+  /** Sends what waits now; true when the server has it. */
   save: () => Promise<boolean>;
+  /** The autosave session: status pill, presence, conflicts. */
+  cms: CmsDoc;
   discard: () => Promise<void>;
   publishing: boolean;
   publish: () => Promise<PublishOutcome | null>;
@@ -63,50 +67,47 @@ export function plainMessage(message: string): string {
 
 export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
   const published = useMemo(() => clone(publishedSiteDoc(docId)) as LooseDoc, [docId]);
-  const [doc, setDocState] = useState<LooseDoc>(published);
-  const [saved, setSaved] = useState<string>(() => JSON.stringify(published));
-  const [hasDraft, setHasDraft] = useState(false);
   const [draftPublished, setDraftPublished] = useState(false);
-  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
   const publisher = usePublisher();
   const alive = useRef(true);
   useEffect(() => () => { alive.current = false; }, []);
 
   useEffect(() => {
     let off = false;
-    (async () => {
-      try {
-        const [draft, rows] = await Promise.all([cmsGet(docId), cmsList()]);
-        if (off) return;
-        const row = rows.find((r) => r.doc_id === docId);
-        if (draft) {
-          setDocState(clone(draft.data as LooseDoc));
-          setSaved(JSON.stringify(draft.data));
-          setUpdatedAt(draft.updated_at);
-          setHasDraft(true);
-          setDraftPublished(!!row?.published);
-        }
-        setLoadError(null);
-      } catch (e) {
-        if (!off) setLoadError(formatError(e));
-      } finally {
-        if (!off) setLoading(false);
-      }
-    })();
+    cmsList().then((rows) => {
+      if (!off) setDraftPublished(!!rows.find((r) => r.doc_id === docId)?.published);
+    }, () => {});
     return () => { off = true; };
   }, [docId]);
 
+  const loadRemote = useCallback(async () => {
+    const draft = await cmsGet(docId);
+    return draft ? { value: clone(draft.data), updatedAt: draft.updated_at } : { value: clone(published), updatedAt: null };
+  }, [docId, published]);
+
+  const cms = useCmsDoc({
+    docId,
+    loadRemote,
+    save: async (v, exp) => {
+      const at = await cmsSave(docId, docId, v as DocValue, exp);
+      if (alive.current) setDraftPublished(false);
+      return at;
+    },
+    isConflictError: isConflict,
+    validate: (v) => validateDocument(docId, v).ok,
+  });
+
+  const doc = (cms.value ?? published) as LooseDoc;
+  const latest = useRef(doc);
+  latest.current = doc;
   const setDoc = useCallback((next: LooseDoc | ((prev: LooseDoc) => LooseDoc)) => {
-    setDocState((prev) => (typeof next === 'function' ? (next as (p: LooseDoc) => LooseDoc)(prev) : next));
-  }, []);
+    const value = typeof next === 'function' ? (next as (p: LooseDoc) => LooseDoc)(latest.current) : next;
+    latest.current = value;
+    cms.edit(value);
+  }, [cms]);
 
-  const dirty = JSON.stringify(doc) !== saved;
-  useUnsavedGuard(dirty);
-
+  const dirty = cms.ready && cms.status !== 'saved';
   const result = useMemo(() => validateDocument(docId, doc), [docId, doc]);
   const errors = result.ok ? [] : result.errors;
   const errorAt = useCallback((path: string, locale?: Locale) => {
@@ -115,58 +116,36 @@ export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
   }, [errors]);
 
   const save = useCallback(async () => {
-    setSaving(true);
-    setSaveError(null);
-    try {
-      const at = await cmsSave(docId, docId, doc as DocValue, updatedAt);
-      if (!alive.current) return true;
-      setUpdatedAt(at);
-      setSaved(JSON.stringify(doc));
-      setHasDraft(true);
-      setDraftPublished(false);
-      return true;
-    } catch (e) {
-      if (alive.current) {
-        setSaveError(isConflict(e)
-          ? 'Κάποιος άλλος άλλαξε αυτό το κείμενο στο μεταξύ. Φορτώστε ξανά τη σελίδα για να δείτε την τελευταία εκδοχή.'
-          : formatError(e));
-      }
-      return false;
-    } finally {
-      if (alive.current) setSaving(false);
-    }
-  }, [docId, doc, updatedAt]);
+    await cms.flush();
+    return cms.ready;
+  }, [cms]);
 
   const discard = useCallback(async () => {
     setSaving(true);
-    setSaveError(null);
     try {
-      if (hasDraft) await cmsDiscard(docId);
-      const fresh = clone(published);
-      setDocState(fresh);
-      setSaved(JSON.stringify(fresh));
-      setHasDraft(false);
-      setUpdatedAt(null);
-    } catch (e) {
-      setSaveError(formatError(e));
+      if (cms.baseUpdatedAt !== null) await cmsDiscard(docId);
+      cms.reset({ value: clone(published), updatedAt: null });
+    } catch {
+      /* the pill keeps showing the draft; Discard can be tried again */
     } finally {
-      setSaving(false);
+      if (alive.current) setSaving(false);
     }
-  }, [docId, hasDraft, published]);
+  }, [docId, published, cms]);
 
   const publish = useCallback(async () => {
-    if (dirty && !(await save())) return null;
+    await cms.flush();
+    if (!validateDocument(docId, latest.current).ok) return null;
     const o = await publisher.publish();
     if (o.status === 'ok' || o.status === 'noop') setDraftPublished(true);
     return o;
-  }, [dirty, save, publisher]);
+  }, [cms, docId, publisher]);
 
-  const status: DraftStatus = dirty ? 'unsaved' : hasDraft && !draftPublished ? 'draft' : 'live';
+  const status: DraftStatus = dirty ? 'unsaved' : cms.baseUpdatedAt !== null && !draftPublished ? 'draft' : 'live';
   const otherDrafts = (publisher.summary?.changed_docs ?? []).filter((d) => d !== docId);
 
   return {
-    docId, loading, loadError, doc, setDoc, status, dirty, errors, errorAt,
-    saving, saveError, save, discard,
+    docId, loading: !cms.ready && !cms.loadError, loadError: cms.loadError, doc, setDoc, status, dirty, errors, errorAt,
+    saving: saving || cms.status === 'saving', saveError: cms.status === 'error' ? cms.error : null, save, discard, cms,
     publishing: publisher.publishing, publish, outcome: publisher.outcome, otherDrafts,
   };
 }

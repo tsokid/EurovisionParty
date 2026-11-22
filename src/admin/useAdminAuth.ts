@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabase';
 interface State {
   status: 'loading' | 'anonymous' | 'pending_otp' | 'authenticated' | 'denied';
   email: string | null;
+  /** The signed-in user's id (presence on CMS docs). */
+  userId?: string | null;
   isAdmin: boolean;
   error: string | null;
 }
@@ -27,7 +29,7 @@ export function useAdminAuth() {
       .eq('user_id', session.user.id)
       .maybeSingle();
     if (row) {
-      setState({ status: 'authenticated', email: session.user.email ?? null, isAdmin: true, error: null });
+      setState({ status: 'authenticated', email: session.user.email ?? null, userId: session.user.id, isAdmin: true, error: null });
     } else {
       await supabase.auth.signOut();
       setState({ status: 'denied', email: null, isAdmin: false, error: 'not_allowed' });

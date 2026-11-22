@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { Link, useInRouterContext } from 'react-router-dom';
 
 export const INPUT =
   'w-full min-w-0 h-10 rounded-stage-sm px-3 text-[15px] bg-stage-bg text-stage-text border border-stage-line-2 ' +
@@ -215,4 +216,10 @@ export function useDragReorder(onMove: (from: number, to: number) => void) {
     onDragEnd: () => { setDragging(null); setOver(null); },
   });
   return { itemProps, handleProps, dragging };
+}
+
+/** A router link, or a plain anchor where no router is mounted (a module rendered alone in a test). */
+export function AdminLink({ to, className, children }: { to: string; className?: string; children: ReactNode }) {
+  const routed = useInRouterContext();
+  return routed ? <Link to={to} className={className}>{children}</Link> : <a href={to} className={className}>{children}</a>;
 }

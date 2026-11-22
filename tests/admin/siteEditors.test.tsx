@@ -33,12 +33,14 @@ const elInputs = () => screen.getAllByRole('textbox', { name: 'Κείμενο ·
 
 beforeEach(() => {
   vi.clearAllMocks();
+  localStorage.clear();
 });
 
 describe('footer editor', () => {
   it('shows a column with its links in both languages', async () => {
     wrap(<FooterEditor column="help" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Βοήθεια' });
+    await screen.findByTestId('autosave-pill');
     expect(enInputs().map((i) => i.value)).toEqual(['FAQ', 'Create a Room', 'Join a Room', 'Leave / Delete a Room', 'How Points Are Calculated', 'Privacy Policy', 'Terms of Use']);
     expect(elInputs()[0].value).toBe('Συχνές Ερωτήσεις');
     expect(screen.getByText('Ίδιο με το site')).toBeInTheDocument();
@@ -47,9 +49,10 @@ describe('footer editor', () => {
   it('deletes a link with undo', async () => {
     wrap(<FooterEditor column="about" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Σχετικά' });
+    await screen.findByTestId('autosave-pill');
     fireEvent.click(screen.getAllByRole('button', { name: 'Διαγραφή' })[1]);
     expect(enInputs().map((i) => i.value)).toEqual(['What is Eurovision Games', 'Cookies & Consent']);
-    const toast = screen.getByRole('status');
+    const toast = screen.getAllByRole('status').find((n) => /Διαγράφηκε/.test(n.textContent ?? ''))!;
     expect(toast.textContent).toMatch(/Διαγράφηκε: «Δωρεάν Online Παιχνίδι Eurovision»/);
     fireEvent.click(within(toast).getByRole('button', { name: 'Αναίρεση' }));
     expect(enInputs().map((i) => i.value)).toEqual(['What is Eurovision Games', 'Free Online Eurovision Game', 'Cookies & Consent']);
@@ -58,6 +61,7 @@ describe('footer editor', () => {
   it('blocks Publish on an empty label and says where', async () => {
     wrap(<FooterEditor column="about" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Σχετικά' });
+    await screen.findByTestId('autosave-pill');
     fireEvent.change(elInputs()[0], { target: { value: ' ' } });
     expect(screen.getByText('Γράψτε κάτι εδώ')).toBeInTheDocument();
     expect(elInputs()[0]).toHaveAttribute('aria-invalid', 'true');
@@ -68,6 +72,7 @@ describe('footer editor', () => {
   it('adds a page from the searchable list; pages already in the column are disabled', async () => {
     wrap(<FooterEditor column="about" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Σχετικά' });
+    await screen.findByTestId('autosave-pill');
     fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη συνδέσμου' }));
     const dialog = screen.getByRole('dialog', { name: 'Προσθήκη συνδέσμου' });
     expect(within(dialog).getByRole('button', { name: /Cookies & consent/ })).toBeDisabled();
@@ -81,6 +86,7 @@ describe('footer editor', () => {
   it('a page already in the column cannot be picked again (an FAQ question is a different place)', async () => {
     wrap(<FooterEditor column="help" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Βοήθεια' });
+    await screen.findByTestId('autosave-pill');
     // Point "Create a Room" (/faq#create) at /faq, which the column already has.
     fireEvent.click(screen.getAllByRole('button', { name: /FAQ · Δημιουργία δωματίου/ })[0]);
     const dialog = screen.getByRole('dialog', { name: 'Αλλαγή σελίδας' });
@@ -90,6 +96,7 @@ describe('footer editor', () => {
   it('hides a link without deleting it', async () => {
     wrap(<FooterEditor column="about" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Σχετικά' });
+    await screen.findByTestId('autosave-pill');
     fireEvent.click(screen.getAllByRole('switch', { name: 'Απόκρυψη από το site' })[0]);
     expect(screen.getByText('Δεν φαίνεται')).toBeInTheDocument();
     expect(enInputs()).toHaveLength(3);
@@ -98,21 +105,26 @@ describe('footer editor', () => {
   it('reorders with the arrows', async () => {
     wrap(<FooterEditor column="about" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Σχετικά' });
+    await screen.findByTestId('autosave-pill');
     fireEvent.click(screen.getAllByRole('button', { name: 'Μετακίνηση κάτω' })[0]);
     expect(enInputs().map((i) => i.value)).toEqual(['Free Online Eurovision Game', 'What is Eurovision Games', 'Cookies & Consent']);
   });
 
-  it('Save keeps a draft; Publish warns it affects every page, then saves and runs the pipeline', async () => {
+  it('edits autosave as a draft; Publish warns it affects every page, then runs the pipeline', async () => {
     wrap(<FooterEditor column="about" />);
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Σχετικά' });
+    await screen.findByTestId('autosave-pill');
+    expect(screen.queryByRole('button', { name: 'Αποθήκευση' })).toBeNull();
     fireEvent.change(enInputs()[0], { target: { value: 'About us' } });
     expect(screen.getByText('Μη αποθηκευμένες αλλαγές')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Αποθήκευση' }));
+    expect(screen.getByTestId('autosave-pill').textContent).toBe('Αποθήκευση…');
+    fireEvent.focusOut(enInputs()[0]);
     await waitFor(() => expect(api.cmsSave).toHaveBeenCalledTimes(1));
-    const [docId, docType, doc] = api.cmsSave.mock.calls[0] as unknown as [string, string, { en: { columns: Array<{ links: Array<{ label: string }> }> } }];
-    expect([docId, docType]).toEqual(['site-footer', 'site-footer']);
+    const [docId, docType, doc, expected] = api.cmsSave.mock.calls[0] as unknown as [string, string, { en: { columns: Array<{ links: Array<{ label: string }> }> } }, string | null];
+    expect([docId, docType, expected]).toEqual(['site-footer', 'site-footer', null]);
     expect(doc.en.columns[0].links[0].label).toBe('About us');
     await screen.findByText('Πρόχειρο, χωρίς δημοσίευση');
+    expect(screen.getByRole('link', { name: 'Ιστορικό' }).getAttribute('href')).toBe('/admin/footer/history');
 
     fireEvent.click(screen.getByRole('button', { name: 'Δημοσίευση' }));
     const confirm = screen.getByRole('alertdialog', { name: 'Δημοσίευση σε όλο το site;' });
@@ -120,12 +132,22 @@ describe('footer editor', () => {
     fireEvent.click(within(confirm).getByRole('button', { name: 'Δημοσίευση' }));
     await waitFor(() => expect(api.publish).toHaveBeenCalledTimes(1));
   });
+
+  it('an invalid edit is kept locally and never sent', async () => {
+    wrap(<FooterEditor column="about" />);
+    await screen.findByTestId('autosave-pill');
+    fireEvent.change(elInputs()[0], { target: { value: ' ' } });
+    fireEvent.focusOut(elInputs()[0]);
+    await waitFor(() => expect(screen.getByTestId('autosave-pill').getAttribute('data-status')).toBe('invalid'));
+    expect(api.cmsSave).not.toHaveBeenCalled();
+  });
 });
 
 describe('header editor', () => {
   it('lists the links and the How to play menu with its own links; /rules is there as shipped', async () => {
     wrap(<HeaderEditor />);
     await screen.findByRole('heading', { name: 'Κεφαλίδα' });
+    await screen.findByTestId('autosave-pill');
     expect(enInputs().map((i) => i.value)).toEqual(['Eurovision {year}', 'Eurovision Night', 'How to Play', 'Trivia', 'Predictions', 'Rules', 'Scoring', 'Other FAQ']);
     expect(screen.getByText('Σύνδεσμοι του μενού')).toBeInTheDocument();
   });
@@ -133,6 +155,7 @@ describe('header editor', () => {
   it('header links cannot go to another site', async () => {
     wrap(<HeaderEditor />);
     await screen.findByRole('heading', { name: 'Κεφαλίδα' });
+    await screen.findByTestId('autosave-pill');
     fireEvent.click(screen.getAllByRole('button', { name: 'Προσθήκη συνδέσμου' })[0]);
     expect(screen.queryByRole('textbox', { name: 'Διεύθυνση άλλου site' })).toBeNull();
   });
