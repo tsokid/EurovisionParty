@@ -181,6 +181,21 @@ describe('076 cms_documents', () => {
     expect((await list()).map((r) => r.doc_id)).toEqual(['about']);
   });
 
+  it('final review M1 (091): a Discard with the version seen refuses when another editor saved since', async () => {
+    const seen = await save('home', 'home', doc('A'), null);
+    await new Promise((r) => setTimeout(r, 5));
+    const theirs = await save('home', 'home', doc('B'), seen);
+    await expect(db.query(`select public.cms_discard($1, $2::timestamptz)`, ['home', seen])).rejects.toThrow(/document changed by someone else; reload/);
+    expect(await get('home')).not.toBeNull();
+    await db.query(`select public.cms_discard($1, $2::timestamptz)`, ['home', theirs]);
+    expect(await get('home')).toBeNull();
+    // Already gone: not an error. Without a version: as before.
+    await db.query(`select public.cms_discard($1, $2::timestamptz)`, ['home', theirs]);
+    await save('about', 'about', doc('A'), null);
+    await discard('about');
+    expect(await get('about')).toBeNull();
+  });
+
   it('cms_list: published is false before any publish, true after, false again after an edit', async () => {
     const ta = await save('about', 'about', doc('A'), null);
     await save('home', 'home', doc('H'), null);

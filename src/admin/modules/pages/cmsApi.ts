@@ -44,8 +44,14 @@ export async function cmsSave(docId: string, docType: string, data: DocValue, ex
   return res.data;
 }
 
-export async function cmsDiscard(docId: string): Promise<void> {
-  const { error } = await supabase.rpc('cms_discard', { p_doc_id: docId });
+/**
+ * Deletes the draft. With `expectedUpdatedAt` (the version this editor last
+ * saw), refuses with the save conflict when another editor saved since
+ * (migration 091, final review M1).
+ */
+export async function cmsDiscard(docId: string, expectedUpdatedAt?: string | null): Promise<void> {
+  const args = expectedUpdatedAt ? { p_doc_id: docId, p_expected_updated_at: expectedUpdatedAt } : { p_doc_id: docId };
+  const { error } = await supabase.rpc('cms_discard', args);
   if (error) throw error;
 }
 

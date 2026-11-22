@@ -44,9 +44,14 @@ vi.mock('../../src/lib/supabase', () => ({
           h.drafts[id] = { doc_id: id, doc_type: String(args?.p_doc_type), data: JSON.parse(JSON.stringify(args?.p_data)), updated_at: at };
           return ok(at);
         }
-        case 'cms_discard':
-          delete h.drafts[String(args?.p_doc_id)];
+        case 'cms_discard': {
+          const id = String(args?.p_doc_id);
+          if (args?.p_expected_updated_at && h.drafts[id] && h.drafts[id].updated_at !== args.p_expected_updated_at) {
+            return Promise.resolve({ data: null, error: { message: 'document changed by someone else; reload' } });
+          }
+          delete h.drafts[id];
           return ok(null);
+        }
         case 'unpublished_summary':
           return ok(h.summary);
         case 'last_publish_run':
@@ -372,7 +377,8 @@ describe('Pages module: editor', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Απόρριψη προχείρου' }));
     fireEvent.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Απόρριψη προχείρου' }));
     await waitFor(() => expect(screen.getByText('Ίδιο με το site')).toBeTruthy());
-    expect(rpcCalls('cms_discard')[0][1]).toEqual({ p_doc_id: 'about' });
+    // M1: with the version this editor saw, so another editor's newer save is never deleted.
+    expect(rpcCalls('cms_discard')[0][1]).toEqual({ p_doc_id: 'about', p_expected_updated_at: DRAFT_TIME });
     expect(homeBreadcrumbEn().value).toBe((published('about').en.breadcrumbs as Record<string, string>).home);
     expect(screen.queryByRole('button', { name: 'Απόρριψη προχείρου' })).toBeNull();
     // The editor also renders the two hidden SEO previews (P6): more room under full-suite load.

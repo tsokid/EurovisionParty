@@ -122,7 +122,7 @@ export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
   const discard = useCallback(async () => {
     setSaving(true);
     try {
-      if (cms.baseUpdatedAt !== null) await cmsDiscard(docId);
+      if (cms.baseUpdatedAt !== null) await cmsDiscard(docId, cms.baseUpdatedAt);
       cms.reset({ value: clone(published), updatedAt: null });
     } catch {
       /* the pill keeps showing the draft; Discard can be tried again */

@@ -160,7 +160,7 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
     setDiscarding(false);
     setDiscardErr(null);
     try {
-      await cmsDiscard(docId);
+      await cmsDiscard(docId, doc.baseUpdatedAt);
       const base = await pageBase(docId);
       doc.reset({ value: base.value, updatedAt: null });
       setFresh(base.fresh);
