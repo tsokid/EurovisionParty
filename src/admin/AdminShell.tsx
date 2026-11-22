@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ExternalLink, LogOut, Menu, X } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
+import { CommandPalette, PaletteButton } from './palette/CommandPalette';
 import { AdminRoutes } from './AdminScreens';
 import { createUnsavedGuard, UnsavedGuardContext, useRouteLeaveGuard } from './unsavedGuard';
 import type { AdminAuth } from './useAdminAuth';
@@ -87,6 +88,7 @@ export default function AdminShell({ auth }: Props) {
   const [guard] = useState(createUnsavedGuard);
   useRouteLeaveGuard(guard, screenKey);
   const navigate = useNavigate();
+  const [palette, setPalette] = useState(false);
   const { pathname } = useLocation();
 
   const [crumbs, setCrumbs] = useState<Crumb[]>([]);
@@ -207,6 +209,7 @@ export default function AdminShell({ auth }: Props) {
                   <Menu size={20} aria-hidden />
                 </button>
                 <Breadcrumb crumbs={crumbs} />
+                <PaletteButton onOpen={() => setPalette(true)} />
                 <LiveLinks path={live} />
                 <div className="hidden lg:flex max-w-72">{user}</div>
               </header>
@@ -215,6 +218,7 @@ export default function AdminShell({ auth }: Props) {
                   <AdminRoutes />
                 </ToastHost>
               </main>
+              <CommandPalette open={palette} onOpenChange={setPalette} />
             </div>
           </div>
         </AdminMetaContext.Provider>
