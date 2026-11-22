@@ -12,6 +12,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { isTopDialog, useDialogFocus } from '../../hooks/useDialogFocus';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
@@ -52,6 +53,8 @@ export default function FinalSequence({ players, winners, meId, championVote = n
   const champAvRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(layerRef);
 
   const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
   const groups = groupByCategory([...winners]);
@@ -107,7 +110,7 @@ export default function FinalSequence({ players, winners, meId, championVote = n
 
   useEffect(() => { if (done) closeRef.current?.focus(); }, [done]);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { if (done) onClose(); else finish(); } };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && isTopDialog(layerRef)) { if (done) onClose(); else finish(); } };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [done, finish, onClose]);
@@ -131,6 +134,7 @@ export default function FinalSequence({ players, winners, meId, championVote = n
   if (typeof document === 'undefined') return null;
   return createPortal(
     <motion.div
+      ref={layerRef}
       className={clsx('fs-layer', tv && 'fs-tv')}
       role="dialog"
       aria-modal="true"

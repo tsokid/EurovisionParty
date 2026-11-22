@@ -3,6 +3,7 @@
 // the winners sequence and any player's reel, also in TV size.
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { isTopDialog, useDialogFocus } from '../../hooks/useDialogFocus';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { Play, X, Clapperboard } from 'lucide-react';
@@ -31,6 +32,7 @@ export default function TvPresentation({ players, winners, roomId, roomCode, yea
   const [seq, setSeq] = useState(false);
   const [reel, setReel] = useState<Player | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(rootRef);
   const groups = groupByCategory([...winners]);
   const champHidden = hasTie(groups.champion) && championVote !== 'accept';
   const byId = new Map(players.map((p) => [p.id, p]));
@@ -40,7 +42,7 @@ export default function TvPresentation({ players, winners, roomId, roomCode, yea
   useEffect(() => {
     const el = rootRef.current;
     if (el?.requestFullscreen && !document.fullscreenElement) void el.requestFullscreen().catch(() => {});
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && !seq && !reel) exit(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && !seq && !reel && isTopDialog(rootRef)) exit(); };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   // eslint-disable-next-line react-hooks/exhaustive-deps

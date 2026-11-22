@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -7,8 +7,7 @@ import { X } from 'lucide-react';
 import { Avatar, avatarInitials, avatarTone, type AvatarProps } from './Avatar';
 import { AvatarVisual } from './avatars/AvatarVisual';
 import { getAvatar } from './avatars/registry';
-
-const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+import { isTopDialog, useDialogFocus } from '../../hooks/useDialogFocus';
 
 export interface AvatarModalProps {
   open: boolean;
@@ -32,32 +31,21 @@ export function AvatarModal({ open, onClose, name, avatarId }: AvatarModalProps)
   const closeRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
 
-  // Focus the close button on open; give focus back to the opener on close.
+  // Tab stays inside; focus goes back to the opener on close.
+  useDialogFocus(dialogRef, open);
+  // Focus the close button on open.
   useEffect(() => {
-    if (!open) return;
-    const opener = document.activeElement as HTMLElement | null;
-    closeRef.current?.focus();
-    return () => { opener?.focus?.(); };
+    if (open) closeRef.current?.focus();
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { e.stopPropagation(); onClose(); }
+      if (e.key === 'Escape' && isTopDialog(dialogRef)) { e.stopPropagation(); onClose(); }
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
-
-  const trap = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== 'Tab' || !dialogRef.current) return;
-    const items = [...dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
-    if (items.length === 0) { e.preventDefault(); return; }
-    const first = items[0];
-    const last = items[items.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  };
 
   if (typeof document === 'undefined') return null;
   const fade = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 } };
@@ -82,7 +70,6 @@ export function AvatarModal({ open, onClose, name, avatarId }: AvatarModalProps)
             aria-label={t('avatarViewer.dialog', { name })}
             aria-describedby={titleId}
             className="avv-dialog"
-            onKeyDown={trap}
             {...pop}
           >
             <button ref={closeRef} type="button" className="iconbtn avv-close" onClick={onClose} aria-label={t('avatarViewer.close')}>

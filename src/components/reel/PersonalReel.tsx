@@ -21,6 +21,7 @@ import { getAvatar } from '../stage/avatars/registry';
 import { StageVfx, type StageVfxHandle } from '../stage/vfx';
 import type { VfxPreset } from '../stage/vfx';
 import { useRevealedNames } from '../../hooks/useRevealedNames';
+import { isTopDialog, useDialogFocus } from '../../hooks/useDialogFocus';
 import { useAudioStore } from '../../stores/audioStore';
 import { playCue, type Cue } from '../../lib/stageSound';
 import { rankOrder } from '../../lib/rankMoves';
@@ -88,6 +89,8 @@ export default function PersonalReel({ player: p, players, winners, roomId, room
   const placeRef = useRef<HTMLSpanElement>(null);
   const sumRef = useRef<HTMLSpanElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(layerRef);
   const { names, revealed } = useRevealedNames(roomId);
   const cues = useAudioStore((s) => s.cues && !s.muted);
   const setCues = useAudioStore((s) => s.setCues);
@@ -166,7 +169,7 @@ export default function PersonalReel({ player: p, players, winners, roomId, room
   };
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && isTopDialog(layerRef)) onClose(); };
     document.addEventListener('keydown', onKey);
     closeRef.current?.focus();
     return () => document.removeEventListener('keydown', onKey);
@@ -186,7 +189,7 @@ export default function PersonalReel({ player: p, players, winners, roomId, room
 
   if (typeof document === 'undefined') return null;
   return createPortal(
-    <div className={clsx('rl-layer', tv && 'rl-tv')} role="dialog" aria-modal="true" aria-label={t('reel.aria', { name: p.name })}>
+    <div ref={layerRef} className={clsx('rl-layer', tv && 'rl-tv')} role="dialog" aria-modal="true" aria-label={t('reel.aria', { name: p.name })}>
       <header className="rl-top">
         <div className="rl-segs" aria-hidden="true">
           {Array.from({ length: scenes }, (_, g) => <i key={g} className={g < scene ? 'past' : g === scene ? 'now' : ''} />)}

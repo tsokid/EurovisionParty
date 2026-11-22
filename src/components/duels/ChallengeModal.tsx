@@ -78,7 +78,7 @@ export default function ChallengeModal({
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} label={t('challengeModal.title')}>
       <div className="du-cm">
         <div className="du-cm-head">
           <span className="du-cm-ico" aria-hidden="true"><Swords strokeWidth={2.4} /></span>

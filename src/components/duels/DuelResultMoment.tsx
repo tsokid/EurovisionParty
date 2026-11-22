@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { isTopDialog, useDialogFocus } from '../../hooks/useDialogFocus';
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
@@ -200,11 +201,13 @@ export default function DuelResultMoment({ duel, onClose, onDecision }: DuelResu
   const totalL = useCountUp(L.player?.total_points ?? 0, reduce ? 0 : 700);
   const totalR = useCountUp(Rt.player?.total_points ?? 0, reduce ? 0 : 700);
 
-  // Esc closes; focus starts on the first control.
+  // Esc closes; focus starts on the first control, Tab stays inside and
+  // focus returns to the opener on close.
   const boxRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(boxRef);
   useEffect(() => {
     boxRef.current?.querySelector<HTMLElement>('button')?.focus();
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && isTopDialog(boxRef)) onClose(); };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
