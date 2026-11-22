@@ -30,8 +30,10 @@ import {
   TIMEOUT_TEXT,
   PUBLISH_TIMEOUT_MS,
   __resetPublishGuardForTests,
+  CONTESTS_PUBLISH_TIMEOUT_MS,
   formatRunTime,
   invokePublish,
+  invokeScopedPublish,
   usePublisher,
 } from '../../src/admin/modules/contests/publish';
 
@@ -187,6 +189,26 @@ describe('PublishBar', () => {
     expect(await screen.findByText('Προειδοποίηση: end_publish failed: timeout')).toBeTruthy();
   });
 
+  it('final review I3: "Μόνο διαγωνισμοί" publishes the contests only, never the page drafts', async () => {
+    h.summary = { changed_years: [2027], changed_docs: ['faq'], since: '2026-10-29T10:00:00Z' } as typeof h.summary;
+    h.invoke.mockResolvedValue({ data: { status: 'ok', run_id: 8, sha: 'fff0000', files_changed: 1 }, error: null });
+    render(<Harness />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Μόνο διαγωνισμοί' }));
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { body: { cms: false } }));
+  });
+
+  it('final review I3: after a refused contests-only publish the retry is contests-only too', async () => {
+    h.invoke.mockResolvedValueOnce(httpError({ status: 'busy', run_id: null, sha: null, files_changed: 0, error: 'publish already running' }));
+    render(<Harness />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Μόνο διαγωνισμοί' }));
+    const retry = await screen.findByRole('button', { name: 'Ξανά: μόνο διαγωνισμοί' });
+    h.invoke.mockResolvedValueOnce({ data: { status: 'ok', run_id: 9, sha: 'aaa0000', files_changed: 1 }, error: null });
+    fireEvent.click(retry);
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: false } });
+    expect(await screen.findByRole('button', { name: 'Μόνο διαγωνισμοί' })).toBeTruthy();
+  });
+
   it('counts changed CMS pages with the years', async () => {
     h.summary = { changed_years: [2024, 2025], changed_docs: ['about', 'faq', 'rules'], since: '2026-10-29T10:00:00Z' } as typeof h.summary;
     render(<Harness />);
@@ -288,20 +310,55 @@ describe('invokePublish guard', () => {
     expect(h.invoke).toHaveBeenCalledTimes(3);
   });
 
-  it('cms: false (auto-publish) and a manual Publish queued behind a run share one trailing run that ships the drafts (I3)', async () => {
+  it('final review I3: a queued auto-publish (cms: false) is never merged into a queued manual Publish; the results go first', async () => {
     const resolvers: Array<(v: unknown) => void> = [];
     h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
-    const first = invokePublish({ cms: false });
-    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: false } });
-    const auto = invokePublish({ cms: false });
+    const first = invokePublish();
     const manual = invokePublish();
-    expect(auto).toBe(manual);
+    const auto = invokePublish({ cms: false });
+    const auto2 = invokePublish({ cms: false });
+    expect(auto).not.toBe(manual);
+    expect(auto).toBe(auto2);
     resolvers[0](ok(1));
     await first;
     await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
-    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: true } });
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: false } });
     resolvers[1](ok(2));
     expect(await auto).toMatchObject({ files_changed: 2 });
+    await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(3));
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: true } });
+    resolvers[2](ok(3));
+    expect(await manual).toMatchObject({ files_changed: 3 });
+  });
+
+  it('final review I2: an auto-publish queued behind an in-flight page publish starts when the page publish settles', async () => {
+    const resolvers: Array<(v: unknown) => void> = [];
+    h.invoke.mockImplementation(() => new Promise((r) => { resolvers.push(r); }));
+    const page = invokeScopedPublish({ docIds: ['faq'] });
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: true, doc_ids: ['faq'], target: 'main' } });
+    const results = invokePublish({ cms: false });
+    resolvers[0](ok(1));
+    expect(await page).toMatchObject({ files_changed: 1 });
+    await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledTimes(2));
+    expect(h.invoke).toHaveBeenLastCalledWith('publish-content', { body: { cms: false } });
+    resolvers[1](ok(2));
+    expect(await results).toMatchObject({ status: 'ok', files_changed: 2 });
+    // The slot is free again.
+    h.invoke.mockResolvedValue(ok(3));
+    expect(await invokeScopedPublish({ docIds: ['about'] })).toMatchObject({ files_changed: 3 });
+  });
+
+  it('a contests-only run waits longer than the server-side takeover before timing out (I1)', async () => {
+    vi.useFakeTimers();
+    h.invoke.mockImplementation(() => new Promise(() => {}));
+    let settled = false;
+    const run = invokePublish({ cms: false });
+    run.then(() => { settled = true; });
+    await vi.advanceTimersByTimeAsync(PUBLISH_TIMEOUT_MS + 20_000);
+    expect(settled).toBe(false);
+    expect(CONTESTS_PUBLISH_TIMEOUT_MS).toBeGreaterThan(110_000);
+    await vi.advanceTimersByTimeAsync(CONTESTS_PUBLISH_TIMEOUT_MS);
+    expect(await run).toEqual({ status: 'error', error: TIMEOUT_TEXT });
   });
 
   it('a trailing run of auto-publishes only stays contests-only', async () => {

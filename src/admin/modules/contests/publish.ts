@@ -8,15 +8,16 @@
 // One publish at a time per page. A call made while a run is in flight
 // must not join that run: its snapshot may predate the caller's change
 // (Publish clicked, then Archive commits and auto-publishes). Such calls
-// share ONE trailing run that starts when the current run settles, so
-// every caller gets an outcome that covers its own change, and any number
-// of callers during a run cost exactly one more invoke. A run that does
-// not settle within PUBLISH_TIMEOUT_MS frees the slot with a timeout error.
+// queue: at most one contests-only run and one content run wait, each
+// shared by every caller of its kind, so every caller gets an outcome that
+// covers its own change. A queued contests-only run (the results) starts
+// first and is never merged into a content run (final review I3): a
+// results publish never ships the page drafts. A run that does not settle
+// within its timeout frees the slot with a timeout error.
 //
 // CMS page drafts (I3) ship only from an explicit Publish click: the
-// lifecycle auto-publish (Finalize / Archive / Un-archive) passes
-// { cms: false }, contests only. A trailing run ships the drafts when any
-// of its callers asked for them.
+// lifecycle auto-publish (Finalize / Archive / Un-archive) and the
+// "contests only" retry pass { cms: false }, contests only.
 //
 // usePublisher holds that state for the Contests module, so its PublishBar
 // and the auto-publish after Finalize / Archive / Un-archive share one
@@ -26,7 +27,8 @@
 // Per-doc publish (CMS P5): invokeScopedPublish ships named docs (doc_ids),
 // a site-wide preview (target 'preview') or a promote. It never queues: with
 // a run in flight it answers busy at once, since a later run of different
-// docs must not be merged into this one.
+// docs must not be merged into this one. When it settles it hands the slot
+// to a queued run like any other (final review I2).
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
@@ -36,6 +38,11 @@ import { t } from '../../i18n';
 export const COMMIT_URL = 'https://github.com/tsokid/EurovisionParty/commit/';
 export const BUSY_TEXT: string = t.publish.busy;
 export const PUBLISH_TIMEOUT_MS = 90_000;
+/**
+ * A contests-only run may wait up to 100 s server-side for a stuck run to be
+ * taken over (migration 090), so the browser waits longer for it.
+ */
+export const CONTESTS_PUBLISH_TIMEOUT_MS = 150_000;
 export const TIMEOUT_TEXT: string = t.publish.timeout;
 
 /** Advice from validating the CMS drafts at publish; never blocks it. */
@@ -120,7 +127,9 @@ function asOutcome(body: unknown): PublishOutcome | null {
 
 // Module-level, so every caller in this page shares the guard.
 let current: Promise<PublishOutcome> | null = null;
-let trailing: { promise: Promise<PublishOutcome>; resolve: (p: Promise<PublishOutcome>) => void; cms: boolean } | null = null;
+type Queued = { promise: Promise<PublishOutcome>; resolve: (p: Promise<PublishOutcome>) => void };
+/** The runs waiting for the slot: contests-only first, then content. */
+const queued: { contests: Queued | null; content: Queued | null } = { contests: null, content: null };
 
 export type PublishRequest = {
   /** Ship the CMS page drafts too (default true). false: contests only (lifecycle auto-publish). */
@@ -137,25 +146,28 @@ export function isPublishInFlight(): boolean {
   return current !== null;
 }
 
-/** callPublish, settled as a timeout error after PUBLISH_TIMEOUT_MS. Never rejects. */
-function timed(cms: boolean): Promise<PublishOutcome> {
+/** A publish-content call, settled as a timeout error after `ms`. Never rejects. */
+function timed(body: Record<string, unknown>, ms: number): Promise<PublishOutcome> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<PublishOutcome>((resolve) => {
-    timer = setTimeout(() => resolve({ status: 'error', error: TIMEOUT_TEXT }), PUBLISH_TIMEOUT_MS);
+    timer = setTimeout(() => resolve({ status: 'error', error: TIMEOUT_TEXT }), ms);
   });
-  return Promise.race([callPublish(cms), timeout]).finally(() => clearTimeout(timer));
+  return Promise.race([callPublishBody(body), timeout]).finally(() => clearTimeout(timer));
 }
 
-function start(cms: boolean): Promise<PublishOutcome> {
-  const run = timed(cms);
+/** Holds the slot for `run`; when it settles, the slot goes straight to a queued run (no gap for a third run). */
+function occupy(run: Promise<PublishOutcome>): Promise<PublishOutcome> {
   current = run;
   void run.then(() => {
     if (current !== run) return; // reset by __resetPublishGuardForTests
-    if (trailing) {
-      // Hand the slot straight to the trailing run: no gap for a third run.
-      const t = trailing;
-      trailing = null;
-      t.resolve(start(t.cms));
+    if (queued.contests) {
+      const q = queued.contests;
+      queued.contests = null;
+      q.resolve(start(false));
+    } else if (queued.content) {
+      const q = queued.content;
+      queued.content = null;
+      q.resolve(start(true));
     } else {
       current = null;
     }
@@ -163,20 +175,27 @@ function start(cms: boolean): Promise<PublishOutcome> {
   return run;
 }
 
+function start(cms: boolean): Promise<PublishOutcome> {
+  return occupy(timed({ cms }, cms ? PUBLISH_TIMEOUT_MS : CONTESTS_PUBLISH_TIMEOUT_MS));
+}
+
 /**
  * Publishes. With nothing in flight, starts a run. Otherwise returns the
- * single trailing run that starts after the current one. Never rejects.
+ * queued run of the caller's kind (contests-only or content), which starts
+ * after the current one; a queued contests-only run goes first. Never
+ * rejects.
  */
 export function invokePublish({ cms = true }: PublishRequest = {}): Promise<PublishOutcome> {
   if (!current) return start(cms);
-  if (!trailing) {
+  const kind = cms ? 'content' : 'contests';
+  let q = queued[kind];
+  if (!q) {
     let resolve!: (p: Promise<PublishOutcome>) => void;
     const promise = new Promise<PublishOutcome>((r) => { resolve = r; });
-    trailing = { promise, resolve, cms };
-  } else if (cms) {
-    trailing.cms = true;
+    q = { promise, resolve };
+    queued[kind] = q;
   }
-  return trailing.promise;
+  return q.promise;
 }
 
 /**
@@ -188,20 +207,14 @@ export function invokeScopedPublish(request: ScopedPublishRequest): Promise<Publ
   const body = 'promote' in request
     ? { cms: true, promote: request.promote }
     : { cms: true, doc_ids: request.docIds, target: request.target ?? 'main' };
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<PublishOutcome>((resolve) => {
-    timer = setTimeout(() => resolve({ status: 'error', error: TIMEOUT_TEXT }), PUBLISH_TIMEOUT_MS);
-  });
-  const run = Promise.race([callPublishBody(body), timeout]).finally(() => clearTimeout(timer));
-  current = run;
-  void run.then(() => { if (current === run) current = null; });
-  return run;
+  return occupy(timed(body, PUBLISH_TIMEOUT_MS));
 }
 
 /** Test-only: forget any in-flight or trailing run. */
 export function __resetPublishGuardForTests(): void {
   current = null;
-  trailing = null;
+  queued.contests = null;
+  queued.content = null;
 }
 
 /** formatError that cannot throw. */
@@ -211,10 +224,6 @@ function safeError(e: unknown): string {
   } catch {
     return 'publish failed (unreadable error)';
   }
-}
-
-function callPublish(cms: boolean): Promise<PublishOutcome> {
-  return callPublishBody({ cms });
 }
 
 async function callPublishBody(body: Record<string, unknown>): Promise<PublishOutcome> {
@@ -289,6 +298,8 @@ export type Publisher = {
   loadError: string | null;
   publishing: boolean;
   outcome: PublishOutcome | null;
+  /** Whether the latest outcome came from a contests-only request (the results). */
+  outcomeContestsOnly: boolean;
   refresh: () => Promise<void>;
   publish: (request?: PublishRequest) => Promise<PublishOutcome>;
 };
@@ -299,6 +310,7 @@ export function usePublisher(): Publisher {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
   const [outcome, setOutcome] = useState<PublishOutcome | null>(null);
+  const [outcomeContestsOnly, setOutcomeContestsOnly] = useState(false);
   // Calls of this hook still waiting for their outcome.
   const pending = useRef(0);
 
@@ -345,6 +357,7 @@ export function usePublisher(): Publisher {
     try {
       const o = await invokePublish(request);
       setOutcome(o);
+      setOutcomeContestsOnly(request?.cms === false);
       return o;
     } finally {
       pending.current -= 1;
@@ -353,5 +366,5 @@ export function usePublisher(): Publisher {
     }
   }, [refresh]);
 
-  return { summary, lastRun, loadError, publishing, outcome, refresh, publish };
+  return { summary, lastRun, loadError, publishing, outcome, outcomeContestsOnly, refresh, publish };
 }

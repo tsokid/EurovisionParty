@@ -20,6 +20,10 @@ function publishLabel(p: Publisher): string {
   return docs ? t.publish.buttonWithDocs(docs) : t.publish.button;
 }
 
+/** The last contests-only publish (Finalize / Archive auto-publish, or this button) did not go through. */
+const retryContests = (p: Publisher) =>
+  p.outcomeContestsOnly && (p.outcome?.status === 'busy' || p.outcome?.status === 'error');
+
 function changeCount(p: Publisher): number {
   return p.summary ? p.summary.changed_years.length + (p.summary.changed_docs?.length ?? 0) : 0;
 }
@@ -63,14 +67,26 @@ export function PublishBar({ publisher: p, reviewTo }: { publisher: Publisher; r
         {reviewTo ? (
           <AdminLink to={reviewTo} className="btn btn-primary btn-sm">{t.publishFlow.pageList}</AdminLink>
         ) : (
-          <button
-            type="button"
-            onClick={() => { p.publish().catch(() => {}); }}
-            disabled={p.publishing}
-            className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
-          >
-            {p.publishing ? t.publish.publishing : publishLabel(p)}
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={() => { p.publish().catch(() => {}); }}
+              disabled={p.publishing}
+              className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
+            >
+              {p.publishing ? t.publish.publishing : publishLabel(p)}
+            </button>
+            {/* The results only (I3): never the page drafts, never behind a page build. */}
+            <button
+              type="button"
+              onClick={() => { p.publish({ cms: false }).catch(() => {}); }}
+              disabled={p.publishing}
+              title={t.publish.contestsOnlyHint}
+              className={`px-3 py-1.5 rounded font-bold text-sm disabled:opacity-40 cursor-pointer ${retryContests(p) ? 'bg-amber-400 text-black' : 'border border-white/20 text-white/85'}`}
+            >
+              {retryContests(p) ? t.publish.retryContestsOnly : t.publish.contestsOnly}
+            </button>
+          </>
         )}
         {pending && (
           <span className={`text-sm font-semibold ${hasChanges ? 'text-amber-200' : 'text-white/60'}`}>{pending}</span>
