@@ -7,6 +7,15 @@ import { useState } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { routes } from '../src/routeConfig';
 import { FAKE_USER, setFakeDb } from './fakeSupabase';
+import { IMAGE_AVATARS } from '../src/components/stage/avatars/images.generated';
+
+// The avatars table (089): the shipped set, a few unpublished, one deleted.
+const AVATAR_ROWS = IMAGE_AVATARS.map((a, i) => ({
+  id: a.id, title_en: a.title.en, title_el: i === 0 ? 'Διοικητής της Ντίσκο' : a.title.el === a.title.en ? '' : a.title.el,
+  thumb_path: a.thumb, full_path: a.full, status: i % 9 === 4 ? 'unpublished' : 'published', sort: (i + 1) * 10,
+  created_at: '2026-11-22T10:00:00Z', deleted_at: i === 52 ? '2026-11-20T10:00:00Z' : null,
+}));
+const AVATAR_USAGE = [{ avatar_id: 'img-01', players: 14 }, { avatar_id: 'img-02', players: 3 }, { avatar_id: 'img-05', players: 1 }, { avatar_id: 'img-07', players: 6 }];
 
 const CONTESTS = [
   { year: 2027, city: 'Sofia', city_slug: 'sofia', host_iso: 'BG', stage: 'upcoming', final_date: '2027-05-15', indexable: false, entry_count: 0, finalist_count: 0 },
@@ -46,10 +55,16 @@ function seedAdmin() {
       winners: [],
       parse_jobs: [],
       parse_runs: [],
+      avatars: AVATAR_ROWS,
     },
     {
       contest_summaries: () => CONTESTS,
       cms_list: () => [{ doc_id: 'faq', doc_type: 'faq', updated_at: '2026-11-20T10:00:00Z', published: false }],
+      cms_get: () => null,
+      cms_save: () => new Date().toISOString(),
+      avatar_usage: () => AVATAR_USAGE,
+      avatars_reorder: () => null,
+      avatar_purge: () => [],
       unpublished_summary: () => ({ changed_years: [2026], changed_docs: ['faq'], since: '2026-11-18T09:00:00Z' }),
       last_publish_run: () => ({ id: 41, status: 'ok', commit_sha: '3e1f0a9c', finished_at: '2026-11-18T09:02:00Z', files_changed: 3, error: null }),
       live_contest_year: () => 2026,
