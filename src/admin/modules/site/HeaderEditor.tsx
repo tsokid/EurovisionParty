@@ -23,6 +23,8 @@ const WORDS: Array<{ group: 'cta' | 'ui'; key: string; label: string }> = [
   { group: 'ui', key: 'closeMenu', label: 'Κλείσιμο μενού (για αναγνώστες οθόνης)' },
 ];
 
+const HEADER_PREVIEW = {};
+
 export default function HeaderEditor() {
   const draft = useSiteDraft('site-header');
   const { doc, setDoc, errorAt } = draft;
@@ -43,6 +45,7 @@ export default function HeaderEditor() {
   return (
     <SiteDocFrame
       draft={draft}
+      preview={HEADER_PREVIEW}
       title="Κεφαλίδα"
       lede="Οι σύνδεσμοι στο πάνω μέρος κάθε σελίδας, με τη σειρά που φαίνονται. Ένα μενού ανοίγει λίστα συνδέσμων (στο κινητό, μέσα στο μενού)."
     >
@@ -91,6 +94,8 @@ export default function HeaderEditor() {
                       value={doc[l][w.group][w.key] ?? ''}
                       invalid={!!error}
                       lang={l}
+                      data-cms-field={`${l}.${path}`}
+                      data-cms-label={`${w.label} (${l.toUpperCase()})`}
                       onChange={(e) => {
                         const v = e.target.value;
                         setDoc((d: LooseDoc) => ({ ...d, [l]: { ...d[l], [w.group]: { ...d[l][w.group], [w.key]: v } } }));

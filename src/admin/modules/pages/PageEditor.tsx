@@ -33,6 +33,7 @@ import { SITE_PAGES } from './sitePages';
 import { useContestContext } from './contestContext';
 import { SchemaForm, type DocValue } from './form/SchemaForm';
 import PreviewPane from './PreviewPane';
+import { useClickToEdit } from '../../preview/useClickToEdit';
 import { useDebounced } from './useDebounced';
 import { useCmsDoc } from '../../cms/useCmsDoc';
 import { CmsDocStatus } from '../../cms/CmsDocUi';
@@ -140,6 +141,10 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
 
   const onChange = useCallback((next: DocValue) => doc.edit(next), [doc]);
 
+  // Click-to-edit (P4): a click on the preview focuses its field; the field in focus is outlined there.
+  const formRef = useRef<HTMLDivElement>(null);
+  const click = useClickToEdit({ docId, formRef, ready: doc.ready && !!value, beforeFocus: () => setTab('edit') });
+
   const discard = async () => {
     setDiscarding(false);
     setDiscardErr(null);
@@ -220,14 +225,21 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
       </div>
 
       <div className="xl:grid xl:grid-cols-2 xl:items-start xl:gap-4">
-        <div data-testid="form-panel" className={`${tab === 'edit' ? 'block' : 'hidden'} xl:block min-w-0`}>
+        <div ref={formRef} data-testid="form-panel" className={`${tab === 'edit' ? 'block' : 'hidden'} xl:block min-w-0`}>
           <SchemaForm schema={schema} value={value} onChange={onChange} errors={errors} warnings={warnings} vars={vars} />
         </div>
         <div
           data-testid="preview-panel"
           className={`${tab === 'preview' ? 'block' : 'hidden'} xl:block min-w-0 xl:sticky xl:top-44 xl:max-h-[calc(100dvh-12rem)] xl:overflow-auto`}
         >
-          <PreviewPane docId={docId} doc={shown} path={previewPath} />
+          <PreviewPane
+            docId={docId}
+            doc={value}
+            path={previewPath}
+            getLabels={click.getLabels}
+            highlight={click.highlight}
+            onFocusTarget={click.onFocusTarget}
+          />
         </div>
       </div>
 

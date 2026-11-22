@@ -20,3 +20,9 @@ __setAvatarClientForTests({
   rpc: () => Promise.resolve(offline),
   storage: { from: () => ({ getPublicUrl: (p: string) => ({ data: { publicUrl: `/storage/${p}` } }) }) },
 });
+
+// The editor's preview is an iframe of the app (src/admin/preview). jsdom
+// cannot load the app into an iframe, so the suites drive the same bridge
+// inline (in-memory port); tests of the iframe host set it explicitly.
+import { __setPreviewTransportForTests } from '../src/admin/preview/transportDefault';
+__setPreviewTransportForTests({ kind: 'inline' });

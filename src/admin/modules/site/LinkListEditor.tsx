@@ -33,6 +33,8 @@ export interface LinkListEditorProps {
   allowExternal: boolean;
   /** «Προσθήκη συνδέσμου». */
   addLabel?: string;
+  /** What a row is called in the preview's hover label («Σύνδεσμος», «Μενού»). */
+  fieldName?: string;
   /** Under a row (a header menu's own links). */
   renderBelow?: (row: LinkRow, index: number) => ReactNode;
   /** Extra add buttons next to «Προσθήκη συνδέσμου». */
@@ -52,6 +54,7 @@ function withHidden(l: LinkDoc, hidden: boolean): LinkDoc {
 
 export function LinkListEditor({
   rows, onChange, path, errorAt, options, allowExternal, addLabel = 'Προσθήκη συνδέσμου', renderBelow, extraActions, emptyText,
+  fieldName = 'Σύνδεσμος',
 }: LinkListEditorProps) {
   const toast = useToast();
   // null: closed; -1: adding; i: changing row i's target.
@@ -134,6 +137,8 @@ export function LinkListEditor({
                               value={row[l].label}
                               invalid={!!error}
                               aria-label={`Κείμενο · ${LOCALE_NAME[l]}`}
+                              data-cms-field={`${l}.${rowPath}.label`}
+                              data-cms-label={`${fieldName} «${row.el.label || row.en.label || where.name}» (${l.toUpperCase()})`}
                               onChange={(e) => {
                                 const v = e.target.value;
                                 update(i, (x, loc) => (loc === l ? { ...x, label: v } : x));

@@ -1,199 +1,265 @@
 /**
- * Admin preview of a CMS page draft: renders the real public page component
- * for `docId` with the draft in place of content/pages/{docId}.json.
+ * The editor's preview (Track 3 §5): the real page in a same-origin iframe
+ * (/admin/preview/:docId/:locale), fed the draft as it is typed.
  *
- * Isolation from the admin (and from the public site's shared state):
- * - Content: PageContentOverrideProvider serves the draft; the previewed doc
- *   is never read from (or written to) the content cache or the network.
- *   Other docs the page reads (site.json, contests/*.json) load as usual.
- * - Head: PreviewModeContext makes SchemaHead skip every document.head write
- *   (title, meta, canonical, hreflang, JSON-LD). There is no head collector,
- *   so NotFoundPage's setStatus(404) is a no-op.
- * - Routing: the page gets its own MemoryRouter at its public path, with the
- *   admin's router contexts reset so nothing reaches the admin's router.
- *   An editorial doc (archive-*, country-*, hub-*) previews its data page at
- *   `path` (from the Pages module), matched by the page's own route so it
- *   reads its :slug; the page loads its contest data as on the site.
- *   Link clicks and form submits inside the pane are swallowed.
- * - Locale: a local LocaleProvider plus a cloned i18next instance, so the
- *   EN/EL toggle never changes the global language or <html lang>.
- * - Safety: the draft may not validate yet, so the page gets a sanitized
- *   copy (sanitizePreview.ts): rawHtml outside the allowlist is shown as
- *   escaped text, an unsafe href becomes "#" and an invalid media reference "".
- * - Media: draft references (cms-media/<uuid>) render through a
- *   MediaResolverContext backed by media_list and signed URLs of the private
- *   bucket (media/previewResolver.ts). The public site has no resolver.
- * - Errors: a malformed draft or a placeholder the page does not supply
- *   (interpolate throws) shows "Preview error: …" inside the pane only.
+ * - Live: the draft goes to the frame over the bridge (protocol.ts), about
+ *   120 ms after the last change; the frame renders it through the public
+ *   components (PreviewDocument.tsx).
+ * - EN / EL: the language of the preview. Focusing a field of the other
+ *   language switches it, so the outlined element is the one being edited.
+ * - Viewports: Κινητό 390, Tablet 768, Desktop 1440. The page is laid out at
+ *   that width and scaled down to fit the pane. The choice is remembered per
+ *   person, in this browser.
+ * - Click-to-edit: a click on the page focuses its field (`onFocusTarget`);
+ *   the field in focus is outlined on the page (`highlight`).
  */
-import { Component, useMemo, useState, type ReactNode, type SyntheticEvent } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '../../../i18n';
-import { routes } from '../../../routeConfig';
-import { NotFoundPage } from '../../../pages/NotFoundPage';
-import { PAGE_REGISTRY } from '../../../lib/seo/registry';
-import { localizePath, type Locale } from '../../../lib/seo/locale';
-import { LocaleProvider } from '../../../lib/seo/LocaleContext';
-import { PreviewModeContext } from '../../../lib/seo/PreviewMode';
-import { PageContentOverrideProvider } from '../../../lib/cms/PageContentOverride';
+import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Monitor, Smartphone, Tablet } from 'lucide-react';
+import type { Locale } from '../../../lib/seo/locale';
+import { cmsPathValue, parseCmsPath } from '../../../lib/cms/cmsAttrs';
 import { docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
-import { editorialFamily, type EditorialFamily } from '../../../../supabase/functions/_shared/cms/pagesIndex';
-import { sanitizePreviewDoc } from './sanitizePreview';
-import { MediaResolverContext } from '../../../components/cms/MediaResolver';
-import { usePreviewMediaResolver } from './media/previewResolver';
-import { DetachedMemoryRouter } from './DetachedMemoryRouter';
+import { windowPort, type FrameMessage, type HostMessage, type HostPort } from '../../preview/protocol';
+import { InlinePreviewFrame, usePreviewTransport } from '../../preview/transport';
+import { AdminUserContext } from '../../cms/docChannel';
+import { useDebounced } from './useDebounced';
 import { t } from '../../i18n';
 
 const LOCALES: Locale[] = ['en', 'el'];
-const NOT_FOUND_PATH = '/page-not-found';
 
-type Target = { element: ReactNode; path: string };
+export const VIEWPORTS = [
+  { id: 'mobile', width: 390, icon: Smartphone },
+  { id: 'tablet', width: 768, icon: Tablet },
+  { id: 'desktop', width: 1440, icon: Monitor },
+] as const;
+export type ViewportId = (typeof VIEWPORTS)[number]['id'];
 
-/** The public page component for a docId, and its unprefixed path in `locale`. */
-function previewTarget(docId: string, locale: Locale): Target | null {
-  if (docId === 'not-found') return { element: <NotFoundPage />, path: NOT_FOUND_PATH };
-  const page = PAGE_REGISTRY.find((p) => p.id === docId);
-  if (!page) return null;
-  const slug = page.slugByLocale[locale];
-  const children = routes.find((r) => r.path === '/:locale')?.children ?? [];
-  const route = slug === '/' ? children.find((r) => r.index) : children.find((r) => r.path === slug.slice(1));
-  return route?.element ? { element: route.element, path: slug } : null;
-}
+/** How long the draft waits before it goes to the frame (typing stays smooth). */
+export const PREVIEW_SEND_MS = 120;
 
-/** The data page route of each editorial family, under /:locale. */
-const EDITORIAL_ROUTE: Record<EditorialFamily, string> = {
-  archive: 'past-contests/:slug',
-  country: 'countries/:slug',
-  hub: ':slug',
-};
+export const viewportKey = (userId: string | null | undefined) => `cms:preview-viewport:${userId ?? 'anon'}`;
 
-/** The page component of an editorial family (the hub page is the index child of its :slug route). */
-function editorialElement(family: EditorialFamily): ReactNode {
-  const children = routes.find((r) => r.path === '/:locale')?.children ?? [];
-  const route = children.find((r) => r.path === EDITORIAL_ROUTE[family]);
-  return family === 'hub' ? route?.children?.find((r) => r.index)?.element : route?.element;
-}
-
-function EditorialPreviewPage({ family, path, locale }: { family: EditorialFamily; path: string; locale: Locale }) {
-  const element = editorialElement(family);
-  if (!element) throw new Error(`no page to preview for ${family} editorial`);
-  return (
-    <DetachedMemoryRouter key={`${path}:${locale}`} path={localizePath(locale, path)}>
-      <Routes>
-        <Route path={`/:locale/${EDITORIAL_ROUTE[family]}`} element={element} />
-      </Routes>
-    </DetachedMemoryRouter>
-  );
-}
-
-type BoundaryProps = { resetKeys: unknown[]; children: ReactNode };
-
-class PreviewErrorBoundary extends Component<BoundaryProps, { error: Error | null }> {
-  state = { error: null as Error | null };
-
-  static getDerivedStateFromError(error: Error) {
-    return { error };
+function readViewport(userId: string | null | undefined): ViewportId {
+  try {
+    const v = localStorage.getItem(viewportKey(userId));
+    if (VIEWPORTS.some((p) => p.id === v)) return v as ViewportId;
+  } catch {
+    // storage blocked: the default below
   }
+  return typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop';
+}
 
-  componentDidUpdate(prev: BoundaryProps) {
-    // A new draft (or locale) gets a fresh attempt.
-    if (this.state.error && prev.resetKeys.some((k, i) => k !== this.props.resetKeys[i])) {
-      this.setState({ error: null });
-    }
-  }
-
-  render() {
-    if (this.state.error) {
-      return (
-        <div role="alert" className="m-4 rounded-lg border border-red-500/50 bg-red-500/10 p-4 text-sm text-red-200">
-          Preview error: {this.state.error.message}
-        </div>
-      );
-    }
-    return this.props.children;
+function writeViewport(userId: string | null | undefined, v: ViewportId) {
+  try {
+    localStorage.setItem(viewportKey(userId), v);
+  } catch {
+    // storage blocked: the choice lasts for this page only
   }
 }
 
-function PreviewPage({ docId, locale, path }: { docId: string; locale: Locale; path?: string | null }) {
-  const family = editorialFamily(docId);
-  if (family) {
-    if (path === null) return <p className="m-4 text-sm text-white/60">{t.media2.finding}</p>;
-    if (!path) throw new Error(`no page to preview for "${docId}" (its year or country is not listed)`);
-    return <EditorialPreviewPage family={family} path={path} locale={locale} />;
-  }
-  const target = previewTarget(docId, locale);
-  if (!target) throw new Error(`no page to preview for "${docId}"`);
-  return (
-    <DetachedMemoryRouter key={`${docId}:${locale}`} path={localizePath(locale, target.path)}>
-      {target.element}
-    </DetachedMemoryRouter>
-  );
-}
+export type FocusTarget = { docId: string; locale: string; path: string };
 
-/** Links go nowhere and forms submit nothing (e.g. the home page's create-room form). */
-function swallowLinkClick(e: SyntheticEvent) {
-  if ((e.target as Element | null)?.closest?.('a')) e.preventDefault();
-}
-function swallowSubmit(e: SyntheticEvent) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
-export default function PreviewPane({ docId, doc, path, initialLocale = 'en' }: {
+export interface PreviewPaneProps {
   docId: string;
   /** The draft document `{ en, el }`, as edited (not necessarily valid). */
   doc: unknown;
   /** Editorial docs: the unprefixed public path of the data page to show; null while it is being looked up. */
   path?: string | null;
   initialLocale?: Locale;
-}) {
+  /** The form's field labels (`en.hero.title` -> "Hero › Title (EN)"), read when the draft is sent. */
+  getLabels?: () => Record<string, string>;
+  /** The form field in focus (`en.hero.title`), outlined on the page; null for none. */
+  highlight?: string | null;
+  /** A click on the page: focus this field. */
+  onFocusTarget?: (target: FocusTarget) => void;
+  /** Doc ids whose elements are clickable (default: this doc, the header and the footer). */
+  editable?: string[];
+  /** Scroll to this doc's first element once (the footer editor). */
+  reveal?: string | null;
+}
+
+const NO_LABELS = () => ({});
+
+export default function PreviewPane({
+  docId, doc: typed, path, initialLocale = 'en', getLabels = NO_LABELS, highlight = null, onFocusTarget, editable, reveal = null,
+}: PreviewPaneProps) {
+  // The page follows the typing shortly after each keystroke, not on every one.
+  const doc = useDebounced(typed, PREVIEW_SEND_MS);
+  const transport = usePreviewTransport();
+  const me = useContext(AdminUserContext);
+  const userId = me?.userId ?? null;
   const [locale, setLocale] = useState<Locale>(initialLocale);
-  // A private i18next instance for the page's own UI strings (footer etc.).
-  const localI18n = useMemo(() => i18n.cloneInstance({ lng: locale }), [locale]);
-  // Never render the draft itself: rawHtml and hrefs are made safe on a copy.
-  const safeDoc = useMemo(() => sanitizePreviewDoc(docTypeFor(docId), doc), [docId, doc]);
-  const media = usePreviewMediaResolver(safeDoc);
+  const [viewport, setViewportState] = useState<ViewportId>(() => readViewport(userId));
+  const [port, setPort] = useState<HostPort | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [boxWidth, setBoxWidth] = useState<number | null>(null);
+  const [boxHeight, setBoxHeight] = useState<number | null>(null);
+
+  // The person may change between renders (sign-in): reread their choice.
+  useEffect(() => setViewportState(readViewport(userId)), [userId]);
+  const setViewport = (v: ViewportId) => {
+    setViewportState(v);
+    writeViewport(userId, v);
+  };
+
+  // The field in focus decides the language of the preview.
+  const highlightLocale = highlight?.split('.')[0];
+  useEffect(() => {
+    if (highlightLocale === 'en' || highlightLocale === 'el') setLocale(highlightLocale);
+  }, [highlightLocale, highlight]);
+
+  // The iframe loads once per doc; the language and the draft then travel over the bridge.
+  const src = useMemo(() => (transport.kind === 'iframe' ? transport.src(docId, initialLocale) : ''), [transport, docId, initialLocale]);
+  // The iframe's port (an inline frame hands its own over).
+  useEffect(() => {
+    if (transport.kind !== 'iframe') return;
+    setPort(windowPort<FrameMessage, HostMessage>(window, () => iframeRef.current?.contentWindow ?? null));
+    return () => setPort(null);
+  }, [transport.kind, src]);
+
+  const latest = useRef({ docId, doc, path, locale, getLabels, editable, reveal, onFocusTarget });
+  latest.current = { docId, doc, path, locale, getLabels, editable, reveal, onFocusTarget };
+
+  const sendState = useCallback(() => {
+    if (!port) return;
+    const s = latest.current;
+    port.post({
+      type: 'state',
+      docId: s.docId,
+      docType: docTypeFor(s.docId),
+      locale: s.locale,
+      doc: s.doc,
+      path: s.path,
+      labels: s.getLabels(),
+      editable: s.editable ?? [s.docId, 'site-header', 'site-footer'],
+      reveal: s.reveal,
+    });
+  }, [port]);
+
+  const target = highlight ? highlightTarget(docId, highlight) : null;
+  const latestTarget = useRef(target);
+  latestTarget.current = target;
+
+  // Messages from the frame.
+  useEffect(() => {
+    if (!port) return;
+    const off = port.listen((msg) => {
+      if (msg.type === 'ready') {
+        sendState();
+        port.post({ type: 'highlight', target: latestTarget.current });
+      } else if (msg.type === 'focus') {
+        const p = parseCmsPath(msg.target);
+        if (p) latest.current.onFocusTarget?.(p);
+      }
+    });
+    sendState();
+    return off;
+  }, [port, sendState]);
+
+  // The draft (debounced above), the language and the page path.
+  useEffect(() => {
+    sendState();
+  }, [sendState, doc, path, locale, docId, reveal]);
+
+  // The field in focus.
+  useEffect(() => {
+    port?.post({ type: 'highlight', target });
+  }, [port, target]);
+
+  // The pane's size, for the scale of the page.
+  useLayoutEffect(() => {
+    const box = boxRef.current;
+    if (!box) return;
+    const measure = () => {
+      setBoxWidth(box.clientWidth || null);
+      setBoxHeight(box.clientHeight || null);
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(box);
+    return () => ro.disconnect();
+  }, []);
+
+  const live = useMemo(() => ({ doc, locale, path }), [doc, locale, path]);
+  const width = VIEWPORTS.find((v) => v.id === viewport)!.width;
+  const scale = boxWidth ? Math.min(1, boxWidth / width) : 1;
+  const frameStyle = useMemo(() => {
+    const h = boxHeight ? boxHeight / scale : undefined;
+    const left = boxWidth && boxWidth > width ? (boxWidth - width) / 2 : 0;
+    return { width, height: h, transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: '0 0', left } as const;
+  }, [width, scale, boxWidth, boxHeight]);
 
   return (
-    <section className="flex flex-col rounded-xl border border-white/10 bg-black/20">
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2 text-xs">
-        <span className="text-white/60">{t.media2.previewBar}</span>
-        <div role="group" aria-label={t.media2.previewLang} className="flex gap-1">
-          {LOCALES.map((l) => (
-            <button
-              key={l}
-              type="button"
-              aria-pressed={l === locale}
-              onClick={() => setLocale(l)}
-              className={`rounded px-2 py-1 font-semibold ${l === locale ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white'}`}
-            >
-              {l.toUpperCase()}
-            </button>
-          ))}
+    <section className="flex flex-col rounded-stage border border-stage-line bg-stage-bg-2 overflow-hidden" data-testid="preview-host">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stage-line px-3 py-2 text-xs">
+        <span className="t-meta">{t.media2.previewBar}</span>
+        <div className="flex items-center gap-2">
+          <div role="group" aria-label={t.preview.viewports} className="flex gap-0.5 rounded-stage-sm bg-stage-bg p-0.5">
+            {VIEWPORTS.map((v) => {
+              const Icon = v.icon;
+              const on = v.id === viewport;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  aria-pressed={on}
+                  title={t.preview.viewportTitle(t.preview.viewport[v.id], v.width)}
+                  onClick={() => setViewport(v.id)}
+                  className={`inline-flex items-center gap-1 rounded px-2 py-1 font-semibold cursor-pointer ${on ? 'bg-stage-surface-2 text-stage-text' : 'text-stage-text-3 hover:text-stage-text'}`}
+                >
+                  <Icon size={14} aria-hidden />
+                  <span>{t.preview.viewport[v.id]}</span>
+                  <span className="num font-normal text-stage-text-3 hidden sm:inline">{v.width}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div role="group" aria-label={t.media2.previewLang} className="flex gap-0.5 rounded-stage-sm bg-stage-bg p-0.5">
+            {LOCALES.map((l) => (
+              <button
+                key={l}
+                type="button"
+                aria-pressed={l === locale}
+                onClick={() => setLocale(l)}
+                className={`rounded px-2 py-1 font-semibold cursor-pointer ${l === locale ? 'bg-stage-surface-2 text-stage-text' : 'text-stage-text-3 hover:text-stage-text'}`}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       <div
-        data-testid="preview-pane"
-        lang={locale}
-        className="relative overflow-auto bg-euro-gradient"
-        onClickCapture={swallowLinkClick}
-        onSubmitCapture={swallowSubmit}
+        ref={boxRef}
+        className="relative overflow-hidden bg-stage-bg h-[calc(100dvh-15rem)] min-h-[26rem]"
+        data-testid="preview-viewport"
+        data-viewport={viewport}
+        data-width={width}
       >
-        <PreviewErrorBoundary resetKeys={[docId, doc, locale, path]}>
-          <PreviewModeContext.Provider value={true}>
-            <I18nextProvider i18n={localI18n}>
-              <LocaleProvider locale={locale}>
-                <PageContentOverrideProvider docId={docId} doc={safeDoc}>
-                  <MediaResolverContext.Provider value={media}>
-                    <PreviewPage docId={docId} locale={locale} path={path} />
-                  </MediaResolverContext.Provider>
-                </PageContentOverrideProvider>
-              </LocaleProvider>
-            </I18nextProvider>
-          </PreviewModeContext.Provider>
-        </PreviewErrorBoundary>
+        {transport.kind === 'iframe' ? (
+          <iframe
+            ref={iframeRef}
+            key={src}
+            src={src}
+            title={t.preview.frameTitle}
+            className="absolute top-0 border-0 bg-stage-bg"
+            style={frameStyle}
+            onLoad={sendState}
+          />
+        ) : (
+          <div className="absolute inset-0 overflow-auto" style={{ maxWidth: width }}>
+            <InlinePreviewFrame docId={docId} live={live} onPort={setPort} />
+          </div>
+        )}
       </div>
     </section>
   );
+}
+
+/** A form field (`en.hero.title`) as the data-cms-path value of this doc. */
+function highlightTarget(docId: string, field: string): string | null {
+  const dot = field.indexOf('.');
+  if (dot < 0) return null;
+  return cmsPathValue(docId, field.slice(0, dot), field.slice(dot + 1));
 }

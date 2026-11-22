@@ -39,9 +39,22 @@ export default function FooterEditor({ column }: { column: FooterColumnKey | nul
 
   const shown = column ? [column] : [...FOOTER_COLUMN_KEYS];
 
+  // A clicked footer field this screen does not show: the screen that does.
+  const preview = useMemo(() => ({
+    reveal: true,
+    screenFor: (field: string) => {
+      const m = /^(?:en|el)\.columns\.(\d+)\./.exec(field);
+      if (!m) return column ? adminPaths.footer() : null;
+      const id = (doc.en.columns as Array<{ id: string }>)[Number(m[1])]?.id;
+      const key = FOOTER_COLUMN_KEYS.find((k) => FOOTER_COLUMN_ID[k] === id);
+      return key && key !== column ? adminPaths.footer(key) : null;
+    },
+  }), [column, doc.en.columns]);
+
   return (
     <SiteDocFrame
       draft={draft}
+      preview={preview}
       title={column ? `Υποσέλιδο · ${COLUMN_TITLE[column]}` : 'Υποσέλιδο'}
       lede={column
         ? <>Μία από τις τέσσερις στήλες στο κάτω μέρος κάθε σελίδας. <Link to={adminPaths.footer()} className="text-stage-pink-2 hover:underline">Όλο το υποσέλιδο</Link></>
@@ -52,7 +65,14 @@ export default function FooterEditor({ column }: { column: FooterColumnKey | nul
           <div className="grid gap-3 sm:grid-cols-2">
             {LOCALES.map((l) => (
               <Field key={l} label={LOCALE_NAME[l]} error={errorAt('tagline', l)}>
-                <TextInput value={doc[l].tagline} lang={l} invalid={!!errorAt('tagline', l)} onChange={(e) => setText('tagline', l, e.target.value)} />
+                <TextInput
+                  value={doc[l].tagline}
+                  lang={l}
+                  invalid={!!errorAt('tagline', l)}
+                  onChange={(e) => setText('tagline', l, e.target.value)}
+                  data-cms-field={`${l}.tagline`}
+                  data-cms-label={`Σύνθημα (${l.toUpperCase()})`}
+                />
               </Field>
             ))}
           </div>
@@ -76,6 +96,8 @@ export default function FooterEditor({ column }: { column: FooterColumnKey | nul
                   <TextInput
                     value={doc[l].columns[ci].heading}
                     lang={l}
+                    data-cms-field={`${l}.columns.${ci}.heading`}
+                    data-cms-label={`Τίτλος στήλης «${COLUMN_TITLE[key]}» (${l.toUpperCase()})`}
                     invalid={!!errorAt(`columns.${ci}.heading`, l)}
                     onChange={(e) => {
                       const v = e.target.value;
@@ -109,6 +131,8 @@ export default function FooterEditor({ column }: { column: FooterColumnKey | nul
                 <textarea
                   value={doc[l].disclaimer}
                   lang={l}
+                  data-cms-field={`${l}.disclaimer`}
+                  data-cms-label={`Σημείωση στο τέλος (${l.toUpperCase()})`}
                   rows={5}
                   aria-invalid={!!errorAt('disclaimer', l) || undefined}
                   onChange={(e) => setText('disclaimer', l, e.target.value)}

@@ -367,11 +367,23 @@ export const t = {
     missing: (ref: string) => `Το ${ref} δεν είναι στη βιβλιοθήκη πολυμέσων (διαγράφηκε;): διαλέξτε άλλο αρχείο`,
     published: (ref: string) => `${ref} (δημοσιευμένο)`,
     notRef: (ref: string) => `${ref} (δεν είναι αναφορά πολυμέσου)`,
-    previewBar: 'Προεπισκόπηση — οι σύνδεσμοι δεν λειτουργούν',
+    previewBar: 'Προεπισκόπηση · κλικ σε ένα κείμενο για επεξεργασία',
     previewLang: 'Γλώσσα προεπισκόπησης',
     finding: 'Αναζήτηση της σελίδας για προεπισκόπηση…',
     loadError2: 'Η διαχείριση δεν φορτώθηκε. Ίσως το site μόλις ενημερώθηκε.',
     runtimeError: 'Κάτι πήγε στραβά στη διαχείριση',
+  },
+
+  /** The live preview and click-to-edit (CMS P4). */
+  preview: {
+    error: 'Σφάλμα προεπισκόπησης',
+    frameTitle: 'Προεπισκόπηση της σελίδας',
+    viewports: 'Πλάτος προεπισκόπησης',
+    viewport: { mobile: 'Κινητό', tablet: 'Tablet', desktop: 'Desktop' } as Record<string, string>,
+    viewportTitle: (name: string, w: number) => `${name}: η σελίδα σε πλάτος ${w} px`,
+    field: 'Πεδίο',
+    otherDoc: (doc: string) => `${doc} · άνοιξε για επεξεργασία`,
+    badUrl: 'Αυτή η διεύθυνση προεπισκόπησης δεν είναι σωστή.',
   },
 
   contests: {

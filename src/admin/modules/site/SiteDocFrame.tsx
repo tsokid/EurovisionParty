@@ -1,7 +1,7 @@
 // The frame of a site-wide doc editor (header, footer, settings): title, where
 // the doc stands, the editor, and a sticky bar with Save and Publish. Publish
 // first says plainly that the change reaches every page of the site.
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { Globe2, History } from 'lucide-react';
 import { AdminLink, ConfirmDialog, StatusChip } from '../../ui/kit';
 import { CmsDocStatus } from '../../cms/CmsDocUi';
@@ -10,6 +10,8 @@ import { t } from '../../i18n';
 import { outcomeText } from '../contests/publish';
 import type { SiteDraft } from './useSiteDraft';
 import { docLabel } from '../../siteStructure';
+import PreviewPane from '../pages/PreviewPane';
+import { useClickToEdit } from '../../preview/useClickToEdit';
 
 const STATUS: Record<SiteDraft['status'], { tone: 'ok' | 'gold' | 'pink'; text: string }> = {
   live: { tone: 'ok', text: 'Ίδιο με το site' },
@@ -17,7 +19,30 @@ const STATUS: Record<SiteDraft['status'], { tone: 'ok' | 'gold' | 'pink'; text: 
   unsaved: { tone: 'pink', text: 'Μη αποθηκευμένες αλλαγές' },
 };
 
-export function SiteDocFrame({ draft, title, lede, children }: { draft: SiteDraft; title: string; lede: ReactNode; children: ReactNode }) {
+/** The live preview beside a site-wide doc's form (P4): the home page with this doc's draft. */
+export type SitePreview = {
+  /** Scroll the preview to this doc once (the footer sits at the bottom of the page). */
+  reveal?: boolean;
+  /** A clicked field this screen does not show (another footer column): the URL of the screen that does. */
+  screenFor?: (field: string) => string | null;
+};
+
+export function SiteDocFrame({ draft, title, lede, preview, children }: {
+  draft: SiteDraft;
+  title: string;
+  lede: ReactNode;
+  preview?: SitePreview;
+  children: ReactNode;
+}) {
+  const [tab, setTab] = useState<'edit' | 'preview'>('edit');
+  const formRef = useRef<HTMLDivElement>(null);
+  const click = useClickToEdit({
+    docId: draft.docId,
+    formRef,
+    ready: !draft.loading,
+    beforeFocus: () => setTab('edit'),
+    screenFor: preview?.screenFor,
+  });
   const [confirming, setConfirming] = useState(false);
   const [discarding, setDiscarding] = useState(false);
   const status = STATUS[draft.status];
@@ -26,7 +51,7 @@ export function SiteDocFrame({ draft, title, lede, children }: { draft: SiteDraf
   const canPublish = !busy && !blocked && draft.status !== 'live';
 
   return (
-    <div className="max-w-4xl pb-28">
+    <div className={`${preview ? 'max-w-[1600px]' : 'max-w-4xl'} pb-28`}>
       <header className="mb-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <h1 className="text-2xl font-bold text-stage-text m-0">{title}</h1>
@@ -45,7 +70,43 @@ export function SiteDocFrame({ draft, title, lede, children }: { draft: SiteDraf
         </p>
       )}
 
-      {draft.loading ? <p className="t-small">{t.common.loading}</p> : <div {...draft.cms.rootProps}>{children}</div>}
+      {draft.loading ? (
+        <p className="t-small">{t.common.loading}</p>
+      ) : preview ? (
+        <>
+          <div role="tablist" aria-label={t.editor.tabsLabel} className="flex gap-1 mb-3 xl:hidden">
+            {(['edit', 'preview'] as const).map((tb) => (
+              <button
+                key={tb}
+                type="button"
+                role="tab"
+                aria-selected={tab === tb}
+                onClick={() => setTab(tb)}
+                className={`rounded-stage-sm px-3 py-1 text-sm font-semibold cursor-pointer ${tab === tb ? 'bg-stage-surface-2 text-stage-text' : 'text-stage-text-3 hover:text-stage-text'}`}
+              >
+                {tb === 'edit' ? t.common.edit : t.common.preview}
+              </button>
+            ))}
+          </div>
+          <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:items-start xl:gap-4">
+            <div ref={formRef} data-testid="form-panel" className={`${tab === 'edit' ? 'block' : 'hidden'} xl:block min-w-0`} {...draft.cms.rootProps}>
+              {children}
+            </div>
+            <div data-testid="preview-panel" className={`${tab === 'preview' ? 'block' : 'hidden'} xl:block min-w-0 xl:sticky xl:top-20`}>
+              <PreviewPane
+                docId={draft.docId}
+                doc={draft.doc}
+                getLabels={click.getLabels}
+                highlight={click.highlight}
+                onFocusTarget={click.onFocusTarget}
+                reveal={preview.reveal ? draft.docId : null}
+              />
+            </div>
+          </div>
+        </>
+      ) : (
+        <div {...draft.cms.rootProps}>{children}</div>
+      )}
 
       <div className="fixed bottom-0 inset-x-0 lg:left-64 z-40 border-t border-stage-line bg-stage-bg/95 backdrop-blur">
         <div className="max-w-4xl px-4 sm:px-6 py-3 flex flex-wrap items-center gap-2">

@@ -39,7 +39,7 @@ describe('PreviewPane', () => {
     (doc.en.hero as Record<string, unknown>).title = 'Draft hero title XYZ';
     inAdmin(<PreviewPane docId="about" doc={doc} />);
     expect(screen.getByText('Draft hero title XYZ')).toBeInTheDocument();
-    expect(screen.getByText('Προεπισκόπηση — οι σύνδεσμοι δεν λειτουργούν')).toBeInTheDocument();
+    expect(screen.getByText('Προεπισκόπηση · κλικ σε ένα κείμενο για επεξεργασία')).toBeInTheDocument();
     expect(fetchSpy.mock.calls.some(([u]) => String(u).includes('pages/about.json'))).toBe(false);
     expect(getCachedContent('pages/about.json')).toBeUndefined();
   });
@@ -74,26 +74,26 @@ describe('PreviewPane', () => {
     expect(document.head.innerHTML).toBe(headBefore);
   });
 
-  it('shows "Preview error" for a malformed draft, without crashing the admin', () => {
+  it('shows "Σφάλμα προεπισκόπησης" for a malformed draft, without crashing the admin', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     inAdmin(<PreviewPane docId="about" doc={{ en: {}, el: {} }} />);
-    expect(screen.getByText(/^Preview error:/)).toBeInTheDocument();
+    expect(screen.getByText(/^Σφάλμα προεπισκόπησης:/)).toBeInTheDocument();
     expect(screen.getByTestId('admin')).toBeInTheDocument();
   });
 
-  it('shows "Preview error" for a placeholder the page does not supply', () => {
+  it('shows "Σφάλμα προεπισκόπησης" for a placeholder the page does not supply', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const doc = published('eurovision-night');
     const faq = doc.en.faq as { q: string }[];
     faq[0].q = 'When is {bogus}?';
     inAdmin(<PreviewPane docId="eurovision-night" doc={doc} />);
-    expect(screen.getByText(/^Preview error:.*bogus/)).toBeInTheDocument();
+    expect(screen.getByText(/^Σφάλμα προεπισκόπησης:.*bogus/)).toBeInTheDocument();
   });
 
   it('recovers once the draft is fixed', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const { rerender } = render(<PreviewPane docId="about" doc={{ en: {}, el: {} }} />);
-    expect(screen.getByText(/^Preview error:/)).toBeInTheDocument();
+    expect(screen.getByText(/^Σφάλμα προεπισκόπησης:/)).toBeInTheDocument();
     const doc = published('about');
     (doc.en.hero as Record<string, unknown>).title = 'Fixed title QRS';
     rerender(<PreviewPane docId="about" doc={doc} />);
@@ -129,7 +129,7 @@ describe('PreviewPane', () => {
 
   it('reports an unknown docId inside the pane', () => {
     render(<PreviewPane docId="nope" doc={{ en: {}, el: {} }} />);
-    expect(screen.getByText(/^Preview error:.*nope/)).toBeInTheDocument();
+    expect(screen.getByText(/^Σφάλμα προεπισκόπησης:.*nope/)).toBeInTheDocument();
   });
 
   it('can preview every site page from its published doc', () => {
@@ -137,7 +137,7 @@ describe('PreviewPane', () => {
     expect(siteDocs.length).toBeGreaterThan(15);
     for (const docId of siteDocs) {
       const { unmount } = inAdmin(<PreviewPane docId={docId} doc={published(docId)} />);
-      expect(screen.queryByText(/^Preview error:/), docId).toBeNull();
+      expect(screen.queryByText(/^Σφάλμα προεπισκόπησης:/), docId).toBeNull();
       unmount();
     }
   });
