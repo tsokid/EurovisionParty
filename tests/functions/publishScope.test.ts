@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pageCommitMessage, publishOptions, runPublish, type PublishDeps, type PreviewFile } from '../../supabase/functions/publish-content/run';
 import { commitChanges, commitFiles, gitBlobSha, revertHead, type DerivedFiles, type FileTransforms } from '../../supabase/functions/publish-content/github';
-import type { CmsDocumentRow, SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
+import type { CmsDocumentRow, MediaRow, SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
 
 const read = (p: string) => readFileSync(resolve(process.cwd(), p), 'utf8').replace(/\r\n/g, '\n');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -149,6 +149,36 @@ describe('runPublish, promote', () => {
       id: 12, status: 'ok', sha: 'c1', files: 2, error: null,
       shipped: [{ doc_id: 'site-header', updated_at: '2026-11-22T09:00:00.000Z', data: header }],
     });
+  });
+
+  it('final review M2: a promote marks the media rows the preview shipped as published', async () => {
+    const header = pageDoc('site-header');
+    const text = JSON.stringify(header, null, 2) + '\n';
+    const SHA = 'ab12cd34ef56'.padEnd(64, '0');
+    const VSHA = 'ffff0000aaaa'.padEnd(64, '1');
+    const files: PreviewFile[] = [
+      { path: 'content/pages/site-header.json', sha: await gitBlobSha(text), mode: '100644', text },
+      { path: 'public/media/ab12cd34ef56.webp', sha: 'blob-img', mode: '100644' },
+      { path: 'public/media/ab12cd34ef56-800.webp', sha: 'blob-var', mode: '100644' },
+    ];
+    const row = (over: Partial<MediaRow>): MediaRow => ({
+      id: 'img', kind: 'image', storage_path: 'img.webp', mime: 'image/webp', bytes: 10, sha256: SHA,
+      published_path: null, variant_of: null, width: 1600, height: 900, ...over,
+    });
+    const { d } = deps(base);
+    d.rpc.previewRun = vi.fn(async () => ({ id: 40, commit_sha: 'prev0', doc_ids: ['site-header'], shipped: [] }));
+    d.commitChanges = vi.fn(async () => files);
+    d.media.rows = vi.fn(async () => [
+      row({}),
+      row({ id: 'img-v', storage_path: 'img-800.webp', sha256: VSHA, variant_of: 'img' }),
+      row({ id: 'other', storage_path: 'other.webp', sha256: '9'.repeat(64) }),
+    ]);
+    const out = await runPublish(d, publishOptions({ promote: 40 }));
+    expect(out.status).toBe('ok');
+    expect(out).not.toHaveProperty('warning');
+    expect(d.media.markPublished).toHaveBeenCalledTimes(2);
+    expect(d.media.markPublished).toHaveBeenCalledWith('img', '/media/ab12cd34ef56.webp');
+    expect(d.media.markPublished).toHaveBeenCalledWith('img-v', '/media/ab12cd34ef56-800.webp');
   });
 
   it('a preview commit with no content files refuses the promote', async () => {

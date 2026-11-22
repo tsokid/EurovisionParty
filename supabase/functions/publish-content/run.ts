@@ -52,7 +52,8 @@
 import { buildSnapshotFiles, type SnapshotInput } from './snapshot.ts';
 import { cmsFiles, CmsValidationError, type CmsIssue } from './cmsFiles.ts';
 import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
-import { draftRefsLeft, imagesWithoutAlt, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
+import { draftRefsLeft, imagesWithoutAlt, MEDIA_MAX_NEW_BYTES, MediaError, promoteMarks, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
+import type { MediaRow } from './snapshot.ts';
 import type { BlobRef, CommitResult, DerivedFiles, FileTransforms } from './github.ts';
 import { appendIntent, buildIntentEntry, SEO_INTENT_FILE } from '../_shared/cms/seoIntent.ts';
 import { upgradeDocument } from '../_shared/cms/layoutUpgrade.ts';
@@ -140,6 +141,8 @@ export type PublishDeps = {
      * row is already published: its file is then not downloaded again.
      */
     publishedPaths(): Promise<ReadonlySet<string>>;
+    /** Every cms_media row (service role). Read only by a promote that ships media, to mark it published. */
+    rows?(): Promise<MediaRow[]>;
   };
   /** Clock of the Storage sweep. Default: the current time. */
   now?: () => Date;
@@ -320,7 +323,7 @@ export async function runPublish(deps: PublishDeps, options: PublishOptions = { 
 
   const status = result.sha ? 'ok' : 'noop';
   const warnings: string[] = [];
-  // A preview publishes nothing: its media rows are marked when it is promoted.
+  // A preview publishes nothing: its media rows are marked when it is promoted (promoteMarks).
   const marked = target === 'preview' ? undefined : await markPublished(deps, marks);
   if (marked) warnings.push(marked);
   const ended = await tryEnd(deps, {
@@ -350,6 +353,7 @@ const PAGE_PATH = /^content\/pages\/([a-z0-9-]+)\.json$/;
 async function promote(deps: PublishDeps, id: number, previewId: number): Promise<PublishResult> {
   let result: CommitResult;
   let shipped: ShippedDoc[] = [];
+  let mediaPaths: string[] = [];
   try {
     if (!deps.rpc.previewRun || !deps.commitChanges) throw new Error('promote is not wired');
     const preview = await deps.rpc.previewRun(previewId);
@@ -364,6 +368,7 @@ async function promote(deps: PublishDeps, id: number, previewId: number): Promis
     const versions = new Map(preview.shipped.map((s) => [s.doc_id, s.updated_at]));
     shipped = preview.doc_ids.filter((d) => d in docs).map((d) => ({ doc_id: d, updated_at: versions.get(d) ?? null, data: docs[d] }));
     const blobs = Object.fromEntries(changed.map((f) => [f.path, { sha: f.sha, mode: f.mode }]));
+    mediaPaths = changed.map((f) => f.path).filter((p) => p.startsWith('public/media/'));
     const createdAt = (deps.now ?? (() => new Date()))().toISOString();
     result = await deps.commitFiles({}, () => pageCommitMessage(preview.doc_ids, 'main'), {}, { maxNewBinaryBytes: MEDIA_MAX_NEW_BYTES }, {
       [SEO_INTENT_FILE]: (current, changedPaths) => {
@@ -377,8 +382,19 @@ async function promote(deps: PublishDeps, id: number, previewId: number): Promis
     return { status: 'error', run_id: id, sha: null, files_changed: 0, error, ...warning };
   }
   const status = result.sha ? 'ok' : 'noop';
+  const warnings: string[] = [];
+  // The preview's media is live now: mark its rows published (M2; a failure is a warning).
+  if (mediaPaths.length && deps.media.rows) {
+    try {
+      const marked = await markPublished(deps, promoteMarks(await deps.media.rows(), mediaPaths));
+      if (marked) warnings.push(marked);
+    } catch (e) {
+      warnings.push(`media rows not read: ${message(e)}`);
+    }
+  }
   const ended = await tryEnd(deps, { id, status, sha: result.sha, files: result.changed, error: null, ...(shipped.length ? { shipped } : {}) });
-  return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...ended };
+  if (ended.warning) warnings.push(ended.warning);
+  return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...(warnings.length ? { warning: warnings.join('; ') } : {}) };
 }
 
 type CommitExtra = { target?: PublishTarget; blobs?: Record<string, BlobRef>; guard?: () => Promise<void> };

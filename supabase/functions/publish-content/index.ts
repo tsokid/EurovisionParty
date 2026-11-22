@@ -35,7 +35,7 @@ import { commitChanges, commitFiles, listPaths, readFiles } from "./github.ts";
 import { pagesFromFiles } from "./cmsFiles.ts";
 import { publishOptions, runPublish, type PreviewRun, type PublishResult } from "./run.ts";
 import { collectRegisteredPaths } from "./media.ts";
-import type { SnapshotInput } from "./snapshot.ts";
+import type { MediaRow, SnapshotInput } from "./snapshot.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -188,6 +188,12 @@ Deno.serve(async (req) => {
           if (error) throw new Error(error.message);
         },
         publishedPaths: () => listPaths({ ...github, match: (path) => path.startsWith("public/media/") }),
+        async rows() {
+          const { data, error } = await service.from("cms_media")
+            .select("id, kind, storage_path, mime, bytes, sha256, published_path, variant_of, width, height");
+          if (error) throw new Error(`cms_media: ${error.message}`);
+          return (data ?? []) as MediaRow[];
+        },
         listObjects: () => listBucket(service),
         registeredPaths: () => registeredPaths(service),
         async removeObjects(names) {

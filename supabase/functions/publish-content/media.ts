@@ -162,6 +162,32 @@ function groupsWithoutDimensions(drafts: readonly CmsDocumentRow[]): string[] {
 /** /media/<sha12>.<ext>: the name a row's file is published under (sha12 = the first 12 hex of its sha256). */
 const contentName = (row: MediaRow) => `/media/${row.sha256.toLowerCase().slice(0, 12)}.${EXT[row.kind]}`;
 
+/** An image's 800 w variant goes beside it: /media/<sha12 of the image>-800.webp. */
+const variantName = (name: string) => name.replace(/\.webp$/, '-800.webp');
+
+/**
+ * The media rows a promote put live (final review M2): every row (and an
+ * image's variant) whose file is among `paths` (the repo paths the preview
+ * commit changed, public/media/...), unless it is already marked with that
+ * path. A promote ships the preview's blobs as they are, so the rows were
+ * resolved when the preview was built; this only finds them again by name.
+ */
+export function promoteMarks(rows: readonly MediaRow[], paths: Iterable<string>): Array<{ id: string; path: string }> {
+  const changed = new Set(paths);
+  const variantOf = new Map(rows.filter((r) => r.variant_of).map((r) => [r.variant_of!.toLowerCase(), r]));
+  const marks: Array<{ id: string; path: string }> = [];
+  for (const row of rows) {
+    if (row.variant_of) continue;
+    const name = contentName(row);
+    if (!changed.has(`public${name}`)) continue;
+    if (row.published_path !== name) marks.push({ id: row.id, path: name });
+    const variant = row.kind === 'image' ? variantOf.get(row.id.toLowerCase()) : undefined;
+    const vname = variantName(name);
+    if (variant && changed.has(`public${vname}`) && variant.published_path !== vname) marks.push({ id: variant.id, path: vname });
+  }
+  return marks;
+}
+
 /** The /media/<sha12>.<ext> a row was published under, if it matches its own sha (else null: publish it again). */
 function publishedName(row: MediaRow): string | null {
   const want = contentName(row);
@@ -238,7 +264,6 @@ export async function publishMedia(
   // its content name is reused: no download. The branch is read when a row
   // is published, or when the downloads would pass the cap (a file committed
   // by a run whose media_mark_published failed still counts as in the branch).
-  const variantName = (name: string) => name.replace(/\.webp$/, '-800.webp');
   let inTree: ReadonlySet<string> | null = null;
   const inBranch = (row: MediaRow) => {
     const name = contentName(row);
