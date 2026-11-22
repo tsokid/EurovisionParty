@@ -13,6 +13,7 @@ import { useMediaInfo } from '../../media/useMediaInfo';
 import type { FieldProps } from './Field';
 import { IssueList } from './IssueList';
 import { FIELD_LABEL, HELP, SMALL_BUTTON } from './styles';
+import { t } from '../../../../i18n';
 
 const PUBLISHED = /^\/media\/[0-9a-f]{12}\.(webp|mp4|vtt)$/;
 
@@ -82,7 +83,7 @@ function MediaControl({ kind, title, name, tag, value, issues, withLocale, onVal
 
   let body;
   if (!ref) {
-    body = <span className="text-xs text-white/40">No {label} chosen</span>;
+    body = <span className="text-xs text-white/40">{t.media2.noneChosen(label)}</span>;
   } else if (id && row) {
     body = (
       <div className="flex min-w-0 items-center gap-3">
@@ -99,17 +100,17 @@ function MediaControl({ kind, title, name, tag, value, issues, withLocale, onVal
     );
   } else if (id) {
     body = info.ready
-      ? <span className="text-xs text-red-300">{ref} is not in the media library (deleted?): choose another file</span>
-      : <span className="text-xs text-white/40">Loading…</span>;
+      ? <span className="text-xs text-red-300">{t.media2.missing(ref)}</span>
+      : <span className="text-xs text-white/40">{t.common.loading}</span>;
   } else if (PUBLISHED.test(ref)) {
     body = (
       <div className="flex min-w-0 items-center gap-3">
         {thumb && <img src={thumb} alt={title} className="h-16 w-28 shrink-0 rounded object-cover bg-black/40" />}
-        <span className="truncate font-mono text-xs text-white/80">{ref} (published)</span>
+        <span className="truncate font-mono text-xs text-white/80">{t.media2.published(ref)}</span>
       </div>
     );
   } else {
-    body = <span className="truncate font-mono text-xs text-red-300">{ref} (not a media reference)</span>;
+    body = <span className="truncate font-mono text-xs text-red-300">{t.media2.notRef(ref)}</span>;
   }
 
   return (
@@ -119,12 +120,12 @@ function MediaControl({ kind, title, name, tag, value, issues, withLocale, onVal
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3 rounded border border-white/15 bg-[#1a0a2e] px-2 py-1.5">
           <div className="min-w-0 flex-1">{body}</div>
           <div className="flex gap-1">
-            <button type="button" aria-label={`Choose ${label} for ${name}`} onClick={() => setPicking(true)} className={SMALL_BUTTON}>Choose…</button>
-            {ref && <button type="button" aria-label={`Clear ${name}`} onClick={() => onValue('')} className={`${SMALL_BUTTON} text-red-300`}>Clear</button>}
+            <button type="button" aria-label={t.media2.chooseFor(label, name)} onClick={() => setPicking(true)} className={SMALL_BUTTON}>{t.media2.chooseBtn}</button>
+            {ref && <button type="button" aria-label={t.media2.clear(name)} onClick={() => onValue('')} className={`${SMALL_BUTTON} text-red-300`}>{t.media2.clearBtn}</button>}
           </div>
         </div>
       </div>
-      {info.error && <p className="text-xs text-red-300">Could not load the media library: {info.error}</p>}
+      {info.error && <p className="text-xs text-red-300">{t.media2.loadError(info.error)}</p>}
       <IssueList issues={issues} withLocale={withLocale} />
       {picking && (
         <MediaPicker

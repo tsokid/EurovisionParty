@@ -14,10 +14,11 @@ import { ACCEPT, uploadMedia } from './upload';
 import { indexRows } from './useMediaInfo';
 import { formatBytes, KIND_LABEL } from './mediaFormat';
 import { SMALL_BUTTON } from '../form/fields/styles';
+import { t } from '../../../i18n';
 
 const UPLOAD_HELP: Record<MediaKind, string> = {
-  image: 'Any image up to 15 MB: saved as WebP, 1600 and 800 px wide',
-  video: 'MP4 (H.264) up to 20 MB; the poster image is chosen separately',
+  image: t.media2.helpImage,
+  video: t.media2.helpVideo,
   captions: 'WebVTT (.vtt) up to 200 KB',
 };
 
@@ -102,7 +103,7 @@ export function MediaPicker({ kind, fieldName, onPick, onClose }: Props) {
     try {
       await mediaDelete(r.id);
     } catch (e) {
-      if (mounted.current) setDeleteError(`Could not delete ${r.storage_path}: ${formatError(e)}`);
+      if (mounted.current) setDeleteError(t.media2.deleteFailed(r.storage_path, formatError(e)));
     }
     if (!mounted.current) return;
     setDeleting(null);
@@ -142,23 +143,23 @@ export function MediaPicker({ kind, fieldName, onPick, onClose }: Props) {
         ref={dialog}
         role="dialog"
         aria-modal="true"
-        aria-label={`Choose ${label} for ${fieldName}`}
+        aria-label={t.media2.chooseFor(label, fieldName)}
         tabIndex={-1}
         onKeyDown={onKeyDown}
         className="flex max-h-[85vh] w-full max-w-3xl flex-col rounded-xl border border-white/15 bg-[#1a0a2e] text-white shadow-xl outline-none"
       >
         <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
-          <h2 className="text-sm font-semibold">Choose {label}</h2>
-          <button type="button" onClick={close} disabled={uploading} className={`${SMALL_BUTTON} disabled:opacity-40`}>Close</button>
+          <h2 className="text-sm font-semibold">{t.media2.choose(label)}</h2>
+          <button type="button" onClick={close} disabled={uploading} className={`${SMALL_BUTTON} disabled:opacity-40`}>{t.common.close}</button>
         </div>
         <div className="space-y-2 border-b border-white/10 px-4 py-3">
           <label className={`${SMALL_BUTTON} inline-block ${uploading ? 'opacity-40 pointer-events-none' : ''}`}>
-            {uploading ? 'Uploading…' : `Upload new ${label}`}
+            {uploading ? t.media2.uploading : t.media2.upload(label)}
             <input
               type="file"
               accept={ACCEPT[kind]}
               disabled={uploading}
-              aria-label={`Upload new ${label}`}
+              aria-label={t.media2.upload(label)}
               className="sr-only"
               onChange={(e) => {
                 void upload(e.target.files?.[0]);
@@ -167,21 +168,21 @@ export function MediaPicker({ kind, fieldName, onPick, onClose }: Props) {
             />
           </label>
           <p className="text-xs text-white/40">{UPLOAD_HELP[kind]}</p>
-          {uploading && <p role="status" className="text-xs text-white/60">Uploading… the dialog closes when it is done</p>}
+          {uploading && <p role="status" className="text-xs text-white/60">{t.media2.uploadingWait}</p>}
           {uploadError && <p role="alert" className="text-xs text-red-300">{uploadError}</p>}
         </div>
         <div className="overflow-auto p-4">
-          {loadError && <p role="alert" className="text-sm text-red-300">Could not load the media library: {loadError}</p>}
+          {loadError && <p role="alert" className="text-sm text-red-300">{t.media2.loadError(loadError)}</p>}
           {deleteError && <p role="alert" className="mb-3 text-sm text-red-300">{deleteError}</p>}
-          {!library && !loadError && <p className="text-sm text-white/50">Loading…</p>}
-          {library && library.rows.length === 0 && <p className="text-sm text-white/50">No {label} uploaded yet.</p>}
+          {!library && !loadError && <p className="text-sm text-white/50">{t.common.loading}</p>}
+          {library && library.rows.length === 0 && <p className="text-sm text-white/50">{t.media2.none(label)}</p>}
           {library && library.rows.length > 0 && (
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
               {library.rows.map((r) => (
                 <li key={r.id} className="flex flex-col gap-1">
                   <button
                     type="button"
-                    aria-label={`Choose ${r.storage_path}`}
+                    aria-label={t.media2.chooseFile(r.storage_path)}
                     onClick={() => onPick(draftRef(r.id))}
                     className="flex w-full flex-col gap-1 rounded border border-white/10 p-2 text-left hover:border-white/40 hover:bg-white/5 cursor-pointer"
                   >
@@ -189,7 +190,7 @@ export function MediaPicker({ kind, fieldName, onPick, onClose }: Props) {
                       library.thumbs[r.id] ? (
                         <img src={library.thumbs[r.id]} alt="" width={r.width ?? undefined} height={r.height ?? undefined} loading="lazy" className="aspect-video w-full rounded object-cover bg-black/40" />
                       ) : (
-                        <span className="flex aspect-video w-full items-center justify-center rounded bg-black/40 text-xs text-white/40">No preview</span>
+                        <span className="flex aspect-video w-full items-center justify-center rounded bg-black/40 text-xs text-white/40">{t.media2.noPreview}</span>
                       )
                     ) : (
                       <span className="flex aspect-video w-full items-center justify-center rounded bg-black/40 font-mono text-xs text-white/60">
@@ -203,16 +204,16 @@ export function MediaPicker({ kind, fieldName, onPick, onClose }: Props) {
                   </button>
                   {confirming === r.id ? (
                     <div className="space-y-1 rounded border border-red-400/40 p-2">
-                      <p className="text-[11px] text-red-200">Delete this file? This cannot be undone.</p>
+                      <p className="text-[11px] text-red-200">{t.media2.confirmDelete}</p>
                       <div className="flex gap-1">
-                        <button type="button" aria-label={`Confirm delete ${r.storage_path}`} onClick={() => void remove(r)} className={`${SMALL_BUTTON} text-red-300`}>Delete</button>
-                        <button type="button" aria-label={`Cancel delete ${r.storage_path}`} onClick={() => setConfirming(null)} className={SMALL_BUTTON}>Cancel</button>
+                        <button type="button" aria-label={t.media2.confirmDeleteOf(r.storage_path)} onClick={() => void remove(r)} className={`${SMALL_BUTTON} text-red-300`}>{t.media2.delete}</button>
+                        <button type="button" aria-label={t.media2.cancelDeleteOf(r.storage_path)} onClick={() => setConfirming(null)} className={SMALL_BUTTON}>{t.common.cancel}</button>
                       </div>
                     </div>
                   ) : (
                     <button
                       type="button"
-                      aria-label={`Delete ${r.storage_path}`}
+                      aria-label={t.media2.deleteOf(r.storage_path)}
                       disabled={deleting !== null || uploading}
                       onClick={() => {
                         setDeleteError(null);
@@ -220,7 +221,7 @@ export function MediaPicker({ kind, fieldName, onPick, onClose }: Props) {
                       }}
                       className={`${SMALL_BUTTON} self-start text-red-300 disabled:opacity-40`}
                     >
-                      {deleting === r.id ? 'Deleting…' : 'Delete'}
+                      {deleting === r.id ? t.media2.deleting : t.media2.delete}
                     </button>
                   )}
                 </li>

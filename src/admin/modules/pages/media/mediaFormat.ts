@@ -1,7 +1,8 @@
 // Display helpers shared by the media picker and the media field.
 import type { MediaKind } from '../../../../../supabase/functions/_shared/cms/fields';
+import { t } from '../../../i18n';
 
-export const KIND_LABEL: Record<MediaKind, string> = { image: 'image', video: 'video', captions: 'captions file' };
+export const KIND_LABEL: Record<MediaKind, string> = { image: t.media2.kind.image, video: t.media2.kind.video, captions: t.media2.kind.captions };
 
 export function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;

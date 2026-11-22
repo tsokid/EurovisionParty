@@ -7,9 +7,10 @@
 //   rather than blaming a deploy; a reload is still the way out.
 import { Component, type ReactNode } from 'react';
 import { isChunkLoadError } from './chunkLoadError';
+import { t } from './i18n';
 
-export const ADMIN_LOAD_ERROR = 'The admin could not be loaded. The site may have just been updated.';
-export const ADMIN_RUNTIME_ERROR = 'Something went wrong in the admin';
+export const ADMIN_LOAD_ERROR: string = t.media2.loadError2;
+export const ADMIN_RUNTIME_ERROR: string = t.media2.runtimeError;
 
 type Props = { children: ReactNode; reload?: () => void };
 

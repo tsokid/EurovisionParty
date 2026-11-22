@@ -231,7 +231,7 @@ describe('Pages module: editorial groups', () => {
   it('the preview shows a wait message, not an error, while the path is looked up', () => {
     const router = createMemoryRouter([{ path: '/admin', element: <PreviewPane docId="archive-2005" doc={{ en: editorial(), el: editorial() }} path={null} /> }], { initialEntries: ['/admin'] });
     render(<RouterProvider router={router} />);
-    expect(screen.getByText('Finding the page to preview…')).toBeTruthy();
+    expect(screen.getByText('Αναζήτηση της σελίδας για προεπισκόπηση…')).toBeTruthy();
     expect(screen.queryByRole('alert')).toBeNull();
   });
 

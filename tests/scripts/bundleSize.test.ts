@@ -47,9 +47,9 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
   // Only the admin UI contains this (the unsent-draft buffer key, src/admin/cms/draftBuffer.ts).
   const ADMIN_MARKER = 'cms:unsent:';
   // The page preview (src/admin/modules/pages/PreviewPane.tsx) is admin-only too.
-  const PREVIEW_MARKER = 'Preview — links are disabled';
+  const PREVIEW_MARKER = 'preview-pane';
   // The schema form (src/admin/modules/pages/form/fields/LeafField.tsx) is admin-only too.
-  const FORM_MARKER = 'Search engines may cut this off';
+  const FORM_MARKER = 'data-cms-field';
   const mainFile = entry ? entry.file.replace(/^assets\//, '') : '';
   const mainSize = jsFiles.find((j) => j.f === mainFile)?.size ?? 0;
 

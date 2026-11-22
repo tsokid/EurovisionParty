@@ -116,16 +116,16 @@ describe('MediaPicker delete', () => {
     const confirmSpy = vi.spyOn(window, 'confirm');
     const { onPick } = renderPicker();
     const dialog = await screen.findByRole('dialog');
-    await within(dialog).findByRole('button', { name: `Choose ${IMG}.webp` });
-    fireEvent.click(within(dialog).getByRole('button', { name: `Delete ${IMG}.webp` }));
+    await within(dialog).findByRole('button', { name: `Επιλογή ${IMG}.webp` });
+    fireEvent.click(within(dialog).getByRole('button', { name: `Διαγραφή ${IMG}.webp` }));
     // Nothing deleted yet: a confirm step in the row.
     expect(h.rpc).not.toHaveBeenCalledWith('media_delete', expect.anything());
-    expect(within(dialog).getByText(/Delete this file\? This cannot be undone/)).toBeInTheDocument();
+    expect(within(dialog).getByText(/Διαγραφή αυτού του αρχείου; Δεν αναιρείται/)).toBeInTheDocument();
     await act(async () => {
-      fireEvent.click(within(dialog).getByRole('button', { name: `Confirm delete ${IMG}.webp` }));
+      fireEvent.click(within(dialog).getByRole('button', { name: `Επιβεβαίωση διαγραφής ${IMG}.webp` }));
     });
-    await waitFor(() => expect(within(dialog).queryByRole('button', { name: `Choose ${IMG}.webp` })).toBeNull());
-    expect(within(dialog).getByRole('button', { name: `Choose ${IMG2}.webp` })).toBeInTheDocument();
+    await waitFor(() => expect(within(dialog).queryByRole('button', { name: `Επιλογή ${IMG}.webp` })).toBeNull());
+    expect(within(dialog).getByRole('button', { name: `Επιλογή ${IMG2}.webp` })).toBeInTheDocument();
     expect(h.remove).toHaveBeenCalledWith('cms-media', [`${IMG}-800.webp`, `${IMG}.webp`]);
     expect(confirmSpy).not.toHaveBeenCalled();
     expect(onPick).not.toHaveBeenCalled();
@@ -134,9 +134,9 @@ describe('MediaPicker delete', () => {
   it('cancel leaves the file alone', async () => {
     renderPicker();
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(await within(dialog).findByRole('button', { name: `Delete ${IMG}.webp` }));
-    fireEvent.click(within(dialog).getByRole('button', { name: `Cancel delete ${IMG}.webp` }));
-    expect(within(dialog).queryByText(/Delete this file\?/)).toBeNull();
+    fireEvent.click(await within(dialog).findByRole('button', { name: `Διαγραφή ${IMG}.webp` }));
+    fireEvent.click(within(dialog).getByRole('button', { name: `Ακύρωση διαγραφής ${IMG}.webp` }));
+    expect(within(dialog).queryByText(/Διαγραφή αυτού του αρχείου;/)).toBeNull();
     expect(h.rpc).not.toHaveBeenCalledWith('media_delete', expect.anything());
   });
 
@@ -144,14 +144,14 @@ describe('MediaPicker delete', () => {
     h.deleteError = { message: 'media in use by about, home' };
     renderPicker();
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(await within(dialog).findByRole('button', { name: `Delete ${IMG}.webp` }));
+    fireEvent.click(await within(dialog).findByRole('button', { name: `Διαγραφή ${IMG}.webp` }));
     await act(async () => {
-      fireEvent.click(within(dialog).getByRole('button', { name: `Confirm delete ${IMG}.webp` }));
+      fireEvent.click(within(dialog).getByRole('button', { name: `Επιβεβαίωση διαγραφής ${IMG}.webp` }));
     });
     expect(await within(dialog).findByRole('alert')).toHaveTextContent(
-      `Could not delete ${IMG}.webp: media in use by about, home`,
+      `Το ${IMG}.webp δεν διαγράφηκε: media in use by about, home`,
     );
-    expect(within(dialog).getByRole('button', { name: `Choose ${IMG}.webp` })).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: `Επιλογή ${IMG}.webp` })).toBeInTheDocument();
     expect(h.remove).not.toHaveBeenCalled();
   });
 });
@@ -164,7 +164,7 @@ describe('MediaPicker while uploading', () => {
     h.uploadGate = new Promise<void>((r) => { release = r; });
     const file = new File([new Uint8Array(10)], 'clip.mp4', { type: 'video/mp4' });
     await act(async () => {
-      fireEvent.change(within(dialog).getByLabelText('Upload new video'), { target: { files: [file] } });
+      fireEvent.change(within(dialog).getByLabelText('Ανέβασμα: βίντεο'), { target: { files: [file] } });
     });
     await waitFor(() => expect(h.upload).toHaveBeenCalled());
     return release;
@@ -189,7 +189,7 @@ describe('MediaPicker while uploading', () => {
     const release = await startUpload(dialog);
     fireEvent.keyDown(dialog, { key: 'Escape' });
     fireEvent.mouseDown(dialog.parentElement!);
-    expect(within(dialog).getByRole('button', { name: 'Close' })).toBeDisabled();
+    expect(within(dialog).getByRole('button', { name: 'Κλείσιμο' })).toBeDisabled();
     expect(onClose).not.toHaveBeenCalled();
     await act(async () => {
       release();
@@ -202,9 +202,9 @@ describe('MediaPicker focus', () => {
   it('focuses the dialog, traps Tab inside it, and Escape closes it', async () => {
     const { onClose } = renderPicker();
     const dialog = await screen.findByRole('dialog');
-    await within(dialog).findByRole('button', { name: `Choose ${IMG}.webp` });
+    await within(dialog).findByRole('button', { name: `Επιλογή ${IMG}.webp` });
     expect(document.activeElement).toBe(dialog);
-    const close = within(dialog).getByRole('button', { name: 'Close' });
+    const close = within(dialog).getByRole('button', { name: 'Κλείσιμο' });
     const buttons = within(dialog).getAllByRole('button');
     const last = buttons[buttons.length - 1];
     // Shift+Tab from the first control wraps to the last, Tab from the last wraps to the first.

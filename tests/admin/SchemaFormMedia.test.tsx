@@ -105,17 +105,17 @@ describe('image widget', () => {
     expect(screen.getByLabelText('Hero › Alt text (EN)')).toHaveValue('Stage');
     expect(screen.getByLabelText('Hero › Alt text (EL)')).toHaveValue('Σκηνή');
     // The file is shared: one control, not one per locale.
-    expect(screen.getAllByRole('button', { name: /^Choose image for Hero › Image/ })).toHaveLength(1);
+    expect(screen.getAllByRole('button', { name: /^Επιλογή: εικόνα για Hero › Image/ })).toHaveLength(1);
   });
 
   it('picking a file from the library writes the same reference to both locales', async () => {
     const form = setup(schema, doc(''));
-    expect(screen.getByText('No image chosen')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Choose image for Hero › Image (EN + EL)' }));
-    const dialog = await screen.findByRole('dialog', { name: 'Choose image for Hero › Image (EN + EL)' });
+    expect(screen.getByText('Δεν έχει επιλεγεί εικόνα')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Επιλογή: εικόνα για Hero › Image (EN + EL)' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Επιλογή: εικόνα για Hero › Image (EN + EL)' });
     // Images only, no variants; thumbnails are the 800 w copies when they exist.
-    const choices = await within(dialog).findAllByRole('button', { name: /^Choose .*\.webp$/ });
-    expect(choices.map((b) => b.getAttribute('aria-label'))).toEqual([`Choose ${IMG}.webp`, `Choose ${IMG2}.webp`]);
+    const choices = await within(dialog).findAllByRole('button', { name: /^Επιλογή .*\.webp$/ });
+    expect(choices.map((b) => b.getAttribute('aria-label'))).toEqual([`Επιλογή ${IMG}.webp`, `Επιλογή ${IMG2}.webp`]);
     // Decorative thumbnail (alt=""): the button names the file.
     expect(choices[0].querySelector('img')).toHaveAttribute('src', `https://signed.test/${IMG}-800.webp`);
     fireEvent.click(choices[1]);
@@ -126,7 +126,7 @@ describe('image widget', () => {
 
   it('clear empties the reference in both locales', async () => {
     const form = setup(schema, doc(`cms-media/${IMG}`));
-    fireEvent.click(screen.getByRole('button', { name: 'Clear Hero › Image (EN + EL)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Καθαρισμός: Hero › Image (EN + EL)' }));
     expect((form.value().en.hero as { media: string }).media).toBe('');
     expect((form.value().el.hero as { media: string }).media).toBe('');
   });
@@ -144,7 +144,7 @@ describe('image widget', () => {
 
   it('a reference missing from the library says so', async () => {
     setup(schema, doc('cms-media/ffffffff-5a4d-4c2e-9f10-1234567890ab'));
-    expect(await screen.findByText(/not in the media library/)).toBeInTheDocument();
+    expect(await screen.findByText(/δεν είναι στη βιβλιοθήκη πολυμέσων/)).toBeInTheDocument();
   });
 });
 
@@ -154,12 +154,12 @@ describe('media picker', () => {
     vi.spyOn(crypto.subtle, 'digest').mockResolvedValue(new Uint8Array(32).buffer);
     const schema = group({ clip: video({ label: 'Clip' }) });
     const form = setup(schema, { en: { clip: { media: '', poster: '', autoplay: false } }, el: { clip: { media: '', poster: '', autoplay: false } } });
-    fireEvent.click(screen.getByRole('button', { name: 'Choose video for Clip › Video (EN + EL)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Επιλογή: βίντεο για Clip › Video (EN + EL)' }));
     const dialog = await screen.findByRole('dialog');
-    expect(await within(dialog).findByRole('button', { name: `Choose ${VID}.mp4` })).toBeInTheDocument();
+    expect(await within(dialog).findByRole('button', { name: `Επιλογή ${VID}.mp4` })).toBeInTheDocument();
     const file = new File([new Uint8Array(10)], 'clip.mp4', { type: 'video/mp4' });
     await act(async () => {
-      fireEvent.change(within(dialog).getByLabelText('Upload new video'), { target: { files: [file] } });
+      fireEvent.change(within(dialog).getByLabelText('Ανέβασμα: βίντεο'), { target: { files: [file] } });
     });
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(h.upload).toHaveBeenCalledWith(`${NEW}.mp4`);
@@ -171,11 +171,11 @@ describe('media picker', () => {
   it('shows an upload error and stays open', async () => {
     const schema = group({ clip: video({ label: 'Clip' }) });
     setup(schema, { en: { clip: { media: '', poster: '', autoplay: false } }, el: { clip: { media: '', poster: '', autoplay: false } } });
-    fireEvent.click(screen.getByRole('button', { name: 'Choose video for Clip › Video (EN + EL)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Επιλογή: βίντεο για Clip › Video (EN + EL)' }));
     const dialog = await screen.findByRole('dialog');
     const file = new File([new Uint8Array(10)], 'clip.webm', { type: 'video/webm' });
     await act(async () => {
-      fireEvent.change(within(dialog).getByLabelText('Upload new video'), { target: { files: [file] } });
+      fireEvent.change(within(dialog).getByLabelText('Ανέβασμα: βίντεο'), { target: { files: [file] } });
     });
     expect(await within(dialog).findByRole('alert')).toHaveTextContent('Could not upload clip.webm: only MP4 (H.264) video is accepted');
     expect(h.upload).not.toHaveBeenCalled();
@@ -184,7 +184,7 @@ describe('media picker', () => {
   it('Escape closes it without changing anything', async () => {
     const schema = group({ hero: image({ label: 'Hero' }) });
     const form = setup(schema, { en: { hero: { media: '', alt: '' } }, el: { hero: { media: '', alt: '' } } });
-    fireEvent.click(screen.getByRole('button', { name: 'Choose image for Hero › Image (EN + EL)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Επιλογή: εικόνα για Hero › Image (EN + EL)' }));
     fireEvent.keyDown(await screen.findByRole('dialog'), { key: 'Escape' });
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(form.value().en.hero).toEqual({ media: '', alt: '' });

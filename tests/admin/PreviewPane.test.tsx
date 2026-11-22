@@ -39,7 +39,7 @@ describe('PreviewPane', () => {
     (doc.en.hero as Record<string, unknown>).title = 'Draft hero title XYZ';
     inAdmin(<PreviewPane docId="about" doc={doc} />);
     expect(screen.getByText('Draft hero title XYZ')).toBeInTheDocument();
-    expect(screen.getByText('Preview — links are disabled')).toBeInTheDocument();
+    expect(screen.getByText('Προεπισκόπηση — οι σύνδεσμοι δεν λειτουργούν')).toBeInTheDocument();
     expect(fetchSpy.mock.calls.some(([u]) => String(u).includes('pages/about.json'))).toBe(false);
     expect(getCachedContent('pages/about.json')).toBeUndefined();
   });
