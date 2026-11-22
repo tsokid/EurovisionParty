@@ -10,19 +10,21 @@ import type {
 import type { WinnerRow } from '../src/lib/winners';
 import { QUESTIONS } from '../src/lib/questions';
 import contest2026 from '../tests/fixtures/content-live-hub/contests/2026.json';
+import contest2025 from '../tests/fixtures/content-live-hub/contests/2025.json';
+import { scorePredictions } from '../src/lib/scoringEngine';
 
 const ROOM_ID = 'room-design';
 const NOW = Date.now();
 const iso = (minsAgo: number) => new Date(NOW - minsAgo * 60_000).toISOString();
 
 // ── Room ─────────────────────────────────────────────────────────────
-export function makeRoom(phase: RoomPhase): Room {
+export function makeRoom(phase: RoomPhase, year = 2026): Room {
   return {
     id: ROOM_ID,
     code: 'DESIGN',
     host_id: 'user-me',
     host_name: 'Ελένη',
-    year: 2026,
+    year,
     phase,
     max_players: 20,
     quiz_rounds: 3,
@@ -182,6 +184,36 @@ export const PREDICTION_SUBMITTED = prediction(ME_ID, MY_TOP5, MY_WORST5, false)
  * PredictionsResultsScreen (which reads only top5/worst5/*_points) is the view.
  */
 export const PREDICTION_SCORED = { ...prediction(ME_ID, MY_TOP5, MY_WORST5, true, 100, 40), scored_at: null };
+
+// ── Task 6: lineups with a given finalist count ─────────────────────
+/**
+ * Predictions fixtures for one year's grand final: 2025 has 26 finalists
+ * (Worst 5 = 22–26), 2026 has 25 (21–25). Same pick pattern as above:
+ * Top 5 two exact + two right-list; Worst 5 one exact + two right-list.
+ */
+export function lineup(year: 2025 | 2026) {
+  const src = (year === 2025 ? contest2025 : contest2026) as { entries: ContestEntry[] };
+  const fin = src.entries.filter((e) => e.in_final).sort((a, b) => (a.final_place ?? 99) - (b.final_place ?? 99));
+  const n = fin.length;
+  const at = (p: number) => fin[p - 1].iso;
+  const entries = fin.map((e) => ({
+    year, in_final: true, iso: e.iso, name_en: e.name_en, name_el: e.name_el, artist: e.artist, song: e.song,
+    final_running_order: e.final_running_order ?? e.final_place, final_place: e.final_place,
+    total_points: e.total_points, jury_points: e.jury_points, televote_points: e.televote_points,
+  }));
+  const top5 = [at(1), at(3), at(2), at(7), at(5)];
+  // worst5[0] = predicted last place (the scoring's order).
+  const worst5 = [at(n), at(n - 2), at(n - 6), at(n - 1), at(n - 10)];
+  const score = scorePredictions(top5, worst5, fin.map((e) => e.iso));
+  return {
+    n,
+    entries,
+    entriesNoResults: entries.map((e) => ({ ...e, final_place: null, total_points: null, jury_points: null, televote_points: null })),
+    partial: prediction(ME_ID, top5.slice(0, 3), worst5.slice(0, 2), false),
+    full: prediction(ME_ID, top5, worst5, false),
+    scored: { ...prediction(ME_ID, top5, worst5, true, score.top5Points, score.worst5Points), scored_at: null },
+  };
+}
 
 // ── Quiz ─────────────────────────────────────────────────────────────
 export const QUIZ_QUESTION_IDS = QUESTIONS.slice(0, 10).map((q) => q.id);

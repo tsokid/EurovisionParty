@@ -4,6 +4,11 @@ export interface PointsChipProps {
   points: number;
   /** Why the points were given, e.g. "4s", "σωστή απάντηση", "κλοπή". */
   reason?: string;
+  /**
+   * Colour override. Default: gains ok (green), losses bad (red), zero
+   * neutral. Prediction hits use gold (+50) and pink (+20), per motion #2.
+   */
+  tone?: 'gold' | 'pink';
   className?: string;
 }
 
@@ -15,13 +20,13 @@ export function formatPoints(points: number): string {
 }
 
 /**
- * "+N · reason" chip for quiz and duel answers. Gains are green (ok),
- * losses red (bad), zero neutral. Motion is added by the screens using it.
+ * "+N · reason" chip for quiz and duel answers and prediction picks.
+ * Motion is added by the screens using it.
  */
-export function PointsChip({ points, reason, className }: PointsChipProps) {
-  const tone = points > 0 ? 'chip-ok' : points < 0 ? 'chip-bad' : null;
+export function PointsChip({ points, reason, tone, className }: PointsChipProps) {
+  const toneClass = tone ? `chip-${tone}` : points > 0 ? 'chip-ok' : points < 0 ? 'chip-bad' : null;
   return (
-    <span className={clsx('chip', tone, className)}>
+    <span className={clsx('chip', toneClass, className)}>
       <span className="num">{formatPoints(points)}</span>
       {reason && <span>· {reason}</span>}
     </span>

@@ -175,15 +175,52 @@ export function RoomPage() {
     );
   }
 
+  // Exit flow (unchanged): choice modal → Visit other rooms, or Exit game
+  // → confirmation. Wired into the lobby as well as the active phases.
+  const openExit = () => setShowChoiceModal(true);
+  const exitModals = (
+    <>
+      {/* Exit choice: Visit Other Rooms OR Exit Game */}
+      {showChoiceModal && (
+        <ExitChoiceModal
+          onVisitOtherRooms={async () => {
+            setShowChoiceModal(false);
+            await leaveRoom('away');
+            navigate('/', { replace: true });
+          }}
+          onExitGame={() => {
+            setShowChoiceModal(false);
+            setShowExitModal(true);
+          }}
+          onCancel={() => setShowChoiceModal(false)}
+        />
+      )}
+
+      {/* Exit Game confirmation */}
+      {showExitModal && (
+        <ExitGameModal
+          onConfirm={async () => {
+            setShowExitModal(false);
+            await leaveRoom('exit');
+            navigate('/', { replace: true });
+          }}
+          onCancel={() => setShowExitModal(false)}
+        />
+      )}
+    </>
+  );
+
   // Lobby phase — game bar + phase strip; the desktop rail shows every
   // section locked; no mobile tab bar (the Start bar sits there instead).
+  // Exit is the same existing flow as in the other phases.
   if (currentRoom.phase === 'lobby') {
     return (
       <>
-        <AppShell showHeader showNav showTabs={false} phase="lobby">
+        <AppShell showHeader showNav showTabs={false} phase="lobby" onExitPress={openExit}>
           <LobbyScreen onAdvancePhase={async () => { if (currentRoom) await advancePhase(currentRoom.id); }} />
         </AppShell>
         {banner}
+        {exitModals}
       </>
     );
   }
@@ -247,7 +284,7 @@ export function RoomPage() {
         showHeader
         showNav
         phase={currentRoom.phase}
-        onExitPress={() => setShowChoiceModal(true)}
+        onExitPress={openExit}
       >
         {renderActiveTab()}
       </AppShell>
@@ -266,33 +303,7 @@ export function RoomPage() {
 
       {banner}
 
-      {/* Exit choice: Visit Other Rooms OR Exit Game */}
-      {showChoiceModal && (
-        <ExitChoiceModal
-          onVisitOtherRooms={async () => {
-            setShowChoiceModal(false);
-            await leaveRoom('away');
-            navigate('/', { replace: true });
-          }}
-          onExitGame={() => {
-            setShowChoiceModal(false);
-            setShowExitModal(true);
-          }}
-          onCancel={() => setShowChoiceModal(false)}
-        />
-      )}
-
-      {/* Exit Game confirmation */}
-      {showExitModal && (
-        <ExitGameModal
-          onConfirm={async () => {
-            setShowExitModal(false);
-            await leaveRoom('exit');
-            navigate('/', { replace: true });
-          }}
-          onCancel={() => setShowExitModal(false)}
-        />
-      )}
+      {exitModals}
     </>
   );
 }

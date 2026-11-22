@@ -1,61 +1,94 @@
 // src/components/results/VotingLiveScreen.tsx
-// Player-facing screen during the voting_live phase.
-// Eurovision is broadcasting points right now; predictions are
-// already locked. Players just wait for finalization.
+// Player-facing Predictions tab during the voting_live phase (boards
+// voting-after-{m,d}). Predictions are locked; this shows the voting-live
+// state and the player's own locked Top 5 + Worst 5. There is no live jury
+// or televote feed in the app, so no provisional scores are shown.
 
-import { motion } from 'framer-motion';
-import { Radio, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ScreenContainer from '../layout/ScreenContainer';
-import Card from '../ui/Card';
+import { Lock, Radio } from 'lucide-react';
+import clsx from 'clsx';
+import { useGameStore } from '../../stores/gameStore';
+import { useParticipants } from '../../hooks/useParticipants';
+import { supabase } from '../../lib/supabase';
+import { PicksLists, useSealMoment } from '../predictions/PicksSummary';
+
+interface LockedPrediction {
+  top5: string[];
+  worst5: string[];
+}
 
 export default function VotingLiveScreen() {
   const { t } = useTranslation();
+  const { room, player } = useGameStore();
+  const { participants, byId, loading: loadingParticipants } = useParticipants(room?.year);
+  const [pred, setPred] = useState<LockedPrediction | null>(null);
+  const [loadingPred, setLoadingPred] = useState(true);
+
+  useEffect(() => {
+    if (!room || !player) { setLoadingPred(false); return; }
+    let cancelled = false;
+    supabase
+      .from('predictions')
+      .select('top5, worst5')
+      .eq('room_id', room.id)
+      .eq('player_id', player.id)
+      .maybeSingle()
+      .then(
+        ({ data }) => {
+          if (cancelled) return;
+          setPred((data as LockedPrediction | null) ?? null);
+          setLoadingPred(false);
+        },
+        () => { if (!cancelled) setLoadingPred(false); },
+      );
+    return () => { cancelled = true; };
+  }, [room?.id, player?.id]);
+
+  const hasPicks = !!pred && ((pred.top5?.length ?? 0) > 0 || (pred.worst5?.length ?? 0) > 0);
+  const play = useSealMoment(hasPicks && room ? room.id : null);
+  const loading = loadingPred || loadingParticipants;
 
   return (
-    <ScreenContainer>
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col gap-5"
-      >
-        <Card className="py-7 sm:py-9 text-center">
-          {/* Pulsing live dot */}
-          <div className="flex justify-center mb-4">
-            <motion.div
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-euro-pink to-euro-purple flex items-center justify-center shadow-[0_0_40px_rgba(236,72,153,0.55)]"
-              animate={{ scale: [1, 1.04, 1] }}
-              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-            >
-              <Radio className="w-10 h-10 text-white" strokeWidth={2.4} />
-            </motion.div>
+    <div className="pk pk-done">
+      <section className="card-hero vt-hero">
+        <div className="vt-hero-top">
+          <span className="vt-ico" aria-hidden="true"><Radio strokeWidth={2.4} /></span>
+          <div>
+            <span className="chip chip-live"><span className="dot" aria-hidden="true" />{t('voting.livePill')}</span>
+            <h1 className="vt-title">{t('voting.heading')}</h1>
           </div>
+        </div>
+        <p className="t-small">{t('voting.body')}</p>
+      </section>
 
-          <span className="inline-flex items-center gap-2 rounded-full bg-euro-pink/15 border border-euro-pink/40 px-3 py-1 text-xs sm:text-sm font-bold tracking-[0.18em] text-euro-pink">
-            <span className="w-1.5 h-1.5 rounded-full bg-euro-pink animate-pulse" aria-hidden />
-            {t('voting.livePill', { defaultValue: 'VOTING LIVE' })}
-          </span>
+      {loading ? (
+        <div className="pk-loading" role="status" aria-label={t('pick.loading')}>
+          <span className="lb-spinner" aria-hidden="true" />
+        </div>
+      ) : hasPicks ? (
+        <section className={clsx('vt-sec', play && 'play')} aria-labelledby="vt-picks-h">
+          <div className="vt-sec-h">
+            <svg className="vt-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <g className="vt-lock-shackle"><path d="M8 11V8a4 4 0 0 1 8 0v3" /></g>
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+            </svg>
+            <h2 id="vt-picks-h" className="t-eyebrow">{t('pick.yours')}</h2>
+            <span className="pk-stamp" aria-hidden="true">{t('pick.stamp')}</span>
+          </div>
+          <PicksLists top5={pred!.top5 ?? []} worst5={pred!.worst5 ?? []} n={participants.length} byId={byId} locked />
+          <p className="t-meta">{t('pick.scoring')}</p>
+        </section>
+      ) : (
+        <section className="card pk-closed">
+          <p className="t-small">{t('pick.noneSubmitted')}</p>
+        </section>
+      )}
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold mt-3 text-white">
-            {t('voting.heading', { defaultValue: 'Eurovision is voting…' })}
-          </h2>
-          <p className="text-sm sm:text-base text-white/65 mt-2 max-w-md mx-auto">
-            {t('voting.body', {
-              defaultValue:
-                'Predictions are locked. Sit tight while the jury and televote points come in. Final results land here as soon as scoring wraps.',
-            })}
-          </p>
-        </Card>
-
-        <Card className="py-4 px-4 text-center">
-          <Sparkles className="w-5 h-5 mx-auto text-euro-gold mb-2" strokeWidth={2.4} />
-          <p className="text-sm sm:text-base text-white/75">
-            {t('voting.footer', {
-              defaultValue: "Watch the show. We will show you who won, who got it right, and your final score.",
-            })}
-          </p>
-        </Card>
-      </motion.div>
-    </ScreenContainer>
+      <section className="card vt-note">
+        <Lock aria-hidden="true" strokeWidth={2} />
+        <p className="t-small">{t('voting.tabsNote')}</p>
+      </section>
+    </div>
   );
 }

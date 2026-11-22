@@ -43,6 +43,12 @@ interface Scenario {
    *  realtime update would (store + fake DB), to show the phase banner. */
   phaseChangeTo?: RoomPhase;
   phaseChangeAfterMs?: number;
+  /** Task 6: a real grand-final lineup (2025 = 26 finalists, 2026 = 25) and
+   *  which saved prediction the player has. */
+  lineup?: 2025 | 2026;
+  pick?: 'none' | 'partial' | 'full' | 'scored';
+  /** Click this button (accessible name) once the screen has loaded. */
+  autoClick?: string;
   note?: string;
 }
 
@@ -89,6 +95,17 @@ const SCENARIOS: Scenario[] = [
   { id: 'leaderboard', label: 'Leaderboard', render: 'room', phase: 'predictions_open', tab: 'leaderboard' },
   { id: 'intel', label: 'Intel market', render: 'room', phase: 'predictions_open', tab: 'intel' },
   { id: 'final-results', label: 'Final results (predictions)', render: 'room', phase: 'final', tab: 'predictions', prediction: F.PREDICTION_SCORED, dismissCrown: true },
+  // ── Task 6: predictions, voting, prediction results (26 finalists; *-25 = 25) ──
+  { id: 'pk-empty', label: 'Predictions · empty (26 finalists)', render: 'room', phase: 'predictions_open', tab: 'predictions', lineup: 2025, pick: 'none', note: 'Redesign Task 6: tap-to-assign, Worst 5 = 22–26.' },
+  { id: 'pk-empty-25', label: 'Predictions · empty (25 finalists)', render: 'room', phase: 'predictions_open', tab: 'predictions', lineup: 2026, pick: 'none', note: 'Worst 5 = 21–25.' },
+  { id: 'pk-partial', label: 'Predictions · partial 5/10 (26)', render: 'room', phase: 'predictions_open', tab: 'predictions', lineup: 2025, pick: 'partial' },
+  { id: 'pk-full', label: 'Predictions · full, still editable (26)', render: 'room', phase: 'predictions_open', tab: 'predictions', lineup: 2025, pick: 'full', autoClick: 'Αλλαγή προβλέψεων', note: 'Saved 10/10, reopened for changes.' },
+  { id: 'pk-submitted', label: 'Predictions · submitted summary (26)', render: 'room', phase: 'predictions_open', tab: 'predictions', lineup: 2025, pick: 'full' },
+  { id: 'pk-locked', label: 'Predictions · locked / sealed (26)', render: 'predictions-locked', phase: 'voting_live', lineup: 2025, pick: 'full', note: 'PredictionsScreen outside predictions_open (lock snap + stamp).' },
+  { id: 'voting-picks', label: 'Voting live with locked picks (26)', render: 'room', phase: 'voting_live', tab: 'predictions', lineup: 2025, pick: 'full' },
+  { id: 'voting-picks-25', label: 'Voting live with locked picks (25)', render: 'room', phase: 'voting_live', tab: 'predictions', lineup: 2026, pick: 'full' },
+  { id: 'results-breakdown', label: 'Prediction results breakdown (26)', render: 'room', phase: 'final', tab: 'predictions', lineup: 2025, pick: 'scored', dismissCrown: true },
+  { id: 'results-breakdown-25', label: 'Prediction results breakdown (25)', render: 'room', phase: 'final', tab: 'predictions', lineup: 2026, pick: 'scored', dismissCrown: true },
   { id: 'winners-crown', label: 'Winner crown reveal', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED },
   { id: 'winners', label: 'Winners carousel', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED, dismissCrown: true },
   { id: 'avatars', label: 'Avatar set (96px, 32px, <Avatar>)', render: 'avatars', phase: 'lobby', note: 'Redesign Task 4: src/components/stage/avatars registry.' },
@@ -105,7 +122,9 @@ function seed(s: Scenario) {
     localStorage.removeItem('europarty_rooms');
   } catch { /* ignore */ }
 
-  const room = F.makeRoom(s.phase);
+  const room = F.makeRoom(s.phase, s.lineup ?? 2026);
+  const L = s.lineup ? F.lineup(s.lineup) : null;
+  const pickRow = L && s.pick && s.pick !== 'none' ? L[s.pick] : null;
   const players = s.players ? s.players() : F.withAvatars(F.makePlayers(s.phase));
   const me = players.find((p) => p.id === F.ME_ID)!;
   const final = s.phase === 'final';
@@ -114,8 +133,10 @@ function seed(s: Scenario) {
   const tables: FakeTables = {
     get rooms() { return [F.ROOM_ROW_REF.current as unknown as Record<string, unknown>]; },
     players,
-    predictions: s.prediction ? [s.prediction as Record<string, unknown>] : [],
-    entries_with_names: final ? F.ENTRIES : F.ENTRIES_NO_RESULTS,
+    predictions: L
+      ? (pickRow ? [pickRow as unknown as Record<string, unknown>] : [])
+      : s.prediction ? [s.prediction as Record<string, unknown>] : [],
+    entries_with_names: L ? (final ? L.entries : L.entriesNoResults) : final ? F.ENTRIES : F.ENTRIES_NO_RESULTS,
     current_participants: F.ENTRIES_NO_RESULTS,
     duels: F.DUELS,
     notifications: F.NOTIFICATIONS,
@@ -166,6 +187,19 @@ function PhaseFlip({ to, afterMs }: { to: RoomPhase; afterMs: number }) {
   return null;
 }
 
+function AutoClick({ name }: { name: string }) {
+  useEffect(() => {
+    let tries = 0;
+    const id = setInterval(() => {
+      const el = [...document.querySelectorAll<HTMLButtonElement>('button')].find((b) => b.textContent?.trim() === name);
+      if (el) { el.click(); clearInterval(id); }
+      if (++tries > 60) clearInterval(id);
+    }, 100);
+    return () => clearInterval(id);
+  }, [name]);
+  return null;
+}
+
 function DismissCrown() {
   useEffect(() => {
     let tries = 0;
@@ -197,7 +231,7 @@ function Screen({ s }: { s: Scenario }): ReactNode {
       return (
         <MemoryRouter initialEntries={['/room/DESIGN']}>
           <Routes>
-            <Route path="/room/:roomCode" element={<><RoomPage />{s.dismissCrown && <DismissCrown />}{s.phaseChangeTo && <PhaseFlip to={s.phaseChangeTo} afterMs={s.phaseChangeAfterMs ?? 1500} />}</>} />
+            <Route path="/room/:roomCode" element={<><RoomPage />{s.dismissCrown && <DismissCrown />}{s.autoClick && <AutoClick name={s.autoClick} />}{s.phaseChangeTo && <PhaseFlip to={s.phaseChangeTo} afterMs={s.phaseChangeAfterMs ?? 1500} />}</>} />
             <Route path="*" element={<p style={{ color: 'white', padding: 24 }}>Navigated away from the room (gallery).</p>} />
           </Routes>
         </MemoryRouter>

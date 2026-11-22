@@ -1,34 +1,34 @@
-import { useState, useCallback, useEffect } from 'react';
+// src/components/predictions/PredictionsScreen.tsx
+//
+// In-game Top 5 + Worst 5 picker (boards gpredictions-after-{m,d};
+// pick mode A "tap-to-assign" from proto-predictions-{m,d}).
+//
+// Data and rules are unchanged: the same `predictions` load, the same
+// upsert on submit (only with all 10 slots filled), editable only while
+// room.phase === 'predictions_open'. The pick mode lives in
+// src/lib/predictionSlots.ts, so another mode only swaps handlers here.
+
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  TouchSensor,
-  KeyboardSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  DragOverlay,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { ArrowDown, ArrowUp, Check, X } from 'lucide-react';
 import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
 import { useParticipants } from '../../hooks/useParticipants';
 import { getLocalizedCountryName } from '../../lib/countryLocale';
 import { compareText } from '../../lib/seo/textSort';
 import { supabase } from '../../lib/supabase';
+import {
+  TOP_N, WORST_N, clearSlot, filledCount, findSlot, indexForRow, isComplete, moveRow, nextEmpty,
+  placeOf, placesFor, savedFromSlots, slotsFromSaved, tapCountry, worstRange,
+  type ListId, type SlotRef, type Slots,
+} from '../../lib/predictionSlots';
+import { Flag } from '../stage';
 import type { Country } from '../../lib/types';
+import ProgressRing from './ProgressRing';
+import { launchFlag, useLandingFlag } from './flagFlight';
+import { PicksLists, SealedHeader, useSealMoment } from './PicksSummary';
 
-const TOP_N = 5;
-const WORST_N = 5;
+const TOTAL = TOP_N + WORST_N;
 
 interface ScoredPrediction {
   top5: string[];
@@ -38,391 +38,101 @@ interface ScoredPrediction {
   scored_at: string | null;
 }
 
-// ── Ordinal helper ──────────────────────────────────────────────────────────
-function ord(n: number): string {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
-}
+type Sort = 'az' | 'za' | 'order';
 
-// ── Rectangular flag image (replaces HeartFlag — user requested) ────────────
-function FlagImg({ id, size = 40, className }: { id: string; size?: number; className?: string }) {
-  return (
-    <img
-      src={`https://flagcdn.com/w40/${id.toLowerCase()}.png`}
-      alt=""
-      loading="lazy"
-      width={size}
-      height={Math.round(size * 0.75)}
-      className={clsx('object-cover rounded-[3px] flex-shrink-0 shadow-[0_1px_4px_rgba(0,0,0,0.5)]', className)}
-      style={{ width: size, height: Math.round(size * 0.75) }}
-      onError={(e) => { (e.target as HTMLImageElement).style.visibility = 'hidden'; }}
-    />
-  );
-}
-
-// ── Slot row (inside zone panel) ────────────────────────────────────────────
+// ── Slot row ─────────────────────────────────────────────────────────
 interface SlotRowProps {
-  id: string;
+  list: ListId;
+  row: number;
+  place: number | null;
   country: Country | undefined;
-  pos: number;
-  zone: 'top' | 'worst';
-  onRemove: () => void;
-  onReplace?: () => void;
-  armed?: boolean;
-  ghost?: boolean;
-  canMoveUp?: boolean;
-  canMoveDown?: boolean;
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
+  iso: string | null;
+  next: boolean;
+  onClear: () => void;
+  onActivate: () => void;
+  onMove: (dir: -1 | 1) => void;
 }
-function SlotRow({ id, country, pos, zone, onRemove, onReplace, armed, ghost, canMoveUp, canMoveDown, onMoveUp, onMoveDown }: SlotRowProps) {
-  if (!country) return null;
-  const label = ord(pos);
+
+function SlotRow({ list, row, place, country, iso, next, onClear, onActivate, onMove }: SlotRowProps) {
+  const { t } = useTranslation();
+  const flagRef = useLandingFlag<HTMLSpanElement>(iso);
+  const listName = t(list === 'top' ? 'pick.top5' : 'pick.worst5');
+  const name = country ? getLocalizedCountryName(country) : iso ?? '';
+  const count = list === 'top' ? TOP_N : WORST_N;
+
+  if (!iso) {
+    return (
+      <li className={clsx('pk-slot empty', list === 'top' ? 't' : 'w', next && 'next')}>
+        <button
+          type="button"
+          className="pk-slot-main"
+          onClick={onActivate}
+          aria-label={t('pick.slotEmptyAria', { list: listName, place: place ?? '' })}
+        >
+          <span className="num pk-slot-n">{place ?? ''}</span>
+          <span className="pk-slot-empty">{t(next ? 'pick.nextSlot' : 'pick.emptySlot')}</span>
+        </button>
+      </li>
+    );
+  }
   return (
-    <div className={clsx(
-      'flex items-center gap-1.5 px-2 py-1.5 rounded-lg border select-none transition-all',
-      zone === 'top'
-        ? 'bg-[rgba(255,209,102,0.1)] border-[rgba(255,209,102,0.4)]'
-        : 'bg-[rgba(255,77,109,0.1)] border-[rgba(255,77,109,0.4)]',
-      armed && (zone === 'top'
-        ? 'ring-2 ring-[#FFD166] ring-offset-2 ring-offset-[#120828] cursor-pointer hover:bg-[rgba(255,209,102,0.2)]'
-        : 'ring-2 ring-[#FF4D6D] ring-offset-2 ring-offset-[#120828] cursor-pointer hover:bg-[rgba(255,77,109,0.2)]'),
-      ghost && 'opacity-0',
-    )}
-    onClick={armed && onReplace ? onReplace : undefined}
-    role={armed ? 'button' : undefined}
-    aria-label={armed ? `Replace ${label} place with selected country` : undefined}
-    >
-      {/* Up/Down arrows */}
-      {!armed && (
-        <div className="flex flex-col gap-0.5 shrink-0">
-          <button
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => { e.stopPropagation(); onMoveUp?.(); }}
-            disabled={!canMoveUp}
-            className={clsx(
-              'w-4 h-4 rounded flex items-center justify-center text-[9px] leading-none transition-colors',
-              canMoveUp
-                ? (zone === 'top' ? 'text-[#FFD166] hover:bg-[rgba(255,209,102,0.3)]' : 'text-[#FF4D6D] hover:bg-[rgba(255,77,109,0.3)]')
-                : 'text-white/15 cursor-not-allowed',
-            )}
-            aria-label="Move up"
-          >▲</button>
-          <button
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => { e.stopPropagation(); onMoveDown?.(); }}
-            disabled={!canMoveDown}
-            className={clsx(
-              'w-4 h-4 rounded flex items-center justify-center text-[9px] leading-none transition-colors',
-              canMoveDown
-                ? (zone === 'top' ? 'text-[#FFD166] hover:bg-[rgba(255,209,102,0.3)]' : 'text-[#FF4D6D] hover:bg-[rgba(255,77,109,0.3)]')
-                : 'text-white/15 cursor-not-allowed',
-            )}
-            aria-label="Move down"
-          >▼</button>
-        </div>
-      )}
-      <span className={clsx(
-        'font-black text-[1rem] leading-none w-7 text-right shrink-0 tabular-nums',
-        zone === 'top' ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
-      )}>{label}</span>
-      <FlagImg id={id} size={24} />
-      <span className="text-[11px] font-bold text-white flex-1 truncate">{getLocalizedCountryName(country)}</span>
+    <li className={clsx('pk-slot filled', list === 'top' ? 't' : 'w')}>
       <button
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={(e) => { e.stopPropagation(); onRemove(); }}
-        className="w-5 h-5 rounded-full bg-white/10 hover:bg-red-400/40 flex items-center justify-center text-white/40 hover:text-white transition-colors text-[10px] shrink-0"
-        aria-label={`Remove from ${label} place`}
-      >✕</button>
-    </div>
+        type="button"
+        className="pk-slot-main"
+        onClick={onClear}
+        aria-label={t('pick.slotFilledAria', { list: listName, place: place ?? '', country: name })}
+      >
+        <span className="num pk-slot-n">{place ?? ''}</span>
+        <span ref={flagRef} className="pk-flag"><Flag iso={iso} /></span>
+        <span className="pk-slot-name" title={name}>{name}</span>
+        <X className="pk-slot-x" aria-hidden="true" strokeWidth={2} />
+      </button>
+      <span className="pk-slot-ctl">
+        <button
+          type="button"
+          className="pk-ctl"
+          onClick={() => onMove(-1)}
+          disabled={row === 0}
+          aria-label={t('pick.moveUp', { country: name })}
+        >
+          <ArrowUp aria-hidden="true" strokeWidth={2.2} />
+        </button>
+        <button
+          type="button"
+          className="pk-ctl"
+          onClick={() => onMove(1)}
+          disabled={row === count - 1}
+          aria-label={t('pick.moveDown', { country: name })}
+        >
+          <ArrowDown aria-hidden="true" strokeWidth={2.2} />
+        </button>
+      </span>
+    </li>
   );
 }
 
-function SortableSlot(props: SlotRowProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: props.id });
-  const dragProps = props.armed ? { ref: setNodeRef } : { ref: setNodeRef, ...attributes, ...listeners };
-  return (
-    <div
-      {...dragProps}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
-      className="touch-none"
-    >
-      <SlotRow {...props} ghost={isDragging} />
-    </div>
-  );
-}
-
-// ── Zone panel (Top 5 / Worst 5) ────────────────────────────────────────────
-interface ZonePanelProps {
-  zone: 'top' | 'worst';
-  picks: string[];
-  byId: Map<string, Country>;
-  n: number;
-  onReorder: (newOrder: string[]) => void;
-  onRemove: (id: string) => void;
-  onPlaceSelected: (slotIndex: number) => void;
-  hasSelection: boolean;
-  activeId: string | null;
-}
-function ZonePanel({ zone, picks, byId, n, onReorder, onRemove, onPlaceSelected, hasSelection, activeId }: ZonePanelProps) {
-  const isTop = zone === 'top';
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 6 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
-
-  const handleDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e;
-    if (!over || active.id === over.id) return;
-    const from = picks.indexOf(active.id as string);
-    const to = picks.indexOf(over.id as string);
-    if (from !== -1 && to !== -1) onReorder(arrayMove(picks, from, to));
-  };
-
-  const labelFor = (i: number) => isTop ? ord(i + 1) : ord(n - WORST_N + 1 + i);
-
-  return (
-    <div className={clsx(
-      'rounded-2xl border flex flex-col',
-      'bg-[rgba(18,8,40,0.65)] backdrop-blur-md',
-      isTop ? 'border-[rgba(255,209,102,0.25)]' : 'border-[rgba(255,77,109,0.25)]',
-    )}>
-      {/* Header */}
-      <div className={clsx(
-        'px-3 pt-2.5 pb-2 border-b shrink-0',
-        isTop ? 'border-[rgba(255,209,102,0.15)]' : 'border-[rgba(255,77,109,0.15)]',
-      )}>
-        <div className="flex items-center justify-between">
-          <h3 className={clsx(
-            'font-black text-sm uppercase tracking-wider leading-none flex items-center gap-1.5',
-            isTop ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
-          )}>
-            {isTop ? '🏆' : '💀'} {isTop ? 'Top 5' : 'Worst 5'}
-          </h3>
-          <span className="text-[10px] font-semibold text-white/40 tabular-nums">
-            {picks.length}/{isTop ? TOP_N : WORST_N}
-          </span>
-        </div>
-      </div>
-
-      {/* Slots — fixed height, no scroll */}
-      <div className="p-1.5 space-y-1">
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={picks} strategy={verticalListSortingStrategy}>
-            {picks.map((id, i) => (
-              <SortableSlot
-                key={id} id={id}
-                country={byId.get(id)}
-                pos={isTop ? i + 1 : n - WORST_N + 1 + i}
-                zone={zone}
-                onRemove={() => onRemove(id)}
-                armed={hasSelection}
-                onReplace={() => onPlaceSelected(i)}
-                canMoveUp={!hasSelection && i > 0}
-                canMoveDown={!hasSelection && i < picks.length - 1}
-                onMoveUp={() => onReorder(arrayMove(picks, i, i - 1))}
-                onMoveDown={() => onReorder(arrayMove(picks, i, i + 1))}
-              />
-            ))}
-          </SortableContext>
-          <DragOverlay>
-            {activeId && picks.includes(activeId) && (
-              <div className="shadow-xl rotate-1 scale-105 opacity-95">
-                <SlotRow
-                  id={activeId}
-                  country={byId.get(activeId)}
-                  pos={isTop ? picks.indexOf(activeId) + 1 : n - WORST_N + 1 + picks.indexOf(activeId)}
-                  zone={zone} onRemove={() => {}}
-                />
-              </div>
-            )}
-          </DragOverlay>
-        </DndContext>
-
-        {/* Empty placeholder slots */}
-        {Array.from({ length: (isTop ? TOP_N : WORST_N) - picks.length }).map((_, i) => {
-          const slotIndex = picks.length + i;
-          const label = labelFor(slotIndex);
-          return (
-            <button
-              key={`empty-${i}`}
-              type="button"
-              onClick={() => hasSelection && onPlaceSelected(slotIndex)}
-              disabled={!hasSelection}
-              aria-label={`${label} place — empty${hasSelection ? ', click to place' : ''}`}
-              className={clsx(
-                'w-full flex items-center gap-2 px-2 py-1.5 rounded-lg border-[1.5px] border-dashed transition-all min-h-[38px]',
-                isTop ? 'border-[rgba(255,209,102,0.25)]' : 'border-[rgba(255,77,109,0.25)]',
-                hasSelection && (isTop
-                  ? 'cursor-pointer hover:bg-[rgba(255,209,102,0.1)] hover:border-[#FFD166] hover:scale-[1.02]'
-                  : 'cursor-pointer hover:bg-[rgba(255,77,109,0.1)] hover:border-[#FF4D6D] hover:scale-[1.02]'),
-                !hasSelection && 'cursor-default',
-              )}
-            >
-              <span className={clsx(
-                'font-black text-[1rem] leading-none w-7 text-right shrink-0 tabular-nums opacity-60',
-                isTop ? 'text-[#FFD166]' : 'text-[#FF4D6D]',
-              )}>{label}</span>
-              <span className="text-[10px] text-white/30 italic">tap a country →</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ── Country tile (pool) — large vertical stack ──────────────────────────────
-interface CountryTileProps {
-  country: Country;
-  rank: { kind: 'top' | 'worst'; label: string } | null;
-  selected: boolean;
-  onClick: () => void;
-}
-function CountryTile({ country, rank, selected, onClick }: CountryTileProps) {
-  const ranked = !!rank;
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={clsx(
-        'group relative flex items-center gap-3 px-3.5 py-3 pr-10 rounded-xl border text-left transition-all',
-        'min-h-[88px] w-full overflow-hidden',
-        'cursor-pointer select-none',
-        !ranked && !selected && 'bg-white/[0.048] border-white/10 hover:bg-white/[0.09] hover:border-white/25 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]',
-        selected && 'bg-purple-500/25 border-purple-400 shadow-[0_0_0_2px_rgba(155,89,244,0.3),0_8px_24px_rgba(0,0,0,0.4)]',
-        ranked && !selected && 'bg-white/[0.048] border-white/10 opacity-40 hover:opacity-75',
-      )}
-    >
-      <FlagImg id={country.id} size={44} />
-      <div className="flex-1 min-w-0">
-        <div className="font-black text-[1.05rem] tracking-wide leading-tight text-white truncate">
-          {getLocalizedCountryName(country)}
-        </div>
-        <div className="text-[0.85rem] font-medium text-white/70 truncate mt-0.5">
-          {country.artist}
-        </div>
-        <div className="text-[0.78rem] font-light text-white/55 italic truncate mt-0.5">
-          {country.song}
-        </div>
-      </div>
-      {/* Position badge */}
-      {rank && (
-        <span className={clsx(
-          'absolute top-1.5 right-1.5 font-black text-[0.85rem] px-1.5 py-0.5 rounded leading-tight',
-          rank.kind === 'top'
-            ? 'bg-[rgba(255,209,102,0.15)] text-[#FFD166] border border-[rgba(255,209,102,0.4)]'
-            : 'bg-[rgba(255,77,109,0.15)] text-[#FF4D6D] border border-[rgba(255,77,109,0.4)]',
-        )}>{rank.label}</span>
-      )}
-    </button>
-  );
-}
-
-// ── Scored / submitted views ─────────────────────────────────────────────────
-function ScoredView({ pred, byId, n }: { pred: ScoredPrediction; byId: Map<string, Country>; n: number }) {
-  const { t } = useTranslation();
-  const totalPts = (pred.top5_points ?? 0) + (pred.worst5_points ?? 0);
-  const t5 = pred.top5.map((id) => byId.get(id)).filter(Boolean) as Country[];
-  const w5 = pred.worst5.map((id) => byId.get(id)).filter(Boolean) as Country[];
-  return (
-    <div className="flex flex-col h-full px-4 py-3 gap-4">
-      <div className="text-center">
-        <div className="text-3xl mb-1">🎯</div>
-        <h2 className="text-xl font-bold text-white">{t('predictions.title')}</h2>
-        <p className="text-white/50 text-sm mt-0.5">{t('predictions.totalScore', { points: totalPts })}</p>
-      </div>
-      <div className="flex-1 overflow-y-auto space-y-4">
-        <div>
-          <p className="text-xs font-bold text-[#FFD166] uppercase tracking-wider mb-2">🏆 Top 5 — {pred.top5_points ?? 0} pts</p>
-          {t5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,209,102,0.1)] rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-[#FFD166] w-9 text-right">{ord(i + 1)}</span>
-              <FlagImg id={c.id} size={22} />
-              <span className="text-sm text-white truncate">{getLocalizedCountryName(c)}</span>
-            </div>
-          ))}
-        </div>
-        <div>
-          <p className="text-xs font-bold text-[#FF4D6D] uppercase tracking-wider mb-2">💀 Worst 5 — {pred.worst5_points ?? 0} pts</p>
-          {w5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,77,109,0.1)] rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(n - WORST_N + 1 + i)}</span>
-              <FlagImg id={c.id} size={22} />
-              <span className="text-sm text-white truncate">{getLocalizedCountryName(c)}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SubmittedView({ top5, worst5, n }: { top5: Country[]; worst5: Country[]; n: number }) {
-  const { t } = useTranslation();
-  return (
-    <div className="flex flex-col h-full px-4 py-3 gap-4">
-      <div className="text-center">
-        <div className="text-3xl mb-1">✅</div>
-        <h2 className="text-xl font-bold text-white">{t('predictions.submitted')}</h2>
-        <p className="text-white/50 text-sm mt-0.5">{t('predictions.waitingResults')}</p>
-      </div>
-      <div className="flex-1 overflow-y-auto space-y-4">
-        <div>
-          <p className="text-xs font-bold text-[#FFD166] uppercase tracking-wider mb-2">🏆 {t('predictions.yourTop5')}</p>
-          {top5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,209,102,0.1)] rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-[#FFD166] w-9 text-right">{ord(i + 1)}</span>
-              <FlagImg id={c.id} size={22} />
-              <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
-            </div>
-          ))}
-        </div>
-        <div>
-          <p className="text-xs font-bold text-[#FF4D6D] uppercase tracking-wider mb-2">💀 {t('predictions.yourWorst5')}</p>
-          {worst5.map((c, i) => (
-            <div key={c.id} className="flex items-center gap-2 bg-[rgba(255,77,109,0.1)] rounded-lg px-3 py-1.5 mb-1">
-              <span className="text-xs font-bold text-[#FF4D6D] w-9 text-right">{ord(n - WORST_N + 1 + i)}</span>
-              <FlagImg id={c.id} size={22} />
-              <span className="text-sm text-white">{getLocalizedCountryName(c)}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Main ─────────────────────────────────────────────────────────────────────
+// ── Main ─────────────────────────────────────────────────────────────
 export default function PredictionsScreen() {
   const { t } = useTranslation();
   const { room, player } = useGameStore();
   const { participants, byId, loading: loadingParticipants } = useParticipants(room?.year);
   const N = participants.length;
 
-  const [top5, setTop5] = useState<string[]>([]);
-  const [worst5, setWorst5] = useState<string[]>([]);
-  const [activeId] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [poolSort, setPoolSort] = useState<'az' | 'za' | 'default'>('az');
+  const [slots, setSlots] = useState<Slots>(() => slotsFromSaved([], []));
+  const [active, setActive] = useState<ListId>('top');
+  const [sort, setSort] = useState<Sort>('az');
+  const [live, setLive] = useState('');
+  const [editing, setEditing] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingPrediction, setExistingPrediction] = useState<ScoredPrediction | null>(null);
   const [isLoadingExisting, setIsLoadingExisting] = useState(true);
+  const poolRef = useRef<HTMLUListElement>(null);
 
-  // Escape clears selection
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedId(null); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
-
-  // Load existing prediction
+  // Load existing prediction (unchanged query and submitted rule)
   useEffect(() => {
     if (!room || !player) { setIsLoadingExisting(false); return; }
     supabase
@@ -435,8 +145,9 @@ export default function PredictionsScreen() {
         ({ data }) => {
           if (data) {
             setExistingPrediction(data as ScoredPrediction);
-            setTop5(data.top5 as string[]);
-            setWorst5(data.worst5 as string[]);
+            const loaded = slotsFromSaved(data.top5 as string[], data.worst5 as string[]);
+            setSlots(loaded);
+            if (!nextEmpty(loaded, 'top') && nextEmpty(loaded, 'worst')) setActive('worst');
             if (data.scored_at || ((data.top5 as string[]).length === TOP_N && (data.worst5 as string[]).length === WORST_N)) {
               setSubmitted(true);
             }
@@ -448,62 +159,63 @@ export default function PredictionsScreen() {
   }, [room?.id, player?.id]);
 
   const isPredictionsOpen = room?.phase === 'predictions_open';
+  const sealPlay = useSealMoment(!isPredictionsOpen && submitted && room ? room.id : null);
 
-  // Pool — sorted (filters removed per redesign). Source is parser-driven
-  // via useParticipants; falls back to hardcoded 2026 lineup if DB empty.
-  const pool = (() => {
+  const pool = useMemo(() => {
     const list = [...participants];
-    if (poolSort === 'az') list.sort((a, b) => compareText(getLocalizedCountryName(a), getLocalizedCountryName(b)));
-    if (poolSort === 'za') list.sort((a, b) => compareText(getLocalizedCountryName(b), getLocalizedCountryName(a)));
-    return list;
-  })();
-
-  const getRank = (id: string): { kind: 'top' | 'worst'; label: string } | null => {
-    const ti = top5.indexOf(id);
-    if (ti !== -1) return { kind: 'top', label: ord(ti + 1) };
-    const wi = worst5.indexOf(id);
-    if (wi !== -1) return { kind: 'worst', label: ord(N - WORST_N + 1 + wi) };
-    return null;
-  };
-
-  // Tile click — toggle selection (or unrank if already ranked)
-  const handleTileClick = useCallback((id: string) => {
-    // If already ranked, unrank (free up the slot)
-    if (top5.includes(id))   { setTop5((p) => p.filter((x) => x !== id)); setSelectedId(null); return; }
-    if (worst5.includes(id)) { setWorst5((p) => p.filter((x) => x !== id)); setSelectedId(null); return; }
-    // Otherwise toggle selection
-    setSelectedId((prev) => prev === id ? null : id);
-  }, [top5, worst5]);
-
-  // Place selected tile into a specific slot.
-  //   • slotIndex < picks.length → REPLACE the country at that index
-  //     (the displaced one returns to the pool unranked).
-  //   • slotIndex >= picks.length → APPEND.
-  const handlePlace = useCallback((zone: 'top' | 'worst', slotIndex: number) => {
-    if (!selectedId) return;
-    if (zone === 'top') {
-      setTop5((p) => {
-        const next = [...p];
-        // Remove from worst5 if present (mutual exclusion)
-        setWorst5((w) => w.filter((x) => x !== selectedId));
-        if (slotIndex < next.length) next[slotIndex] = selectedId;
-        else next.push(selectedId);
-        return next.slice(0, TOP_N);
-      });
-    } else {
-      setWorst5((p) => {
-        const next = [...p];
-        setTop5((t) => t.filter((x) => x !== selectedId));
-        if (slotIndex < next.length) next[slotIndex] = selectedId;
-        else next.push(selectedId);
-        return next.slice(0, WORST_N);
-      });
+    if (sort === 'az') list.sort((a, b) => compareText(getLocalizedCountryName(a), getLocalizedCountryName(b)));
+    if (sort === 'za') list.sort((a, b) => compareText(getLocalizedCountryName(b), getLocalizedCountryName(a)));
+    if (sort === 'order') {
+      list.sort((a, b) => (a.runningOrder ?? 999) - (b.runningOrder ?? 999)
+        || compareText(getLocalizedCountryName(a), getLocalizedCountryName(b)));
     }
-    setSelectedId(null);
-  }, [selectedId]);
+    return list;
+  }, [participants, sort]);
+
+  const tagFor = useCallback((ref: SlotRef) => {
+    const place = placeOf(ref, N) ?? '';
+    return t(ref.list === 'top' ? 'pick.tagTop' : 'pick.tagWorst', { place });
+  }, [N, t]);
+
+  const nameOf = useCallback((id: string) => {
+    const c = byId.get(id);
+    return c ? getLocalizedCountryName(c) : id;
+  }, [byId]);
+
+  const handleTap = useCallback((id: string, flagEl: Element | null) => {
+    const r = tapCountry(slots, active, id);
+    if (r.kind === 'full') { setLive(t('pick.allFull')); return; }
+    if (r.kind === 'placed') {
+      launchFlag(id, flagEl);
+      setLive(t('pick.placedLive', { country: nameOf(id), tag: tagFor(r.at) }));
+    } else {
+      setLive(t('pick.removedLive', { country: nameOf(id) }));
+    }
+    setSlots(r.slots);
+    setActive(r.active);
+    setError(null);
+  }, [slots, active, t, nameOf, tagFor]);
+
+  const handleClear = useCallback((ref: SlotRef) => {
+    const id = slots[ref.list][ref.index];
+    if (!id) return;
+    setSlots(clearSlot(slots, ref));
+    setActive(ref.list);
+    setLive(t('pick.removedLive', { country: nameOf(id) }));
+  }, [slots, t, nameOf]);
+
+  const handleMove = useCallback((list: ListId, row: number, dir: -1 | 1) => {
+    const id = slots[list][indexForRow(list, row)];
+    const next = moveRow(slots, list, row, dir);
+    if (next === slots || !id) return;
+    setSlots(next);
+    const at = findSlot(next, id);
+    if (at) setLive(t('pick.placedLive', { country: nameOf(id), tag: tagFor(at) }));
+  }, [slots, t, nameOf, tagFor]);
 
   const handleSubmit = useCallback(async () => {
     if (!room || !player || isSubmitting) return;
+    const { top5, worst5 } = savedFromSlots(slots);
     setIsSubmitting(true); setError(null);
     try {
       const { error: err } = await supabase.from('predictions').upsert(
@@ -512,181 +224,219 @@ export default function PredictionsScreen() {
       );
       if (err) throw err;
       setSubmitted(true);
+      setEditing(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : t('errors.failedPredictions'));
     } finally { setIsSubmitting(false); }
-  }, [room, player, top5, worst5, isSubmitting, t]);
+  }, [room, player, slots, isSubmitting, t]);
 
-  // ── Guards ─────────────────────────────────────────────────────────────────
+  // ── Guards ─────────────────────────────────────────────────────────
   if (!room || !player || isLoadingExisting || loadingParticipants) {
-    return <div className="flex items-center justify-center h-64"><div className="w-7 h-7 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" /></div>;
-  }
-  if (existingPrediction?.scored_at) return <ScoredView pred={existingPrediction} byId={byId} n={N} />;
-  if (submitted && !isPredictionsOpen) {
-    return <SubmittedView
-      top5={top5.map((id) => byId.get(id)!).filter(Boolean)}
-      worst5={worst5.map((id) => byId.get(id)!).filter(Boolean)}
-      n={N}
-    />;
-  }
-  if (!isPredictionsOpen && !submitted) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 px-4">
-        <div className="text-4xl">🔒</div>
-        <h2 className="text-xl font-bold text-white">{t('predictions.locked')}</h2>
-        <p className="text-white/50 text-center text-sm">{t('predictions.lockedDesc')}</p>
+      <div className="pk-loading" role="status" aria-label={t('pick.loading')}>
+        <span className="lb-spinner" aria-hidden="true" />
       </div>
     );
   }
 
-  const filled = top5.length + worst5.length;
-  const isReady = top5.length === TOP_N && worst5.length === WORST_N;
-  const selectedCountry = selectedId ? byId.get(selectedId) : null;
+  const saved = savedFromSlots(slots);
+  const range = worstRange(N);
+
+  if (existingPrediction?.scored_at) {
+    const pts = (existingPrediction.top5_points ?? 0) + (existingPrediction.worst5_points ?? 0);
+    return (
+      <div className="pk pk-done">
+        <SealedHeader as="h1" title={t('pick.sealedTitle')} body={t('pick.scoredTotal', { points: pts })} play={false} />
+        <PicksLists top5={existingPrediction.top5} worst5={existingPrediction.worst5} n={N} byId={byId} locked />
+      </div>
+    );
+  }
+  if (submitted && !isPredictionsOpen) {
+    return (
+      <div className="pk pk-done">
+        <SealedHeader as="h1" title={t('pick.sealedTitle')} body={t('pick.sealedBody')} play={sealPlay} />
+        <PicksLists top5={saved.top5} worst5={saved.worst5} n={N} byId={byId} locked />
+        <p className="t-meta">{t('pick.scoring')}</p>
+      </div>
+    );
+  }
+  if (!isPredictionsOpen && !submitted) {
+    return (
+      <div className="pk pk-done">
+        <section className="card pk-closed">
+          <h1 className="t-h3">{t('pick.closedTitle')}</h1>
+          <p className="t-meta">{t('pick.closedBody')}</p>
+        </section>
+      </div>
+    );
+  }
+  if (submitted && !editing) {
+    return (
+      <div className="pk pk-done">
+        <section className="card-hero pk-seal ok">
+          <span className="pk-seal-ico" aria-hidden="true"><Check strokeWidth={2.4} /></span>
+          <div className="pk-seal-text">
+            <h1 className="t-h3">{t('pick.submittedTitle')}</h1>
+            <p className="t-meta">{t('pick.submittedBody')}</p>
+          </div>
+        </section>
+        <PicksLists top5={saved.top5} worst5={saved.worst5} n={N} byId={byId} />
+        <p className="t-meta">{t('pick.scoring')}</p>
+        <button type="button" className="btn btn-secondary btn-block" onClick={() => setEditing(true)}>
+          {t('pick.edit')}
+        </button>
+      </div>
+    );
+  }
+
+  // ── Editor ─────────────────────────────────────────────────────────
+  const filled = filledCount(slots);
+  const ready = isComplete(slots);
+  const nextRef = nextEmpty(slots, active);
+  const count = (list: ListId) => slots[list].filter(Boolean).length;
+
+  const panel = (list: ListId) => {
+    const places = placesFor(list, N);
+    const size = list === 'top' ? TOP_N : WORST_N;
+    return (
+      <section
+        className={clsx('card pk-panel', list === 'top' ? 't' : 'w', active === list && 'on')}
+        aria-labelledby={`pk-h-${list}`}
+        data-list={list}
+      >
+        <div className="pk-panel-h">
+          <h2 id={`pk-h-${list}`} className="pk-panel-title">
+            {list === 'top' ? <ArrowUp aria-hidden="true" strokeWidth={2.4} /> : <ArrowDown aria-hidden="true" strokeWidth={2.4} />}
+            {t(list === 'top' ? 'pick.top5' : 'pick.worst5')}
+            <span className="t-meta">
+              {list === 'top'
+                ? t('pick.places', { from: 1, to: 5 })
+                : range ? t('pick.places', { from: range[0], to: range[1] }) : ''}
+            </span>
+          </h2>
+          <span className="num pk-panel-count">{count(list)}/{size}</span>
+        </div>
+        {list === 'worst' && range && (
+          <p className="t-meta pk-panel-note">{t('pick.worstNote', { count: N, from: range[0], to: range[1] })}</p>
+        )}
+        <ol className="pk-slots">
+          {Array.from({ length: size }, (_, row) => {
+            const index = indexForRow(list, row);
+            const iso = slots[list][index];
+            return (
+              <SlotRow
+                key={`${list}-${row}-${iso ?? 'empty'}`}
+                list={list}
+                row={row}
+                place={places[row]}
+                iso={iso}
+                country={iso ? byId.get(iso) : undefined}
+                next={!!nextRef && nextRef.list === list && nextRef.index === index}
+                onClear={() => handleClear({ list, index })}
+                onActivate={() => setActive(list)}
+                onMove={(dir) => handleMove(list, row, dir)}
+              />
+            );
+          })}
+        </ol>
+      </section>
+    );
+  };
+
+  const submitLabel = isSubmitting ? t('pick.saving') : submitted ? t('pick.update') : t('pick.submit');
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="pk">
+      <header className="pk-head">
+        <h1 className="pk-title">{t('pick.title')}</h1>
+        <p className="t-meta pk-lead">{t('pick.scoring')}</p>
+        <p className="t-meta pk-how">{t('pick.howTo')}</p>
+      </header>
 
-      {/* ── 3-col desktop / stacked mobile ──────────────────────────────────── */}
-      <div
-        className="flex-1 overflow-hidden grid gap-2.5 p-2.5 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)] grid-cols-1 grid-rows-[auto_1fr_auto] lg:grid-rows-1"
-      >
-        {/* LEFT: Top 5 */}
-        <div>
-          <ZonePanel
-            zone="top" picks={top5}
-            byId={byId} n={N}
-            onReorder={setTop5}
-            onRemove={(id) => setTop5((p) => p.filter((x) => x !== id))}
-            onPlaceSelected={(slotIndex) => handlePlace('top', slotIndex)}
-            hasSelection={!!selectedId}
-            activeId={activeId}
-          />
+      <div className="pk-cols">
+        <div className="pk-side">
+          <div className="pk-seg" role="group" aria-label={t('pick.nextInAria')}>
+            <span className="t-meta pk-seg-k">{t('pick.nextIn')}</span>
+            {(['top', 'worst'] as const).map((list) => (
+              <button
+                key={list}
+                type="button"
+                className={clsx('pk-seg-b', list === 'top' ? 't' : 'w', active === list && 'on')}
+                aria-pressed={active === list}
+                onClick={() => setActive(list)}
+              >
+                {t(list === 'top' ? 'pick.top5' : 'pick.worst5')}
+                <span className="num">{count(list)}/{list === 'top' ? TOP_N : WORST_N}</span>
+              </button>
+            ))}
+          </div>
+          <div className="pk-panels" data-active={active}>
+            {panel('top')}
+            {panel('worst')}
+          </div>
+
+          <div className="pk-bar">
+            <ProgressRing filled={filled} total={TOTAL} />
+            <div className="pk-bar-text">
+              <span className="num pk-bar-n">{filled}/{TOTAL}</span>
+              <span className="t-meta">{ready ? t('pick.ready') : t('pick.remaining', { count: TOTAL - filled })}</span>
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary pk-submit"
+              onClick={handleSubmit}
+              disabled={!ready || isSubmitting}
+              aria-describedby={!ready ? 'pk-fill-hint' : undefined}
+            >
+              {submitLabel}
+            </button>
+          </div>
+          {!ready && <p id="pk-fill-hint" className="t-meta pk-fill">{t('pick.fillAll')}</p>}
+          {error && <p className="pk-error" role="alert">{error}</p>}
         </div>
 
-        {/* CENTER: Pool */}
-        <div className="flex flex-col overflow-hidden">
-          {/* Meta row */}
-          <div className="flex items-baseline justify-between mb-2 px-1">
-            <span className="text-xs font-black uppercase tracking-widest text-white/60">
-              {t('predictions.participantsHeader', { count: N, defaultValue: `Participants (${N})` })}
-            </span>
-            <span className="text-[11px] font-bold text-purple-400 tabular-nums">
-              {filled} / {TOP_N + WORST_N} picked
-            </span>
-          </div>
-
-          {/* Sort row */}
-          <div className="flex items-center gap-1.5 mb-2 px-1">
-            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest mr-1">Sort</span>
-            <button onClick={() => setPoolSort('az')}
-              className={clsx('px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all',
-                poolSort === 'az' ? 'bg-purple-500 border-purple-500 text-white' : 'bg-white/5 border-white/15 text-white/60 hover:border-white/30 hover:text-white')}>
-              A ↑
-            </button>
-            <button onClick={() => setPoolSort('za')}
-              className={clsx('px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all',
-                poolSort === 'za' ? 'bg-purple-500 border-purple-500 text-white' : 'bg-white/5 border-white/15 text-white/60 hover:border-white/30 hover:text-white')}>
-              Z ↓
-            </button>
-            <button onClick={() => setPoolSort('default')}
-              className={clsx('px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border transition-all',
-                poolSort === 'default' ? 'bg-purple-500 border-purple-500 text-white' : 'bg-white/5 border-white/15 text-white/60 hover:border-white/30 hover:text-white')}>
-              Order
-            </button>
-          </div>
-
-          {/* Selection banner */}
-          {selectedCountry && (
-            <div className="flex items-center gap-2 px-3 py-1.5 mb-2 mx-1 rounded-lg bg-purple-500/20 border border-purple-400/55 text-purple-200 text-[12px] font-semibold">
-              <FlagImg id={selectedCountry.id} size={22} />
-              <span>{getLocalizedCountryName(selectedCountry)} selected — now click an empty slot</span>
-              <button
-                onClick={() => setSelectedId(null)}
-                className="ml-auto text-purple-200/70 hover:text-white text-[10px] uppercase tracking-wider"
-                aria-label="Cancel selection"
-              >Esc</button>
-            </div>
-          )}
-
-          {/* Hint */}
-          {!selectedCountry && (
-            <p className="text-[10px] text-white/40 mb-2 px-1">
-              Tap a country, then tap an empty slot — or drag within a panel to reorder.
-            </p>
-          )}
-
-          {/* Tile grid */}
-          <div className="flex-1 overflow-y-auto pb-4 pr-0.5">
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1">
-              {pool.map((c) => (
-                <CountryTile
-                  key={c.id}
-                  country={c}
-                  rank={getRank(c.id)}
-                  selected={selectedId === c.id}
-                  onClick={() => handleTileClick(c.id)}
-                />
+        <section className="pk-pool-wrap" aria-labelledby="pk-pool-h">
+          <div className="pk-pool-head">
+            <h2 id="pk-pool-h" className="t-eyebrow">{t('pick.participants', { count: N })}</h2>
+            <div className="pk-sort" role="group" aria-label={t('pick.sortAria')}>
+              {([['az', 'pick.sortAz'], ['za', 'pick.sortZa'], ['order', 'pick.sortOrder']] as const).map(([k, label]) => (
+                <button key={k} type="button" className={clsx('pk-sort-b', sort === k && 'on')} aria-pressed={sort === k} onClick={() => setSort(k)}>
+                  {t(label)}
+                </button>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* RIGHT: Worst 5 */}
-        <div>
-          <ZonePanel
-            zone="worst" picks={worst5}
-            byId={byId} n={N}
-            onReorder={setWorst5}
-            onRemove={(id) => setWorst5((p) => p.filter((x) => x !== id))}
-            onPlaceSelected={(slotIndex) => handlePlace('worst', slotIndex)}
-            hasSelection={!!selectedId}
-            activeId={activeId}
-          />
-        </div>
+          <ul className="pk-pool" ref={poolRef}>
+            {pool.map((c) => {
+              const at = findSlot(slots, c.id);
+              const name = getLocalizedCountryName(c);
+              const tag = at ? tagFor(at) : null;
+              const sub = [c.artist, c.song].filter(Boolean).join(' · ');
+              return (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    className={clsx('pk-country', at && 'picked', at?.list === 'worst' && 'w')}
+                    aria-label={at
+                      ? t('pick.countryPickedAria', { country: name, tag })
+                      : t('pick.countryFreeAria', { country: name })}
+                    onClick={(e) => handleTap(c.id, e.currentTarget.querySelector('.flag'))}
+                  >
+                    <Flag iso={c.id} />
+                    <span className="pk-country-who">
+                      <span className="pk-country-name">{name}</span>
+                      {sub && <span className="pk-country-sub">{sub}</span>}
+                    </span>
+                    {tag && <span className={clsx('pk-tag', at?.list === 'worst' ? 'w' : 't')}>{tag}</span>}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
       </div>
 
-      {/* ── Footer (submit) ───────────────────────────────────────────────── */}
-      <div className="shrink-0 px-3 pt-2 pb-3 border-t border-white/8 bg-[#0f0520]/80 backdrop-blur">
-        {/* Flag previews */}
-        <div className="flex items-center gap-2 mb-2 text-xs flex-wrap">
-          <span className="text-[#FFD166] font-semibold shrink-0">🏆</span>
-          <div className="flex gap-1">
-            {Array.from({ length: TOP_N }).map((_, i) => {
-              const id = top5[i];
-              return id
-                ? <FlagImg key={id} id={id} size={26} />
-                : <div key={i} className="w-[26px] h-[20px] rounded bg-white/8 border border-dashed border-white/15" />;
-            })}
-          </div>
-          <span className="text-white/20 mx-0.5">|</span>
-          <span className="text-[#FF4D6D] font-semibold shrink-0">💀</span>
-          <div className="flex gap-1">
-            {Array.from({ length: WORST_N }).map((_, i) => {
-              const id = worst5[i];
-              return id
-                ? <FlagImg key={id} id={id} size={26} />
-                : <div key={i} className="w-[26px] h-[20px] rounded bg-white/8 border border-dashed border-white/15" />;
-            })}
-          </div>
-        </div>
-
-        <button
-          onClick={handleSubmit}
-          disabled={!isReady || isSubmitting}
-          className={clsx(
-            'w-full py-3 rounded-xl font-bold text-sm text-white transition-all',
-            'bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500',
-            isReady && !isSubmitting ? 'opacity-100 hover:brightness-110 active:scale-[0.98]' : 'opacity-35 cursor-not-allowed',
-          )}
-        >
-          {isSubmitting ? '...' : submitted
-            ? t('predictions.updateBtn', { defaultValue: '✅ Update Predictions' })
-            : isReady
-              ? t('predictions.submitBtn', { defaultValue: '🎯 Submit Predictions' })
-              : t('predictions.fillSlots', { defaultValue: 'Fill all 10 slots to submit' })}
-        </button>
-        {error && <p className="text-red-400 text-xs text-center mt-1.5">{error}</p>}
-      </div>
+      <p className="sr-only" role="status" aria-live="polite">{live}</p>
     </div>
   );
 }

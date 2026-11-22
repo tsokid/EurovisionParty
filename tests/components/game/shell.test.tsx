@@ -91,7 +91,7 @@ describe('<PhaseStrip>', () => {
   it('compact: current phase and the next one, using the phases.* labels', () => {
     render(<PhaseStrip phase="pre_night" variant="compact" />);
     const items = screen.getAllByRole('listitem');
-    expect(items.map((li) => li.textContent?.replace('→', ''))).toEqual(['Pre-Night Show', 'Προβλέψεις']);
+    expect(items.map((li) => li.textContent?.replace('→', ''))).toEqual(['Προθέρμανση', 'Οι προβλέψεις είναι ανοιχτές']);
     expect(items[0]).toHaveAttribute('aria-current', 'step');
   });
 
@@ -101,7 +101,22 @@ describe('<PhaseStrip>', () => {
     expect(items).toHaveLength(5);
     expect(items.slice(0, 3).every((li) => li.classList.contains('past'))).toBe(true);
     expect(items[3]).toHaveAttribute('aria-current', 'step');
-    expect(items[3]).toHaveTextContent('Ψηφοφορία Live');
+    expect(items[3]).toHaveTextContent('Ψηφοφορία σε εξέλιξη');
+  });
+
+  it('phase labels never read like a tab name (EL and EN)', () => {
+    const phases = ['lobby', 'pre_night', 'predictions_open', 'voting_live', 'final'];
+    for (const lng of ['el', 'en']) {
+      const fixed = i18n.getFixedT(lng);
+      const tabs = new Set(['predict', 'quiz', 'duels', 'board'].map((k) => fixed(`nav.${k}`).toLowerCase()));
+      for (const p of phases) expect(tabs.has(fixed(`phases.${p}.label`).toLowerCase())).toBe(false);
+    }
+    expect(phases.map((p) => i18n.getFixedT('el')(`phases.${p}.label`))).toEqual([
+      'Λόμπι', 'Προθέρμανση', 'Οι προβλέψεις είναι ανοιχτές', 'Ψηφοφορία σε εξέλιξη', 'Τελικά αποτελέσματα',
+    ]);
+    expect(phases.map((p) => i18n.getFixedT('en')(`phases.${p}.label`))).toEqual([
+      'Lobby', 'Warm-up', 'Predictions open', 'Voting live', 'Final results',
+    ]);
   });
 
   it('final has no "next"', () => {
@@ -112,7 +127,7 @@ describe('<PhaseStrip>', () => {
   it('is a toggle button when it opens the phase list', () => {
     const onToggle = vi.fn();
     render(<PhaseStrip phase="lobby" variant="compact" onToggle={onToggle} expanded={false} />);
-    const btn = screen.getByRole('button', { name: /Όλες οι φάσεις της βραδιάς: Αναμονή/ });
+    const btn = screen.getByRole('button', { name: /Όλες οι φάσεις της βραδιάς: Λόμπι/ });
     fireEvent.click(btn);
     expect(onToggle).toHaveBeenCalled();
     expect(btn).toHaveAttribute('aria-expanded', 'false');
