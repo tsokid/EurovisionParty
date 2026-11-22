@@ -31,6 +31,8 @@ vi.mock('../../src/admin/publish/api', async (orig) => {
   const draftOf: Record<string, (d: Record<string, Record<string, Record<string, unknown>>>) => void> = {
     about: (d) => { d.en.hero.title = 'About Eurovision Games and the people who make it'; },
     'site-header': (d) => { (d.en.cta as Record<string, unknown>).createRoom = 'Create a room now'; },
+    // CMS P6: a page with no H1 in English (the SEO panel must hold Publish).
+    terms: (d) => { d.en.hero.title = ''; },
   };
   return {
     ...real,
@@ -98,7 +100,9 @@ describe('PublishReview: one page', () => {
     h.invoke.mockImplementationOnce(async () => ({ data: { status: 'ok', run_id: 77, sha: 'c0ffee1234', files_changed: 2 }, error: null }));
 
     wrap(<PublishReview docIds={['about']} />);
-    fireEvent.click(await screen.findByTestId('publish-docs'));
+    // The SEO checks read the rendered page first (CMS P6): Publish opens once they pass.
+    await waitFor(() => expect(screen.getByTestId('publish-docs')).toBeEnabled(), { timeout: 8000 });
+    fireEvent.click(screen.getByTestId('publish-docs'));
     const dialog = screen.getByRole('alertdialog', { name: 'Δημοσίευση: Σχετικά' });
     expect(dialog.textContent).toMatch(/Στέλνεται μόνο αυτή η σελίδα/);
     await act(async () => { fireEvent.click(within(dialog).getByRole('button', { name: 'Δημοσίευση' })); });
@@ -108,6 +112,28 @@ describe('PublishReview: one page', () => {
     await waitFor(() => expect(within(card).getByTestId('deploy-chip').getAttribute('data-state')).toBe('ready'));
     expect(within(card).getByTestId('deploy-chip').textContent).toBe('Live');
     expect(h.invoke).toHaveBeenCalledWith('publish-status', { run_ids: [77] });
+  });
+});
+
+describe('PublishReview: the SEO checks hold Publish (CMS P6)', () => {
+  it('a page whose rendered English has no H1 cannot be published; the panel says why', async () => {
+    wrap(<PublishReview docIds={['terms']} />);
+    const panel = await screen.findByTestId('seo-panel');
+    await waitFor(() => expect(within(panel).getByTestId('seo-check-h1-en').getAttribute('data-severity')).toBe('block'));
+    expect(within(panel).getByTestId('seo-check-h1-el').getAttribute('data-severity')).toBe('ok');
+    expect(within(panel).getByTestId('seo-check-hreflang').getAttribute('data-severity')).toBe('block');
+    expect(within(panel).getByTestId('seo-summary').textContent).toMatch(/σταματ/);
+    expect(screen.getByTestId('publish-docs')).toBeDisabled();
+    expect(screen.getByTestId('seo-blocked').textContent).toMatch(/Η δημοσίευση περιμένει το SEO/);
+    expect(h.invoke).not.toHaveBeenCalledWith('publish-content', expect.anything());
+  });
+
+  it('a clean page publishes once every check has read the page', async () => {
+    wrap(<PublishReview docIds={['about']} />);
+    const panel = await screen.findByTestId('seo-panel');
+    await waitFor(() => expect(within(panel).getByTestId('seo-check-h1-el').getAttribute('data-severity')).toBe('ok'));
+    expect(within(panel).getByTestId('seo-check-links-en').getAttribute('data-severity')).not.toBe('block');
+    await waitFor(() => expect(screen.getByTestId('publish-docs')).toBeEnabled());
   });
 });
 

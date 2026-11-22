@@ -20,6 +20,7 @@
  * new side in green, with nothing clickable (`editable: []`).
  */
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { auditDom, sameAudit, type DomAudit } from '../seo/domAudit';
 import { CMS_PATH_ATTR, parseCmsPath } from '../../lib/cms/cmsAttrs';
 import type { Locale } from '../../lib/seo/locale';
 import { docTypeFor } from '../../../supabase/functions/_shared/cms/registry';
@@ -239,6 +240,7 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
   const latest = useRef<State | null>(null);
   latest.current = state;
   const revealed = useRef<string | null>(null);
+  const lastAudit = useRef<{ locale: string; audit: DomAudit } | null>(null);
 
   const shown: Shown | null = live ?? (state ? { doc: state.doc, locale: state.locale, path: state.path } : initial ?? null);
   const doc = shown?.doc;
@@ -265,6 +267,8 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
     const off = port.listen((msg) => {
       if (msg.type === 'state') {
         if (msg.docId !== docId || msg.docType !== docTypeFor(docId)) return;
+        // A host that just connected has not seen the audit yet: post it again after this render.
+        lastAudit.current = null;
         setState(msg);
       } else if (msg.type === 'highlight') {
         const target = msg.target;
@@ -292,6 +296,12 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
       observer.disconnect();
       autoTag(scope, pageDoc, locale, slice, accept);
       port.post({ type: 'tagged', count: scope.querySelectorAll(`[${CMS_PATH_ATTR}]`).length });
+      // The SEO panel's view of the rendered page (CMS P6), when it changed.
+      const audit = auditDom(scope);
+      if (lastAudit.current?.locale !== locale || !sameAudit(lastAudit.current.audit, audit)) {
+        lastAudit.current = { locale, audit };
+        port.post({ type: 'audit', locale, audit });
+      }
       setSelected((s) => (s ? withBoxes(s, markSelected(scope, s.target).filter(visible).map((el) => boxOf(el, root))) : s));
       if (changedRef.current.length || scope.querySelector(`[${CHANGED_ATTR}]`)) {
         const tinted = markChanged(scope, changedRef.current).filter(visible);

@@ -20,11 +20,15 @@
 //   focus      an element was clicked: focus its field (data-cms-path value)
 //   tagged     how many elements carry a data-cms-path (diagnostics, tests)
 //   tinted     how many elements the diff tinted
+//   audit      (CMS P6) what the SEO panel reads from the rendered page: the
+//              h1s, the images and their alt, the links and the ids
+//              (seo/domAudit.ts), for the locale shown; posted when it changes
 //
 // The transport is a Port, so tests (and the inline preview) can run both
 // ends in one document with memoryPorts().
 import type { Locale } from '../../lib/seo/locale';
 import type { DraftDoc } from '../../../supabase/functions/_shared/cms/overlay';
+import type { DomAudit } from '../seo/domAudit';
 
 export const PREVIEW_NS = 'cms-preview';
 export const PREVIEW_PROTOCOL = 1;
@@ -58,7 +62,8 @@ export type FrameMessage =
   | { type: 'ready' }
   | { type: 'focus'; target: string }
   | { type: 'tagged'; count: number }
-  | { type: 'tinted'; count: number };
+  | { type: 'tinted'; count: number }
+  | { type: 'audit'; locale: Locale; audit: DomAudit };
 
 type Envelope = { ns: typeof PREVIEW_NS; v: number };
 

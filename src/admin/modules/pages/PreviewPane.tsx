@@ -22,6 +22,7 @@ import { windowPort, type FrameMessage, type HostMessage, type HostPort } from '
 import { InlinePreviewFrame, usePreviewTransport } from '../../preview/transport';
 import { AdminUserContext } from '../../cms/docChannel';
 import { useDebounced } from './useDebounced';
+import type { DomAudit } from '../../seo/domAudit';
 import { t } from '../../i18n';
 
 const LOCALES: Locale[] = ['en', 'el'];
@@ -75,12 +76,14 @@ export interface PreviewPaneProps {
   editable?: string[];
   /** Scroll to this doc's first element once (the footer editor). */
   reveal?: string | null;
+  /** The rendered page's audit (CMS P6, the SEO panel), per locale shown. */
+  onAudit?: (locale: Locale, audit: DomAudit) => void;
 }
 
 const NO_LABELS = () => ({});
 
 export default function PreviewPane({
-  docId, doc: typed, path, initialLocale = 'en', getLabels = NO_LABELS, highlight = null, onFocusTarget, editable, reveal = null,
+  docId, doc: typed, path, initialLocale = 'en', getLabels = NO_LABELS, highlight = null, onFocusTarget, editable, reveal = null, onAudit,
 }: PreviewPaneProps) {
   // The page follows the typing shortly after each keystroke, not on every one.
   const doc = useDebounced(typed, PREVIEW_SEND_MS);
@@ -117,8 +120,8 @@ export default function PreviewPane({
     return () => setPort(null);
   }, [transport.kind, src]);
 
-  const latest = useRef({ docId, doc, path, locale, getLabels, editable, reveal, onFocusTarget });
-  latest.current = { docId, doc, path, locale, getLabels, editable, reveal, onFocusTarget };
+  const latest = useRef({ docId, doc, path, locale, getLabels, editable, reveal, onFocusTarget, onAudit });
+  latest.current = { docId, doc, path, locale, getLabels, editable, reveal, onFocusTarget, onAudit };
 
   const sendState = useCallback(() => {
     if (!port) return;
@@ -150,6 +153,8 @@ export default function PreviewPane({
       } else if (msg.type === 'focus') {
         const p = parseCmsPath(msg.target);
         if (p) latest.current.onFocusTarget?.(p);
+      } else if (msg.type === 'audit') {
+        latest.current.onAudit?.(msg.locale, msg.audit);
       }
     });
     sendState();

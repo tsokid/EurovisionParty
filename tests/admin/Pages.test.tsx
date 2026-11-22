@@ -242,11 +242,24 @@ describe('Pages module: editor', () => {
     await waitFor(() => expect(fetchesOf('faq')).toHaveLength(1));
     type(title, faqTitle);
     await waitFor(() => expect(title.getAttribute('aria-invalid')).toBe('true'));
-    expect(screen.getByText(/Same SEO title as "faq"/)).toBeTruthy();
+    expect(within(screen.getByTestId("form-panel")).getByText(/Same SEO title as "faq"/)).toBeTruthy();
     await waitFor(() => expect(pill().getAttribute('data-status')).toBe('invalid'));
     expect(saves()).toHaveLength(0);
     // The other pages were fetched once for the whole session.
     expect(fetchesOf('faq')).toHaveLength(1);
+  });
+
+  it('the SEO panel (P6) counts the title live and reads the rendered page', async () => {
+    await openEditor();
+    const panel = await screen.findByTestId('seo-panel');
+    await waitFor(() => expect(within(panel).getByTestId('seo-check-h1-el').getAttribute('data-severity')).toBe('ok'), { timeout: 8000 });
+    expect(within(panel).getByTestId('seo-check-images-en').getAttribute('data-severity')).toBe('ok');
+    const title = control('Page meta (SEO) › SEO title (EN)');
+    fireEvent.change(title, { target: { value: 'Short' } });
+    await waitFor(() => expect(within(panel).getByTestId('seo-check-title-en').getAttribute('data-severity')).toBe('warn'));
+    expect(within(panel).getByTestId('seo-check-title-en').textContent).toMatch(/5 χαρακτήρες/);
+    fireEvent.change(title, { target: { value: '' } });
+    await waitFor(() => expect(within(panel).getByTestId('seo-check-title-en').getAttribute('data-severity')).toBe('block'));
   });
 
   it('Page sections (P6): add a FAQ block; the autosave writes the layout, the sections then the block, in both languages', async () => {

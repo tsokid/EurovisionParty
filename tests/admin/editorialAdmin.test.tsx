@@ -242,7 +242,7 @@ describe('Pages module: editorial groups', () => {
       data: { en: editorial({ intro: 'Hi', metaDescription: faq.en.meta.description }), el: editorial({ intro: 'Γεια' }) },
     };
     render(<Pages docId="archive-2005" onOpen={vi.fn()} />);
-    expect(await screen.findByText(/Same meta description as "faq"/)).toBeTruthy();
+    await waitFor(() => expect(within(screen.getByTestId("form-panel")).getByText(/Same meta description as "faq"/)).toBeTruthy());
     expect(screen.getByText(/1 λάθος/)).toBeTruthy();
   });
 });

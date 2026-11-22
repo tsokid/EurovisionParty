@@ -53,6 +53,14 @@ function setup(docId: string, initial: Doc = published(docId)) {
   return { value: () => current };
 }
 
+/** A form control by its label text (getByLabelText is very slow in jsdom on a form this size). */
+function control(name: string): HTMLElement {
+  const label = [...document.querySelectorAll('label[for]')].find((l) => l.textContent === name);
+  const el = label && document.getElementById(label.getAttribute('for')!);
+  if (!el) throw new Error(`no control labelled ${name}`);
+  return el;
+}
+
 const keys = (items: Item[] | undefined) => (items ?? []).map((it) => (it.type === 'section' ? it.key : `${it.type}:${it.body ?? ''}`));
 const ABOUT = ['whatIs', 'why', 'whatsIn', 'freeNoAccount', 'ebu', 'builtBy'];
 const sectionCards = () => screen.getAllByTestId('layout-section');
@@ -69,7 +77,7 @@ describe('page layout editor', { timeout: 90_000 }, () => {
     // …and not drawn a second time outside it; the hero title is outside the list.
     const list = screen.getByRole('list', { name: 'Page sections' });
     expect(within(list).queryByLabelText('Hero › Title (EN)')).toBeNull();
-    expect(screen.getByLabelText('Hero › Title (EN)')).toBeTruthy();
+    expect(control('Hero › Title (EN)')).toBeTruthy();
     expect(screen.getAllByLabelText(/› Body \(EN\)$/).filter((el) => cards[1].contains(el))).toHaveLength(1);
   });
 
@@ -80,8 +88,8 @@ describe('page layout editor', { timeout: 90_000 }, () => {
     fireEvent.click(screen.getByRole('button', { name: 'Προσθήκη μπλοκ: Page sections' }));
     expect(keys(form.value().en.layout)).toEqual([...ABOUT, 'callout:']);
     expect(form.value().el.layout).toEqual(form.value().en.layout);
-    fireEvent.change(screen.getByLabelText('Page sections › Μπλοκ 7 › Text (EN)'), { target: { value: 'Note' } });
-    fireEvent.change(screen.getByLabelText('Page sections › Μπλοκ 7 › Text (EL)'), { target: { value: 'Σημείωση' } });
+    fireEvent.change(control('Page sections › Μπλοκ 7 › Text (EN)'), { target: { value: 'Note' } });
+    fireEvent.change(control('Page sections › Μπλοκ 7 › Text (EL)'), { target: { value: 'Σημείωση' } });
     fireEvent.click(screen.getByRole('button', { name: 'Διπλότυπο: Page sections › Μπλοκ 7' }));
     const [a, b] = form.value().en.layout!.slice(6);
     expect([a.body, b.body]).toEqual(['Note', 'Note']);

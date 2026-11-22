@@ -25,6 +25,15 @@ import { VisualDiff } from './VisualDiff';
 import { SeoDelta, TextDiff } from './DiffParts';
 import { DeployChip, FailureNotice } from './DeployState';
 import { t } from '../i18n';
+import { SeoGate } from '../seo/SeoPanel';
+import type { SeoCheck } from '../seo/seoChecks';
+
+/** Whether the SEO checks hold Publish: a failing check, or one not known yet (a doc not reported). */
+function seoState(docIds: string[], blocking: Record<string, SeoCheck[]>): 'block' | 'pending' | null {
+  if (docIds.some((id) => blocking[id]?.some((c) => c.severity === 'block'))) return 'block';
+  if (docIds.some((id) => !blocking[id] || blocking[id].length > 0)) return 'pending';
+  return null;
+}
 
 type View = 'visual' | 'text' | 'seo';
 
@@ -167,7 +176,7 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
 }
 
 /** Publishes exactly the reviewed page docs. */
-function PagePublish({ pairs, changedIds }: { pairs: DocPair[]; changedIds: string[] }) {
+function PagePublish({ pairs, changedIds, seoBlocked }: { pairs: DocPair[]; changedIds: string[]; seoBlocked: 'block' | 'pending' | null }) {
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState<PublishOutcome | null>(null);
@@ -191,11 +200,16 @@ function PagePublish({ pairs, changedIds }: { pairs: DocPair[]; changedIds: stri
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" className="btn btn-primary btn-sm" disabled={busy || shipping.length === 0} onClick={() => setConfirming(true)} data-testid="publish-docs">
+        <button type="button" className="btn btn-primary btn-sm" disabled={busy || shipping.length === 0 || !!seoBlocked} onClick={() => setConfirming(true)} data-testid="publish-docs">
           <Rocket size={15} aria-hidden />{busy ? t.publishFlow.publishing : pairs.length > 1 ? t.publishFlow.publishSelected(shipping.length) : t.publishFlow.publishOne}
         </button>
         <span className="t-meta">{t.publishFlow.eta}</span>
       </div>
+      {seoBlocked && (
+        <p role="status" className={clsx('t-small m-0', seoBlocked === 'block' ? 'text-stage-bad' : 'text-stage-text-3')} data-testid="seo-blocked">
+          {seoBlocked === 'block' ? t.seo.publishBlocked : t.seo.publishPending}
+        </p>
+      )}
       {outcome && outcome.status === 'ok' && run && <RunCard run={run} lead={t.publishFlow.published} />}
       {outcome && outcome.status === 'noop' && <p className="t-small m-0">{t.publishFlow.nothingSent}</p>}
       {outcome && (outcome.status === 'error' || outcome.status === 'busy') && <p role="alert" className="t-small text-stage-bad m-0">{outcomeText(outcome)}</p>}
@@ -224,6 +238,8 @@ export function PublishReview({ docIds, actions = true }: { docIds: string[]; ac
   const [targets, setTargets] = useState<EditorialTarget[] | null>(null);
   const [current, setCurrent] = useState(0);
   const [view, setView] = useState<View>('visual');
+  const [seoBlocking, setSeoBlocking] = useState<Record<string, SeoCheck[]>>({});
+  const onBlocking = useCallback((id: string, b: SeoCheck[]) => setSeoBlocking((prev) => ({ ...prev, [id]: b })), []);
   const key = docIds.join(',');
 
   useEffect(() => {
@@ -290,9 +306,32 @@ export function PublishReview({ docIds, actions = true }: { docIds: string[]; ac
         {view === 'seo' && <SeoDelta rows={seo} siteWide={siteWide} />}
       </section>
 
+      {actions && !siteWide && (
+        // The SEO checks of every page being published (spec §4.1): a blocking one holds Publish.
+        <section className="space-y-3" data-testid="publish-seo">
+          {pairs.filter((p) => !isSiteWide(p.docId) && changedIds.includes(p.docId)).map((p) => (
+            <div key={p.docId} className="space-y-1">
+              {pairs.length > 1 && <h3 className="t-eyebrow text-[11px] m-0">{t.seo.gateTitle(p.label)}</h3>}
+              <SeoGate
+                docId={p.docId}
+                doc={p.draft}
+                path={isEditorialDocId(p.docId) ? editorialPreviewPath(p.docId, targets) ?? null : undefined}
+                onBlocking={onBlocking}
+              />
+            </div>
+          ))}
+        </section>
+      )}
+
       {actions && (
         <section className="card p-4 sm:p-5" data-testid="publish-actions">
-          {siteWide ? <SitePreviewFlow pair={pair} changed={changes.length > 0} /> : <PagePublish pairs={pairs.filter((p) => !isSiteWide(p.docId))} changedIds={changedIds} />}
+          {siteWide ? <SitePreviewFlow pair={pair} changed={changes.length > 0} /> : (
+            <PagePublish
+              pairs={pairs.filter((p) => !isSiteWide(p.docId))}
+              changedIds={changedIds}
+              seoBlocked={seoState(pairs.filter((p) => !isSiteWide(p.docId) && changedIds.includes(p.docId)).map((p) => p.docId), seoBlocking)}
+            />
+          )}
         </section>
       )}
     </div>

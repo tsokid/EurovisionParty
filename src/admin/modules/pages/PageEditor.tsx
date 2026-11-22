@@ -27,6 +27,7 @@ import { seoDuplicates } from '../../../../supabase/functions/_shared/cms/seo';
 import { missingTranslationsOf } from '../../../../supabase/functions/_shared/cms/translations';
 import { reportGaps } from '../../cms/translationStatus';
 import { TranslationChips } from '../../cms/TranslationChips';
+import { SeoPanel, useSeoReport } from '../../seo/SeoPanel';
 import { formatError } from '../../lib/formatError';
 import { formatRunTime } from '../contests/publish';
 import { cmsDiscard, cmsGet, cmsSave, fetchPublished, fetchPublishedEditorialIds, fetchPublishedPages, isConflict } from './cmsApi';
@@ -148,6 +149,9 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
 
   const onChange = useCallback((next: DocValue) => doc.edit(next), [doc]);
 
+  // The SEO panel (CMS P6, spec §4.1): live while typing, the same checks Publish enforces.
+  const seo = useSeoReport({ docId, doc: shown, path: previewPath, vars, duplicates });
+
   // Click-to-edit (P4): a click on the preview focuses its field; the field in focus is outlined there.
   const formRef = useRef<HTMLDivElement>(null);
   const click = useClickToEdit({ docId, formRef, ready: doc.ready && !!value, beforeFocus: () => setTab('edit') });
@@ -247,6 +251,9 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
           data-testid="preview-panel"
           className={`${tab === 'preview' ? 'block' : 'hidden'} xl:block min-w-0 xl:sticky xl:top-44 xl:max-h-[calc(100dvh-12rem)] xl:overflow-auto`}
         >
+          <SeoPanel checks={seo.checks} onField={click.focusField} />
+          {seo.frames}
+          <div className="h-3" />
           <PreviewPane
             docId={docId}
             doc={value}

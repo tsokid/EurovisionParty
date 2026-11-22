@@ -26,3 +26,11 @@ __setAvatarClientForTests({
 // inline (in-memory port); tests of the iframe host set it explicitly.
 import { __setPreviewTransportForTests } from '../src/admin/preview/transportDefault';
 __setPreviewTransportForTests({ kind: 'inline' });
+
+// The SEO panel's internal-link check (CMS P6) reads the content indexes the
+// site serves; the suites get the routes of the committed content at once.
+import { __setKnownRoutesForTests, knownRoutes } from '../src/admin/seo/knownRoutes';
+import siteIndex from './fixtures/content-live-hub/site.json';
+import contestsIndex from '../content/contests/index.json';
+import countriesIndex from '../content/countries/index.json';
+__setKnownRoutesForTests(knownRoutes(siteIndex, contestsIndex, countriesIndex));
