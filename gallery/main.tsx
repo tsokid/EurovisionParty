@@ -26,6 +26,7 @@ import { duelRewardPreview } from '../src/lib/answerPoints';
 import { QUESTIONS } from '../src/lib/questions';
 import { getLocalizedQuestion } from '../src/lib/questionLocale';
 import type { Duel, DuelDecision, Notification } from '../src/lib/types';
+import type { WinnerRow } from '../src/lib/winners';
 import '../src/index.css';
 
 // ── Screens ──────────────────────────────────────────────────────────
@@ -40,8 +41,16 @@ interface Scenario {
   homeUrl?: string;
   prediction?: object | null;
   quizProgress?: (roomId: string, playerId: string) => QuizProgress;
-  /** Click away the final-phase WinnerCrown overlay. */
+  /** Final phase: mark the winners sequence as already seen (it plays otherwise). */
   dismissCrown?: boolean;
+  /** Task 8: my own quiz answers are in quiz_answers (activity feed). */
+  myAnswers?: boolean;
+  /** Task 8: player_secrets rows (the unmask). */
+  secrets?: boolean;
+  /** Task 8: my quiz total jumps by +40 after this many ms (overtake). */
+  overtakeAfterMs?: number;
+  /** Task 8: winners rows override. */
+  winners?: () => WinnerRow[];
   /** Override the cast (default: F.makePlayers + avatars). */
   players?: () => Player[];
   /** Move the room to this phase after `phaseChangeAfterMs`, the way a
@@ -133,11 +142,35 @@ const SCENARIOS: Scenario[] = [
   { id: 'du-incoming', label: 'Incoming challenge sheet (motion #11)', render: 'room', phase: 'pre_night', tab: 'quiz', incomingAfterMs: 1200, players: () => F.withStageNames(F.makePlayers('pre_night')),
     quizProgress: (roomId, playerId) => ({ roomId, playerId, phase: 'waiting', roundNumber: 2, questionIndex: 0, questionIds: [], usedQuestionIds: F.QUIZ_QUESTION_IDS, roundAnswers: [] }) },
   { id: 'avatar-modal', label: 'Avatar viewer modal (from the lobby)', render: 'room', phase: 'lobby', players: () => F.makeLobbyPlayers(6, 'other').map((p, i) => ({ ...p, avatar_id: ['img-02', 'img-01', 'img-11', 'img-25', 'img-37', 'img-29'][i] ?? p.avatar_id })), autoClickSelector: '.lb-tile .avv-btn' },
+  // ── Task 8: leaderboard, final, reel, TV ──
+  { id: 'lb-mid', label: 'Leaderboard mid-game (FLIP, chips, feed)', render: 'room', phase: 'pre_night', tab: 'leaderboard', players: () => F.withStageNames(F.makePlayers('pre_night')), myAnswers: true, note: 'Redesign Task 8: motion #9/#10.' },
+  { id: 'lb-overtake', label: 'Leaderboard · overtake at 1.8 s (toast + spark)', render: 'room', phase: 'pre_night', tab: 'leaderboard', players: () => F.withStageNames(F.makePlayers('pre_night')).map((p) => (p.id === F.ME_ID ? { ...p, quiz_points: 150, total_points: 174 } : p)), myAnswers: true, overtakeAfterMs: 1800 },
+  { id: 'final', label: 'Final screen (sequence already seen)', render: 'room', phase: 'final', tab: 'leaderboard', players: () => F.withStageNames(F.makePlayers('final')), prediction: F.PREDICTION_SCORED, dismissCrown: true, myAnswers: true, secrets: true },
+  { id: 'final-seq', label: 'Final · tier-1 winners sequence (~12 s)', render: 'room', phase: 'final', tab: 'leaderboard', players: () => F.withStageNames(F.makePlayers('final')), prediction: F.PREDICTION_SCORED, myAnswers: true, secrets: true },
+  { id: 'final-tie', label: 'Final · champion tie (vote panel)', render: 'room', phase: 'final', tab: 'leaderboard', players: () => F.withStageNames(F.makePlayers('final')).map((p) => (p.id === 'p-nikos' ? { ...p, quiz_points: 270, total_points: 348 } : p)), prediction: F.PREDICTION_SCORED, dismissCrown: true, winners: F.winnersTie },
+  { id: 'final-tv', label: 'Final · TV layout', render: 'room', phase: 'final', tab: 'leaderboard', players: () => F.withStageNames(F.makePlayers('final')), prediction: F.PREDICTION_SCORED, dismissCrown: true, secrets: true, autoClick: 'Στην τηλεόραση' },
+  { id: 'final-reel', label: 'Final · personal reel «Η βραδιά σου»', render: 'room', phase: 'final', tab: 'leaderboard', players: () => F.withStageNames(F.makePlayers('final')), prediction: F.PREDICTION_SCORED, dismissCrown: true, secrets: true, autoClick: 'Η βραδιά σου' },
   { id: 'avatars', label: 'Avatar set (96px, 32px, <Avatar>)', render: 'avatars', phase: 'lobby', note: 'Redesign Task 4: src/components/stage/avatars registry.' },
   { id: 'stage-primitives', label: 'Stage primitives (design system)', render: 'stage', phase: 'lobby', note: 'Redesign Task 1: every src/components/stage primitive, in 390px and 1440px iframes.' },
 ];
 
 // ── Seeding ──────────────────────────────────────────────────────────
+let TABLES: FakeTables | null = null;
+
+/** Task 8: +40 trivia for me, the way a realtime players UPDATE lands, plus the stored answer row. */
+function OvertakeAfter({ ms }: { ms: number }) {
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const st = useGameStore.getState();
+      st.setPlayers(st.players.map((p) => (p.id === F.ME_ID ? { ...p, quiz_points: p.quiz_points + 40, total_points: p.total_points + 40 } : p)));
+      const qa = TABLES?.quiz_answers as Record<string, unknown>[] | undefined;
+      qa?.push({ id: 'qa-me-overtake', room_id: F.ROOM_ID, player_id: F.ME_ID, round_number: 2, question_id: 999, answer_index: 0, is_correct: true, question_opened_at: new Date().toISOString(), answered_at: new Date().toISOString(), response_seconds: 1.4, points_awarded: 40 });
+    }, ms);
+    return () => clearTimeout(id);
+  }, [ms]);
+  return null;
+}
+
 function seed(s: Scenario) {
   if (s.render === 'stage' || s.render === 'avatars') return; // static sheet, no data
   // Skip first-entry overlays and audio, the same flags the app checks.
@@ -165,20 +198,27 @@ function seed(s: Scenario) {
     current_participants: F.ENTRIES_NO_RESULTS,
     duels: F.DUELS,
     notifications: F.NOTIFICATIONS,
-    quiz_answers: [...F.OTHER_QUIZ_ANSWERS],
+    quiz_answers: [...F.OTHER_QUIZ_ANSWERS, ...(s.myAnswers ? F.ROUND1_ANSWERS : [])],
+    player_secrets: s.secrets ? F.PLAYER_SECRETS : [],
     quiz_rounds: [],
     question_assignments: [],
     intel_reveals: [{ id: 'ir1', room_id: room.id, player_id: me.id, reveal_type: 'top3', points_cost: 30, revealed_at: new Date().toISOString() }],
-    winners: final ? F.WINNERS : [],
+    winners: final ? (s.winners ? s.winners() : F.WINNERS) : [],
     tie_votes: [],
     tie_vote_choices: [],
     sudden_death_rounds: [],
     sudden_death_answers: [],
     results: [],
   };
+  TABLES = tables;
+  try {
+    if (s.dismissCrown) localStorage.setItem(`eurovision-games-finale-seen-${room.id}`, '1');
+    else localStorage.removeItem(`eurovision-games-finale-seen-${room.id}`);
+    localStorage.removeItem(`eurovision-games-official-top5-${room.id}`);
+  } catch { /* ignore */ }
   const top3 = F.ENTRIES.slice(0, 3).map((e) => e.iso);
   setFakeDb(tables, {
-    compute_winners: () => F.WINNERS.length,
+    compute_winners: () => (s.winners ? s.winners() : F.WINNERS).length,
     get_intel_reveal: ({ p_reveal_type }) =>
       p_reveal_type === 'top3' ? { available: true, data: top3 } : { available: false },
     // Mirrors submit_quiz_answer (083): p_response_ms clamped to [0, 16000] and
@@ -292,19 +332,6 @@ function AutoClick({ name }: { name: string }) {
   return null;
 }
 
-function DismissCrown() {
-  useEffect(() => {
-    let tries = 0;
-    const id = setInterval(() => {
-      const el = document.querySelector<HTMLElement>('div.fixed.inset-0.z-\\[100\\]');
-      if (el) { el.click(); clearInterval(id); }
-      if (++tries > 40) clearInterval(id);
-    }, 100);
-    return () => clearInterval(id);
-  }, []);
-  return null;
-}
-
 function Screen({ s }: { s: Scenario }): ReactNode {
   const noop = () => {};
   switch (s.render) {
@@ -323,7 +350,7 @@ function Screen({ s }: { s: Scenario }): ReactNode {
       return (
         <MemoryRouter initialEntries={['/room/DESIGN']}>
           <Routes>
-            <Route path="/room/:roomCode" element={<><RoomPage />{s.dismissCrown && <DismissCrown />}{s.autoClick && <AutoClick name={s.autoClick} />}{s.autoClickSelector && <AutoClickSel sel={s.autoClickSelector} />}{s.incomingAfterMs && <IncomingAfter ms={s.incomingAfterMs} />}{s.phaseChangeTo && <PhaseFlip to={s.phaseChangeTo} afterMs={s.phaseChangeAfterMs ?? 1500} />}</>} />
+            <Route path="/room/:roomCode" element={<><RoomPage />{s.overtakeAfterMs && <OvertakeAfter ms={s.overtakeAfterMs} />}{s.autoClick && <AutoClick name={s.autoClick} />}{s.autoClickSelector && <AutoClickSel sel={s.autoClickSelector} />}{s.incomingAfterMs && <IncomingAfter ms={s.incomingAfterMs} />}{s.phaseChangeTo && <PhaseFlip to={s.phaseChangeTo} afterMs={s.phaseChangeAfterMs ?? 1500} />}</>} />
             <Route path="*" element={<p style={{ color: 'white', padding: 24 }}>Navigated away from the room (gallery).</p>} />
           </Routes>
         </MemoryRouter>

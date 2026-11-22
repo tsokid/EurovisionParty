@@ -99,6 +99,19 @@ describe.skipIf(!built)('client bundle (dist/)', () => {
     }
   });
 
+  // Task 8: the stage VFX engine (WebGL/Canvas2D) is a dynamic chunk that only
+  // game screens load; no public chunk may carry it. The marker is a piece of
+  // the beam fragment shader (src/components/stage/vfx/engine.ts).
+  const VFX_MARKER = 'fbm(vP*0.0075';
+  it('the stage VFX engine ships as its own lazy chunk, never in a public chunk', () => {
+    const holders = jsFiles.filter(({ f }) => read(f).includes(VFX_MARKER)).map(({ f }) => f);
+    expect(holders.length, 'no chunk contains the VFX engine').toBeGreaterThan(0);
+    for (const f of holders) {
+      expect(publicNames.includes(f), `VFX engine in public chunk ${f}`).toBe(false);
+      console.log(`bundleSize.test: VFX chunk ${f} = ${statSync(resolve(ASSETS, f)).size} bytes`);
+    }
+  });
+
   // Regression guard (final review M4): the main chunk was 1,731,226 bytes
   // raw after sub-project 2b. Raise the budget deliberately, never silently.
   const MAIN_CHUNK_BUDGET = 1_760_000;

@@ -351,7 +351,7 @@ export const WINNERS: WinnerRow[] = [
   { id: 'w2', room_id: ROOM_ID, category: 'duelist', player_id: 'p-maria', metric_value: 4, is_sudden_death_winner: false },
   { id: 'w3', room_id: ROOM_ID, category: 'thief', player_id: 'p-maria', metric_value: 36, is_sudden_death_winner: false },
   { id: 'w4', room_id: ROOM_ID, category: 'guru', player_id: 'p-nikos', metric_value: 22, is_sudden_death_winner: false },
-  { id: 'w5', room_id: ROOM_ID, category: 'oracle', player_id: 'p-maria', metric_value: 6, is_sudden_death_winner: false },
+  { id: 'w5', room_id: ROOM_ID, category: 'oracle', player_id: 'p-me', metric_value: 140, is_sudden_death_winner: false },
 ];
 
 // ── Other players' quiz answers (feeds aggregate views) ─────────────
@@ -384,3 +384,14 @@ export const ROUND1_START_STANDINGS = [
   { id: 'p-nikos', total: 214 }, { id: 'p-maria', total: 176 }, { id: 'p-kostas', total: 168 },
   { id: 'p-me', total: 141 }, { id: 'p-sofia', total: 120 }, { id: 'p-alex', total: 98 },
 ];
+
+// ── Task 8: final screen fixtures ────────────────────────────────────
+/** Real names (player_secrets). p-sofia joined before 082: no row, the unmask shows «—». */
+export const PLAYER_SECRETS = [
+  { player_id: 'p-me', real_name: 'Ελένη' }, { player_id: 'p-nikos', real_name: 'Νίκος' }, { player_id: 'p-maria', real_name: 'Μαρία' },
+  { player_id: 'p-kostas', real_name: 'Κώστας' }, { player_id: 'p-alex', real_name: 'Αλέξανδρος' },
+];
+/** Champion tie between me and Douze Points (348 each). */
+export function winnersTie(): WinnerRow[] {
+  return [...WINNERS, { id: 'w6', room_id: ROOM_ID, category: 'champion', player_id: 'p-nikos', metric_value: 348, is_sudden_death_winner: false }];
+}

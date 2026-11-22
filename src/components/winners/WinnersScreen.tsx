@@ -1,38 +1,36 @@
 // src/components/winners/WinnersScreen.tsx
-// Card-carousel winners screen.
-// Slide order: Champion → other categories → Dashboard (final standings).
-// Each card is portrait, covers ~90% of mobile screen width.
-// Dot indicators + swipe navigation. Tie/sudden-death panels live below the carousel.
+//
+// Final screen (boards final-after-{m,d}). Your final place and the points
+// breakdown, the 5 titles of the night (today's compute_winners result),
+// the final ranking and — on desktop — your prediction breakdown and the
+// activity feed. «Η βραδιά σου» opens your personal reel; «Στην τηλεόραση»
+// opens the TV / presentation layout. The champion tie-vote and
+// sudden-death panels keep working, restyled.
 
-import { useEffect, useState, useCallback, useRef, type CSSProperties } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Crown } from 'lucide-react';
-import { useTranslation, Trans } from 'react-i18next';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
+import { Clapperboard, Tv, RotateCcw, Activity } from 'lucide-react';
 import TieVotePanel from './TieVotePanel';
 import SuddenDeathPanel from './SuddenDeathPanel';
-import {
-  computeWinners, fetchWinners, groupByCategory, hasTie, CATEGORY_META,
-} from '../../lib/winners';
-import type { WinnerRow, WinnerCategory } from '../../lib/winners';
+import { TitleIcon } from './FinalSequence';
+import { REPLAY_FINALE_EVENT } from './FinalCeremony';
+import TvPresentation from './TvPresentation';
+import PersonalReel, { reelNumbers, signedNum } from '../reel/PersonalReel';
+import PredictionsResultsScreen from '../results/PredictionsResultsScreen';
+import { FeedLine, FeedTime, useNow } from '../leaderboard/LeaderboardScreen';
+import { groupByCategory, hasTie, type WinnerCategory } from '../../lib/winners';
+import { TITLE_LIST_ORDER } from '../../lib/titles';
+import { rankOrder } from '../../lib/rankMoves';
 import { useGameStore } from '../../stores/gameStore';
 import { useLeaderboard } from '../../hooks/useLeaderboard';
-import { avatarGradient, avatarInitial } from '../../lib/avatarUtils';
-import { supabase } from '../../lib/supabase';
-
-type ChampionVoteStatus = 'active' | 'accept' | 'sudden_death' | null;
-
-const CARD_ORDER: WinnerCategory[] = ['champion', 'duelist', 'thief', 'guru', 'oracle'];
-
-// Carousel card geometry (shared by category cards and dashboard card)
-const CARD_STYLE: CSSProperties = {
-  width: 'calc(100vw - 40px)',
-  maxWidth: '360px',
-  // Tall portrait — fills most of the phone screen vertically
-  height: 'clamp(440px, 72svh, 600px)',
-  scrollSnapAlign: 'start',
-  flexShrink: 0,
-};
+import { useWinners } from '../../hooks/useWinners';
+import { useChampionVote } from '../../hooks/useChampionVote';
+import { useActivityFeed } from '../../hooks/useActivityFeed';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { Avatar, PlayerAvatar } from '../stage';
+import type { Player } from '../../lib/types';
 
 interface Props {
   roomId: string;
@@ -42,508 +40,176 @@ interface Props {
 
 export default function WinnersScreen({ roomId, isHost, playerNameById }: Props) {
   const { t } = useTranslation();
-  const [winners, setWinners]   = useState<WinnerRow[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [search, setSearch]     = useState('');
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const { player: currentPlayer, room } = useGameStore();
+  const reduce = useReducedMotion() ?? false;
+  const { player: me, room } = useGameStore();
   const { players } = useLeaderboard(room?.id);
+  const { rows: winners, loading, refresh } = useWinners(roomId, isHost);
+  const championVote = useChampionVote(roomId);
+  const desktop = useMediaQuery('(min-width: 1024px)');
+  const ranked = rankOrder(players);
+  const feed = useActivityFeed(roomId, me?.id, ranked.map((p) => `${p.id}:${p.total_points}`).join('|'));
+  const now = useNow();
+  const [reelFor, setReelFor] = useState<Player | null>(null);
+  const [tv, setTv] = useState(false);
 
-  const catName     = (cat: WinnerCategory) => t(`winners.cat.${cat}.name`);
-  const catSubtitle = (cat: WinnerCategory) => t(`winners.cat.${cat}.subtitle`);
-
-  const refresh = useCallback(async () => {
-    setLoading(true);
-    if (isHost) await computeWinners(roomId).catch(() => {});
-    setWinners(await fetchWinners(roomId));
-    setLoading(false);
-  }, [roomId, isHost]);
-
-  useEffect(() => { refresh(); }, [refresh]);
-
-  // ── Champion tie-vote status (drives SD panel visibility + card blur) ───
-  const [championVoteStatus, setChampionVoteStatus] = useState<ChampionVoteStatus>(null);
-  useEffect(() => {
-    let mounted = true;
-    const loadStatus = async () => {
-      const { data } = await supabase
-        .from('tie_votes')
-        .select('status')
-        .eq('room_id', roomId)
-        .eq('category', 'champion')
-        .order('opened_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (mounted) setChampionVoteStatus((data?.status as ChampionVoteStatus) ?? null);
-    };
-    loadStatus();
-    const ch = supabase
-      .channel(`tie_votes_status:${roomId}:champion`)
-      .on('postgres_changes',
-          { event: '*', schema: 'public', table: 'tie_votes', filter: `room_id=eq.${roomId}` },
-          (payload) => {
-            if (payload.eventType === 'DELETE') { setChampionVoteStatus(null); return; }
-            const row = payload.new as { category?: string; status?: string };
-            if (row.category === 'champion' && row.status) {
-              setChampionVoteStatus(row.status as ChampionVoteStatus);
-            }
-          }).subscribe();
-    return () => { mounted = false; supabase.removeChannel(ch); };
-  }, [roomId]);
-
-  // ── Scroll tracking ──────────────────────────────────────────────────────
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cards = el.querySelectorAll<HTMLElement>('[data-card]');
-    const mid = el.scrollLeft + el.clientWidth / 2;
-    let closest = 0, minD = Infinity;
-    cards.forEach((card, i) => {
-      const d = Math.abs(card.offsetLeft + card.offsetWidth / 2 - mid);
-      if (d < minD) { minD = d; closest = i; }
-    });
-    setActiveIdx(closest);
-  }, []);
-
-  const scrollToCard = useCallback((i: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cards = el.querySelectorAll<HTMLElement>('[data-card]');
-    if (cards[i]) {
-      // Scroll so the card's left edge aligns with the carousel's paddingLeft
-      el.scrollTo({ left: cards[i].offsetLeft - 16, behavior: 'smooth' });
-    }
-  }, []);
-
-  // ── Loading ──────────────────────────────────────────────────────────────
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-          className="w-8 h-8 border-[3px] border-white/20 border-t-euro-gold rounded-full"
-        />
-      </div>
-    );
+  if (loading && winners.length === 0) {
+    return <div className="pk-loading" role="status" aria-label={t('common.loading')}><span className="lb-spinner" aria-hidden="true" /></div>;
   }
 
-  // ── Derived data ─────────────────────────────────────────────────────────
-  const groups     = groupByCategory(winners);
-  const champions  = groups.champion;
-  const isTied     = hasTie(champions);
+  const groups = groupByCategory(winners);
+  const champions = groups.champion;
+  const isTied = hasTie(champions);
   const champNames = champions.map((r) => playerNameById[r.player_id] ?? '?');
+  const champHidden = isTied && championVote !== 'accept';
+  const nameOf = (id: string | null | undefined) => (id && playerNameById[id]) || players.find((p) => p.id === id)?.name || '—';
 
-  const myWinCats: WinnerCategory[] = currentPlayer
-    ? CARD_ORDER.filter((c) => groups[c].some((r) => r.player_id === currentPlayer.id))
-    : [];
+  const myIdx = me ? ranked.findIndex((p) => p.id === me.id) : -1;
+  const mine = myIdx >= 0 ? ranked[myIdx] : null;
+  const nums = mine ? reelNumbers(mine) : null;
+  const next = myIdx > 0 ? ranked[myIdx - 1] : myIdx === 0 ? ranked[1] : null;
 
-  // Only show categories that have at least one winner
-  const activeCats = CARD_ORDER.filter((c) => groups[c].length > 0);
-  const totalSlides = activeCats.length;
+  const stagger = (i: number) => (reduce ? { initial: false as const } : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3, delay: i * 0.05 } });
 
-  const maxPts = players[0]?.total_points || 1;
-  const filteredPlayers = search
-    ? players.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
-    : players;
+  const titleCard = (cat: WinnerCategory, i: number) => {
+    const rows = groups[cat];
+    const hidden = cat === 'champion' && champHidden;
+    const holders = rows.map((r) => players.find((p) => p.id === r.player_id)).filter((p): p is Player => !!p);
+    const metric = rows[0] ? Number(rows[0].metric_value) : 0;
+    return (
+      <motion.li key={cat} className={clsx('fn-title', `c-${cat}`, rows.some((r) => r.player_id === me?.id) && 'mine')} {...stagger(i)}>
+        <span className="fn-ti"><TitleIcon cat={cat} /></span>
+        <span className="fn-tt">
+          <span className="fn-tname">{t(`winners.cat.${cat}.name`)}</span>
+          <span className="t-meta">
+            {rows.length === 0 ? t('titles.none') : hidden ? t('finale.tieVote') : `${t(`titles.reason.${cat}`)} · ${t(`titles.metric.${cat}`, { count: metric })}`}
+          </span>
+        </span>
+        {rows.length > 0 && (
+          <span className={clsx('fn-twho', hidden && 'hidden')}>
+            <span className="fn-tnames">
+              {hidden ? '?' : holders.map((p) => (p.id === me?.id ? t('titles.you') : p.name)).join(' & ')}
+            </span>
+            {!hidden && holders[0] && <PlayerAvatar name={holders[0].name} avatarId={holders[0].avatar_id} size="md" />}
+          </span>
+        )}
+      </motion.li>
+    );
+  };
 
-  // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col gap-4 pt-4 pb-[calc(2rem+env(safe-area-inset-bottom))]">
-
-      {/* ── PROMINENT TIE BANNER (champion only) — hoisted above everything
-              so the host can act and players can vote without scrolling. ── */}
+    <div className="fn">
       {isTied && (
-        <div className="px-4">
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ type: 'spring', damping: 22 }}
-            className="rounded-3xl border-2 border-amber-400/50 p-1 shadow-[0_0_60px_rgba(251,191,36,0.25)]"
-            style={{ background: 'linear-gradient(135deg,rgba(251,191,36,0.12),rgba(236,72,153,0.10))' }}
-          >
-            {/* Headline strip */}
-            <div className="px-4 sm:px-5 pt-4 pb-3 text-center">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 border border-amber-400/50 px-3 py-1 text-[10px] sm:text-[11px] font-bold text-amber-300 tracking-[0.18em] uppercase mb-3">
-                {t('winners.tiebreakRequired')}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-                {t('winners.matchStillOn')}
-              </h2>
-              <p className="text-sm text-white/65 mt-1.5 max-w-md mx-auto">
-                {t('winners.tiebreakSubtitle', { names: champNames.join(' & ') })}
-              </p>
-            </div>
-            {/* Either the TieVotePanel (no-vote / active vote / accepted)
-                OR the SuddenDeathPanel (after the room voted SD). Never
-                both — TieVotePanel's "sudden death chosen" reminder is
-                redundant once the SD panel takes over the same column. */}
-            <div className="bg-[#0d061d]/60 rounded-[22px] m-1">
-              {championVoteStatus === 'sudden_death' ? (
-                <SuddenDeathPanel
-                  roomId={roomId}
-                  isHost={isHost}
-                  tiedPlayerIds={champions.map((r) => r.player_id)}
-                  tiedPlayerNames={Object.fromEntries(
-                    champions.map((r) => [r.player_id, playerNameById[r.player_id] ?? '?']),
-                  )}
-                  onResolved={refresh}
-                />
-              ) : (
-                <TieVotePanel
-                  roomId={roomId}
-                  isHost={isHost}
-                  category="champion"
-                  tiedPlayerNames={champNames}
-                  onResolved={refresh}
-                />
-              )}
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* ── Title ── */}
-      <div className="px-4">
-        <h2 className="text-[1.75rem] sm:text-3xl font-extrabold text-white leading-[1.1]">
-          {t('winners.circleTitle1')}{' '}
-          <span className="bg-gradient-to-r from-euro-purple-light to-euro-pink bg-clip-text text-transparent">
-            {t('winners.circleTitle2')}
-          </span>{' '}
-          {t('winners.circleTitle3')}
-        </h2>
-      </div>
-
-      {/* ── Carousel ── */}
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex gap-3 overflow-x-auto"
-        style={{
-          scrollSnapType: 'x mandatory',
-          scrollbarWidth: 'none',
-          paddingLeft: '16px',
-        } as CSSProperties}
-      >
-        {/* ── Category cards ── */}
-        {activeCats.map((cat, slideIdx) => {
-          const rows    = groups[cat];
-          const meta    = CATEGORY_META[cat];
-          const names   = rows.map((r) => playerNameById[r.player_id] ?? '?');
-          const score   = rows[0] ? Number(rows[0].metric_value) : 0;
-          const catTied = hasTie(rows);
-          const isMyCat = myWinCats.includes(cat);
-          const isChamp = cat === 'champion';
-
-          return (
-            <motion.div
-              key={cat}
-              data-card
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: 'spring', damping: 22, delay: slideIdx * 0.07 }}
-              className="relative rounded-3xl overflow-hidden"
-              style={CARD_STYLE}
-            >
-              {/* Background image */}
-              <img
-                src={meta.image}
-                alt={catName(cat)}
-                className="absolute inset-0 w-full h-full object-cover select-none"
-                draggable={false}
-              />
-
-              {/* Gradient overlay — light at top, heavy at bottom */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/10" />
-
-              {/* ── Top badges ── (category name omitted — already on the card art) */}
-              {isMyCat && (
-                <div className="absolute top-4 right-4 z-10">
-                  <span
-                    className="rounded-full px-3 py-1 text-[11px] font-bold text-white tracking-[0.14em] uppercase backdrop-blur-sm"
-                    style={{ background: 'linear-gradient(90deg,#be185d,#7c3aed)' }}
-                  >
-                    {t('winners.yourCrown')}
-                  </span>
-                </div>
-              )}
-
-              {/* ── Bottom content ── */}
-              <div className="absolute inset-x-0 bottom-0 p-5 z-10">
-                {/* Subtitle */}
-                <p className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.2em] mb-3">
-                  {catSubtitle(cat)}
-                </p>
-
-                {/* Player name(s)
-                    Champion + tied + vote unresolved → identity hidden.
-                    Champion + tied + vote 'accept' → CO-CHAMPIONS, names shown.
-                    Champion + single → normal champion display.
-                    Other categories: stacked co-winners as before. */}
-                {(() => {
-                  const championIdentityHidden =
-                    isChamp && catTied && championVoteStatus !== 'accept';
-                  if (championIdentityHidden) {
-                    return (
-                      <div className="flex items-center gap-2.5 mb-4">
-                        <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-white/60 font-bold text-base flex-shrink-0">
-                          ?
-                        </div>
-                        <span
-                          className="text-[1.3rem] font-extrabold text-white/85 leading-tight truncate"
-                          style={{ filter: 'blur(6px)', userSelect: 'none' }}
-                          aria-label="Champion identity hidden until tiebreak resolves"
-                        >
-                          {names.join(' & ') || 'Hidden Player'}
-                        </span>
-                      </div>
-                    );
-                  }
-                  return (
-                    <div className="space-y-2 mb-4">
-                      {names.slice(0, 3).map((name, ni) => (
-                        <div key={name + ni} className="flex items-center gap-2.5">
-                          <div className={clsx(
-                            'w-9 h-9 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-sm flex-shrink-0',
-                            avatarGradient(ni),
-                          )}>
-                            {avatarInitial(name)}
-                          </div>
-                          <span className="text-[1.3rem] font-extrabold text-white leading-tight truncate">
-                            {name}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })()}
-
-                {/* Score row */}
-                <div className="flex items-end justify-between gap-3">
-                  <div>
-                    {(() => {
-                      const tieUnresolved = isChamp && catTied && championVoteStatus !== 'accept';
-                      const acceptedCo    = isChamp && catTied && championVoteStatus === 'accept';
-                      if (tieUnresolved) {
-                        return (
-                          <>
-                            <p className="text-3xl font-extrabold text-amber-300 tabular-nums leading-none">
-                              {score.toLocaleString()}
-                            </p>
-                            <p className="text-[10px] text-amber-200/70 mt-1.5 uppercase tracking-widest">
-                              {t('winners.tiedAtTop')}
-                            </p>
-                          </>
-                        );
-                      }
-                      return (
-                        <>
-                          <p className="text-5xl font-extrabold text-white tabular-nums leading-none">
-                            {score.toLocaleString()}
-                          </p>
-                          <p className="text-[10px] text-white/40 mt-1.5 uppercase tracking-widest">
-                            {acceptedCo
-                              ? t('winners.coChampions', { defaultValue: 'Co-champions' })
-                              : isChamp
-                                ? t('winners.totalPts')
-                                : t('winners.stat')}
-                          </p>
-                        </>
-                      );
-                    })()}
-                  </div>
-
-                  {/* Status badge / crown icon */}
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    {isChamp && catTied && championVoteStatus !== 'accept' ? (
-                      <span className="rounded-full bg-amber-400/20 border border-amber-400/50 px-2.5 py-1 text-[11px] font-bold text-amber-300 uppercase tracking-wider">
-                        {t('winners.tiebreakBadge')}
-                      </span>
-                    ) : isChamp ? (
-                      <div className="w-11 h-11 rounded-full bg-euro-gold/20 border border-euro-gold/40 flex items-center justify-center">
-                        <Crown className="w-5 h-5 text-euro-gold" strokeWidth={2} />
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-
-        {/* Right spacer — gives the last card right padding on snap */}
-        <div style={{ width: '16px', flexShrink: 0 }} />
-      </div>
-
-      {/* ── Dot indicators ── */}
-      {totalSlides > 1 && (
-        <div className="flex justify-center items-center gap-1.5">
-          {Array.from({ length: totalSlides }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => scrollToCard(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              className={clsx(
-                'rounded-full transition-all duration-300 focus:outline-none',
-                i === activeIdx
-                  ? 'w-5 h-[5px] bg-white'
-                  : 'w-[5px] h-[5px] bg-white/30 hover:bg-white/55',
-              )}
+        <section className="card-hero fn-tie" aria-labelledby="fn-tie-h">
+          <h2 id="fn-tie-h" className="t-h2">{t('winners.matchStillOn')}</h2>
+          <p className="t-small">{t('winners.tiebreakSubtitle', { names: champNames.join(' & ') })}</p>
+          {championVote === 'sudden_death' ? (
+            <SuddenDeathPanel
+              roomId={roomId}
+              isHost={isHost}
+              tiedPlayerIds={champions.map((r) => r.player_id)}
+              tiedPlayerNames={Object.fromEntries(champions.map((r) => [r.player_id, playerNameById[r.player_id] ?? '?']))}
+              onResolved={refresh}
             />
-          ))}
-        </div>
+          ) : (
+            <TieVotePanel roomId={roomId} isHost={isHost} category="champion" tiedPlayerNames={champNames} onResolved={refresh} />
+          )}
+        </section>
       )}
 
-      {/* ── Final Standings — full analysis table ── */}
-      <div className="px-4 mt-2">
-        <div className="rounded-2xl border border-white/10 overflow-hidden"
-          style={{ background: 'linear-gradient(160deg,#130826 0%,#0d051a 100%)' }}
-        >
-          {/* Header */}
-          <div className="p-4 sm:p-5 border-b border-white/8">
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-white/40 tracking-[0.2em] uppercase">{t('winners.fullAnalysis')}</p>
-                <h3 className="text-lg sm:text-xl font-extrabold text-white mt-0.5">{t('winners.finalStandings')}</h3>
+      <div className="fn-cols">
+        <div className="fn-main">
+          {mine && nums && (
+            <section className="card-hero fn-hero" aria-labelledby="fn-hero-h">
+              <Avatar name={mine.name} avatarId={mine.avatar_id} size="xl" className="fn-hero-av" />
+              <div className="fn-hero-who">
+                <span className="t-eyebrow fn-hero-k">{t('final.eyebrow', { year: room?.year ?? '' })}</span>
+                <h1 id="fn-hero-h" className="fn-hero-h">
+                  {t('final.placeOf', { place: myIdx + 1, count: ranked.length })}
+                  <span className="fn-only-d"> · {t('final.points', { points: nums.total })}</span>
+                </h1>
+                {next && (
+                  <span className="t-meta">
+                    {myIdx === 0
+                      ? t('final.nextBehind', { name: next.name, points: next.total_points })
+                      : t('final.nextAhead', { name: next.name, points: next.total_points })}
+                  </span>
+                )}
               </div>
-              <div className="text-right text-[11px] text-white/35 flex-shrink-0">
-                <p>{t('winners.playersCount', { count: players.length })}</p>
-                <p className="mt-0.5">{t('winners.topAt')} <span className="text-white/70 font-bold tabular-nums">{maxPts.toLocaleString()}</span></p>
+              <div className="fn-hero-pts fn-only-m"><span className="num">{nums.total}</span><span className="t-meta">{t('board.points')}</span></div>
+              <div className="fn-stats">
+                <div className="stat"><div className="v num">{nums.trivia}</div><div className="k">{t('reel.trivia')}</div></div>
+                <div className="stat"><div className="v num">{signedNum(nums.duels)}</div><div className="k">{t('reel.duels')}</div></div>
+                <div className="stat"><div className="v num">{nums.predictions}</div><div className="k">{t('reel.predictions')}</div></div>
               </div>
-            </div>
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('winners.searchPlayer')}
-                className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl bg-white/[0.08] border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-white/25"
-              />
-            </div>
-          </div>
+              {nums.spent > 0 && <p className="t-meta fn-spent">{t('reel.spentNote', { points: nums.spent })}</p>}
+              <div className="fn-actions">
+                <button type="button" className="btn btn-primary" onClick={() => setReelFor(mine)}>
+                  <Clapperboard aria-hidden="true" strokeWidth={2} />{t('final.yourNight')}
+                </button>
+                {desktop && (
+                  <button type="button" className="btn btn-secondary" onClick={() => setTv(true)}>
+                    <Tv aria-hidden="true" strokeWidth={2} />{t('final.tv')}
+                  </button>
+                )}
+                <button type="button" className="btn btn-ghost" onClick={() => window.dispatchEvent(new Event(REPLAY_FINALE_EVENT))}>
+                  <RotateCcw aria-hidden="true" strokeWidth={2} />{t('final.replay')}
+                </button>
+              </div>
+            </section>
+          )}
 
-          {/* Table — horizontal scroll on narrow screens so all 6 columns
-              stay visible without crushing into unreadable widths. */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm" style={{ minWidth: '560px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr className="text-[10px] font-bold text-white/40 tracking-widest uppercase">
-                  <th className="text-left  py-2.5 pl-4 sm:pl-5 pr-2 w-12">{t('winners.col.rank')}</th>
-                  <th className="text-left  py-2.5 px-2">{t('winners.col.player')}</th>
-                  <th className="text-right py-2.5 px-2 w-20">{t('winners.col.total')}</th>
-                  <th className="text-right py-2.5 px-2 w-16">{t('winners.col.quiz')}</th>
-                  <th className="text-right py-2.5 px-2 w-16">{t('winners.col.duel')}</th>
-                  <th className="text-right py-2.5 px-2 pr-4 sm:pr-5 w-16">{t('winners.col.pred')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPlayers.map((p, i) => {
-                  const isMe   = p.id === currentPlayer?.id;
-                  const isTop3 = !search && i < 3 && p.total_points > 0;
-                  const medal  = ['🥇', '🥈', '🥉'][i];
-                  const duelSign = p.duel_points > 0 ? '+' : '';
-                  return (
-                    <motion.tr
-                      key={p.id}
-                      initial={{ opacity: 0, x: -4 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.02 }}
-                      className={clsx(
-                        'border-t border-white/[0.04]',
-                        isMe ? 'bg-euro-purple/12' : 'hover:bg-white/[0.02]',
-                      )}
-                    >
-                      {/* Rank */}
-                      <td className="py-3 pl-4 sm:pl-5 pr-2 align-middle">
-                        {isTop3 ? (
-                          <span className="text-base">{medal}</span>
-                        ) : (
-                          <span className="text-xs font-bold text-white/40 tabular-nums">{i + 1}</span>
-                        )}
-                      </td>
-                      {/* Player */}
-                      <td className="py-3 px-2 align-middle">
-                        <div className="flex items-center gap-2.5">
-                          <div className={clsx(
-                            'w-8 h-8 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-xs flex-shrink-0',
-                            avatarGradient(i),
-                          )}>
-                            {avatarInitial(p.name)}
-                          </div>
-                          <span className={clsx(
-                            'font-semibold truncate',
-                            isMe ? 'text-euro-purple-light' : 'text-white',
-                          )}>
-                            {p.name}
-                          </span>
-                          {isMe && (
-                            <span className="text-[9px] font-bold text-euro-purple-light bg-euro-purple/25 rounded-full px-1.5 py-0.5 leading-none flex-shrink-0">
-                              {t('winners.you')}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      {/* Total */}
-                      <td className="py-3 px-2 text-right align-middle">
-                        <span className="text-base font-extrabold text-white tabular-nums">
-                          {p.total_points.toLocaleString()}
-                        </span>
-                      </td>
-                      {/* Quiz */}
-                      <td className="py-3 px-2 text-right align-middle">
-                        <span className="text-sm font-semibold text-white/75 tabular-nums">
-                          {p.quiz_points.toLocaleString()}
-                        </span>
-                      </td>
-                      {/* Duel (signed balance) */}
-                      <td className="py-3 px-2 text-right align-middle">
-                        <span className={clsx(
-                          'text-sm font-semibold tabular-nums',
-                          p.duel_points > 0 ? 'text-emerald-400'
-                            : p.duel_points < 0 ? 'text-red-400'
-                            : 'text-white/50',
-                        )}>
-                          {duelSign}{p.duel_points.toLocaleString()}
-                        </span>
-                      </td>
-                      {/* Predictions */}
-                      <td className="py-3 px-2 pr-4 sm:pr-5 text-right align-middle">
-                        <span className="text-sm font-semibold text-white/75 tabular-nums">
-                          {p.pred_points.toLocaleString()}
-                        </span>
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            {filteredPlayers.length === 0 && (
-              <p className="text-center text-white/30 text-sm py-8">{t('winners.noPlayer')}</p>
-            )}
-          </div>
+          <section aria-labelledby="fn-titles-h">
+            <h2 id="fn-titles-h" className="t-h3 fn-h">{t('final.titlesH')}</h2>
+            <ol className="fn-titles">{TITLE_LIST_ORDER.map(titleCard)}</ol>
+          </section>
 
-          {/* Legend */}
-          <div className="px-4 sm:px-5 py-3 border-t border-white/8 text-[10px] text-white/35 flex flex-wrap gap-x-4 gap-y-1">
-            <span>
-              <Trans
-                i18nKey="winners.legend.total"
-                components={{ b: <span className="text-white/55 font-semibold" /> }}
-              />
-            </span>
-            <span>
-              <Trans
-                i18nKey="winners.legend.duel"
-                components={{ b: <span className="text-white/55 font-semibold" /> }}
-              />
-            </span>
-          </div>
+          {desktop && <div className="fn-pred"><PredictionsResultsScreen embedded /></div>}
         </div>
+
+        <aside className="fn-aside">
+          <section className="fn-rank" aria-labelledby="fn-rank-h">
+            <h2 id="fn-rank-h" className="t-eyebrow">{t('final.rankH')}</h2>
+            <ol className="fn-rank-list">
+              {ranked.map((p, i) => (
+                <motion.li key={p.id} className={clsx('fn-rrow', p.id === me?.id && 'me')} {...stagger(i)}>
+                  <span className={clsx('num fn-rpos', i < 3 && `p${i + 1}`)}>{i + 1}</span>
+                  <PlayerAvatar name={p.name} avatarId={p.avatar_id} size="md" />
+                  <span className="fn-rwho">
+                    <span className="fn-rname">{p.name}{p.id === me?.id && <span className="t-meta"> · {t('lobby.you')}</span>}</span>
+                    <span className="t-meta">{t('board.sub', { quiz: p.quiz_points, duel: signedNum(p.duel_points), pred: p.pred_points })}{p.points_spent > 0 && ` · ${t('board.spent', { points: p.points_spent })}`}</span>
+                  </span>
+                  <span className="num fn-rpts">{p.total_points}</span>
+                </motion.li>
+              ))}
+            </ol>
+          </section>
+          {desktop && (
+            <section className="rk-feed" aria-labelledby="fn-feed-h">
+              <h2 id="fn-feed-h" className="t-eyebrow rk-feed-h">{t('board.feedTitle')} <span className="chip rk-new">{t('board.feedNew')}</span></h2>
+              {feed.length === 0 ? (
+                <p className="t-meta rk-feed-empty"><Activity aria-hidden="true" strokeWidth={2} />{t('board.feedEmpty')}</p>
+              ) : (
+                <ol className="rk-feed-list">
+                  {feed.slice(0, 8).map((e) => (
+                    <li key={e.id} className="rk-item">
+                      <PlayerAvatar name={nameOf(e.playerId)} avatarId={players.find((p) => p.id === e.playerId)?.avatar_id} size="sm" />
+                      <span className="rk-item-t"><FeedLine e={e} nameOf={nameOf} /></span>
+                      <FeedTime at={e.at} now={now} />
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+          )}
+        </aside>
       </div>
 
+      {reelFor && room && (
+        <PersonalReel player={reelFor} players={ranked} winners={winners} roomId={roomId} roomCode={room.code} year={room.year} onClose={() => setReelFor(null)} />
+      )}
+      {tv && room && (
+        <TvPresentation players={ranked} winners={winners} roomId={roomId} roomCode={room.code} year={room.year} championVote={championVote} meId={me?.id} onExit={() => setTv(false)} />
+      )}
     </div>
   );
 }

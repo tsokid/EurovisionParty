@@ -23,7 +23,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { supabase } from '../../lib/supabase';
 import { useGameStore } from '../../stores/gameStore';
-import { avatarGradient, avatarInitial } from '../../lib/avatarUtils';
+import { Avatar } from '../stage';
 // Question bank is shipped as static JSON, not a Postgres table — same
 // source the regular Quiz tab uses, so SD inherits the same 500-Q pool.
 import { QUESTIONS, QUESTIONS_BY_ID } from '../../lib/questions';
@@ -240,34 +240,18 @@ export default function SuddenDeathPanel({
   // ── No match yet ───────────────────────────────────────────────────────
   if (rounds.length === 0) {
     return (
-      <div className="rounded-2xl border border-euro-pink/30 bg-euro-pink/8 p-5 text-center">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-euro-pink/20 border border-euro-pink/40 px-3 py-1 text-xs font-bold text-euro-pink tracking-widest uppercase mb-3">
-          {t('sd.headerLabel', { defaultValue: '⚔ Sudden Death' })}
-        </div>
-        <p className="text-base font-bold text-white">
-          {t('sd.suddenDeathChosen', { defaultValue: 'The room voted to settle it.' })}
-        </p>
-        <p className="text-sm text-white/55 mt-1 max-w-sm mx-auto">
-          {t('sd.intro', {
-            defaultValue: '3 quick questions decide the Champion. Only the tied players answer; everyone else watches.',
-          })}
-        </p>
+      <div className="tv-panel c">
+        <span className="chip tv-chip pink">{t('sd.headerLabel')}</span>
+        <p className="tv-panel-t">{t('sd.suddenDeathChosen')}</p>
+        <p className="t-small">{t('sd.intro')}</p>
         {isHost ? (
-          <button
-            type="button"
-            onClick={startMatch}
-            disabled={busy}
-            className="mt-4 px-5 py-2.5 rounded-full bg-euro-pink text-white font-bold text-sm disabled:opacity-50"
-          >
-            {busy ? t('sd.starting', { defaultValue: 'Starting…' })
-                  : t('sd.startMatch', { defaultValue: '⚔ Start Sudden Death' })}
+          <button type="button" onClick={startMatch} disabled={busy} className="btn btn-primary btn-block">
+            {busy ? t('sd.starting') : t('sd.startMatch')}
           </button>
         ) : (
-          <p className="mt-3 text-xs text-white/40">
-            {t('sd.waitingForHost', { defaultValue: 'Waiting for the host to start…' })}
-          </p>
+          <p className="t-meta">{t('sd.waitingForHost')}</p>
         )}
-        {err && <p className="text-sm text-red-300 mt-2">{err}</p>}
+        {err && <p className="pk-error" role="alert">{err}</p>}
       </div>
     );
   }
@@ -291,59 +275,26 @@ export default function SuddenDeathPanel({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
-          className="rounded-2xl border border-euro-pink/30 bg-[#1a0a2e]/80 p-4 sm:p-5"
+          className="tv-panel"
         >
-          {/* Header strip */}
-          <div className="flex items-center justify-between mb-4 gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-euro-pink/20 border border-euro-pink/40 px-2.5 py-1 text-[11px] font-bold text-euro-pink tracking-widest uppercase">
-              ⚔ {t('sd.round', { defaultValue: 'Round' })} {activeRound.question_index + 1}/3
-            </span>
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-white/45 tabular-nums">
-                {submittedCount}/{tiedCount} {t('sd.answered', { defaultValue: 'answered' })}
-              </span>
-              <div className={clsx(
-                'flex-shrink-0 w-10 h-10 rounded-full border flex items-center justify-center font-extrabold tabular-nums',
-                isReveal
-                  ? 'bg-emerald-500/15 border-emerald-400/50 text-emerald-300'
-                  : 'bg-[#0d0620] border-white/15 text-white',
-              )}>
-                {isReveal ? '✓' : remainingSec}
-              </div>
-            </div>
+          <div className="tv-head">
+            <span className="chip tv-chip pink">{t('sd.round')} {activeRound.question_index + 1}/3</span>
+            <span className="t-meta num">{submittedCount}/{tiedCount} {t('sd.answered')}</span>
+            <span className={clsx('num tv-count', isReveal && 'ok')}>{isReveal ? '✓' : remainingSec}</span>
           </div>
-
-          {/* Question */}
-          {q ? (
-            <p className="text-base sm:text-lg font-bold text-white mb-4">{q.question}</p>
-          ) : (
-            <p className="text-sm text-white/40 mb-4">{t('sd.loadingQuestion', { defaultValue: 'Loading question…' })}</p>
-          )}
-
-          {/* Answer grid */}
+          {q ? <p className="tv-panel-t">{q.question}</p> : <p className="t-meta">{t('sd.loadingQuestion')}</p>}
           {q && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="tv-ans">
               {options.map((opt, idx) => {
                 const isCorrect = idx === q.correct_index;
                 const isMine    = myPick === idx;
-                const showCorrect = isReveal && isCorrect;
-                const showWrong   = isReveal && isMine && !isCorrect;
                 return (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => submitAnswer(activeRound, idx)}
                     disabled={!amTied || myPick !== null || isReveal}
-                    className={clsx(
-                      'rounded-xl border px-3 py-3 text-sm font-medium text-left transition-all disabled:cursor-not-allowed',
-                      showCorrect
-                        ? 'border-emerald-400/70 bg-emerald-500/20 text-emerald-100'
-                        : showWrong
-                          ? 'border-red-500/70 bg-red-500/15 text-red-200'
-                          : isMine
-                            ? 'border-euro-purple/60 bg-euro-purple/25 text-white'
-                            : 'border-white/15 bg-white/[0.04] text-white/80 hover:bg-white/[0.08] hover:text-white',
-                    )}
+                    className={clsx('tv-a', isReveal && isCorrect && 'ok', isReveal && isMine && !isCorrect && 'bad', isMine && 'mine')}
                   >
                     {opt}
                   </button>
@@ -351,14 +302,8 @@ export default function SuddenDeathPanel({
               })}
             </div>
           )}
-
-          {!amTied && (
-            <p className="text-[11px] text-white/40 text-center mt-3">
-              {t('sd.spectator', { defaultValue: 'You are watching — only the tied players answer.' })}
-            </p>
-          )}
-
-          {err && <p className="text-sm text-red-300 mt-2">{err}</p>}
+          {!amTied && <p className="t-meta tv-foot">{t('sd.spectator')}</p>}
+          {err && <p className="pk-error" role="alert">{err}</p>}
         </motion.div>
       </AnimatePresence>
     );
@@ -366,25 +311,13 @@ export default function SuddenDeathPanel({
 
   // ── Match resolved (winner pulled from `winners` by parent refetch) ────
   return (
-    <div className="rounded-2xl border border-euro-gold/40 bg-euro-gold/10 p-5 text-center">
-      <div className="inline-flex items-center gap-1.5 rounded-full bg-euro-gold/20 border border-euro-gold/50 px-3 py-1 text-xs font-bold text-euro-gold tracking-widest uppercase mb-3">
-        ⚔ {t('sd.resolved', { defaultValue: 'Sudden Death Decided' })}
-      </div>
-      <p className="text-base font-bold text-white">
-        {t('sd.resolving', { defaultValue: 'Crowning the Champion…' })}
-      </p>
+    <div className="tv-panel c">
+      <span className="chip chip-gold tv-chip">{t('sd.resolved')}</span>
+      <p className="tv-panel-t">{t('sd.resolving')}</p>
       {tiedPlayerNames && Object.keys(tiedPlayerNames).length > 0 && (
-        <div className="flex items-center justify-center gap-3 mt-4">
-          {Object.entries(tiedPlayerNames).slice(0, 4).map(([id, name], i) => (
-            <div key={id} className="flex items-center gap-2 bg-white/[0.06] rounded-full pl-1 pr-3 py-1">
-              <div className={clsx(
-                'w-7 h-7 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-xs',
-                avatarGradient(i),
-              )}>
-                {avatarInitial(name)}
-              </div>
-              <span className="text-xs font-semibold text-white">{name}</span>
-            </div>
+        <div className="tv-names">
+          {Object.entries(tiedPlayerNames).slice(0, 4).map(([id, name]) => (
+            <span key={id} className="tv-name"><Avatar name={name} size="sm" />{name}</span>
           ))}
         </div>
       )}

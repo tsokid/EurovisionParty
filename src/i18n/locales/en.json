@@ -610,12 +610,12 @@
     "topAt": "Top:",
     "totalPts": "Total pts",
     "stat": "stat",
-    "tiedAtTop": "Tied at top",
-    "coChampions": "Co-champions",
+    "tiedAtTop": "Tie at the top",
+    "coChampions": "Shared first place",
     "tiebreakBadge": "⚔ Tiebreak",
     "tiebreakRequired": "⚔ Tiebreak required",
     "matchStillOn": "The match is still on.",
-    "tiebreakSubtitle": "{{names}} are tied at the top — the room decides what happens next.",
+    "tiebreakSubtitle": "Tie at the top: {{names}}. The room decides what happens.",
     "yourCrown": "★ Your Crown",
     "col": {
       "rank": "#",
@@ -653,18 +653,18 @@
     }
   },
   "sd": {
-    "headerLabel": "⚔ Sudden Death",
+    "headerLabel": "Sudden death",
     "suddenDeathChosen": "The room voted to settle it.",
-    "intro": "3 quick questions decide the Champion. Only the tied players answer; everyone else watches.",
-    "startMatch": "⚔ Start Sudden Death",
+    "intro": "3 quick questions decide the Champion title. Only the tied players answer; the rest of the room watches.",
+    "startMatch": "Start sudden death",
     "starting": "Starting…",
-    "waitingForHost": "Waiting for the host to start…",
+    "waitingForHost": "Waiting for the start…",
     "round": "Round",
     "answered": "answered",
     "loadingQuestion": "Loading question…",
     "spectator": "You are watching — only the tied players answer.",
-    "resolved": "Sudden Death Decided",
-    "resolving": "Crowning the Champion…"
+    "resolved": "Sudden death decided",
+    "resolving": "Awarding the Champion title…"
   },
   "winnerCrown": {
     "winner": "WINNER!",
@@ -1090,5 +1090,153 @@
       "11": "November",
       "12": "December"
     }
+  },
+  "board": {
+    "title": "Room leaderboard",
+    "live": "Live",
+    "search": "Search player…",
+    "noMatch": "No player found",
+    "empty": "No players yet.",
+    "points": "points",
+    "yourCard": "Your place",
+    "rankOf": "Place {{rank}} of {{total}}",
+    "leadBy": "Place 1 of {{total}} · +{{points}} on: {{name}}",
+    "behind": "Place {{rank}} of {{total}} · −{{points}} to: {{name}}",
+    "lastMove": "Latest move",
+    "col": {
+      "player": "Player",
+      "quiz": "Quiz",
+      "duel": "Duels",
+      "pred": "Predictions",
+      "move": "Move",
+      "total": "Total"
+    },
+    "sub": "Quiz {{quiz}} · Duels {{duel}} · Pred. {{pred}}",
+    "spent": "Intel −{{points}}",
+    "footer": "Total = Quiz + Duels (won minus lost) + Predictions. Predictions are scored once the official ranking is in.",
+    "footerSpent": "Points spent on Intel are subtracted.",
+    "feedTitle": "In the room",
+    "feedNew": "New",
+    "feedSub": "Every duel in the room · Trivia and Predictions: your own points",
+    "feedEmpty": "No points scored yet.",
+    "feed": {
+      "trivia": "Trivia +{{points}}",
+      "steal": "Duels +{{points}} (steal) · {{name}} −{{points}}",
+      "double": "Duels +{{points}} (double)",
+      "prediction": "Predictions +{{points}}"
+    },
+    "age": {
+      "now": "now",
+      "min": "{{n}}m",
+      "hour": "{{n}}h"
+    }
+  },
+  "titles": {
+    "reason": {
+      "champion": "Most points",
+      "oracle": "Most prediction points",
+      "thief": "Most points stolen",
+      "duelist": "Most duels won",
+      "guru": "Most correct answers"
+    },
+    "metric": {
+      "champion_one": "{{count}} point",
+      "champion_other": "{{count}} points",
+      "oracle_one": "{{count}} point",
+      "oracle_other": "{{count}} points",
+      "thief_one": "{{count}} point",
+      "thief_other": "{{count}} points",
+      "duelist_one": "{{count}} win",
+      "duelist_other": "{{count}} wins",
+      "guru_one": "{{count}} correct",
+      "guru_other": "{{count}} correct"
+    },
+    "none": "Not awarded tonight",
+    "you": "You"
+  },
+  "finale": {
+    "aria": "Titles of the night",
+    "kicker": "Titles of the night",
+    "continue": "Continue",
+    "tieTop": "Tie at the top",
+    "tieVote": "Tie · the room decides",
+    "coChampions": "Shared first place",
+    "podium": "Podium",
+    "place": "Place {{n}}"
+  },
+  "final": {
+    "eyebrow": "Final place · Eurovision {{year}}",
+    "placeOf": "{{place}} of {{count}}",
+    "points": "{{points}} points",
+    "nextAhead": "Next place: {{name}} · {{points}}",
+    "nextBehind": "Behind: {{name}} · {{points}}",
+    "yourNight": "Your night",
+    "tv": "On the TV",
+    "replay": "Watch the ceremony again",
+    "titlesH": "The 5 titles of the night",
+    "rankH": "Final leaderboard"
+  },
+  "reel": {
+    "aria": "Your night: {{name}}",
+    "eyebrow": "Your night",
+    "tvEyebrow": "Player reel",
+    "sound": "Sound",
+    "replay": "Play again",
+    "close": "Close",
+    "heroKick": "Eurovision {{year}} · Room {{code}}",
+    "heroSub": "Stage name · the night in 20″",
+    "trivia": "Trivia",
+    "triviaSub": "points from the quiz",
+    "duels": "Duels",
+    "duelsSub": "net: won minus lost",
+    "predictions": "Predictions",
+    "predictionsSub": "Top 5 + Worst 5",
+    "total": "Total",
+    "spent": "Intel −{{points}}",
+    "spentNote": "Minus {{points}} points spent on Intel",
+    "place": "Final place",
+    "placeSub": "Place {{place}} of {{count}} players",
+    "titlesKick": "Your titles",
+    "titlesNone": "Titles",
+    "noTitle": "No title this time — next year.",
+    "stageName": "Stage name",
+    "unmaskKick": "Masks off",
+    "unmaskTitle": "Who was who?"
+  },
+  "tv": {
+    "aria": "TV presentation",
+    "room": "Room",
+    "title": "Final leaderboard · Eurovision {{year}}",
+    "ceremony": "Ceremony",
+    "exit": "Leave TV mode",
+    "reel": "Reel",
+    "reelFor": "Reel: {{name}}"
+  },
+  "tie": {
+    "tag": "Tie at the top",
+    "tiedNames": "Tie: {{names}}",
+    "explain": "The room votes: share first place or settle it in sudden death.",
+    "open": "Open the vote (60″)",
+    "waitHost": "Waiting for the vote to open…",
+    "acceptedTag": "Shared first place",
+    "acceptedTitle": "Two at the top",
+    "acceptedBody": "The room voted to share the Champion title.",
+    "sdTag": "Sudden death",
+    "sdTitle": "The room voted to settle it.",
+    "sdHost": "Start the sudden-death match below.",
+    "sdGuest": "Sudden death starts shortly…",
+    "question": "How is the Champion title decided?",
+    "voteIn": "Tie: {{names}}. Vote within {{s}}″.",
+    "secondsLeft": "{{s}} seconds",
+    "accept": "Share first place",
+    "sudden": "Sudden death",
+    "acceptDesc": "The title is shared.",
+    "suddenDesc": "3 quick questions decide the title.",
+    "rule": "The option with the most votes when time runs out wins. No votes or a tied vote: shared first place."
+  },
+  "officialTop": {
+    "kicker": "Official result vs your predictions",
+    "title": "The official Top 5",
+    "pointsAria": "{{points}} points from the Top 5"
   }
 }

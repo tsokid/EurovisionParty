@@ -17,7 +17,7 @@ import IntelMarket from '../components/intel/IntelMarket';
 import VotingLiveScreen from '../components/results/VotingLiveScreen';
 import PredictionsResultsScreen from '../components/results/PredictionsResultsScreen';
 import LeaderboardScreen from '../components/leaderboard/LeaderboardScreen';
-import WinnerCrown from '../components/leaderboard/WinnerCrown';
+import FinalCeremony from '../components/winners/FinalCeremony';
 import WinnersScreen from '../components/winners/WinnersScreen';
 import ExitGameModal from '../components/room/ExitGameModal';
 import ExitChoiceModal from '../components/room/ExitChoiceModal';
@@ -32,7 +32,6 @@ export function RoomPage() {
   const navigate = useNavigate();
   const { room, advancePhase, refetchRoom, leaveRoom } = useRoom();
   const { room: storeRoom, player, players, activeTab, setActiveTab, setRoom, isReconnecting } = useGameStore();
-  const [showWinner, setShowWinner] = useState(true);
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
 
@@ -239,10 +238,6 @@ export function RoomPage() {
   // Final-phase computations — winners view + crown overlay
   const playerNameById = Object.fromEntries(players.map((p) => [p.id, p.name]));
   const isHost = !!player?.is_host;
-  const sortedPlayers  = [...players].sort((a, b) => b.total_points - a.total_points);
-  const topScore       = sortedPlayers[0]?.total_points ?? 0;
-  const tiedAtTop      = sortedPlayers.filter((p) => p.total_points === topScore && topScore > 0);
-  const isTopTied      = tiedAtTop.length >= 2;
 
   const renderActiveTab = () => {
     // In final, the Predictions tab gets its own dedicated breakdown
@@ -290,16 +285,9 @@ export function RoomPage() {
         {renderActiveTab()}
       </AppShell>
 
-      {/* Winner / Tiebreak overlay — only in final phase */}
+      {/* Tier-1 winners sequence (motion map #1), synced by the phase change */}
       {isFinal && (
-        <WinnerCrown
-          winner={isTopTied ? null : sortedPlayers[0] ?? null}
-          visible={showWinner}
-          onDismiss={() => setShowWinner(false)}
-          isTied={isTopTied}
-          tiedNames={isTopTied ? tiedAtTop.map((p) => p.name) : []}
-          tiedScore={isTopTied ? topScore : 0}
-        />
+        <FinalCeremony roomId={currentRoom.id} isHost={isHost} players={players} meId={player?.id} />
       )}
 
       {banner}
