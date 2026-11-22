@@ -9,8 +9,16 @@
 // text equals one of them gets that field's data-cms-path, marked
 // data-cms-auto so the next pass can clear it. Explicit markers always win.
 //
+// Identical strings in two fields (CMS P6): every field with the text is a
+// candidate, and the choice is deterministic. Walking the page in document
+// order, an element takes the candidate that shares the longest path prefix
+// with the last marked element before it (a section's explicit title marker,
+// or the previous auto-tagged element), among the fields no earlier copy
+// took, so text under "why" maps into "why" whatever the layout order, and
+// the k-th copy with no better clue takes the k-th field in document order.
+//
 // This runs in the admin only: the public site and the prerender never load it.
-import { CMS_PATH_ATTR, cmsPathValue } from '../../lib/cms/cmsAttrs';
+import { CMS_PATH_ATTR, cmsPathValue, parseCmsPath } from '../../lib/cms/cmsAttrs';
 
 export const AUTO_ATTR = 'data-cms-auto';
 
@@ -48,7 +56,8 @@ export function textChunks(s: string): string[] {
   return [...out];
 }
 
-type Index = { exact: Map<string, string>; patterns: Array<{ re: RegExp; path: string }> };
+/** exact: each text chunk → every field path that renders it, in document order. */
+type Index = { exact: Map<string, string[]>; patterns: Array<{ re: RegExp; path: string }> };
 
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -64,8 +73,10 @@ export function buildIndex(value: unknown, accept: (path: string) => boolean = (
           if (normText(literal).length < 3) continue;
           const source = chunk.split(/\{[^}]+\}/).map(escapeRe).join('.+?');
           index.patterns.push({ re: new RegExp(`^${source}$`, 'u'), path });
-        } else if (!index.exact.has(chunk)) {
-          index.exact.set(chunk, path);
+        } else {
+          const paths = index.exact.get(chunk);
+          if (!paths) index.exact.set(chunk, [path]);
+          else if (!paths.includes(path)) paths.push(path);
         }
       }
       return;
@@ -92,17 +103,53 @@ export function autoTag(root: ParentNode, docId: string, locale: string, value: 
   const index = buildIndex(value, accept);
   if (index.exact.size === 0 && index.patterns.length === 0) return 0;
   let n = 0;
+  // The path of the last marked element (explicit or auto) before the current one, in document order.
+  let context = '';
+  const used = new Map<string, Set<string>>();
   for (const el of root.querySelectorAll('*')) {
-    if (SKIP.has(el.tagName) || el.hasAttribute(CMS_PATH_ATTR) || !hasOwnText(el)) continue;
+    const explicit = el.getAttribute(CMS_PATH_ATTR);
+    if (explicit) {
+      const p = parseCmsPath(explicit);
+      if (p && p.docId === docId) context = p.path;
+      continue;
+    }
+    if (SKIP.has(el.tagName) || !hasOwnText(el)) continue;
     if (el.closest('svg')) continue;
     const text = normText(el.textContent ?? '');
     if (!text) continue;
-    let path = index.exact.get(text);
+    const candidates = index.exact.get(text);
+    let path = candidates ? pick(candidates, context, used.get(text) ?? new Set()) : undefined;
     if (!path) path = index.patterns.find((p) => p.re.test(text))?.path;
     if (!path) continue;
+    if (candidates) used.set(text, (used.get(text) ?? new Set()).add(path));
     el.setAttribute(CMS_PATH_ATTR, cmsPathValue(docId, locale, path));
     el.setAttribute(AUTO_ATTR, '');
+    context = path;
     n++;
   }
   return n;
+}
+
+/** Dotted segments two paths share from the start. */
+function sharedDepth(a: string, b: string): number {
+  if (!a || !b) return 0;
+  const x = a.split('.');
+  const y = b.split('.');
+  let i = 0;
+  while (i < x.length && i < y.length && x[i] === y[i]) i++;
+  return i;
+}
+
+/**
+ * The field an element with this text maps to: among the candidates no
+ * earlier element with the same text took (all of them once every one is
+ * taken), the one nearest the context (longest shared prefix), the first in
+ * document order on a tie.
+ */
+export function pick(candidates: readonly string[], context: string, used: ReadonlySet<string>): string {
+  if (candidates.length === 1) return candidates[0];
+  const unused = candidates.filter((c) => !used.has(c));
+  const pool = unused.length ? unused : candidates;
+  const best = Math.max(...pool.map((c) => sharedDepth(c, context)));
+  return pool.find((c) => sharedDepth(c, context) === best)!;
 }

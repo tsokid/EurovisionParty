@@ -22,7 +22,7 @@ import { AdminUserContext } from '../../src/admin/cms/docChannel';
 import { useCmsAttrs, CmsDocContext, parseCmsPath } from '../../src/lib/cms/cmsAttrs';
 import { PreviewModeContext } from '../../src/lib/seo/PreviewMode';
 import { LocaleProvider } from '../../src/lib/seo/LocaleContext';
-import { autoTag, plainText, textChunks } from '../../src/admin/preview/autoTag';
+import { autoTag, pick, plainText, textChunks } from '../../src/admin/preview/autoTag';
 import { parsePreviewPath } from '../../src/admin/preview/AdminPreviewRoute';
 import { bundledContent } from '../../src/lib/seo/contentData';
 
@@ -205,6 +205,36 @@ describe('autoTag (text mapping)', () => {
     autoTag(root, 'faq', 'en', {});
     expect(root.querySelectorAll('[data-cms-auto]').length).toBe(0);
     expect(root.querySelectorAll('[data-cms-path]').length).toBe(1);
+  });
+});
+
+describe('identical strings in two fields (CMS P6)', () => {
+  const doc = { why: { title: 'Why', note: 'Free forever' }, free: { title: 'Free', note: 'Free forever' }, tail: 'Free forever' };
+  const tags = (root: Element) => [...root.querySelectorAll('p')].map((p) => p.getAttribute('data-cms-path'));
+
+  it('each copy maps into the section it sits in (the explicit title marker before it), whatever the order', () => {
+    document.body.innerHTML = `<div id="r">
+      <section><h2 data-cms-path="faq:en:free.title">Free</h2><p>Free forever</p></section>
+      <section><h2 data-cms-path="faq:en:why.title">Why</h2><p>Free forever</p></section></div>`;
+    const root = document.getElementById('r')!;
+    autoTag(root, 'faq', 'en', doc);
+    expect(tags(root)).toEqual(['faq:en:free.note', 'faq:en:why.note']);
+  });
+
+  it('without a marker, the k-th copy takes the k-th field in document order; the same input always gives the same map', () => {
+    document.body.innerHTML = `<div id="r"><p>Free forever</p><p>Free forever</p><p>Free forever</p></div>`;
+    const root = document.getElementById('r')!;
+    autoTag(root, 'faq', 'en', doc);
+    const first = tags(root);
+    expect(first).toEqual(['faq:en:why.note', 'faq:en:free.note', 'faq:en:tail']);
+    autoTag(root, 'faq', 'en', doc);
+    expect(tags(root)).toEqual(first);
+  });
+
+  it('pick: nearest by shared prefix, then the first unused', () => {
+    expect(pick(['a.x', 'b.x'], 'b.title', new Set())).toBe('b.x');
+    expect(pick(['a.x', 'b.x'], '', new Set(['a.x']))).toBe('b.x');
+    expect(pick(['a.x', 'b.x'], '', new Set(['a.x', 'b.x']))).toBe('a.x');
   });
 });
 
