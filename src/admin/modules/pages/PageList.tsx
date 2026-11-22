@@ -8,6 +8,7 @@ import type { CmsListRow } from './cmsApi';
 import { pageState, SITE_PAGES, type PageState } from './sitePages';
 import { EDITORIAL_GROUPS, type EditorialGroup, type EditorialTarget } from './editorialPages';
 import { t } from '../../i18n';
+import { hasGaps, useTranslationGaps } from '../../cms/translationStatus';
 
 const BADGE: Record<PageState, { text: string; className: string }> = {
   published: { text: t.pageList.state.published, className: 'bg-emerald-500/20 text-emerald-200 border-emerald-400/30' },
@@ -36,9 +37,20 @@ interface Props {
 
 function Row({ docId, label, row, onOpen }: { docId: string; label: string; row: CmsListRow | undefined; onOpen: (docId: string) => void }) {
   const badge = BADGE[pageState(row)];
+  const gaps = useTranslationGaps().get(docId);
   return (
     <tr className="border-b border-white/5 last:border-0">
-      <td className="px-3 py-2 font-bold text-white">{label}</td>
+      <td className="px-3 py-2 font-bold text-white">
+        <span className="inline-flex items-center gap-2">
+          {label}
+          {hasGaps(gaps) && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-stage-bad" data-testid="list-missing">
+              <span aria-hidden className="inline-block size-2 rounded-full bg-stage-bad" />
+              {t.translations.treeMissing(gaps!.en, gaps!.el)}
+            </span>
+          )}
+        </span>
+      </td>
       <td className="px-3 py-2 font-mono text-xs text-white/60">{docId}</td>
       <td className="px-3 py-2">
         <span className={`inline-block rounded-full border px-2 py-0.5 text-xs ${badge.className}`}>{badge.text}</span>

@@ -13,6 +13,18 @@ import {
 import { adminPaths } from './paths';
 import { docLabel, footerColumns, pageGroups } from './siteStructure';
 import { t } from './i18n';
+import { hasGaps, useTranslationGaps, type Gaps } from './cms/translationStatus';
+
+/** The tree-level translation flag (CMS P6): a red dot on a doc missing EN or EL. */
+function GapDot({ gaps, label }: { gaps?: Gaps; label?: string }) {
+  if (!hasGaps(gaps) && !label) return null;
+  const text = label ?? t.translations.treeMissing(gaps!.en, gaps!.el);
+  return (
+    <span className="ml-auto inline-block size-2 shrink-0 rounded-full bg-stage-bad" title={text} data-testid="tree-missing">
+      <span className="sr-only">{text}</span>
+    </span>
+  );
+}
 
 type Icon = ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean }>;
 
@@ -20,6 +32,8 @@ interface Item {
   label: string;
   to: string;
   icon: Icon;
+  /** A CMS doc behind the screen: its translation flag shows. */
+  docId?: string;
   /** Only exact matches are active. */
   end?: boolean;
   /** Not CMS-backed yet: the phase it arrives in. */
@@ -42,12 +56,12 @@ const SECTIONS: Array<{ title: string; items: Item[] }> = [
   },
   {
     title: t.nav.media,
-    items: [{ label: t.nav.mediaLibrary, to: adminPaths.media(), icon: Image, later: 'P6' }],
+    items: [{ label: t.nav.mediaLibrary, to: adminPaths.media(), icon: Image }],
   },
   {
     title: t.nav.settings,
     items: [
-      { label: t.nav.siteSettings, to: adminPaths.settings(), icon: Settings, end: true },
+      { label: t.nav.siteSettings, to: adminPaths.settings(), icon: Settings, end: true, docId: 'site-settings' },
       { label: t.nav.admins, to: adminPaths.admins(), icon: Shield },
     ],
   },
@@ -72,11 +86,13 @@ function Later({ phase }: { phase: string }) {
 
 function NavItem({ item }: { item: Item }) {
   const { icon: I } = item;
+  const gaps = useTranslationGaps();
   return (
     <NavLink to={item.to} end={item.end} className={rowClass}>
       <I size={16} aria-hidden className="shrink-0 text-stage-text-3" />
       <span className="truncate">{item.label}</span>
       {item.later && <Later phase={item.later} />}
+      {item.docId && <GapDot gaps={gaps.get(item.docId)} />}
     </NavLink>
   );
 }
@@ -89,6 +105,7 @@ function SectionTitle({ children }: { children: string }) {
 function PagesTree() {
   const { pathname } = useLocation();
   const groups = pageGroups();
+  const gaps = useTranslationGaps();
   const activeDoc = /^\/admin\/pages\/([^/]+)(?:\/history(?:\/[^/]+)?)?$/.exec(pathname)?.[1];
   const active = activeDoc ? decodeURIComponent(activeDoc) : null;
   // A group is open when the user opened it, or (until they close it) when it holds the open page.
@@ -113,7 +130,8 @@ function PagesTree() {
             >
               <ChevronRight size={14} aria-hidden className={clsx('shrink-0 transition-transform', expanded && 'rotate-90')} />
               <span className="truncate">{g.title}</span>
-              <span className="ml-auto text-[11px] text-stage-text-3">{g.docIds.length}</span>
+              {g.docIds.some((d) => hasGaps(gaps.get(d))) && <GapDot label={t.translations.groupMissing} />}
+              <span className={clsx('text-[11px] text-stage-text-3', !g.docIds.some((d) => hasGaps(gaps.get(d))) && 'ml-auto')}>{g.docIds.length}</span>
             </button>
             {expanded && (
               <ul id={id} className="ml-[18px] space-y-0.5">
@@ -121,6 +139,7 @@ function PagesTree() {
                   <li key={docId}>
                     <NavLink to={adminPaths.pages(docId)} className={rowClass}>
                       <span className="truncate">{docLabel(docId)}</span>
+                      <GapDot gaps={gaps.get(docId)} />
                     </NavLink>
                   </li>
                 ))}
@@ -146,9 +165,9 @@ export default function AdminSidebar() {
 
       <SectionTitle>{t.nav.site}</SectionTitle>
       <ul className="space-y-0.5">
-        <li><NavItem item={{ label: t.nav.header, to: adminPaths.header(), icon: PanelTop }} /></li>
+        <li><NavItem item={{ label: t.nav.header, to: adminPaths.header(), icon: PanelTop, docId: 'site-header' }} /></li>
         <li>
-          <NavItem item={{ label: t.nav.footer, to: adminPaths.footer(), icon: PanelBottom, end: true }} />
+          <NavItem item={{ label: t.nav.footer, to: adminPaths.footer(), icon: PanelBottom, end: true, docId: 'site-footer' }} />
           {inFooter && (
             <ul className="ml-[18px] border-l border-stage-line pl-2 mt-0.5 space-y-0.5">
               {footerColumns().map((c) => (

@@ -936,6 +936,17 @@ export const t = {
     },
   },
 
+  translations: {
+    missingIn: (l: string) => `Λείπει η μετάφραση (${l})`,
+    docMissing: (l: string, n: number) => `${l}: λείπουν ${n}`,
+    docComplete: (l: string) => `${l}: πλήρες`,
+    jump: (l: string, n: number) => `${l}: λείπουν ${n} μεταφράσεις. Πήγαινε στο πρώτο κενό`,
+    complete: (l: string) => `${l}: δεν λείπει καμία μετάφραση`,
+    treeMissing: (en: number, el: number) => `Λείπουν μεταφράσεις: ${[en ? `EN ${en}` : '', el ? `EL ${el}` : ''].filter(Boolean).join(', ')}`,
+    groupMissing: 'Κάποια σελίδα εδώ θέλει μετάφραση',
+    label: 'Μεταφράσεις',
+  },
+
   settings: {
     lede: 'Στοιχεία που ισχύουν για όλο το site, σε ένα σημείο. Κάθε σελίδα τα διαβάζει από εδώ μετά τη δημοσίευση.',
     adminsPre: 'Ποιος μπαίνει στο admin: ',

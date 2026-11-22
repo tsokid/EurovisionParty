@@ -8,6 +8,7 @@
 import { useContext, useId, useLayoutEffect, useRef } from 'react';
 import type { FieldMeta } from '../../../../../../supabase/functions/_shared/cms/fields';
 import { interpolate } from '../../../../../../supabase/functions/_shared/cms/placeholders';
+import { missingHere } from '../../../../../../supabase/functions/_shared/cms/translations';
 import { useFormApi, useIssues, VarsContext } from '../context';
 import { editLocales, LOCALES, schemaInfo, setIn, type Issue, type Locale } from '../formModel';
 import type { FieldProps } from './Field';
@@ -61,6 +62,7 @@ export function LeafField({ schema, segments, path, name, label, en, el, hasEn, 
                 name={`${name} (${l.toUpperCase()})`}
                 tag={l.toUpperCase()}
                 value={l === 'en' ? en : el}
+                missing={hasEn && hasEl && missingHere(meta, l === 'en' ? en : el, l === 'en' ? el : en)}
                 issues={issues.filter((i) => i.locale === l)}
                 onValue={(v) => write([l], v)}
               />
@@ -84,12 +86,14 @@ type ControlProps = {
   name: string;
   tag: string;
   value: unknown;
+  /** The field is empty in this locale while it needs a translation (CMS P6: the field-level flag). */
+  missing?: boolean;
   issues: readonly Issue[];
   withLocale?: boolean;
   onValue: (v: unknown) => void;
 };
 
-function LocaleControl({ meta, locale, field, name, tag, value, issues, withLocale, onValue }: ControlProps) {
+function LocaleControl({ meta, locale, field, name, tag, value, missing, issues, withLocale, onValue }: ControlProps) {
   const id = useId();
   const vars = useContext(VarsContext)?.[locale];
   const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
@@ -115,6 +119,7 @@ function LocaleControl({ meta, locale, field, name, tag, value, issues, withLoca
     'aria-invalid': hasErrors || undefined,
     'aria-describedby': describedBy,
     'data-cms-field': field,
+    ...(missing ? { 'data-cms-missing': 'true' } : {}),
   };
 
   const selection = () => {
@@ -176,7 +181,14 @@ function LocaleControl({ meta, locale, field, name, tag, value, issues, withLoca
     <div className="space-y-1">
       <label htmlFor={id} className="sr-only">{name}</label>
       <div className="flex items-center gap-2">
-        <span aria-hidden="true" className="text-[10px] font-bold text-white/40 w-10 shrink-0">{tag}</span>
+        <span className="text-[10px] font-bold text-white/40 w-10 shrink-0 inline-flex items-center gap-1">
+          <span aria-hidden="true">{tag}</span>
+          {missing && (
+            <span className="inline-block size-2 rounded-full bg-stage-bad" title={t.translations.missingIn(tag)} data-testid="missing-dot">
+              <span className="sr-only">{t.translations.missingIn(tag)}</span>
+            </span>
+          )}
+        </span>
         <div className="flex-1 min-w-0">{control}</div>
       </div>
       {limit !== undefined && <Counter id={counterId} text={text} limit={limit} soft={meta.softMaxLength !== undefined} placeholders={meta.placeholders} vars={vars} />}

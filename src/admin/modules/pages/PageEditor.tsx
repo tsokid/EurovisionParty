@@ -24,6 +24,9 @@ import { History, Rocket } from 'lucide-react';
 import { CMS_DOC_TYPES, docTypeFor } from '../../../../supabase/functions/_shared/cms/registry';
 import { validateDocument, type ValidationError, type ValidationWarning } from '../../../../supabase/functions/_shared/cms/validate';
 import { seoDuplicates } from '../../../../supabase/functions/_shared/cms/seo';
+import { missingTranslationsOf } from '../../../../supabase/functions/_shared/cms/translations';
+import { reportGaps } from '../../cms/translationStatus';
+import { TranslationChips } from '../../cms/TranslationChips';
 import { formatError } from '../../lib/formatError';
 import { formatRunTime } from '../contests/publish';
 import { cmsDiscard, cmsGet, cmsSave, fetchPublished, fetchPublishedEditorialIds, fetchPublishedPages, isConflict } from './cmsApi';
@@ -138,6 +141,10 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
     [validation, duplicates],
   );
   const warnings = validation?.warnings ?? NO_WARNINGS;
+  const missing = useMemo(() => (shown ? missingTranslationsOf(docType, shown) : null), [docType, shown]);
+  useEffect(() => {
+    if (missing) reportGaps(docId, { en: missing.en.length, el: missing.el.length });
+  }, [docId, missing]);
 
   const onChange = useCallback((next: DocValue) => doc.edit(next), [doc]);
 
@@ -206,7 +213,10 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
             )}
           </div>
         </div>
-        <CmsDocStatus doc={doc} />
+        <div className="flex flex-wrap items-center gap-2">
+          <CmsDocStatus doc={doc} />
+          {missing && <TranslationChips missing={missing} formRef={formRef} />}
+        </div>
         {hasErrors && <p className="text-xs text-stage-bad m-0">{t.editor.errors(errors.length)}</p>}
         {!hasErrors && warnings.length > 0 && <p className="text-xs text-stage-gold m-0">{t.editor.warnings(warnings.length)}</p>}
         {discardErr && <p role="alert" className="text-xs text-stage-bad break-words m-0">{discardErr}</p>}
