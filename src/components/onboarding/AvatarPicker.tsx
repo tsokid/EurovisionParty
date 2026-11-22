@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
 import { ChevronLeft, ChevronRight, Shuffle } from 'lucide-react';
-import { AVATARS, AvatarPop, getAvatar, randomAvatarId } from '../stage/avatars';
+import { AvatarPop, randomFrom, useAvatarEntry, usePickerAvatars, type AvatarEntry } from '../stage/avatars';
 
 interface AvatarPickerProps {
   value: string;
@@ -13,12 +13,14 @@ interface AvatarPickerProps {
 /** Avatars per page: a 3 × 3 grid. */
 const AVATARS_PER_PAGE = 9;
 
-const PAGES = Array.from({ length: Math.ceil(AVATARS.length / AVATARS_PER_PAGE) }, (_, p) =>
-  AVATARS.slice(p * AVATARS_PER_PAGE, (p + 1) * AVATARS_PER_PAGE),
-);
+function pagesOf(avatars: readonly AvatarEntry[]): AvatarEntry[][] {
+  return Array.from({ length: Math.max(1, Math.ceil(avatars.length / AVATARS_PER_PAGE)) }, (_, p) =>
+    avatars.slice(p * AVATARS_PER_PAGE, (p + 1) * AVATARS_PER_PAGE),
+  );
+}
 
-function avatarPageOf(id: string): number {
-  const i = AVATARS.findIndex((a) => a.id === id);
+function avatarPageOf(avatars: readonly AvatarEntry[], id: string): number {
+  const i = avatars.findIndex((a) => a.id === id);
   return i < 0 ? 0 : Math.floor(i / AVATARS_PER_PAGE);
 }
 
@@ -33,8 +35,12 @@ export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('el') ? 'el' : 'en';
   const reduce = useReducedMotion() ?? false;
-  const chosen = getAvatar(value) ?? AVATARS[0];
-  const chosenPage = avatarPageOf(chosen.id);
+  // The published library (live, cached), or the shipped set until it loads.
+  const avatars = usePickerAvatars();
+  const PAGES = useMemo(() => pagesOf(avatars), [avatars]);
+  const current = useAvatarEntry(value);
+  const chosen = current ?? avatars[0];
+  const chosenPage = avatarPageOf(avatars, chosen.id);
   const last = PAGES.length - 1;
 
   const [page, setPage] = useState(chosenPage);
@@ -118,7 +124,7 @@ export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
     if (next === page) return;
     // Keep keyboard focus in the grid: same slot on the new page.
     const active = document.activeElement as HTMLElement | null;
-    const fromTile = active?.dataset.id ? AVATARS.findIndex((a) => a.id === active.dataset.id) : -1;
+    const fromTile = active?.dataset.id ? avatars.findIndex((a) => a.id === active.dataset.id) : -1;
     const fromDisabledArrow = active?.classList.contains('avp-arrow') && (next === 0 || next === last);
     if (fromTile < 0 && !fromDisabledArrow) return;
     const slot = fromTile < 0 ? 0 : fromTile % AVATARS_PER_PAGE;
@@ -127,7 +133,7 @@ export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
   };
 
   // One tab stop in the grid: the choice if it's on this page, else the page's first.
-  const tabbableId = chosenPage === page ? chosen.id : PAGES[page][0].id;
+  const tabbableId = chosenPage === page ? chosen.id : (PAGES[page] ?? PAGES[last])[0].id;
 
   return (
     <div className="avp" onKeyDown={onKeyDown}>
@@ -138,7 +144,7 @@ export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
         <div className="avp-meta">
           <span className="field-label" id="avatar-label">{t('nameEntry.avatarLabel')}</span>
           <span className="avp-title" aria-live="polite">{chosen.title[lang]}</span>
-          <button type="button" className="btn btn-secondary btn-sm avp-shuffle" onClick={() => onChange(randomAvatarId(chosen.id))}>
+          <button type="button" className="btn btn-secondary btn-sm avp-shuffle" onClick={() => onChange(randomFrom(avatars, chosen.id))}>
             <Shuffle size={16} aria-hidden />
             {t('nameEntry.shuffle')}
           </button>

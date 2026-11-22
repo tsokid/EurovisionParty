@@ -8,7 +8,7 @@ import {
   STAGE_NAME_LIMITS,
   type NameErrorCode,
 } from '../../lib/nameFilter';
-import { randomAvatarId } from '../stage/avatars';
+import { randomAvatarId, randomFrom, usePickerAvatars } from '../stage/avatars';
 import AvatarPicker from './AvatarPicker';
 
 export interface NameEntryData {
@@ -63,6 +63,11 @@ export default function NameEntry({
   const [name, setName] = useState('');
   const [realName, setRealName] = useState('');
   const [avatarId, setAvatarId] = useState(() => randomAvatarId());
+  // Once the live library loads, a preselected avatar it no longer offers is re-rolled.
+  const pickerAvatars = usePickerAvatars();
+  useEffect(() => {
+    if (!pickerAvatars.some((a) => a.id === avatarId)) setAvatarId(randomFrom(pickerAvatars));
+  }, [pickerAvatars, avatarId]);
   const [roomCode, setRoomCode] = useState(initialRoomCode);
   const fromQr = mode === 'join' && !!qrPassword && !!initialRoomCode;
   const [password, setPassword] = useState(fromQr ? qrPassword : '');

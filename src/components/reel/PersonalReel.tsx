@@ -17,7 +17,7 @@ import clsx from 'clsx';
 import { SkipForward, X, Volume2, VolumeX, RotateCcw, Star } from 'lucide-react';
 import { Avatar, useTimeline } from '../stage';
 import { AvatarVisual } from '../stage/avatars/AvatarVisual';
-import { getAvatar } from '../stage/avatars/registry';
+import { resolveAvatar } from '../stage/avatars/library';
 import { StageVfx, type StageVfxHandle } from '../stage/vfx';
 import type { VfxPreset } from '../stage/vfx';
 import { useRevealedNames } from '../../hooks/useRevealedNames';
@@ -179,7 +179,7 @@ export default function PersonalReel({ player: p, players, winners, roomId, room
   const an = (i: number, anim: string): CSSProperties => (scene !== i ? { opacity: 0 } : reduce ? { opacity: 1 } : { animation: anim });
   const sc = (i: number): CSSProperties => ({ opacity: on(i) ? 1 : 0, pointerEvents: on(i) ? 'auto' : 'none', zIndex: on(i) ? 5 : 1, transition: reduce ? 'opacity 200ms ease' : 'none' });
   const numVal = (i: number, final: number) => (on(i) ? num : final);
-  const entry = getAvatar(p.avatar_id);
+  const entry = resolveAvatar(p.avatar_id);
   const shake = !reduce && impact > 0 ? { animation: `rl-shake-${impact % 2 ? 'a' : 'b'} 380ms ease-out` } : undefined;
 
   const toggleSound = () => {

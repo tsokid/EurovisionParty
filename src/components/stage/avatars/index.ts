@@ -7,4 +7,6 @@ export { AvatarPop } from './AvatarPop';
 export type { AvatarPopProps } from './AvatarPop';
 export type { AvatarVisualProps } from './AvatarVisual';
 export { isImageAvatar } from './types';
+export { usePickerAvatars, useAvatarEntry, resolveAvatar, loadAvatarLibrary, randomFrom, rowToEntry, avatarFileUrl, AVATAR_BUCKET } from './library';
+export type { AvatarRow } from './library';
 export type { AvatarSpec, ImageAvatarSpec, AvatarEntry } from './types';

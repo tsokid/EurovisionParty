@@ -8,7 +8,7 @@ import { Avatar, avatarInitials, avatarTone, type AvatarProps } from './Avatar';
 import { AvatarVisual } from './avatars/AvatarVisual';
 import { AvatarPop } from './avatars/AvatarPop';
 import { isImageAvatar } from './avatars/types';
-import { getAvatar } from './avatars/registry';
+import { useAvatarEntry } from './avatars/library';
 import { isTopDialog, useDialogFocus } from '../../hooks/useDialogFocus';
 
 export interface AvatarModalProps {
@@ -28,7 +28,7 @@ export function AvatarModal({ open, onClose, name, avatarId }: AvatarModalProps)
   const { t, i18n } = useTranslation();
   const reduce = useReducedMotion() ?? false;
   const lang = i18n.language?.startsWith('el') ? 'el' : 'en';
-  const entry = getAvatar(avatarId);
+  const entry = useAvatarEntry(avatarId);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { AvatarVisual } from './avatars/AvatarVisual';
-import { getAvatar } from './avatars/registry';
+import { useAvatarEntry } from './avatars/library';
 
 /**
  * Initials from a stage name, for Greek and Latin alike:
@@ -54,7 +54,7 @@ export interface AvatarProps {
 
 export function Avatar({ name, avatarId, size = 'md', decorative = true, className }: AvatarProps) {
   const a11y = decorative ? { 'aria-hidden': true as const } : { role: 'img' as const, 'aria-label': name };
-  const art = getAvatar(avatarId);
+  const art = useAvatarEntry(avatarId);
   if (art) {
     return (
       <span
