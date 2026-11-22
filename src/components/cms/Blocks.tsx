@@ -14,6 +14,10 @@ import RichText from './RichText';
 import { faqEntries } from './faqEntries';
 import { isPublishedMedia, type CmsBlock } from './mediaTypes';
 import { isDraftMedia, MediaResolverContext } from './MediaResolver';
+import { useCmsAttrs, type CmsAttrs } from '../../lib/cms/cmsAttrs';
+
+type At = (path: string) => CmsAttrs;
+const NO_AT: At = () => ({});
 
 function Caption({ children }: { children?: string }) {
   return children ? <figcaption className="t-meta mt-2">{children}</figcaption> : null;
@@ -40,7 +44,7 @@ function Cta({ block }: { block: Extract<CmsBlock, { type: 'cta' }> }) {
 }
 
 /** Draft references count only in the admin preview (under a MediaResolverContext provider). */
-function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
+function renderBlock(b: CmsBlock, preview: boolean, at: At = NO_AT): ReactNode {
   const media = (ref: unknown, ext: 'webp' | 'mp4') => isPublishedMedia(ref, ext) || (preview && isDraftMedia(ref));
   switch (b?.type) {
     case 'text':
@@ -57,7 +61,7 @@ function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
     case 'image':
       if (!b.image || !media(b.image.media, 'webp')) return null;
       return (
-        <figure>
+        <figure {...at('image')}>
           <CmsImage value={b.image} />
           <Caption>{b.caption}</Caption>
         </figure>
@@ -65,7 +69,7 @@ function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
     case 'video':
       if (!b.video || !media(b.video.media, 'mp4')) return null;
       return (
-        <figure>
+        <figure {...at('video')}>
           <VideoPlayer value={b.video} />
           <Caption>{b.caption}</Caption>
         </figure>
@@ -73,8 +77,8 @@ function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
     case 'faq':
       return (
         <div className="flex flex-col gap-3">
-          {(Array.isArray(b.items) ? b.items : []).filter((it) => it && typeof it.q === 'string').map((it, i) => (
-            <div key={i} className="card card-pad">
+          {(Array.isArray(b.items) ? b.items : []).map((it, i) => ({ it, i })).filter(({ it }) => it && typeof it.q === 'string').map(({ it, i }) => (
+            <div key={i} className="card card-pad" {...at(`items.${i}`)}>
               <h3 className="t-h3 text-stage-text">{it.q}</h3>
               <RichText source={typeof it.a === 'string' ? it.a : ''} className="mt-2 space-y-3 text-stage-text-2 leading-relaxed" />
             </div>
@@ -88,8 +92,14 @@ function renderBlock(b: CmsBlock, preview: boolean): ReactNode {
   }
 }
 
-export default function Blocks({ value, onFaq }: { value: readonly CmsBlock[]; onFaq?: (entries: FaqEntry[]) => void }) {
+export default function Blocks({ value, onFaq, cms }: {
+  value: readonly CmsBlock[];
+  onFaq?: (entries: FaqEntry[]) => void;
+  /** The doc path of this zone ("extraBlocks"), for the admin preview's click-to-edit (nothing on the site). */
+  cms?: string;
+}) {
   const list = Array.isArray(value) ? value : [];
+  const attrs = useCmsAttrs();
   const preview = useContext(MediaResolverContext) !== null;
   const entries = useMemo(() => faqEntries(value), [value]);
   // onFaq lives in a ref and the effect keys on the entries' content, so an
@@ -104,7 +114,8 @@ export default function Blocks({ value, onFaq }: { value: readonly CmsBlock[]; o
     if (key !== '[]') onFaqRef.current?.(JSON.parse(key));
   }, [key]);
 
-  const rendered = list.map((b, i) => ({ i, node: renderBlock(b, preview) })).filter((x) => x.node !== null);
+  const at = (i: number): At => (cms ? (p) => attrs(`${cms}.${i}.${p}`) : NO_AT);
+  const rendered = list.map((b, i) => ({ i, node: renderBlock(b, preview, at(i)) })).filter((x) => x.node !== null);
   if (!rendered.length) return null;
-  return <div className="space-y-8">{rendered.map((x) => <div key={x.i}>{x.node}</div>)}</div>;
+  return <div className="space-y-8">{rendered.map((x) => <div key={x.i} {...(cms ? attrs(`${cms}.${x.i}`) : undefined)}>{x.node}</div>)}</div>;
 }

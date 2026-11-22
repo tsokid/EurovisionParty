@@ -32,5 +32,5 @@ export function EditorialTop({ editorial }: { editorial: Editorial | null }) {
 
 /** The blocks: placed before the page's related links. */
 export function EditorialBlocks({ editorial }: { editorial: Editorial | null }) {
-  return editorial ? <Blocks value={editorial.blocks} /> : null;
+  return editorial ? <Blocks value={editorial.blocks} cms="blocks" /> : null;
 }

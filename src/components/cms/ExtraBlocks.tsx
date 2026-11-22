@@ -6,5 +6,5 @@ import type { CmsBlock } from './mediaTypes';
 
 export default function ExtraBlocks({ value }: { value: unknown }) {
   // A doc's extraBlocks as published (validated by its doc type); typed loosely like the editorial layer's.
-  return Array.isArray(value) && value.length ? <Blocks value={value as readonly CmsBlock[]} /> : null;
+  return Array.isArray(value) && value.length ? <Blocks value={value as readonly CmsBlock[]} cms="extraBlocks" /> : null;
 }

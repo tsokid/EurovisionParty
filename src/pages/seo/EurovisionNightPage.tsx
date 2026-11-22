@@ -146,6 +146,7 @@ export default function EurovisionNightPage() {
       />
 
       <PageHero
+        cms="hero"
         crumbs={crumbs}
         chip={c.hero.chip}
         chipTone="pink"

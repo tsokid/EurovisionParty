@@ -17,7 +17,7 @@ import { useLocale } from '../seo/LocaleContext';
 import type { Locale } from '../seo/locale';
 import { PAGE_REGISTRY } from '../seo/registry';
 import { ARCHIVE_INDEX_PATH, COUNTRY_INDEX_PATH, hubPath } from '../seo/dynamicPages';
-import { usePageContentOverride } from './pageContentOverrideContext';
+import { overriddenDoc, usePageContentOverride } from './pageContentOverrideContext';
 import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
 import type { LinkTarget, SiteWideDocId } from '../../../supabase/functions/_shared/cms/siteLinks';
 import type { SiteHeaderContent } from '../../../supabase/functions/_shared/cms/schemas/site-header';
@@ -42,8 +42,8 @@ export function publishedSiteDoc<K extends SiteWideDocId>(docId: K): Doc<SiteWid
 /** The active locale's slice of a site-wide doc: the admin preview's draft, else the published doc. */
 export function useSiteDoc<K extends SiteWideDocId>(docId: K): SiteWideContent[K] {
   const locale = useLocale();
-  const override = usePageContentOverride();
-  if (override && override.docId === docId) {
+  const override = overriddenDoc(usePageContentOverride(), docId);
+  if (override) {
     const draft = (override.doc as Partial<Doc<SiteWideContent[K]>> | null)?.[locale];
     if (draft !== undefined) return draft;
   }
@@ -85,6 +85,8 @@ export interface ResolvedLink {
   label: string;
   to: string;
   target: LinkTarget;
+  /** Its position in the doc's list (hidden links included): the admin preview's field path. */
+  index: number;
 }
 
 /** The visible links of a list, resolved; hidden ones and ones with nowhere to go are left out. */
@@ -94,10 +96,10 @@ export function resolveLinks(
   year: number | null,
 ): ResolvedLink[] {
   const out: ResolvedLink[] = [];
-  for (const l of links) {
-    if (l.hidden) continue;
+  links.forEach((l, index) => {
+    if (l.hidden) return;
     const to = targetPath(l.target, locale, year);
-    if (to !== null) out.push({ label: linkText(l.label, year), to, target: l.target });
-  }
+    if (to !== null) out.push({ label: linkText(l.label, year), to, target: l.target, index });
+  });
   return out;
 }

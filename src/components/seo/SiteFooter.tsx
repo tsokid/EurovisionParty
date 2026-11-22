@@ -4,18 +4,19 @@ import { useCurrentYear } from '../../lib/currentContest';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { resolveLinks, useSiteDoc, type ResolvedLink } from '../../lib/cms/siteChrome';
 import type { NavLink } from '../../../supabase/functions/_shared/cms/siteLinks';
+import { useCmsAttrs, type CmsAttrs } from '../../lib/cms/cmsAttrs';
 
-function Column({ title, links }: { title: string; links: ResolvedLink[] }) {
+function Column({ title, links, attrs }: { title: string; links: ResolvedLink[]; attrs: (path: string) => CmsAttrs }) {
   return (
     <div>
-      <h4>{title}</h4>
+      <h4 {...attrs('heading')}>{title}</h4>
       <ul>
         {links.map((l) => (
           <li key={l.to}>
             {l.target.kind === 'external' ? (
-              <a href={l.to} rel="noopener">{l.label}</a>
+              <a href={l.to} rel="noopener" {...attrs(`links.${l.index}.label`)}>{l.label}</a>
             ) : (
-              <LocaleLink to={l.to}>{l.label}</LocaleLink>
+              <LocaleLink to={l.to} {...attrs(`links.${l.index}.label`)}>{l.label}</LocaleLink>
             )}
           </li>
         ))}
@@ -34,6 +35,8 @@ export default function SiteFooter() {
   const year = useCurrentYear();
   const locale = useLocale();
   const doc = useSiteDoc('site-footer');
+  // Admin preview only (click-to-edit); {} on the site.
+  const attrs = useCmsAttrs('site-footer');
 
   return (
     <footer className="footer">
@@ -41,16 +44,16 @@ export default function SiteFooter() {
         <div className="fcols">
           <div className="fbrand">
             <Wordmark />
-            <span className="t-meta">{doc.tagline}</span>
+            <span className="t-meta" {...attrs('tagline')}>{doc.tagline}</span>
           </div>
 
-          {doc.columns.map((c) => (
-            <Column key={c.id} title={c.heading} links={resolveLinks(c.links as NavLink[], locale, year)} />
+          {doc.columns.map((c, i) => (
+            <Column key={c.id} title={c.heading} links={resolveLinks(c.links as NavLink[], locale, year)} attrs={(p) => attrs(`columns.${i}.${p}`)} />
           ))}
         </div>
 
         {/* EBU disclaimer */}
-        <p className="t-meta fdisclaimer">{doc.disclaimer}</p>
+        <p className="t-meta fdisclaimer" {...attrs('disclaimer')}>{doc.disclaimer}</p>
       </div>
     </footer>
   );

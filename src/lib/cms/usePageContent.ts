@@ -44,7 +44,7 @@ import { peekContent, useContent, type ContentState } from '../seo/useContent';
 import { PAGES_INDEX_PATH, readPagesIndex } from '../../../supabase/functions/_shared/cms/pagesIndex';
 import { ContentCollectorContext } from '../seo/contentContext';
 import { useLocale } from '../seo/LocaleContext';
-import { usePageContentOverride } from './pageContentOverrideContext';
+import { overriddenDoc, usePageContentOverride } from './pageContentOverrideContext';
 import { factNeeds, factValues, resolveFacts } from './facts';
 import { SITE_PATH } from '../currentContest';
 import type { ContestIndex, CountryIndex, SiteSnapshot } from '../../content/contests/types';
@@ -100,8 +100,7 @@ function useRawPageContent<T>(docId: string, { optional = false }: PageContentOp
   const path = pageContentPath(docId);
   const locale = useLocale();
   const isServer = useContext(ContentCollectorContext) !== null;
-  const override = usePageContentOverride();
-  const draft = override !== null && override.docId === docId ? override : null;
+  const draft = overriddenDoc(usePageContentOverride(), docId);
   // Client only (the server must not record, hence inline, the index).
   const askIndex = optional && !draft && !isServer && peekContent(path) === undefined;
   const index = useContent<unknown>(askIndex ? PAGES_INDEX_PATH : null);

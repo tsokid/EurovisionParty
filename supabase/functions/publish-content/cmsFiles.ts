@@ -25,6 +25,7 @@ import { docTypeFor } from '../_shared/cms/registry.ts';
 import { validateDocument, type Locale } from '../_shared/cms/validate.ts';
 import { seoDuplicates } from '../_shared/cms/seo.ts';
 import { isEditorialDocId, PAGES_INDEX_FILE, pagesIndex } from '../_shared/cms/pagesIndex.ts';
+import { overlayDrafts } from '../_shared/cms/overlay.ts';
 import { stableJson } from '../_shared/stableJson.ts';
 import type { CmsDocumentRow } from './snapshot.ts';
 
@@ -146,7 +147,9 @@ export function cmsFiles(
     valid[doc_id] = data;
   }
 
-  for (const issue of seoDuplicates({ ...committed, ...valid }, Object.keys(valid))) errors.push(issue);
+  // The site after this publish: the same overlay the admin preview renders (_shared/cms/overlay.ts).
+  const after = overlayDrafts(committed, Object.entries(valid).map(([doc_id, data]) => ({ doc_id, data })));
+  for (const issue of seoDuplicates(after, Object.keys(valid))) errors.push(issue);
 
   if (errors.length) throw new CmsValidationError(errors, warnings);
   if (Object.keys(valid).some(isEditorialDocId)) {

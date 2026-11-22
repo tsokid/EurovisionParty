@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from 'react';
 import Breadcrumbs, { type Crumb } from './Breadcrumbs';
 import Chip from './Chip';
+import { useCmsAttrs } from '../../lib/cms/cmsAttrs';
 
 interface Props {
   crumbs: Crumb[];
@@ -22,6 +23,8 @@ interface Props {
   grad?: 'dash' | string;
   /** Extra class on the <header> (page-specific hero tweaks). */
   className?: string;
+  /** The doc path of the hero's fields ("hero"), for the admin preview's click-to-edit (nothing on the site). */
+  cms?: string;
 }
 
 /** The H1 content with the board's gradient words; the text stays `title`. */
@@ -49,11 +52,13 @@ export const usePageHeroSlot = (): ReactNode => useContext(PageHeroSlot);
 
 // Hero row used at the top of every SEO page (Stage board): breadcrumb, chip,
 // H1, lede on the stage glow, closed by a hairline that introduces the body.
-export default function PageHero({ crumbs, chip, chipTone = 'pink', title, lede, titleLead, children, aside, grad, className }: Props) {
+export default function PageHero({ crumbs, chip, chipTone = 'pink', title, lede, titleLead, children, aside, grad, className, cms }: Props) {
   const slot = usePageHeroSlot();
+  const attrs = useCmsAttrs();
+  const at = (field: string) => (cms ? attrs(`${cms}.${field}`) : undefined);
   const extra = className ? ` ${className}` : '';
   if (aside || titleLead || children) {
-    const h1 = <h1 className="hero-title">{heroTitle(title, grad)}</h1>;
+    const h1 = <h1 className="hero-title" {...at('title')}>{heroTitle(title, grad)}</h1>;
     return (
       <header className={(aside ? 'hero hero-split' : 'hero') + extra}>
         <div className="wrap hero-inner">
@@ -61,7 +66,7 @@ export default function PageHero({ crumbs, chip, chipTone = 'pink', title, lede,
             <Breadcrumbs items={crumbs} />
             {chip && <Chip tone={chipTone}>{chip}</Chip>}
             {titleLead ? <div className="hero-title-row">{titleLead}{h1}</div> : h1}
-            <p className="hero-lede">{lede}</p>
+            <p className="hero-lede" {...at('lede')}>{lede}</p>
             {children}
           </div>
           {aside && <div className="hero-aside">{aside}</div>}
@@ -75,8 +80,8 @@ export default function PageHero({ crumbs, chip, chipTone = 'pink', title, lede,
       <div className="wrap hero-inner">
         <Breadcrumbs items={crumbs} />
         {chip && <Chip tone={chipTone}>{chip}</Chip>}
-        <h1 className="hero-title">{heroTitle(title, grad)}</h1>
-        <p className="hero-lede">{lede}</p>
+        <h1 className="hero-title" {...at('title')}>{heroTitle(title, grad)}</h1>
+        <p className="hero-lede" {...at('lede')}>{lede}</p>
         {slot}
       </div>
     </header>

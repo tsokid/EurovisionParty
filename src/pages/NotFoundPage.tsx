@@ -90,6 +90,7 @@ export function NotFoundPage() {
       />
 
       <PageHero
+        cms="hero"
         crumbs={crumbs}
         title={c.hero.title}
         lede={c.hero.lede}

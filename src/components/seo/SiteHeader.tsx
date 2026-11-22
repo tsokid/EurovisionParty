@@ -16,6 +16,7 @@ import { useContent } from '../../lib/seo/useContent';
 import { buttonClass } from '../stage';
 import { linkText, resolveLinks, useSiteDoc, type ResolvedLink } from '../../lib/cms/siteChrome';
 import type { LinkTarget, NavLink as NavLinkDoc } from '../../../supabase/functions/_shared/cms/siteLinks';
+import { useCmsAttrs } from '../../lib/cms/cmsAttrs';
 
 /**
  * The live contest year for the header's {year} labels and its hub link. It
@@ -35,6 +36,8 @@ const MENU_LANDING_PATH = '/how-to-play';
 const isTrivia = (l: ResolvedLink) => l.target.kind === 'page' && l.target.pageId === 'eurovision-trivia';
 
 interface HeaderEntry {
+  /** Its position in the doc's items (the admin preview's field path). */
+  index: number;
   label: string;
   /** A link (`link`) or a menu (`links`). */
   link: ResolvedLink | null;
@@ -50,16 +53,16 @@ function useHeaderEntries(year: number | null): HeaderEntry[] {
   const locale = useLocale();
   const doc = useSiteDoc('site-header');
   const out: HeaderEntry[] = [];
-  for (const item of doc.items) {
-    if (item.hidden) continue;
+  doc.items.forEach((item, index) => {
+    if (item.hidden) return;
     if (item.target) {
       const [link] = resolveLinks([{ label: item.label, target: item.target as LinkTarget }], locale, year);
-      if (link) out.push({ label: link.label, link, links: [] });
-      continue;
+      if (link) out.push({ index, label: link.label, link, links: [] });
+      return;
     }
     const links = resolveLinks((item.children ?? []) as NavLinkDoc[], locale, year);
-    if (links.length) out.push({ label: linkText(item.label, year), link: null, links });
-  }
+    if (links.length) out.push({ index, label: linkText(item.label, year), link: null, links });
+  });
   return out;
 }
 
@@ -120,6 +123,10 @@ export default function SiteHeader() {
   const year = useHubYear();
   const entries = useHeaderEntries(year);
   const { cta, ui } = useSiteDoc('site-header');
+  // Admin preview only (click-to-edit); {} on the site.
+  const attrs = useCmsAttrs('site-header');
+  const itemAttrs = (e: HeaderEntry) => attrs(`items.${e.index}.label`);
+  const childAttrs = (e: HeaderEntry, l: ResolvedLink) => attrs(`items.${e.index}.children.${l.index}.label`);
   const leaves = entries.filter((e) => e.link !== null);
   const menus = entries.filter((e) => e.link === null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -182,11 +189,11 @@ export default function SiteHeader() {
   };
 
   /** A link of the drawer, or its locked badge (trivia while broadcasting). */
-  const drawerLink = (l: ResolvedLink, sub: boolean) =>
+  const drawerLink = (l: ResolvedLink, sub: boolean, path: ReturnType<typeof attrs>) =>
     isTrivia(l) && triviaLocked ? (
-      <div className={`drawer-link${sub ? ' sub' : ''}`}><LockedBadge label={l.label} /></div>
+      <div className={`drawer-link${sub ? ' sub' : ''}`} {...path}><LockedBadge label={l.label} /></div>
     ) : (
-      <LocaleLink to={l.to} className={`drawer-link${sub ? ' sub' : ''}${cleanPath === l.to ? ' on' : ''}`}>{l.label}</LocaleLink>
+      <LocaleLink to={l.to} className={`drawer-link${sub ? ' sub' : ''}${cleanPath === l.to ? ' on' : ''}`} {...path}>{l.label}</LocaleLink>
     );
 
   const drawer = open ? (
@@ -217,10 +224,10 @@ export default function SiteHeader() {
       <nav className="wrap drawer-body" aria-label="Mobile">
         {/* ─── CTAs ─── */}
         <div className="flex flex-col gap-2.5">
-          <button type="button" onClick={() => handleAction('create')} className={buttonClass({ size: 'lg', block: true })}>
+          <button type="button" onClick={() => handleAction('create')} className={buttonClass({ size: 'lg', block: true })} {...attrs('cta.createRoom')}>
             {cta.createRoom}
           </button>
-          <button type="button" onClick={() => handleAction('join')} className={buttonClass({ variant: 'secondary', size: 'lg', block: true })}>
+          <button type="button" onClick={() => handleAction('join')} className={buttonClass({ variant: 'secondary', size: 'lg', block: true })} {...attrs('cta.joinRoom')}>
             {cta.joinRoom}
           </button>
         </div>
@@ -229,7 +236,7 @@ export default function SiteHeader() {
         {leaves.length > 0 && (
           <ul className="drawer-links">
             {leaves.map((e) => (
-              <li key={e.link!.to}>{drawerLink(e.link!, false)}</li>
+              <li key={e.link!.to}>{drawerLink(e.link!, false, itemAttrs(e))}</li>
             ))}
           </ul>
         )}
@@ -237,10 +244,10 @@ export default function SiteHeader() {
         {/* ─── Menus (How to play) ─── */}
         {menus.map((m, i) => (
           <div key={i}>
-            <span className="t-eyebrow">{m.label}</span>
+            <span className="t-eyebrow" {...itemAttrs(m)}>{m.label}</span>
             <ul className="drawer-links">
               {m.links.map((l) => (
-                <li key={l.to}>{drawerLink(l, true)}</li>
+                <li key={l.to}>{drawerLink(l, true, childAttrs(m, l))}</li>
               ))}
             </ul>
           </div>
@@ -255,7 +262,7 @@ export default function SiteHeader() {
             className="w-full flex items-center justify-between gap-3 min-h-[56px] px-4 text-left cursor-pointer text-stage-text"
           >
             <span className="flex items-center gap-2.5">
-              <span className="font-semibold">{ui.yourRooms}</span>
+              <span className="font-semibold" {...attrs('ui.yourRooms')}>{ui.yourRooms}</span>
               {roomCount > 0 && (
                 <span className="chip chip-pink num">{roomCount}</span>
               )}
@@ -265,7 +272,7 @@ export default function SiteHeader() {
           {roomsOpen && (
             <div className="px-2 pb-2 flex flex-col gap-1">
               {rooms.length === 0 ? (
-                <p className="t-meta px-2.5 py-2 m-0">{ui.noRooms}</p>
+                <p className="t-meta px-2.5 py-2 m-0" {...attrs('ui.noRooms')}>{ui.noRooms}</p>
               ) : (
                 rooms.map((r) => {
                   const badge = getBadge(r);
@@ -308,10 +315,10 @@ export default function SiteHeader() {
             if (e.link) {
               const l = e.link;
               if (isTrivia(l) && triviaLocked) {
-                return <span key={l.to} className="nav-item"><LockedBadge label={l.label} /></span>;
+                return <span key={l.to} className="nav-item" {...itemAttrs(e)}><LockedBadge label={l.label} /></span>;
               }
               return (
-                <LocaleLink key={l.to} to={l.to} className={`nav-item${cleanPath === l.to ? ' on' : ''}`}>
+                <LocaleLink key={l.to} to={l.to} className={`nav-item${cleanPath === l.to ? ' on' : ''}`} {...itemAttrs(e)}>
                   {l.label}
                 </LocaleLink>
               );
@@ -326,6 +333,7 @@ export default function SiteHeader() {
                   aria-haspopup="menu"
                   aria-expanded={isOpen}
                   className={`nav-item${menuActive(e, i) ? ' on' : ''}`}
+                  {...itemAttrs(e)}
                 >
                   {e.label}
                   <ChevronIcon open={isOpen} />
@@ -335,7 +343,7 @@ export default function SiteHeader() {
                     {e.links.map((l) => {
                       if (isTrivia(l) && triviaLocked) {
                         return (
-                          <div key={l.to} className="px-2 py-1" role="menuitem">
+                          <div key={l.to} className="px-2 py-1" role="menuitem" {...childAttrs(e, l)}>
                             <LockedBadge label={l.label} />
                           </div>
                         );
@@ -347,6 +355,7 @@ export default function SiteHeader() {
                           role="menuitem"
                           className="menu-item"
                           onClick={() => setOpenMenu(null)}
+                          {...childAttrs(e, l)}
                         >
                           {l.label}
                         </LocaleLink>
@@ -368,6 +377,7 @@ export default function SiteHeader() {
           type="button"
           onClick={() => handleAction('join')}
           className={buttonClass({ variant: 'secondary', size: 'sm', className: 'hidden xl:inline-flex' })}
+          {...attrs('cta.joinRoom')}
         >
           {cta.joinRoom}
         </button>
@@ -375,6 +385,7 @@ export default function SiteHeader() {
           type="button"
           onClick={() => handleAction('create')}
           className={buttonClass({ size: 'sm', className: 'hidden lg:inline-flex' })}
+          {...attrs('cta.createRoom')}
         >
           {cta.createRoom}
         </button>
