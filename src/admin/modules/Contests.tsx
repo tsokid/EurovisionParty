@@ -7,8 +7,15 @@
 // SQL stays authoritative and its refusals show through formatError.
 // Finalize, Archive and Un-archive publish automatically once they
 // succeed (spec §7); a failed publish never undoes the lifecycle move.
+//
+// In the admin shell the selected year is the URL (/admin/contests/:year,
+// …/entries, …/entries/:iso): the route passes `year`, `section`, `iso` and
+// `onSelect`. Rendered alone (tests), the year is local state.
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { archivePath, hubPath } from '../../lib/seo/dynamicPages';
+import { useAdminLive } from '../adminMeta';
+import { useUnsavedGuard } from '../unsavedGuard';
 import { supabase } from '../../lib/supabase';
 import { formatError } from '../lib/formatError';
 import { ContestList, type ContestSummary } from './contests/ContestList';
@@ -45,9 +52,24 @@ const FORM_FIELDS: Array<{ key: keyof Form; label: string; type: string; example
   { key: 'final', label: 'Final', type: 'date', example: 'e.g. Sat 15 May 2027' },
 ];
 
-export default function Contests() {
+export interface ContestsProps {
+  /** The selected year (from the URL). Only read when `onSelect` is given. */
+  year?: number | null;
+  /** Which part of the year's editor to bring into view. */
+  section?: 'details' | 'entries';
+  /** One entry to bring into view and highlight (entries section). */
+  iso?: string | null;
+  /** Selects a year (null: none), e.g. by navigating. */
+  onSelect?: (year: number | null) => void;
+  /** Admin link of one entry, shown on its country name. */
+  entryPath?: (year: number, iso: string) => string;
+}
+
+export default function Contests({ year, section = 'details', iso = null, onSelect, entryPath }: ContestsProps = {}) {
   const [contests, setContests] = useState<ContestSummary[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [localYear, setLocalYear] = useState<number | null>(null);
+  const selectedYear = onSelect ? year ?? null : localYear;
+  const setSelectedYear = (y: number | null) => (onSelect ? onSelect(y) : setLocalYear(y));
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState<Form>(EMPTY_FORM);
   const [busy, setBusy] = useState(false);
@@ -134,13 +156,21 @@ export default function Contests() {
   };
 
   const selected = contests.find((c) => c.year === selectedYear) ?? null;
+  useAdminLive(selected ? (selected.stage === 'archived' ? archivePath(selected.year, selected.city_slug) : hubPath(selected.year)) : null);
+  // The create form counts as unsaved edits once anything is typed.
+  useUnsavedGuard(showCreate && Object.values(form).some((v) => v !== ''));
 
   // The editor renders below the full year list (70+ rows): bring it into
-  // view on Edit, or the click looks like it did nothing.
+  // view on Edit, or the click looks like it did nothing. A deep link to the
+  // entries (or one entry, which EntriesEditor scrolls to) skips the details.
   const editorRef = useRef<HTMLElement>(null);
+  const entriesRef = useRef<HTMLDivElement>(null);
+  const shown = selected !== null;
   useEffect(() => {
-    if (selectedYear !== null) editorRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
-  }, [selectedYear]);
+    if (selectedYear === null || !shown || iso) return;
+    const target = section === 'entries' ? entriesRef.current : editorRef.current;
+    target?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }, [selectedYear, shown, section, iso]);
 
   return (
     <div className="p-4 space-y-4">
@@ -220,12 +250,15 @@ export default function Contests() {
       )}
 
       {selected && (
+        <div ref={entriesRef} className="scroll-mt-4">
         <EntriesEditor
           key={selected.year}
           year={selected.year}
           archived={selected.stage === 'archived'}
           onChanged={changed}
           reloadKey={entriesReload}
+          focusIso={iso}
+          entryPath={entryPath ? (code) => entryPath(selected.year, code) : undefined}
           parseSemisSlot={
             selected.stage === 'current' || selected.stage === 'finalized' ? (
               <ParseSemisButton
@@ -238,6 +271,7 @@ export default function Contests() {
             ) : undefined
           }
         />
+        </div>
       )}
     </div>
   );

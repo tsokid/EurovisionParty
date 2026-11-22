@@ -34,16 +34,41 @@ import ArchiveYearPage from './pages/contest/ArchiveYearPage';
 import CountriesPage from './pages/contest/CountriesPage';
 import CountryPage from './pages/contest/CountryPage';
 
+/**
+ * The URL patterns that open the admin. React Router ranks routes by how
+ * specific they are, not by order, so a bare `/admin/*` loses to the locale
+ * tree (`/admin/pages` would match `/:locale/:slug`). Each admin section is
+ * listed with its static segment, which outranks every locale route;
+ * `/admin/:screen` and `/admin/:screen/:item` tie with the locale routes of
+ * the same depth and win by coming first in `routes`, and `/admin/:screen/*`
+ * takes anything deeper. The admin picks the screen itself (AdminScreens),
+ * and unknown screens get its "Nothing here". tests/admin/adminAccess.test.tsx
+ * checks that every /admin URL reaches the admin.
+ */
+export const ADMIN_ROUTE_PATTERNS = [
+  '/admin',
+  '/admin/header',
+  '/admin/footer/*',
+  '/admin/pages/*',
+  '/admin/contests/*',
+  '/admin/game/*',
+  '/admin/media/*',
+  '/admin/settings/*',
+  '/admin/system/*',
+  '/admin/:screen',
+  '/admin/:screen/:item',
+  '/admin/:screen/*',
+];
+
 /** Locale child route paths fed by content data, not PAGE_REGISTRY (excluded from route parity). */
 export const DYNAMIC_ROUTE_PATHS = [':slug', 'past-contests', 'past-contests/:slug', 'countries', 'countries/:slug'];
 
 export const routes: RouteObject[] = [
   // Game + admin own their own chrome
   { path: '/room/:roomCode', element: <RoomPage /> },
-  {
-    path: '/admin',
-    element: <LazyAdminRoute />,
-  },
+  // Every admin screen has its own URL under /admin/* (src/admin/paths.ts);
+  // the admin's own <Routes> picks the screen. See ADMIN_ROUTE_PATTERNS.
+  ...ADMIN_ROUTE_PATTERNS.map((path) => ({ path, element: <LazyAdminRoute /> })),
 
   // Locale-prefixed public surface
   {

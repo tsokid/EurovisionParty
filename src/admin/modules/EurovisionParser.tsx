@@ -1,6 +1,8 @@
 // src/admin/modules/EurovisionParser.tsx
 // Thin composition over four parser cards. State lives in useParserState; this
 // component just slots data into the right card and provides a refresh handle.
+// In the admin shell a picked year is the URL (/admin/game/parser/:year): the
+// route passes `year` and `onPickYear`. Without a year it opens on the game year.
 
 import { useEffect, useState } from "react";
 import { useParserState } from "./parser/useParserState";
@@ -13,10 +15,18 @@ import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
 import { GamePhaseCard } from "./parser/GamePhaseCard";
 
-export default function EurovisionParser() {
+export interface EurovisionParserProps {
+  /** A year picked through the URL; null/undefined: the game year. */
+  year?: number | null;
+  /** Picks a year, e.g. by navigating. */
+  onPickYear?: (year: number) => void;
+}
+
+export default function EurovisionParser({ year: routeYear = null, onPickYear }: EurovisionParserProps = {}) {
   // The page opens on the game year (the contest new rooms play), not on the
   // newest contest created; the picker switches to any year with parse jobs.
-  const [picked, setPicked] = useState<number | null>(null);
+  const [localPicked, setPicked] = useState<number | null>(null);
+  const picked = routeYear ?? localPicked;
   useEffect(() => {
     let cancelled = false;
     fetchLiveContestYear()
@@ -67,7 +77,7 @@ export default function EurovisionParser() {
           <select
             aria-label="Contest year"
             value={year}
-            onChange={(e) => setPicked(Number(e.target.value))}
+            onChange={(e) => (onPickYear ? onPickYear(Number(e.target.value)) : setPicked(Number(e.target.value)))}
             className="bg-white/10 text-white/80 font-normal text-base rounded px-2 py-0.5 cursor-pointer"
           >
             {years.map((y) => (

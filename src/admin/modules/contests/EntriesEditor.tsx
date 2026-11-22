@@ -5,7 +5,9 @@
 // Archived years are edited the same way (Edit + Republish): the change
 // reaches the public archive page with the next Publish, as the banner says.
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import { useUnsavedGuard } from '../../unsavedGuard';
 import { supabase } from '../../../lib/supabase';
 import { compareText } from '../../../lib/seo/textSort';
 import { formatError } from '../../lib/formatError';
@@ -52,6 +54,10 @@ interface Props {
   parseSemisSlot?: ReactNode;
   /** Bump to reload the entries (e.g. after a semi-final parse). Unsaved edits are kept. */
   reloadKey?: number;
+  /** Bring this entry (ISO code) into view and highlight it once loaded (a deep link). */
+  focusIso?: string | null;
+  /** Admin link of one entry; when given, the country name links to it. */
+  entryPath?: (iso: string) => string;
 }
 
 const toNum = (v: string): number | null => (v.trim() === '' ? null : Number(v));
@@ -59,7 +65,7 @@ const toText = (v: string): string | null => (v.trim() === '' ? null : v);
 const triState = (v: boolean | null) => (v === null ? '' : v ? 'yes' : 'no');
 const fromTriState = (v: string): boolean | null => (v === '' ? null : v === 'yes');
 
-export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlot, reloadKey }: Props) {
+export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlot, reloadKey, focusIso = null, entryPath }: Props) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
@@ -90,6 +96,13 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
     [entries, nameOf],
   );
   const available = countries.filter((c) => !entries.some((e) => e.iso === c.iso));
+  useUnsavedGuard(Object.values(drafts).some((d) => Object.keys(d).length > 0));
+
+  const focusRef = useRef<HTMLTableRowElement>(null);
+  const hasFocusRow = !!focusIso && entries.some((e) => e.iso === focusIso);
+  useEffect(() => {
+    if (hasFocusRow) focusRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+  }, [hasFocusRow, focusIso]);
 
   // Runs one RPC, then reloads. Unsaved drafts of other rows are kept.
   const run = async (fn: () => PromiseLike<{ error: unknown }>, onDone?: () => void) => {
@@ -189,8 +202,19 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
               const name = nameOf.get(e.iso) ?? e.iso;
               const dirty = Object.keys(drafts[e.iso] ?? {}).length > 0;
               return (
-                <tr key={e.iso} className="border-b border-white/5 last:border-0">
-                  <td className="px-2 py-1.5 text-white">{name}</td>
+                <tr
+                  key={e.iso}
+                  ref={e.iso === focusIso ? focusRef : undefined}
+                  aria-current={e.iso === focusIso ? 'true' : undefined}
+                  className={`border-b border-white/5 last:border-0${e.iso === focusIso ? ' bg-stage-pink/10 outline outline-1 outline-stage-pink/40' : ''}`}
+                >
+                  <td className="px-2 py-1.5 text-white">
+                    {entryPath ? (
+                      <Link to={entryPath(e.iso)} className="hover:underline">{name}</Link>
+                    ) : (
+                      name
+                    )}
+                  </td>
                   <td className="px-2 py-1.5">
                     <input
                       aria-label={`Artist ${e.iso}`}

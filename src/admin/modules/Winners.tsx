@@ -40,10 +40,18 @@ interface Winner {
   is_sudden_death_winner: boolean;
 }
 
-export default function Winners() {
+export interface WinnersProps {
+  /** A room picked through the URL (/admin/game/winners/:roomId); else the newest room. */
+  roomId?: string | null;
+  /** Picks a room, e.g. by navigating. */
+  onSelectRoom?: (roomId: string) => void;
+}
+
+export default function Winners({ roomId: routeRoomId = null, onSelectRoom }: WinnersProps = {}) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [hostMap, setHostMap] = useState<HostMap>({});
-  const [roomId, setRoomId] = useState<string | null>(null);
+  const [localRoomId, setRoomId] = useState<string | null>(null);
+  const roomId = routeRoomId ?? localRoomId;
   const [players, setPlayers] = useState<Player[]>([]);
   const [winners, setWinners] = useState<Winner[]>([]);
   const [busy, setBusy] = useState(false);
@@ -64,7 +72,8 @@ export default function Winners() {
       if (roomErr) { setMsg({ kind: 'err', text: roomErr.message }); return; }
       const rs = (roomData ?? []) as Room[];
       setRooms(rs);
-      if (rs.length > 0 && !roomId) setRoomId(rs[0].id);
+      // The newest room is the default when the URL names none.
+      if (rs.length > 0) setRoomId((r) => r ?? rs[0].id);
 
       // Pull hosts for those rooms in a single query
       if (rs.length > 0) {
@@ -154,7 +163,7 @@ export default function Winners() {
           <label className="text-xs text-white/50 uppercase tracking-wider font-semibold block mb-2">Room</label>
           <select
             value={roomId ?? ''}
-            onChange={(e) => setRoomId(e.target.value)}
+            onChange={(e) => (onSelectRoom ? onSelectRoom(e.target.value) : setRoomId(e.target.value))}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white"
           >
             {rooms.length === 0 && <option>No rooms yet</option>}

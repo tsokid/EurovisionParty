@@ -206,11 +206,9 @@ describe('Pages module: editorial groups', () => {
     expect(screen.getByRole('heading', { name: 'Country Greece' })).toBeTruthy();
   });
 
-  it('a pending doc from another module opens its editor; one never saved nor published starts empty', async () => {
-    const nav: AdminNav = { openDoc: vi.fn(), pendingDoc: 'archive-2004', clearPendingDoc: vi.fn() };
-    render(<AdminNavContext.Provider value={nav}><Pages /></AdminNavContext.Provider>);
+  it('a doc opened by its URL shows its editor; one never saved nor published starts empty', async () => {
+    render(<Pages docId="archive-2004" onOpen={vi.fn()} />);
     expect(await screen.findByText('New: not saved yet')).toBeTruthy();
-    expect(nav.clearPendingDoc).toHaveBeenCalled();
     expect(fetchSpy.mock.calls.map(([u]) => String(u))).not.toContain('/content/pages/archive-2004.json');
     expect(await screen.findByRole('heading', { name: 'Contest year 2004 · Istanbul' })).toBeTruthy();
   });
@@ -224,8 +222,7 @@ describe('Pages module: editorial groups', () => {
       return realFetch(input, init);
     });
     h.drafts['archive-2005'] = { doc_id: 'archive-2005', doc_type: 'archive-editorial', data: { en: editorial({ intro: 'Hi' }), el: editorial() }, updated_at: '2026-10-30T09:15:00Z' };
-    const nav: AdminNav = { openDoc: vi.fn(), pendingDoc: 'archive-2005', clearPendingDoc: vi.fn() };
-    render(<AdminNavContext.Provider value={nav}><Pages /></AdminNavContext.Provider>);
+    render(<Pages docId="archive-2005" onOpen={vi.fn()} />);
     expect(await screen.findByRole('heading', { name: 'Contest year 2005' })).toBeTruthy();
     release();
     expect(await screen.findByRole('heading', { name: 'Contest year 2005 · Kyiv' })).toBeTruthy();
@@ -244,8 +241,7 @@ describe('Pages module: editorial groups', () => {
       doc_id: 'archive-2005', doc_type: 'archive-editorial', updated_at: '2026-10-30T09:15:00Z',
       data: { en: editorial({ intro: 'Hi', metaDescription: faq.en.meta.description }), el: editorial({ intro: 'Γεια' }) },
     };
-    const nav: AdminNav = { openDoc: vi.fn(), pendingDoc: 'archive-2005', clearPendingDoc: vi.fn() };
-    render(<AdminNavContext.Provider value={nav}><Pages /></AdminNavContext.Provider>);
+    render(<Pages docId="archive-2005" onOpen={vi.fn()} />);
     expect(await screen.findByText(/Same meta description as "faq"/)).toBeTruthy();
     expect((screen.getByRole('button', { name: 'Save draft' }) as HTMLButtonElement).disabled).toBe(true);
   });
@@ -277,7 +273,7 @@ describe('PreviewPane: editorial on its data page', () => {
 });
 
 describe('ContestDetailsForm: editorial indicator', () => {
-  const NAV = () => ({ openDoc: vi.fn(), pendingDoc: null, clearPendingDoc: vi.fn() }) satisfies AdminNav;
+  const NAV = () => ({ openDoc: vi.fn() }) satisfies AdminNav;
   const show = (nav: AdminNav = NAV()) => {
     h.contest = { year: 2005, city: 'Kyiv', city_slug: 'kyiv', host_iso: 'UA', semi1_date: null, semi2_date: null, final_date: null, indexable: false, stage: 'archived' };
     render(<AdminNavContext.Provider value={nav}><ContestDetailsForm year={2005} /></AdminNavContext.Provider>);

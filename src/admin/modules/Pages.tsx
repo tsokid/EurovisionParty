@@ -7,13 +7,18 @@
 // Documents: the site pages, then the optional editorial docs of the data
 // pages grouped as Contest years, Countries and Live hub (editorialPages.ts).
 // "Add editorial for …" saves a new draft from the schema's empty value
-// (cms_save, as a first save) and opens it. The Contests module opens an
-// editorial doc here through the admin navigation (adminNav.ts).
+// (cms_save, as a first save) and opens it.
+//
+// In the admin shell the open document is the URL (/admin/pages/:docId):
+// the route passes `docId` and `onOpen`, and the shell's route guard asks
+// before leaving unsaved edits. Rendered alone (tests), it keeps the open
+// document in local state and asks through the leave guard itself.
 
 import { useCallback, useEffect, useState } from 'react';
 import { formatError } from '../lib/formatError';
 import { useLeaveGuard } from '../unsavedGuard';
-import { useAdminNav } from '../adminNav';
+import { useAdminLive } from '../adminMeta';
+import { sitePagePath } from '../siteStructure';
 import { PublishBar } from './contests/PublishBar';
 import { usePublisher } from './contests/publish';
 import { cmsList, cmsSave, fetchPublishedEditorialIds, resetPublishedPages, type CmsListRow } from './pages/cmsApi';
@@ -26,13 +31,20 @@ import { isEditorialDocId } from '../../../supabase/functions/_shared/cms/pagesI
 
 type EditorialData = { targets: EditorialTarget[]; published: string[] };
 
-export default function Pages() {
+export interface PagesProps {
+  /** The open document (from the URL); null: the list. Only read when `onOpen` is given. */
+  docId?: string | null;
+  /** Opens a document (or the list, with null), e.g. by navigating. */
+  onOpen?: (docId: string | null) => void;
+}
+
+export default function Pages({ docId, onOpen }: PagesProps = {}) {
   const publisher = usePublisher();
   const { refresh: refreshPublish } = publisher;
   const guard = useLeaveGuard();
-  const nav = useAdminNav();
   const [rows, setRows] = useState<CmsListRow[]>([]);
-  const [selected, setSelected] = useState<string | null>(() => nav?.pendingDoc ?? null);
+  const [localSelected, setLocalSelected] = useState<string | null>(null);
+  const selected = onOpen ? docId ?? null : localSelected;
   const [err, setErr] = useState<string | null>(null);
   const [editorial, setEditorial] = useState<EditorialData | null>(null);
   const [editorialErr, setEditorialErr] = useState<string | null>(null);
@@ -65,8 +77,6 @@ export default function Pages() {
   useEffect(() => { loadEditorial(); }, [loadEditorial]);
   // A new editor session reads the other pages' published copies afresh (SEO check).
   useEffect(() => { resetPublishedPages(); }, []);
-  // A document opened from another module (taken once, on mount).
-  useEffect(() => { nav?.clearPendingDoc(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // After a save or discard: the list badges and the "unpublished changes" count.
   const changed = useCallback(() => {
@@ -74,9 +84,10 @@ export default function Pages() {
     refreshPublish();
   }, [load, refreshPublish]);
 
-  const open = (docId: string | null) => {
-    if (docId === selected || !guard.confirmLeave()) return;
-    setSelected(docId);
+  const open = (next: string | null) => {
+    if (next === selected) return;
+    if (onOpen) onOpen(next);
+    else if (guard.confirmLeave()) setLocalSelected(next);
   };
 
   const add = async (docId: string) => {
@@ -102,6 +113,7 @@ export default function Pages() {
     ? { docId: selected, label: editorialTitle(selected, editorial?.targets) }
     : null);
   const previewPath = page && !site ? editorialPreviewPath(page.docId, editorial?.targets ?? null) : undefined;
+  useAdminLive(site ? sitePagePath(site.docId) : previewPath);
 
   return (
     <div className="p-4 space-y-4">
