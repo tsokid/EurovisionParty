@@ -12,7 +12,7 @@
     },
     "faq": [
       {
-        "a": "Ναι — όσες φορές θέλεις μέχρι να ανοίξει η ψηφοφορία. Τότε το δωμάτιο περνά στην Ψηφοφορία Live και οι λίστες σου κλειδώνουν αυτόματα.",
+        "a": "Ναι — όσες φορές θέλεις μέχρι να ανοίξει η ψηφοφορία. Τότε το δωμάτιο περνά στη φάση «Ψηφοφορία σε εξέλιξη» και οι λίστες σου κλειδώνουν αυτόματα.",
         "q": "Μπορώ να αλλάξω τη λίστα μου;"
       },
       {
@@ -20,13 +20,13 @@
         "q": "Τι γίνεται με τις χώρες που αποκλείονται στους ημιτελικούς;"
       },
       {
-        "a": "Η εφαρμογή παίρνει αυτόματα τα επίσημα αποτελέσματα κριτικής επιτροπής και televote από την επίσημη πηγή — κανείς δεν χρειάζεται να τα πληκτρολογήσει.",
+        "a": "Η εφαρμογή παίρνει αυτόματα τα επίσημα αποτελέσματα από την επίσημη πηγή, μόλις ανακοινωθούν — κανείς δεν χρειάζεται να τα πληκτρολογήσει.",
         "q": "Πώς ξέρει η εφαρμογή τα αποτελέσματα;"
       }
     ],
     "hero": {
       "chip": "Παιχνίδι προβλέψεων",
-      "lede": "Η Eurovision {year} {verb} {cityIn}{hostPart}, με τον μεγάλο τελικό το {finalDay}. Στο Eurovision Games κάθε παίκτης φτιάχνει δύο λίστες προβλέψεων — Top 5 και Worst 5 — πριν ανοίξει η ψηφοφορία, και τις βλέπει να βαθμολογούνται αυτόματα με βάση τα επίσημα αποτελέσματα κριτικής επιτροπής και televote.",
+      "lede": "Η Eurovision {year} {verb} {cityIn}{hostPart}, με τον μεγάλο τελικό το {finalDay}. Στο Eurovision Games κάθε παίκτης φτιάχνει δύο λίστες προβλέψεων — Top 5 και Worst 5 — πριν ανοίξει η ψηφοφορία, και τις βλέπει να βαθμολογούνται αυτόματα μόλις ανακοινωθούν τα επίσημα αποτελέσματα.",
       "ledeHost": " ({hostName})",
       "ledeVerb": {
         "decided": "διεξήχθη",
@@ -76,9 +76,9 @@
     "sections": {
       "faqTitle": "Συχνές ερωτήσεις",
       "format": {
-        "intro": "Κάθε παίκτης φτιάχνει δύο λίστες αφού ο οικοδεσπότης ξεκινήσει το πάρτι (οι προβλέψεις ανοίγουν μόλις επιβεβαιωθεί η σύνθεση του Μεγάλου Τελικού):",
+        "intro": "Κάθε παίκτης φτιάχνει δύο λίστες αφού ξεκινήσει το πάρτι (οι προβλέψεις ανοίγουν μόλις επιβεβαιωθεί η σύνθεση του Μεγάλου Τελικού):",
         "orderedEm": "ταξινομημένες",
-        "orderedPost": ": ένα #1 pick που νικά βαθμολογείται περισσότερο από ένα #5 pick που νικά. Δεν μπορείς να βάλεις την ίδια χώρα και στις δύο λίστες. Οι λίστες αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια και κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία και το δωμάτιο περάσει στην Ψηφοφορία Live.",
+        "orderedPost": ": ένα #1 pick που νικά βαθμολογείται περισσότερο από ένα #5 pick που νικά. Δεν μπορείς να βάλεις την ίδια χώρα και στις δύο λίστες. Οι λίστες αλλάζουν ελεύθερα όσο παίζουν τα τραγούδια και κλειδώνουν αυτόματα όταν ανοίξει η ψηφοφορία και το δωμάτιο περάσει στη φάση «Ψηφοφορία σε εξέλιξη».",
         "orderedPre": "Οι λίστες είναι ",
         "title": "Φόρμα προβλέψεων",
         "top5Body": "πέντε χώρες που πιστεύεις ότι θα τερματίσουν ψηλότερα στον συνδυασμό κριτικής επιτροπής + televote.",
@@ -167,7 +167,7 @@
     },
     "faq": [
       {
-        "a": "Yes — as often as you like until voting opens. Then the room moves to Voting Live and your lists lock automatically.",
+        "a": "Yes — as often as you like until voting opens. Then the room moves to Voting live and your lists lock automatically.",
         "q": "Can I change my list?"
       },
       {
@@ -175,13 +175,13 @@
         "q": "What about semi-final exits?"
       },
       {
-        "a": "The app pulls in the official jury and televote results automatically from the official source — nobody has to type them in.",
+        "a": "The app pulls in the official results automatically from the official source once they are announced — nobody has to type them in.",
         "q": "How does the app know the results?"
       }
     ],
     "hero": {
       "chip": "Predictions game",
-      "lede": "Eurovision {year} {verb} {cityIn}{hostPart}, with the grand final on {finalDay}. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before voting opens, then watches them auto-score against the official jury and televote results.",
+      "lede": "Eurovision {year} {verb} {cityIn}{hostPart}, with the grand final on {finalDay}. In Eurovision Games each player builds two prediction lists — Top 5 and Worst 5 — before voting opens, then watches them auto-score once the official results are announced.",
       "ledeHost": ", {hostName}",
       "ledeVerb": {
         "decided": "took place",
@@ -233,7 +233,7 @@
       "format": {
         "intro": "Each player builds two lists once the host has started the party (predictions open as soon as the Grand Final line-up is confirmed):",
         "orderedEm": "ordered",
-        "orderedPost": ": a #1 pick that wins scores more than a #5 pick that wins. You cannot put the same country in both lists. Lists stay editable through the songs and lock automatically when voting opens and the room moves to Voting Live.",
+        "orderedPost": ": a #1 pick that wins scores more than a #5 pick that wins. You cannot put the same country in both lists. Lists stay editable through the songs and lock automatically when voting opens and the room moves to Voting live.",
         "orderedPre": "Lists are ",
         "title": "Prediction format",
         "top5Body": "five countries you think will finish highest in the combined jury + televote.",

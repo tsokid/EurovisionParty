@@ -453,7 +453,7 @@
     "submitted": "Predictions Submitted!",
     "waitingResults": "Waiting for official results to score...",
     "locked": "Predictions Locked",
-    "lockedDesc": "Predictions open when the game advances to the Predictions phase."
+    "lockedDesc": "Predictions open when the game advances to the Predictions open phase."
   },
   "leaderboard": {
     "title": "🏆 Leaderboard",
@@ -546,7 +546,7 @@
     "yours": "Your locked predictions",
     "lockedAria": "locked",
     "closedTitle": "Predictions are not open",
-    "closedBody": "Predictions open when the game moves to the predictions phase.",
+    "closedBody": "Predictions open when the game moves to the Predictions open phase.",
     "noneSubmitted": "No predictions were submitted before they locked.",
     "scoredTotal": "{{points}} prediction points",
     "loading": "Loading…"
@@ -853,7 +853,7 @@
       "winnersDesc": "Every winner since 1956."
     },
     "preview": {
-      "phase": "Voting open",
+      "phase": "Voting live",
       "example": "Example",
       "room": "Room",
       "board": "Room leaderboard",
@@ -903,10 +903,10 @@
       "partyBody": "From the start of the party you collect points, before and during the show.",
       "finalTitle": "Grand final",
       "finalBody": "The lists open. Change them freely while the songs play.",
-      "votingTitle": "Live voting",
+      "votingTitle": "Voting live",
       "votingBody": "The lists lock automatically. No changes after that.",
-      "resultsTitle": "Results",
-      "resultsBody": "Scored automatically against the official ranking."
+      "resultsTitle": "Final results",
+      "resultsBody": "Scored automatically once the official ranking is announced."
     },
     "detail": "In detail: the format and the scoring"
   },

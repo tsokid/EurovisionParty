@@ -6,7 +6,7 @@
       "winners": "Νικητές"
     },
     "cta": {
-      "body": "Κλείδωσε το Top 5 σου πριν ανοίξει η ψηφοφορία, σκόραρε ζωντανά με βάση τις επίσημες ψήφους κριτικής επιτροπής + televote και δες αν μπορείς να μαντέψεις τον νικητή της Eurovision {current.year} πριν από όλους.",
+      "body": "Κλείδωσε το Top 5 σου πριν ανοίξει η ψηφοφορία, δες τους πόντους σου να μπαίνουν αυτόματα μόλις ανακοινωθούν τα επίσημα αποτελέσματα και μάντεψε τον νικητή της Eurovision {current.year} πριν από όλους.",
       "primary": "Φτιάξε δωμάτιο",
       "secondary": "Πώς παίζεται",
       "title": "Μάντεψε τον επόμενο νικητή"
@@ -152,7 +152,7 @@
       "winners": "Winners"
     },
     "cta": {
-      "body": "Lock your Top 5 before voting opens, score live against the official jury + televote, and see if you can pick the Eurovision {current.year} winner before everyone else.",
+      "body": "Lock your Top 5 before voting opens, watch your points land automatically once the official results are announced, and see if you can pick the Eurovision {current.year} winner before everyone else.",
       "primary": "Create room",
       "secondary": "How to play",
       "title": "Predict the next winner"
