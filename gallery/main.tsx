@@ -21,6 +21,7 @@ import { setFakeDb, type FakeTables } from './fakeSupabase';
 import * as F from './fixtures';
 import StagePrimitives from './StagePrimitives';
 import AvatarSheet from './AvatarSheet';
+import { AdminGallery } from './AdminGallery';
 import DuelResultMoment from '../src/components/duels/DuelResultMoment';
 import { duelRewardPreview } from '../src/lib/answerPoints';
 import { QUESTIONS } from '../src/lib/questions';
@@ -412,6 +413,10 @@ function Index() {
     <div className="min-h-svh bg-euro-gradient text-white p-6">
       <h1 className="text-3xl font-extrabold mb-1">Screen gallery</h1>
       <p className="text-white/60 mb-6 text-sm">Fake data only — no Supabase traffic. Room DESIGN · 2026.</p>
+      <p className="mb-6 text-sm">
+        <a className="underline" href="?screen=admin&path=/admin">Admin shell (faked admin session)</a>
+        <span className="text-white/50"> · add &amp;path=/admin/… for any admin URL</span>
+      </p>
       <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {SCENARIOS.map((s) => (
           <li key={s.id}>
@@ -446,7 +451,7 @@ void i18n.changeLanguage(lang).then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <ErrorBoundary>
-        {scenario ? <Screen s={scenario} /> : screenId ? <p style={{ color: 'white', padding: 24 }}>Unknown screen “{screenId}”.</p> : <Index />}
+        {screenId === 'admin' ? <AdminGallery path={params.get('path') ?? '/admin'} /> : scenario ? <Screen s={scenario} /> : screenId ? <p style={{ color: 'white', padding: 24 }}>Unknown screen “{screenId}”.</p> : <Index />}
       </ErrorBoundary>
     </StrictMode>,
   );
