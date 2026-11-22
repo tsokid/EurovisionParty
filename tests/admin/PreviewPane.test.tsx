@@ -52,8 +52,8 @@ describe('PreviewPane', () => {
     inAdmin(<PreviewPane docId="about" doc={doc} />);
     fireEvent.click(screen.getByRole('button', { name: 'EL' }));
     expect(screen.getByText('Πρόχειρος τίτλος ΧΨΩ')).toBeInTheDocument();
-    // The page's own UI strings (the footer) follow the preview locale too.
-    expect(screen.getAllByRole('heading', { name: i18n.getFixedT('el')('siteFooter.about') }).length).toBeGreaterThan(0);
+    // The footer (site-footer doc) follows the preview locale too.
+    expect(screen.getAllByRole('heading', { name: 'Σχετικά' }).length).toBeGreaterThan(0);
     expect(i18n.language).toBe(langBefore);
     expect(document.documentElement.lang).toBe(htmlLang);
   });

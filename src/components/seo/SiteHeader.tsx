@@ -13,33 +13,54 @@ import { useGameStore } from '../../stores/gameStore';
 import LockedBadge from '../ui/LockedBadge';
 import type { SiteSnapshot } from '../../content/contests/types';
 import { useContent } from '../../lib/seo/useContent';
-import { hubPath } from '../../lib/seo/dynamicPages';
 import { buttonClass } from '../stage';
-
-interface NavLink {
-  href: string;
-  key: 'trivia' | 'predictions' | 'hub' | 'rules' | 'scoring' | 'otherFaq';
-}
-
-const HOW_TO_PLAY_LINKS: NavLink[] = [
-  { href: '/eurovision-trivia', key: 'trivia' },
-  { href: '/eurovision-predictions', key: 'predictions' },
-  { href: '/rules', key: 'rules' },
-  { href: '/scoring', key: 'scoring' },
-  { href: '/faq', key: 'otherFaq' },
-];
+import { linkText, resolveLinks, useSiteDoc, type ResolvedLink } from '../../lib/cms/siteChrome';
+import type { LinkTarget, NavLink as NavLinkDoc } from '../../../supabase/functions/_shared/cms/siteLinks';
 
 /**
- * The "How to play" links, plus the live contest hub ("Eurovision {year}").
- * The year comes from site.json, which every prerendered page inlines because
- * the header reads it; no hub link while it is unknown or the live contest is
- * archived (the hub then redirects to the archive).
+ * The live contest year for the header's {year} labels and its hub link. It
+ * comes from site.json, which every prerendered page inlines because the
+ * header reads it; null while it is unknown or the live contest is archived
+ * (the hub then redirects to the archive, so the hub link is left out).
  */
-function useHowToPlayLinks(): { links: NavLink[]; hub: NavLink | null; year: number | null } {
+function useHubYear(): number | null {
   const site = useContent<SiteSnapshot>('site.json');
-  const year = site.status === 'ready' && site.data.live_stage !== 'archived' ? site.data.current_year : null;
-  if (year === null) return { links: HOW_TO_PLAY_LINKS, hub: null, year };
-  return { links: HOW_TO_PLAY_LINKS, hub: { href: hubPath(year), key: 'hub' }, year };
+  return site.status === 'ready' && site.data.live_stage !== 'archived' ? site.data.current_year : null;
+}
+
+/** The "How to play" guide page: a menu also reads as active there. */
+const MENU_LANDING_PATH = '/how-to-play';
+
+/** Trivia cannot be opened while a room is broadcasting (voting or final). */
+const isTrivia = (l: ResolvedLink) => l.target.kind === 'page' && l.target.pageId === 'eurovision-trivia';
+
+interface HeaderEntry {
+  label: string;
+  /** A link (`link`) or a menu (`links`). */
+  link: ResolvedLink | null;
+  links: ResolvedLink[];
+}
+
+/**
+ * The header doc's (content/pages/site-header.json) visible items, resolved.
+ * Links with nowhere to go (the hub while no year is live) and menus left
+ * without links are skipped.
+ */
+function useHeaderEntries(year: number | null): HeaderEntry[] {
+  const locale = useLocale();
+  const doc = useSiteDoc('site-header');
+  const out: HeaderEntry[] = [];
+  for (const item of doc.items) {
+    if (item.hidden) continue;
+    if (item.target) {
+      const [link] = resolveLinks([{ label: item.label, target: item.target as LinkTarget }], locale, year);
+      if (link) out.push({ label: link.label, link, links: [] });
+      continue;
+    }
+    const links = resolveLinks((item.children ?? []) as NavLinkDoc[], locale, year);
+    if (links.length) out.push({ label: linkText(item.label, year), link: null, links });
+  }
+  return out;
 }
 
 function ChevronIcon({ open }: { open: boolean }) {
@@ -87,7 +108,8 @@ export default function SiteHeader() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [roomsOpen, setRoomsOpen] = useState(false);
-  const [howDropdownOpen, setHowDropdownOpen] = useState(false);
+  /** The desktop menu whose popover is open (its index in `entries`). */
+  const [openMenu, setOpenMenu] = useState<number | null>(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const locale = useLocale();
@@ -95,8 +117,11 @@ export default function SiteHeader() {
   const room = useGameStore((s) => s.room);
   const inRoomBroadcasting = !!room && (room.phase === 'voting_live' || room.phase === 'final');
   const triviaLocked = inRoomBroadcasting;
-  const { links: howLinks, hub, year } = useHowToPlayLinks();
-  const label = (l: NavLink) => t(`siteNav.${l.key}`, { year });
+  const year = useHubYear();
+  const entries = useHeaderEntries(year);
+  const { cta, ui } = useSiteDoc('site-header');
+  const leaves = entries.filter((e) => e.link !== null);
+  const menus = entries.filter((e) => e.link === null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -129,13 +154,13 @@ export default function SiteHeader() {
     };
   }, [open]);
 
-  // Close desktop "How to play" dropdown on outside click / esc
+  // Close the desktop menu popover on outside click / esc
   useEffect(() => {
-    if (!howDropdownOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setHowDropdownOpen(false); };
+    if (openMenu === null) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpenMenu(null); };
     const onClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('[data-how-popover]')) setHowDropdownOpen(false);
+      if (!target.closest('[data-how-popover]')) setOpenMenu(null);
     };
     window.addEventListener('keydown', onKey);
     window.addEventListener('click', onClick);
@@ -143,17 +168,26 @@ export default function SiteHeader() {
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('click', onClick);
     };
-  }, [howDropdownOpen]);
+  }, [openMenu]);
 
   const liveRooms = rooms.filter((r) => getBadge(r) !== 'ENDED');
   const roomCount = liveRooms.length;
   const cleanPath = stripLocaleFromPath(pathname);
-  const howActive = howDropdownOpen || howLinks.some((l) => l.href === cleanPath) || cleanPath === '/how-to-play';
+  const menuActive = (e: HeaderEntry, i: number) =>
+    openMenu === i || e.links.some((l) => l.to === cleanPath) || cleanPath === MENU_LANDING_PATH;
 
   const handleAction = (action: 'create' | 'join') => {
     setOpen(false);
     navigate(`${localizePath(locale, '/')}?action=${action}`);
   };
+
+  /** A link of the drawer, or its locked badge (trivia while broadcasting). */
+  const drawerLink = (l: ResolvedLink, sub: boolean) =>
+    isTrivia(l) && triviaLocked ? (
+      <div className={`drawer-link${sub ? ' sub' : ''}`}><LockedBadge label={l.label} /></div>
+    ) : (
+      <LocaleLink to={l.to} className={`drawer-link${sub ? ' sub' : ''}${cleanPath === l.to ? ' on' : ''}`}>{l.label}</LocaleLink>
+    );
 
   const drawer = open ? (
     <div
@@ -162,7 +196,7 @@ export default function SiteHeader() {
       className="drawer lg:hidden"
       role="dialog"
       aria-modal="true"
-      aria-label={t('siteNav.menu')}
+      aria-label={ui.menu}
     >
       <div className="drawer-head">
         <div className="wrap topbar-row">
@@ -172,7 +206,7 @@ export default function SiteHeader() {
             type="button"
             data-autofocus
             onClick={() => setOpen(false)}
-            aria-label={t('siteNav.closeMenu')}
+            aria-label={ui.closeMenu}
             className="iconbtn"
           >
             <CloseIcon />
@@ -184,42 +218,33 @@ export default function SiteHeader() {
         {/* ─── CTAs ─── */}
         <div className="flex flex-col gap-2.5">
           <button type="button" onClick={() => handleAction('create')} className={buttonClass({ size: 'lg', block: true })}>
-            {t('siteNav.createRoom')}
+            {cta.createRoom}
           </button>
           <button type="button" onClick={() => handleAction('join')} className={buttonClass({ variant: 'secondary', size: 'lg', block: true })}>
-            {t('siteNav.joinRoom')}
+            {cta.joinRoom}
           </button>
         </div>
 
         {/* ─── Pages ─── */}
-        <ul className="drawer-links">
-          {hub && (
-            <li>
-              <LocaleLink to={hub.href} className={`drawer-link${cleanPath === hub.href ? ' on' : ''}`}>{label(hub)}</LocaleLink>
-            </li>
-          )}
-          <li>
-            <LocaleLink to="/eurovision-night" className={`drawer-link${cleanPath === '/eurovision-night' ? ' on' : ''}`}>
-              {t('siteNav.eurovisionNight')}
-            </LocaleLink>
-          </li>
-        </ul>
-
-        {/* ─── How to play ─── */}
-        <div>
-          <span className="t-eyebrow">{t('siteNav.howToPlay')}</span>
+        {leaves.length > 0 && (
           <ul className="drawer-links">
-            {howLinks.map((l) => (
-              <li key={l.href}>
-                {l.key === 'trivia' && triviaLocked ? (
-                  <div className="drawer-link sub"><LockedBadge label={label(l)} /></div>
-                ) : (
-                  <LocaleLink to={l.href} className={`drawer-link sub${cleanPath === l.href ? ' on' : ''}`}>{label(l)}</LocaleLink>
-                )}
-              </li>
+            {leaves.map((e) => (
+              <li key={e.link!.to}>{drawerLink(e.link!, false)}</li>
             ))}
           </ul>
-        </div>
+        )}
+
+        {/* ─── Menus (How to play) ─── */}
+        {menus.map((m, i) => (
+          <div key={i}>
+            <span className="t-eyebrow">{m.label}</span>
+            <ul className="drawer-links">
+              {m.links.map((l) => (
+                <li key={l.to}>{drawerLink(l, true)}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
 
         {/* ─── Your Rooms — collapsible ─── */}
         <div className="card overflow-hidden">
@@ -230,7 +255,7 @@ export default function SiteHeader() {
             className="w-full flex items-center justify-between gap-3 min-h-[56px] px-4 text-left cursor-pointer text-stage-text"
           >
             <span className="flex items-center gap-2.5">
-              <span className="font-semibold">{t('siteNav.yourRooms')}</span>
+              <span className="font-semibold">{ui.yourRooms}</span>
               {roomCount > 0 && (
                 <span className="chip chip-pink num">{roomCount}</span>
               )}
@@ -240,7 +265,7 @@ export default function SiteHeader() {
           {roomsOpen && (
             <div className="px-2 pb-2 flex flex-col gap-1">
               {rooms.length === 0 ? (
-                <p className="t-meta px-2.5 py-2 m-0">{t('siteNav.noRooms')}</p>
+                <p className="t-meta px-2.5 py-2 m-0">{ui.noRooms}</p>
               ) : (
                 rooms.map((r) => {
                   const badge = getBadge(r);
@@ -279,55 +304,59 @@ export default function SiteHeader() {
 
         {/* Desktop nav */}
         <nav className="nav" aria-label="Primary">
-          {hub && (
-            <LocaleLink to={hub.href} className={`nav-item${cleanPath === hub.href ? ' on' : ''}`}>
-              {label(hub)}
-            </LocaleLink>
-          )}
-          <LocaleLink
-            to="/eurovision-night"
-            className={`nav-item${cleanPath === '/eurovision-night' ? ' on' : ''}`}
-          >
-            {t('siteNav.eurovisionNight')}
-          </LocaleLink>
-
-          {/* How to play — popover */}
-          <div className="relative" data-how-popover>
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); setHowDropdownOpen((v) => !v); }}
-              aria-haspopup="menu"
-              aria-expanded={howDropdownOpen}
-              className={`nav-item${howActive ? ' on' : ''}`}
-            >
-              {t('siteNav.howToPlay')}
-              <ChevronIcon open={howDropdownOpen} />
-            </button>
-            {howDropdownOpen && (
-              <div className="menu-pop" style={{ left: 0, right: 'auto' }} role="menu">
-                {howLinks.map((l) => {
-                  if (l.key === 'trivia' && triviaLocked) {
-                    return (
-                      <div key={l.href} className="px-2 py-1" role="menuitem">
-                        <LockedBadge label={label(l)} />
-                      </div>
-                    );
-                  }
-                  return (
-                    <LocaleLink
-                      key={l.href}
-                      to={l.href}
-                      role="menuitem"
-                      className="menu-item"
-                      onClick={() => setHowDropdownOpen(false)}
-                    >
-                      {label(l)}
-                    </LocaleLink>
-                  );
-                })}
+          {entries.map((e, i) => {
+            if (e.link) {
+              const l = e.link;
+              if (isTrivia(l) && triviaLocked) {
+                return <span key={l.to} className="nav-item"><LockedBadge label={l.label} /></span>;
+              }
+              return (
+                <LocaleLink key={l.to} to={l.to} className={`nav-item${cleanPath === l.to ? ' on' : ''}`}>
+                  {l.label}
+                </LocaleLink>
+              );
+            }
+            const isOpen = openMenu === i;
+            return (
+              /* A menu (How to play): popover */
+              <div key={`menu-${i}`} className="relative" data-how-popover>
+                <button
+                  type="button"
+                  onClick={(ev) => { ev.stopPropagation(); setOpenMenu((v) => (v === i ? null : i)); }}
+                  aria-haspopup="menu"
+                  aria-expanded={isOpen}
+                  className={`nav-item${menuActive(e, i) ? ' on' : ''}`}
+                >
+                  {e.label}
+                  <ChevronIcon open={isOpen} />
+                </button>
+                {isOpen && (
+                  <div className="menu-pop" style={{ left: 0, right: 'auto' }} role="menu">
+                    {e.links.map((l) => {
+                      if (isTrivia(l) && triviaLocked) {
+                        return (
+                          <div key={l.to} className="px-2 py-1" role="menuitem">
+                            <LockedBadge label={l.label} />
+                          </div>
+                        );
+                      }
+                      return (
+                        <LocaleLink
+                          key={l.to}
+                          to={l.to}
+                          role="menuitem"
+                          className="menu-item"
+                          onClick={() => setOpenMenu(null)}
+                        >
+                          {l.label}
+                        </LocaleLink>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            );
+          })}
         </nav>
 
         <span className="spacer" />
@@ -340,14 +369,14 @@ export default function SiteHeader() {
           onClick={() => handleAction('join')}
           className={buttonClass({ variant: 'secondary', size: 'sm', className: 'hidden xl:inline-flex' })}
         >
-          {t('siteNav.joinRoom')}
+          {cta.joinRoom}
         </button>
         <button
           type="button"
           onClick={() => handleAction('create')}
           className={buttonClass({ size: 'sm', className: 'hidden lg:inline-flex' })}
         >
-          {t('siteNav.createRoom')}
+          {cta.createRoom}
         </button>
 
         {/* Mobile menu button */}
@@ -357,7 +386,7 @@ export default function SiteHeader() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="site-drawer"
-          aria-label={open ? t('siteNav.closeMenu') : t('siteNav.openMenu')}
+          aria-label={open ? ui.closeMenu : ui.openMenu}
           className="iconbtn lg:hidden"
         >
           {open ? <CloseIcon /> : <MenuIcon />}

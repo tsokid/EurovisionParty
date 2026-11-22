@@ -1,21 +1,23 @@
 import LocaleLink from './LocaleLink';
 import Wordmark from './Wordmark';
-import { useTranslation } from 'react-i18next';
 import { useCurrentYear } from '../../lib/currentContest';
-import { hubPath } from '../../lib/seo/dynamicPages';
+import { useLocale } from '../../lib/seo/LocaleContext';
+import { resolveLinks, useSiteDoc, type ResolvedLink } from '../../lib/cms/siteChrome';
+import type { NavLink } from '../../../supabase/functions/_shared/cms/siteLinks';
 
-interface FooterLink {
-  to: string;
-  label: string;
-}
-
-function Column({ title, links }: { title: string; links: FooterLink[] }) {
+function Column({ title, links }: { title: string; links: ResolvedLink[] }) {
   return (
     <div>
       <h4>{title}</h4>
       <ul>
         {links.map((l) => (
-          <li key={l.to}><LocaleLink to={l.to}>{l.label}</LocaleLink></li>
+          <li key={l.to}>
+            {l.target.kind === 'external' ? (
+              <a href={l.to} rel="noopener">{l.label}</a>
+            ) : (
+              <LocaleLink to={l.to}>{l.label}</LocaleLink>
+            )}
+          </li>
         ))}
       </ul>
     </div>
@@ -23,14 +25,15 @@ function Column({ title, links }: { title: string; links: FooterLink[] }) {
 }
 
 /**
- * Site footer (Stage board): brand column on desktop, then four columns
- * (About / How to play / Eurovision / Help) and the EBU disclaimer.
- * Every target is a route in src/routeConfig.tsx.
+ * Site footer (Stage board): brand column on desktop, then the four columns
+ * of the footer doc (content/pages/site-footer.json: About / How to play /
+ * Eurovision / Help) and the EBU disclaimer. Links name pages by id, so every
+ * target is a route in src/routeConfig.tsx.
  */
 export default function SiteFooter() {
-  const { t } = useTranslation();
   const year = useCurrentYear();
-  const l = (key: string) => t(`siteFooter.links.${key}`, { year });
+  const locale = useLocale();
+  const doc = useSiteDoc('site-footer');
 
   return (
     <footer className="footer">
@@ -38,56 +41,16 @@ export default function SiteFooter() {
         <div className="fcols">
           <div className="fbrand">
             <Wordmark />
-            <span className="t-meta">{t('siteFooter.tagline')}</span>
+            <span className="t-meta">{doc.tagline}</span>
           </div>
 
-          <Column
-            title={t('siteFooter.about')}
-            links={[
-              { to: '/about', label: l('whatIs') },
-              { to: '/eurovision-games', label: l('freeGame') },
-              { to: '/cookies', label: l('cookies') },
-            ]}
-          />
-
-          <Column
-            title={t('siteFooter.howToPlay')}
-            links={[
-              { to: '/how-to-play', label: l('gameStages') },
-              { to: '/eurovision-trivia', label: l('trivia') },
-              { to: '/duels', label: l('duels') },
-              { to: '/eurovision-predictions', label: l('predictions') },
-              { to: '/dashboard', label: l('dashboard') },
-              { to: '/rules', label: l('rules') },
-            ]}
-          />
-
-          <Column
-            title={t('siteFooter.eurovision')}
-            links={[
-              { to: hubPath(year), label: l('hub') },
-              { to: '/past-contests', label: l('pastContests') },
-              { to: '/countries', label: l('countries') },
-              { to: '/winners', label: l('winners') },
-            ]}
-          />
-
-          <Column
-            title={t('siteFooter.help')}
-            links={[
-              { to: '/faq', label: l('faq') },
-              { to: '/faq#create', label: l('create') },
-              { to: '/faq#join', label: l('join') },
-              { to: '/faq#leave', label: l('leave') },
-              { to: '/scoring', label: l('scoring') },
-              { to: '/privacy', label: l('privacy') },
-              { to: '/terms', label: l('terms') },
-            ]}
-          />
+          {doc.columns.map((c) => (
+            <Column key={c.id} title={c.heading} links={resolveLinks(c.links as NavLink[], locale, year)} />
+          ))}
         </div>
 
         {/* EBU disclaimer */}
-        <p className="t-meta fdisclaimer">{t('siteFooter.disclaimer')}</p>
+        <p className="t-meta fdisclaimer">{doc.disclaimer}</p>
       </div>
     </footer>
   );

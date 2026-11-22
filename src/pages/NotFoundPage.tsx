@@ -120,8 +120,8 @@ export function NotFoundPage() {
           <h2 id="nf-ev-h" className="t-h2">Eurovision</h2>
           <div className="kit-grid c3">
             <IconLink to={hubPath(cc.year)} icon="globe" title={`Eurovision ${cc.year}`} blurb={hubBlurb} />
-            <IconLink to="/winners" icon="trophy" title={t('siteFooter.links.winners')} blurb={t('home.guides.winnersDesc')} />
-            <IconLink to={COUNTRY_INDEX_PATH} icon="globe" title={t('siteFooter.links.countries')} blurb={t('notFoundPage.countriesBlurb')} />
+            <IconLink to="/winners" icon="trophy" title={t('notFoundPage.winnersTitle')} blurb={t('home.guides.winnersDesc')} />
+            <IconLink to={COUNTRY_INDEX_PATH} icon="globe" title={t('notFoundPage.countriesTitle')} blurb={t('notFoundPage.countriesBlurb')} />
           </div>
         </section>
 

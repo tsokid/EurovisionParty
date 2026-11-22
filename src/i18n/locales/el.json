@@ -728,23 +728,7 @@
     "banner": "Επανασύνδεση… η πρόοδός σου είναι ασφαλής"
   },
   "siteNav": {
-    "homeAria": "eurovision.games — αρχική",
-    "openMenu": "Άνοιγμα μενού",
-    "closeMenu": "Κλείσιμο μενού",
-    "yourRooms": "Τα Δωμάτιά σου",
-    "createRoom": "Φτιάξε Δωμάτιο",
-    "joinRoom": "Μπες σε Δωμάτιο",
-    "eurovisionNight": "Eurovision Night",
-    "howToPlay": "Πώς Παίζεται",
-    "trivia": "Trivia",
-    "predictions": "Προβλέψεις",
-    "hub": "Eurovision {{year}}",
-    "rules": "Κανόνες",
-    "scoring": "Βαθμολογία",
-    "otherFaq": "Άλλες Ερωτήσεις",
-    "contactUs": "Επικοινωνία",
-    "noRooms": "Κανένα δωμάτιο ακόμα",
-    "menu": "Μενού"
+    "homeAria": "eurovision.games — αρχική"
   },
   "yourRooms": {
     "title": "Τα Δωμάτιά σου",
@@ -765,39 +749,6 @@
     "label": "Beta",
     "body": "Το Eurovision Games βρίσκεται σε ενεργή ανάπτυξη. Περίμενε γρήγορες αλλαγές.",
     "dismiss": "Κλείσιμο μηνύματος beta"
-  },
-  "siteFooter": {
-    "about": "Σχετικά",
-    "howToPlay": "Πώς Παίζεται",
-    "faq": "Συχνές Ερωτήσεις",
-    "legal": "Νομικά",
-    "help": "Βοήθεια",
-    "tagline": "Το παιχνίδι πάρτι για τη βραδιά της Eurovision.",
-    "eurovision": "Eurovision",
-    "links": {
-      "hub": "Eurovision {{year}}",
-      "pastContests": "Προηγούμενοι διαγωνισμοί",
-      "countries": "Χώρες",
-      "winners": "Νικητές",
-      "whatIs": "Τι είναι το Eurovision Games",
-      "freeGame": "Δωρεάν Online Παιχνίδι Eurovision",
-      "cookies": "Cookies & Συγκατάθεση",
-      "gameStages": "Φάσεις Παιχνιδιού",
-      "trivia": "Trivia",
-      "duels": "Μονομαχίες",
-      "predictions": "Προβλέψεις",
-      "dashboard": "Πίνακας Βαθμολογίας",
-      "create": "Δημιουργία Δωματίου",
-      "join": "Είσοδος σε Δωμάτιο",
-      "leave": "Αποχώρηση / Διαγραφή Δωματίου",
-      "scoring": "Πώς Υπολογίζονται οι Πόντοι",
-      "privacy": "Πολιτική Απορρήτου",
-      "terms": "Όροι Χρήσης",
-      "faq": "Συχνές Ερωτήσεις",
-      "rules": "Κανόνες Παιχνιδιού"
-    },
-    "disclaimer": "Το Eurovision Games είναι ανεπίσημο παιχνίδι πάρτι, φτιαγμένο από θαυμαστές της Eurovision. Δεν σχετίζεται με την Ευρωπαϊκή Ραδιοτηλεοπτική Ένωση ή τον Διαγωνισμό Τραγουδιού Eurovision, ούτε υποστηρίζεται ή λειτουργεί από αυτούς.",
-    "contactEmail": "hello@eurovision.games"
   },
   "home": {
     "hero": {
@@ -1081,7 +1032,9 @@
       "10": "Οκτωβρίου",
       "11": "Νοεμβρίου",
       "12": "Δεκεμβρίου"
-    }
+    },
+    "winnersTitle": "Νικητές",
+    "countriesTitle": "Χώρες"
   },
   "board": {
     "title": "Βαθμολογία δωματίου",
