@@ -1,372 +1,277 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+// src/components/leaderboard/LeaderboardScreen.tsx
+//
+// Live room leaderboard (boards leaderboard-after-{m,d}, motion map #9/#10,
+// prototype motion-leaderboard-d). Rows reorder with FLIP, totals count up,
+// ↑N / ↓N chips flash. When you pass someone: a toast «Πέρασες: …» and a
+// subtle cold-spark crackle at your position chip (VFX preset `overtake`).
+// No titles here: they belong to the end of the game only.
+//
+// Desktop aside: your card + the activity feed, built only from stored
+// point events (src/lib/activityFeed.ts).
+
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Crown, Search } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
+import { Search, TrendingUp, Activity } from 'lucide-react';
 import { useLeaderboard } from '../../hooks/useLeaderboard';
+import { useActivityFeed } from '../../hooks/useActivityFeed';
 import { useGameStore } from '../../stores/gameStore';
+import { rankOrder, diffRanks } from '../../lib/rankMoves';
+import { feedAge, type FeedEvent } from '../../lib/activityFeed';
+import { PlayerAvatar, useCountUp } from '../stage';
+import { StageVfx, type StageVfxHandle } from '../stage/vfx';
 import type { Player } from '../../lib/types';
 
-const PODIUM = {
-  1: {
-    tone: 'text-euro-gold',
-    ring: 'ring-euro-gold/40',
-    bg: 'bg-euro-gold/10',
-    rankBg: 'bg-euro-gold text-black',
-    emoji: '👑',
-    platformH: 'h-24 sm:h-28',
-  },
-  2: {
-    tone: 'text-white',
-    ring: 'ring-white/20',
-    bg: 'bg-white/[0.07]',
-    rankBg: 'bg-white/60 text-black',
-    emoji: '🥈',
-    platformH: 'h-16 sm:h-20',
-  },
-  3: {
-    tone: 'text-amber-400',
-    ring: 'ring-amber-500/30',
-    bg: 'bg-amber-700/10',
-    rankBg: 'bg-amber-500 text-white',
-    emoji: '🥉',
-    platformH: 'h-12 sm:h-14',
-  },
-} as const;
+const COUNT_MS = 600;
+const TOAST_MS = 4200;
 
-const AVATAR_GRADIENTS = [
-  'from-pink-500 to-purple-600',
-  'from-purple-500 to-indigo-600',
-  'from-fuchsia-500 to-pink-600',
-  'from-violet-500 to-purple-600',
-  'from-rose-500 to-pink-600',
-  'from-indigo-500 to-violet-600',
-];
-function avatarGradient(i: number) {
-  return AVATAR_GRADIENTS[i % AVATAR_GRADIENTS.length];
+export function signed(n: number): string {
+  return n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '0';
 }
 
-interface PodiumColProps {
-  player: Player;
-  rank: 1 | 2 | 3;
-  playerIndex: number;
-  isCurrentPlayer: boolean;
-  youLabel: string;
-  ptsLabel: string;
+function Total({ value, reduce, className }: { value: number; reduce: boolean; className?: string }) {
+  const shown = useCountUp(value, reduce ? 0 : COUNT_MS);
+  return <span className={className}>{shown}</span>;
 }
 
-function PodiumCol({ player: p, rank, playerIndex, isCurrentPlayer, youLabel, ptsLabel }: PodiumColProps) {
-  const s = PODIUM[rank];
-  return (
-    <motion.div
-      className="flex flex-col items-center"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: rank === 1 ? 0.15 : rank === 2 ? 0.05 : 0.1, type: 'spring', damping: 18 }}
-    >
-      {rank === 1 ? (
-        <Crown className="w-5 h-5 text-euro-gold mb-1.5" strokeWidth={2} />
-      ) : (
-        <div className="h-7" />
-      )}
-      <div className="relative">
-        <div className={clsx(
-          'w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-base sm:text-lg',
-          avatarGradient(playerIndex),
-          rank === 1 && 'shadow-[0_0_22px_rgba(147,51,234,0.55)]',
-        )}>
-          {p.name.charAt(0).toUpperCase()}
-        </div>
-        <span className={clsx(
-          'absolute -bottom-1 -right-1 w-[18px] h-[18px] rounded-full flex items-center justify-center text-[9px] font-extrabold ring-2 ring-[#150930]',
-          s.rankBg,
-        )}>
-          {rank}
-        </span>
-      </div>
-      <p className={clsx('text-xs sm:text-sm font-bold mt-2 text-center leading-tight', s.tone)}>
-        {p.name}
-      </p>
-      {isCurrentPlayer && (
-        <span className="text-[10px] text-white/45 font-normal">({youLabel})</span>
-      )}
-      <p className={clsx('text-sm font-extrabold tabular-nums mt-0.5', s.tone)}>
-        {p.total_points}{' '}
-        <span className="text-[10px] font-medium text-white/40">{ptsLabel}</span>
-      </p>
-      <div className={clsx(
-        'w-full mt-2 rounded-t-xl flex items-center justify-center ring-1',
-        s.platformH, s.bg, s.ring,
-      )}>
-        <span className="text-xl sm:text-2xl opacity-50">{s.emoji}</span>
-      </div>
-    </motion.div>
-  );
+/** One feed line: «Douze Points · Trivia +12». Names are stage names. */
+export function FeedLine({ e, nameOf }: { e: FeedEvent; nameOf: (id: string | null | undefined) => string }) {
+  const { t } = useTranslation();
+  let what: string;
+  if (e.kind === 'trivia') what = t('board.feed.trivia', { points: e.points });
+  else if (e.kind === 'prediction') what = t('board.feed.prediction', { points: e.points });
+  else if (e.decision === 'steal') what = t('board.feed.steal', { points: e.points, name: nameOf(e.otherId) });
+  else what = t('board.feed.double', { points: e.points });
+  return <><b>{nameOf(e.playerId)}</b> · {what}</>;
 }
 
-interface StandingRowProps {
-  player: Player;
-  rank: number;
-  isCurrentPlayer: boolean;
-  pct: number;
-  gradientIdx: number;
-  youLabel: string;
+export function FeedTime({ at, now }: { at: string; now: number }) {
+  const { t } = useTranslation();
+  const a = feedAge(at, now);
+  return <time dateTime={at}>{a.unit === 'now' ? t('board.age.now') : t(`board.age.${a.unit}`, { n: a.n })}</time>;
 }
 
-export function StandingRow({ player: p, rank, isCurrentPlayer, pct, gradientIdx, youLabel }: StandingRowProps) {
-  return (
-    <motion.div
-      layoutId={`lb-${p.id}`}
-      initial={{ opacity: 0, x: -8 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ layout: { type: 'spring', damping: 25, stiffness: 200 } }}
-      className={clsx(
-        'flex items-center gap-3 rounded-xl px-3 py-2.5',
-        isCurrentPlayer
-          ? 'bg-euro-purple/15 border border-euro-purple/30'
-          : 'bg-transparent',
-      )}
-    >
-      <div className="w-6 h-6 rounded-full bg-white/[0.08] flex-shrink-0 flex items-center justify-center">
-        <span className="text-[11px] font-bold text-white/45 tabular-nums">{rank}</span>
-      </div>
-      <div className={clsx(
-        'w-9 h-9 rounded-full bg-gradient-to-br flex-shrink-0 flex items-center justify-center text-white font-bold text-sm',
-        avatarGradient(gradientIdx),
-      )}>
-        {p.name.charAt(0).toUpperCase()}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <p className={clsx('font-semibold text-sm truncate leading-tight', isCurrentPlayer ? 'text-euro-purple-light' : 'text-white')}>
-            {p.name}
-          </p>
-          {isCurrentPlayer && (
-            <span className="text-[10px] font-bold text-euro-purple-light bg-euro-purple/25 rounded-full px-1.5 py-0.5 leading-none flex-shrink-0">
-              {youLabel}
-            </span>
-          )}
-        </div>
-        <div className="mt-1.5 h-[3px] rounded-full bg-white/10 overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400"
-            initial={{ width: 0 }}
-            animate={{ width: `${pct}%` }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-          />
-        </div>
-      </div>
-      <div className="flex-shrink-0 text-right min-w-[2.5rem]">
-        <p className="text-lg font-extrabold tabular-nums text-white leading-none">
-          {p.total_points}
-        </p>
-        <span className="text-[10px] text-white/20 font-medium">--</span>
-      </div>
-    </motion.div>
-  );
+export function useNow(everyMs = 30000): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), everyMs);
+    return () => clearInterval(id);
+  }, [everyMs]);
+  return now;
 }
 
 export default function LeaderboardScreen() {
   const { t } = useTranslation();
-  const { room, player: currentPlayer } = useGameStore();
+  const { room, player: me } = useGameStore();
   const { players, isLoading } = useLeaderboard(room?.id);
+  const reduce = useReducedMotion() ?? false;
   const [search, setSearch] = useState('');
+  const vfx = useRef<StageVfxHandle>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
+  const now = useNow();
+
+  const ranked = useMemo(() => rankOrder(players), [players]);
+  const order = ranked.map((p) => p.id);
+  const orderKey = order.join('|');
+  const totalsKey = ranked.map((p) => `${p.id}:${p.total_points}`).join('|');
+  const nameOf = (id: string | null | undefined) => players.find((p) => p.id === id)?.name ?? '—';
+
+  const feed = useActivityFeed(room?.id, me?.id, totalsKey);
+
+  // ── Movement: ↑↓ chips, overtake toast + spark ──
+  const prevOrder = useRef<string[] | null>(null);
+  const [delta, setDelta] = useState<{ map: Record<string, number>; key: number }>({ map: {}, key: 0 });
+  const [toast, setToast] = useState<string[] | null>(null);
+  useEffect(() => {
+    const before = prevOrder.current;
+    prevOrder.current = order;
+    if (!before) return;
+    const d = diffRanks(before, order, me?.id);
+    if (Object.keys(d.delta).length === 0) return;
+    setDelta((x) => ({ map: d.delta, key: x.key + 1 }));
+    // Spark at most two overtakers (motion budget): you first, then the biggest climber.
+    const climbers = Object.entries(d.delta).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]).map(([id]) => id);
+    const sparkIds = (me && climbers.includes(me.id) ? [me.id, ...climbers.filter((id) => id !== me.id)] : climbers).slice(0, 2);
+    const tid = setTimeout(() => {
+      for (const id of sparkIds) vfx.current?.fire('overtake', { target: tableRef.current?.querySelector(`[data-rk-chip="${id}"]`) });
+    }, reduce ? 0 : 420);
+    if (d.overtaken.length > 0) setToast(d.overtaken);
+    return () => clearTimeout(tid);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderKey]);
+  useEffect(() => {
+    if (!toast) return;
+    const id = setTimeout(() => setToast(null), TOAST_MS);
+    return () => clearTimeout(id);
+  }, [toast]);
 
   if (!room) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-white/50">{t('common.loading')}</p>
-      </div>
-    );
+    return <div className="pk-loading" role="status" aria-label={t('common.loading')}><span className="lb-spinner" aria-hidden="true" /></div>;
   }
 
-  const hasPoints = !!players[0] && players[0].total_points > 0;
-  const maxPoints = hasPoints ? players[0].total_points : 1;
-  const currentRank = currentPlayer ? players.findIndex((p) => p.id === currentPlayer.id) + 1 : 0;
-  const me = players.find((p) => p.id === currentPlayer?.id);
+  const myIdx = me ? order.indexOf(me.id) : -1;
+  const mine = myIdx >= 0 ? ranked[myIdx] : null;
+  const q = search.trim().toLowerCase();
+  const rows = q ? ranked.filter((p) => p.name.toLowerCase().includes(q)) : ranked;
+  const anySpent = ranked.some((p) => (p.points_spent ?? 0) > 0);
+  const latest = feed[0];
 
-  const standingsRows = hasPoints ? players.slice(3) : players;
-  const filteredRows = search
-    ? standingsRows.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
-    : standingsRows;
+  const gapLine = (p: Player, idx: number) => {
+    if (ranked.length < 2) return t('board.rankOf', { rank: idx + 1, total: ranked.length });
+    if (idx === 0) {
+      const second = ranked[1];
+      return t('board.leadBy', { rank: 1, total: ranked.length, points: p.total_points - second.total_points, name: second.name });
+    }
+    const ahead = ranked[idx - 1];
+    return t('board.behind', { rank: idx + 1, total: ranked.length, points: ahead.total_points - p.total_points, name: ahead.name });
+  };
+
+  const myCard = mine && (
+    <section className="rk-me" aria-label={t('board.yourCard')}>
+      <PlayerAvatar name={mine.name} avatarId={mine.avatar_id} size="lg" />
+      <div className="rk-me-who">
+        <div className="rk-me-name">{mine.name} <span className="t-meta">· {t('lobby.you')}</span></div>
+        <div className="t-meta">{gapLine(mine, myIdx)}</div>
+      </div>
+      <div className="rk-me-pts">
+        <Total value={mine.total_points} reduce={reduce} className={clsx('num', myIdx === 0 && 'gold')} />
+        <span className="t-meta">{t('board.points')}</span>
+      </div>
+    </section>
+  );
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex flex-col flex-1 max-w-3xl w-full mx-auto px-3 sm:px-5 lg:px-6 pb-6 gap-4 sm:gap-5">
+    <div className="rk">
+      <div className="rk-main">
+        <header className="rk-head">
+          <div className="rk-head-l">
+            <span className="chip chip-live"><span className="dot" aria-hidden="true" />{t('board.live')}</span>
+            <h1 className="rk-title">{t('board.title')}</h1>
+          </div>
+          <label className="rk-search">
+            <Search aria-hidden="true" strokeWidth={2} />
+            <span className="sr-only">{t('board.search')}</span>
+            <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('board.search')} />
+          </label>
+        </header>
 
-        {/* Title */}
-        <div className="pt-1">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-            The{' '}
-            <span className="bg-gradient-to-r from-euro-purple-light to-euro-pink bg-clip-text text-transparent">
-              stage
-            </span>{' '}
-            rankings.
-          </h2>
-        </div>
+        <div className="rk-only-m">{myCard}</div>
 
-        {isLoading && players.length === 0 && (
-          <div className="flex items-center justify-center py-16">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-              className="w-8 h-8 border-[3px] border-white/20 border-t-euro-purple-light rounded-full"
-            />
+        {latest && (
+          <div className="rk-tick rk-only-d" role="status" aria-live="polite">
+            <span className="t-eyebrow">{t('board.lastMove')}</span>
+            <span className="rk-tick-sep" aria-hidden="true" />
+            <PlayerAvatar name={nameOf(latest.playerId)} avatarId={players.find((p) => p.id === latest.playerId)?.avatar_id} size="sm" interactive={false} />
+            <motion.span key={latest.id} className="rk-tick-what" initial={reduce ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}>
+              <FeedLine e={latest} nameOf={nameOf} />
+            </motion.span>
+            <span className="num rk-tick-pts">+{latest.points}</span>
           </div>
         )}
 
-        {!isLoading && players.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-white/20 bg-white/[0.03] px-6 py-8 flex flex-col items-center text-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-euro-purple to-euro-pink flex items-center justify-center">
-              <Crown className="w-7 h-7 text-white" strokeWidth={2} />
+        {isLoading && players.length === 0 ? (
+          <div className="pk-loading" role="status" aria-label={t('common.loading')}><span className="lb-spinner" aria-hidden="true" /></div>
+        ) : players.length === 0 ? (
+          <section className="card rk-empty"><p className="t-small">{t('board.empty')}</p></section>
+        ) : (
+          <div className="rk-table" ref={tableRef}>
+            <StageVfx ref={vfx} layers="front" />
+            <div className="rk-cols rk-thead t-eyebrow rk-only-d" aria-hidden="true">
+              <span>#</span><span>{t('board.col.player')}</span><span className="r">{t('board.col.quiz')}</span><span className="r">{t('board.col.duel')}</span><span className="r">{t('board.col.pred')}</span><span className="c">{t('board.col.move')}</span><span className="r">{t('board.col.total')}</span>
             </div>
-            <p className="text-lg font-bold text-white">
-              {t('leaderboard.noPlayers', { defaultValue: 'No players yet' })}
-            </p>
-          </div>
-        )}
-
-        {/* Pre-game empty podium */}
-        {!isLoading && players.length > 0 && !hasPoints && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-dashed border-white/20 bg-white/[0.03] px-6 py-8 flex flex-col items-center text-center gap-3"
-          >
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-euro-purple to-euro-pink flex items-center justify-center shadow-[0_0_24px_rgba(147,51,234,0.4)]">
-              <Crown className="w-7 h-7 text-white" strokeWidth={2} />
-            </div>
-            <p className="text-lg font-bold text-white">
-              {t('leaderboard.noPodiumYet', { defaultValue: 'Nobody on the podium yet' })}
-            </p>
-            <p className="text-sm text-white/55 max-w-xs">
-              {`${players.length} ${t('leaderboard.noPodiumHint', { defaultValue: 'players ready. Play a quiz round or win a duel to claim the first crown.' })}`}
-            </p>
-          </motion.div>
-        )}
-
-        {/* Active podium */}
-        {hasPoints && (
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 items-end">
-            {players[1] ? (
-              <PodiumCol player={players[1]} rank={2} playerIndex={1}
-                isCurrentPlayer={players[1].id === currentPlayer?.id}
-                youLabel={t('common.you')} ptsLabel={t('common.pts')} />
-            ) : <div />}
-            <PodiumCol player={players[0]} rank={1} playerIndex={0}
-              isCurrentPlayer={players[0].id === currentPlayer?.id}
-              youLabel={t('common.you')} ptsLabel={t('common.pts')} />
-            {players[2] ? (
-              <PodiumCol player={players[2]} rank={3} playerIndex={2}
-                isCurrentPlayer={players[2].id === currentPlayer?.id}
-                youLabel={t('common.you')} ptsLabel={t('common.pts')} />
-            ) : <div />}
-          </div>
-        )}
-
-        {/* YOU card */}
-        {me && players.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-euro-purple/30 bg-euro-purple/10 px-4 py-4"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <div className={clsx(
-                'w-10 h-10 rounded-full bg-gradient-to-br flex-shrink-0 flex items-center justify-center text-white font-bold text-base',
-                avatarGradient(currentRank - 1),
-              )}>
-                {me.name.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-euro-purple-light tracking-widest uppercase leading-none">
-                  {t('common.you')}
-                </p>
-                <p className="text-sm font-bold text-white truncate mt-0.5">
-                  {me.name}
-                  {currentRank > 0 && (
-                    <span className="text-white/45 font-normal">
-                      {' '}— {t('leaderboard.rankOf', {
-                        defaultValue: `rank ${currentRank} of ${players.length}`,
-                        rank: currentRank,
-                        total: players.length,
-                      })}
-                    </span>
-                  )}
-                </p>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <p className="text-2xl font-extrabold text-white tabular-nums leading-none">{me.total_points}</p>
-                <p className="text-[10px] text-white/40 font-medium uppercase tracking-wide mt-0.5">
-                  {t('common.points', { defaultValue: 'Points' })}
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { value: me.quiz_points, label: t('leaderboard.quizPts', { defaultValue: 'Quiz pts' }) },
-                { value: me.duel_points, label: t('leaderboard.duelPts', { defaultValue: 'Duel pts' }) },
-                { value: me.pred_points, label: t('leaderboard.predPts', { defaultValue: 'Pred pts' }) },
-              ].map(({ value, label }) => (
-                <div key={label} className="rounded-xl bg-white/[0.07] px-2 py-2.5 text-center">
-                  <p className="text-base font-extrabold text-white tabular-nums leading-none">{value}</p>
-                  <p className="text-[10px] text-white/40 uppercase tracking-wide font-medium mt-1">{label}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Standings */}
-        {players.length > 0 && (
-          <div className="flex flex-col flex-1 min-h-0 rounded-2xl bg-[rgba(255,255,255,0.04)] p-3 sm:p-4">
-            <div className="flex items-center justify-between mb-3 px-1">
-              <p className="text-xs font-bold text-white/35 tracking-widest uppercase">
-                {t('leaderboard.standings', { defaultValue: 'Standings' })}
-              </p>
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-white/30 pointer-events-none" />
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder={t('leaderboard.searchPlayer', { defaultValue: 'Search player' })}
-                  className="pl-7 pr-3 py-1.5 text-xs rounded-full bg-white/[0.08] border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-white/30 w-28 sm:w-32"
-                />
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
-              {filteredRows.map((p, i) => {
-                const rank = hasPoints ? i + 4 : i + 1;
-                const realIndex = standingsRows.indexOf(p);
-                const pct = hasPoints ? Math.round((p.total_points / maxPoints) * 100) : 0;
+            <ol className="rk-list" aria-label={t('board.title')}>
+              {rows.map((p) => {
+                const idx = order.indexOf(p.id);
+                const isMe = p.id === me?.id;
+                const d = delta.map[p.id] ?? 0;
+                const spent = p.points_spent ?? 0;
                 return (
-                  <StandingRow
+                  <motion.li
                     key={p.id}
-                    player={p}
-                    rank={rank}
-                    isCurrentPlayer={p.id === currentPlayer?.id}
-                    pct={pct}
-                    gradientIdx={hasPoints ? realIndex + 3 : realIndex}
-                    youLabel={t('common.you')}
-                  />
+                    layout={reduce ? false : 'position'}
+                    transition={{ layout: { duration: 0.6, ease: [0.3, 1.12, 0.4, 1] } }}
+                    className={clsx('rk-row rk-cols', isMe && 'me')}
+                  >
+                    <span className={clsx('num rk-pos', idx < 3 && `p${idx + 1}`)}>{idx + 1}</span>
+                    <span className="rk-who">
+                      <PlayerAvatar name={p.name} avatarId={p.avatar_id} size="md" />
+                      <span className="rk-name">
+                        <span className="rk-name-t">{p.name}{isMe && <span className="t-meta"> · {t('lobby.you')}</span>}</span>
+                        <span className="t-meta rk-sub rk-only-m">
+                          {t('board.sub', { quiz: p.quiz_points, duel: signed(p.duel_points), pred: p.pred_points })}
+                          {spent > 0 && ` · ${t('board.spent', { points: spent })}`}
+                        </span>
+                      </span>
+                    </span>
+                    <span className="num r rk-only-d rk-cell">{p.quiz_points}</span>
+                    <span className={clsx('num r rk-only-d rk-cell', p.duel_points > 0 && 'pos', p.duel_points < 0 && 'neg')}>{signed(p.duel_points)}</span>
+                    <span className="num r rk-only-d rk-cell">{p.pred_points}</span>
+                    <span className="c rk-chip-slot" data-rk-chip={p.id}>
+                      {d !== 0 && (
+                        <motion.span
+                          key={`${delta.key}-${p.id}`}
+                          className={clsx('rk-mv', d > 0 ? 'up' : 'down')}
+                          initial={reduce ? false : { opacity: 0, scale: 0.4 }}
+                          animate={reduce ? { opacity: 1 } : { opacity: [0, 1, 1, 0.5, 1, 1], scale: [0.4, 1.3, 0.95, 0.95, 1.05, 1] }}
+                          transition={reduce ? { duration: 0 } : { duration: 0.9, ease: 'easeOut' }}
+                          aria-label={t(d > 0 ? 'roundEnd.up' : 'roundEnd.down', { n: Math.abs(d) })}
+                        >
+                          {d > 0 ? `↑${d}` : `↓${-d}`}
+                        </motion.span>
+                      )}
+                    </span>
+                    <Total value={p.total_points} reduce={reduce} className="num r rk-total" />
+                  </motion.li>
                 );
               })}
-              {filteredRows.length === 0 && (
-                <p className="text-center text-white/30 text-sm py-4">
-                  {t('leaderboard.noMatch', { defaultValue: 'No player found' })}
-                </p>
-              )}
-            </div>
-
-            <p className="text-center text-[11px] text-white/25 mt-3">
-              {t('leaderboard.liveFooter', { defaultValue: 'Updated live as quizzes finish and duels resolve.' })}
-            </p>
+            </ol>
+            {rows.length === 0 && <p className="t-meta rk-nomatch">{t('board.noMatch')}</p>}
           </div>
         )}
+
+        <p className="t-meta rk-foot">{t('board.footer')}{anySpent ? ` ${t('board.footerSpent')}` : ''}</p>
+
+        <motion.div
+          className="qz-toast rk-toast"
+          role="status"
+          initial={false}
+          animate={reduce ? { opacity: toast ? 1 : 0 } : { opacity: toast ? 1 : 0, y: toast ? 0 : 40 }}
+          transition={{ duration: reduce ? 0.2 : 0.34 }}
+          aria-hidden={!toast}
+        >
+          <span className="qz-toast-ico"><TrendingUp aria-hidden="true" strokeWidth={2.6} /></span>
+          {toast ? t('roundEnd.passed', { names: toast.map((id) => nameOf(id)).join(', ') }) : ''}
+        </motion.div>
       </div>
+
+      <aside className="rk-aside" aria-label={t('board.feedTitle')}>
+        {myCard}
+        <section className="rk-feed">
+          <h2 className="t-eyebrow rk-feed-h">{t('board.feedTitle')} <span className="chip rk-new">{t('board.feedNew')}</span></h2>
+          <p className="t-meta">{t('board.feedSub')}</p>
+          {feed.length === 0 ? (
+            <p className="t-meta rk-feed-empty"><Activity aria-hidden="true" strokeWidth={2} />{t('board.feedEmpty')}</p>
+          ) : (
+            <ol className="rk-feed-list">
+              {feed.slice(0, 12).map((e, i) => (
+                <motion.li
+                  key={e.id}
+                  className={clsx('rk-item', i === 0 && 'fresh')}
+                  layout={reduce ? false : 'position'}
+                  initial={reduce ? false : { opacity: 0, y: -26 }}
+                  animate={{ opacity: i < 8 ? 1 : 0.45, y: 0 }}
+                  transition={{ duration: reduce ? 0.2 : 0.38, ease: [0.2, 0.8, 0.2, 1] }}
+                >
+                  <PlayerAvatar name={nameOf(e.playerId)} avatarId={players.find((p) => p.id === e.playerId)?.avatar_id} size="sm" />
+                  <span className="rk-item-t"><FeedLine e={e} nameOf={nameOf} /></span>
+                  <FeedTime at={e.at} now={now} />
+                </motion.li>
+              ))}
+            </ol>
+          )}
+        </section>
+      </aside>
     </div>
   );
 }
