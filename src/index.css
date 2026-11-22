@@ -1545,7 +1545,7 @@ body { margin: 0; overscroll-behavior: none; }
   .pk-slot.next .pk-slot-empty { color: var(--color-stage-text-2); }
   .pk-slot-x { width: 16px; height: 16px; flex: none; color: var(--color-stage-text-3); }
   .pk-slot-ctl { display: flex; flex: none; }
-  .pk-ctl { width: 40px; min-height: 46px; display: grid; place-items: center; border: 0; border-radius: 10px; background: none; color: var(--color-stage-text-2); cursor: pointer; }
+  .pk-ctl { width: 44px; min-height: 46px; display: grid; place-items: center; border: 0; border-radius: 10px; background: none; color: var(--color-stage-text-2); cursor: pointer; }
   .pk-ctl svg { width: 18px; height: 18px; }
   .pk-ctl:disabled { opacity: .25; cursor: default; }
   .pk-ctl:not(:disabled):hover, .pk-slot-main:hover { background: rgba(255, 255, 255, .05); }
@@ -1707,7 +1707,9 @@ body { margin: 0; overscroll-behavior: none; }
   .avatar-art > .avatar-img, .avp-preview > .avatar-img, .avp-item > .avatar-img, .avv-art > .avatar-img { width: 100%; height: 100%; }
 
   /* Clickable avatar + viewer */
-  .avv-btn { display: inline-grid; place-items: center; flex: none; padding: 0; border: 0; background: none; border-radius: 50%; cursor: zoom-in; }
+  .avv-btn { position: relative; display: inline-grid; place-items: center; flex: none; padding: 0; border: 0; background: none; border-radius: 50%; cursor: zoom-in; }
+  /* Hit area at least 44 × 44 around the 28 / 36 px avatars; the visual size and layout are unchanged. */
+  .avv-btn::before { content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); border-radius: 50%; }
   .avv-btn:focus-visible { outline: 2px solid var(--color-stage-pink-2); outline-offset: 2px; }
   .avv-btn:active { transform: scale(.95); }
   .avv-layer { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; }
