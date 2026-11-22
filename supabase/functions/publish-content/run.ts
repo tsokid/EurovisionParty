@@ -93,6 +93,12 @@ export type PublishDeps = {
     endPublish(args: EndPublishArgs): Promise<void>;
     /** The preview run a promote ships (service role). Only promotes call it. */
     previewRun?(id: number): Promise<PreviewRun>;
+    /**
+     * Whether run `id` is still running (service role). Asked just before
+     * main moves: a run that a results publish took over (090) must not
+     * commit late. Without it, no check.
+     */
+    stillRunning?(id: number): Promise<boolean>;
   };
   /** The files a commit changed against its first parent (promote). */
   commitChanges?(sha: string): Promise<PreviewFile[]>;
@@ -116,8 +122,12 @@ export type PublishDeps = {
     transforms: FileTransforms,
     limits: { maxNewBinaryBytes: number },
     derived?: DerivedFiles,
-    /** A preview commit goes to content-preview; existing blobs (a promote) are referenced by sha. */
-    extra?: { target?: PublishTarget; blobs?: Record<string, BlobRef> },
+    /**
+     * A preview commit goes to content-preview; existing blobs (a promote)
+     * are referenced by sha; `guard` runs just before the branch moves and
+     * refuses the commit by throwing.
+     */
+    extra?: { target?: PublishTarget; blobs?: Record<string, BlobRef>; guard?: () => Promise<void> },
   ): Promise<CommitResult>;
   /** CMS media: Storage (bucket cms-media, service role) and cms_media. */
   media: StorageSweepDeps & {
@@ -148,9 +158,15 @@ export type PublishResult =
   | { status: 'busy'; run_id: null; sha: null; files_changed: 0; error: string };
 
 const BUSY = 'publish already running';
-/** A contests-only run retries begin_publish this many times, this far apart, while another run is in flight. */
-export const CONTESTS_RETRIES = 8;
+/**
+ * A contests-only run retries begin_publish this many times, this far apart,
+ * while another run is in flight: 100 s, longer than the 90 s after which
+ * begin_publish lets the results take over a stuck run (090, final review I1).
+ */
+export const CONTESTS_RETRIES = 25;
 export const CONTESTS_RETRY_MS = 4000;
+/** begin_publish's takeover of a stuck "Publish all" or contests run (090). */
+export const TAKEOVER_MS = 90_000;
 /** begin_publish's refusal while the previous main deploy builds (086). */
 export const DEPLOY_BUSY = 'publish already running (the previous deploy is still building)';
 
@@ -289,7 +305,7 @@ export async function runPublish(deps: PublishDeps, options: PublishOptions = { 
         const entry = buildIntentEntry({ id: `publish-${id}`, createdAt, changedPaths, drafts: shipped, committed });
         return entry ? appendIntent(current, entry) : null;
       },
-    }, ...(target === 'preview' ? [{ target }] : []));
+    }, ...extraOf({ ...(target === 'preview' ? { target } : {}), guard: runGuard(deps, id) }));
   } catch (e) {
     if (e instanceof CmsValidationError && e.warnings.length) found = { warnings: e.warnings };
     const error = message(e);
@@ -302,12 +318,14 @@ export async function runPublish(deps: PublishDeps, options: PublishOptions = { 
   // A preview publishes nothing: its media rows are marked when it is promoted.
   const marked = target === 'preview' ? undefined : await markPublished(deps, marks);
   if (marked) warnings.push(marked);
-  if (cms) await sweep(deps);
   const ended = await tryEnd(deps, {
     id, status, sha: result.sha, files: result.changed, error: null,
     ...(shippedDocs.length ? { shipped: shippedDocs } : {}),
   });
   if (ended.warning) warnings.push(ended.warning);
+  // After end_publish (I1): the sweep lists the whole bucket and must not
+  // keep the run slot, which a results publish may be waiting for.
+  if (cms) await sweep(deps);
   const warning = warnings.length ? { warning: warnings.join('; ') } : {};
   return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...warning, ...found };
 }
@@ -347,7 +365,7 @@ async function promote(deps: PublishDeps, id: number, previewId: number): Promis
         const entry = buildIntentEntry({ id: `publish-${id}`, createdAt, changedPaths, drafts: docs, committed });
         return entry ? appendIntent(current, entry) : null;
       },
-    }, { blobs });
+    }, ...extraOf({ blobs, guard: runGuard(deps, id) }));
   } catch (e) {
     const error = message(e);
     const warning = await tryEnd(deps, { id, status: 'error', sha: null, files: null, error });
@@ -356,6 +374,23 @@ async function promote(deps: PublishDeps, id: number, previewId: number): Promis
   const status = result.sha ? 'ok' : 'noop';
   const ended = await tryEnd(deps, { id, status, sha: result.sha, files: result.changed, error: null, ...(shipped.length ? { shipped } : {}) });
   return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...ended };
+}
+
+type CommitExtra = { target?: PublishTarget; blobs?: Record<string, BlobRef>; guard?: () => Promise<void> };
+
+/** commitFiles' last argument, left out when it carries nothing. */
+function extraOf(extra: CommitExtra): [CommitExtra] | [] {
+  const set = Object.fromEntries(Object.entries(extra).filter(([, v]) => v !== undefined)) as CommitExtra;
+  return Object.keys(set).length ? [set] : [];
+}
+
+/** The commit guard of run `id`: refuses when the run was closed while it ran (090 takeover, timeout). */
+function runGuard(deps: PublishDeps, id: number): (() => Promise<void>) | undefined {
+  const still = deps.rpc.stillRunning;
+  if (!still) return undefined;
+  return async () => {
+    if (!(await still(id))) throw new Error(`publish ${id} was closed while it ran (timed out or taken over by a results publish); nothing was committed`);
+  };
 }
 
 /**

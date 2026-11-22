@@ -1,9 +1,9 @@
 // @vitest-environment node
 // publish-content/github.ts: one commit via the Git Data API, fetch mocked.
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { commitFiles, gitBlobSha, listPaths, readFiles } from '../../supabase/functions/publish-content/github';
+import { commitFiles, COMMIT_RACE_RETRIES, gitBlobSha, listPaths, readFiles } from '../../supabase/functions/publish-content/github';
 
 type Call = { method: string; url: string; body: unknown; headers: Record<string, string> };
 type Route = { method: string; path: string | RegExp; status?: number; body: unknown };
@@ -149,6 +149,61 @@ describe('commitFiles', () => {
     await expect(commitFiles(opts(fetch, { 'a.json': 'a\n' }))).rejects.toThrow(
       'GitHub 422 PATCH /repos/tsokid/EurovisionParty/git/refs/heads/main: Update is not a fast forward',
     );
+  });
+
+  it('I1: a fast-forward lost to a concurrent publish is rebuilt on the new head (transforms read it again), then lands', async () => {
+    let head = 'c0ffee';
+    let patches = 0;
+    const calls: string[] = [];
+    const fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+      const path = String(input).slice(API.length);
+      const method = (init?.method ?? 'GET').toUpperCase();
+      calls.push(`${method} ${path}`);
+      const ok = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
+      if (method === 'GET' && path.endsWith('/git/ref/heads/main')) return ok({ object: { sha: head } });
+      if (method === 'GET' && path.includes('/git/commits/')) return ok({ tree: { sha: `tree-${path.split('/').pop()}` } });
+      if (method === 'GET' && path.includes('/git/trees/')) {
+        return ok({ truncated: false, tree: [{ path: 'v.json', mode: '100644', type: 'blob', sha: head === 'c0ffee' ? 'v0' : 'v1' }] });
+      }
+      if (method === 'GET' && path.includes('/git/blobs/')) return ok({ content: btoa(path.endsWith('v0') ? 'old' : 'new'), encoding: 'base64' });
+      if (method === 'POST' && path.endsWith('/git/blobs')) return ok({ sha: 'bin1' }, 201);
+      if (method === 'POST' && path.endsWith('/git/trees')) return ok({ sha: `t${calls.length}` }, 201);
+      if (method === 'POST' && path.endsWith('/git/commits')) return ok({ sha: `commit-on-${head}` }, 201);
+      if (method === 'PATCH') {
+        patches++;
+        if (patches === 1) { head = 'moved1'; return ok({ message: 'Update is not a fast forward' }, 422); }
+        return ok({ object: { sha: 'x' } });
+      }
+      return ok({ message: 'no route' }, 404);
+    }) as typeof globalThis.fetch;
+    const seen: Array<string | null> = [];
+    const guard = vi.fn(async () => {});
+    const out = await commitFiles({
+      ...opts(fetch, { 'a.json': 'a\n', 'm.webp': new Uint8Array([1, 2, 3]) }),
+      transforms: { 'v.json': (cur) => { seen.push(cur); return `${cur}+mine`; } },
+      guard,
+    });
+    expect(out.sha).toBe('commit-on-moved1');
+    expect(seen).toEqual(['old', 'new']);
+    expect(guard).toHaveBeenCalledTimes(2);
+    // The binary blob is uploaded once.
+    expect(calls.filter((c) => c.endsWith('/git/blobs'))).toHaveLength(1);
+  });
+
+  it('I1: gives up after COMMIT_RACE_RETRIES refusals; the guard refusing moves nothing', async () => {
+    const routes = await baseRoutes({});
+    routes.push(
+      { method: 'POST', path: `/repos/${REPO}/git/trees`, status: 201, body: { sha: 'tree1' } },
+      { method: 'POST', path: `/repos/${REPO}/git/commits`, status: 201, body: { sha: 'commit1' } },
+      { method: 'PATCH', path: `/repos/${REPO}/git/refs/heads/main`, status: 422, body: { message: 'Update is not a fast forward' } },
+    );
+    const { fetch, calls } = mockFetch(routes);
+    await expect(commitFiles(opts(fetch, { 'a.json': 'a\n' }))).rejects.toThrow(/422 PATCH/);
+    expect(calls.filter((c) => c.method === 'PATCH')).toHaveLength(COMMIT_RACE_RETRIES + 1);
+
+    const second = mockFetch(routes);
+    await expect(commitFiles({ ...opts(second.fetch, { 'a.json': 'a\n' }), guard: async () => { throw new Error('closed'); } })).rejects.toThrow('closed');
+    expect(second.calls.filter((c) => c.method === 'PATCH')).toHaveLength(0);
   });
 
   it('throws on a failed read (401) before writing anything', async () => {

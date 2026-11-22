@@ -468,14 +468,14 @@ describe('runPublish with media', () => {
     expect(page).toBe(stableJson(JSON.parse(page)));
   });
 
-  it('marks every written row published only after the commit, then sweeps orphaned Storage objects, then ends the run', async () => {
+  it('marks every written row published only after the commit, ends the run, then sweeps orphaned Storage objects (I1: the sweep never holds the slot)', async () => {
     const { d, log } = deps(withDraft);
     await runPublish(d);
     expect(log[0]).toBe('commit');
     expect(log.filter((l) => l.startsWith('mark '))).toHaveLength(6);
     expect(log).toContain(`mark ${IMG} /media/${IMG_SHA}.webp`);
     expect(log).toContain(`mark ${IMG_V} /media/${IMG_SHA}-800.webp`);
-    expect(log.slice(-3)).toEqual(['list', `remove ${MISSING}.webp`, 'end']);
+    expect(log.slice(-3)).toEqual(['end', 'list', `remove ${MISSING}.webp`]);
   });
 
   it('a refused commit marks nothing and sweeps nothing', async () => {

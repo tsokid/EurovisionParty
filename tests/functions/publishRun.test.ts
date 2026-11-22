@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { runPublish, commitMessage, type PublishDeps } from '../../supabase/functions/publish-content/run';
+import { runPublish, commitMessage, CONTESTS_RETRIES, CONTESTS_RETRY_MS, TAKEOVER_MS, type PublishDeps } from '../../supabase/functions/publish-content/run';
 import type { FileTransforms } from '../../supabase/functions/publish-content/github';
 import { buildSnapshotFiles, type SnapshotInput } from '../../supabase/functions/publish-content/snapshot';
 import type { ContestRow } from '../../src/content/contests/types';
@@ -164,11 +164,35 @@ describe('runPublish', () => {
     let slept = 0;
     contests.d.sleep = async () => { slept++; };
     expect(await runPublish(contests.d, { cms: false })).toMatchObject({ status: 'busy', error: 'publish already running' });
-    expect(slept).toBe(8);
+    expect(slept).toBe(CONTESTS_RETRIES);
 
     const content = deps({ begin: async () => { throw new Error('publish already running'); } });
     content.d.sleep = async () => { throw new Error('a content run must not wait'); };
     expect(await runPublish(content.d)).toMatchObject({ status: 'busy' });
+  });
+
+  it('I1: the contests retry window outlasts the 90 s takeover of a stuck run (migration 090)', () => {
+    expect(CONTESTS_RETRIES * CONTESTS_RETRY_MS).toBeGreaterThan(TAKEOVER_MS);
+    // ...and still fits an edge function's 150 s wall clock with room for the publish itself.
+    expect(CONTESTS_RETRIES * CONTESTS_RETRY_MS).toBeLessThanOrEqual(110_000);
+  });
+
+  it('I1: a run closed while it ran (taken over by the results) commits nothing: the guard refuses before main moves', async () => {
+    const { d, endPublish } = deps({
+      commit: async (_f, _m, _t, _l, _d, extra) => {
+        await extra?.guard?.();
+        return { sha: 'late', changed: 1, paths: ['a'] };
+      },
+    });
+    d.rpc.stillRunning = vi.fn(async () => false);
+    const r = await runPublish(d);
+    expect(r).toMatchObject({ status: 'error', sha: null, error: expect.stringMatching(/publish 7 was closed while it ran/) });
+    expect(d.rpc.stillRunning).toHaveBeenCalledWith(7);
+    expect(endPublish).toHaveBeenCalledWith(expect.objectContaining({ id: 7, status: 'error' }));
+
+    const ok = deps({ commit: async (_f, _m, _t, _l, _d, extra) => { await extra?.guard?.(); return { sha: 'c', changed: 1, paths: ['a'] }; } });
+    ok.d.rpc.stillRunning = vi.fn(async () => true);
+    expect(await runPublish(ok.d)).toMatchObject({ status: 'ok', sha: 'c' });
   });
 
   it('any other begin_publish failure (e.g. forbidden) propagates', async () => {

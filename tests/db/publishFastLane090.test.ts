@@ -83,4 +83,55 @@ describe('090 publish fast lane', () => {
     const contests = await begin(false);
     expect(contests).toBeGreaterThan(page);
   });
+
+  // I1: a slow or crashed content publish never holds the results.
+  const age = async (id: number, seconds: number) => {
+    await db.exec(`reset role`);
+    await db.query(`update public.publish_runs set started_at = now() - make_interval(secs => $2) where id = $1`, [id, seconds]);
+  };
+  const row = async (id: number) =>
+    (await db.query<{ status: string; error: string | null }>(`select status, error from public.publish_runs where id = $1`, [id])).rows[0];
+
+  it('I1: a page run in flight (doc_ids set) never blocks a contests run, however young', async () => {
+    await save('faq', doc('F'));
+    const page = await begin(true, ['faq']);
+    const contests = await begin(false);
+    expect(contests).toBeGreaterThan(page);
+    expect((await row(page)).status).toBe('running');
+    // Content callers still wait for anything in flight.
+    await expect(begin(true, ['about'])).rejects.toThrow(/publish already running$/);
+  });
+
+  it('I1: a "Publish all" or contests run stuck for over 90 s is taken over by the results; a younger one still blocks', async () => {
+    const all = await begin(true, null);
+    await age(all, 60);
+    await asUser(db, ADMIN);
+    await expect(begin(false)).rejects.toThrow(/publish already running$/);
+    await age(all, 95);
+    await asUser(db, ADMIN);
+    const contests = await begin(false);
+    expect(await row(all)).toMatchObject({ status: 'error', error: expect.stringMatching(/results publish took over after 90 seconds/) });
+
+    await age(contests, 95);
+    await asUser(db, ADMIN);
+    // A content caller keeps the 10-minute rule.
+    await expect(begin(true, ['faq'])).rejects.toThrow(/publish already running$/);
+    const next = await begin(false);
+    expect(next).toBeGreaterThan(contests);
+    expect((await row(contests)).status).toBe('error');
+  });
+
+  it('I1: a page run in flight is never taken over, even when old', async () => {
+    await save('faq', doc('F'));
+    const page = await begin(true, ['faq']);
+    await age(page, 300);
+    await asUser(db, ADMIN);
+    await begin(false);
+    expect((await row(page)).status).toBe('running');
+  });
+
+  it('M3: a contests-only call never ships documents', async () => {
+    await expect(begin(false, ['faq'])).rejects.toThrow(/contests-only publish ships no documents/);
+    await expect(db.query(`select public.begin_publish(false, null, 'preview', null)`)).rejects.toThrow(/contests-only publish ships no documents/);
+  });
 });

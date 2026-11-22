@@ -65,6 +65,8 @@ export type CommitFilesOpts = GitHubOpts & {
    * with it. A derived file alone never makes a commit.
    */
   derived?: DerivedFiles;
+  /** Called just before the branch is moved; throwing aborts the commit with nothing moved. */
+  guard?: () => Promise<void>;
 };
 
 /** The refusal when a publish would add more new media than allowed (also checked before downloading). */
@@ -165,7 +167,31 @@ export async function listPaths(opts: GitHubOpts & { match: (path: string) => bo
   return new Set([...existing.keys()].filter(opts.match));
 }
 
+/** How many times a commit whose fast-forward lost the race is rebuilt on the new head. */
+export const COMMIT_RACE_RETRIES = 3;
+
+/** GitHub's refusal of a fast-forward-only ref update (the branch moved since its head was read). */
+const lostRace = (e: unknown) => /^GitHub 422 PATCH \/repos\/[^ ]+\/git\/refs\//.test(e instanceof Error ? e.message : String(e));
+
+/**
+ * Commits the files as one commit. When the fast-forward is refused because
+ * the branch moved meanwhile (a results publish and a page publish may run
+ * side by side, migration 090), the commit is rebuilt on the new head (the
+ * transforms and derived files read it again) up to COMMIT_RACE_RETRIES
+ * times; binary blobs already uploaded are not uploaded again.
+ */
 export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> {
+  const uploaded = new Map<string, string>();
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await commitOnce(opts, uploaded);
+    } catch (e) {
+      if (!lostRace(e) || attempt >= COMMIT_RACE_RETRIES) throw e;
+    }
+  }
+}
+
+async function commitOnce(opts: CommitFilesOpts, uploaded: Map<string, string>): Promise<CommitResult> {
   const call = client(opts);
   const repo = `/repos/${opts.repo}`;
   const refPath = `heads/${opts.branch}`;
@@ -222,8 +248,13 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
     } else if (!(f.content instanceof Uint8Array)) {
       entries.push({ path: f.path, mode: f.mode, type: 'blob', sha: f.content.sha });
     } else {
-      const blob = await call<{ sha: string }>('POST', `${repo}/git/blobs`, { content: toBase64(f.content), encoding: 'base64' });
-      entries.push({ path: f.path, mode: f.mode, type: 'blob', sha: blob.sha });
+      const key = await gitBlobSha(f.content);
+      let sha = uploaded.get(key);
+      if (!sha) {
+        sha = (await call<{ sha: string }>('POST', `${repo}/git/blobs`, { content: toBase64(f.content), encoding: 'base64' })).sha;
+        uploaded.set(key, sha);
+      }
+      entries.push({ path: f.path, mode: f.mode, type: 'blob', sha });
     }
   }
   const newTree = await call<{ sha: string }>('POST', `${repo}/git/trees`, { base_tree: baseTree, tree: entries });
@@ -237,6 +268,9 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
     tree: newTree.sha,
     parents: [parent],
   });
+  // The caller's last word before the branch moves (publish-content: the run
+  // was not closed meanwhile, migration 090). Throwing here writes nothing.
+  if (opts.guard) await opts.guard();
   if (!cut) {
     await call('PATCH', `${repo}/git/refs/${refPath}`, { sha: newCommit.sha, force: false });
   } else {

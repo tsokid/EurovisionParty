@@ -10,9 +10,18 @@
 -- begin_publish now applies the building hold to content runs only:
 --   p_cms true (a page, the site-wide promote, "Publish all")   waits
 --   p_cms false (contests only)                                  never waits
--- The run serialization itself (one run in flight, table lock, 10-minute
--- timeout) is unchanged: a run holds it for seconds, and publish-content
--- retries a contests run for a short while instead of answering busy.
+-- The run serialization is relaxed for a contests-only caller too (final
+-- review I1), so a slow or crashed content publish never holds the results:
+--   * a page / site-wide promote run (doc_ids set) in flight never blocks it:
+--     they touch disjoint files, and publish-content retries a commit whose
+--     fast-forward lost the race against fresh main;
+--   * a "Publish all" or contests run still running after 90 seconds is
+--     closed as timed out (its own commit is then refused: publish-content
+--     checks the run is still running just before it moves main);
+--   * publish-content retries a refused contests run for 100 seconds, longer
+--     than that 90-second takeover, instead of answering busy.
+-- Content callers keep the P5 rules: one run in flight, 10-minute timeout.
+-- A contests-only call never ships documents (p_doc_ids / p_promote refused).
 --
 -- The safety intent stays: publish-status reverts a failed content run only
 -- when main's head is its commit, or when every commit above it is a
@@ -40,6 +49,7 @@ declare
   v_docs   text[] := p_doc_ids;
   v_target text := coalesce(p_target, 'main');
   v_src    public.publish_runs%rowtype;
+  v_fast   boolean := not coalesce(p_cms, true);
   c_site_wide constant text[] := array['site-header', 'site-footer', 'site-settings'];
 begin
   if not public.is_super_admin() then
@@ -51,6 +61,9 @@ begin
   if v_docs is not null and cardinality(v_docs) = 0 then
     raise exception 'no documents to publish';
   end if;
+  if v_fast and (v_docs is not null or p_promote is not null or v_target <> 'main') then
+    raise exception 'a contests-only publish ships no documents';
+  end if;
 
   -- Serialize concurrent callers: the second waits here, then sees the
   -- first one's running row.
@@ -60,7 +73,17 @@ begin
      set status = 'error', finished_at = now(), error = 'timed out (still running after 10 minutes)'
    where status = 'running' and started_at < now() - interval '10 minutes';
 
-  if exists (select 1 from public.publish_runs where status = 'running') then
+  -- The results take over a "Publish all" or contests run stuck for 90 s.
+  if v_fast then
+    update public.publish_runs
+       set status = 'error', finished_at = now(), error = 'timed out (a results publish took over after 90 seconds)'
+     where status = 'running' and started_at < now() - interval '90 seconds'
+       and not (cms and doc_ids is not null);
+  end if;
+
+  -- A page / promote run in flight never blocks the results (disjoint files).
+  if exists (select 1 from public.publish_runs
+              where status = 'running' and not (v_fast and cms and doc_ids is not null)) then
     raise exception 'publish already running';
   end if;
 

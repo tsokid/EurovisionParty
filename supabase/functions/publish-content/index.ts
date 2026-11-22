@@ -157,6 +157,11 @@ Deno.serve(async (req) => {
           });
           if (error) throw new Error(error.message);
         },
+        async stillRunning(id) {
+          const { data, error } = await service.from("publish_runs").select("status").eq("id", id).maybeSingle();
+          if (error) throw new Error(error.message);
+          return data?.status === "running";
+        },
         async previewRun(id) {
           const { data, error } = await service
             .from("publish_runs").select("id, commit_sha, doc_ids, shipped").eq("id", id).single();
@@ -170,7 +175,7 @@ Deno.serve(async (req) => {
       commitFiles: (files, message, transforms, limits, derived, extra) => commitFiles({
         ...github,
         ...(extra?.target === "preview" ? { branch: PREVIEW_BRANCH, base: GITHUB_BRANCH } : {}),
-        files, message, transforms, derived, blobs: extra?.blobs, ...limits,
+        files, message, transforms, derived, blobs: extra?.blobs, guard: extra?.guard, ...limits,
       }),
       media: {
         async download(storagePath) {
