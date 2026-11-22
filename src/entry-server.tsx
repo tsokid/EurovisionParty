@@ -1,4 +1,5 @@
 import { StrictMode } from 'react';
+import { MotionConfig } from 'framer-motion';
 import { renderToString } from 'react-dom/server';
 import {
   createStaticHandler,
@@ -50,11 +51,14 @@ export async function render(url: string): Promise<RenderResult> {
   const content = createContentCollector();
   const html = renderToString(
     <StrictMode>
-      <HeadProvider collector={collector}>
-        <ContentProvider collector={content}>
-          <StaticRouterProvider router={router} context={context} hydrate={false} />
-        </ContentProvider>
-      </HeadProvider>
+      {/* Same tree as main.tsx; renders no markup of its own. */}
+      <MotionConfig reducedMotion="user">
+        <HeadProvider collector={collector}>
+          <ContentProvider collector={content}>
+            <StaticRouterProvider router={router} context={context} hydrate={false} />
+          </ContentProvider>
+        </HeadProvider>
+      </MotionConfig>
     </StrictMode>,
   );
 

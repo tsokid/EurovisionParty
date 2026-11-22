@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import { router } from './routes';
 import ErrorBoundary from './components/ErrorBoundary';
 import i18n from './i18n';
@@ -10,11 +11,16 @@ import { seedContentFromDom } from './lib/seo/contentCache';
 import './index.css';
 
 const root = document.getElementById('root')!;
+// reducedMotion="user": with the OS "reduce motion" setting, every
+// framer-motion transform / layout animation becomes opacity-only, also in
+// screens that do not call useReducedMotion themselves.
 const app = (
   <StrictMode>
-    <ErrorBoundary>
-      <RouterProvider router={router} />
-    </ErrorBoundary>
+    <MotionConfig reducedMotion="user">
+      <ErrorBoundary>
+        <RouterProvider router={router} />
+      </ErrorBoundary>
+    </MotionConfig>
   </StrictMode>
 );
 
