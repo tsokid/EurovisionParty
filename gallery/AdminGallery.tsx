@@ -31,13 +31,13 @@ function seedDraft(docId: string) {
   const data = JSON.parse(JSON.stringify(rulesDoc));
   drafts[docId] = { doc_id: docId, doc_type: docId, data, updated_at: '2026-11-22T09:58:00.000Z' };
 }
-(window as unknown as Record<string, unknown>).__cmsRemoteSave = (docId: string, mutate: (d: { en: Record<string, unknown>; el: Record<string, unknown> }) => void) => {
+(window as unknown as Record<string, unknown>).__cmsRemoteSave = (docId: string, mutate: (d: { en: Record<string, unknown>; el: Record<string, unknown> }) => void, notify = true) => {
   const row = drafts[docId];
   if (!row) return;
   const data = JSON.parse(JSON.stringify(row.data));
   mutate(data);
   drafts[docId] = { ...row, data, updated_at: nextStamp() };
-  channels.get(docId)?.onRemoteSave({ updatedAt: drafts[docId].updated_at, by: 'elena@example.com' });
+  if (notify) channels.get(docId)?.onRemoteSave({ updatedAt: drafts[docId].updated_at, by: 'elena@example.com' });
 };
 const HISTORY = [
   { id: 31, kind: 'checkpoint', author: 'user-me', author_email: 'owner@example.com', created_at: '2026-11-22T09:40:00Z', updated_at: '2026-11-22T09:58:00Z', run_id: null, commit_sha: null, restored_from: null },
