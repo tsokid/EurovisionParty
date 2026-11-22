@@ -14,6 +14,9 @@ import type { ContentData } from '../../src/lib/seo/dynamicPages';
 const CONTENT = process.env.EUROPARTY_CONTENT_DIR
   ?? resolve(dirname(fileURLToPath(import.meta.url)), '../../content');
 
+/** The content root this loader reads (content/, or EUROPARTY_CONTENT_DIR). */
+export const CONTENT_DIR = CONTENT;
+
 function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(path, 'utf8')) as T;
 }

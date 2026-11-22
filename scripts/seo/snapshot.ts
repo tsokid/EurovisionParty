@@ -108,6 +108,52 @@ export function collectSnapshot(distDir: string): Snapshot {
   return sortKeys(snap) as Snapshot;
 }
 
+/** Format tag of the deployed snapshot (/_seo/snapshot.json, written by guard.ts). */
+export const LIVE_SNAPSHOT_FORMAT = 'eurovision-games/seo-snapshot@1';
+
+/**
+ * The deployed snapshot: the routes plus what the build knew, so the next
+ * build can compare against what is live. `intents`: the seo-intent.json
+ * entry ids present when this deploy was built (they are live now).
+ */
+export interface LiveSnapshot {
+  format: typeof LIVE_SNAPSHOT_FORMAT;
+  built_at: string;
+  commit: string | null;
+  intents: string[];
+  routes: Snapshot;
+}
+
+/**
+ * A baseline in either format: a deployed LiveSnapshot, or a bare Snapshot
+ * (snapshot.ts output, docs/design/stage/seo-baseline.json), whose
+ * `intents` is then null (nothing known to be live). Throws unless it looks
+ * like a real snapshot with at least one route, so a wrong or truncated
+ * response can never pass as an empty baseline.
+ */
+export function readBaseline(value: unknown): { routes: Snapshot; intents: string[] | null } {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('baseline is not a JSON object');
+  const v = value as Record<string, unknown>;
+  let routes: unknown = value;
+  let intents: string[] | null = null;
+  if ('format' in v) {
+    if (v.format !== LIVE_SNAPSHOT_FORMAT) throw new Error(`baseline format ${JSON.stringify(v.format)} is not ${LIVE_SNAPSHOT_FORMAT}`);
+    if (!Array.isArray(v.intents) || !v.intents.every((x) => typeof x === 'string')) throw new Error('baseline intents is not a list of ids');
+    routes = v.routes;
+    intents = v.intents as string[];
+  }
+  if (!routes || typeof routes !== 'object' || Array.isArray(routes)) throw new Error('baseline routes is not an object');
+  const entries = Object.entries(routes as Record<string, unknown>);
+  if (entries.length === 0) throw new Error('baseline has no routes');
+  for (const [route, page] of entries) {
+    const p = page as Partial<PageSnapshot> | null;
+    if (!p || p.route !== route || !Array.isArray(p.hreflang) || !Array.isArray(p.jsonLd) || !Array.isArray(p.h1)) {
+      throw new Error(`baseline route ${route} is not a page snapshot`);
+    }
+  }
+  return { routes: routes as Snapshot, intents };
+}
+
 const isMain = !!process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');

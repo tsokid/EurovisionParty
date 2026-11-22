@@ -1691,7 +1691,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!en/|el/|content/|media/).*)",
+      "source": "/((?!en/|el/|content/|media/|_seo/).*)",
       "destination": "/"
     }
   ],
@@ -1745,6 +1745,19 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/_seo/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     },

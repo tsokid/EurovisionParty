@@ -10,20 +10,40 @@
  * disappearing or turning into a non-date, is still an error.
  * `datePublished` is a fixed constant on every page, so it stays an error.
  *
- *   npx tsx scripts/seo/snapshot-diff.ts before.json after.json
+ * With a policy (an SEO intent, scripts/seo/intent.ts), a hard change the
+ * intent declares for that route and field is reported under ALLOWED
+ * instead of ERRORS, and a removed route the policy accepts (a 301 in
+ * vercel.json) likewise. The build runs this through scripts/seo/guard.ts.
+ *
+ *   npx tsx scripts/seo/snapshot-diff.ts before.json after.json [--intent seo-intent.json]
+ *
+ * before/after: a snapshot (snapshot.ts) or a deployed /_seo/snapshot.json.
+ * --intent applies every entry in the file (the guard applies only the ones
+ * the live snapshot has not seen).
  */
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Snapshot } from './snapshot';
+import { readBaseline, type Snapshot } from './snapshot';
 
 const HARD = ['title', 'description', 'robots', 'canonical', 'h1', 'hreflang', 'jsonLd'] as const;
 const SOFT = ['ogTitle', 'ogDescription'] as const;
+
+export type HardField = (typeof HARD)[number];
+
+/** What an SEO intent lets change (scripts/seo/intent.ts). */
+export interface DiffPolicy {
+  allows(route: string, field: HardField): boolean;
+  /** `builtRoutes`: the routes of the new snapshot (where a redirect may land). */
+  allowsRemoval(route: string, builtRoutes: Set<string>): boolean;
+}
 
 export interface DiffResult {
   added: string[];
   removed: string[];
   errors: string[];
+  /** Hard changes the policy declared (empty without one). */
+  allowed: string[];
   warnings: string[];
   exitCode: 0 | 1;
 }
@@ -53,12 +73,18 @@ export function maskVolatileDates(entry: string): string {
 }
 const minus = (a: string[], b: string[]): string[] => a.filter((x) => !b.includes(x));
 
-export function diffSnapshots(before: Snapshot, after: Snapshot): DiffResult {
+export function diffSnapshots(before: Snapshot, after: Snapshot, policy?: DiffPolicy): DiffResult {
   const bk = Object.keys(before);
   const ak = Object.keys(after);
   const added = ak.filter((k) => !(k in before)).sort();
   const removed = bk.filter((k) => !(k in after)).sort();
-  const errors: string[] = removed.map((r) => `removed route: ${r}`);
+  const errors: string[] = [];
+  const allowed: string[] = [];
+  const built = new Set(ak);
+  for (const r of removed) {
+    if (policy?.allowsRemoval(r, built)) allowed.push(`removed route (301 in vercel.json): ${r}`);
+    else errors.push(`removed route: ${r}`);
+  }
   const warnings: string[] = added.map((r) => `added route: ${r}`);
 
   for (const route of bk.filter((k) => k in after).sort()) {
@@ -72,9 +98,9 @@ export function diffSnapshots(before: Snapshot, after: Snapshot): DiffResult {
         const onlyDateModified = f === 'jsonLd'
           && j(b.jsonLd.map(maskVolatileDates)) === j(a.jsonLd.map(maskVolatileDates));
         if (onlyDateModified) warnings.push(`${route} jsonLd dateModified changed:${rem}${add}`);
-        else errors.push(`${route} ${f} changed:${rem}${add}`);
+        else (policy?.allows(route, f) ? allowed : errors).push(`${route} ${f} changed:${rem}${add}`);
       } else {
-        errors.push(`${route} ${f}: ${j(b[f])} -> ${j(a[f])}`);
+        (policy?.allows(route, f) ? allowed : errors).push(`${route} ${f}: ${j(b[f])} -> ${j(a[f])}`);
       }
     }
     for (const f of SOFT) {
@@ -90,20 +116,38 @@ export function diffSnapshots(before: Snapshot, after: Snapshot): DiffResult {
       warnings.push(`${route} internal links: ${parts.join(' ')}`);
     }
   }
-  return { added, removed, errors, warnings, exitCode: errors.length ? 1 : 0 };
+  return { added, removed, errors, allowed, warnings, exitCode: errors.length ? 1 : 0 };
+}
+
+/** The diff as the CLI and the build print it. */
+export function formatDiff(r: DiffResult): string {
+  const out = [`routes added: ${r.added.length}, removed: ${r.removed.length}`];
+  if (r.errors.length) out.push(`\nERRORS (${r.errors.length}):\n  ${r.errors.join('\n  ')}`);
+  if (r.allowed.length) out.push(`\nALLOWED BY SEO INTENT (${r.allowed.length}):\n  ${r.allowed.join('\n  ')}`);
+  if (r.warnings.length) out.push(`\nWARNINGS (${r.warnings.length}):\n  ${r.warnings.join('\n  ')}`);
+  out.push(r.exitCode ? '\nFAIL: SEO regression detected' : '\nOK: no blocking SEO changes');
+  return out.join('\n');
 }
 
 const isMain = !!process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
-  const [bp, ap] = process.argv.slice(2);
-  if (!bp || !ap) {
-    console.error('usage: snapshot-diff.ts <before.json> <after.json>');
+  const args = process.argv.slice(2);
+  const i = args.indexOf('--intent');
+  const intentPath = i >= 0 ? args[i + 1] : undefined;
+  const [bp, ap] = args.filter((_, k) => i < 0 || (k !== i && k !== i + 1));
+  if (!bp || !ap || (i >= 0 && !intentPath)) {
+    console.error('usage: snapshot-diff.ts <before.json> <after.json> [--intent seo-intent.json]');
     process.exit(2);
   }
-  const r = diffSnapshots(JSON.parse(readFileSync(bp, 'utf8')), JSON.parse(readFileSync(ap, 'utf8')));
-  console.log(`routes added: ${r.added.length}, removed: ${r.removed.length}`);
-  if (r.errors.length) console.log(`\nERRORS (${r.errors.length}):\n  ${r.errors.join('\n  ')}`);
-  if (r.warnings.length) console.log(`\nWARNINGS (${r.warnings.length}):\n  ${r.warnings.join('\n  ')}`);
-  console.log(r.exitCode ? '\nFAIL: SEO regression detected' : '\nOK: no blocking SEO changes');
+  const before = readBaseline(JSON.parse(readFileSync(bp, 'utf8'))).routes;
+  const after = readBaseline(JSON.parse(readFileSync(ap, 'utf8'))).routes;
+  let policy: DiffPolicy | undefined;
+  if (intentPath) {
+    const { intentContext, intentPolicy, readIntentFile } = await import('./intent');
+    const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+    policy = intentPolicy(readIntentFile(resolve(intentPath)), intentContext(root));
+  }
+  const r = diffSnapshots(before, after, policy);
+  console.log(formatDiff(r));
   process.exit(r.exitCode);
 }

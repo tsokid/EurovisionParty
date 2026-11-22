@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && npm run typecheck:shared && tsx scripts/cms/validate-content.ts && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts && tsx scripts/seo/check-prerender.ts && tsx scripts/move-build-manifest.ts",
+    "build": "tsc -b && npm run typecheck:shared && tsx scripts/cms/validate-content.ts && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts && tsx scripts/seo/check-prerender.ts && tsx scripts/seo/guard.ts && tsx scripts/move-build-manifest.ts",
     "typecheck:shared": "tsc -p tsconfig.shared.json --noEmit",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -13,6 +13,9 @@
     "sitemap": "tsx scripts/seo/generate-sitemap.ts",
     "llms-txt": "tsx scripts/seo/generate-llms-txt.ts",
     "validate-schema": "tsx scripts/seo/validate-schema.ts",
+    "seo:snapshot": "tsx scripts/seo/snapshot.ts",
+    "seo:diff": "tsx scripts/seo/snapshot-diff.ts",
+    "seo:guard": "tsx scripts/seo/guard.ts",
     "prebuild": "npm run sitemap && npm run llms-txt",
     "test": "vitest run",
     "test:watch": "vitest",
