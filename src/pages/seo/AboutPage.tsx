@@ -12,9 +12,11 @@ import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { AboutContent } from '../../../supabase/functions/_shared/cms/schemas/about';
 import { PageContentFallback } from './PageContentFallback';
+import { sameAsOf, useSiteSettings } from '../../lib/cms/siteSettings';
 
 export default function AboutPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const content = usePageContent<AboutContent>('about');
   if (content.status !== 'ready') return <PageContentFallback state={content} />;
   const c = content.data;
@@ -27,11 +29,11 @@ export default function AboutPage() {
   const organization = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Eurovision Games',
+    name: settings.organization.name,
     url: 'https://eurovision.games',
-    logo: 'https://eurovision.games/logo.png',
+    logo: settings.defaultOgImage,
     description: c.meta.organizationDescription,
-    sameAs: [],
+    sameAs: sameAsOf(settings),
   };
 
   const aboutPage = {
@@ -42,7 +44,7 @@ export default function AboutPage() {
     description: c.meta.aboutPageDescription,
     mainEntity: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
+      name: settings.organization.name,
       url: 'https://eurovision.games',
     },
   };
@@ -55,7 +57,7 @@ export default function AboutPage() {
         title={c.meta.title}
         description={c.meta.description}
         ogType="website"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         keywords={c.meta.keywords}
         jsonLd={mergeFaqJsonLd([organization, aboutPage, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />

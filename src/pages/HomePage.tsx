@@ -17,6 +17,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useRoom, SecretSaveError, WRONG_PASSWORD_ERROR } from '../hooks/useRoom';
 import { useTranslation } from 'react-i18next';
 import { captureQrPassword, peekQrPassword, clearQrPassword } from '../lib/qrJoin';
+import { useSiteSettings } from '../lib/cms/siteSettings';
 
 type Mode = 'welcome' | 'create' | 'join';
 
@@ -38,6 +39,7 @@ export function HomePage() {
   const [secretPending, setSecretPending] = useState(false);
   const navigate = useNavigate();
   const locale = useLocale();
+  const settings = useSiteSettings();
   const year = useCurrentYear();
   // The SEO copy (head tags and HomeSeoBlock) is a CMS doc. Only those wait
   // for it on client navigation: the game UI never does.
@@ -56,7 +58,7 @@ export function HomePage() {
       title={interpolate(doc.meta.title, { year })}
       description={interpolate(doc.meta.description, { year })}
       ogType="website"
-      ogImage="https://eurovision.games/logo.png"
+      ogImage={settings.defaultOgImage}
       jsonLd={homeJsonLd}
     />
   );

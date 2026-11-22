@@ -15,6 +15,7 @@ import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { FaqContent } from '../../../supabase/functions/_shared/cms/schemas/faq';
 import { FAQ_TOPICS, type FaqTopic } from '../../../supabase/functions/_shared/cms/faqTopics';
 import { PageContentFallback } from './PageContentFallback';
+import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 const TOPIC_ICON: Record<FaqTopic, IconName> = {
   start: 'home',
@@ -32,6 +33,7 @@ const firstSentence = (s: string): string => {
 
 export default function FAQPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const { t } = useTranslation();
   const content = usePageContent<FaqContent>('faq');
   if (content.status !== 'ready') return <PageContentFallback state={content} />;
@@ -62,12 +64,12 @@ export default function FAQPage() {
     '@type': 'Article',
     headline: c.schema.articleHeadline,
     description: c.schema.articleDescription,
-    image: 'https://eurovision.games/logo.png',
-    author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
+    image: settings.defaultOgImage,
+    author: { '@type': 'Organization', name: settings.organization.name, url: 'https://eurovision.games' },
     publisher: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
-      logo: { '@type': 'ImageObject', url: 'https://eurovision.games/logo.png' },
+      name: settings.organization.name,
+      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
@@ -170,7 +172,7 @@ export default function FAQPage() {
         title={c.meta.title}
         description={c.meta.description}
         ogType="article"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}

@@ -16,6 +16,7 @@ import ExtraBlocks from '../../components/cms/ExtraBlocks';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { ScoringContent } from '../../../supabase/functions/_shared/cms/schemas/scoring';
 import { PageContentFallback } from './PageContentFallback';
+import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 interface RowSpec {
   label: string;
@@ -48,6 +49,7 @@ const boldNumber = (html: string): string | null => {
 
 export default function ScoringPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const { t } = useTranslation();
   const ui = (k: string) => t(`scoringPage.${k}`);
   const content = usePageContent<ScoringContent>('scoring');
@@ -72,12 +74,12 @@ export default function ScoringPage() {
     '@type': 'Article',
     headline: c.schema.articleHeadline,
     description: c.schema.articleDescription,
-    image: 'https://eurovision.games/logo.png',
-    author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
+    image: settings.defaultOgImage,
+    author: { '@type': 'Organization', name: settings.organization.name, url: 'https://eurovision.games' },
     publisher: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
-      logo: { '@type': 'ImageObject', url: 'https://eurovision.games/logo.png' },
+      name: settings.organization.name,
+      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
@@ -92,7 +94,7 @@ export default function ScoringPage() {
         title={c.meta.title}
         description={c.meta.description}
         ogType="article"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}

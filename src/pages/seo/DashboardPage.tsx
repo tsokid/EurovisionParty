@@ -14,9 +14,11 @@ import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { DashboardContent } from '../../../supabase/functions/_shared/cms/schemas/dashboard';
 import { PageContentFallback } from './PageContentFallback';
+import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 export default function DashboardPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const content = usePageContent<DashboardContent>('dashboard');
   if (content.status !== 'ready') return <PageContentFallback state={content} />;
   const c = content.data;
@@ -34,12 +36,12 @@ export default function DashboardPage() {
     '@type': 'Article',
     headline: c.meta.headline,
     description: c.meta.articleDescription,
-    image: 'https://eurovision.games/logo.png',
-    author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
+    image: settings.defaultOgImage,
+    author: { '@type': 'Organization', name: settings.organization.name, url: 'https://eurovision.games' },
     publisher: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
-      logo: { '@type': 'ImageObject', url: 'https://eurovision.games/logo.png' },
+      name: settings.organization.name,
+      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
@@ -63,7 +65,7 @@ export default function DashboardPage() {
         title={c.meta.title}
         description={c.meta.description}
         ogType="article"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}

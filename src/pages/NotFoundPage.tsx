@@ -17,6 +17,7 @@ import { mergeFaqJsonLd } from '../components/cms/extraFaq';
 import type { NotFoundContent } from '../../supabase/functions/_shared/cms/schemas/not-found';
 import LocaleLink from '../components/seo/LocaleLink';
 import type { Locale } from '../lib/seo/locale';
+import { useSiteSettings } from '../lib/cms/siteSettings';
 
 const FALLBACK: Record<Locale, { title: string; home: string }> = {
   en: { title: 'Page not found', home: 'Home' },
@@ -43,6 +44,7 @@ function MinimalNotFound({ locale }: { locale: Locale }) {
 
 export function NotFoundPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const { t } = useTranslation();
   const cc = useCurrentContest();
   // Prerender: mark this response as a real 404 (no-op in the browser).
@@ -82,7 +84,7 @@ export function NotFoundPage() {
         description={c.meta.description}
         robots="noindex"
         ogType="website"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         ogLocale={locale === 'el' ? 'el_GR' : 'en_US'}
         ogLocaleAlternate={[locale === 'el' ? 'en_US' : 'el_GR']}
         keywords={c.meta.keywords}

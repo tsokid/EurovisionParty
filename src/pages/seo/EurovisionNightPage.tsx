@@ -22,6 +22,7 @@ import { PageContentFallback } from './PageContentFallback';
 import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
 import { contestTexts } from './content/contestText';
 import { useCurrentContest } from '../../lib/currentContest';
+import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 const IN_GAME = new Set([3, 5, 7, 9]); // playbook steps that happen in the app (board chips)
 const GAME_ICONS: IconName[] = ['list', 'swords', 'help', 'trophy'];
@@ -74,6 +75,7 @@ function FinalCard({ cc, locale, zones, note, label, daysLabel }: {
 
 export default function EurovisionNightPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const { t: tr } = useTranslation();
   const ui = (k: string, o?: Record<string, unknown>) => tr(`nightPage.${k}`, o);
   const cc = useCurrentContest();
@@ -103,12 +105,12 @@ export default function EurovisionNightPage() {
     '@type': 'Article',
     headline: c.meta.headline,
     description: c.meta.articleDescription,
-    image: 'https://eurovision.games/logo.png',
-    author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
+    image: settings.defaultOgImage,
+    author: { '@type': 'Organization', name: settings.organization.name, url: 'https://eurovision.games' },
     publisher: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
-      logo: { '@type': 'ImageObject', url: 'https://eurovision.games/logo.png' },
+      name: settings.organization.name,
+      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
@@ -138,7 +140,7 @@ export default function EurovisionNightPage() {
         title={fill(c.meta.title)}
         description={c.meta.description}
         ogType="article"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords.map(fill)}

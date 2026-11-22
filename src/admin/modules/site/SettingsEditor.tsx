@@ -7,6 +7,7 @@ import { Field, IconButton, TextInput, useToast } from '../../ui/kit';
 import { SiteDocFrame, Section } from './SiteDocFrame';
 import { useSiteDraft, type Locale, type LooseDoc } from './useSiteDraft';
 import { adminPaths } from '../../paths';
+import { t } from '../../i18n';
 
 const LOCALES: Locale[] = ['en', 'el'];
 
@@ -38,34 +39,33 @@ export default function SettingsEditor() {
       draft={draft}
       title="Ρυθμίσεις"
       lede={<>
-        Στοιχεία που ισχύουν για όλο το site, σε ένα σημείο. Οι σελίδες θα τα διαβάζουν από εδώ στη φάση P6· μέχρι τότε
-        οι τιμές τους είναι ίδιες με αυτές. Ποιος μπαίνει στο admin: <Link to={adminPaths.admins()} className="text-stage-pink-2 hover:underline">Super admins</Link>.
+        {t.settings.lede} {t.settings.adminsPre}<Link to={adminPaths.admins()} className="text-stage-pink-2 hover:underline">Super admins</Link>.
       </>}
     >
       <Section title="Το site">
         <div className="grid gap-4 sm:grid-cols-2">
-          {text('Όνομα του site', 'siteName')}
-          {text('Email επικοινωνίας', 'contactEmail', undefined, 'email')}
+          {text('Όνομα του site', 'siteName', t.settings.used.siteName)}
+          {text('Email επικοινωνίας', 'contactEmail', t.settings.used.contactEmail, 'email')}
         </div>
       </Section>
 
       <Section title="Κοινοποίηση και μηχανές αναζήτησης" hint="Διευθύνσεις που ξεκινούν με https://">
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-            {text('Εικόνα κοινοποίησης (όταν μια σελίδα δεν έχει δική της)', 'defaultOgImage', undefined, 'url')}
+            {text('Εικόνα κοινοποίησης (όταν μια σελίδα δεν έχει δική της)', 'defaultOgImage', t.settings.used.defaultOgImage, 'url')}
             {/^https:\/\//.test(en.defaultOgImage) && (
               <img src={en.defaultOgImage} alt="" className="h-16 w-auto max-w-40 rounded-stage-sm border border-stage-line bg-stage-bg object-contain" />
             )}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Όνομα οργανισμού" error={err('organization.name')}>
+            <Field label="Όνομα οργανισμού" hint={t.settings.used.orgName} error={err('organization.name')}>
               <TextInput
                 value={en.organization.name}
                 invalid={!!err('organization.name')}
                 onChange={(e) => { const v = e.target.value; setDoc((d: LooseDoc) => setShared(d, (s) => ({ ...s, organization: { ...s.organization, name: v } }))); }}
               />
             </Field>
-            <Field label="Λογότυπο (τετράγωνο)" error={err('organization.logo')}>
+            <Field label="Λογότυπο (τετράγωνο)" hint={t.settings.used.orgLogo} error={err('organization.logo')}>
               <TextInput
                 value={en.organization.logo}
                 inputMode="url"
@@ -77,7 +77,7 @@ export default function SettingsEditor() {
         </div>
       </Section>
 
-      <Section title="Social media" hint="Τα προφίλ του site. Κανένα ακόμα: πρόσθεσε όποτε χρειαστεί.">
+      <Section title="Social media" hint={t.settings.used.social}>
         <ul className="space-y-2">
           {profiles.map((p, i) => (
             <li key={i} className="rounded-stage border border-stage-line bg-stage-bg-2 p-3 grid gap-2 sm:grid-cols-[1fr_1fr_2fr_auto] sm:items-end">

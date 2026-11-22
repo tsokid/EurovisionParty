@@ -13,9 +13,11 @@ import { layoutBlocks, pageSections } from '../../components/cms/PageSections';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { EurovisionTriviaContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-trivia';
 import { PageContentFallback } from './PageContentFallback';
+import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 export default function EurovisionTriviaPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const content = usePageContent<EurovisionTriviaContent>('eurovision-trivia');
   if (content.status !== 'ready') return <PageContentFallback state={content} />;
   const c = content.data;
@@ -33,12 +35,12 @@ export default function EurovisionTriviaPage() {
     '@type': 'Article',
     headline: c.meta.schemaTitle,
     description: c.meta.schemaDescription,
-    image: 'https://eurovision.games/logo.png',
-    author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
+    image: settings.defaultOgImage,
+    author: { '@type': 'Organization', name: settings.organization.name, url: 'https://eurovision.games' },
     publisher: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
-      logo: { '@type': 'ImageObject', url: 'https://eurovision.games/logo.png' },
+      name: settings.organization.name,
+      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
@@ -73,7 +75,7 @@ export default function EurovisionTriviaPage() {
         title={c.meta.title}
         description={c.meta.description}
         ogType="article"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}

@@ -17,6 +17,7 @@ import { PageContentFallback } from './PageContentFallback';
 import { interpolate } from '../../../supabase/functions/_shared/cms/placeholders';
 import { contestTexts } from './content/contestText';
 import { useCurrentContest } from '../../lib/currentContest';
+import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 /** `YYYY-MM-DD` + 1 day (UTC). */
 function nextDay(iso: string): string {
@@ -26,6 +27,7 @@ function nextDay(iso: string): string {
 
 export default function EurovisionPartyPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const cc = useCurrentContest();
   const content = usePageContent<EurovisionPartyContent>('eurovision-party');
   if (content.status !== 'ready') return <PageContentFallback state={content} />;
@@ -46,12 +48,12 @@ export default function EurovisionPartyPage() {
     '@type': 'Article',
     headline: interpolate(c.meta.headline, vars),
     description: interpolate(c.meta.articleDescription, vars),
-    image: 'https://eurovision.games/logo.png',
-    author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
+    image: settings.defaultOgImage,
+    author: { '@type': 'Organization', name: settings.organization.name, url: 'https://eurovision.games' },
     publisher: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
-      logo: { '@type': 'ImageObject', url: 'https://eurovision.games/logo.png' },
+      name: settings.organization.name,
+      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
@@ -83,7 +85,7 @@ export default function EurovisionPartyPage() {
     },
     organizer: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
+      name: settings.organization.name,
       url: 'https://eurovision.games',
     },
   };
@@ -96,7 +98,7 @@ export default function EurovisionPartyPage() {
         title={interpolate(c.meta.title, vars)}
         description={interpolate(c.meta.description, vars)}
         ogType="article"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}

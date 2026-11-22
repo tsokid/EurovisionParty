@@ -1,8 +1,7 @@
 import type { Locale } from './locale';
+import { sameAsOf, siteSettings } from '../cms/siteSettings';
 
 const SITE_URL = 'https://eurovision.games';
-const ORG_NAME = 'Eurovision Games';
-const ORG_LOGO = `${SITE_URL}/icon-512.png`;
 
 type SchemaBlock = Record<string, unknown>;
 
@@ -11,10 +10,10 @@ export function buildOrganization(): SchemaBlock {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': `${SITE_URL}#organization`,
-    name: ORG_NAME,
+    name: siteSettings().organization.name,
     url: SITE_URL,
-    logo: ORG_LOGO,
-    sameAs: [],
+    logo: siteSettings().organization.logo,
+    sameAs: sameAsOf(siteSettings()),
   };
 }
 
@@ -24,7 +23,7 @@ export function buildWebSite(): SchemaBlock {
     '@type': 'WebSite',
     '@id': `${SITE_URL}#website`,
     url: SITE_URL,
-    name: ORG_NAME,
+    name: siteSettings().siteName,
     publisher: { '@id': `${SITE_URL}#organization` },
     potentialAction: {
       '@type': 'SearchAction',
@@ -58,7 +57,7 @@ export function buildArticle(i: ArticleInput): SchemaBlock {
     datePublished: i.datePublished,
     dateModified: i.dateModified,
     image: i.image,
-    author: { '@type': 'Organization', name: i.authorName ?? ORG_NAME },
+    author: { '@type': 'Organization', name: i.authorName ?? siteSettings().organization.name },
     publisher: { '@id': `${SITE_URL}#organization` },
   };
 }

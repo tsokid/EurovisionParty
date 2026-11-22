@@ -34,6 +34,7 @@ import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
 import type { EurovisionPredictionsContent } from '../../../supabase/functions/_shared/cms/schemas/eurovision-predictions';
 import { PageContentFallback } from './PageContentFallback';
 import { predictionsText, type PredictionsText } from './predictionsText';
+import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 // fact: date the page was first published
 const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
@@ -349,6 +350,7 @@ const FoldChevron = () => (
 
 export default function PredictionsPage() {
   const locale = useLocale();
+  const settings = useSiteSettings();
   const cc = useCurrentContest();
   const { t } = useTranslation();
   const content = usePageContent<EurovisionPredictionsContent>('eurovision-predictions');
@@ -367,12 +369,12 @@ export default function PredictionsPage() {
     '@type': 'Article',
     headline: c.meta.schemaTitle,
     description: c.meta.schemaDescription,
-    image: 'https://eurovision.games/logo.png',
-    author: { '@type': 'Organization', name: 'Eurovision Games', url: 'https://eurovision.games' },
+    image: settings.defaultOgImage,
+    author: { '@type': 'Organization', name: settings.organization.name, url: 'https://eurovision.games' },
     publisher: {
       '@type': 'Organization',
-      name: 'Eurovision Games',
-      logo: { '@type': 'ImageObject', url: 'https://eurovision.games/logo.png' },
+      name: settings.organization.name,
+      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,
@@ -396,7 +398,7 @@ export default function PredictionsPage() {
         title={c.meta.title}
         description={c.meta.description}
         ogType="article"
-        ogImage="https://eurovision.games/logo.png"
+        ogImage={settings.defaultOgImage}
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}

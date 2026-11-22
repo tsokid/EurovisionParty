@@ -1,4 +1,5 @@
 import type { HreflangLink } from './hreflang';
+import { siteSettings } from '../cms/siteSettings';
 
 export interface HeadInput {
   title: string;
@@ -24,7 +25,6 @@ export interface HeadInput {
   keywords?: string[];
 }
 
-const DEFAULT_OG_IMAGE = 'https://eurovision.games/logo.png';
 
 function esc(v: string): string {
   return v
@@ -53,7 +53,8 @@ export function headTagsHtml(input: HeadInput): string {
     ogType, ogImage, twitterTitle, twitterDescription,
     articlePublishedTime, articleModifiedTime, keywords,
   } = input;
-  const image = ogImage ?? DEFAULT_OG_IMAGE;
+  // A page without its own share image uses the settings' default (CMS P6).
+  const image = ogImage ?? siteSettings().defaultOgImage;
   const out: string[] = [
     `<title>${esc(title)}</title>`,
     metaName('description', description),
