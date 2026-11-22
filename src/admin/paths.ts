@@ -43,6 +43,12 @@ export const adminPaths = {
     const base = SITE_DOC_SCREEN[docId] ?? `${ADMIN_ROOT}/pages/${seg(docId)}`;
     return revId == null ? `${base}/history` : `${base}/history/${seg(revId)}`;
   },
+  /** The publish screen of one doc (spec §3 …/publish): the diff, the SEO delta and Publish. */
+  docPublish: (docId: string) => `${SITE_DOC_SCREEN[docId] ?? `${ADMIN_ROOT}/pages/${seg(docId)}`}/publish`,
+  /** The publish queue (spec §3 /admin/publish), optionally with docs selected for review. */
+  publish: (docIds?: readonly string[]) => (docIds && docIds.length ? `${ADMIN_ROOT}/publish?docs=${docIds.map(seg).join(',')}` : `${ADMIN_ROOT}/publish`),
+  /** One publish run (spec §3 /admin/publish/runs/:runId). */
+  publishRun: (runId: number) => `${ADMIN_ROOT}/publish/runs/${runId}`,
   /** The editor a history screen goes back to. */
   editorOf: (docId: string) => SITE_DOC_SCREEN[docId] ?? `${ADMIN_ROOT}/pages/${seg(docId)}`,
 };

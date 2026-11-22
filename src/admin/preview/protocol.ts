@@ -11,14 +11,20 @@
 //              may outline; `docType` is checked against the frame's docId
 //   highlight  outline the element of a data-cms-path value (a field got focus)
 //   reveal     scroll to the first element of a doc (the footer editor)
+//   (state, diff mode, CMS P5) `changed` tints the nodes of those
+//              data-cms-path values (and their children) in `tone`; `overlays`
+//              replaces the saved header/footer drafts the frame loaded (the
+//              live side and a one-page publish show none)
 // frame → host
 //   ready      the frame mounted: send the state
 //   focus      an element was clicked: focus its field (data-cms-path value)
 //   tagged     how many elements carry a data-cms-path (diagnostics, tests)
+//   tinted     how many elements the diff tinted
 //
 // The transport is a Port, so tests (and the inline preview) can run both
 // ends in one document with memoryPorts().
 import type { Locale } from '../../lib/seo/locale';
+import type { DraftDoc } from '../../../supabase/functions/_shared/cms/overlay';
 
 export const PREVIEW_NS = 'cms-preview';
 export const PREVIEW_PROTOCOL = 1;
@@ -39,13 +45,20 @@ export type HostMessage =
       editable: string[];
       /** Scroll once to the first element of this doc (the footer editor). */
       reveal?: string | null;
+      /** Diff mode: tint the nodes of these data-cms-path values. */
+      changed?: string[];
+      /** The tint: the live page (old) or the draft (new). */
+      tone?: 'live' | 'draft';
+      /** The other docs' drafts to overlay instead of the saved ones ([] = the published header and footer). */
+      overlays?: DraftDoc[];
     }
   | { type: 'highlight'; target: string | null };
 
 export type FrameMessage =
   | { type: 'ready' }
   | { type: 'focus'; target: string }
-  | { type: 'tagged'; count: number };
+  | { type: 'tagged'; count: number }
+  | { type: 'tinted'; count: number };
 
 type Envelope = { ns: typeof PREVIEW_NS; v: number };
 

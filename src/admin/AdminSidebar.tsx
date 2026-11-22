@@ -8,7 +8,7 @@ import { useState, type ComponentType } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Activity, Award, CalendarDays, ChevronRight, FileText, Image, LayoutDashboard,
-  PanelBottom, PanelTop, Radar, Settings, Shield, Smile,
+  PanelBottom, PanelTop, Radar, Rocket, Settings, Shield, Smile,
 } from 'lucide-react';
 import { adminPaths } from './paths';
 import { docLabel, footerColumns, pageGroups } from './siteStructure';
@@ -141,6 +141,7 @@ export default function AdminSidebar() {
     <nav aria-label={t.shell.nav} className="px-3 pb-6">
       <div className="pt-3">
         <NavItem item={{ label: t.nav.overview, to: adminPaths.overview(), icon: LayoutDashboard, end: true }} />
+        <NavItem item={{ label: t.nav.publish, to: adminPaths.publish(), icon: Rocket }} />
       </div>
 
       <SectionTitle>{t.nav.site}</SectionTitle>

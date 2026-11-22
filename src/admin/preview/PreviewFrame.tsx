@@ -14,6 +14,10 @@
  * editor lists as editable are outlined, and only paths the editor has a
  * field for. Runs inside the preview iframe (AdminPreviewRoute) or inline
  * (InlinePreviewFrame).
+ *
+ * Diff mode (CMS P5, the publish screen): the host lists the changed fields
+ * (`changed`), and the frame tints their nodes, the old side in rose and the
+ * new side in green, with nothing clickable (`editable: []`).
  */
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CMS_PATH_ATTR, parseCmsPath } from '../../lib/cms/cmsAttrs';
@@ -134,6 +138,49 @@ function withBoxes<T extends { boxes: Box[] }>(s: T, boxes: Box[]): T {
 /** The page re-renders only when what it shows changes (not on every hover). */
 const MemoPreviewDocument = memo(PreviewDocument);
 
+/** Elements the diff tints carry data-cms-changed (frame only). */
+export const CHANGED_ATTR = 'data-cms-changed';
+
+/**
+ * The nodes of the changed targets: each target's own nodes and the nodes
+ * inside it (a list that changed length is one target), else its nearest
+ * marked container. Outermost nodes only, so a tinted block is one box.
+ */
+export function tintElements(root: ParentNode, targets: readonly string[]): Element[] {
+  if (targets.length === 0) return [];
+  const all = [...root.querySelectorAll(`[${CMS_PATH_ATTR}]`)];
+  const hit = new Set<Element>();
+  for (const target of targets) {
+    const own = all.filter((el) => {
+      const v = el.getAttribute(CMS_PATH_ATTR)!;
+      return v === target || v.startsWith(`${target}.`);
+    });
+    for (const el of own.length ? own : elementsFor(root, target)) hit.add(el);
+  }
+  return [...hit].filter((el) => ![...hit].some((other) => other !== el && other.contains(el)));
+}
+
+function markChanged(scope: ParentNode, targets: readonly string[]): Element[] {
+  for (const el of scope.querySelectorAll(`[${CHANGED_ATTR}]`)) el.removeAttribute(CHANGED_ATTR);
+  const els = tintElements(scope, targets);
+  for (const el of els) el.setAttribute(CHANGED_ATTR, '');
+  return els;
+}
+
+const TINT = {
+  live: { border: '#ff5c7a', fill: 'rgb(255 92 122 / 0.16)' },
+  draft: { border: '#35d29a', fill: 'rgb(53 210 154 / 0.16)' },
+} as const;
+
+function tintStyle(b: Box, tone: 'live' | 'draft') {
+  return {
+    position: 'absolute', top: b.top - 2, left: b.left - 2, width: b.width + 4, height: b.height + 4,
+    border: `2px dashed ${TINT[tone].border}`, borderRadius: 5, background: TINT[tone].fill,
+  } as const;
+}
+
+const NO_TARGETS: string[] = [];
+
 /** The selected field's elements carry data-cms-selected (frame only: the outlines and tests read it). */
 export const SELECTED_ATTR = 'data-cms-selected';
 
@@ -186,6 +233,7 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
   const [state, setState] = useState<State | null>(null);
   const [hover, setHover] = useState<{ target: string; box: Box; label: string } | null>(null);
   const [selected, setSelected] = useState<{ target: string; boxes: Box[] } | null>(null);
+  const [tints, setTints] = useState<Box[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const hoverEl = useRef<Element | null>(null);
   const latest = useRef<State | null>(null);
@@ -198,6 +246,12 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
   const path = shown?.path;
   const labels = state?.labels ?? NO_LABELS;
   const editable = state?.editable ?? defaultEditable(docId);
+  const changed = state?.changed ?? NO_TARGETS;
+  const changedKey = changed.join('|');
+  const changedRef = useRef(changed);
+  changedRef.current = changed;
+  const tone = state?.tone ?? 'draft';
+  const shownDrafts = state?.overlays ?? drafts;
 
   const isEditable = useCallback((target: string | null): target is string => {
     if (!target) return false;
@@ -239,6 +293,14 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
       autoTag(scope, pageDoc, locale, slice, accept);
       port.post({ type: 'tagged', count: scope.querySelectorAll(`[${CMS_PATH_ATTR}]`).length });
       setSelected((s) => (s ? withBoxes(s, markSelected(scope, s.target).filter(visible).map((el) => boxOf(el, root))) : s));
+      if (changedRef.current.length || scope.querySelector(`[${CHANGED_ATTR}]`)) {
+        const tinted = markChanged(scope, changedRef.current).filter(visible);
+        setTints((prev) => {
+          const next = tinted.map((el) => boxOf(el, root));
+          return next.length === prev.length && next.every((b, i) => sameBox(b, prev[i])) ? prev : next;
+        });
+        port.post({ type: 'tinted', count: tinted.length });
+      }
       observer.observe(scope, { childList: true, subtree: true, characterData: true });
     };
     const schedule = () => {
@@ -254,7 +316,7 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
         el.removeAttribute(CMS_PATH_ATTR);
       }
     };
-  }, [slice, locale, pageDoc, docId, port, labels]);
+  }, [slice, locale, pageDoc, docId, port, labels, changedKey]);
 
   // Pointer: outline on hover, focus the field on click.
   useEffect(() => {
@@ -334,6 +396,8 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
         setHover((h) => (h ? { ...h, box: boxOf(el, root) } : h));
       }
       setSelected((s) => (s ? withBoxes(s, elementsFor(root.ownerDocument, s.target).filter(visible).map((el) => boxOf(el, root))) : s));
+      const tinted = [...root.ownerDocument.querySelectorAll(`[${CHANGED_ATTR}]`)].filter(visible);
+      setTints((prev) => (prev.length || tinted.length ? tinted.map((el) => boxOf(el, root)) : prev));
     };
     w.addEventListener('resize', relayout);
     w.addEventListener('scroll', relayout, true);
@@ -347,8 +411,11 @@ export function PreviewFrame({ port, docId, initial, live, drafts }: {
 
   return (
     <div ref={rootRef} className="relative" data-testid="preview-frame">
-      <MemoPreviewDocument docId={docId} doc={doc} locale={locale} path={path} drafts={drafts} />
+      <MemoPreviewDocument docId={docId} doc={doc} locale={locale} path={path} drafts={shownDrafts} />
       <div aria-hidden style={LAYER} data-testid="preview-outlines">
+        {tints.map((b, i) => (
+          <div key={`t${i}`} style={tintStyle(b, tone)} data-testid="preview-tint" data-tone={tone} />
+        ))}
         {selected?.boxes.map((b, i) => (
           <div key={i} style={outline(b, 'selected')} data-testid="preview-selected" />
         ))}

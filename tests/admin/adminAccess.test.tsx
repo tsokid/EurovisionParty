@@ -29,6 +29,10 @@ const ADMIN_URLS = [
   '/admin/pages',
   '/admin/pages/faq',
   '/admin/pages/archive-2004',
+  '/admin/pages/faq/publish',
+  '/admin/header/publish',
+  '/admin/publish',
+  '/admin/publish/runs/12',
   '/admin/contests',
   '/admin/contests/2027',
   '/admin/contests/2027/entries',
@@ -66,7 +70,7 @@ describe('/admin/* access', () => {
   it.each(ADMIN_URLS)('%s renders the noindex meta (and the sign-in when signed out)', async (url) => {
     const router = createMemoryRouter(routes, { initialEntries: [url] });
     render(<RouterProvider router={router} />);
-    expect(await screen.findByText('Πρόσβαση διαχείρισης', {}, { timeout: 5000 })).toBeTruthy();
+    expect(await screen.findByText('Πρόσβαση διαχείρισης', {}, { timeout: 15_000 })).toBeTruthy();
     // Set in an effect, which may land just after the first paint under load.
     await waitFor(() => {
       const metas = [...document.head.querySelectorAll('meta[name="robots"]')] as HTMLMetaElement[];
@@ -74,7 +78,7 @@ describe('/admin/* access', () => {
     });
     // The URL is kept, so signing in lands on the deep-linked screen.
     expect(router.state.location.pathname).toBe(url);
-  });
+  }, 20_000); // the first URL loads the admin chunk cold
 
   it('moving between admin URLs keeps the admin mounted (no second auth check, typed input kept)', async () => {
     const router = createMemoryRouter(routes, { initialEntries: ['/admin/pages/faq'] });

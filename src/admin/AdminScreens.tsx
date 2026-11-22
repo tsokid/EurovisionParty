@@ -28,7 +28,7 @@ import FooterEditor, { COLUMN_TITLE } from './modules/site/FooterEditor';
 import SettingsEditor from './modules/site/SettingsEditor';
 import AvatarsLibrary from './modules/avatars/AvatarsLibrary';
 import { FOOTER_COLUMN_KEYS, type FooterColumnKey } from './paths';
-import { footerColumn } from './siteStructure';
+import { footerColumn, sitePagePath } from './siteStructure';
 import { t } from './i18n';
 import { DocHistory } from './cms/DocHistory';
 import { CMS_DOC_TYPES, docTypeFor } from '../../supabase/functions/_shared/cms/registry';
@@ -38,6 +38,7 @@ import { publishedSiteDoc } from '../lib/cms/siteChrome';
 import type { SiteWideDocId } from '../../supabase/functions/_shared/cms/siteLinks';
 import type { DocValue } from './modules/pages/form/SchemaForm';
 import { useCallback } from 'react';
+import { DocPublishScreen, PublishQueueScreen, RunScreen } from './publish/PublishScreens';
 
 const LINK = 'text-stage-pink-2 hover:underline';
 const NOT_FOUND: Crumb[] = [{ label: t.nav.notFound }];
@@ -77,7 +78,7 @@ function Overview() {
   return (
     <div className="max-w-4xl space-y-5">
       <ScreenTitle title={t.overview.title} />
-      <PublishBar publisher={publisher} />
+      <PublishBar publisher={publisher} reviewTo={adminPaths.publish()} />
       <p className="t-meta max-w-2xl">{PUBLISH_PAGES_TEXT}</p>
       <ul className="grid gap-3 sm:grid-cols-2">
         {START.map((s) => (
@@ -154,9 +155,25 @@ function PageDocHistory({ docId, label, rev }: { docId: string; label: string; r
 }
 
 const SITE_CRUMB: Crumb = { label: t.nav.site };
+const PUBLISH_CRUMB: Crumb = { label: t.nav.publish };
+
+/** …/publish of a site-wide doc: the diff and the Vercel preview flow. */
+function SiteDocPublish({ docId, crumbs }: { docId: SiteWideDocId; crumbs: Crumb[] }) {
+  useAdminCrumbs(crumbs);
+  useAdminLive('/');
+  return <DocPublishScreen docId={docId} label={t.docs[docId]} />;
+}
 
 function HeaderScreen({ splat }: ScreenProps) {
-  const hist = historyOf(splatSegments(splat));
+  const parts = splatSegments(splat);
+  if (parts.length === 1 && parts[0] === 'publish') {
+    return <SiteDocPublish docId="site-header" crumbs={[SITE_CRUMB, { label: t.nav.header, to: adminPaths.header() }, PUBLISH_CRUMB]} />;
+  }
+  return <HeaderMain parts={parts} />;
+}
+
+function HeaderMain({ parts }: { parts: string[] }) {
+  const hist = historyOf(parts);
   const crumbs: Crumb[] = hist == null
     ? [SITE_CRUMB, { label: t.nav.header }]
     : [SITE_CRUMB, { label: t.nav.header, to: adminPaths.header() }, HISTORY_CRUMB];
@@ -170,6 +187,9 @@ function HeaderScreen({ splat }: ScreenProps) {
 
 function FooterScreen({ splat }: ScreenProps) {
   const parts = splatSegments(splat);
+  if (parts.length === 1 && parts[0] === 'publish') {
+    return <SiteDocPublish docId="site-footer" crumbs={[SITE_CRUMB, { label: t.nav.footer, to: adminPaths.footer() }, PUBLISH_CRUMB]} />;
+  }
   if (parts[0] === 'history') return <FooterHistoryScreen parts={parts} />;
   return <FooterColumnScreen parts={parts} />;
 }
@@ -201,18 +221,36 @@ function PagesScreen({ splat }: ScreenProps) {
   const known = docId === null || SITE_PAGES.some((p) => p.docId === docId) || isEditorialDocId(docId);
   const site = SITE_PAGES.find((p) => p.docId === docId);
   const label = docId ? site?.label ?? editorialTitle(docId) : null;
-  const hist = historyOf(parts.slice(1));
+  const publishing = docId !== null && parts.length === 2 && parts[1] === 'publish';
+  const hist = publishing ? null : historyOf(parts.slice(1));
   const valid = known && hist !== undefined;
   const inHistory = valid && docId !== null && hist != null;
   const crumbs: Crumb[] = !docId
     ? [SITE_CRUMB, { label: t.nav.pages }]
-    : inHistory
-      ? [SITE_CRUMB, { label: t.nav.pages, to: adminPaths.pages() }, { label: label ?? docId, to: adminPaths.pages(docId) }, HISTORY_CRUMB]
+    : inHistory || publishing
+      ? [SITE_CRUMB, { label: t.nav.pages, to: adminPaths.pages() }, { label: label ?? docId, to: adminPaths.pages(docId) }, publishing ? PUBLISH_CRUMB : HISTORY_CRUMB]
       : [SITE_CRUMB, { label: t.nav.pages, to: adminPaths.pages() }, { label: label ?? docId }];
   useAdminCrumbs(valid ? crumbs : NOT_FOUND);
   if (!valid) return <NotFound />;
+  if (publishing) return <PagePublish key={docId} docId={docId!} label={label ?? docId!} />;
   if (inHistory) return <PageDocHistory key={docId} docId={docId!} label={label ?? docId!} rev={hist!} />;
   return <Pages docId={docId} onOpen={(next) => navigate(adminPaths.pages(next))} />;
+}
+
+function PagePublish({ docId, label }: { docId: string; label: string }) {
+  useAdminLive(sitePagePath(docId));
+  return <DocPublishScreen docId={docId} label={label} />;
+}
+
+// ── Publish ──────────────────────────────────────────────────────────
+function PublishScreen({ splat }: ScreenProps) {
+  const parts = splatSegments(splat);
+  const runId = parts[0] === 'runs' && parts.length === 2 && /^\d+$/.test(parts[1]) ? Number(parts[1]) : null;
+  const valid = parts.length === 0 || runId !== null;
+  useAdminCrumbs(!valid ? NOT_FOUND : runId === null ? [PUBLISH_CRUMB] : [{ label: t.nav.publish, to: adminPaths.publish() }, { label: t.nav.run(runId) }]);
+  if (!valid) return <NotFound />;
+  if (runId !== null) return <RunScreen key={runId} runId={runId} />;
+  return <PublishQueueScreen />;
 }
 
 // ── Contests ─────────────────────────────────────────────────────────
@@ -290,7 +328,15 @@ function MediaScreen() {
 }
 
 function SettingsScreen({ splat }: ScreenProps) {
-  const hist = historyOf(splatSegments(splat));
+  const parts = splatSegments(splat);
+  if (parts.length === 1 && parts[0] === 'publish') {
+    return <SiteDocPublish docId="site-settings" crumbs={[{ label: t.nav.settings }, { label: t.nav.siteSettings, to: adminPaths.settings() }, PUBLISH_CRUMB]} />;
+  }
+  return <SettingsMain parts={parts} />;
+}
+
+function SettingsMain({ parts }: { parts: string[] }) {
+  const hist = historyOf(parts);
   const crumbs: Crumb[] = hist == null
     ? [{ label: t.nav.settings }, { label: t.nav.siteSettings }]
     : [{ label: t.nav.settings }, { label: t.nav.siteSettings, to: adminPaths.settings() }, HISTORY_CRUMB];
@@ -321,6 +367,7 @@ const SCREENS: Array<{ pattern: string; Screen: ComponentType<ScreenProps> }> = 
   { pattern: '/admin/header/*', Screen: HeaderScreen },
   { pattern: '/admin/footer/*', Screen: FooterScreen },
   { pattern: '/admin/pages/*', Screen: PagesScreen },
+  { pattern: '/admin/publish/*', Screen: PublishScreen },
   { pattern: '/admin/contests/*', Screen: ContestsScreen },
   { pattern: '/admin/game/monitor', Screen: MonitorScreen },
   { pattern: '/admin/game/parser/*', Screen: ParserScreen },

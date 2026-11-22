@@ -20,7 +20,13 @@
 //
 // usePublisher holds that state for the Contests module, so its PublishBar
 // and the auto-publish after Finalize / Archive / Un-archive share one
-// "publishing" flag and one last outcome.
+// "publishing" flag and one last outcome. It also follows the last run's
+// deploy (publish-status) while it builds.
+//
+// Per-doc publish (CMS P5): invokeScopedPublish ships named docs (doc_ids),
+// a site-wide preview (target 'preview') or a promote. It never queues: with
+// a run in flight it answers busy at once, since a later run of different
+// docs must not be merged into this one.
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
@@ -42,6 +48,8 @@ export type ContentWarning = {
 
 export type PublishOutcome = {
   status: 'ok' | 'noop' | 'error' | 'busy';
+  /** The publish_runs row (null when busy). */
+  run_id?: number | null;
   sha?: string | null;
   files_changed?: number;
   warning?: string;
@@ -57,6 +65,8 @@ export type UnpublishedSummary = {
   since: string | null;
 };
 
+export type DeployState = 'building' | 'ready' | 'error' | 'reverted' | 'revert_blocked';
+
 export type PublishRun = {
   id: number;
   status: 'running' | 'ok' | 'noop' | 'error';
@@ -64,7 +74,38 @@ export type PublishRun = {
   finished_at: string | null;
   files_changed?: number | null;
   error: string | null;
+  started_at?: string | null;
+  /** Whether the run shipped CMS drafts (074). */
+  cms?: boolean;
+  /** 086: the docs the run ships (null: every draft and the contests). */
+  doc_ids?: string[] | null;
+  target?: 'main' | 'preview';
+  promoted_from?: number | null;
+  /** The versions shipped: [{doc_id, updated_at}] (086). */
+  shipped?: Array<{ doc_id: string; updated_at: string | null }> | null;
+  deploy_state?: DeployState | null;
+  deploy_url?: string | null;
+  deploy_note?: string | null;
+  reverted_sha?: string | null;
 };
+
+/** Whether publish-status should still look at this run's deploy. */
+export function deployPending(run: Pick<PublishRun, 'status' | 'commit_sha' | 'deploy_state' | 'target'> | null | undefined): boolean {
+  if (!run || run.status !== 'ok' || !run.commit_sha) return false;
+  return run.deploy_state == null || run.deploy_state === 'building' || (run.deploy_state === 'error' && run.target !== 'preview');
+}
+
+/** publish-status for these runs: their deploy state as recorded now. Throws on a failed call. */
+export async function checkDeploys(runIds: number[]): Promise<PublishRun[]> {
+  const { data, error } = await supabase.functions.invoke('publish-status', { body: { run_ids: runIds } });
+  if (error) throw error;
+  return ((data as { runs?: PublishRun[] } | null)?.runs ?? []).map((r) => ({ ...r, id: Number(r.id) }));
+}
+
+/** How often a building deploy is read again. */
+export const DEPLOY_POLL_MS = 8000;
+/** A deploy is followed for at most this long after the commit. */
+export const DEPLOY_WATCH_MS = 20 * 60_000;
 
 const STATUSES = ['ok', 'noop', 'error', 'busy'];
 
@@ -85,6 +126,11 @@ export type PublishRequest = {
   /** Ship the CMS page drafts too (default true). false: contests only (lifecycle auto-publish). */
   cms?: boolean;
 };
+
+/** A per-doc publish (CMS P5): these docs only; a site-wide preview; or the promote of a ready preview. */
+export type ScopedPublishRequest =
+  | { docIds: string[]; target?: 'main' | 'preview' }
+  | { promote: number };
 
 /** True while a publish of this page is running (a new call would queue the trailing run). */
 export function isPublishInFlight(): boolean {
@@ -133,6 +179,25 @@ export function invokePublish({ cms = true }: PublishRequest = {}): Promise<Publ
   return trailing.promise;
 }
 
+/**
+ * Publishes the named docs, a site-wide preview or a promote. Never queues
+ * (busy while any run of this page is in flight) and never rejects.
+ */
+export function invokeScopedPublish(request: ScopedPublishRequest): Promise<PublishOutcome> {
+  if (current) return Promise.resolve({ status: 'busy', error: BUSY_TEXT });
+  const body = 'promote' in request
+    ? { cms: true, promote: request.promote }
+    : { cms: true, doc_ids: request.docIds, target: request.target ?? 'main' };
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<PublishOutcome>((resolve) => {
+    timer = setTimeout(() => resolve({ status: 'error', error: TIMEOUT_TEXT }), PUBLISH_TIMEOUT_MS);
+  });
+  const run = Promise.race([callPublishBody(body), timeout]).finally(() => clearTimeout(timer));
+  current = run;
+  void run.then(() => { if (current === run) current = null; });
+  return run;
+}
+
 /** Test-only: forget any in-flight or trailing run. */
 export function __resetPublishGuardForTests(): void {
   current = null;
@@ -148,9 +213,13 @@ function safeError(e: unknown): string {
   }
 }
 
-async function callPublish(cms: boolean): Promise<PublishOutcome> {
+function callPublish(cms: boolean): Promise<PublishOutcome> {
+  return callPublishBody({ cms });
+}
+
+async function callPublishBody(body: Record<string, unknown>): Promise<PublishOutcome> {
   try {
-    const { data, error } = await supabase.functions.invoke('publish-content', { body: { cms } });
+    const { data, error } = await supabase.functions.invoke('publish-content', { body });
     if (error) {
       // Non-2xx (409 busy, 500 error): the function's JSON body is on error.context.
       const ctx = (error as { context?: { json?: () => Promise<unknown> } }).context;
@@ -247,6 +316,24 @@ export function usePublisher(): Publisher {
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  // The last run's deploy, while it builds (publish-status; the auto-revert runs there).
+  const watchId = deployPending(lastRun) && lastRun?.finished_at && Date.now() - Date.parse(lastRun.finished_at) < DEPLOY_WATCH_MS ? lastRun.id : null;
+  useEffect(() => {
+    if (watchId === null) return;
+    let off = false;
+    const tick = async () => {
+      try {
+        const [next] = await checkDeploys([watchId]);
+        if (!off && next) setLastRun((r) => (r && r.id === next.id ? { ...r, ...next } : r));
+      } catch {
+        /* publish-status not deployed or offline: the run line keeps its last state */
+      }
+    };
+    void tick();
+    const timer = setInterval(tick, DEPLOY_POLL_MS);
+    return () => { off = true; clearInterval(timer); };
+  }, [watchId]);
 
   // A call during a run waits for the trailing run (invokePublish). Only a
   // call that starts a run clears the outcome line; a queued one leaves the

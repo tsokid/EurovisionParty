@@ -51,6 +51,7 @@ export const ADMIN_ROUTE_PATTERNS = [
   '/admin/header/*',
   '/admin/footer/*',
   '/admin/pages/*',
+  '/admin/publish/*',
   '/admin/contests/*',
   '/admin/game/*',
   '/admin/media/*',
