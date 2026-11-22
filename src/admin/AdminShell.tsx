@@ -6,6 +6,7 @@
 // One unsaved-edits guard covers the whole admin (unsavedGuard.ts): route
 // changes ask through useRouteLeaveGuard, sign-out through confirmLeave, and
 // closing the tab through beforeunload.
+import { ToastHost } from './ui/kit';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ExternalLink, LogOut, Menu, X } from 'lucide-react';
@@ -205,7 +206,9 @@ export default function AdminShell({ auth }: Props) {
                 <div className="hidden lg:flex max-w-72">{user}</div>
               </header>
               <main className="flex-1 min-w-0 p-4 md:p-6">
-                <AdminRoutes />
+                <ToastHost>
+                  <AdminRoutes />
+                </ToastHost>
               </main>
             </div>
           </div>

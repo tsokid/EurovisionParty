@@ -1,11 +1,14 @@
 // Where each CMS page appears on the public site, for the admin's Site tree
-// (spec §2 "Derived, not stored", §3). Until P2 makes the header and footer
-// CMS documents, this mirrors the links coded in SiteHeader.tsx and
-// SiteFooter.tsx; tests/admin/siteStructure.test.ts fails when they drift.
+// (spec §2 "Derived, not stored", §3). Read from the published header and
+// footer docs (content/pages/site-header.json, site-footer.json), so moving
+// a link in the CMS moves the page in the tree. Hidden links do not count:
+// a page only reachable through a hidden link is "Not in any menu".
 // Only CMS page docs are listed: the live hub, past contests and countries
 // are data pages (their editorials sit in the Pages list).
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
+import type { FooterColumnId, LinkTarget, NavLink } from '../../supabase/functions/_shared/cms/siteLinks';
 import { PAGE_REGISTRY } from '../lib/seo/registry';
+import { publishedSiteDoc } from '../lib/cms/siteChrome';
 import type { FooterColumnKey } from './paths';
 
 export interface PageGroup {
@@ -15,35 +18,59 @@ export interface PageGroup {
   docIds: string[];
 }
 
-/** Header: the logo (home), Eurovision night, and the "How to play" menu. */
-export const HEADER_DOC_IDS = [
-  'home',
-  'eurovision-night',
-  'eurovision-trivia',
-  'eurovision-predictions',
-  'rules',
-  'scoring',
-  'faq',
-] as const;
+/** Admin URL segment ↔ footer doc column id. */
+export const FOOTER_COLUMN_ID: Record<FooterColumnKey, FooterColumnId> = {
+  about: 'about',
+  'how-to-play': 'howToPlay',
+  eurovision: 'eurovision',
+  help: 'help',
+};
 
-export const FOOTER_COLUMNS: ReadonlyArray<{ key: FooterColumnKey; title: string; docIds: readonly string[] }> = [
-  { key: 'about', title: 'About', docIds: ['about', 'eurovision-games', 'cookies'] },
-  {
-    key: 'how-to-play',
-    title: 'How to play',
-    docIds: ['how-to-play', 'eurovision-trivia', 'eurovision-duels', 'eurovision-predictions', 'dashboard', 'rules'],
-  },
-  { key: 'eurovision', title: 'Eurovision', docIds: ['winners'] },
-  { key: 'help', title: 'Help', docIds: ['faq', 'scoring', 'privacy', 'terms'] },
-];
+const columnKey = (id: FooterColumnId) =>
+  (Object.keys(FOOTER_COLUMN_ID) as FooterColumnKey[]).find((k) => FOOTER_COLUMN_ID[k] === id)!;
 
-export function footerColumn(key: string | undefined) {
-  return FOOTER_COLUMNS.find((c) => c.key === key) ?? null;
+/** The page ids of visible page links, in order, each once. */
+export function linkedPageIds(links: ReadonlyArray<{ target?: LinkTarget; hidden?: boolean; children?: NavLink[] }>): string[] {
+  const out: string[] = [];
+  const add = (t: LinkTarget | undefined) => {
+    if (t?.kind === 'page' && !out.includes(t.pageId)) out.push(t.pageId);
+  };
+  for (const l of links) {
+    if (l.hidden) continue;
+    add(l.target);
+    for (const c of l.children ?? []) if (!c.hidden) add(c.target);
+  }
+  return out;
+}
+
+/** Header: the logo (home), then the pages of its links and menus. */
+export function headerDocIds(): string[] {
+  const ids = linkedPageIds(publishedSiteDoc('site-header').en.items as Parameters<typeof linkedPageIds>[0]);
+  return ['home', ...ids.filter((id) => id !== 'home')];
+}
+
+export interface FooterColumnInfo {
+  key: FooterColumnKey;
+  title: string;
+  docIds: string[];
+}
+
+/** The footer's four columns: admin key, heading (English) and the pages they link to. */
+export function footerColumns(): FooterColumnInfo[] {
+  return publishedSiteDoc('site-footer').en.columns.map((c) => ({
+    key: columnKey(c.id as FooterColumnId),
+    title: c.heading,
+    docIds: linkedPageIds(c.links as NavLink[]),
+  }));
+}
+
+export function footerColumn(key: string | undefined): FooterColumnInfo | null {
+  return footerColumns().find((c) => c.key === key) ?? null;
 }
 
 /** Registry pages linked from neither the header nor the footer (today: /eurovision-party). */
 export function pagesInNoMenu(): string[] {
-  const linked = new Set<string>([...HEADER_DOC_IDS, ...FOOTER_COLUMNS.flatMap((c) => c.docIds)]);
+  const linked = new Set<string>([...headerDocIds(), ...footerColumns().flatMap((c) => c.docIds)]);
   return PAGE_REGISTRY.map((p) => p.id).filter((id) => !linked.has(id));
 }
 
@@ -57,8 +84,8 @@ function systemDocs(): string[] {
 
 export function pageGroups(): PageGroup[] {
   return [
-    { key: 'header', title: 'Header', docIds: [...HEADER_DOC_IDS] },
-    ...FOOTER_COLUMNS.map((c) => ({ key: `footer:${c.key}`, title: `Footer · ${c.title}`, docIds: [...c.docIds] })),
+    { key: 'header', title: 'Header', docIds: headerDocIds() },
+    ...footerColumns().map((c) => ({ key: `footer:${c.key}`, title: `Footer · ${c.title}`, docIds: c.docIds })),
     { key: 'none', title: 'Not in any menu', docIds: pagesInNoMenu() },
     { key: 'system', title: 'System', docIds: systemDocs() },
   ].filter((g) => g.docIds.length > 0);

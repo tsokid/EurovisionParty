@@ -62,6 +62,13 @@ vi.mock('../../src/admin/modules/PhaseMonitor', () => ({ default: () => <p>Monit
 vi.mock('../../src/admin/modules/SuperAdmins', () => ({ default: () => <p>Super admins module</p> }));
 vi.mock('../../src/admin/modules/contests/PublishBar', () => ({ PublishBar: () => <p>Publish bar</p> }));
 vi.mock('../../src/admin/modules/contests/publish', () => ({ usePublisher: () => ({}) }));
+vi.mock('../../src/admin/modules/site/HeaderEditor', () => ({ default: () => <p>Header editor</p> }));
+vi.mock('../../src/admin/modules/site/FooterEditor', () => ({
+  default: (p: { column: string | null }) => <p>Footer editor: {String(p.column)}</p>,
+  COLUMN_TITLE: { about: 'Σχετικά', 'how-to-play': 'Πώς παίζεται', eurovision: 'Eurovision', help: 'Βοήθεια' },
+}));
+vi.mock('../../src/admin/modules/site/SettingsEditor', () => ({ default: () => <p>Settings editor</p> }));
+vi.mock('../../src/admin/modules/avatars/AvatarsLibrary', () => ({ default: () => <p>Avatars library</p> }));
 
 
 const auth = { email: 'a@b.c', logout: vi.fn(), status: 'authenticated' } as unknown as AdminAuth;
@@ -88,9 +95,9 @@ afterEach(() => {
 describe('admin URLs', () => {
   it.each([
     ['/admin', 'Publish bar', ['Overview']],
-    ['/admin/header', 'Header', ['Site', 'Header']],
-    ['/admin/footer', 'Footer', ['Site', 'Footer']],
-    ['/admin/footer/help', 'Footer · Help', ['Site', 'Footer', 'Help']],
+    ['/admin/header', 'Header editor', ['Site', 'Header']],
+    ['/admin/footer', 'Footer editor: null', ['Site', 'Footer']],
+    ['/admin/footer/help', 'Footer editor: help', ['Site', 'Footer', 'Help']],
     ['/admin/pages', 'Pages module: null', ['Site', 'Pages']],
     ['/admin/pages/faq', 'Pages module: faq', ['Site', 'Pages', 'FAQ']],
     ['/admin/pages/archive-2004', 'Pages module: archive-2004', ['Site', 'Pages', 'Contest year 2004']],
@@ -103,9 +110,9 @@ describe('admin URLs', () => {
     ['/admin/game/parser/2026', 'Parser module: 2026', ['Game', 'Parser & controls', '2026']],
     ['/admin/game/winners', 'Winners module: null', ['Game', 'Winners']],
     ['/admin/game/winners/room-1', 'Winners module: room-1', ['Game', 'Winners', 'Room']],
-    ['/admin/game/avatars', 'Avatars', ['Game', 'Avatars']],
+    ['/admin/game/avatars', 'Avatars library', ['Game', 'Avatars']],
     ['/admin/media', 'Media library', ['Media']],
-    ['/admin/settings', 'Site settings', ['Settings', 'Site settings']],
+    ['/admin/settings', 'Settings editor', ['Settings', 'Site settings']],
     ['/admin/system/admins', 'Super admins module', ['Settings', 'Super admins']],
   ])('%s renders its screen', async (path, text, trail) => {
     show(path);
@@ -122,11 +129,17 @@ describe('admin URLs', () => {
   );
 
   it('placeholders are honest: no buttons, and they name their phase', async () => {
-    show('/admin/header');
-    expect(await screen.findByText('Coming in P2')).toBeTruthy();
+    show('/admin/media');
+    expect(await screen.findByText('Coming in P6')).toBeTruthy();
     expect(within(screen.getByRole('main')).queryAllByRole('button')).toHaveLength(0);
-    // What the header links to today, each one opening its page editor.
-    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Rules' }).getAttribute('href')).toBe('/admin/pages/rules');
+  });
+
+  it('header, footer, settings and avatars are no longer marked as coming later', async () => {
+    show('/admin/header');
+    await screen.findByText('Header editor');
+    for (const name of ['Header', 'Footer', 'Avatars', 'Site settings']) {
+      expect(within(desktopNav()).getByRole('link', { name }).textContent).not.toMatch(/P2/);
+    }
   });
 
   it('nav links, module selections, back and forward all move the URL', async () => {

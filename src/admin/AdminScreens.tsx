@@ -23,7 +23,12 @@ import { editorialTitle } from './modules/pages/editorialPages';
 import { isEditorialDocId } from '../../supabase/functions/_shared/cms/pagesIndex';
 import { useAdminCrumbs, useAdminLive, type Crumb } from './adminMeta';
 import { adminPaths, parseContestRoute, parseYear, splatSegments } from './paths';
-import { FOOTER_COLUMNS, HEADER_DOC_IDS, docLabel, footerColumn } from './siteStructure';
+import HeaderEditor from './modules/site/HeaderEditor';
+import FooterEditor, { COLUMN_TITLE } from './modules/site/FooterEditor';
+import SettingsEditor from './modules/site/SettingsEditor';
+import AvatarsLibrary from './modules/avatars/AvatarsLibrary';
+import { FOOTER_COLUMN_KEYS, type FooterColumnKey } from './paths';
+import { footerColumn } from './siteStructure';
 
 const LINK = 'text-stage-pink-2 hover:underline';
 const NOT_FOUND: Crumb[] = [{ label: 'Not found' }];
@@ -34,19 +39,6 @@ function ScreenTitle({ title, lede }: { title: string; lede?: ReactNode }) {
       <h1 className="text-2xl font-bold text-stage-text m-0">{title}</h1>
       {lede && <p className="t-small mt-1.5 max-w-2xl">{lede}</p>}
     </header>
-  );
-}
-
-/** Links to the page editors of `docIds`. */
-function PageLinks({ docIds }: { docIds: readonly string[] }) {
-  return (
-    <ul className="space-y-1.5">
-      {docIds.map((id) => (
-        <li key={id}>
-          <Link to={adminPaths.pages(id)} className={LINK}>{docLabel(id)}</Link>
-        </li>
-      ))}
-    </ul>
   );
 }
 
@@ -96,54 +88,23 @@ function Overview() {
 
 // ── Site ─────────────────────────────────────────────────────────────
 function HeaderScreen() {
-  return (
-    <Later title="Header" phase="P2" crumbs={[{ label: 'Site' }, { label: 'Header' }]}>
-      <p>
-        The header's links and labels become editable here in P2. Until then they are part of the site code.
-      </p>
-      <p className="text-stage-text-3">Pages the header links to today:</p>
-      <PageLinks docIds={HEADER_DOC_IDS} />
-    </Later>
-  );
+  useAdminCrumbs([{ label: 'Site' }, { label: 'Header' }]);
+  useAdminLive('/');
+  return <HeaderEditor />;
 }
 
 type ScreenProps = { splat?: string };
 
 function FooterScreen({ splat }: ScreenProps) {
   const [key, ...rest] = splatSegments(splat);
-  const column = key === undefined ? null : footerColumn(key);
-  if (key !== undefined && (!column || rest.length > 0)) return <NotFound />;
-  const crumbs: Crumb[] = column
-    ? [{ label: 'Site' }, { label: 'Footer', to: adminPaths.footer() }, { label: column.title }]
-    : [{ label: 'Site' }, { label: 'Footer' }];
-  return (
-    <Later title={column ? `Footer · ${column.title}` : 'Footer'} phase="P2" crumbs={crumbs}>
-      <p>
-        {column
-          ? 'This column\'s heading and links become editable here in P2. Until then they are part of the site code.'
-          : 'The footer\'s four columns, tagline and disclaimer become editable here in P2. Until then they are part of the site code.'}
-      </p>
-      {column ? (
-        <>
-          <p className="text-stage-text-3">Pages in this column today:</p>
-          <PageLinks docIds={column.docIds} />
-          {column.key === 'eurovision' && (
-            <p className="text-stage-text-3">
-              It also links to the live hub, past contests and countries, which come from <Link to={adminPaths.contests()} className={LINK}>Contests</Link>.
-            </p>
-          )}
-        </>
-      ) : (
-        <ul className="space-y-1.5">
-          {FOOTER_COLUMNS.map((c) => (
-            <li key={c.key}>
-              <Link to={adminPaths.footer(c.key)} className={LINK}>{c.title}</Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Later>
-  );
+  const column = key === undefined ? null : (FOOTER_COLUMN_KEYS as readonly string[]).includes(key) ? (key as FooterColumnKey) : undefined;
+  const valid = column !== undefined && rest.length === 0;
+  useAdminCrumbs(!valid ? NOT_FOUND : column
+    ? [{ label: 'Site' }, { label: 'Footer', to: adminPaths.footer() }, { label: footerColumn(column)?.title ?? COLUMN_TITLE[column] }]
+    : [{ label: 'Site' }, { label: 'Footer' }]);
+  useAdminLive(valid ? '/' : null);
+  if (!valid) return <NotFound />;
+  return <FooterEditor key={column ?? 'all'} column={column} />;
 }
 
 function PagesScreen({ splat }: ScreenProps) {
@@ -221,14 +182,8 @@ function WinnersScreen({ splat }: ScreenProps) {
 }
 
 function AvatarsScreen() {
-  return (
-    <Later title="Avatars" phase="P2" crumbs={[{ label: 'Game' }, { label: 'Avatars' }]}>
-      <p>
-        Add, order, publish and remove the avatars players pick from, here in P2. Until then the avatars ship with
-        the site code.
-      </p>
-    </Later>
-  );
+  useAdminCrumbs([{ label: 'Game' }, { label: 'Avatars' }]);
+  return <AvatarsLibrary />;
 }
 
 // ── Media, settings ──────────────────────────────────────────────────
@@ -246,17 +201,8 @@ function MediaScreen() {
 }
 
 function SettingsScreen() {
-  return (
-    <Later title="Site settings" phase="P2" crumbs={[{ label: 'Settings' }, { label: 'Site settings' }]}>
-      <p>
-        The site name, default share image, contact email and social profiles become editable here in P2. Until then
-        they are part of the site code.
-      </p>
-      <p className="text-stage-text-3">
-        Who can sign in: <Link to={adminPaths.admins()} className={LINK}>Super admins</Link>.
-      </p>
-    </Later>
-  );
+  useAdminCrumbs([{ label: 'Settings' }, { label: 'Site settings' }]);
+  return <SettingsEditor />;
 }
 
 function AdminsScreen() {

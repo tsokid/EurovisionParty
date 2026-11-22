@@ -1,39 +1,33 @@
-// The admin's Site tree mirrors the links coded in SiteHeader/SiteFooter
-// until P2 makes them CMS documents; this fails when the two drift. Also the
-// admin URL helpers (paths.ts).
+// The admin's Site tree, read from the published header and footer docs
+// (content/pages/site-header.json, site-footer.json). Also the admin URL
+// helpers (paths.ts).
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { PAGE_REGISTRY } from '../../src/lib/seo/registry';
-import { FOOTER_COLUMNS, HEADER_DOC_IDS, pageGroups, pagesInNoMenu, sitePagePath } from '../../src/admin/siteStructure';
+import { footerColumns, headerDocIds, linkedPageIds, pageGroups, pagesInNoMenu, sitePagePath } from '../../src/admin/siteStructure';
 import { SITE_PAGES } from '../../src/admin/modules/pages/sitePages';
-import { adminPaths, parseContestRoute, screenKey } from '../../src/admin/paths';
-
-const source = (f: string) => readFileSync(resolve(process.cwd(), f), 'utf8');
-const bySlug = new Map(PAGE_REGISTRY.map((p) => [p.slugByLocale.en, p.id as string]));
-
-/** Registry pages a source links to: `to: '/x'`, `href: '/x'`, `to="/x"` (anchors dropped). */
-function linkedPages(text: string): string[] {
-  const out: string[] = [];
-  for (const m of text.matchAll(/\b(?:to|href)\s*[:=]\s*["'](\/[^"'#]*)/g)) {
-    const id = bySlug.get(m[1]);
-    if (id && !out.includes(id)) out.push(id);
-  }
-  return out;
-}
+import { adminPaths, FOOTER_COLUMN_KEYS, parseContestRoute, screenKey } from '../../src/admin/paths';
 
 describe('admin site structure', () => {
-  it('header pages match SiteHeader.tsx (the logo is home)', () => {
-    expect([...linkedPages(source('src/components/seo/SiteHeader.tsx'))].sort()).toEqual([...HEADER_DOC_IDS].sort());
+  it('header pages come from the header doc (the logo is home); /rules stays in the header', () => {
+    expect(headerDocIds()).toEqual(['home', 'eurovision-night', 'eurovision-trivia', 'eurovision-predictions', 'rules', 'scoring', 'faq']);
   });
 
-  it('footer columns match SiteFooter.tsx, column by column', () => {
-    const text = source('src/components/seo/SiteFooter.tsx');
-    const columns = text.split(/<Column\b/).slice(1);
-    expect(columns).toHaveLength(FOOTER_COLUMNS.length);
-    columns.forEach((col, i) => {
-      expect(linkedPages(col), FOOTER_COLUMNS[i].key).toEqual([...FOOTER_COLUMNS[i].docIds]);
-    });
+  it('footer columns come from the footer doc, in the Stage order', () => {
+    const cols = footerColumns();
+    expect(cols.map((c) => c.key)).toEqual([...FOOTER_COLUMN_KEYS]);
+    expect(cols.map((c) => c.docIds)).toEqual([
+      ['about', 'eurovision-games', 'cookies'],
+      ['how-to-play', 'eurovision-trivia', 'eurovision-duels', 'eurovision-predictions', 'dashboard', 'rules'],
+      ['winners'],
+      ['faq', 'scoring', 'privacy', 'terms'],
+    ]);
+  });
+
+  it('hidden links do not count as being in a menu', () => {
+    expect(linkedPageIds([
+      { target: { kind: 'page', pageId: 'faq' }, hidden: true },
+      { children: [{ label: 'x', target: { kind: 'page', pageId: 'rules' }, hidden: true }, { label: 'y', target: { kind: 'page', pageId: 'about' } }] },
+      { target: { kind: 'dynamic', key: 'hub' } },
+    ])).toEqual(['about']);
   });
 
   it('"Not in any menu" is /eurovision-party today', () => {

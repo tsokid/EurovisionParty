@@ -11,7 +11,7 @@ import {
   PanelBottom, PanelTop, Radar, Settings, Shield, Smile,
 } from 'lucide-react';
 import { adminPaths } from './paths';
-import { FOOTER_COLUMNS, docLabel, pageGroups } from './siteStructure';
+import { docLabel, footerColumns, pageGroups } from './siteStructure';
 
 type Icon = ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean }>;
 
@@ -36,7 +36,7 @@ const SECTIONS: Array<{ title: string; items: Item[] }> = [
       { label: 'Room phases', to: adminPaths.monitor(), icon: Activity },
       { label: 'Parser & controls', to: adminPaths.parser(), icon: Radar },
       { label: 'Winners', to: adminPaths.winners(), icon: Award },
-      { label: 'Avatars', to: adminPaths.avatars(), icon: Smile, later: 'P2' },
+      { label: 'Avatars', to: adminPaths.avatars(), icon: Smile },
     ],
   },
   {
@@ -46,7 +46,7 @@ const SECTIONS: Array<{ title: string; items: Item[] }> = [
   {
     title: 'Settings',
     items: [
-      { label: 'Site settings', to: adminPaths.settings(), icon: Settings, later: 'P2', end: true },
+      { label: 'Site settings', to: adminPaths.settings(), icon: Settings, end: true },
       { label: 'Super admins', to: adminPaths.admins(), icon: Shield },
     ],
   },
@@ -144,12 +144,12 @@ export default function AdminSidebar() {
 
       <SectionTitle>Site</SectionTitle>
       <ul className="space-y-0.5">
-        <li><NavItem item={{ label: 'Header', to: adminPaths.header(), icon: PanelTop, later: 'P2' }} /></li>
+        <li><NavItem item={{ label: 'Header', to: adminPaths.header(), icon: PanelTop }} /></li>
         <li>
-          <NavItem item={{ label: 'Footer', to: adminPaths.footer(), icon: PanelBottom, later: 'P2', end: true }} />
+          <NavItem item={{ label: 'Footer', to: adminPaths.footer(), icon: PanelBottom, end: true }} />
           {inFooter && (
             <ul className="ml-[18px] border-l border-stage-line pl-2 mt-0.5 space-y-0.5">
-              {FOOTER_COLUMNS.map((c) => (
+              {footerColumns().map((c) => (
                 <li key={c.key}>
                   <NavLink to={adminPaths.footer(c.key)} className={rowClass}>
                     <span className="truncate">{c.title}</span>
