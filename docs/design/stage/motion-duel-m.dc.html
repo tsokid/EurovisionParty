@@ -13,7 +13,9 @@
 <style>
 body{margin:0}
 .dl-av{display:block;border-radius:50%;overflow:hidden;flex:none}
-.dl-av svg{display:block;width:100%;height:100%}
+.dl-av{background:radial-gradient(circle at 50% 30%,#2C1A4A,#170B2B 72%)}
+.dl-av img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.42) translateY(9%)}
+.mo-vfx{position:absolute;left:0;top:0;width:100%;height:100%;display:block;pointer-events:none;mix-blend-mode:screen;z-index:5}
 .dl-chip{position:absolute;width:96px;height:26px;margin:-13px 0 0 -48px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:4px;font:700 12px/1 'Space Grotesk',sans-serif;white-space:nowrap;pointer-events:none;z-index:4}
 .gx-phone{position:relative;width:390px;overflow:hidden;border-radius:28px;border:1px solid rgba(255,255,255,.16);background:#0B0416;display:flex;flex-direction:column}
 .gx-bar{display:flex;align-items:center;gap:10px;height:60px;padding:0 12px 0 16px;background:#110721;border-bottom:1px solid rgba(255,255,255,.09);flex:none}
@@ -60,14 +62,14 @@ body{margin:0}
 <section class="dl-vs" aria-label="Lady Televote εναντίον Douze Points">
 <div class="dl-col" style="{{ colL }}">
 <div class="dl-glow" style="{{ glowStyle }}"></div>
-<span class="dl-av" style="{{ avL }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span>
+<span class="dl-av" style="{{ avL }}"><img src="{{ imgL }}" alt=""></span>
 <span style="font-weight: 700; font-size: 14px; margin-top: 8px; white-space: nowrap">Lady Televote</span>
 <span class="num" style="font-size: 52px; line-height: 1; margin-top: 6px; color: #FFC53D">{{ scoreL }}</span>
 <div class="dl-pill"><span class="dl-flash" style="{{ flashL }}"></span><span style="position: relative">Σύνολο</span><span class="num" style="position: relative; font-size: 22px; color: #F6F1FF">{{ totalL }}</span></div>
 </div>
 <div class="dl-badge"><span class="dl-ring" style="{{ ringStyle }}"></span><span class="num" style="{{ vsStyle }}">VS</span></div>
 <div class="dl-col" style="{{ colR }}">
-<span class="dl-av" style="{{ avR }}"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 41c0-8.5 5.8-13.5 13-13.5S33 32.5 33 41z" fill="currentColor"/><path d="M14.5 28.5 20 34l5.5-5.5" fill="none" stroke="#FFE08A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="18" r="7" fill="#F3E6FF"/><path d="M12.6 18.5c-.6-6.6 3.2-10.3 7.4-10.3s8 3.7 7.4 10.3c-1.6-3.6-4.6-5.4-7.4-5.4s-5.8 1.8-7.4 5.4z" fill="#1A0B2E"/><path d="M20 3.2l1.1 2.3 2.5.4-1.8 1.7.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.7 2.5-.4z" fill="#FFC53D"/></svg></span>
+<span class="dl-av" style="{{ avR }}"><img src="{{ imgR }}" alt=""></span>
 <span style="font-weight: 700; font-size: 14px; margin-top: 8px; white-space: nowrap">Douze Points</span>
 <span class="num" style="font-size: 52px; line-height: 1; margin-top: 6px; color: #CFC4E3">{{ scoreR }}</span>
 <div class="dl-pill"><span class="dl-flash" style="{{ flashR }}"></span><span style="position: relative">Σύνολο</span><span class="num" style="position: relative; font-size: 22px; color: #F6F1FF">{{ totalR }}</span></div>
@@ -80,6 +82,7 @@ body{margin:0}
 <button class="dl-choice" type="button" style="{{ cardDouble }}" onClick="{{ chooseDouble }}"><span class="t-eyebrow" style="color: #FFE08A">Διπλασίασε</span><span class="num" style="font-size: 56px; line-height: 1; margin-top: 4px">48</span><span class="t-meta" style="color: #CFC4E3; line-height: 1.35; margin-top: auto">Εσύ +48 (24×2)<br>Douze Points ±0</span></button>
 <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6"><span class="dl-chip" style="{{ c.style }}" aria-hidden="true"><b style="font: 400 17px/1 'Bebas Neue', sans-serif">{{ c.label }}</b>{{ c.why }}</span></sc-for>
 <sc-for list="{{ coins }}" as="c" hint-placeholder-count="6"><span class="dl-coin" style="{{ c.style }}" aria-hidden="true"></span></sc-for>
+<canvas class="mo-vfx" data-vfx="motion-duel-m" width="388" height="680" aria-hidden="true"></canvas>
 <div class="dl-toast" role="status" style="{{ toastStyle }}"><span style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255,197,61,.16); color: #FFC53D; display: grid; place-items: center; flex: none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span>{{ toastText }}</div>
 </main>
 <div class="mo-dock" aria-label="Έλεγχοι πρωτοτύπου">
@@ -100,12 +103,277 @@ var SL = Q.reduce(function (a, q) { return a + q.l.p; }, 0), SR = Q.reduce(funct
 var TL0 = 128, TR0 = 88;
 var EASE = 'cubic-bezier(.2,.8,.2,1)';
 var POP = 'cubic-bezier(.34,1.56,.64,1)';
+/* VFX:BEGIN */
+// Stage VFX — procedural, no assets. WebGL additive (one quad batch, one shader); Canvas2D 'lighter' fallback.
+// Canvas is opaque black + CSS mix-blend-mode:screen, so black = no light.
+var VFX_VS = 'attribute vec2 aP;attribute vec2 aL;attribute vec4 aC;attribute vec4 aE;uniform vec2 uR;varying vec2 vL;varying vec4 vC;varying vec4 vE;varying vec2 vP;void main(){vL=aL;vC=aC;vE=aE;vP=aP;vec2 c=aP/uR*2.0-1.0;gl_Position=vec4(c.x,-c.y,0.0,1.0);}';
+var VFX_FS = [
+  '#ifdef GL_FRAGMENT_PRECISION_HIGH', 'precision highp float;', '#else', 'precision mediump float;', '#endif',
+  'uniform float uT;varying vec2 vL;varying vec4 vC;varying vec4 vE;varying vec2 vP;',
+  'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+  'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1.0,0.0)),f.x),mix(h(i+vec2(0.0,1.0)),h(i+vec2(1.0,1.0)),f.x),f.y);}',
+  'float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<3;i++){v+=a*n(p);p=p*2.07+vec2(5.3,1.7);a*=0.5;}return v;}',
+  'void main(){float k=vE.x,I=0.0;',
+  // 0 glow sprite: hot core + soft halo
+  'if(k<0.5){float r2=dot(vL,vL);if(r2>=1.0)discard;I=vE.y*exp(-r2*30.0)+vE.z*exp(-r2*4.5)*(1.0-r2);}',
+  // 1 motion-blurred streak: tail (u=-1) -> head (u=+1)
+  'else if(k<1.5){float u=vL.x,v=vL.y;float ac=exp(-v*v*6.0)*(1.0-v*v);float al=smoothstep(-1.0,0.75,u)*(1.0-smoothstep(0.82,1.0,u)*0.7);I=ac*al*(1.0+exp(-v*v*36.0)*0.9);}',
+  // 2 volumetric beam through drifting haze: x=t along (0 source..1 end), y=s across px
+  'else if(k<2.5){float t=vL.x;float w=mix(vE.y,vE.z,t);float a=vL.y/w;float hz=fbm(vP*0.0075+vec2(uT*0.03,-uT*0.055));I=exp(-a*a*2.4)*(0.3+0.7*exp(-t*1.5))*smoothstep(0.0,0.03,t)*smoothstep(1.0,0.5,t)*(0.22+1.9*hz*hz);I+=exp(-a*a*20.0)*0.45*exp(-t*2.6);}',
+  // 3 flat full-frame flash
+  'else if(k<3.5){I=1.0;}',
+  // 4 ambient haze (x,y 0..1)
+  'else if(k<4.5){float hz=fbm(vP*0.0032+vec2(uT*0.018,uT*0.01));I=hz*hz*(0.35+0.65*vL.y);}',
+  // 5 anamorphic streak, symmetric
+  'else{float u=vL.x,v=vL.y;I=exp(-v*v*5.0)*(1.0-v*v)*(exp(-abs(u)*2.6)*0.7+exp(-abs(u)*14.0));}',
+  'gl_FragColor=vec4(vC.rgb*vC.a*I,1.0);}'
+].join('\n');
+function vfxHash(i) { var x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+function VFX(sel) { this.sel = sel; this.cv = null; this.parts = []; this.fx = []; this.raf = 0; this.tries = 0; this.dead = false; this.seed = 1; }
+VFX.prototype.now = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
+VFX.prototype.ensure = function () {
+  if (this.cv && this.cv.isConnected && (this.gl || this.c2)) return true;
+  var list = document.querySelectorAll(this.sel), cv = null;
+  for (var i = 0; i < list.length; i++) { if (!list[i].__vfx || list[i].__vfx === this) { cv = list[i]; break; } }
+  if (!cv) return false;
+  this.cv = cv; cv.__vfx = this; this.W = cv.width; this.H = cv.height; this.S = this.H / 680;
+  var cores = navigator.hardwareConcurrency || 4;
+  this.max = Math.round((this.W * this.H < 400000 ? 900 : 2000) * (cores <= 4 ? 0.6 : 1));
+  this.gl = null; this.c2 = null;
+  try { this.initGL(); } catch (e) { this.gl = null; }
+  if (!this.gl) { try { this.c2 = cv.getContext('2d'); } catch (e) { this.c2 = null; } }
+  return !!(this.gl || this.c2);
+};
+VFX.prototype.initGL = function () {
+  if (window.__vfxNoGL) return;
+  var gl = this.cv.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, premultipliedAlpha: true, powerPreference: 'high-performance' });
+  if (!gl) return;
+  var sh = function (type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+  var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VFX_VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, VFX_FS)); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error('link');
+  gl.useProgram(pr);
+  this.buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, this.buf);
+  this.cap = (this.max * 3 + 300); this.vb = new Float32Array(this.cap * 6 * 12);
+  var off = 0; [['aP', 2], ['aL', 2], ['aC', 4], ['aE', 4]].forEach(function (a) { var l = gl.getAttribLocation(pr, a[0]); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, a[1], gl.FLOAT, false, 48, off * 4); off += a[1]; });
+  this.uR = gl.getUniformLocation(pr, 'uR'); this.uT = gl.getUniformLocation(pr, 'uT');
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE); gl.disable(gl.DEPTH_TEST);
+  gl.viewport(0, 0, this.W, this.H); gl.uniform2f(this.uR, this.W, this.H);
+  this.gl = gl;
+};
+// ---- primitives (GL: push a quad; 2D: draw now) ----
+VFX.prototype.quad = function (cx, cy, ax, ay, bx, by, u0, u1, v0, v1, r, g, b, a, k, e1, e2) {
+  if (this.nq >= this.cap) return; this.nq++;
+  var V = this.vb, o = this.nv * 12;
+  var P = [[-1, -1, u0, v0], [1, -1, u1, v0], [1, 1, u1, v1], [-1, -1, u0, v0], [1, 1, u1, v1], [-1, 1, u0, v1]];
+  for (var i = 0; i < 6; i++) { var q = P[i]; V[o++] = cx + ax * q[0] + bx * q[1]; V[o++] = cy + ay * q[0] + by * q[1]; V[o++] = q[2]; V[o++] = q[3]; V[o++] = r; V[o++] = g; V[o++] = b; V[o++] = a; V[o++] = k; V[o++] = e1 || 0; V[o++] = e2 || 0; V[o++] = 0; }
+  this.nv += 6;
+};
+VFX.prototype.rgba = function (c, a) { return 'rgba(' + Math.round(Math.min(1, c[0]) * 255) + ',' + Math.round(Math.min(1, c[1]) * 255) + ',' + Math.round(Math.min(1, c[2]) * 255) + ',' + Math.max(0, Math.min(1, a)).toFixed(3) + ')'; };
+VFX.prototype.glow = function (x, y, r, c, a, core, halo) {
+  if (a <= 0.002 || r < 0.5) return;
+  if (this.gl) return this.quad(x, y, r, 0, 0, r, -1, 1, -1, 1, c[0], c[1], c[2], a, 0, core, halo);
+  var X = this.c2, gr = X.createRadialGradient(x, y, 0, x, y, r);
+  gr.addColorStop(0, this.rgba(c, a * (core + halo))); gr.addColorStop(0.18, this.rgba(c, a * (core * 0.06 + halo * 0.75))); gr.addColorStop(1, this.rgba(c, 0));
+  X.fillStyle = gr; X.beginPath(); X.arc(x, y, r, 0, 6.2832); X.fill();
+};
+VFX.prototype.streak = function (x0, y0, x1, y1, w, c, a) {
+  if (a <= 0.002) return;
+  var dx = x1 - x0, dy = y1 - y0, L = Math.sqrt(dx * dx + dy * dy) || 0.01, ux = dx / L, uy = dy / L;
+  if (this.gl) { var hl = L / 2 + w, hw = w * 1.6; return this.quad((x0 + x1) / 2, (y0 + y1) / 2, ux * hl, uy * hl, -uy * hw, ux * hw, -1, 1, -1, 1, c[0], c[1], c[2], a, 1); }
+  var X = this.c2; X.strokeStyle = this.rgba(c, a * 0.8); X.lineWidth = w; X.lineCap = 'round'; X.beginPath(); X.moveTo(x0, y0); X.lineTo(x1, y1); X.stroke();
+};
+VFX.prototype.cone = function (ox, oy, dx, dy, L, w0, w1, c, a) {
+  if (a <= 0.002) return;
+  if (this.gl) { var wm = Math.max(w0, w1) * 1.35; return this.quad(ox + dx * L / 2, oy + dy * L / 2, dx * L / 2, dy * L / 2, -dy * wm, dx * wm, 0, 1, -wm, wm, c[0], c[1], c[2], a, 2, w0, w1); }
+  var X = this.c2, px = -dy, py = dx, gr = X.createLinearGradient(ox, oy, ox + dx * L, oy + dy * L);
+  gr.addColorStop(0, this.rgba(c, a * 0.55)); gr.addColorStop(0.6, this.rgba(c, a * 0.18)); gr.addColorStop(1, this.rgba(c, 0));
+  X.fillStyle = gr;
+  [1, 0.55].forEach(function (f) { X.beginPath(); X.moveTo(ox + px * w0 * f, oy + py * w0 * f); X.lineTo(ox + dx * L + px * w1 * f, oy + dy * L + py * w1 * f); X.lineTo(ox + dx * L - px * w1 * f, oy + dy * L - py * w1 * f); X.lineTo(ox - px * w0 * f, oy - py * w0 * f); X.fill(); });
+};
+VFX.prototype.full = function (c, a, kind) {
+  if (a <= 0.002) return;
+  if (this.gl) return this.quad(this.W / 2, this.H / 2, this.W / 2, 0, 0, this.H / 2, 0, 1, 0, 1, c[0], c[1], c[2], a, kind);
+  if (kind === 4) return; this.c2.fillStyle = this.rgba(c, a); this.c2.fillRect(0, 0, this.W, this.H);
+};
+VFX.prototype.ana = function (x, y, hl, hw, c, a) {
+  if (a <= 0.002) return;
+  if (this.gl) return this.quad(x, y, hl, 0, 0, hw, -1, 1, -1, 1, c[0], c[1], c[2], a, 5);
+  var X = this.c2, gr = X.createLinearGradient(x - hl, 0, x + hl, 0);
+  gr.addColorStop(0, this.rgba(c, 0)); gr.addColorStop(0.5, this.rgba(c, a)); gr.addColorStop(1, this.rgba(c, 0));
+  X.fillStyle = gr; X.fillRect(x - hl, y - hw * 0.35, hl * 2, hw * 0.7);
+};
+// ---- effect API (canvas px, ms) ----
+VFX.prototype.add = function (f) { f.t0 = this.now() + (f.delay || 0); this.fx.push(f); this.kick(); return this; };
+VFX.prototype.gerb = function (x, y, o) { o = o || {}; return this.add({ type: 'gerb', x: x, y: y, h: o.h || 300, dur: o.dur || 1200, rate: o.rate || 160, spread: o.spread || 5, size: o.size || 1, bright: o.bright || 1, delay: o.delay, acc: 0 }); };
+VFX.prototype.burst = function (x, y, o) { o = o || {}; return this.add({ type: 'burst', x: x, y: y, n: o.n || 40, speed: o.speed || 420, up: o.up || 0, life: o.life || 0.8, size: o.size || 1, bright: o.bright || 1, glow: o.glow == null ? 1.1 : o.glow, delay: o.delay }); };
+VFX.prototype.glitter = function (o) { o = o || {}; return this.add({ type: 'glitter', n: o.n || 50, dur: o.dur || 6000, delay: o.delay, x0: o.x0 || 0, x1: o.x1 || null }); };
+VFX.prototype.beam = function (o) { o.type = 'beam'; o.ph = Math.random() * 6; return this.add(o); };
+VFX.prototype.flash = function (o) { o = o || {}; o.type = 'flash'; return this.add(o); };
+VFX.prototype.flare = function (x, y, o) { o = o || {}; o.type = 'flare'; o.x = x; o.y = y; return this.add(o); };
+VFX.prototype.light = function (x, y, o) { o = o || {}; o.type = 'glow'; o.x = x; o.y = y; return this.add(o); };
+VFX.prototype.haze = function (o) { o = o || {}; o.type = 'haze'; return this.add(o); };
+VFX.prototype.clear = function () { this.fx = []; this.parts = []; if (this.raf) { cancelAnimationFrame(this.raf); this.raf = 0; } this.blank(); };
+VFX.prototype.destroy = function () { this.clear(); this.dead = true; if (this.cv) this.cv.__vfx = null; };
+VFX.prototype.find = function (sel, fx, fy) {
+  if (!this.ensure()) return { x: fx, y: fy };
+  var root = this.cv.parentNode, el = root && root.querySelector(sel);
+  while (!el && root && root.parentNode) { root = root.parentNode; el = root.querySelector && root.querySelector(sel); }
+  if (!el) return { x: fx, y: fy };
+  var c = this.cv.getBoundingClientRect(), r = el.getBoundingClientRect(); if (!c.width) return { x: fx, y: fy };
+  var sx = this.W / c.width, sy = this.H / c.height;
+  return { x: (r.left + r.width / 2 - c.left) * sx, y: (r.top + r.height / 2 - c.top) * sy, w: r.width * sx, h: r.height * sy };
+};
+VFX.prototype.blank = function () {
+  if (this.gl) { this.gl.clearColor(0, 0, 0, 1); this.gl.clear(this.gl.COLOR_BUFFER_BIT); }
+  else if (this.c2) { this.c2.globalCompositeOperation = 'source-over'; this.c2.fillStyle = '#000'; this.c2.fillRect(0, 0, this.W, this.H); }
+};
+VFX.prototype.kick = function () {
+  if (this.raf || this.dead) return;
+  var self = this; this.last = this.now();
+  var loop = function () { self.raf = 0; if (self.frame()) self.raf = requestAnimationFrame(loop); else self.blank(); };
+  this.raf = requestAnimationFrame(loop);
+};
+VFX.prototype.env = function (f, t) {
+  var l = t - f.t0; if (l < 0) return 0;
+  var a = f.fadeIn ? Math.min(1, l / f.fadeIn) : 1;
+  if (f.dur) { var rem = f.dur - l; if (rem <= 0) { f.done = true; return 0; } if (f.fadeOut) a *= Math.min(1, rem / f.fadeOut); }
+  return a;
+};
+VFX.prototype.spark = function (x, y, vx, vy, life, g, drag, size, bright) {
+  if (this.parts.length >= this.max) return;
+  this.parts.push({ k: 0, x: x, y: y, vx: vx, vy: vy, age: 0, life: life, g: g, drag: drag, sz: size, br: bright, sd: this.seed++ });
+};
+VFX.prototype.heat = function (a) {
+  if (a < 0.12) return [1, 0.97, 0.92];
+  if (a < 0.45) { var m = (a - 0.12) / 0.33; return [1, 0.97 - 0.17 * m, 0.92 - 0.5 * m]; }
+  var q = (a - 0.45) / 0.55; return [1, 0.8 - 0.36 * q, 0.42 - 0.28 * q];
+};
+VFX.prototype.frame = function () {
+  if (!this.ensure()) return ++this.tries < 240;
+  var now = this.now(), dt = Math.min(0.05, Math.max(0.001, (now - this.last) / 1000)); this.last = now;
+  var t = now, T = (now / 1000) % 600, S = this.S, W = this.W, H = this.H, self = this;
+  this.nv = 0; this.nq = 0;
+  if (this.gl) { var gl = this.gl; gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(this.uT, T); }
+  else { var X = this.c2; X.globalCompositeOperation = 'source-over'; X.fillStyle = '#000'; X.fillRect(0, 0, W, H); X.globalCompositeOperation = 'lighter'; }
+  // effects
+  this.fx.forEach(function (f) {
+    var l = t - f.t0; if (l < 0) return;
+    if (f.type === 'gerb') {
+      if (l > f.dur) { f.done = true; return; }
+      var Tr = 0.85, g = 2 * f.h / (Tr * Tr), v0 = Math.sqrt(2 * g * f.h), ramp = Math.min(1, l / 90) * Math.min(1, (f.dur - l) / 160);
+      f.acc += f.rate * dt * ramp;
+      while (f.acc >= 1) {
+        f.acc -= 1; var sput = Math.random() < 0.14, ang = (Math.random() - 0.5) * 2 * (sput ? f.spread * 3.5 : f.spread) * Math.PI / 180, sp = v0 * (sput ? 0.45 + Math.random() * 0.35 : 0.84 + Math.random() * 0.22);
+        self.spark(f.x + (Math.random() - 0.5) * 4 * S, f.y, Math.sin(ang) * sp, -Math.cos(ang) * sp, (0.95 + Math.random() * 0.75) * Tr * 1.45, g, 0.35, (0.8 + Math.random() * 0.5) * f.size, f.bright);
+      }
+      var fl = 0.75 + 0.25 * Math.random();
+      self.glow(f.x, f.y - 2 * S, 16 * S * f.size, [1, 0.96, 0.88], 1.3 * fl * ramp, 1, 0.5);
+      self.glow(f.x, f.y - 10 * S, 70 * S * f.size, [1, 0.62, 0.25], 0.28 * fl * ramp, 0, 1);
+      self.glow(f.x, f.y - f.h * 0.45, f.h * 0.75, [1, 0.78, 0.45], 0.06 * ramp, 0, 1);
+    } else if (f.type === 'burst') {
+      for (var i = 0; i < f.n; i++) {
+        var an = Math.random() * 6.2832, sp2 = f.speed * S * (0.3 + Math.random() * 0.7), vx = Math.cos(an) * sp2, vy = Math.sin(an) * sp2 - f.up * f.speed * S * (0.4 + Math.random() * 0.6);
+        self.spark(f.x, f.y, vx, vy, f.life * (0.6 + Math.random() * 0.6), 700 * S, 2.4, (0.7 + Math.random() * 0.5) * f.size, f.bright);
+      }
+      self.fx.push({ type: 'glow', x: f.x, y: f.y, r: 80 * S * f.size, col: [1, 0.9, 0.7], a: f.glow * f.bright, t0: t, dur: 260, fadeOut: 240, core: 0.8, halo: 1 });
+      f.done = true;
+    } else if (f.type === 'glitter') {
+      var x1 = f.x1 == null ? W : f.x1;
+      for (var j = 0; j < f.n; j++) {
+        var cr = Math.random(), col = cr < 0.55 ? [1, 0.97, 0.9] : cr < 0.8 ? [1, 0.82, 0.45] : cr < 0.93 ? [1, 0.55, 0.8] : [0.75, 0.9, 1];
+        if (self.parts.length >= self.max) break;
+        self.parts.push({ k: 1, x: f.x0 + Math.random() * (x1 - f.x0), y: -10 - Math.random() * H * 0.9, vx: 0, vy: (28 + Math.random() * 46) * S, age: 0, life: f.dur / 1000, ph: Math.random() * 6.28, rate: 1.2 + Math.random() * 2.6, sw: 0.6 + Math.random() * 1.2, sz: 0.7 + Math.random() * 0.8, col: col, sd: self.seed++ });
+      }
+      f.done = true;
+    }
+  });
+  // lights
+  this.fx.forEach(function (f) {
+    if (f.done || f.type === 'gerb') return;
+    var e = self.env(f, t); if (e <= 0) return;
+    var l = t - f.t0;
+    if (f.type === 'beam') {
+      var p = Math.min(1, l / (f.sweepMs || 1)), ee = 1 - Math.pow(1 - p, 3);
+      var base = Math.atan2(f.tx - f.ox, f.ty - f.oy), off = (f.sweep || 0) * (1 - ee) * Math.PI / 180 + (f.wob || 0) * Math.sin(T * 0.9 + f.ph) * Math.PI / 180;
+      var A = base + off, dx = Math.sin(A), dy = Math.cos(A), D = Math.sqrt((f.tx - f.ox) * (f.tx - f.ox) + (f.ty - f.oy) * (f.ty - f.oy)), L = D * (f.reach || 1.45);
+      var w1 = f.w1 * (f.reach || 1.45), c = f.col || [0.8, 0.75, 1];
+      self.cone(f.ox, f.oy, dx, dy, L, f.w0, w1, c, f.a * e);
+      self.glow(f.ox, f.oy, f.w0 * 10, c, 0.5 * f.a * e, 0.6, 1);
+      if (f.pool) self.glow(f.ox + dx * D, f.oy + dy * D, f.w1 * 1.3, c, f.pool * e * ee, 0, 1);
+    } else if (f.type === 'flash') {
+      var k = l < 35 ? l / 35 : Math.exp(-(l - 35) / (f.tau || 120)); if (l > 35 + (f.tau || 120) * 6) { f.done = true; return; }
+      self.full(f.col || [1, 0.96, 0.88], (f.a || 0.8) * k, 3);
+      if (f.x != null) self.glow(f.x, f.y, Math.max(W, H) * 0.42, [1, 0.92, 0.78], (f.a || 0.8) * k * 0.75, 0.3, 1);
+    } else if (f.type === 'flare') {
+      var dur = f.dur || 900; if (l > dur) { f.done = true; return; }
+      var at = l < 50 ? l / 50 : Math.pow(1 - (l - 50) / (dur - 50), 1.6), a = (f.a || 1) * at, grow = 1 + 0.25 * (l / dur);
+      var len = (f.len || W * 0.8) * grow;
+      self.ana(f.x, f.y, len, 5 * S, [1, 0.97, 0.92], 1.4 * a);
+      self.ana(f.x, f.y, len * 1.25, 16 * S, [0.55, 0.62, 1], 0.45 * a);
+      self.glow(f.x, f.y, 95 * S, [1, 0.93, 0.8], 0.9 * a, 0.8, 0.8);
+      self.glow(f.x, f.y, 22 * S, [1, 1, 1], 1.3 * a, 1, 0);
+      var cx = W / 2, cy = H / 2;
+      [[0.45, 20, [0.7, 0.5, 1]], [0.95, 34, [1, 0.45, 0.75]], [1.5, 12, [1, 0.8, 0.4]], [-0.35, 9, [0.6, 0.8, 1]]].forEach(function (gh) {
+        self.glow(cx + (cx - f.x) * gh[0], cy + (cy - f.y) * gh[0], gh[1] * S, gh[2], 0.22 * a, 0.2, 1);
+      });
+    } else if (f.type === 'glow') {
+      var pu = f.pulse ? 1 + f.pulse * Math.sin(T * 2.2) : 1;
+      self.glow(f.x, f.y, f.r, f.col || [1, 0.78, 0.35], f.a * e * pu, f.core || 0, f.halo == null ? 1 : f.halo);
+    } else if (f.type === 'haze') {
+      self.full(f.col || [0.55, 0.42, 0.85], f.a * e, 4);
+    }
+  });
+  this.fx = this.fx.filter(function (f) { return !f.done; });
+  // particles
+  var keep = [];
+  for (var i = 0; i < this.parts.length; i++) {
+    var p = this.parts[i]; p.age += dt; if (p.age >= p.life) continue;
+    if (p.k === 0) {
+      var dr = Math.exp(-p.drag * dt); p.vx *= dr; p.vy = p.vy * dr + p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.y > H + 20) continue;
+      var a = p.age / p.life, c = this.heat(a), I = Math.min(1, p.age / 0.04) * Math.pow(1 - a, 1.25) * p.br;
+      if (a > 0.3) { var hsh = vfxHash(p.sd * 13 + Math.floor(t / 42)); I *= hsh < 0.28 ? 0.2 : 0.75 + 0.5 * hsh; }
+      var spd = Math.sqrt(p.vx * p.vx + p.vy * p.vy), bl = Math.max(1.5 * S, Math.min(64 * S, spd * 0.03));
+      var ux = p.vx / (spd || 1), uy = p.vy / (spd || 1), w = 1.15 * S * p.sz;
+      this.streak(p.x - ux * bl, p.y - uy * bl, p.x, p.y, w, c, I * 1.25);
+      if (a < 0.55) this.glow(p.x, p.y, 7 * S * p.sz, c, I * 0.55, 0.8, 0.35);
+    } else {
+      p.y += p.vy * dt; p.x += Math.sin(t / 1000 * p.sw + p.ph) * 9 * S * dt;
+      if (p.y > H + 10) continue;
+      var fade = Math.min(1, (p.life - p.age) / 0.8), tw = Math.pow(Math.max(0, Math.sin(t / 1000 * p.rate + p.ph)), 28) * fade;
+      if (p.y > -5) {
+        this.glow(p.x, p.y, 2.4 * S * p.sz, p.col, 0.35 * fade, 1, 0.2);
+        if (tw > 0.03) {
+          var gl2 = 8 * S * p.sz * (0.6 + tw);
+          this.glow(p.x, p.y, 5 * S * p.sz, p.col, 1.6 * tw, 1, 0.6);
+          this.streak(p.x - gl2, p.y, p.x + gl2, p.y, 0.7 * S, p.col, 0.9 * tw);
+          this.streak(p.x, p.y - gl2 * 0.75, p.x, p.y + gl2 * 0.75, 0.7 * S, p.col, 0.75 * tw);
+        }
+      }
+    }
+    keep.push(p);
+  }
+  this.parts = keep;
+  if (this.gl && this.nv) { var g2 = this.gl; g2.bufferData(g2.ARRAY_BUFFER, this.vb.subarray(0, this.nv * 12), g2.DYNAMIC_DRAW); g2.drawArrays(g2.TRIANGLES, 0, this.nv); }
+  return this.fx.length > 0 || this.parts.length > 0;
+};
+/* VFX:END */
 var INIT = { chips: [0, 0, 0, 0, 0, 0], reduced: false, still: true, intro: false, vs: false, qhead: false, cells: 0, scoreL: 0, scoreR: 0, win: false, cards: false, ready: false, choice: '', fly: false, totalL: TL0, totalR: TR0, flashL: false, flashR: false, toast: false };
 
 class Component extends DCLogic {
   componentDidMount() { this.play(false); }
-  componentWillUnmount() { this.clear(); }
-  clear() { (this._t || []).forEach(clearTimeout); this._t = []; }
+  componentWillUnmount() { this.clear(); if (this._vfx) this._vfx.destroy(); }
+  clear() { (this._t || []).forEach(clearTimeout); this._t = []; if (this._vfx) this._vfx.clear(); }
+  // stage VFX on the win: a key spot finds the winner, two small cold-spark fountains fire from the card edge behind the avatar
+  fx() {
+    var F = this._vfx || (this._vfx = new VFX('canvas[data-vfx="motion-duel-m"]'));
+    var x = 88, y = 68;
+    F.beam({ ox: 150, oy: -60, tx: x, ty: y, sweep: 26, sweepMs: 650, w0: 4, w1: 62, a: .7, col: [1, .93, .84], fadeIn: 150, dur: 3000, fadeOut: 1000, pool: .1, reach: 2.6 });
+    F.gerb(x - 50, 250, { h: 150, dur: 700, rate: 110, spread: 7, size: .85 });
+    F.gerb(x + 50, 250, { h: 150, dur: 700, rate: 110, spread: 7, size: .85, delay: 50 });
+    F.burst(x, 232, { n: 22, speed: 300, up: .7, life: .6, size: .8, glow: .35, delay: 60 });
+    F.light(x, y + 6, { r: 110, col: [1, .74, .34], a: .13, fadeIn: 120, dur: 2200, fadeOut: 900 });
+  }
   at(ms, fn) { this._t.push(setTimeout(fn, ms)); }
   st() { return Object.assign({}, INIT, this.state || {}); }
   count(key, from, to, dur, start) {
@@ -144,6 +412,7 @@ class Component extends DCLogic {
       });
     });
     at(3700, { win: true });
+    if (!r) this.at(3700, function () { self.fx(); });
     at(4200, { cards: true });
     at(4800, { ready: true });
   }
@@ -217,8 +486,9 @@ class Component extends DCLogic {
       scoreL: s.scoreL, scoreR: s.scoreR, totalL: s.totalL, totalR: s.totalR,
       colL: 'left:0;' + (R ? mv(s.intro, '', '', 200, 0) : (s.intro ? 'animation:clash-l 650ms cubic-bezier(.3,.9,.4,1) forwards;' : 'opacity:0;')),
       colR: 'left:214px;' + (R ? 'opacity:' + (s.intro ? (s.win ? 0.55 : 1) : 0) + ';transition:opacity 200ms ease;' : (s.intro ? 'animation:clash-r 650ms cubic-bezier(.3,.9,.4,1) forwards;' : 'opacity:0;')),
-      avL: 'width:80px;height:80px;margin-top:16px;background:#A35BFF;color:#F0469C;position:relative;' + (s.win ? 'box-shadow:0 0 0 4px #FFC53D;' : 'box-shadow:0 0 0 3px rgba(255,255,255,.12);'),
-      avR: 'width:80px;height:80px;margin-top:16px;background:#BE185D;color:#2EE6D6;box-shadow:0 0 0 3px rgba(255,255,255,.12);transition:opacity 300ms ease;opacity:' + (s.win && !R ? 0.5 : 1) + ';',
+      imgL: '/_blob/2682032dbdf8ed9fd25de22069fcb16a', imgR: '/_blob/963826caa02530d10c0403052d018d56',
+      avL: 'width:80px;height:80px;margin-top:16px;position:relative;' + (s.win ? 'box-shadow:0 0 0 4px #FFC53D;' : 'box-shadow:0 0 0 3px rgba(255,255,255,.12);'),
+      avR: 'width:80px;height:80px;margin-top:16px;box-shadow:0 0 0 3px rgba(255,255,255,.12);transition:opacity 300ms ease;opacity:' + (s.win && !R ? 0.5 : 1) + ';',
       glowStyle: s.win ? (R ? 'opacity:.8;transition:opacity 200ms;' : 'animation:glow-pulse 700ms ease-out forwards, glow-breathe 1800ms ease-in-out 700ms infinite;') : 'opacity:0;',
       vsStyle: 'position:relative;font-size:34px;color:#FF7AB8;' + kf(s.vs, 'vs-pop 420ms cubic-bezier(.3,1.3,.5,1) forwards'),
       ringStyle: R ? 'opacity:0;' : (s.vs ? 'animation:ring-out 600ms ease-out forwards;' : 'opacity:0;'),
