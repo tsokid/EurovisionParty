@@ -3,7 +3,7 @@
 // header, is disallowed in robots.txt, and is served the SPA shell on reload.
 // No public page links to /admin.
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -67,8 +67,11 @@ describe('/admin/* access', () => {
     const router = createMemoryRouter(routes, { initialEntries: [url] });
     render(<RouterProvider router={router} />);
     expect(await screen.findByText('Admin access', {}, { timeout: 5000 })).toBeTruthy();
-    const metas = [...document.head.querySelectorAll('meta[name="robots"]')] as HTMLMetaElement[];
-    expect(metas.map((m) => m.content)).toEqual(['noindex,nofollow']);
+    // Set in an effect, which may land just after the first paint under load.
+    await waitFor(() => {
+      const metas = [...document.head.querySelectorAll('meta[name="robots"]')] as HTMLMetaElement[];
+      expect(metas.map((m) => m.content)).toEqual(['noindex,nofollow']);
+    });
     // The URL is kept, so signing in lands on the deep-linked screen.
     expect(router.state.location.pathname).toBe(url);
   });
