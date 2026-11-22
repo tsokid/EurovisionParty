@@ -73,7 +73,7 @@
     "stageNameHint": "Shown everywhere in the game. You rejoin with it.",
     "realNameLabel": "Your real name",
     "realNamePlaceholder": "What your friends call you",
-    "realNameHint": "Kept secret until the end, revealed in 'Who was who?'",
+    "realNameHint": "Your first name or what your friends call you is enough. Kept secret until the end, revealed in 'Who was who?'",
     "avatarLabel": "Avatar",
     "shuffle": "Random",
     "secretFailed": "Your real name wasn't saved. Try again.",

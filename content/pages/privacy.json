@@ -27,7 +27,7 @@
       "title": "Cookies"
     },
     "deletion": {
-      "cardBody": "Αν δημιούργησες δωμάτιο, διάγραψέ το από την ενότητα «Τα Δωμάτιά σου» στην αρχική σελίδα. Το δωμάτιο και όλο το περιεχόμενό του (τα ονόματα εμφάνισης και τα avatar όλων των παικτών, οι προβλέψεις, οι απαντήσεις quiz, τα αποτελέσματα των μονομαχιών και οι πόντοι) διαγράφονται αμέσως και δεν μπορούν να ανακτηθούν. Τα δωμάτια δεν διαγράφονται αυτόματα: παραμένουν μέχρι να τα διαγράψει όποιος τα έφτιαξε. Για οποιοδήποτε άλλο αίτημα, στείλε email στο privacy@eurovision.games.",
+      "cardBody": "Αν δημιούργησες δωμάτιο, διάγραψέ το από την ενότητα «Τα Δωμάτιά σου» στην αρχική σελίδα. Το δωμάτιο και όλο το περιεχόμενό του (τα ονόματα εμφάνισης, τα avatar και τα ονόματα για την αποκάλυψη όλων των παικτών, οι προβλέψεις, οι απαντήσεις quiz, τα αποτελέσματα των μονομαχιών και οι πόντοι) διαγράφονται αμέσως και δεν μπορούν να ανακτηθούν. Τα δωμάτια δεν διαγράφονται αυτόματα: παραμένουν μέχρι να τα διαγράψει όποιος τα έφτιαξε. Για οποιοδήποτε άλλο αίτημα, στείλε email στο privacy@eurovision.games.",
       "cardLead": "Στείλε email στο ",
       "cardTail": " για οποιοδήποτε άλλο αίτημα διαγραφής. Όποιος φτιάξει ένα δωμάτιο μπορεί ανά πάσα στιγμή να το διαγράψει, μαζί με όλο το περιεχόμενό του, από την ενότητα «Τα Δωμάτιά σου» στην αρχική σελίδα· τα δωμάτια δεν διαγράφονται αυτόματα.",
       "cardTitle": "Πώς να διαγράψεις τα δεδομένα σου",
@@ -57,7 +57,7 @@
     "notCollect": {
       "items": [
         {
-          "bold": "Κανένα πραγματικό όνομα, διεύθυνση, τηλέφωνο ή στοιχεία πληρωμής.",
+          "bold": "Καμία διεύθυνση, τηλέφωνο ή στοιχεία πληρωμής.",
           "rest": " Το παιχνίδι είναι δωρεάν και δεν υπάρχει τίποτα να χρεώσουμε."
         },
         {
@@ -135,7 +135,7 @@
         "Σκοπός",
         "Διατήρηση"
       ],
-      "intro": "Τέσσερις κατηγορίες — σε τι χρησιμεύει η καθεμία και για πόσο την κρατάμε. Κανείς δεν κάνει εγγραφή: όλοι παίζουν σε ανώνυμη συνεδρία και δεν ζητάμε ποτέ διεύθυνση email ή πραγματικό όνομα.",
+      "intro": "Πέντε κατηγορίες — σε τι χρησιμεύει η καθεμία και για πόσο την κρατάμε. Κανείς δεν κάνει εγγραφή: όλοι παίζουν σε ανώνυμη συνεδρία και δεν ζητάμε ποτέ διεύθυνση email.",
       "rows": [
         {
           "purpose": "Ένα τυχαίο αναγνωριστικό που δημιουργείται αυτόματα όταν φτιάχνεις ή μπαίνεις σε δωμάτιο, ώστε η εφαρμογή να ξέρει ποιος παίκτης και ποια δωμάτια είναι δικά σου. Δεν συνδέεται με email, κωδικό πρόσβασης ή πραγματικό όνομα.",
@@ -146,6 +146,11 @@
           "purpose": "Επιλέγεται από κάθε παίκτη που μπαίνει στο δωμάτιο. Ορατό μόνο στους άλλους παίκτες του ίδιου δωματίου.",
           "retention": "Διατηρείται μέχρι να διαγραφεί το δωμάτιο.",
           "type": "Όνομα εμφάνισης & avatar παίκτη"
+        },
+        {
+          "purpose": "Το όνομα που γράφει κάθε παίκτης για το «Ποιος ήταν ποιος;» στο τέλος του παιχνιδιού. Αρκεί μικρό όνομα ή παρατσούκλι. Μέχρι το τέλος το βλέπει μόνο ο ίδιος ο παίκτης· στο τέλος μόνο οι παίκτες του ίδιου δωματίου. Δεν εμφανίζεται ποτέ δημόσια.",
+          "retention": "Διαγράφεται μαζί με το δωμάτιο.",
+          "type": "Όνομα για την αποκάλυψη"
         },
         {
           "purpose": "Στοιχεία δωματίου (κωδικός και κρυπτογραφημένος κωδικός πρόσβασης), προβλέψεις, απαντήσεις quiz, αποτελέσματα μονομαχιών, πόντοι και τρόπαια. Συνδέονται με το δωμάτιο και με το αναγνωριστικό ανώνυμης συνεδρίας κάθε παίκτη.",
@@ -207,7 +212,7 @@
       "title": "Cookies"
     },
     "deletion": {
-      "cardBody": "If you created a room, delete it from “Your Rooms” on the home page. The room and everything in it (every player’s display name and avatar, predictions, quiz answers, duel results and points) is removed immediately and can’t be restored. Rooms are not deleted automatically: they stay until the host deletes them. For any other request, email privacy@eurovision.games.",
+      "cardBody": "If you created a room, delete it from “Your Rooms” on the home page. The room and everything in it (every player’s display name, avatar and name for the reveal, predictions, quiz answers, duel results and points) is removed immediately and can’t be restored. Rooms are not deleted automatically: they stay until the host deletes them. For any other request, email privacy@eurovision.games.",
       "cardLead": "Email ",
       "cardTail": " with any other deletion request. Hosts can delete a room, and everything in it, from “Your Rooms” on the home page at any time; rooms are not deleted automatically.",
       "cardTitle": "How to delete your data",
@@ -237,7 +242,7 @@
     "notCollect": {
       "items": [
         {
-          "bold": "No real names, addresses, phone numbers, or payment details.",
+          "bold": "No addresses, phone numbers, or payment details.",
           "rest": " The game is free and there's nothing to bill."
         },
         {
@@ -315,7 +320,7 @@
         "Purpose",
         "Retention"
       ],
-      "intro": "Four categories — what each is for, and how long we keep it. Nobody signs up: hosts and players alike play in an anonymous session, and we never ask for an email address or real name.",
+      "intro": "Five categories — what each is for, and how long we keep it. Nobody signs up: hosts and players alike play in an anonymous session, and we never ask for an email address.",
       "rows": [
         {
           "purpose": "A random ID created automatically when you create or join a room, so the app knows which player and which rooms are yours. No email, password or real name is attached to it.",
@@ -326,6 +331,11 @@
           "purpose": "Chosen by each player joining a room. Visible to other players in the same room only.",
           "retention": "Kept until the host deletes the room.",
           "type": "Player display name & avatar"
+        },
+        {
+          "purpose": "The name each player enters for “Who was who?” at the end of the game. A first name or nickname is enough. Until the end only that player can see it; at the end only players in the same room can. It is never shown publicly.",
+          "retention": "Deleted together with the room.",
+          "type": "Name for the reveal"
         },
         {
           "purpose": "Room details (code and an encrypted room password), predictions, quiz answers, duel results, points and trophies. Tied to the room and to each player’s anonymous session ID.",

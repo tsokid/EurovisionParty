@@ -19,7 +19,7 @@ describe('<NameEntry>', () => {
     render(<NameEntry mode="create" onSubmit={vi.fn()} />);
     expect(screen.getByLabelText('Καλλιτεχνικό όνομα')).toBeInTheDocument();
     expect(screen.getByLabelText('Πραγματικό όνομα')).toBeInTheDocument();
-    expect(screen.getByText('Μένει μυστικό μέχρι το τέλος. Θα αποκαλυφθεί στο «Ποιος ήταν ποιος;»')).toBeInTheDocument();
+    expect(screen.getByText('Αρκεί το μικρό σου ή όπως σε ξέρει η παρέα. Μένει μυστικό μέχρι το τέλος και αποκαλύπτεται στο «Ποιος ήταν ποιος;»')).toBeInTheDocument();
     expect(screen.getAllByRole('radio')).toHaveLength(AVATARS.length);
     expect(screen.getAllByRole('radio').filter((r) => r.getAttribute('aria-checked') === 'true')).toHaveLength(1);
   });
