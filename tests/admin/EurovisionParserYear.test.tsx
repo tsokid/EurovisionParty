@@ -31,7 +31,7 @@ import EurovisionParser from '../../src/admin/modules/EurovisionParser';
 describe('EurovisionParser year', () => {
   it('opens on the game year, not the newest parse_jobs year', async () => {
     render(<EurovisionParser />);
-    const picker = await screen.findByLabelText('Contest year');
+    const picker = await screen.findByLabelText('Χρονιά διαγωνισμού');
     await waitFor(() => expect((picker as HTMLSelectElement).value).toBe('2026'));
     expect(screen.getByRole('option', { name: '2027' })).toBeTruthy();
   });

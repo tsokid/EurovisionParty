@@ -14,6 +14,7 @@ import { ResetContestCard } from "./parser/ResetContestCard";
 import { TestCard } from "./parser/TestCard";
 import { ManualRankingCard } from "./parser/ManualRankingCard";
 import { GamePhaseCard } from "./parser/GamePhaseCard";
+import { t } from '../i18n';
 
 export interface EurovisionParserProps {
   /** A year picked through the URL; null/undefined: the game year. */
@@ -39,7 +40,7 @@ export default function EurovisionParser({ year: routeYear = null, onPickYear }:
   if (loading && Object.keys(jobs).length === 0) {
     return (
       <div className="p-4 text-white/60">
-        Loading parser state…
+        {t.parser.loading}
         {error && (
           <div className="mt-3 text-xs">
             <p className="text-red-300">⚠️ {error}</p>
@@ -48,7 +49,7 @@ export default function EurovisionParser({ year: routeYear = null, onPickYear }:
               onClick={() => refresh()}
               className="mt-2 px-3 py-1 rounded bg-white/10 text-white text-xs cursor-pointer"
             >
-              Retry
+              {t.parser.retry}
             </button>
           </div>
         )}
@@ -59,8 +60,7 @@ export default function EurovisionParser({ year: routeYear = null, onPickYear }:
   if (year == null) {
     return (
       <div className="p-4 text-white/60">
-        No <code>parse_jobs</code> rows found. Seed the contest year before
-        using the parser dashboard.
+        {t.parser.noJobs1}<code>parse_jobs</code>{t.parser.noJobs2}
       </div>
     );
   }
@@ -70,12 +70,12 @@ export default function EurovisionParser({ year: routeYear = null, onPickYear }:
   const overrideOn = jobs.results?.manual_override === true;
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4">
       <header>
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          🛰️ Eurovision Parser
+        <h2 className="text-2xl font-bold text-stage-text flex flex-wrap items-center gap-2 m-0">
+          {t.parser.title}
           <select
-            aria-label="Contest year"
+            aria-label={t.parser.year}
             value={year}
             onChange={(e) => (onPickYear ? onPickYear(Number(e.target.value)) : setPicked(Number(e.target.value)))}
             className="bg-white/10 text-white/80 font-normal text-base rounded px-2 py-0.5 cursor-pointer"
@@ -86,12 +86,10 @@ export default function EurovisionParser({ year: routeYear = null, onPickYear }:
           </select>
         </h2>
         <p className="text-xs text-white/50 mt-1">
-          Game phase, parse, manual ranking and Finalize below all act on {year} and its rooms only.
+          {t.parser.scope(year)}
         </p>
         <p className="text-sm text-white/60 mt-1">
-          Parsing only fetches data. You move the rooms with Game phase and Finalize. Each parser has its own
-          schedule (start, end, poll interval) editable below — all times in
-          Athens (Europe/Athens) timezone.
+          {t.parser.lede}
         </p>
       </header>
 
@@ -100,13 +98,13 @@ export default function EurovisionParser({ year: routeYear = null, onPickYear }:
           recent poll failed and can retry on demand. */}
       {error && Object.keys(jobs).length > 0 && (
         <div className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300 flex items-center justify-between">
-          <span>⚠️ Showing cached data — latest refresh failed: {error}</span>
+          <span>{t.parser.cached(error)}</span>
           <button
             type="button"
             onClick={() => refresh()}
             className="px-2 py-1 rounded bg-white/10 text-white text-xs cursor-pointer"
           >
-            Retry
+            {t.parser.retry}
           </button>
         </div>
       )}
@@ -135,8 +133,7 @@ export default function EurovisionParser({ year: routeYear = null, onPickYear }:
       </div>
       {overrideOn && (
         <div className="text-xs text-white/40 text-center">
-          🔧 Manual override is active. The Results parser cron + on-demand calls
-          are disabled until you toggle override OFF.
+          {t.parser.override}
         </div>
       )}
     </div>
