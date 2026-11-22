@@ -89,6 +89,36 @@ const entry = (year: number, iso: string, artist: string, song: string, place: n
   in_final: true, final_running_order: null, final_place: place, total_points: null,
 });
 
+// The night-of parser (P4 screens): both jobs of 2026 and a few runs with their rows (parse report).
+const job = (kind: 'participants' | 'results', extra: Record<string, unknown>) => ({
+  kind, year: 2026, status: 'idle', poll_count: 0, last_poll_at: null, started_at: null, stopped_at: null,
+  triggered_by_user: null, manual_override: false, source_url: null, scheduled_start_at: null, scheduled_end_at: null,
+  poll_interval_minutes: 2, respect_schedule: false, ...extra,
+});
+const PARSE_JOBS = [
+  job('participants', {
+    status: 'done', last_poll_at: '2026-05-14T20:10:00Z', respect_schedule: true,
+    source_url: 'https://www.eurovision.com/eurovision-song-contest/vienna-2026/vienna-2026-grand-final/',
+    scheduled_start_at: '2026-05-14T20:00:00Z',
+  }),
+  job('results', {
+    status: 'running', poll_count: 37, last_poll_at: '2026-05-16T21:54:00Z', respect_schedule: true,
+    source_url: 'https://www.eurovision.com/eurovision-song-contest/vienna-2026/vienna-2026-grand-final/',
+    scheduled_start_at: '2026-05-16T21:30:00Z', scheduled_end_at: '2026-05-16T23:30:00Z',
+  }),
+];
+const PARSE_RUNS = [
+  { id: 'r3', kind: 'results', year: 2026, finished_at: '2026-05-16T21:54:00Z', http_status: 200, status: 'ok', rows_upserted: 4, error: null,
+    source_url: PARSE_JOBS[1].source_url,
+    rows: [{ iso: 'AT', name: 'Austria', place: 1, points: 436 }, { iso: 'SE', name: 'Sweden', place: 2, points: 321 }, { iso: 'GR', name: 'Greece', place: 3, points: 230 }, { iso: 'UA', name: 'Ukraine', place: 4, points: 218 }] },
+  { id: 'r2', kind: 'results', year: 2026, finished_at: '2026-05-16T21:52:00Z', http_status: 200, status: 'ok', rows_upserted: 4, error: null,
+    source_url: PARSE_JOBS[1].source_url,
+    rows: [{ iso: 'AT', name: 'Austria', place: 1, points: 401 }, { iso: 'SE', name: 'Sweden', place: 2, points: 321 }, { iso: 'GR', name: 'Greece', place: 3, points: 202 }, { iso: 'UA', name: 'Ukraine', place: 4, points: 199 }] },
+  { id: 'p1', kind: 'participants', year: 2026, finished_at: '2026-05-14T20:10:00Z', http_status: 200, status: 'ok', rows_upserted: 4, error: null,
+    source_url: PARSE_JOBS[0].source_url,
+    rows: [{ iso: 'AT', name: 'Austria', artist: 'JJ', song: 'Wasted Love' }, { iso: 'GR', name: 'Greece', artist: 'Klavdia', song: 'Asteromata' }, { iso: 'SE', name: 'Sweden', artist: 'KAJ', song: '' }, { iso: 'UA', name: 'Ukraine', artist: 'Ziferblat', song: 'Bird of Pray' }] },
+];
+
 function seedAdmin() {
   seedDraft('rules');
   (FAKE_USER as Record<string, unknown>).email = 'owner@example.com';
@@ -96,7 +126,7 @@ function seedAdmin() {
     {
       super_admins: [{ user_id: FAKE_USER.id }],
       super_admin_emails: [{ email: 'owner@example.com' }, { email: 'editor@example.com' }],
-      contests: CONTESTS.map((c) => ({ ...c, semi1_date: null, semi2_date: null })),
+      contests: CONTESTS.map((c) => ({ ...c, semi1_date: null, semi2_date: null, game_phase: c.year === 2026 ? 'voting_live' : 'pre_night' })),
       countries: COUNTRIES,
       contest_entries: [
         entry(2025, 'AT', 'JJ', 'Wasted Love', 1),
@@ -104,11 +134,12 @@ function seedAdmin() {
         entry(2025, 'SE', 'KAJ', 'Bara bada bastu', 4),
         entry(2025, 'UA', 'Ziferblat', 'Bird of Pray', 9),
       ],
-      rooms: [],
+      rooms: [{ id: 'room-1', year: 2026, phase: 'voting_live', code: 'ABCD' }, { id: 'room-2', year: 2026, phase: 'voting_live', code: 'EFGH' }, { id: 'room-3', year: 2026, phase: 'lobby', code: 'IJKL' }],
       players: [],
       winners: [],
-      parse_jobs: [],
-      parse_runs: [],
+      parse_jobs: PARSE_JOBS,
+      parse_runs: PARSE_RUNS,
+      game_entries: [{ year: 2026, iso: 'AT', in_final: true }, { year: 2026, iso: 'GR', in_final: true }, { year: 2026, iso: 'SE', in_final: true }, { year: 2026, iso: 'UA', in_final: true }],
       avatars: AVATAR_ROWS,
     },
     {
