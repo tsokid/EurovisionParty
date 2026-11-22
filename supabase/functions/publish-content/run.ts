@@ -32,13 +32,32 @@
 // is kept. The run row then stays running until begin_publish's 10-minute
 // timeout closes it.
 //
+// Per-doc publish (CMS P5, migration 086). The request names the docs it
+// ships (doc_ids; null = every unpublished draft plus the contests, the old
+// "Publish all") and where (target):
+// - main, doc_ids given: only those drafts, one content file each (plus the
+//   media they reference and seo-intent.json). No contest snapshot and no
+//   vercel.json rewrite: a page publish ships that page only.
+// - main, doc_ids null: as before, minus the site-wide docs (Q3 = C: those
+//   always go through a preview first).
+// - preview (site-wide docs only): the same commit, but on the
+//   content-preview branch, cut from main's head; Vercel builds it as a
+//   preview deployment. Nothing is published, no media row is marked.
+// - promote (a ready preview run): the preview commit's files, by blob sha,
+//   committed onto main (the "go live" action), with the intent derived again.
+// end_publish gets the versions shipped (doc_id, updated_at, data), so an
+// edit saved while the run was in flight stays unpublished.
+//
 // Pure and Deno-free.
 import { buildSnapshotFiles, type SnapshotInput } from './snapshot.ts';
 import { cmsFiles, CmsValidationError, type CmsIssue } from './cmsFiles.ts';
 import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
 import { draftRefsLeft, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
-import type { CommitResult, DerivedFiles, FileTransforms } from './github.ts';
+import type { BlobRef, CommitResult, DerivedFiles, FileTransforms } from './github.ts';
 import { appendIntent, buildIntentEntry, SEO_INTENT_FILE } from '../_shared/cms/seoIntent.ts';
+
+/** One doc a run shipped: its draft version and the data committed (end_publish's p_shipped). */
+export type ShippedDoc = { doc_id: string; updated_at: string | null; data: unknown };
 
 export type EndPublishArgs = {
   id: number;
@@ -46,17 +65,36 @@ export type EndPublishArgs = {
   sha: string | null;
   files: number | null;
   error: string | null;
+  /** Present when CMS drafts were shipped (ok / noop). */
+  shipped?: ShippedDoc[];
 };
+
+/** Where a commit goes: main (the site) or the content-preview branch (cut from main). */
+export type PublishTarget = 'main' | 'preview';
+
+/** The preview run a promote ships (publish_runs, service role). */
+export type PreviewRun = { id: number; commit_sha: string; doc_ids: string[]; shipped: Array<{ doc_id: string; updated_at: string | null }> };
+
+/** A file the preview commit changed: its blob, and its text for content/pages/*.json. */
+export type PreviewFile = BlobRef & { path: string; text?: string };
 
 export type PublishDeps = {
   rpc: {
-    /** begin_publish(p_cms) as the calling super admin. Returns the run id. */
-    beginPublish(cms: boolean): Promise<number>;
-    /** publish_input() as service role. */
-    publishInput(): Promise<SnapshotInput>;
+    /**
+     * begin_publish(p_cms, p_doc_ids, p_target, p_promote) as the calling
+     * super admin. Returns the run id. `scope` is passed only when the
+     * request is not the default full publish to main.
+     */
+    beginPublish(cms: boolean, scope?: PublishScope): Promise<number>;
+    /** publish_input(p_doc_ids, p_skip_site_wide) as service role. */
+    publishInput(filter?: { docIds: string[] | null; skipSiteWide: boolean }): Promise<SnapshotInput>;
     /** end_publish(...) as service role. */
     endPublish(args: EndPublishArgs): Promise<void>;
+    /** The preview run a promote ships (service role). Only promotes call it. */
+    previewRun?(id: number): Promise<PreviewRun>;
   };
+  /** The files a commit changed against its first parent (promote). */
+  commitChanges?(sha: string): Promise<PreviewFile[]>;
   /**
    * The committed content/pages/*.json of the branch head, as { doc_id:
    * document }: the base of the cross-page title/description check. Read
@@ -77,6 +115,8 @@ export type PublishDeps = {
     transforms: FileTransforms,
     limits: { maxNewBinaryBytes: number },
     derived?: DerivedFiles,
+    /** A preview commit goes to content-preview; existing blobs (a promote) are referenced by sha. */
+    extra?: { target?: PublishTarget; blobs?: Record<string, BlobRef> },
   ): Promise<CommitResult>;
   /** CMS media: Storage (bucket cms-media, service role) and cms_media. */
   media: StorageSweepDeps & {
@@ -105,6 +145,8 @@ export type PublishResult =
   | { status: 'busy'; run_id: null; sha: null; files_changed: 0; error: string };
 
 const BUSY = 'publish already running';
+/** begin_publish's refusal while the previous main deploy builds (086). */
+export const DEPLOY_BUSY = 'publish already running (the previous deploy is still building)';
 
 /** Years as "1956-1958, 1999". */
 function yearRanges(years: number[]): string {
@@ -130,31 +172,70 @@ export function commitMessage(changedPaths: string[]): string {
 
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
+/** What a run ships beyond the default (every draft and the contests, to main). */
+export type PublishScope = {
+  /** Only these docs (086 begin_publish p_doc_ids); null: every unpublished draft and the contests. */
+  docIds: string[] | null;
+  target: PublishTarget;
+  /** Promote this ready preview run to main. */
+  promote: number | null;
+};
+
 export type PublishOptions = {
   /** Ship the CMS drafts too (default). false: contests only (lifecycle auto-publish). */
   cms: boolean;
-};
+} & Partial<PublishScope>;
 
-/** The options of a request body: `{ cms: false }` skips the CMS drafts; anything else ships them. */
+const DOC_ID = /^[a-z0-9-]+$/;
+
+/**
+ * The options of a request body. `{ cms: false }` skips the CMS drafts;
+ * `doc_ids` (a non-empty list of doc ids) ships only those; `target:
+ * 'preview'` commits to content-preview; `promote: <run id>` ships a ready
+ * preview. An invalid doc id list throws; anything else unknown is ignored.
+ */
 export function publishOptions(body: unknown): PublishOptions {
-  const cms = body && typeof body === 'object' ? (body as Record<string, unknown>).cms : undefined;
-  return { cms: cms !== false };
+  const b = body && typeof body === 'object' ? (body as Record<string, unknown>) : {};
+  const out: PublishOptions = { cms: b.cms !== false };
+  if (b.doc_ids !== undefined && b.doc_ids !== null) {
+    if (!Array.isArray(b.doc_ids) || b.doc_ids.length === 0 || !b.doc_ids.every((d) => typeof d === 'string' && DOC_ID.test(d))) {
+      throw new Error('doc_ids must be a non-empty list of document ids');
+    }
+    out.docIds = [...new Set(b.doc_ids as string[])].sort();
+  }
+  if (b.target === 'preview') out.target = 'preview';
+  if (typeof b.promote === 'number' && Number.isInteger(b.promote) && b.promote > 0) out.promote = b.promote;
+  return out;
 }
 
-export async function runPublish(deps: PublishDeps, { cms }: PublishOptions = { cms: true }): Promise<PublishResult> {
+/** The scope of a request, or undefined for the default full publish to main. */
+function scopeOf(o: PublishOptions): PublishScope | undefined {
+  const scope: PublishScope = { docIds: o.docIds ?? null, target: o.target ?? 'main', promote: o.promote ?? null };
+  return scope.docIds === null && scope.target === 'main' && scope.promote === null ? undefined : scope;
+}
+
+export async function runPublish(deps: PublishDeps, options: PublishOptions = { cms: true }): Promise<PublishResult> {
+  const { cms } = options;
+  const scope = scopeOf(options);
   let id: number;
   try {
-    id = await deps.rpc.beginPublish(cms);
+    id = await (scope ? deps.rpc.beginPublish(cms, scope) : deps.rpc.beginPublish(cms));
   } catch (e) {
-    if (message(e).includes(BUSY)) return { status: 'busy', run_id: null, sha: null, files_changed: 0, error: BUSY };
+    const m = message(e);
+    if (m.includes(BUSY)) return { status: 'busy', run_id: null, sha: null, files_changed: 0, error: m.includes('deploy') ? DEPLOY_BUSY : BUSY };
     throw e;
   }
+  if (scope?.promote) return promote(deps, id, scope.promote);
+  const docScoped = scope?.docIds != null;
+  const target: PublishTarget = scope?.target ?? 'main';
 
   let result: CommitResult;
   let found: Warnings = {};
   let marks: Array<{ id: string; path: string }> = [];
+  let shippedDocs: ShippedDoc[] = [];
   try {
-    const input = await deps.rpc.publishInput();
+    // A direct "publish all" to main never ships the site-wide docs (Q3 = C).
+    const input = await deps.rpc.publishInput({ docIds: scope?.docIds ?? null, skipSiteWide: target === 'main' && !docScoped });
     // All built before anything is committed: a bad draft, a bad media
     // reference or bad contest data refuses it all.
     const drafts = cms ? input.cms_documents ?? [] : [];
@@ -165,25 +246,29 @@ export async function runPublish(deps: PublishDeps, { cms }: PublishOptions = { 
     const media = await publishMedia(drafts, input.media ?? [], (path) => deps.media.download(path), () => deps.media.publishedPaths());
     if (media.rewritten) pages = cmsFiles(media.drafts, committed);
     marks = media.marks;
-    const files = { ...buildSnapshotFiles(input), ...pages.files, ...media.files };
+    // A doc-scoped run ships those docs only: no contest snapshot.
+    const files = { ...(docScoped ? {} : buildSnapshotFiles(input)), ...pages.files, ...media.files };
     // A cms-media/ left outside a media field would ship unrewritten and fail every build.
     const left = draftRefsLeft(files);
     if (left.length) throw new MediaError(left);
     const redirects = generatedRedirects(input.contests);
     const shipped = Object.fromEntries((media.rewritten ? media.drafts : drafts).map((d) => [d.doc_id, d.data]));
+    shippedDocs = drafts.map((d) => ({ doc_id: d.doc_id, updated_at: d.updated_at ?? null, data: d.data }));
     const createdAt = (deps.now ?? (() => new Date()))().toISOString();
-    result = await deps.commitFiles(files, commitMessage, {
+    const transforms: FileTransforms = docScoped ? {} : {
       'vercel.json': (current) => {
         if (current === null) throw new Error('vercel.json is missing from the branch');
         return mergeVercelRedirects(current, redirects);
       },
-    }, { maxNewBinaryBytes: MEDIA_MAX_NEW_BYTES }, {
+    };
+    const msg = docScoped ? () => pageCommitMessage(drafts.map((d) => d.doc_id), target) : commitMessage;
+    result = Object.keys(files).length === 0 ? { sha: null, changed: 0, paths: [] } : await deps.commitFiles(files, msg, transforms, { maxNewBinaryBytes: MEDIA_MAX_NEW_BYTES }, {
       // The SEO intent of this commit (spec §6): what the build's SEO guard may see change.
       [SEO_INTENT_FILE]: (current, changedPaths) => {
         const entry = buildIntentEntry({ id: `publish-${id}`, createdAt, changedPaths, drafts: shipped, committed });
         return entry ? appendIntent(current, entry) : null;
       },
-    });
+    }, ...(target === 'preview' ? [{ target }] : []));
   } catch (e) {
     if (e instanceof CmsValidationError && e.warnings.length) found = { warnings: e.warnings };
     const error = message(e);
@@ -193,13 +278,63 @@ export async function runPublish(deps: PublishDeps, { cms }: PublishOptions = { 
 
   const status = result.sha ? 'ok' : 'noop';
   const warnings: string[] = [];
-  const marked = await markPublished(deps, marks);
+  // A preview publishes nothing: its media rows are marked when it is promoted.
+  const marked = target === 'preview' ? undefined : await markPublished(deps, marks);
   if (marked) warnings.push(marked);
   if (cms) await sweep(deps);
-  const ended = await tryEnd(deps, { id, status, sha: result.sha, files: result.changed, error: null });
+  const ended = await tryEnd(deps, {
+    id, status, sha: result.sha, files: result.changed, error: null,
+    ...(shippedDocs.length ? { shipped: shippedDocs } : {}),
+  });
   if (ended.warning) warnings.push(ended.warning);
   const warning = warnings.length ? { warning: warnings.join('; ') } : {};
   return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...warning, ...found };
+}
+
+/** `content: publish faq` (a page publish) or `content: preview site-header` (a site-wide preview). */
+export function pageCommitMessage(docIds: string[], target: PublishTarget): string {
+  return `content: ${target === 'preview' ? 'preview' : 'publish'} ${[...docIds].sort().join(', ')}`;
+}
+
+const PAGE_PATH = /^content\/pages\/([a-z0-9-]+)\.json$/;
+
+/**
+ * Go live with a ready preview: the files of the preview commit, by blob sha,
+ * as one commit on main; the SEO intent is derived again against main. The
+ * run ships the versions the preview showed (an edit since stays unpublished).
+ */
+async function promote(deps: PublishDeps, id: number, previewId: number): Promise<PublishResult> {
+  let result: CommitResult;
+  let shipped: ShippedDoc[] = [];
+  try {
+    if (!deps.rpc.previewRun || !deps.commitChanges) throw new Error('promote is not wired');
+    const preview = await deps.rpc.previewRun(previewId);
+    const changed = (await deps.commitChanges(preview.commit_sha)).filter((f) => f.path !== SEO_INTENT_FILE);
+    if (changed.length === 0) throw new Error(`preview commit ${preview.commit_sha.slice(0, 7)} changed no content`);
+    const docs: Record<string, unknown> = {};
+    for (const f of changed) {
+      const m = PAGE_PATH.exec(f.path);
+      if (m && f.text !== undefined) docs[m[1]] = JSON.parse(f.text);
+    }
+    const committed = await deps.readCommittedPages();
+    const versions = new Map(preview.shipped.map((s) => [s.doc_id, s.updated_at]));
+    shipped = preview.doc_ids.filter((d) => d in docs).map((d) => ({ doc_id: d, updated_at: versions.get(d) ?? null, data: docs[d] }));
+    const blobs = Object.fromEntries(changed.map((f) => [f.path, { sha: f.sha, mode: f.mode }]));
+    const createdAt = (deps.now ?? (() => new Date()))().toISOString();
+    result = await deps.commitFiles({}, () => pageCommitMessage(preview.doc_ids, 'main'), {}, { maxNewBinaryBytes: MEDIA_MAX_NEW_BYTES }, {
+      [SEO_INTENT_FILE]: (current, changedPaths) => {
+        const entry = buildIntentEntry({ id: `publish-${id}`, createdAt, changedPaths, drafts: docs, committed });
+        return entry ? appendIntent(current, entry) : null;
+      },
+    }, { blobs });
+  } catch (e) {
+    const error = message(e);
+    const warning = await tryEnd(deps, { id, status: 'error', sha: null, files: null, error });
+    return { status: 'error', run_id: id, sha: null, files_changed: 0, error, ...warning };
+  }
+  const status = result.sha ? 'ok' : 'noop';
+  const ended = await tryEnd(deps, { id, status, sha: result.sha, files: result.changed, error: null, ...(shipped.length ? { shipped } : {}) });
+  return { status, run_id: id, sha: result.sha, files_changed: result.changed, ...ended };
 }
 
 /**

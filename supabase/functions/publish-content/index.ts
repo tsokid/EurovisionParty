@@ -14,6 +14,11 @@
 // rows are marked published and cms-media objects with no cms_media row,
 // older than a day, are deleted from Storage.
 //
+// Per-doc publish (CMS P5, migration 086): the body may carry doc_ids (only
+// those drafts, no contests), target: 'preview' (the site-wide docs, to the
+// content-preview branch cut from main) or promote: <preview run id> (the
+// preview commit's files onto main). See run.ts.
+//
 // Response: { status: 'ok' | 'noop' | 'error' | 'busy', sha, files_changed,
 // run_id, error?, warnings? }. warnings: CMS validation advice per doc
 // ({ doc_id, locale, path, message }), never blocking. A CMS validation
@@ -21,13 +26,14 @@
 // 403 forbidden.
 //
 // Secrets: GITHUB_TOKEN (fine-grained, contents read/write, this repo only),
-// GITHUB_REPO (tsokid/EurovisionParty), GITHUB_BRANCH (main).
+// GITHUB_REPO (tsokid/EurovisionParty), GITHUB_BRANCH (main). Optional:
+// GITHUB_PREVIEW_BRANCH (default content-preview).
 //
 // This file only wires I/O; the flow is runPublish in run.ts (unit-tested).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.99.3";
-import { commitFiles, listPaths, readFiles } from "./github.ts";
+import { commitChanges, commitFiles, listPaths, readFiles } from "./github.ts";
 import { pagesFromFiles } from "./cmsFiles.ts";
-import { publishOptions, runPublish, type PublishResult } from "./run.ts";
+import { publishOptions, runPublish, type PreviewRun, type PublishResult } from "./run.ts";
 import { collectRegisteredPaths } from "./media.ts";
 import type { SnapshotInput } from "./snapshot.ts";
 
@@ -37,6 +43,7 @@ const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const GITHUB_TOKEN = Deno.env.get("GITHUB_TOKEN") ?? "";
 const GITHUB_REPO = Deno.env.get("GITHUB_REPO") ?? "tsokid/EurovisionParty";
 const GITHUB_BRANCH = Deno.env.get("GITHUB_BRANCH") ?? "main";
+const PREVIEW_BRANCH = Deno.env.get("GITHUB_PREVIEW_BRANCH") ?? "content-preview";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -114,33 +121,57 @@ Deno.serve(async (req) => {
     if (!(await isSuperAdmin(authorization))) return jsonResponse({ error: "forbidden" }, 403);
     if (!GITHUB_TOKEN) return jsonResponse({ status: "error", error: "GITHUB_TOKEN is not set" }, 500);
 
-    const options = publishOptions(await req.json().catch(() => null));
+    let options;
+    try {
+      options = publishOptions(await req.json().catch(() => null));
+    } catch (e) {
+      return jsonResponse({ status: "error", error: e instanceof Error ? e.message : String(e) }, 400);
+    }
     const user = userClient(authorization);
     const service = serviceClient();
     const github = { token: GITHUB_TOKEN, repo: GITHUB_REPO, branch: GITHUB_BRANCH, fetch };
 
     const result = await runPublish({
       rpc: {
-        async beginPublish(cms) {
-          const { data, error } = await user.rpc("begin_publish", { p_cms: cms });
+        async beginPublish(cms, scope) {
+          const { data, error } = await user.rpc("begin_publish", {
+            p_cms: cms,
+            p_doc_ids: scope?.docIds ?? null,
+            p_target: scope?.target ?? "main",
+            p_promote: scope?.promote ?? null,
+          });
           if (error) throw new Error(error.message);
           return Number(data);
         },
-        async publishInput() {
-          const { data, error } = await service.rpc("publish_input");
+        async publishInput(filter) {
+          const { data, error } = await service.rpc("publish_input", {
+            p_doc_ids: filter?.docIds ?? null,
+            p_skip_site_wide: filter?.skipSiteWide ?? false,
+          });
           if (error) throw new Error(error.message);
           return data as SnapshotInput;
         },
-        async endPublish({ id, status, sha, files, error: runError }) {
+        async endPublish({ id, status, sha, files, error: runError, shipped }) {
           const { error } = await service.rpc("end_publish", {
-            p_id: id, p_status: status, p_sha: sha, p_files: files, p_error: runError,
+            p_id: id, p_status: status, p_sha: sha, p_files: files, p_error: runError, p_shipped: shipped ?? null,
           });
           if (error) throw new Error(error.message);
         },
+        async previewRun(id) {
+          const { data, error } = await service
+            .from("publish_runs").select("id, commit_sha, doc_ids, shipped").eq("id", id).single();
+          if (error || !data?.commit_sha) throw new Error(error?.message ?? `run ${id} has no commit`);
+          return { id: Number(data.id), commit_sha: data.commit_sha, doc_ids: data.doc_ids ?? [], shipped: data.shipped ?? [] } as PreviewRun;
+        },
       },
+      commitChanges: (sha) => commitChanges({ ...github, sha, textOf: (path) => /^content\/pages\/[a-z0-9-]+\.json$/.test(path) }),
       readCommittedPages: async () =>
         pagesFromFiles(await readFiles({ ...github, match: (path) => path.startsWith("content/pages/") })),
-      commitFiles: (files, message, transforms, limits, derived) => commitFiles({ ...github, files, message, transforms, derived, ...limits }),
+      commitFiles: (files, message, transforms, limits, derived, extra) => commitFiles({
+        ...github,
+        ...(extra?.target === "preview" ? { branch: PREVIEW_BRANCH, base: GITHUB_BRANCH } : {}),
+        files, message, transforms, derived, blobs: extra?.blobs, ...limits,
+      }),
       media: {
         async download(storagePath) {
           const { data, error } = await service.storage.from(BUCKET).download(storagePath);

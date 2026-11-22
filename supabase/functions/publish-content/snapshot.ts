@@ -54,7 +54,13 @@ export type SnapshotInput = {
 };
 
 /** One publish_input().cms_documents row. */
-export type CmsDocumentRow = { doc_id: string; doc_type: string; data: { en: unknown; el: unknown } };
+export type CmsDocumentRow = {
+  doc_id: string;
+  doc_type: string;
+  data: { en: unknown; el: unknown };
+  /** The draft's version (086): end_publish stamps exactly this one as published. */
+  updated_at?: string;
+};
 
 /**
  * One publish_input().media row. storage_path is the bare object name in the

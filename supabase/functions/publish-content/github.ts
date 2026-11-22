@@ -6,8 +6,14 @@
 //
 // Files are only added or updated, never deleted. A text file goes inline
 // in the tree; a binary file (Uint8Array, the CMS media) is uploaded first as
-// a base64 blob and referenced by its sha. Either way an unchanged file (same
-// git blob sha as the parent tree's) is skipped.
+// a base64 blob and referenced by its sha; a blob already in the repo (a
+// promote, CMS P5) is referenced by its sha as is. Either way an unchanged
+// file (same git blob sha as the parent tree's) is skipped.
+//
+// A commit can be cut from another branch (`base`): the site-wide preview
+// takes main's head as its parent and moves content-preview onto the new
+// commit (created when missing, force-moved otherwise: the branch only ever
+// holds the latest preview). Commits to the branch itself stay fast-forward.
 
 type Fetch = typeof fetch;
 
@@ -23,7 +29,17 @@ type GitHubOpts = {
   apiBase?: string;
 };
 
+/** A blob already in the repository, with its tree mode. */
+export type BlobRef = { sha: string; mode: string };
+
 export type CommitFilesOpts = GitHubOpts & {
+  /**
+   * The branch whose head is the new commit's parent (default: `branch`).
+   * When it differs, `branch` is created or force-moved onto the commit.
+   */
+  base?: string;
+  /** Files whose content is an existing blob of the repo (path -> blob). */
+  blobs?: Record<string, BlobRef>;
   /** Repo path → UTF-8 file text, or the bytes of a binary file. */
   files: Record<string, string | Uint8Array>;
   /** Commit message, or a function of the changed paths (sorted). */
@@ -68,7 +84,8 @@ export type CommitResult = {
 };
 
 /** git's blob id: sha1("blob <byte length>\0" + content), over the UTF-8 bytes of a string. */
-export async function gitBlobSha(content: string | Uint8Array): Promise<string> {
+export async function gitBlobSha(content: string | Uint8Array | BlobRef): Promise<string> {
+  if (typeof content !== 'string' && !(content instanceof Uint8Array)) return content.sha;
   const body = typeof content === 'string' ? new TextEncoder().encode(content) : content;
   const header = new TextEncoder().encode(`blob ${body.byteLength}\0`);
   const bytes = new Uint8Array(header.byteLength + body.byteLength);
@@ -152,8 +169,9 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   const call = client(opts);
   const repo = `/repos/${opts.repo}`;
   const refPath = `heads/${opts.branch}`;
+  const cut = opts.base !== undefined && opts.base !== opts.branch;
 
-  const { parent, baseTree, existing } = await headTree(call, repo, refPath);
+  const { parent, baseTree, existing } = await headTree(call, repo, cut ? `heads/${opts.base}` : refPath);
 
   const files = { ...opts.files };
   for (const [path, transform] of Object.entries(opts.transforms ?? {})) {
@@ -161,12 +179,18 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
     files[path] = transform(prev ? await readBlob(call, repo, prev.sha) : null);
   }
 
-  const changed: Array<{ path: string; content: string | Uint8Array; mode: string }> = [];
+  const changed: Array<{ path: string; content: string | Uint8Array | BlobRef; mode: string }> = [];
   for (const path of Object.keys(files).sort()) {
     const content = files[path];
     const prev = existing.get(path);
     if (prev && prev.sha === (await gitBlobSha(content))) continue;
     changed.push({ path, content, mode: prev?.mode ?? '100644' });
+  }
+  for (const [path, blob] of Object.entries(opts.blobs ?? {}).sort(([a], [b]) => (a < b ? -1 : 1))) {
+    if (path in files) throw new Error(`${path} is both a file and a blob`);
+    const prev = existing.get(path);
+    if (prev && prev.sha === blob.sha) continue;
+    changed.push({ path, content: blob, mode: blob.mode });
   }
   if (changed.length === 0) return { sha: null, changed: 0, paths: [] };
 
@@ -181,7 +205,7 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   changed.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
 
   if (opts.maxNewBinaryBytes !== undefined) {
-    const added = changed.reduce((n, f) => n + (typeof f.content === 'string' ? 0 : f.content.byteLength), 0);
+    const added = changed.reduce((n, f) => n + (f.content instanceof Uint8Array ? f.content.byteLength : 0), 0);
     if (added > opts.maxNewBinaryBytes) {
       throw new Error(tooMuchNewMedia(added, opts.maxNewBinaryBytes));
     }
@@ -195,6 +219,8 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
   for (const f of changed) {
     if (typeof f.content === 'string') {
       entries.push({ path: f.path, mode: f.mode, type: 'blob', content: f.content });
+    } else if (!(f.content instanceof Uint8Array)) {
+      entries.push({ path: f.path, mode: f.mode, type: 'blob', sha: f.content.sha });
     } else {
       const blob = await call<{ sha: string }>('POST', `${repo}/git/blobs`, { content: toBase64(f.content), encoding: 'base64' });
       entries.push({ path: f.path, mode: f.mode, type: 'blob', sha: blob.sha });
@@ -211,8 +237,82 @@ export async function commitFiles(opts: CommitFilesOpts): Promise<CommitResult> 
     tree: newTree.sha,
     parents: [parent],
   });
-  await call('PATCH', `${repo}/git/refs/${refPath}`, { sha: newCommit.sha, force: false });
+  if (!cut) {
+    await call('PATCH', `${repo}/git/refs/${refPath}`, { sha: newCommit.sha, force: false });
+  } else {
+    await moveBranch(call, repo, opts.branch, newCommit.sha);
+  }
   return { sha: newCommit.sha, changed: paths.length, paths };
+}
+
+/** Points `branch` at `sha`: force-moves it, or creates it when it does not exist yet. */
+async function moveBranch(call: Call, repo: string, branch: string, sha: string): Promise<void> {
+  try {
+    await call('PATCH', `${repo}/git/refs/heads/${branch}`, { sha, force: true });
+  } catch (e) {
+    if (!/GitHub (404|422) /.test(e instanceof Error ? e.message : String(e))) throw e;
+    await call('POST', `${repo}/git/refs`, { ref: `refs/heads/${branch}`, sha });
+  }
+}
+
+/**
+ * The files a commit added or changed against its first parent, with their
+ * blobs (deletions are never made by publish-content and are not listed).
+ * `text` holds the UTF-8 content of the paths `textOf` selects.
+ */
+export async function commitChanges(
+  opts: GitHubOpts & { sha: string; textOf?: (path: string) => boolean },
+): Promise<Array<BlobRef & { path: string; text?: string }>> {
+  const call = client(opts);
+  const repo = `/repos/${opts.repo}`;
+  const commit = await call<{ tree: { sha: string }; parents: Array<{ sha: string }> }>('GET', `${repo}/git/commits/${opts.sha}`);
+  if (commit.parents.length === 0) throw new Error(`commit ${opts.sha} has no parent`);
+  const parent = await call<{ tree: { sha: string } }>('GET', `${repo}/git/commits/${commit.parents[0].sha}`);
+  const blobsOf = async (tree: string) => {
+    const t = await call<{ truncated: boolean; tree: TreeEntry[] }>('GET', `${repo}/git/trees/${tree}?recursive=1`);
+    if (t.truncated) throw new Error(`GitHub tree ${tree} is truncated; cannot compare files`);
+    return new Map(t.tree.filter((e) => e.type === 'blob').map((e) => [e.path, e]));
+  };
+  const [after, before] = await Promise.all([blobsOf(commit.tree.sha), blobsOf(parent.tree.sha)]);
+  const out: Array<BlobRef & { path: string; text?: string }> = [];
+  for (const [path, entry] of [...after].sort(([a], [b]) => (a < b ? -1 : 1))) {
+    if (before.get(path)?.sha === entry.sha) continue;
+    const item: BlobRef & { path: string; text?: string } = { path, sha: entry.sha, mode: entry.mode };
+    if (opts.textOf?.(path)) item.text = await readBlob(call, repo, entry.sha);
+    out.push(item);
+  }
+  return out;
+}
+
+/** The head commit of a branch (read-only). */
+export async function branchHead(opts: GitHubOpts): Promise<string> {
+  const ref = await client(opts)<{ object: { sha: string } }>('GET', `/repos/${opts.repo}/git/ref/heads/${opts.branch}`);
+  return ref.object.sha;
+}
+
+/**
+ * Reverts `sha` on `branch` when, and only when, it is still the branch head
+ * (spec §9): a new commit with the tree of `sha`'s first parent, fast-forward
+ * only. Returns { reverted: sha } or { blocked: head } (nothing written).
+ */
+export async function revertHead(
+  opts: GitHubOpts & { sha: string; message: string },
+): Promise<{ reverted: string } | { blocked: string }> {
+  const call = client(opts);
+  const repo = `/repos/${opts.repo}`;
+  const head = await branchHead(opts);
+  if (head !== opts.sha) return { blocked: head };
+  const commit = await call<{ parents: Array<{ sha: string }> }>('GET', `${repo}/git/commits/${opts.sha}`);
+  if (commit.parents.length !== 1) throw new Error(`commit ${opts.sha} is not a single-parent commit; not reverting`);
+  const parent = await call<{ tree: { sha: string } }>('GET', `${repo}/git/commits/${commit.parents[0].sha}`);
+  const revert = await call<{ sha: string }>('POST', `${repo}/git/commits`, {
+    message: opts.message,
+    tree: parent.tree.sha,
+    parents: [opts.sha],
+  });
+  // force: false — if anything landed since the head check, GitHub refuses and nothing moves.
+  await call('PATCH', `${repo}/git/refs/heads/${opts.branch}`, { sha: revert.sha, force: false });
+  return { reverted: revert.sha };
 }
 
 /** A blob's UTF-8 text (blobs API, base64). */
