@@ -142,6 +142,35 @@ describe('runPublish', () => {
     expect(endPublish).not.toHaveBeenCalled();
   });
 
+  it('a contests-only run retries while another run is in flight, then publishes (night of the final)', async () => {
+    let calls = 0;
+    const { d, commitFiles } = deps({
+      begin: async () => {
+        calls++;
+        if (calls < 3) throw new Error('publish already running');
+        return 9;
+      },
+    });
+    const waits: number[] = [];
+    d.sleep = async (ms) => { waits.push(ms); };
+    const r = await runPublish(d, { cms: false });
+    expect(r).toMatchObject({ status: 'ok', run_id: 9, sha: 'commit1' });
+    expect(waits).toHaveLength(2);
+    expect(commitFiles).toHaveBeenCalledTimes(1);
+  });
+
+  it('a contests-only run gives up as busy after its retries; a content run never retries', async () => {
+    const contests = deps({ begin: async () => { throw new Error('publish already running'); } });
+    let slept = 0;
+    contests.d.sleep = async () => { slept++; };
+    expect(await runPublish(contests.d, { cms: false })).toMatchObject({ status: 'busy', error: 'publish already running' });
+    expect(slept).toBe(8);
+
+    const content = deps({ begin: async () => { throw new Error('publish already running'); } });
+    content.d.sleep = async () => { throw new Error('a content run must not wait'); };
+    expect(await runPublish(content.d)).toMatchObject({ status: 'busy' });
+  });
+
   it('any other begin_publish failure (e.g. forbidden) propagates', async () => {
     const { d } = deps({ begin: async () => { throw new Error('forbidden'); } });
     await expect(runPublish(d)).rejects.toThrow('forbidden');

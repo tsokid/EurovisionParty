@@ -51,7 +51,7 @@ async function isSuperAdmin(authorization: string): Promise<boolean> {
   return !!data;
 }
 
-const COLUMNS = "id, status, target, commit_sha, finished_at, deploy_state, deploy_url, deploy_note, reverted_sha, doc_ids, started_at, files_changed, error, promoted_from, cms";
+const COLUMNS = "id, status, target, commit_sha, finished_at, deploy_state, deploy_url, deploy_note, reverted_sha, doc_ids, started_at, files_changed, error, promoted_from, cms, deploy_checked_at";
 
 function runIds(body: unknown): number[] | null {
   const b = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
@@ -86,6 +86,26 @@ Deno.serve(async (req) => {
           });
           if (e) throw new Error(e.message);
           return next as RunRow;
+        },
+        // 090: contests-only runs land on top of a building content run.
+        async laterMainRuns(r) {
+          const { data: rows, error: e } = await service.from("publish_runs").select(COLUMNS)
+            .eq("target", "main").eq("status", "ok").not("commit_sha", "is", null).gt("id", r.id).order("id");
+          if (e) throw new Error(e.message);
+          return ((rows ?? []) as RunRow[]).map((x) => ({ ...x, id: Number(x.id) }));
+        },
+        async earlierContentRun(r) {
+          if (!r.finished_at) return null;
+          const since = new Date(Date.parse(r.finished_at) - 20 * 60_000).toISOString();
+          const { data: rows, error: e } = await service.from("publish_runs").select(COLUMNS)
+            .eq("target", "main").eq("status", "ok").eq("cms", true).not("commit_sha", "is", null)
+            .lt("id", r.id).gt("finished_at", since).order("id", { ascending: false }).limit(1);
+          if (e) throw new Error(e.message);
+          const below = (rows ?? [])[0] as RunRow | undefined;
+          if (!below || below.deploy_state === "ready") return null;
+          // Reverted before this run committed: this run built on the revert, its failure is its own.
+          if (below.deploy_state === "reverted" && below.deploy_checked_at && below.deploy_checked_at < r.finished_at) return null;
+          return { ...below, id: Number(below.id) };
         },
       }, { ...row, id: Number(row.id) }));
     }

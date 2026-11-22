@@ -315,6 +315,67 @@ export async function revertHead(
   return { reverted: revert.sha };
 }
 
+/** Files every publish appends to; never compared or put back by a scoped revert. */
+const APPEND_ONLY = new Set(['seo-intent.json']);
+
+/**
+ * Reverts the files of `sha` on top of the branch head (CMS P6, 090): for a
+ * failed content publish that contests-only publishes landed on top of
+ * while it was building. Writes only when
+ * - the head is ahead of `sha` (never diverged),
+ * - `allowAbove` accepts every commit above `sha` (the caller checks they are
+ *   contests-only publishes), and
+ * - none of those commits touched a file `sha` changed (the append-only
+ *   seo-intent.json aside).
+ * The new commit sets each of `sha`'s files back to its first parent's blob
+ * (removing a file `sha` added) and keeps everything else of the head; the
+ * ref update is fast-forward only. Returns { reverted } or { blocked: head }.
+ */
+export async function revertFilesOnHead(
+  opts: GitHubOpts & { sha: string; message: string; allowAbove: (shas: string[]) => boolean },
+): Promise<{ reverted: string; scoped: true } | { blocked: string }> {
+  const call = client(opts);
+  const repo = `/repos/${opts.repo}`;
+  const head = await branchHead(opts);
+  if (head === opts.sha) return { blocked: head };
+  const cmp = await call<{ status: string; commits: Array<{ sha: string }>; files?: Array<{ filename: string; previous_filename?: string }> }>(
+    'GET', `${repo}/compare/${opts.sha}...${head}`,
+  );
+  if (cmp.status !== 'ahead' || !cmp.commits.length || !opts.allowAbove(cmp.commits.map((c) => c.sha))) return { blocked: head };
+
+  const commit = await call<{ tree: { sha: string }; parents: Array<{ sha: string }> }>('GET', `${repo}/git/commits/${opts.sha}`);
+  if (commit.parents.length !== 1) return { blocked: head };
+  const parent = await call<{ tree: { sha: string } }>('GET', `${repo}/git/commits/${commit.parents[0].sha}`);
+  const blobsOf = async (tree: string) => {
+    const t = await call<{ truncated: boolean; tree: TreeEntry[] }>('GET', `${repo}/git/trees/${tree}?recursive=1`);
+    if (t.truncated) throw new Error(`GitHub tree ${tree} is truncated; cannot compare files`);
+    return new Map(t.tree.filter((e) => e.type === 'blob').map((e) => [e.path, e]));
+  };
+  const [after, before] = await Promise.all([blobsOf(commit.tree.sha), blobsOf(parent.tree.sha)]);
+  const mine = new Set<string>();
+  for (const [path, e] of after) if (before.get(path)?.sha !== e.sha) mine.add(path);
+  for (const path of before.keys()) if (!after.has(path)) mine.add(path);
+  for (const path of APPEND_ONLY) mine.delete(path);
+  if (!mine.size) return { blocked: head };
+  const above = new Set((cmp.files ?? []).flatMap((f) => [f.filename, f.previous_filename ?? f.filename]));
+  if ([...mine].some((p) => above.has(p))) return { blocked: head };
+
+  const headCommit = await call<{ tree: { sha: string } }>('GET', `${repo}/git/commits/${head}`);
+  const tree = await call<{ sha: string }>('POST', `${repo}/git/trees`, {
+    base_tree: headCommit.tree.sha,
+    tree: [...mine].sort().map((path) => {
+      const prev = before.get(path);
+      return prev
+        ? { path, mode: prev.mode, type: 'blob', sha: prev.sha }
+        : { path, mode: after.get(path)!.mode, type: 'blob', sha: null };
+    }),
+  });
+  const revert = await call<{ sha: string }>('POST', `${repo}/git/commits`, { message: opts.message, tree: tree.sha, parents: [head] });
+  // force: false — if anything landed since, GitHub refuses and nothing moves.
+  await call('PATCH', `${repo}/git/refs/heads/${opts.branch}`, { sha: revert.sha, force: false });
+  return { reverted: revert.sha, scoped: true };
+}
+
 /** A blob's UTF-8 text (blobs API, base64). */
 async function readBlob(call: Call, repo: string, sha: string): Promise<string> {
   const res = await call<{ encoding: string; content: string }>('GET', `${repo}/git/blobs/${sha}`);

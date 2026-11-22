@@ -24,7 +24,7 @@
 // the content-preview branch is scratch space and main is untouched.
 //
 // Pure and Deno-free.
-import { revertHead } from '../publish-content/github.ts';
+import { revertFilesOnHead, revertHead } from '../publish-content/github.ts';
 
 export type DeployState = 'building' | 'ready' | 'error' | 'reverted' | 'revert_blocked';
 
@@ -40,6 +40,9 @@ export type RunRow = {
   deploy_note: string | null;
   reverted_sha: string | null;
   doc_ids: string[] | null;
+  /** false: a contests-only publish (the lifecycle / parser auto-publish). */
+  cms?: boolean;
+  deploy_checked_at?: string | null;
 };
 
 export type GitHubConfig = {
@@ -106,6 +109,14 @@ export type StatusDeps = {
   github: GitHubConfig;
   /** set_deploy_state(run, state, url, reverted_sha, note) as service role; returns the run. */
   setDeployState(args: { id: number; state: DeployState; url: string | null; revertedSha: string | null; note: string | null }): Promise<RunRow>;
+  /** The ok main runs with a commit after `run` (id order). Without it, a failed run is reverted only while it is main's head. */
+  laterMainRuns?(run: RunRow): Promise<RunRow[]>;
+  /**
+   * For a contests-only run: the content run committed just before it whose
+   * deploy had not gone live when it landed (building, error, or reverted
+   * after it), or null.
+   */
+  earlierContentRun?(run: RunRow): Promise<RunRow | null>;
   log?: (message: string) => void;
 };
 
@@ -116,6 +127,21 @@ const settled = (run: RunRow) =>
 
 export const revertMessage = (run: RunRow) =>
   `content: revert publish ${run.id} (the Vercel build of ${run.commit_sha!.slice(0, 7)} failed)`;
+
+export const scopedRevertMessage = (run: RunRow) =>
+  `content: revert the files of publish ${run.id} (the Vercel build of ${run.commit_sha!.slice(0, 7)} failed; the contests published since stay)`;
+
+export const liveViaNote = (later: RunRow) =>
+  `live with publish ${later.id} (${later.commit_sha!.slice(0, 7)}), which built on top of this one`;
+
+export const inheritedNote = (below: RunRow, via: string) =>
+  `this build failed because of publish ${below.id}; its files were put back in ${via.slice(0, 7)}, which carries these results`;
+
+export const waitingNote = (below: RunRow) =>
+  `this build includes publish ${below.id}, whose deploy is not settled yet`;
+
+export const blockedBelowNote = (below: RunRow) =>
+  `this build failed because of publish ${below.id}, which could not be reverted automatically. Fix it; these results are not reverted.`;
 
 export const blockedNote = (head: string) =>
   `main moved on to ${head.slice(0, 7)} after this publish: not reverting automatically. Fix the content or revert by hand.`;
@@ -144,11 +170,21 @@ export async function checkRun(deps: StatusDeps, run: RunRow): Promise<RunRow> {
   const failed = await deps.setDeployState({ id: run.id, state: 'error', url: observed.url, revertedSha: null, note: observed.detail });
   if (run.target !== 'main') return failed;
 
+  // A contests-only run on top of a content run that had not gone live: the
+  // build failed because of that run. The results are never reverted.
+  if (run.cms === false && deps.earlierContentRun) {
+    const below = await deps.earlierContentRun(run);
+    const outcome = below ? await inherited(deps, run, below, observed) : null;
+    if (outcome) return outcome;
+  }
+
   try {
     const outcome = await revertHead({ ...deps.github, sha: run.commit_sha, message: revertMessage(run) });
     if ('reverted' in outcome) {
       return deps.setDeployState({ id: run.id, state: 'reverted', url: observed.url, revertedSha: outcome.reverted, note: observed.detail });
     }
+    const scoped = await revertUnderContests(deps, run, observed, failed);
+    if (scoped) return scoped;
     (deps.log ?? console.error)(`publish-status: run ${run.id}: ${blockedNote(outcome.blocked)}`);
     return deps.setDeployState({ id: run.id, state: 'revert_blocked', url: observed.url, revertedSha: null, note: blockedNote(outcome.blocked) });
   } catch (e) {
@@ -156,4 +192,52 @@ export async function checkRun(deps: StatusDeps, run: RunRow): Promise<RunRow> {
     (deps.log ?? console.error)(`publish-status: run ${run.id}: revert failed: ${msg}`);
     return deps.setDeployState({ id: run.id, state: 'revert_blocked', url: observed.url, revertedSha: null, note: `revert failed: ${msg}` });
   }
+}
+
+/**
+ * A failed content run that only contests-only publishes landed on top of
+ * (090: they do not wait for its build). If the latest of them built, this
+ * run's content is live with it: ready. While it builds: undecided (the run
+ * stays error and is checked again). If it failed too: this run's files are
+ * put back on top of main (revertFilesOnHead; the contests never share a
+ * file with a page), so the results go live with the revert commit.
+ * Returns null when anything else landed on top (then revert_blocked).
+ */
+async function revertUnderContests(deps: StatusDeps, run: RunRow, observed: Observed, failed: RunRow): Promise<RunRow | null> {
+  if (run.cms === false || !deps.laterMainRuns) return null;
+  const later = (await deps.laterMainRuns(run)).filter((r) => r.commit_sha);
+  if (!later.length || !later.every((r) => r.cms === false)) return null;
+  const last = later[later.length - 1];
+  const top = await observeDeploy(deps.github, last.commit_sha!, 'main');
+  if (top.state === 'ready') return deps.setDeployState({ id: run.id, state: 'ready', url: top.url, revertedSha: null, note: liveViaNote(last) });
+  if (top.state === 'building') return failed;
+  const contests = new Set(later.map((r) => r.commit_sha!));
+  const outcome = await revertFilesOnHead({
+    ...deps.github,
+    sha: run.commit_sha!,
+    message: scopedRevertMessage(run),
+    allowAbove: (shas) => shas.every((s) => contests.has(s)),
+  });
+  if (!('reverted' in outcome)) return null;
+  return deps.setDeployState({ id: run.id, state: 'reverted', url: observed.url, revertedSha: outcome.reverted, note: observed.detail });
+}
+
+/** A contests-only run whose build failed because of the content run below it (see checkRun). */
+async function inherited(deps: StatusDeps, run: RunRow, below: RunRow, observed: Observed): Promise<RunRow | null> {
+  const p = await checkRun(deps, below);
+  // The run below went live: this failure is the contests run's own.
+  if (p.deploy_state === 'ready') return null;
+  if (p.deploy_state === 'reverted' && p.reverted_sha) {
+    const via = await observeDeploy(deps.github, p.reverted_sha, 'main');
+    const note = inheritedNote(p, p.reverted_sha);
+    if (via.state === 'error') {
+      return deps.setDeployState({ id: run.id, state: 'revert_blocked', url: observed.url, revertedSha: null, note: `${note}; that build failed too. These results are not reverted.` });
+    }
+    return deps.setDeployState({ id: run.id, state: via.state, url: via.url, revertedSha: null, note });
+  }
+  if (p.deploy_state === 'revert_blocked') {
+    return deps.setDeployState({ id: run.id, state: 'revert_blocked', url: observed.url, revertedSha: null, note: blockedBelowNote(p) });
+  }
+  // The run below is still undecided: stay failed (checked again on the next poll), never revert the results.
+  return deps.setDeployState({ id: run.id, state: 'error', url: observed.url, revertedSha: null, note: waitingNote(p) });
 }

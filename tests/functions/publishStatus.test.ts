@@ -176,3 +176,142 @@ describe('checkRun', () => {
     expect(calls.every((c) => c.method === 'GET' && !c.path.includes('/git/'))).toBe(true);
   });
 });
+
+// 090: on the night of the final a contests-only publish no longer waits
+// behind a building page deploy. If that page build fails, only the page's
+// files are put back on top of the contests commit; the results are never
+// reverted.
+describe('contests published on top of a building content run (090)', () => {
+  const PAGE = 'fa11ed0000000000000000000000000000000000';
+  const CONT = 'c0e5750000000000000000000000000000000000';
+  const REV = 'feed000000000000000000000000000000000000';
+  const deployOf = (sha: string, id: number, state: string, extra: Record<string, unknown> = {}): Route[] => [
+    { method: 'GET', path: `${R}/deployments?sha=${sha}&per_page=20`, body: [{ id, sha, environment: 'Production', created_at: '2026-11-22T10:00:10Z' }] },
+    { method: 'GET', path: `${R}/deployments/${id}/statuses?per_page=1`, body: [{ state, ...extra }] },
+  ];
+  const page = run({ id: 51, commit_sha: PAGE, cms: true, doc_ids: ['faq'] });
+  const contests = run({ id: 52, commit_sha: CONT, cms: false, doc_ids: null, finished_at: '2026-11-22T10:01:00Z' });
+
+  /** set_deploy_state over several runs. */
+  function store(...rows: RunRow[]) {
+    const byId = new Map(rows.map((r) => [r.id, { ...r }]));
+    const calls: Array<{ id: number; state: DeployState; revertedSha: string | null; note: string | null }> = [];
+    const setDeployState = vi.fn(async (a: { id: number; state: DeployState; url: string | null; revertedSha: string | null; note: string | null }) => {
+      calls.push({ id: a.id, state: a.state, revertedSha: a.revertedSha, note: a.note });
+      const prev = byId.get(a.id)!;
+      const next = { ...prev, deploy_state: a.state, reverted_sha: a.revertedSha ?? prev.reverted_sha, deploy_note: a.note };
+      byId.set(a.id, next);
+      return next;
+    });
+    return { setDeployState, calls, row: (id: number) => byId.get(id)! };
+  }
+
+  // The page commit changed faq.json and the intent file; the contests commit 2027.json and the intent file.
+  const scopedRevert: Route[] = [
+    { method: 'GET', path: `${R}/git/ref/heads/main`, body: { object: { sha: CONT } } },
+    { method: 'GET', path: `${R}/compare/${PAGE}...${CONT}`, body: { status: 'ahead', commits: [{ sha: CONT }], files: [{ filename: 'content/contests/2027.json' }, { filename: 'seo-intent.json' }] } },
+    { method: 'GET', path: `${R}/git/commits/${PAGE}`, body: { sha: PAGE, tree: { sha: 'tree-page' }, parents: [{ sha: 'good0' }] } },
+    { method: 'GET', path: `${R}/git/commits/good0`, body: { sha: 'good0', tree: { sha: 'tree-good' } } },
+    { method: 'GET', path: `${R}/git/trees/tree-page?recursive=1`, body: { truncated: false, tree: [
+      { path: 'content/pages/faq.json', mode: '100644', type: 'blob', sha: 'faq-new' },
+      { path: 'seo-intent.json', mode: '100644', type: 'blob', sha: 'intent-2' },
+      { path: 'content/contests/2027.json', mode: '100644', type: 'blob', sha: 'y-old' },
+    ] } },
+    { method: 'GET', path: `${R}/git/trees/tree-good?recursive=1`, body: { truncated: false, tree: [
+      { path: 'content/pages/faq.json', mode: '100644', type: 'blob', sha: 'faq-old' },
+      { path: 'seo-intent.json', mode: '100644', type: 'blob', sha: 'intent-1' },
+      { path: 'content/contests/2027.json', mode: '100644', type: 'blob', sha: 'y-old' },
+    ] } },
+    { method: 'GET', path: `${R}/git/commits/${CONT}`, body: { sha: CONT, tree: { sha: 'tree-cont' } } },
+    { method: 'POST', path: `${R}/git/trees`, body: { sha: 'tree-rev' } },
+    { method: 'POST', path: `${R}/git/commits`, body: { sha: REV } },
+    { method: 'PATCH', path: `${R}/git/refs/heads/main`, body: { object: { sha: REV } } },
+  ];
+
+  it('a failed page build under a failed contests build: only the page file is put back, on top of the results', async () => {
+    const { cfg, calls } = github([...deployOf(PAGE, 901, 'failure'), ...deployOf(CONT, 902, 'failure'), ...scopedRevert]);
+    const db = store(page, contests);
+    const out = await checkRun({ github: cfg, setDeployState: db.setDeployState, laterMainRuns: async () => [contests] }, page);
+
+    expect(writes(calls)).toEqual([
+      { method: 'POST', path: `${R}/git/trees`, body: { base_tree: 'tree-cont', tree: [{ path: 'content/pages/faq.json', mode: '100644', type: 'blob', sha: 'faq-old' }] } },
+      { method: 'POST', path: `${R}/git/commits`, body: { message: expect.stringMatching(/^content: revert the files of publish 51/), tree: 'tree-rev', parents: [CONT] } },
+      { method: 'PATCH', path: `${R}/git/refs/heads/main`, body: { sha: REV, force: false } },
+    ]);
+    expect(out).toMatchObject({ deploy_state: 'reverted', reverted_sha: REV });
+  });
+
+  it('the contests run never reverts itself: it follows the page revert commit to live', async () => {
+    const { cfg, calls } = github([
+      ...deployOf(CONT, 902, 'failure'), ...deployOf(PAGE, 901, 'failure'), ...scopedRevert,
+      ...deployOf(REV, 903, 'success', { environment_url: 'https://eurovision.games' }),
+    ]);
+    const db = store(page, contests);
+    const out = await checkRun({
+      github: cfg,
+      setDeployState: db.setDeployState,
+      laterMainRuns: async (r) => (r.id === 51 ? [contests] : []),
+      earlierContentRun: async () => page,
+    }, contests);
+
+    // One revert commit, the page's, on top of the contests commit.
+    const commits = writes(calls).filter((c) => c.method === 'POST' && c.path.endsWith('/git/commits'));
+    expect(commits).toHaveLength(1);
+    expect(commits[0].body).toMatchObject({ parents: [CONT] });
+    expect(db.row(51)).toMatchObject({ deploy_state: 'reverted', reverted_sha: REV });
+    expect(out).toMatchObject({ deploy_state: 'ready' });
+    expect(out.deploy_note).toMatch(/because of publish 51.*put back in feed000/);
+  });
+
+  it('when the contests build on top went live, the page is live with it: ready, nothing reverted', async () => {
+    const { cfg, calls } = github([...deployOf(PAGE, 901, 'failure'), ...deployOf(CONT, 902, 'success'),
+      { method: 'GET', path: `${R}/git/ref/heads/main`, body: { object: { sha: CONT } } }]);
+    const db = store(page, contests);
+    const out = await checkRun({ github: cfg, setDeployState: db.setDeployState, laterMainRuns: async () => [contests] }, page);
+    expect(writes(calls)).toEqual([]);
+    expect(out.deploy_state).toBe('ready');
+    expect(out.deploy_note).toMatch(/live with publish 52/);
+  });
+
+  it('while the contests build on top is still building, nothing is decided or written', async () => {
+    const { cfg, calls } = github([...deployOf(PAGE, 901, 'failure'), ...deployOf(CONT, 902, 'in_progress'),
+      { method: 'GET', path: `${R}/git/ref/heads/main`, body: { object: { sha: CONT } } }]);
+    const db = store(page, contests);
+    const out = await checkRun({ github: cfg, setDeployState: db.setDeployState, laterMainRuns: async () => [contests] }, page);
+    expect(writes(calls)).toEqual([]);
+    expect(out.deploy_state).toBe('error');
+  });
+
+  it('a content publish on top (not contests-only) still blocks: revert_blocked, nothing written', async () => {
+    const other = run({ id: 53, commit_sha: 'beef', cms: true });
+    const { cfg, calls } = github([...deployOf(PAGE, 901, 'failure'),
+      { method: 'GET', path: `${R}/git/ref/heads/main`, body: { object: { sha: 'beef' } } }]);
+    const db = store(page, other);
+    const out = await checkRun({ github: cfg, setDeployState: db.setDeployState, laterMainRuns: async () => [contests, other], log: () => {} }, page);
+    expect(writes(calls)).toEqual([]);
+    expect(out.deploy_state).toBe('revert_blocked');
+  });
+
+  it('a contests commit that touched one of the page files blocks the scoped revert', async () => {
+    const routes = scopedRevert.map((r) => (r.path.includes('/compare/')
+      ? { ...r, body: { status: 'ahead', commits: [{ sha: CONT }], files: [{ filename: 'content/pages/faq.json' }] } }
+      : r));
+    const { cfg, calls } = github([...deployOf(PAGE, 901, 'failure'), ...deployOf(CONT, 902, 'failure'), ...routes]);
+    const db = store(page, contests);
+    const out = await checkRun({ github: cfg, setDeployState: db.setDeployState, laterMainRuns: async () => [contests], log: () => {} }, page);
+    expect(writes(calls)).toEqual([]);
+    expect(out.deploy_state).toBe('revert_blocked');
+  });
+
+  it('a contests run whose own build failed (the run below went live) keeps the P5 rule: revert only while it is the head', async () => {
+    const { cfg } = github([...deployOf(CONT, 902, 'failure'),
+      { method: 'GET', path: `${R}/git/ref/heads/main`, body: { object: { sha: 'later000' } } }]);
+    const live = { ...page, deploy_state: 'ready' as const };
+    const db = store(live, contests);
+    const out = await checkRun({
+      github: cfg, setDeployState: db.setDeployState, log: () => {},
+      laterMainRuns: async () => [], earlierContentRun: async () => live,
+    }, contests);
+    expect(out.deploy_state).toBe('revert_blocked');
+  });
+});

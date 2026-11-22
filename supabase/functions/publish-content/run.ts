@@ -132,6 +132,8 @@ export type PublishDeps = {
   };
   /** Clock of the Storage sweep. Default: the current time. */
   now?: () => Date;
+  /** Waits between a contests run's begin_publish retries (090). Default: setTimeout. */
+  sleep?: (ms: number) => Promise<void>;
   /** Where a failed Storage sweep is reported. Default: console.error. */
   log?: (message: string) => void;
 };
@@ -145,6 +147,9 @@ export type PublishResult =
   | { status: 'busy'; run_id: null; sha: null; files_changed: 0; error: string };
 
 const BUSY = 'publish already running';
+/** A contests-only run retries begin_publish this many times, this far apart, while another run is in flight. */
+export const CONTESTS_RETRIES = 8;
+export const CONTESTS_RETRY_MS = 4000;
 /** begin_publish's refusal while the previous main deploy builds (086). */
 export const DEPLOY_BUSY = 'publish already running (the previous deploy is still building)';
 
@@ -218,12 +223,23 @@ export async function runPublish(deps: PublishDeps, options: PublishOptions = { 
   const { cms } = options;
   const scope = scopeOf(options);
   let id: number;
-  try {
-    id = await (scope ? deps.rpc.beginPublish(cms, scope) : deps.rpc.beginPublish(cms));
-  } catch (e) {
-    const m = message(e);
-    if (m.includes(BUSY)) return { status: 'busy', run_id: null, sha: null, files_changed: 0, error: m.includes('deploy') ? DEPLOY_BUSY : BUSY };
-    throw e;
+  const sleep = deps.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
+  for (let attempt = 0; ; attempt++) {
+    try {
+      id = await (scope ? deps.rpc.beginPublish(cms, scope) : deps.rpc.beginPublish(cms));
+      break;
+    } catch (e) {
+      const m = message(e);
+      if (!m.includes(BUSY)) throw e;
+      // A contests-only run (the night-of auto-publish) never waits behind a
+      // building deploy (090), only behind a run in flight, which takes
+      // seconds: retry for a while instead of answering busy.
+      if (!cms && !m.includes('deploy') && attempt < CONTESTS_RETRIES) {
+        await sleep(CONTESTS_RETRY_MS);
+        continue;
+      }
+      return { status: 'busy', run_id: null, sha: null, files_changed: 0, error: m.includes('deploy') ? DEPLOY_BUSY : BUSY };
+    }
   }
   if (scope?.promote) return promote(deps, id, scope.promote);
   const docScoped = scope?.docIds != null;
