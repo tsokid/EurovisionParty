@@ -728,6 +728,7 @@
     "banner": "Reconnecting… your progress is safe"
   },
   "siteNav": {
+    "homeAria": "eurovision.games — home",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "yourRooms": "Your Rooms",

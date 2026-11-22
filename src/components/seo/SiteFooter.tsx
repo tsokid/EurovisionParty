@@ -1,4 +1,5 @@
 import LocaleLink from './LocaleLink';
+import Wordmark from './Wordmark';
 import { useTranslation } from 'react-i18next';
 import { useCurrentYear } from '../../lib/currentContest';
 import { hubPath } from '../../lib/seo/dynamicPages';
@@ -36,9 +37,7 @@ export default function SiteFooter() {
       <div className="wrap footer-inner">
         <div className="fcols">
           <div className="fbrand">
-            <LocaleLink to="/" className="logo" aria-label="Eurovision Games — home">
-              <img src="/logo.png" alt="eurovision.games" width={866} height={288} loading="lazy" draggable={false} />
-            </LocaleLink>
+            <Wordmark />
             <span className="t-meta">{t('siteFooter.tagline')}</span>
           </div>
 

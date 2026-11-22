@@ -6,6 +6,7 @@ import { useUserRooms, getBadge } from '../../hooks/useUserRooms';
 import MuteToggle from '../ui/MuteToggle';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 import LocaleLink from './LocaleLink';
+import Wordmark from './Wordmark';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { localizePath, stripLocaleFromPath } from '../../lib/seo/locale';
 import { useGameStore } from '../../stores/gameStore';
@@ -77,11 +78,7 @@ function CloseIcon() {
 }
 
 function Logo() {
-  return (
-    <LocaleLink to="/" className="logo" aria-label="Eurovision Games — home">
-      <img src="/logo.png" alt="eurovision.games" width={866} height={288} draggable={false} />
-    </LocaleLink>
-  );
+  return <Wordmark />;
 }
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';

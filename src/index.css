@@ -381,6 +381,11 @@ body { margin: 0; overscroll-behavior: none; }
   @media (min-width: 768px) { .topbar-row { gap: 12px; } }
   .logo { display: flex; align-items: center; flex: none; border-radius: 10px; }
   .logo img { height: 44px; width: auto; display: block; filter: drop-shadow(0 0 14px rgba(240, 70, 156, .25)); user-select: none; }
+  /* Text wordmark (header + footer): "vision" in the pink → purple gradient, ".games" lighter. */
+  .wordmark { font: 700 22px/1 var(--font-stage); letter-spacing: -.02em; color: var(--color-stage-text); text-decoration: none; white-space: nowrap; padding: 6px 0; }
+  .wordmark-grad { background: linear-gradient(90deg, #F0469C 0%, #A35BFF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .wordmark-tld { font-weight: 500; color: var(--color-stage-text-2); }
+  @media (min-width: 1024px) { .wordmark { font-size: 27px; } }
   .logo:focus-visible { outline: 2px solid var(--color-stage-pink-2); outline-offset: 4px; }
   .nav { display: none; gap: 4px; margin-left: 24px; align-items: center; }
   .nav-item { display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: var(--radius-stage-pill); font: 500 15px/1.2 var(--font-stage); color: var(--color-stage-text-2); background: none; border: 0; cursor: pointer; text-decoration: none; white-space: nowrap; }
@@ -419,6 +424,7 @@ body { margin: 0; overscroll-behavior: none; }
   .fcols a { display: block; padding: 6px 0; font-size: 14px; line-height: 1.4; color: var(--color-stage-text-2); text-decoration: none; }
   .fcols a:hover { color: var(--color-stage-text); }
   .fcols a:focus-visible { outline: 2px solid var(--color-stage-pink-2); outline-offset: 2px; border-radius: 4px; }
+  .fcols a.wordmark { font-size: 24px; line-height: 1; color: var(--color-stage-text); }
   .fbrand { display: none; }
   @media (min-width: 1024px) { .fbrand { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; } }
   .fdisclaimer { margin: 0; padding-top: 24px; border-top: 1px solid var(--color-stage-line); }
@@ -586,6 +592,8 @@ body { margin: 0; overscroll-behavior: none; }
     .home-preview-bar { padding: 14px 20px; }
     .home-preview-chip { height: 24px; }
     .home-preview-body { padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+    .home-preview-row { padding-top: 4px; padding-bottom: 6px; }
+    .home-preview .avpop.home-preview-av { width: 44px; flex: none; }
     .home-preview-event { margin: 14px 12px 0; padding: 14px 16px; border-radius: 14px; background: var(--color-stage-surface-2); display: flex; align-items: center; gap: 12px; }
     .home-rooms { padding-top: 40px; }
     .home-block { padding-top: 0; padding-bottom: 0; }
@@ -640,10 +648,13 @@ body { margin: 0; overscroll-behavior: none; }
   .hub-main { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
   .hub-aside { display: flex; flex-direction: column; gap: 20px; }
   .hub-semis { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 8px; }
-  .hub-semis-list { margin: 0; padding: 0; list-style: none; }
+  /* Date column sized to the widest date (subgrid), so a wider fallback font
+     can't push the date into the label and the labels line up across rows. */
+  .hub-semis-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: max-content minmax(0, 1fr) auto; column-gap: 16px; }
+  .hub-semis-list li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
   .hub-semis-list li + li { border-top: 1px solid var(--color-stage-line); }
-  .hub-semi { display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 10px 0; color: var(--color-stage-text); text-decoration: none; }
-  .hub-semi-n { flex: none; width: 58px; font-size: 30px; color: var(--color-stage-pink-2); }
+  .hub-semi { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; min-height: 56px; padding: 10px 0; color: var(--color-stage-text); text-decoration: none; }
+  .hub-semi-n { min-width: 58px; white-space: nowrap; font-size: 30px; color: var(--color-stage-pink-2); }
   .hub-play { padding: 20px; display: flex; flex-direction: column; gap: 14px; border-color: rgba(240, 70, 156, .25); background: radial-gradient(100% 120% at 100% 0%, rgba(163, 91, 255, .24), transparent 60%), var(--color-stage-surface); }
   .hub-play-title { font-size: 22px; }
   .hub-checks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
@@ -802,7 +813,7 @@ body { margin: 0; overscroll-behavior: none; }
   .hero-stats > div { display: flex; flex-direction: column-reverse; gap: 4px; }
   .hero-stats dd { margin: 0; font-size: 36px; color: var(--color-stage-text); }
   @media (min-width: 1024px) {
-    .hero-split .hero-inner { display: grid; grid-template-columns: minmax(0, 1fr) 460px; column-gap: 64px; row-gap: 20px; align-items: end; }
+    .hero-split .hero-inner { display: grid; grid-template-columns: minmax(0, 1fr) 460px; column-gap: 64px; row-gap: 20px; align-items: start; }
     .hero-split .hero-main { gap: 18px; }
     .hero-split .hero-aside { margin-top: 0; gap: 14px; }
     .hero-split .hero-inner > :not(.hero-main):not(.hero-aside) { grid-column: 1 / -1; }
