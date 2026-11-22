@@ -310,7 +310,8 @@ describe('countries index (SSR)', () => {
 
   it('/en/countries groups by the English initial', async () => {
     const r = await render('/en/countries');
-    expect(h2s(r.html).slice(0, 3)).toEqual(['A', 'B', 'C']);
+    // The Stage board puts «The most successful» above the A–Z letter groups.
+    expect(h2s(r.html).filter((h) => h.length === 1).slice(0, 3)).toEqual(['A', 'B', 'C']);
   });
 });
 

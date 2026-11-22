@@ -3,9 +3,7 @@ import type { z } from 'zod';
 import { choice, group, list, optional, text } from '../fields.ts';
 import { articleSchema, basicMeta, crumbs, cta, hero, relatedItem, strongRest, strongRestHtml, extraBlocks } from './common.ts';
 
-/** The FAQ page groups the accordion questions under these topics (labels in i18n faqPage.topics). */
-export const FAQ_TOPICS = ['start', 'devices', 'during', 'scoring', 'results'] as const;
-export type FaqTopic = (typeof FAQ_TOPICS)[number];
+import { FAQ_TOPICS } from '../faqTopics.ts';
 
 /** In sorted order, so a sorted list of ids compares position by position. */
 const ANCHOR_IDS = ['create', 'join', 'leave'] as const;

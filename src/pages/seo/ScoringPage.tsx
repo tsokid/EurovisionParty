@@ -63,8 +63,6 @@ export default function ScoringPage() {
   const items = c.example.items;
   const totalMatch = items.length > 1 ? /(\d+)/.exec(items[items.length - 1].strong) : null;
   const total = totalMatch ? totalMatch[1] : null;
-  const last = total ? items[items.length - 1] : null;
-  const exampleRows = (total ? items.slice(0, -1) : items).map((it) => ({ ...it, value: boldNumber(it.rest) }));
 
   const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
   const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
@@ -185,17 +183,20 @@ export default function ScoringPage() {
             )}
             <p className="t-small m-0">{c.example.intro}</p>
             <ul className="sc-ex-list">
-              {exampleRows.map((it, i) => (
-                <li key={i} className={`sc-ex-row c${i % 3}`}>
-                  <span className="sc-ex-b">
-                    <strong>{it.strong}</strong>
-                    <span className="t-meta" dangerouslySetInnerHTML={{ __html: it.rest }} />
-                  </span>
-                  {it.value && <span className="num sc-ex-v">{it.value}</span>}
-                </li>
-              ))}
+              {c.example.items.map((it, i) => {
+                const isTotal = total != null && i === c.example.items.length - 1;
+                const value = isTotal ? null : boldNumber(it.rest);
+                return (
+                  <li key={i} className={isTotal ? 'sc-ex-total t-small' : `sc-ex-row c${i % 3}`}>
+                    <span className="sc-ex-b">
+                      <strong>{it.strong}</strong>
+                      <span className={isTotal ? undefined : 't-meta'} dangerouslySetInnerHTML={{ __html: it.rest }} />
+                    </span>
+                    {value && <span className="num sc-ex-v">{value}</span>}
+                  </li>
+                );
+              })}
             </ul>
-            {last && <p className="t-small m-0"><strong>{last.strong}</strong> <span dangerouslySetInnerHTML={{ __html: last.rest }} /></p>}
           </section>
           <div className="card-hero card-pad sc-cta" role="complementary">
             <h2 className="t-h3">{c.cta.title}</h2>

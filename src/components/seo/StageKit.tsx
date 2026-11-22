@@ -54,8 +54,8 @@ export const IconBox = ({ name, size = 20 }: { name: IconName; size?: number }) 
 
 export const Tick = () => <Icon name="check" size={18} className="tick" />;
 
-/** Check-mark list: bold lead-in, then the rest of the sentence (rest may be HTML). */
-export function Ticks({ items, html = false, tone }: { items: { strong: string; rest: string }[]; html?: boolean; tone?: 'x' }) {
+/** Check-mark list: bold lead-in, then the rest of the sentence (plain text). */
+export function Ticks({ items, tone }: { items: { strong: string; rest: string }[]; tone?: 'x' }) {
   return (
     <ul className={tone === 'x' ? 'ticks ticks-x' : 'ticks'}>
       {items.map((it, i) => (
@@ -63,7 +63,7 @@ export function Ticks({ items, html = false, tone }: { items: { strong: string; 
           {tone === 'x' ? <Icon name="x" size={18} className="tick" /> : <Tick />}
           <span>
             <strong>{it.strong}</strong>{' '}
-            {html ? <span dangerouslySetInnerHTML={{ __html: it.rest }} /> : it.rest}
+            {it.rest}
           </span>
         </li>
       ))}

@@ -12,7 +12,8 @@ import { pageUrl } from '../../lib/seo/registry';
 import { usePageContent } from '../../lib/cms/usePageContent';
 import ExtraBlocks from '../../components/cms/ExtraBlocks';
 import { mergeFaqJsonLd } from '../../components/cms/extraFaq';
-import { FAQ_TOPICS, type FaqContent, type FaqTopic } from '../../../supabase/functions/_shared/cms/schemas/faq';
+import type { FaqContent } from '../../../supabase/functions/_shared/cms/schemas/faq';
+import { FAQ_TOPICS, type FaqTopic } from '../../../supabase/functions/_shared/cms/faqTopics';
 import { PageContentFallback } from './PageContentFallback';
 
 const TOPIC_ICON: Record<FaqTopic, IconName> = {
@@ -95,13 +96,13 @@ export default function FAQPage() {
         </div>
       ),
     },
-    ...[{ a: joinA, s: c.joinSection }, { a: leaveA, s: c.leaveSection }].map(({ a, s }) => ({
-      id: a.id, q: a.q, a: a.a,
+    {
+      id: 'join', q: joinA.q, a: joinA.a,
       body: (
         <div className="faq-rich">
-          <p>{a.a}</p>
+          <p>{joinA.a}</p>
           <ul className="ticks">
-            {s.bullets.map((b, i) => (
+            {c.joinSection.bullets.map((b, i) => (
               <li key={i}>
                 <Icon name="check" size={18} className="tick" />
                 <span><strong>{b.strong}</strong> <span dangerouslySetInnerHTML={{ __html: b.rest }} /></span>
@@ -110,7 +111,23 @@ export default function FAQPage() {
           </ul>
         </div>
       ),
-    })),
+    },
+    {
+      id: 'leave', q: leaveA.q, a: leaveA.a,
+      body: (
+        <div className="faq-rich">
+          <p>{leaveA.a}</p>
+          <ul className="ticks">
+            {c.leaveSection.bullets.map((b, i) => (
+              <li key={i}>
+                <Icon name="check" size={18} className="tick" />
+                <span><strong>{b.strong}</strong> <span dangerouslySetInnerHTML={{ __html: b.rest }} /></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ),
+    },
   ];
 
   const topics = FAQ_TOPICS.map((id) => {

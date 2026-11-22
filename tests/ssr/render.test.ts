@@ -102,10 +102,12 @@ describe('entry-server render', () => {
   it('renders el after en without leaking language', async () => {
     await render('/en/faq');
     const el = await render('/el/faq');
-    expect(el.html).toContain(faqCopy.el.hero.title);
+    // The H1 wraps its gradient part in a <span>; compare the text without tags.
+    const text = (html: string) => html.replace(/<[^>]+>/g, '');
+    expect(text(el.html)).toContain(faqCopy.el.hero.title);
     expect(el.lang).toBe('el');
     const en = await render('/en/faq');
-    expect(en.html).toContain(faqCopy.en.hero.title);
+    expect(text(en.html)).toContain(faqCopy.en.hero.title);
     expect(en.lang).toBe('en');
   });
 

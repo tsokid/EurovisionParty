@@ -183,7 +183,14 @@ export default function RulesPage() {
           </GuideSection>
 
           <GuideSection id="duels" n={nOf('duels')} title={c.duels.title}>
-            <Ticks items={c.duels.items} html />
+            <ul className="ticks">
+              {c.duels.items.map((it, i) => (
+                <li key={i}>
+                  <Icon name="check" size={18} className="tick" />
+                  <span><strong>{it.strong}</strong> <span dangerouslySetInnerHTML={{ __html: it.rest }} /></span>
+                </li>
+              ))}
+            </ul>
           </GuideSection>
 
           <GuideSection id="trophies" n={nOf('trophies')} title={c.trophies.title} intro={c.trophies.intro}>
