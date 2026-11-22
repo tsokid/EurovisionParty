@@ -7,6 +7,7 @@ import { MAX_ROUNDS, QUESTIONS_PER_ROUND, SCORING, TIMER_SECONDS } from '../../l
 import { quizAnswerChip } from '../../lib/answerPoints';
 import { standingsMove, standingsWindow, type Standing } from '../../lib/roundStandings';
 import { useGameStore } from '../../stores/gameStore';
+import { StageVfx, type StageVfxHandle } from '../stage/vfx';
 import { PlayerAvatar, useCountUp, useTimeline } from '../stage';
 import { quizChipView } from './chipText';
 import type { QuizAnswer, QuizQuestion } from '../../lib/types';
@@ -123,8 +124,12 @@ export default function RoundResults({
     return { ...prev, chips: next };
   }), []);
 
+  const vfx = useRef<StageVfxHandle>(null);
+  const meRowRef = useRef<HTMLLIElement | null>(null);
+
   const finish = useCallback(() => {
     clear();
+    vfx.current?.clear();
     setS({
       ...initial(chips.length),
       shown: true, dots: chips.length, chips: chips.map((c) => (c.points > 0 ? 2 : 0)) as ChipState[],
@@ -163,7 +168,7 @@ export default function RoundResults({
     });
     at(T.summary, () => set({ summary: true }));
     at(T.total, () => set({ countTotal: true }));
-    at(T.move, () => set({ moved: true, lift: true }));
+    at(T.move, () => { set({ moved: true, lift: true }); if (roundTotal > 0) vfx.current?.fire('roundEnd', { target: meRowRef.current }); });
     at(T.flash, () => set({ lift: false, flash: true }));
     at(T.toast, () => set({ toast: true, done: true }));
     return clear;
@@ -193,6 +198,7 @@ export default function RoundResults({
 
   return (
     <div className="qz-end">
+      <StageVfx ref={vfx} layers="front" />
       <motion.section
         className="card-hero qz-end-card"
         aria-label={t('roundEnd.aria', { num: roundNumber })}
@@ -305,6 +311,7 @@ export default function RoundResults({
           return (
             <motion.li
               key={id}
+              ref={me ? meRowRef : undefined}
               layout={!reduce}
               className={clsx('qz-lb-row', me && 'me', s.lift && me && 'lift')}
               animate={reduce ? { opacity: s.fadeMovers && mover ? 0 : 1 } : { scale: s.lift && me ? 1.04 : 1 }}

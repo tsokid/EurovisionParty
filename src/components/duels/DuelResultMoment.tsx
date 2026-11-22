@@ -11,6 +11,7 @@ import {
 } from '../../lib/answerPoints';
 import { buzz } from '../../lib/haptics';
 import { PlayerAvatar, useCountUp, useTimeline } from '../stage';
+import { StageVfx, type StageVfxHandle } from '../stage/vfx';
 import { duelChipView } from '../quiz/chipText';
 import type { Duel, DuelAnswer, DuelDecision, Player } from '../../lib/types';
 
@@ -126,6 +127,9 @@ export default function DuelResultMoment({ duel, onClose, onDecision }: DuelResu
     setS({ intro: true, vs: true, qhead: true, cells: 6, chips: [2, 2, 2, 2, 2, 2], scoreL: L.score, scoreR: Rt.score, win: true, cards: true, ready: true });
   }, [clear, L.score, Rt.score]);
 
+  const vfx = useRef<StageVfxHandle>(null);
+  const winAvRef = useRef<HTMLSpanElement | null>(null);
+
   useEffect(() => {
     clear();
     setS(START);
@@ -155,6 +159,7 @@ export default function DuelResultMoment({ duel, onClose, onDecision }: DuelResu
     });
     go(T.win, { win: true });
     if (!reduce && outcome === 'win') at(T.win, () => buzz());
+    if (winner) at(Math.round(T.win * k), () => vfx.current?.fire('duelWin', { target: winAvRef.current }));
     go(T.cards, { cards: true });
     go(T.ready, { ready: true, scoreL: L.score, scoreR: Rt.score });
     return clear;
@@ -345,6 +350,7 @@ export default function DuelResultMoment({ duel, onClose, onDecision }: DuelResu
         aria-modal="true"
         aria-label={t('duelMoment.aria', { a: nameL, b: nameR })}
       >
+        <StageVfx ref={vfx} layers="front" />
         <div className="du-m-top">
           <span className="t-eyebrow">{duel.is_rematch ? t('duelMoment.rematch') : t('duelMoment.eyebrow')}</span>
           {!done
@@ -361,7 +367,7 @@ export default function DuelResultMoment({ duel, onClose, onDecision }: DuelResu
               <motion.div key={side.id} className={clsx('du-col', isL ? 'l' : 'r')} {...clash(isL ? 1 : -1)}>
                 <div className="du-av-wrap">
                   <motion.span className="du-glow" aria-hidden="true" initial={false} animate={winGlow(isWinner)} transition={{ duration: 0.7, ease: 'easeOut' }} />
-                  <motion.span animate={{ opacity: dim && !reduce ? 0.5 : 1 }} transition={{ duration: 0.3 }} className={clsx('du-av', isWinner && s.win && 'win')}>
+                  <motion.span ref={isWinner ? winAvRef : undefined} animate={{ opacity: dim && !reduce ? 0.5 : 1 }} transition={{ duration: 0.3 }} className={clsx('du-av', isWinner && s.win && 'win')}>
                     <PlayerAvatar name={side.player?.name ?? '—'} avatarId={side.player?.avatar_id} size="xl" />
                   </motion.span>
                 </div>
