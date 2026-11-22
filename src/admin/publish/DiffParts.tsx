@@ -94,7 +94,7 @@ export function SeoDelta({ rows, siteWide }: { rows: readonly SeoRow[]; siteWide
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span className="font-semibold text-stage-text">{t.publishFlow.seoField[r.field]}</span>
                 <span className="chip text-[11px]">{r.locale.toUpperCase()}</span>
-                <span className="t-meta font-mono">{r.route ?? t.publishFlow.seoNoRoute}</span>
+                <span className="t-meta tabular-nums">{r.route ?? t.publishFlow.seoNoRoute}</span>
                 {!r.definite && <span className="t-meta italic">{t.publishFlow.seoMay}</span>}
                 <span className={clsx('ml-auto inline-flex items-center gap-1 text-xs font-semibold', r.allowed ? 'text-[#35d29a]' : 'text-stage-bad')}>
                   {r.allowed ? <CheckCircle2 size={14} aria-hidden /> : <OctagonAlert size={14} aria-hidden />}

@@ -91,7 +91,7 @@ function MediaControl({ kind, title, name, tag, value, issues, withLocale, onVal
           ? <img src={thumb} alt={title} width={row.width ?? undefined} height={row.height ?? undefined} className="h-16 w-28 shrink-0 rounded object-cover bg-black/40" />
           : <span className="h-16 w-28 shrink-0 rounded bg-black/40" />)}
         <div className="min-w-0 space-y-0.5">
-          {kind !== 'image' && <div className="truncate font-mono text-xs text-white/80">{row.storage_path}</div>}
+          {kind !== 'image' && <div className="truncate tabular-nums text-xs text-white/80">{row.storage_path}</div>}
           <div className="text-[11px] text-white/40">
             {row.width && row.height ? `${row.width}×${row.height} · ` : ''}{formatBytes(row.bytes)}
           </div>
@@ -106,11 +106,11 @@ function MediaControl({ kind, title, name, tag, value, issues, withLocale, onVal
     body = (
       <div className="flex min-w-0 items-center gap-3">
         {thumb && <img src={thumb} alt={title} className="h-16 w-28 shrink-0 rounded object-cover bg-black/40" />}
-        <span className="truncate font-mono text-xs text-white/80">{t.media2.published(ref)}</span>
+        <span className="truncate tabular-nums text-xs text-white/80">{t.media2.published(ref)}</span>
       </div>
     );
   } else {
-    body = <span className="truncate font-mono text-xs text-red-300">{t.media2.notRef(ref)}</span>;
+    body = <span className="truncate tabular-nums text-xs text-red-300">{t.media2.notRef(ref)}</span>;
   }
 
   return (

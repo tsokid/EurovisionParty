@@ -222,10 +222,10 @@ export function RunScreen({ runId }: { runId: number }) {
     [t.publishFlow.runDocs, runWhat(run)],
     [t.publishFlow.runStarted, run.started_at ? formatRunTime(run.started_at) : '—'],
     [t.publishFlow.runFinished, run.finished_at ? formatRunTime(run.finished_at) : t.publish.runStatus.running],
-    [t.publishFlow.runCommit, sha ? <a href={`${COMMIT_URL}${sha}`} target="_blank" rel="noreferrer" className="font-mono text-stage-pink-2 underline">{sha.slice(0, 7)}</a> : '—'],
+    [t.publishFlow.runCommit, sha ? <a href={`${COMMIT_URL}${sha}`} target="_blank" rel="noreferrer" className="tabular-nums text-stage-pink-2 underline">{sha.slice(0, 7)}</a> : '—'],
     [t.publishFlow.runDeploy, <span key="d" className="inline-flex flex-wrap items-center gap-2"><DeployChip run={run} />{run.deploy_url && <a href={run.deploy_url} target="_blank" rel="noreferrer" className={`${LINK} text-xs`}>{t.publishFlow.openDeployment} ↗</a>}</span>],
   ];
-  if (run.reverted_sha) rowsOf.push([t.publishFlow.runRevert, <a key="r" href={`${COMMIT_URL}${run.reverted_sha}`} target="_blank" rel="noreferrer" className="font-mono text-stage-pink-2 underline">{run.reverted_sha.slice(0, 7)}</a>]);
+  if (run.reverted_sha) rowsOf.push([t.publishFlow.runRevert, <a key="r" href={`${COMMIT_URL}${run.reverted_sha}`} target="_blank" rel="noreferrer" className="tabular-nums text-stage-pink-2 underline">{run.reverted_sha.slice(0, 7)}</a>]);
 
   return (
     <div className="max-w-3xl space-y-4 pb-10" data-testid="run-screen">

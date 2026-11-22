@@ -57,7 +57,7 @@ function Thumb({ row, src, className }: { row: MediaRow; src?: string; className
     return <img src={src} alt="" width={row.width ?? undefined} height={row.height ?? undefined} loading="lazy" className={`${className} object-cover bg-black/40`} />;
   }
   return (
-    <span className={`${className} flex items-center justify-center bg-black/40 font-mono text-xs text-white/60`}>
+    <span className={`${className} flex items-center justify-center bg-black/40 tabular-nums text-xs text-white/60`}>
       {row.kind === 'image' ? <ImageIcon size={20} aria-hidden /> : `.${row.storage_path.split('.').pop()}`}
     </span>
   );

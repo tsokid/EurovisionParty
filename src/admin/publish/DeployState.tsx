@@ -57,7 +57,7 @@ export function FailureNotice({ run }: { run: PublishRun }) {
             <>
               {t.publishFlow.revertedText}{' '}
               {t.publishFlow.revertCommit}:{' '}
-              <a href={`${COMMIT_URL}${run.reverted_sha}`} target="_blank" rel="noreferrer" className="font-mono text-stage-pink-2 underline">{short(run.reverted_sha ?? '')}</a>
+              <a href={`${COMMIT_URL}${run.reverted_sha}`} target="_blank" rel="noreferrer" className="tabular-nums text-stage-pink-2 underline">{short(run.reverted_sha ?? '')}</a>
             </>
           ) : t.publishFlow.blockedText}
         </p>

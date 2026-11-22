@@ -176,7 +176,7 @@ function Row({ check, onField }: { check: SeoCheck; onField?: (field: string) =>
         <span className="break-words">{check.message}</span>
         {check.count && <Counter check={check} />}
         {check.items && check.items.length > 0 && check.severity !== 'ok' && (
-          <span className="mt-0.5 block font-mono text-[11px] text-stage-text-3 break-all">{check.items.slice(0, 4).join(' · ')}{check.items.length > 4 ? ` · +${check.items.length - 4}` : ''}</span>
+          <span className="mt-0.5 block tabular-nums text-[11px] text-stage-text-3 break-all">{check.items.slice(0, 4).join(' · ')}{check.items.length > 4 ? ` · +${check.items.length - 4}` : ''}</span>
         )}
         {check.field && onField && (check.severity === 'block' || check.severity === 'warn') && (
           <button type="button" onClick={() => onField(check.field!)} className="ml-1 text-stage-pink-2 hover:underline cursor-pointer">{t.seo.toField}</button>
