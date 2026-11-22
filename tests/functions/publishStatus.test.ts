@@ -4,7 +4,7 @@
 // while main's head is still the failed commit (spec §9). GitHub is mocked;
 // nothing here talks to production.
 import { describe, it, expect, vi } from 'vitest';
-import { checkRun, observeDeploy, blockedNote, type RunRow, type DeployState } from '../../supabase/functions/publish-status/status';
+import { checkRun, culpritBelow, observeDeploy, blockedNote, ownFailureNote, type RunRow, type DeployState } from '../../supabase/functions/publish-status/status';
 
 const API = 'https://api.github.com';
 const REPO = 'tsokid/EurovisionParty';
@@ -303,7 +303,49 @@ describe('contests published on top of a building content run (090)', () => {
     expect(out.deploy_state).toBe('revert_blocked');
   });
 
-  it('a contests run whose own build failed (the run below went live) keeps the P5 rule: revert only while it is the head', async () => {
+  it('B1: a contests run whose own build failed is never reverted, even while it is the head of main', async () => {
+    const { cfg, calls } = github([...deployOf(CONT, 902, 'failure'),
+      { method: 'GET', path: `${R}/git/ref/heads/main`, body: { object: { sha: CONT } } },
+      { method: 'GET', path: `${R}/git/commits/${CONT}`, body: { sha: CONT, tree: { sha: 'tree-cont' }, parents: [{ sha: PAGE }] } },
+      { method: 'GET', path: `${R}/git/commits/${PAGE}`, body: { sha: PAGE, tree: { sha: 'tree-page' } } },
+      { method: 'POST', path: `${R}/git/commits`, body: { sha: REV } },
+      { method: 'PATCH', path: `${R}/git/refs/heads/main`, body: { object: { sha: REV } } }]);
+    const live = { ...page, deploy_state: 'ready' as const };
+    for (const deps of [
+      { earlierContentRun: async () => live },
+      { earlierContentRun: async () => null },
+      {},
+    ]) {
+      calls.length = 0;
+      const db = store(live, contests);
+      const out = await checkRun({ github: cfg, setDeployState: db.setDeployState, log: () => {}, laterMainRuns: async () => [], ...deps }, contests);
+      expect(writes(calls)).toEqual([]);
+      expect(out.deploy_state).toBe('revert_blocked');
+      expect(out.deploy_note).toBe(ownFailureNote);
+    }
+  });
+
+  it('B1: an hours-old failed page below (nobody watched it) is put back on top of the results; the results stay', async () => {
+    const stale = { ...page, finished_at: '2026-11-22T06:30:00Z', deploy_state: 'error' as const };
+    const { cfg, calls } = github([
+      ...deployOf(CONT, 902, 'failure'), ...scopedRevert,
+      ...deployOf(REV, 903, 'in_progress'),
+    ]);
+    const db = store(stale, contests);
+    const out = await checkRun({
+      github: cfg, setDeployState: db.setDeployState, log: () => {},
+      laterMainRuns: async (r) => (r.id === 51 ? [contests] : []),
+      earlierContentRun: async (r) => culpritBelow(r, [stale]),
+    }, contests);
+    const commits = writes(calls).filter((c) => c.method === 'POST' && c.path.endsWith('/git/commits'));
+    expect(commits).toHaveLength(1);
+    expect(commits[0].body).toMatchObject({ message: expect.stringMatching(/^content: revert the files of publish 51/), parents: [CONT] });
+    expect(db.row(51)).toMatchObject({ deploy_state: 'reverted', reverted_sha: REV });
+    expect(db.row(52).deploy_state).not.toBe('reverted');
+    expect(out.deploy_state).toBe('building');
+  });
+
+  it('a contests run whose own build failed (the run below went live) when main moved on: revert_blocked, nothing written', async () => {
     const { cfg } = github([...deployOf(CONT, 902, 'failure'),
       { method: 'GET', path: `${R}/git/ref/heads/main`, body: { object: { sha: 'later000' } } }]);
     const live = { ...page, deploy_state: 'ready' as const };
@@ -313,5 +355,34 @@ describe('contests published on top of a building content run (090)', () => {
       laterMainRuns: async () => [], earlierContentRun: async () => live,
     }, contests);
     expect(out.deploy_state).toBe('revert_blocked');
+  });
+});
+
+describe('culpritBelow (B1: the content run a failed results build inherited, whatever its age)', () => {
+  const at = (iso: string) => iso;
+  const results = run({ id: 60, cms: false, finished_at: at('2026-11-22T23:30:00Z') });
+  const content = (id: number, over: Partial<RunRow>) => run({ id, cms: true, ...over });
+
+  it('returns the nearest unsettled content run however old it is (no 20-minute window)', () => {
+    const c = content(40, { finished_at: at('2026-11-22T20:00:00Z'), deploy_state: 'error' });
+    expect(culpritBelow(results, [c])).toBe(c);
+    const b = content(41, { finished_at: at('2026-11-20T20:00:00Z'), deploy_state: 'building' });
+    expect(culpritBelow(results, [b])).toBe(b);
+  });
+
+  it('a content run that went live means main was green below the results: null', () => {
+    const ok = content(42, { deploy_state: 'ready' });
+    const broken = content(41, { deploy_state: 'error' });
+    expect(culpritBelow(results, [ok, broken])).toBeNull();
+    expect(culpritBelow(results, [content(43, { deploy_state: null })])).toBeNull();
+    expect(culpritBelow(results, [])).toBeNull();
+  });
+
+  it('skips a run reverted before the results landed; one reverted after them is the culprit', () => {
+    const early = content(44, { deploy_state: 'reverted', deploy_checked_at: '2026-11-22T21:00:00Z' });
+    const older = content(39, { deploy_state: 'revert_blocked' });
+    expect(culpritBelow(results, [early, older])).toBe(older);
+    const late = content(45, { deploy_state: 'reverted', deploy_checked_at: '2026-11-22T23:31:00Z' });
+    expect(culpritBelow(results, [late])).toBe(late);
   });
 });

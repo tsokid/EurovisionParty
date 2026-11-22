@@ -15,7 +15,8 @@
 //   success, inactive (superseded)    ready (deploy_url = environment_url)
 //   failure, error                    error
 //
-// Auto-revert (main runs only): when the build of a run's commit failed,
+// Auto-revert (main content runs only; a contests-only run, the results, is
+// never reverted): when the build of a run's commit failed,
 // Vercel keeps the previous production deployment, but main is red. The run's
 // commit is reverted (a new commit with its parent's tree) ONLY IF main's
 // head is still that commit; otherwise nothing is written, the state becomes
@@ -112,9 +113,9 @@ export type StatusDeps = {
   /** The ok main runs with a commit after `run` (id order). Without it, a failed run is reverted only while it is main's head. */
   laterMainRuns?(run: RunRow): Promise<RunRow[]>;
   /**
-   * For a contests-only run: the content run committed just before it whose
-   * deploy had not gone live when it landed (building, error, or reverted
-   * after it), or null.
+   * For a contests-only run: the content run committed before it, whatever
+   * its age, whose deploy had not gone live when it landed (culpritBelow), or
+   * null.
    */
   earlierContentRun?(run: RunRow): Promise<RunRow | null>;
   log?: (message: string) => void;
@@ -143,6 +144,27 @@ export const waitingNote = (below: RunRow) =>
 export const blockedBelowNote = (below: RunRow) =>
   `this build failed because of publish ${below.id}, which could not be reverted automatically. Fix it; these results are not reverted.`;
 
+export const ownFailureNote =
+  'the build of these results failed, and no content publish below it is broken. Results are never reverted automatically: fix the data or the build, then publish the results again.';
+
+/**
+ * The content run a failed contests-only run inherited its failure from
+ * (B1): `below` are the content runs committed before it on main, newest
+ * first, whatever their age. The first one that went live (ready, or an old
+ * run with no deploy state) means main was green under the contests run:
+ * null. A run reverted before the contests run landed is skipped (the
+ * contests run built on the revert). Anything else (building, error,
+ * revert_blocked, or reverted after the contests run landed) is the culprit.
+ */
+export function culpritBelow(run: Pick<RunRow, 'finished_at'>, below: readonly RunRow[]): RunRow | null {
+  for (const b of below) {
+    if (b.deploy_state === 'ready' || b.deploy_state == null) return null;
+    if (b.deploy_state === 'reverted' && b.deploy_checked_at && run.finished_at && b.deploy_checked_at < run.finished_at) continue;
+    return b;
+  }
+  return null;
+}
+
 export const blockedNote = (head: string) =>
   `main moved on to ${head.slice(0, 7)} after this publish: not reverting automatically. Fix the content or revert by hand.`;
 
@@ -170,12 +192,16 @@ export async function checkRun(deps: StatusDeps, run: RunRow): Promise<RunRow> {
   const failed = await deps.setDeployState({ id: run.id, state: 'error', url: observed.url, revertedSha: null, note: observed.detail });
   if (run.target !== 'main') return failed;
 
-  // A contests-only run on top of a content run that had not gone live: the
-  // build failed because of that run. The results are never reverted.
-  if (run.cms === false && deps.earlierContentRun) {
-    const below = await deps.earlierContentRun(run);
+  // A contests-only run (the results) is never reverted (B1), whether or not
+  // it is main's head. On top of a content run that had not gone live, the
+  // build failed because of that run: that run is dealt with instead.
+  // Otherwise the failure is the results' own: revert_blocked, for a human.
+  if (run.cms === false) {
+    const below = deps.earlierContentRun ? await deps.earlierContentRun(run) : null;
     const outcome = below ? await inherited(deps, run, below, observed) : null;
     if (outcome) return outcome;
+    (deps.log ?? console.error)(`publish-status: run ${run.id}: ${ownFailureNote}`);
+    return deps.setDeployState({ id: run.id, state: 'revert_blocked', url: observed.url, revertedSha: null, note: ownFailureNote });
   }
 
   try {

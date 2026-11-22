@@ -6,7 +6,8 @@
 // with set_deploy_state: building | ready (with the deployment URL; for a
 // site-wide preview, the preview URL) | error. A failed main build is
 // reverted automatically, only while main's head is still the run's commit;
-// otherwise the run becomes revert_blocked and the admin shows the alert.
+// otherwise the run becomes revert_blocked and the admin shows the alert. A
+// contests-only run (the results) is never reverted (B1).
 // The flow is checkRun in status.ts (unit-tested); this file only wires I/O.
 //
 // Response: { runs: [publish_runs row without shipped] } (200), 400 for a
@@ -17,7 +18,7 @@
 // "Deployments" (and "Commit statuses" for the fallback); contents
 // read/write is already granted (the revert commit).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.99.3";
-import { checkRun, type RunRow } from "./status.ts";
+import { checkRun, culpritBelow, type RunRow } from "./status.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -94,18 +95,15 @@ Deno.serve(async (req) => {
           if (e) throw new Error(e.message);
           return ((rows ?? []) as RunRow[]).map((x) => ({ ...x, id: Number(x.id) }));
         },
+        // B1: no time window. The content runs committed before this one,
+        // newest first; culpritBelow stops at the first that went live.
         async earlierContentRun(r) {
           if (!r.finished_at) return null;
-          const since = new Date(Date.parse(r.finished_at) - 20 * 60_000).toISOString();
           const { data: rows, error: e } = await service.from("publish_runs").select(COLUMNS)
             .eq("target", "main").eq("status", "ok").eq("cms", true).not("commit_sha", "is", null)
-            .lt("id", r.id).gt("finished_at", since).order("id", { ascending: false }).limit(1);
+            .lt("finished_at", r.finished_at).order("finished_at", { ascending: false }).limit(25);
           if (e) throw new Error(e.message);
-          const below = (rows ?? [])[0] as RunRow | undefined;
-          if (!below || below.deploy_state === "ready") return null;
-          // Reverted before this run committed: this run built on the revert, its failure is its own.
-          if (below.deploy_state === "reverted" && below.deploy_checked_at && below.deploy_checked_at < r.finished_at) return null;
-          return { ...below, id: Number(below.id) };
+          return culpritBelow(r, ((rows ?? []) as RunRow[]).map((x) => ({ ...x, id: Number(x.id) })));
         },
       }, { ...row, id: Number(row.id) }));
     }
