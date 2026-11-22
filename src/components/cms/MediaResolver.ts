@@ -7,7 +7,8 @@
 // Ships in the public bundle: tiny, zod-free, no Supabase.
 import { createContext } from 'react';
 
-export type ResolvedImage = { src: string; src800?: string; width: number; height: number };
+/** `alt`: the library's alt text per locale (088), used where the block's own alt is empty. */
+export type ResolvedImage = { src: string; src800?: string; width: number; height: number; alt?: { en?: string; el?: string } | null };
 
 /** width and height are the poster's (the player reserves that space). */
 export type ResolvedVideo = { src: string; poster: string; width: number; height: number; captions?: string };

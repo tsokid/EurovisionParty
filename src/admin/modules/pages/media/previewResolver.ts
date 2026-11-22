@@ -27,7 +27,7 @@ export function createMediaResolver(info: MediaInfo): MediaResolver {
     if (!f?.row?.width || !f.row.height) return null;
     const variant = info.variants.get(f.row.id);
     const src800 = isDraftMedia(ref) ? (variant && info.urls[variant.storage_path]) : (ref as string).replace(/\.webp$/, '-800.webp');
-    return { src: f.src, ...(src800 ? { src800 } : {}), width: f.row.width, height: f.row.height };
+    return { src: f.src, ...(src800 ? { src800 } : {}), width: f.row.width, height: f.row.height, ...(f.row.alt ? { alt: f.row.alt } : {}) };
   };
 
   return {

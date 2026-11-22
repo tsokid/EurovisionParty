@@ -26,6 +26,10 @@ export type MediaRow = {
   sha256: string;
   published_path: string | null;
   created_at: string;
+  /** 088: the default alt text per locale ({} = none). Absent before 088 is applied. */
+  alt?: { en?: string; el?: string } | null;
+  /** 088: a name for the library. */
+  title?: string | null;
 };
 
 export type RegisterArgs = {
@@ -85,6 +89,21 @@ export async function mediaDelete(id: string): Promise<void> {
       `The file was deleted from the library, but Storage could not remove it yet (${formatError(removeError)}); the next publish cleans it up`,
     );
   }
+}
+
+/** media_set_meta (088): the alt text per locale and the title; returns the row. */
+export async function mediaSetMeta(id: string, alt: { en: string; el: string }, title: string): Promise<MediaRow> {
+  const { data, error } = await supabase.rpc('media_set_meta', { p_id: id, p_alt: alt, p_title: title });
+  if (error) throw error;
+  invalidateLibrary();
+  return data as MediaRow;
+}
+
+/** media_usage (088): the doc ids whose saved draft references the file. */
+export async function mediaUsage(id: string): Promise<string[]> {
+  const { data, error } = await supabase.rpc('media_usage', { p_id: id });
+  if (error) throw error;
+  return (data ?? []) as string[];
 }
 
 // ---- Library ---------------------------------------------------------------

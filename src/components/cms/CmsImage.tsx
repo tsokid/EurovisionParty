@@ -5,6 +5,7 @@
 import { useContext } from 'react';
 import { isDim, isPublishedMedia, type CmsImageValue } from './mediaTypes';
 import { isDraftMedia, MediaResolverContext, type ResolvedImage } from './MediaResolver';
+import { useLocale } from '../../lib/seo/LocaleContext';
 
 /**
  * The widest content column a CmsImage renders in: ContentLayout `wide`
@@ -17,9 +18,12 @@ const SIZES = `(min-width: ${CONTENT_MAX_PX}px) ${CONTENT_MAX_PX}px, 100vw`;
 
 export default function CmsImage({ value, hero = false, className }: { value: CmsImageValue; hero?: boolean; className?: string }) {
   const resolver = useContext(MediaResolverContext);
+  const locale = useLocale();
   let img: ResolvedImage | null = null;
   if (value && isPublishedMedia(value.media, 'webp') && isDim(value.width) && isDim(value.height)) {
     img = { src: value.media, src800: value.media.replace(/\.webp$/, '-800.webp'), width: value.width, height: value.height };
+    // Preview only: a published image whose block alt is empty shows the library's (publish writes it in).
+    if (resolver && !value.alt?.trim()) img.alt = resolver.image(value.media)?.alt ?? null;
   } else if (value && resolver && isDraftMedia(value.media)) {
     const r = resolver.image(value.media);
     if (r && isDim(r.width) && isDim(r.height)) img = r;
@@ -33,7 +37,7 @@ export default function CmsImage({ value, hero = false, className }: { value: Cm
       src={img.src}
       srcSet={srcSet}
       sizes={srcSet ? SIZES : undefined}
-      alt={value.alt ?? ''}
+      alt={value.alt?.trim() ? value.alt : (img.alt?.[locale as 'en' | 'el'] ?? '')}
       width={img.width}
       height={img.height}
       loading={hero ? 'eager' : 'lazy'}

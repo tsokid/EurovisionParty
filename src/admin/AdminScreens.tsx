@@ -27,6 +27,7 @@ import HeaderEditor from './modules/site/HeaderEditor';
 import FooterEditor, { COLUMN_TITLE } from './modules/site/FooterEditor';
 import SettingsEditor from './modules/site/SettingsEditor';
 import AvatarsLibrary from './modules/avatars/AvatarsLibrary';
+import { MediaAsset, MediaLibrary } from './modules/media/MediaLibrary';
 import { FOOTER_COLUMN_KEYS, type FooterColumnKey } from './paths';
 import { footerColumn, sitePagePath } from './siteStructure';
 import { t } from './i18n';
@@ -53,19 +54,6 @@ function ScreenTitle({ title, lede }: { title: string; lede?: ReactNode }) {
 }
 
 /** A screen whose content becomes editable in a later phase: says so, and what exists today. */
-function Later({ title, phase, crumbs, children }: { title: string; phase: string; crumbs: Crumb[]; children: ReactNode }) {
-  useAdminCrumbs(crumbs);
-  return (
-    <div className="max-w-2xl">
-      <div className="flex flex-wrap items-center gap-3 mb-5">
-        <h1 className="text-2xl font-bold text-stage-text m-0">{title}</h1>
-        <span className="chip">{t.shell.comingIn(phase)}</span>
-      </div>
-      <div className="card card-pad space-y-3 t-small">{children}</div>
-    </div>
-  );
-}
-
 // ── Overview ─────────────────────────────────────────────────────────
 const START_TO: Record<string, string> = {
   pages: adminPaths.pages(), contests: adminPaths.contests(), parser: adminPaths.parser(), monitor: adminPaths.monitor(),
@@ -316,15 +304,15 @@ function AvatarsScreen() {
 }
 
 // ── Media, settings ──────────────────────────────────────────────────
-function MediaScreen() {
-  return (
-    <Later title={t.media.title} phase="P6" crumbs={[{ label: t.nav.media }]}>
-      <p>{t.media.p1}</p>
-      <p className="text-stage-text-3">
-        {t.media.p2a}<Link to={adminPaths.pages()} className={LINK}>{t.media.p2b}</Link>.
-      </p>
-    </Later>
-  );
+function MediaScreen({ splat }: ScreenProps) {
+  const parts = splatSegments(splat);
+  const id = parts[0] ?? null;
+  const valid = parts.length === 0 || (parts.length === 1 && /^[0-9a-f-]{36}$/.test(parts[0]));
+  useAdminCrumbs(!valid ? NOT_FOUND : id
+    ? [{ label: t.nav.media }, { label: t.nav.mediaLibrary, to: adminPaths.media() }, { label: t.media.file }]
+    : [{ label: t.nav.media }, { label: t.nav.mediaLibrary }]);
+  if (!valid) return <NotFound />;
+  return id ? <MediaAsset id={id} /> : <MediaLibrary />;
 }
 
 function SettingsScreen({ splat }: ScreenProps) {
@@ -373,7 +361,7 @@ const SCREENS: Array<{ pattern: string; Screen: ComponentType<ScreenProps> }> = 
   { pattern: '/admin/game/parser/*', Screen: ParserScreen },
   { pattern: '/admin/game/winners/*', Screen: WinnersScreen },
   { pattern: '/admin/game/avatars', Screen: AvatarsScreen },
-  { pattern: '/admin/media', Screen: MediaScreen },
+  { pattern: '/admin/media/*', Screen: MediaScreen },
   { pattern: '/admin/settings/*', Screen: SettingsScreen },
   { pattern: '/admin/system/admins', Screen: AdminsScreen },
 ];

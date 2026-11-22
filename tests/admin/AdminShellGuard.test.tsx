@@ -111,7 +111,7 @@ describe('admin URLs', () => {
     ['/admin/game/winners', 'Winners module: null', ['Παιχνίδι', 'Νικητές']],
     ['/admin/game/winners/room-1', 'Winners module: room-1', ['Παιχνίδι', 'Νικητές', 'Δωμάτιο']],
     ['/admin/game/avatars', 'Avatars library', ['Παιχνίδι', 'Avatars']],
-    ['/admin/media', 'Βιβλιοθήκη πολυμέσων', ['Πολυμέσα']],
+    ['/admin/media', 'Βιβλιοθήκη πολυμέσων', ['Πολυμέσα', 'Βιβλιοθήκη πολυμέσων']],
     ['/admin/settings', 'Settings editor', ['Ρυθμίσεις', 'Ρυθμίσεις ιστότοπου']],
     ['/admin/system/admins', 'Super admins module', ['Ρυθμίσεις', 'Διαχειριστές']],
   ])('%s renders its screen', async (path, text, trail) => {
@@ -128,10 +128,11 @@ describe('admin URLs', () => {
     },
   );
 
-  it('placeholders are honest: no buttons, and they name their phase', async () => {
+  it('no screen is a placeholder any more: the media library (P6) is live and not marked as coming later', async () => {
     show('/admin/media');
-    expect(await screen.findByText('Έρχεται στη φάση P6')).toBeTruthy();
-    expect(within(screen.getByRole('main')).queryAllByRole('button')).toHaveLength(0);
+    expect(await screen.findByRole('heading', { name: 'Βιβλιοθήκη πολυμέσων' })).toBeTruthy();
+    expect(screen.queryByText(/Έρχεται στη φάση/)).toBeNull();
+    expect(within(desktopNav()).getByRole('link', { name: /Βιβλιοθήκη/ }).textContent).not.toMatch(/P6/);
   });
 
   it('header, footer, settings and avatars are no longer marked as coming later', async () => {

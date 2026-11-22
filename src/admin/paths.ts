@@ -35,7 +35,7 @@ export const adminPaths = {
   parser: (year?: number | null) => (year == null ? `${ADMIN_ROOT}/game/parser` : `${ADMIN_ROOT}/game/parser/${year}`),
   winners: (roomId?: string | null) => (roomId ? `${ADMIN_ROOT}/game/winners/${seg(roomId)}` : `${ADMIN_ROOT}/game/winners`),
   avatars: () => `${ADMIN_ROOT}/game/avatars`,
-  media: () => `${ADMIN_ROOT}/media`,
+  media: (id?: string | null) => (id ? `${ADMIN_ROOT}/media/${seg(id)}` : `${ADMIN_ROOT}/media`),
   settings: () => `${ADMIN_ROOT}/settings`,
   admins: () => `${ADMIN_ROOT}/system/admins`,
   /** The history of a CMS doc (spec §3 …/history[/:revId]); site-wide docs live under their own screens. */
