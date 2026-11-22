@@ -310,11 +310,13 @@ describe('076 cms_documents', () => {
     } finally {
       await db.exec(`reset role`);
     }
+    // 087 lets a super admin read drafts directly; anyone else sees none.
+    await asUser(db, STRANGER);
     for (const role of ['anon', 'authenticated']) {
       await db.exec(`set role ${role}`);
       try {
         const r = await db.query(`select * from public.cms_documents`).catch((e: Error) => e);
-        // Either no privilege at all, or RLS with no policies hides every row.
+        // Either no privilege at all, or RLS hides every row.
         if (r instanceof Error) expect(r.message).toMatch(/permission denied/);
         else expect(r.rows).toEqual([]);
         await expect(

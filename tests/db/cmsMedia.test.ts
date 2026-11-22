@@ -109,12 +109,13 @@ describe('077 cms_media', () => {
     );
 
   // ── table ──────────────────────────────────────────────────
-  it('the table has RLS on, no policies, and no direct access for anon/authenticated', async () => {
+  it('the table has RLS on, only the 087 admin read policy, and no direct access for anon/authenticated', async () => {
     const rls = await db.query<{ r: boolean }>(`select relrowsecurity as r from pg_class where oid = 'public.cms_media'::regclass`);
     expect(rls.rows[0].r).toBe(true);
-    const pol = await db.query(`select 1 from pg_policies where schemaname = 'public' and tablename = 'cms_media'`);
-    expect(pol.rows).toHaveLength(0);
+    const pol = await db.query<{ policyname: string; cmd: string }>(`select policyname, cmd from pg_policies where schemaname = 'public' and tablename = 'cms_media'`);
+    expect(pol.rows).toEqual([{ policyname: 'cms_media_admin_select', cmd: 'SELECT' }]);
     await image();
+    await asUser(db, STRANGER); // 087 lets only a super admin read the rows
     for (const role of ['anon', 'authenticated']) {
       await db.exec(`set role ${role}`);
       try {
