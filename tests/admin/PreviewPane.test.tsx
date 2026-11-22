@@ -90,14 +90,15 @@ describe('PreviewPane', () => {
     expect(screen.getByText(/^Σφάλμα προεπισκόπησης:.*bogus/)).toBeInTheDocument();
   });
 
-  it('recovers once the draft is fixed', () => {
+  it('recovers once the draft is fixed', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const { rerender } = render(<PreviewPane docId="about" doc={{ en: {}, el: {} }} />);
     expect(screen.getByText(/^Σφάλμα προεπισκόπησης:/)).toBeInTheDocument();
     const doc = published('about');
     (doc.en.hero as Record<string, unknown>).title = 'Fixed title QRS';
     rerender(<PreviewPane docId="about" doc={doc} />);
-    expect(screen.getByText('Fixed title QRS')).toBeInTheDocument();
+    // The pane follows the draft shortly after it changes (PREVIEW_SEND_MS).
+    expect(await screen.findByText('Fixed title QRS')).toBeInTheDocument();
   });
 
   it('disables links: clicking one navigates neither the preview nor the admin', () => {
@@ -140,5 +141,6 @@ describe('PreviewPane', () => {
       expect(screen.queryByText(/^Σφάλμα προεπισκόπησης:/), docId).toBeNull();
       unmount();
     }
-  });
+    // Every page with its header and footer: slow under full-suite load.
+  }, 30_000);
 });

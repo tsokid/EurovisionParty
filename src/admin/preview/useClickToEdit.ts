@@ -1,7 +1,8 @@
 // The editor side of click-to-edit (Track 3 §4, §5):
 // - a click on the preview focuses its field: scrolled into view and focused,
 //   with ?field= in the URL (a deep link to the field);
-// - a field that gets focus is outlined on the preview (`highlight`);
+// - a field that gets focus is outlined on the preview (`highlight`), and
+//   stays outlined until another field gets focus;
 // - an element of another doc (the header or footer, from a page editor)
 //   opens that doc's editor on the field;
 // - /admin/pages/:docId?field=en.hero.title opens on that field.
@@ -132,16 +133,10 @@ export function useClickToEdit({ docId, formRef, ready, beforeFocus, editorFor, 
       const holder = (e.target as HTMLElement | null)?.closest?.(`[${FIELD_ATTR}]`);
       if (holder) setHighlight(holder.getAttribute(FIELD_ATTR));
     };
-    const onOut = (e: FocusEvent) => {
-      const next = e.relatedTarget as Node | null;
-      if (!next || !root.contains(next)) setHighlight(null);
-    };
+    // The outline stays on the last field until another one gets focus, so
+    // switching to the Preview tab (phones) still shows what was just edited.
     root.addEventListener('focusin', onIn);
-    root.addEventListener('focusout', onOut);
-    return () => {
-      root.removeEventListener('focusin', onIn);
-      root.removeEventListener('focusout', onOut);
-    };
+    return () => root.removeEventListener('focusin', onIn);
   }, [formRef, ready]);
 
   // ?field= on arrival: focus it once the form is there.
