@@ -102,7 +102,7 @@ describe('ContestDetailsForm', () => {
       }),
     );
     await waitFor(() => expect(onSaved).toHaveBeenCalled());
-    expect(await screen.findByText('Το 2025 αποθηκεύτηκε. Κάντε «Δημοσίευση» για να φανεί στο site.')).toBeTruthy();
+    expect(await screen.findByText('Το 2025 αποθηκεύτηκε. Κάνε «Δημοσίευση» για να φανεί στο site.')).toBeTruthy();
   });
 
   it('an edit back to the original value is not sent', async () => {

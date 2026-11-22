@@ -77,7 +77,7 @@ export default function SettingsEditor() {
         </div>
       </Section>
 
-      <Section title="Social media" hint="Τα προφίλ του site. Κανένα ακόμα: προσθέστε όποτε χρειαστεί.">
+      <Section title="Social media" hint="Τα προφίλ του site. Κανένα ακόμα: πρόσθεσε όποτε χρειαστεί.">
         <ul className="space-y-2">
           {profiles.map((p, i) => (
             <li key={i} className="rounded-stage border border-stage-line bg-stage-bg-2 p-3 grid gap-2 sm:grid-cols-[1fr_1fr_2fr_auto] sm:items-end">

@@ -83,7 +83,7 @@ function Cropper({ p, onCrop }: { p: PendingAvatar; onCrop: (c: Crop) => void })
     <div className="flex flex-col items-center gap-2">
       <div
         role="img"
-        aria-label="Περιοχή περικοπής: σύρετε για μετακίνηση"
+        aria-label="Περιοχή περικοπής: σύρε για μετακίνηση"
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={() => { drag.current = null; }}
@@ -158,7 +158,7 @@ export function AddAvatarsDialog({
                     <CircleCrop p={p} size={56} />
                   </button>
                   <div className="min-w-0 flex-1 grid gap-2 sm:grid-cols-2">
-                    <Field label="Τίτλος · English" error={p.title_en.trim() ? null : 'Γράψτε έναν τίτλο'}>
+                    <Field label="Τίτλος · English" error={p.title_en.trim() ? null : 'Γράψε έναν τίτλο'}>
                       <TextInput value={p.title_en} invalid={!p.title_en.trim()} onChange={(e) => set(p.key, { title_en: e.target.value })} maxLength={60} lang="en" />
                     </Field>
                     <Field label="Τίτλος · Ελληνικά" hint="Προαιρετικό· αλλιώς δείχνει τον αγγλικό">

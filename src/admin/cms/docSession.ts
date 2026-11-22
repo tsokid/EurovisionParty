@@ -295,7 +295,7 @@ export class DocSession {
         return;
       }
     }
-    this.set({ status: 'error', error: 'Το έγγραφο αλλάζει συνεχώς από άλλο άτομο. Δοκιμάστε ξανά.' });
+    this.set({ status: 'error', error: 'Το έγγραφο αλλάζει συνεχώς από άλλο άτομο. Δοκίμασε ξανά.' });
   }
 
   private async sync(): Promise<void> {

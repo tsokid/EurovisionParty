@@ -302,7 +302,7 @@ describe('Contests module', () => {
     render(<Contests />);
     fireEvent.click((await rowFor(2026)).getByRole('button', { name: 'Αρχειοθέτηση' }));
     expect(await screen.findByText('Αρχειοθέτηση 2026: έγινε.')).toBeTruthy();
-    expect(await screen.findByText('Τρέχει ήδη άλλη δημοσίευση· δοκιμάστε ξανά σε ένα λεπτό.')).toBeTruthy();
+    expect(await screen.findByText('Τρέχει ήδη άλλη δημοσίευση· δοκίμασε ξανά σε ένα λεπτό.')).toBeTruthy();
     expect((screen.getByRole('button', { name: 'Δημοσίευση' }) as HTMLButtonElement).disabled).toBe(false);
   });
 
@@ -398,7 +398,7 @@ describe('Contests module', () => {
     expect(await screen.findByText('semi-final 1: http 403 from https://x/; paste the page HTML instead')).toBeTruthy();
     expect(
       screen.getByText(
-        'Ανοίξτε τη σελίδα του ημιτελικού στο eurovision.com, πατήστε Ctrl+U (κώδικας σελίδας), μετά Ctrl+A και Ctrl+C, και επικολλήστε εδώ.',
+        'Άνοιξε τη σελίδα του ημιτελικού στο eurovision.com, πάτα Ctrl+U (κώδικας σελίδας), μετά Ctrl+A και Ctrl+C, και επικόλλησε εδώ.',
       ),
     ).toBeTruthy();
     const resend = screen.getByRole('button', { name: 'Ανάγνωση του HTML' }) as HTMLButtonElement;

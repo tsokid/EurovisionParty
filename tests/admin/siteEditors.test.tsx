@@ -63,10 +63,10 @@ describe('footer editor', () => {
     await screen.findByRole('heading', { name: 'Υποσέλιδο · Σχετικά' });
     await screen.findByTestId('autosave-pill');
     fireEvent.change(elInputs()[0], { target: { value: ' ' } });
-    expect(screen.getByText('Γράψτε κάτι εδώ')).toBeInTheDocument();
+    expect(screen.getByText('Γράψε κάτι εδώ')).toBeInTheDocument();
     expect(elInputs()[0]).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByRole('button', { name: 'Δημοσίευση' })).toBeDisabled();
-    expect(screen.getByText(/Διορθώστε το σημείο με κόκκινο/)).toBeInTheDocument();
+    expect(screen.getByText(/Διόρθωσε το σημείο με κόκκινο/)).toBeInTheDocument();
   });
 
   it('adds a page from the searchable list; pages already in the column are disabled', async () => {

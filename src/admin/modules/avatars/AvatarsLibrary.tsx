@@ -194,7 +194,7 @@ export default function AvatarsLibrary() {
           <h1 className="text-2xl font-bold text-stage-text m-0">Avatars</h1>
           <p className="t-small mt-1.5 max-w-2xl">
             Οι εικόνες που διαλέγουν οι παίκτες. Οι αλλαγές φαίνονται αμέσως, χωρίς δημοσίευση του site.
-            Σύρετε εικόνες εδώ για προσθήκη, ή σύρετε μια κάρτα για αλλαγή σειράς.
+            Σύρε εικόνες εδώ για προσθήκη, ή σύρε μια κάρτα για αλλαγή σειράς.
           </p>
           {rows && <p className="t-meta mt-1">{publishedCount} δημοσιευμένα από {live.length}</p>}
         </div>
@@ -217,8 +217,8 @@ export default function AvatarsLibrary() {
       {rows && live.length === 0 && !error && (
         <button type="button" onClick={() => fileRef.current?.click()} className="card w-full p-10 grid place-items-center gap-2 text-center border-dashed cursor-pointer">
           <Upload size={28} aria-hidden className="text-stage-text-3" />
-          <span className="text-stage-text font-semibold">Σύρετε εικόνες εδώ</span>
-          <span className="t-meta">ή πατήστε για επιλογή αρχείων</span>
+          <span className="text-stage-text font-semibold">Σύρε εικόνες εδώ</span>
+          <span className="t-meta">ή πάτα για επιλογή αρχείων</span>
         </button>
       )}
 
@@ -244,7 +244,7 @@ export default function AvatarsLibrary() {
                     {on && <Check size={14} aria-hidden className="text-white" />}
                   </span>
                 </label>
-                <span {...drag.handleProps(i)} className="hidden sm:grid place-items-center size-9 cursor-grab active:cursor-grabbing text-stage-text-3 hover:text-stage-text" title="Σύρετε για αλλαγή σειράς" aria-hidden>
+                <span {...drag.handleProps(i)} className="hidden sm:grid place-items-center size-9 cursor-grab active:cursor-grabbing text-stage-text-3 hover:text-stage-text" title="Σύρε για αλλαγή σειράς" aria-hidden>
                   <GripVertical size={16} />
                 </span>
               </div>
@@ -325,7 +325,7 @@ export default function AvatarsLibrary() {
         <div className="fixed inset-0 z-[80] grid place-items-center bg-stage-bg/80 backdrop-blur-sm pointer-events-none">
           <div className="card px-8 py-6 text-center border-dashed !border-stage-pink-2">
             <Upload size={28} aria-hidden className="mx-auto text-stage-pink-2" />
-            <p className="text-stage-text font-semibold mt-2 mb-0">Αφήστε τις εικόνες για προσθήκη</p>
+            <p className="text-stage-text font-semibold mt-2 mb-0">Άφησε τις εικόνες για προσθήκη</p>
           </div>
         </div>
       )}
@@ -359,7 +359,7 @@ export default function AvatarsLibrary() {
         ) : (
           <p>Δεν {confirmIds.length === 1 ? 'το' : 'τα'} χρησιμοποιεί κανείς αυτή τη στιγμή.</p>
         )}
-        <p>Βγαίνει αμέσως από την επιλογή avatar. Μπορείτε να το επαναφέρετε από τα «Διαγραμμένα».</p>
+        <p>Βγαίνει αμέσως από την επιλογή avatar. Μπορείς να το επαναφέρεις από τα «Διαγραμμένα».</p>
       </ConfirmDialog>
 
       <ConfirmDialog

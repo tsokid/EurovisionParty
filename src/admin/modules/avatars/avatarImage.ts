@@ -93,7 +93,7 @@ export async function renderSquareWebp(source: CanvasImageSource, rect: Rect, si
   ctx.drawImage(source, rect.x, rect.y, rect.side, rect.side, 0, 0, size, size);
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', AVATAR_WEBP_QUALITY));
   // A browser without a WebP encoder silently returns PNG.
-  if (!blob || blob.type !== 'image/webp') throw new Error('Αυτός ο browser δεν φτιάχνει WebP: δοκιμάστε Chrome, Edge ή Firefox');
+  if (!blob || blob.type !== 'image/webp') throw new Error('Αυτός ο browser δεν φτιάχνει WebP: δοκίμασε Chrome, Edge ή Firefox');
   return blob;
 }
 

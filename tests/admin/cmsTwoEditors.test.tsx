@@ -93,7 +93,7 @@ describe('two editors on the footer', () => {
     // Elena's editor merged it in, kept her own edit, and said so.
     await waitFor(() => expect(b.en('elena')[0].value).toBe('About us'));
     expect(b.el('elena')[0].value).toBe('Τι είναι το Eurovision Games;');
-    expect(await screen.findByText('Νέες αλλαγές από owner: ενώθηκαν με τις δικές σας.')).toBeTruthy();
+    expect(await screen.findByText('Νέες αλλαγές από owner: ενώθηκαν με τις δικές σου.')).toBeTruthy();
     expect(screen.queryByRole('alertdialog')).toBeNull();
     fireEvent.focusOut(b.el('elena')[0]);
     await waitFor(() => expect(saved()?.el.columns[0].links[0].label).toBe('Τι είναι το Eurovision Games;'));

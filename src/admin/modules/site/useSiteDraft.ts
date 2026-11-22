@@ -52,7 +52,7 @@ const clone = <T,>(v: T): T => structuredClone(v);
 
 /** The schema's messages, in the owner's words. */
 export function plainMessage(message: string): string {
-  if (/^Required/.test(message)) return 'Γράψτε κάτι εδώ';
+  if (/^Required/.test(message)) return 'Γράψε κάτι εδώ';
   if (/already in (this list|the header)/.test(message)) return 'Αυτή η σελίδα υπάρχει ήδη εδώ';
   if (/https/.test(message)) return 'Πρέπει να ξεκινά με https://';
   if (/email/.test(message)) return 'Δεν είναι διεύθυνση email';
@@ -60,8 +60,8 @@ export function plainMessage(message: string): string {
   const long = /^Too long: \d+ characters, max (\d+)/.exec(message);
   if (long) return `Πολύ μεγάλο: μέχρι ${long[1]} χαρακτήρες`;
   if (/placeholder|escaped braces/.test(message)) return 'Μόνο το {year} μπαίνει σε αγκύλες';
-  if (/Pick a page/.test(message)) return 'Διαλέξτε σελίδα';
-  if (/no longer|Invalid option/.test(message)) return 'Η σελίδα δεν υπάρχει πια: διαλέξτε άλλη';
+  if (/Pick a page/.test(message)) return 'Διάλεξε σελίδα';
+  if (/no longer|Invalid option/.test(message)) return 'Η σελίδα δεν υπάρχει πια: διάλεξε άλλη';
   return message;
 }
 

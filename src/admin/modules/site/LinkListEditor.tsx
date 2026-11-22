@@ -103,7 +103,7 @@ export function LinkListEditor({
                 <span
                   {...drag.handleProps(i)}
                   className="hidden sm:grid place-items-center size-9 shrink-0 cursor-grab active:cursor-grabbing text-stage-text-3 hover:text-stage-text"
-                  title="Σύρετε για αλλαγή σειράς"
+                  title="Σύρε για αλλαγή σειράς"
                   aria-hidden
                 >
                   <GripVertical size={18} />

@@ -159,7 +159,7 @@ describe('PublishBar', () => {
     h.invoke.mockResolvedValue(httpError({ status: 'busy', run_id: null, sha: null, files_changed: 0, error: 'publish already running' }));
     render(<Harness />);
     fireEvent.click(await screen.findByRole('button', { name: 'Δημοσίευση' }));
-    expect(await screen.findByText('Τρέχει ήδη άλλη δημοσίευση· δοκιμάστε ξανά σε ένα λεπτό.')).toBeTruthy();
+    expect(await screen.findByText('Τρέχει ήδη άλλη δημοσίευση· δοκίμασε ξανά σε ένα λεπτό.')).toBeTruthy();
   });
 
   it('an error (500) is shown and the Publish button stays available', async () => {
@@ -327,7 +327,7 @@ describe('invokePublish guard', () => {
     expect(settled).toBe(false);
     await vi.advanceTimersByTimeAsync(1);
     expect(await run).toEqual({ status: 'error', error: TIMEOUT_TEXT });
-    expect(TIMEOUT_TEXT).toBe('Η δημοσίευση άργησε πολύ· δείτε την τελευταία εκτέλεση παρακάτω και δοκιμάστε ξανά.');
+    expect(TIMEOUT_TEXT).toBe('Η δημοσίευση άργησε πολύ· δες την τελευταία εκτέλεση παρακάτω και δοκίμασε ξανά.');
     h.invoke.mockResolvedValue(ok(1));
     expect(await invokePublish()).toMatchObject({ status: 'ok' });
     expect(h.invoke).toHaveBeenCalledTimes(2);

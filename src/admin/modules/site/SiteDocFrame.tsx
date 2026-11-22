@@ -66,7 +66,7 @@ export function SiteDocFrame({ draft, title, lede, preview, children }: {
 
       {draft.loadError && (
         <p className="card card-pad mb-4 text-sm text-stage-bad">
-          Δεν φορτώθηκε το αποθηκευμένο πρόχειρο ({draft.loadError}). Βλέπετε την εκδοχή που είναι στο site.
+          Δεν φορτώθηκε το αποθηκευμένο πρόχειρο ({draft.loadError}). Βλέπεις την εκδοχή που είναι στο site.
         </p>
       )}
 
@@ -112,7 +112,7 @@ export function SiteDocFrame({ draft, title, lede, preview, children }: {
         <div className="max-w-4xl px-4 sm:px-6 py-3 flex flex-wrap items-center gap-2">
           <p className={`t-meta flex-1 basis-full sm:basis-auto min-w-[12rem] m-0 ${blocked || draft.saveError || draft.outcome ? '' : 'hidden sm:block'}`}>
             {blocked
-              ? `Διορθώστε ${draft.errors.length === 1 ? 'το σημείο' : `τα ${draft.errors.length} σημεία`} με κόκκινο για να γίνει δημοσίευση.`
+              ? `Διόρθωσε ${draft.errors.length === 1 ? 'το σημείο' : `τα ${draft.errors.length} σημεία`} με κόκκινο για να γίνει δημοσίευση.`
               : draft.saveError ?? (draft.outcome ? outcomeText(draft.outcome) : 'Οι αλλαγές αποθηκεύονται μόνες τους ως πρόχειρο· το site αλλάζει μόνο με «Δημοσίευση».')}
           </p>
           {draft.status !== 'live' && (
