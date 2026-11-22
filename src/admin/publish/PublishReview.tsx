@@ -105,7 +105,8 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
 
   const promoted = p ? promotionOf(runs ?? [], p.id) : null;
   const state = p?.deploy_state ?? (p ? 'building' : null);
-  const at: 0 | 1 | 2 | 3 = !p ? 0 : state === 'ready' && !stale ? 2 : state === 'ready' ? 0 : 1;
+  // 0 preview (to make, or building), 1 check it (ready), 2 going live, 3 live.
+  const at: 0 | 1 | 2 | 3 = promoted ? (promoted.deploy_state === 'ready' ? 3 : 2) : p && state === 'ready' && !stale ? 1 : 0;
   const canStart = !busy && (changed || stale);
 
   return (

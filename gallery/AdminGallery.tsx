@@ -6,10 +6,13 @@
 import { useState } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { routes } from '../src/routeConfig';
-import { FAKE_USER, setFakeDb } from './fakeSupabase';
+import { FAKE_USER, setFakeDb, setFakeFunctions } from './fakeSupabase';
 import { IMAGE_AVATARS } from '../src/components/stage/avatars/images.generated';
 import { CmsRealtimeContext, type DocChannelFactory, type DocChannelHandlers } from '../src/admin/cms/docChannel';
 import rulesDoc from '../content/pages/rules.json';
+import faqDoc from '../content/pages/faq.json';
+import headerDoc from '../content/pages/site-header.json';
+import footerDoc from '../content/pages/site-footer.json';
 import { PreviewTransportContext, previewSrc, type PreviewTransport } from '../src/admin/preview/transport';
 
 // The editor's preview iframe loads the gallery too (same fake session and fixtures).
@@ -60,6 +63,38 @@ function revisionData(id: number) {
     data.el.hero.lede = 'Όλα όσα χρειάζεται ο host ή ένας παίκτης για να λυθεί μια διαφωνία την ώρα του σόου.';
   }
   return data;
+}
+
+// CMS P5: drafts with real changes (the publish diff), and the publish runs
+// in every deploy state. publish-status echoes the runs; publish-content
+// records a new run, building.
+type Mut = { en: Record<string, any>; el: Record<string, any> }; // eslint-disable-line @typescript-eslint/no-explicit-any
+function seedChanged(docId: string, source: unknown, at: string, mutate: (d: Mut) => void) {
+  const data = JSON.parse(JSON.stringify(source)) as Mut;
+  mutate(data);
+  drafts[docId] = { doc_id: docId, doc_type: docId, data, updated_at: at };
+}
+const ago = (min: number) => new Date(Date.now() - min * 60_000).toISOString();
+const HEADER_AT = '2026-11-22T09:40:00.000Z';
+const FOOTER_AT = '2026-11-22T09:44:00.000Z';
+const PUBLISH_RUNS: Array<Record<string, unknown>> = [];
+function seedRuns() {
+  const run = (r: Record<string, unknown>) => ({
+    status: 'ok', cms: true, files_changed: 2, error: null, promoted_from: null, deploy_url: null, deploy_note: null,
+    reverted_sha: null, shipped: null, started_at: r.finished_at, ...r,
+  });
+  PUBLISH_RUNS.splice(0, PUBLISH_RUNS.length,
+    run({ id: 64, target: 'preview', doc_ids: ['site-header'], commit_sha: '6a41c09e7d2b', finished_at: ago(3), deploy_state: 'ready',
+      deploy_url: 'https://eurovision-git-content-preview-tsokid.vercel.app', shipped: [{ doc_id: 'site-header', updated_at: HEADER_AT }] }),
+    run({ id: 63, target: 'preview', doc_ids: ['site-footer'], commit_sha: '5f20aa81c3e4', finished_at: ago(1), deploy_state: 'building',
+      shipped: [{ doc_id: 'site-footer', updated_at: FOOTER_AT }] }),
+    run({ id: 62, target: 'main', doc_ids: ['about'], commit_sha: '4c9d0b2e11aa', finished_at: ago(26), deploy_state: 'ready', deploy_url: 'https://eurovision.games' }),
+    run({ id: 61, target: 'main', doc_ids: ['scoring'], commit_sha: '3b77e1f0c2d9', finished_at: ago(95), deploy_state: 'revert_blocked',
+      deploy_note: 'main moved on to 9e01c4d after this publish: not reverting automatically. Fix the content or revert by hand.' }),
+    run({ id: 58, target: 'main', doc_ids: ['faq'], commit_sha: 'fa11ed4c2b90', finished_at: ago(240), deploy_state: 'reverted', reverted_sha: 'b4ck0ff1e2d3',
+      deploy_url: 'https://vercel.com/tsokid/eurovision/8xq', deploy_note: 'seo:diff: /en/faq title changed without an SEO intent (HARD: title)' }),
+    run({ id: 57, target: 'main', doc_ids: null, commit_sha: '2a90f3d4e5b6', finished_at: ago(60 * 26), deploy_state: 'ready', files_changed: 7 }),
+  );
 }
 
 // The avatars table (089): the shipped set, a few unpublished, one deleted.
@@ -121,6 +156,37 @@ const PARSE_RUNS = [
 
 function seedAdmin() {
   seedDraft('rules');
+  seedChanged('faq', faqDoc, '2026-11-22T09:52:00.000Z', (d) => {
+    d.en.hero.title = 'Eurovision Games: your questions, answered';
+    d.en.meta.title = 'Eurovision Games FAQ: rooms, scoring and the live show';
+    d.el.hero.lede = 'Γρήγορες απαντήσεις στις ερωτήσεις που κάνουν πιο συχνά οι hosts και οι παίκτες. Οι τρεις πιο συχνές, για δημιουργία, συμμετοχή και αποχώρηση, είναι πρώτες.';
+  });
+  seedChanged('site-header', headerDoc, HEADER_AT, (d) => {
+    d.en.cta.createRoom = 'Start a room';
+    d.el.cta.createRoom = 'Ξεκίνα δωμάτιο';
+  });
+  seedChanged('site-footer', footerDoc, FOOTER_AT, (d) => {
+    d.en.tagline = 'The party game for Eurovision night, with friends.';
+  });
+  seedRuns();
+  setFakeFunctions({
+    'publish-status': (body) => {
+      const ids = (body.run_ids as number[]) ?? [];
+      return { runs: PUBLISH_RUNS.filter((r) => ids.includes(r.id as number)) };
+    },
+    'publish-content': (body) => {
+      const id = Math.max(...PUBLISH_RUNS.map((r) => r.id as number)) + 1;
+      const promote = typeof body.promote === 'number' ? body.promote : null;
+      const source = promote ? PUBLISH_RUNS.find((r) => r.id === promote) : null;
+      PUBLISH_RUNS.unshift({
+        id, status: 'ok', cms: true, files_changed: 2, error: null, started_at: ago(0), finished_at: ago(0),
+        commit_sha: `9${id}c0ffee12`, deploy_state: 'building', deploy_url: null, deploy_note: null, reverted_sha: null,
+        target: body.target === 'preview' ? 'preview' : 'main', promoted_from: promote,
+        doc_ids: source ? source.doc_ids : (body.doc_ids as string[] | undefined) ?? null, shipped: null,
+      });
+      return { status: 'ok', run_id: id, sha: `9${id}c0ffee12`, files_changed: 2 };
+    },
+  });
   (FAKE_USER as Record<string, unknown>).email = 'owner@example.com';
   setFakeDb(
     {
@@ -141,10 +207,11 @@ function seedAdmin() {
       parse_runs: PARSE_RUNS,
       game_entries: [{ year: 2026, iso: 'AT', in_final: true }, { year: 2026, iso: 'GR', in_final: true }, { year: 2026, iso: 'SE', in_final: true }, { year: 2026, iso: 'UA', in_final: true }],
       avatars: AVATAR_ROWS,
+      publish_runs: PUBLISH_RUNS,
     },
     {
       contest_summaries: () => CONTESTS,
-      cms_list: () => [{ doc_id: 'faq', doc_type: 'faq', updated_at: '2026-11-20T10:00:00Z', published: false }],
+      cms_list: () => Object.values(drafts).map((d) => ({ doc_id: d.doc_id, doc_type: d.doc_type, updated_at: d.updated_at, published: false })),
       cms_get: (a) => drafts[String(a.p_doc_id)] ?? null,
       cms_save: (a) => {
         const id = String(a.p_doc_id);
@@ -158,8 +225,8 @@ function seedAdmin() {
       avatar_usage: () => AVATAR_USAGE,
       avatars_reorder: () => null,
       avatar_purge: () => [],
-      unpublished_summary: () => ({ changed_years: [2026], changed_docs: ['faq'], since: '2026-11-18T09:00:00Z' }),
-      last_publish_run: () => ({ id: 41, status: 'ok', commit_sha: '3e1f0a9c', finished_at: '2026-11-18T09:02:00Z', files_changed: 3, error: null }),
+      unpublished_summary: () => ({ changed_years: [2026], changed_docs: ['faq', 'site-footer', 'site-header'], since: '2026-11-18T09:00:00Z' }),
+      last_publish_run: () => PUBLISH_RUNS[0] ?? null,
       live_contest_year: () => 2026,
     },
   );

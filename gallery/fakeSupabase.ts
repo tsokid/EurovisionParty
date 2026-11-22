@@ -25,6 +25,13 @@ export function setFakeDb(nextTables: FakeTables, nextRpcs: FakeRpcs = {}) {
   rpcs = nextRpcs;
 }
 
+/** Edge functions the gallery models (CMS P5: publish-content, publish-status). */
+export type FakeFunctions = Record<string, (body: Record<string, unknown>) => unknown>;
+let functions: FakeFunctions = {};
+export function setFakeFunctions(next: FakeFunctions) {
+  functions = next;
+}
+
 const warned = new Set<string>();
 function warnOnce(key: string, msg: string) {
   if (warned.has(key)) return;
@@ -291,7 +298,15 @@ const client = {
   getChannels: () => [],
   auth,
   functions: {
-    invoke: async (name: string) => {
+    invoke: async (name: string, opts?: { body?: Record<string, unknown> }) => {
+      const fn = functions[name];
+      if (fn) {
+        try {
+          return { data: await fn(opts?.body ?? {}), error: null };
+        } catch (e) {
+          return { data: null, error: { message: e instanceof Error ? e.message : String(e) } };
+        }
+      }
       warnOnce(`fn:${name}`, `functions.invoke("${name}") — not modelled, returning null`);
       return { data: null, error: null };
     },

@@ -134,7 +134,7 @@ describe('PublishReview: a site-wide doc', () => {
     await act(async () => { fireEvent.click(within(flow).getByRole('button', { name: 'Φτιάξε προεπισκόπηση' })); });
     const url = await screen.findByTestId('preview-url');
     expect(url.getAttribute('href')).toBe('https://eurovision-git-content-preview.vercel.app');
-    expect(screen.getByTestId('site-preview-flow').getAttribute('data-step')).toBe('2');
+    expect(screen.getByTestId('site-preview-flow').getAttribute('data-step')).toBe('1');
 
     h.invoke.mockImplementationOnce(async (_n: string, body: unknown) => {
       expect(body).toEqual({ cms: true, promote: 90 });
