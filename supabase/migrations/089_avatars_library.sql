@@ -23,8 +23,11 @@
 --   bucket object names (static paths are not), for the admin to remove
 --   from Storage. No cron: an admin action only (crons are off, 068).
 -- * Storage (Supabase only, skipped where the storage schema is absent):
---   bucket `avatars`, public read, 2 MiB, image/webp; insert/update/delete
---   for authenticated super admins on that bucket only.
+--   bucket `avatars`, public read, 2 MiB, image/webp; select/insert/
+--   update/delete for authenticated super admins on that bucket only. The
+--   select policy is what lets Storage's remove() see the rows it deletes:
+--   a public bucket serves files by URL, but grants no SELECT on
+--   storage.objects (as 077's cms_media_admin_select).
 -- * Seed: the 53 shipped owner avatars, published, static paths.
 --
 -- Idempotent: safe to run twice.
@@ -162,6 +165,11 @@ begin
                       allowed_mime_types = array['image/webp']
                 where id = 'avatars'$q$;
   end if;
+
+  drop policy if exists avatars_admin_select on storage.objects;
+  create policy avatars_admin_select on storage.objects
+    for select to authenticated
+    using (bucket_id = 'avatars' and public.is_super_admin());
 
   drop policy if exists avatars_admin_insert on storage.objects;
   create policy avatars_admin_insert on storage.objects

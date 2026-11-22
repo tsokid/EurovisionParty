@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { PGlite } from '@electric-sql/pglite';
-import { createDb, asUser } from './harness';
+import { createDb, asUser, applyMigration, makeAdmin } from './harness';
 import { IMAGE_AVATARS } from '../../src/components/stage/avatars/images.generated';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -63,4 +63,49 @@ describe('089 avatars library', () => {
       `insert into public.avatars (id, title_en, thumb_path, full_path) values ('bad', 'Bad', 'https://evil.example/x.webp', 'bad-512.webp')`,
     )).rejects.toThrow(/thumb_path/);
   });
+
+  it('final review I4: with a storage schema, an admin can delete avatar objects (remove() needs SELECT too); nobody else can', async () => {
+    const ADMIN = '00000000-0000-4000-8000-000000000891';
+    const STRANGER = '00000000-0000-4000-8000-000000000892';
+    const sdb = await createDb({ upTo: '088' });
+    try {
+      // A minimal stand-in for Supabase's storage schema (as tests/db/cmsMedia.test.ts).
+      await sdb.exec(`
+        create schema storage;
+        create table storage.buckets (
+          id text primary key, name text not null, public boolean default false,
+          file_size_limit bigint, allowed_mime_types text[]);
+        create table storage.objects (
+          id uuid primary key default gen_random_uuid(), bucket_id text references storage.buckets(id),
+          name text, owner uuid);
+        alter table storage.objects enable row level security;
+        grant usage on schema storage to anon, authenticated, service_role;
+        grant select, insert, update, delete on storage.objects to anon, authenticated;
+      `);
+      await makeAdmin(sdb, ADMIN, 'admin891@example.test');
+      await applyMigration(sdb, '089');
+      await applyMigration(sdb, '089'); // idempotent, policies included
+
+      const pols = await sdb.query<{ policyname: string; cmd: string }>(
+        `select policyname, cmd from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname like 'avatars_%' order by cmd`);
+      expect(pols.rows.map((p) => p.cmd)).toEqual(['DELETE', 'INSERT', 'SELECT', 'UPDATE']);
+
+      // Storage's remove() is a DELETE ... WHERE name IN (...): it needs to see the rows.
+      const del = () => sdb.query(`delete from storage.objects where bucket_id = 'avatars' and name in ('t-96.webp', 't-512.webp')`);
+      await sdb.exec(`set role authenticated`);
+      try {
+        await asUser(sdb, ADMIN);
+        await sdb.query(`insert into storage.objects (bucket_id, name) values ('avatars', 't-96.webp'), ('avatars', 't-512.webp')`);
+        await asUser(sdb, STRANGER);
+        expect((await del()).affectedRows).toBe(0);
+        await asUser(sdb, ADMIN);
+        expect((await del()).affectedRows).toBe(2);
+      } finally {
+        await sdb.exec(`reset role`);
+      }
+      expect((await sdb.query(`select * from storage.objects where bucket_id = 'avatars'`)).rows).toHaveLength(0);
+    } finally {
+      await sdb.close();
+    }
+  }, 120_000);
 });

@@ -64,7 +64,8 @@ export async function addAvatar(a: { id: string; title_en: string; title_el: str
   const row = { id: a.id, title_en: a.title_en, title_el: a.title_el, thumb_path: names.thumb, full_path: names.full, status: a.status, sort: a.sort };
   const { error } = await supabase.from('avatars').insert(row);
   if (error) {
-    await bucket.remove([names.thumb, names.full]).catch(() => {});
+    // Best effort: the insert error is the one to show.
+    await removeObjects([names.thumb, names.full]).catch(() => {});
     throw error;
   }
   return { ...row, created_at: new Date().toISOString(), deleted_at: null };
@@ -75,10 +76,20 @@ export async function purgeAvatar(id: string): Promise<void> {
   const { data, error } = await supabase.rpc('avatar_purge', { p_id: id });
   if (error) throw error;
   const objects = (data ?? []) as string[];
-  if (objects.length) {
-    const { error: e } = await supabase.storage.from(AVATAR_BUCKET).remove(objects);
-    if (e) throw e;
-  }
+  if (objects.length) await removeObjects(objects);
+}
+
+/**
+ * Removes bucket objects and checks that Storage really removed each one:
+ * remove() answers without an error when RLS hides the rows, so a missing
+ * name means the file is still public.
+ */
+async function removeObjects(names: string[]): Promise<void> {
+  const { data, error } = await supabase.storage.from(AVATAR_BUCKET).remove(names);
+  if (error) throw error;
+  const removed = new Set((data ?? []).map((o: { name: string }) => o.name));
+  const left = names.filter((n) => !removed.has(n));
+  if (left.length) throw new Error(`Τα αρχεία δεν σβήστηκαν από το Storage: ${left.join(', ')}`);
 }
 
 /** Whether a deleted avatar can be purged now. */

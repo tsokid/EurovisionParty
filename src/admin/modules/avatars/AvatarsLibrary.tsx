@@ -115,8 +115,11 @@ export default function AvatarsLibrary() {
   const restore = (ids: string[]) =>
     write((rs) => rs.map((r) => (ids.includes(r.id) ? { ...r, deleted_at: null } : r)), () => updateAvatars(ids, { deleted_at: null }), 'Δεν έγινε επαναφορά');
 
-  const purge = (id: string) =>
-    write((rs) => rs.filter((r) => r.id !== id), () => purgeAvatar(id), 'Δεν διαγράφηκε οριστικά');
+  // Reloaded after: a purge can remove the row and still fail on its files (I4).
+  const purge = async (id: string) => {
+    await write((rs) => rs.filter((r) => r.id !== id), () => purgeAvatar(id), 'Δεν διαγράφηκε οριστικά');
+    void load();
+  };
 
   const titleOf = (id: string) => {
     const r = rows?.find((x) => x.id === id);
