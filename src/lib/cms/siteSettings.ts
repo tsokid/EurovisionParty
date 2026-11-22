@@ -13,24 +13,35 @@
  *                     its addresses in its own text)
  *
  * The values are not translated (both locales hold the same ones), so the
- * English slice is read. Bundled like the header and footer (siteChrome.ts):
- * never inlined in a page's #__content__, never fetched, so with the seeded
- * values every page renders byte for byte as before. Inside the admin
- * preview useSiteSettings() returns the settings draft.
+ * English slice is read. The file is imported directly (like the client
+ * bundle of the header and footer, contentData.client.ts), not through the
+ * content snapshot: the head tags and schema builders that read it also run
+ * in the Node build scripts (prerender, validate-schema), which have no
+ * import.meta.glob. Never inlined in a page's #__content__ and never
+ * fetched, so with the seeded values every page renders byte for byte as
+ * before. Inside the admin preview useSiteSettings() returns the settings
+ * draft.
  */
-import { publishedSiteDoc, useSiteDoc } from './siteChrome';
+import { useLocale } from '../seo/LocaleContext';
+import { overriddenDoc, usePageContentOverride } from './pageContentOverrideContext';
+import settingsDoc from '../../../content/pages/site-settings.json';
 import type { SiteSettingsContent } from '../../../supabase/functions/_shared/cms/schemas/site-settings';
 
 export type { SiteSettingsContent };
 
+type Doc = Record<'en' | 'el', SiteSettingsContent>;
+
 /** The published settings (plain function: for code outside React, such as the head tags and the schema builders). */
 export function siteSettings(): SiteSettingsContent {
-  return publishedSiteDoc('site-settings').en;
+  return (settingsDoc as unknown as Doc).en;
 }
 
 /** The settings in a component: the admin preview's draft, else the published doc. */
 export function useSiteSettings(): SiteSettingsContent {
-  return useSiteDoc('site-settings');
+  const locale = useLocale();
+  const override = overriddenDoc(usePageContentOverride(), 'site-settings');
+  const draft = (override?.doc as Partial<Doc> | null | undefined)?.[locale];
+  return draft ?? siteSettings();
 }
 
 /** The Organization's sameAs: the social profile addresses, in order. */

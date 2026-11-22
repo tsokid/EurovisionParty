@@ -7,13 +7,17 @@ import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const overrides = vi.hoisted(() => ({ docs: new Map<string, unknown>() }));
-vi.mock('../../src/lib/seo/contentData', async (importActual) => {
-  const actual = await importActual<typeof import('../../src/lib/seo/contentData')>();
-  return { ...actual, bundledContent: (p: string) => (overrides.docs.has(p) ? overrides.docs.get(p) : actual.bundledContent(p)) };
-});
-
 const committed = JSON.parse(readFileSync(resolve(__dirname, '../../content/pages/site-settings.json'), 'utf8'));
+
+// The settings file the site imports; each test swaps its values in place.
+const settings = vi.hoisted(() => ({ doc: { en: {} as Record<string, unknown>, el: {} as Record<string, unknown> } }));
+vi.mock('../../content/pages/site-settings.json', () => ({ default: settings.doc }));
+const use = (v: Record<string, unknown>) => {
+  settings.doc.en = v;
+  settings.doc.el = v;
+};
+
+use(committed.en);
 const other = {
   siteName: 'Euro Party Games',
   defaultOgImage: 'https://cdn.example.org/share.png',
@@ -47,7 +51,7 @@ describe('site settings are read by the site', { timeout: 60_000 }, () => {
   });
 
   it('other values flow into og:image, the Article publisher and author, the About Organization and the logo label', async () => {
-    overrides.docs.set('pages/site-settings.json', { en: other, el: other });
+    use(other);
     try {
       const about = await page('/en/about');
       expect(about.head).toContain('<meta property="og:image" content="https://cdn.example.org/share.png"');
@@ -64,18 +68,18 @@ describe('site settings are read by the site', { timeout: 60_000 }, () => {
         publisher: { name: 'Party Org', logo: { url: 'https://cdn.example.org/share.png' } },
       });
     } finally {
-      overrides.docs.clear();
+      use(committed.en);
     }
   });
 
   it('the site-wide Organization and WebSite schema builders read them too', async () => {
-    overrides.docs.set('pages/site-settings.json', { en: other, el: other });
+    use(other);
     try {
       const { buildOrganization, buildWebSite } = await import('../../src/lib/seo/schema');
       expect(buildOrganization()).toMatchObject({ name: 'Party Org', logo: 'https://cdn.example.org/square.png', sameAs: ['https://instagram.com/europarty'] });
       expect(buildWebSite()).toMatchObject({ name: 'Euro Party Games' });
     } finally {
-      overrides.docs.clear();
+      use(committed.en);
     }
   });
 });
