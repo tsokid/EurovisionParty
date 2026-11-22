@@ -32,9 +32,6 @@ export const SCORING = {
     /** Points for a country that is in the Worst 5 but wrong position */
     inWorst5: 20,
   },
-
-  /** Flat bonus for winning a duel */
-  duelWin: 12,
 } as const
 
 // ── Emoji avatar options ─────────────────────────────────────────────
