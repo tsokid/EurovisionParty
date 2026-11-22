@@ -1,0 +1,348 @@
+{
+  "el": {
+    "columns": [
+      {
+        "heading": "Σχετικά",
+        "id": "about",
+        "links": [
+          {
+            "label": "Τι είναι το Eurovision Games",
+            "target": {
+              "kind": "page",
+              "pageId": "about"
+            }
+          },
+          {
+            "label": "Δωρεάν Online Παιχνίδι Eurovision",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-games"
+            }
+          },
+          {
+            "label": "Cookies & Συγκατάθεση",
+            "target": {
+              "kind": "page",
+              "pageId": "cookies"
+            }
+          }
+        ]
+      },
+      {
+        "heading": "Πώς Παίζεται",
+        "id": "howToPlay",
+        "links": [
+          {
+            "label": "Φάσεις Παιχνιδιού",
+            "target": {
+              "kind": "page",
+              "pageId": "how-to-play"
+            }
+          },
+          {
+            "label": "Trivia",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-trivia"
+            }
+          },
+          {
+            "label": "Μονομαχίες",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-duels"
+            }
+          },
+          {
+            "label": "Προβλέψεις",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-predictions"
+            }
+          },
+          {
+            "label": "Πίνακας Βαθμολογίας",
+            "target": {
+              "kind": "page",
+              "pageId": "dashboard"
+            }
+          },
+          {
+            "label": "Κανόνες Παιχνιδιού",
+            "target": {
+              "kind": "page",
+              "pageId": "rules"
+            }
+          }
+        ]
+      },
+      {
+        "heading": "Eurovision",
+        "id": "eurovision",
+        "links": [
+          {
+            "label": "Eurovision {year}",
+            "target": {
+              "key": "hub",
+              "kind": "dynamic"
+            }
+          },
+          {
+            "label": "Προηγούμενοι διαγωνισμοί",
+            "target": {
+              "key": "pastContests",
+              "kind": "dynamic"
+            }
+          },
+          {
+            "label": "Χώρες",
+            "target": {
+              "key": "countries",
+              "kind": "dynamic"
+            }
+          },
+          {
+            "label": "Νικητές",
+            "target": {
+              "kind": "page",
+              "pageId": "winners"
+            }
+          }
+        ]
+      },
+      {
+        "heading": "Βοήθεια",
+        "id": "help",
+        "links": [
+          {
+            "label": "Συχνές Ερωτήσεις",
+            "target": {
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "Δημιουργία Δωματίου",
+            "target": {
+              "anchor": "create",
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "Είσοδος σε Δωμάτιο",
+            "target": {
+              "anchor": "join",
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "Αποχώρηση / Διαγραφή Δωματίου",
+            "target": {
+              "anchor": "leave",
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "Πώς Υπολογίζονται οι Πόντοι",
+            "target": {
+              "kind": "page",
+              "pageId": "scoring"
+            }
+          },
+          {
+            "label": "Πολιτική Απορρήτου",
+            "target": {
+              "kind": "page",
+              "pageId": "privacy"
+            }
+          },
+          {
+            "label": "Όροι Χρήσης",
+            "target": {
+              "kind": "page",
+              "pageId": "terms"
+            }
+          }
+        ]
+      }
+    ],
+    "disclaimer": "Το Eurovision Games είναι ανεπίσημο παιχνίδι πάρτι, φτιαγμένο από θαυμαστές της Eurovision. Δεν σχετίζεται με την Ευρωπαϊκή Ραδιοτηλεοπτική Ένωση ή τον Διαγωνισμό Τραγουδιού Eurovision, ούτε υποστηρίζεται ή λειτουργεί από αυτούς.",
+    "tagline": "Το παιχνίδι πάρτι για τη βραδιά της Eurovision."
+  },
+  "en": {
+    "columns": [
+      {
+        "heading": "About",
+        "id": "about",
+        "links": [
+          {
+            "label": "What is Eurovision Games",
+            "target": {
+              "kind": "page",
+              "pageId": "about"
+            }
+          },
+          {
+            "label": "Free Online Eurovision Game",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-games"
+            }
+          },
+          {
+            "label": "Cookies & Consent",
+            "target": {
+              "kind": "page",
+              "pageId": "cookies"
+            }
+          }
+        ]
+      },
+      {
+        "heading": "How to Play",
+        "id": "howToPlay",
+        "links": [
+          {
+            "label": "Game Stages",
+            "target": {
+              "kind": "page",
+              "pageId": "how-to-play"
+            }
+          },
+          {
+            "label": "Trivia",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-trivia"
+            }
+          },
+          {
+            "label": "Duels",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-duels"
+            }
+          },
+          {
+            "label": "Predictions",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-predictions"
+            }
+          },
+          {
+            "label": "Dashboard",
+            "target": {
+              "kind": "page",
+              "pageId": "dashboard"
+            }
+          },
+          {
+            "label": "Game Rules",
+            "target": {
+              "kind": "page",
+              "pageId": "rules"
+            }
+          }
+        ]
+      },
+      {
+        "heading": "Eurovision",
+        "id": "eurovision",
+        "links": [
+          {
+            "label": "Eurovision {year}",
+            "target": {
+              "key": "hub",
+              "kind": "dynamic"
+            }
+          },
+          {
+            "label": "Past contests",
+            "target": {
+              "key": "pastContests",
+              "kind": "dynamic"
+            }
+          },
+          {
+            "label": "Countries",
+            "target": {
+              "key": "countries",
+              "kind": "dynamic"
+            }
+          },
+          {
+            "label": "Winners",
+            "target": {
+              "kind": "page",
+              "pageId": "winners"
+            }
+          }
+        ]
+      },
+      {
+        "heading": "Help",
+        "id": "help",
+        "links": [
+          {
+            "label": "FAQ",
+            "target": {
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "Create a Room",
+            "target": {
+              "anchor": "create",
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "Join a Room",
+            "target": {
+              "anchor": "join",
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "Leave / Delete a Room",
+            "target": {
+              "anchor": "leave",
+              "kind": "page",
+              "pageId": "faq"
+            }
+          },
+          {
+            "label": "How Points Are Calculated",
+            "target": {
+              "kind": "page",
+              "pageId": "scoring"
+            }
+          },
+          {
+            "label": "Privacy Policy",
+            "target": {
+              "kind": "page",
+              "pageId": "privacy"
+            }
+          },
+          {
+            "label": "Terms of Use",
+            "target": {
+              "kind": "page",
+              "pageId": "terms"
+            }
+          }
+        ]
+      }
+    ],
+    "disclaimer": "Eurovision Games is an unofficial fan-made party game. Not affiliated with, endorsed by, or operated by the European Broadcasting Union or the Eurovision Song Contest.",
+    "tagline": "The party game for Eurovision night."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "el": {
+    "contactEmail": "hello@eurovision.games",
+    "defaultOgImage": "https://eurovision.games/logo.png",
+    "organization": {
+      "logo": "https://eurovision.games/icon-512.png",
+      "name": "Eurovision Games"
+    },
+    "siteName": "Eurovision Games",
+    "socialProfiles": []
+  },
+  "en": {
+    "contactEmail": "hello@eurovision.games",
+    "defaultOgImage": "https://eurovision.games/logo.png",
+    "organization": {
+      "logo": "https://eurovision.games/icon-512.png",
+      "name": "Eurovision Games"
+    },
+    "siteName": "Eurovision Games",
+    "socialProfiles": []
+  }
+}

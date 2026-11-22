@@ -3,10 +3,10 @@ import type { z } from 'zod';
 import { choice, group, list, optional, text } from '../fields.ts';
 import { articleSchema, basicMeta, crumbs, cta, hero, relatedItem, strongRest, strongRestHtml, extraBlocks } from './common.ts';
 
-import { FAQ_TOPICS } from '../faqTopics.ts';
+import { FAQ_ANCHOR_IDS, FAQ_TOPICS } from '../faqTopics.ts';
 
 /** In sorted order, so a sorted list of ids compares position by position. */
-const ANCHOR_IDS = ['create', 'join', 'leave'] as const;
+const ANCHOR_IDS = FAQ_ANCHOR_IDS;
 
 // The three anchored questions: their ids are URL fragments (/faq#leave) and
 // the page sections look them up, so there is exactly one of each.

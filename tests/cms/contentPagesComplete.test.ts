@@ -13,6 +13,8 @@ const DIR = resolve(__dirname, '../../content/pages');
 const files = readdirSync(DIR).filter((f) => f.endsWith('.json') && f !== 'index.json').sort();
 const docIds = files.map((f) => f.slice(0, -'.json'.length));
 const staticIds = [...PAGE_REGISTRY.map((p) => p.id), 'not-found'];
+// The site-wide docs (header, footer, settings): one each, on every page.
+const siteWideIds = Object.entries(CMS_DOC_TYPES).filter(([, d]) => d.group === 'sitewide').map(([id]) => id);
 
 describe('content/pages completeness', () => {
   it.each(staticIds)('%s has a document that validates', (id) => {
@@ -22,12 +24,18 @@ describe('content/pages completeness', () => {
     expect(r.ok ? [] : r.errors).toEqual([]);
   });
 
+  it.each(siteWideIds)('site-wide %s has a document that validates', (id) => {
+    expect(docIds, `content/pages/${id}.json`).toContain(id);
+    const r = validateDocument(docTypeFor(id), JSON.parse(readFileSync(resolve(DIR, `${id}.json`), 'utf8')));
+    expect(r.ok ? [] : r.errors).toEqual([]);
+  });
+
   it('every document maps to a registered doc type (no orphans)', () => {
     expect(docIds.filter((id) => !(docTypeFor(id) in CMS_DOC_TYPES))).toEqual([]);
   });
 
   it('every static document is a registry page or the 404 (no strays)', () => {
-    expect(docIds.filter((id) => !staticIds.includes(id))).toEqual([]);
+    expect(docIds.filter((id) => !staticIds.includes(id) && !siteWideIds.includes(id))).toEqual([]);
   });
 
   it('every registered static doc type has a document', () => {

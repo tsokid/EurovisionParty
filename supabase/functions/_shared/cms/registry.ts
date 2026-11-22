@@ -24,9 +24,16 @@ import { scoringSchema } from './schemas/scoring.ts';
 import { termsSchema } from './schemas/terms.ts';
 import { winnersSchema } from './schemas/winners.ts';
 import { editorialSchema } from './schemas/editorial.ts';
+import { siteHeaderSchema } from './schemas/site-header.ts';
+import { siteFooterSchema } from './schemas/site-footer.ts';
+import { siteSettingsSchema } from './schemas/site-settings.ts';
 import { editorialFamily } from './pagesIndex.ts';
 
-export type DocTypeGroup = 'site' | 'contest' | 'country' | 'hub';
+/**
+ * site: a static page; sitewide: header, footer and settings (on every page,
+ * edited on their own screens, not in Pages); contest, country, hub: editorials.
+ */
+export type DocTypeGroup = 'site' | 'sitewide' | 'contest' | 'country' | 'hub';
 
 export type DocTypeDef = {
   /** Schema of one locale's content (the document is { en: T, el: T }). */
@@ -54,6 +61,9 @@ export const CMS_DOC_TYPES: Record<string, DocTypeDef> = {
   'not-found': { schema: notFoundSchema, label: 'Page not found (404)', group: 'site' },
   'eurovision-predictions': { schema: eurovisionPredictionsSchema, label: 'Predictions game', group: 'site' },
   winners: { schema: winnersSchema, label: 'Winners', group: 'site' },
+  'site-header': { schema: siteHeaderSchema, label: 'Header', group: 'sitewide' },
+  'site-footer': { schema: siteFooterSchema, label: 'Footer', group: 'sitewide' },
+  'site-settings': { schema: siteSettingsSchema, label: 'Site settings', group: 'sitewide' },
   'archive-editorial': { schema: editorialSchema, label: 'Contest year editorial', group: 'contest' },
   'country-editorial': { schema: editorialSchema, label: 'Country editorial', group: 'country' },
   'hub-editorial': { schema: editorialSchema, label: 'Live hub editorial', group: 'hub' },

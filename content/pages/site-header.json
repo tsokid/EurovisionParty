@@ -1,0 +1,140 @@
+{
+  "el": {
+    "cta": {
+      "createRoom": "Φτιάξε Δωμάτιο",
+      "joinRoom": "Μπες σε Δωμάτιο"
+    },
+    "items": [
+      {
+        "label": "Eurovision {year}",
+        "target": {
+          "key": "hub",
+          "kind": "dynamic"
+        }
+      },
+      {
+        "label": "Eurovision Night",
+        "target": {
+          "kind": "page",
+          "pageId": "eurovision-night"
+        }
+      },
+      {
+        "children": [
+          {
+            "label": "Trivia",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-trivia"
+            }
+          },
+          {
+            "label": "Προβλέψεις",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-predictions"
+            }
+          },
+          {
+            "label": "Κανόνες",
+            "target": {
+              "kind": "page",
+              "pageId": "rules"
+            }
+          },
+          {
+            "label": "Βαθμολογία",
+            "target": {
+              "kind": "page",
+              "pageId": "scoring"
+            }
+          },
+          {
+            "label": "Άλλες Ερωτήσεις",
+            "target": {
+              "kind": "page",
+              "pageId": "faq"
+            }
+          }
+        ],
+        "label": "Πώς Παίζεται"
+      }
+    ],
+    "ui": {
+      "closeMenu": "Κλείσιμο μενού",
+      "menu": "Μενού",
+      "noRooms": "Κανένα δωμάτιο ακόμα",
+      "openMenu": "Άνοιγμα μενού",
+      "yourRooms": "Τα Δωμάτιά σου"
+    }
+  },
+  "en": {
+    "cta": {
+      "createRoom": "Create a Room",
+      "joinRoom": "Join a Room"
+    },
+    "items": [
+      {
+        "label": "Eurovision {year}",
+        "target": {
+          "key": "hub",
+          "kind": "dynamic"
+        }
+      },
+      {
+        "label": "Eurovision Night",
+        "target": {
+          "kind": "page",
+          "pageId": "eurovision-night"
+        }
+      },
+      {
+        "children": [
+          {
+            "label": "Trivia",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-trivia"
+            }
+          },
+          {
+            "label": "Predictions",
+            "target": {
+              "kind": "page",
+              "pageId": "eurovision-predictions"
+            }
+          },
+          {
+            "label": "Rules",
+            "target": {
+              "kind": "page",
+              "pageId": "rules"
+            }
+          },
+          {
+            "label": "Scoring",
+            "target": {
+              "kind": "page",
+              "pageId": "scoring"
+            }
+          },
+          {
+            "label": "Other FAQ",
+            "target": {
+              "kind": "page",
+              "pageId": "faq"
+            }
+          }
+        ],
+        "label": "How to Play"
+      }
+    ],
+    "ui": {
+      "closeMenu": "Close menu",
+      "menu": "Menu",
+      "noRooms": "No rooms yet",
+      "openMenu": "Open menu",
+      "yourRooms": "Your Rooms"
+    }
+  }
+}

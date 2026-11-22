@@ -23,7 +23,8 @@ vi.mock('../../src/lib/seo/contentData', async (importOriginal) => {
 afterEach(() => overrides.clear());
 
 const templated = Object.entries(CMS_DOC_TYPES)
-  .filter(([id, def]) => !id.startsWith('__') && fieldPaths(def.schema, (m) => (m.placeholders ?? []).length > 0).length > 0)
+  // Static pages only: the site-wide docs' {year} labels are covered in tests/cms/siteWideDocs.test.ts.
+  .filter(([id, def]) => !id.startsWith('__') && def.group === 'site' && fieldPaths(def.schema, (m) => (m.placeholders ?? []).length > 0).length > 0)
   .map(([id]) => id);
 
 /** Every templated string field gets all of its allowed placeholders appended. */

@@ -14,7 +14,7 @@ import { PAGE_REGISTRY } from '../../src/lib/seo/registry';
 
 const PAGES = resolve(__dirname, '../../content/pages');
 const STATIC_IDS = readdirSync(PAGES)
-  .filter((f) => f.endsWith('.json') && f !== 'index.json')
+  .filter((f) => f.endsWith('.json') && f !== 'index.json' && !f.startsWith('site-'))
   .map((f) => f.slice(0, -'.json'.length))
   .sort();
 
