@@ -3,7 +3,7 @@
 // without it, an index of links. All Supabase traffic goes to
 // gallery/fakeSupabase.ts (aliased in place of src/lib/supabase.ts).
 
-import { StrictMode, useEffect, type ReactNode } from 'react';
+import { StrictMode, useEffect, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import i18n from '../src/i18n';
@@ -21,10 +21,15 @@ import { setFakeDb, type FakeTables } from './fakeSupabase';
 import * as F from './fixtures';
 import StagePrimitives from './StagePrimitives';
 import AvatarSheet from './AvatarSheet';
+import DuelResultMoment from '../src/components/duels/DuelResultMoment';
+import { duelRewardPreview } from '../src/lib/answerPoints';
+import { QUESTIONS } from '../src/lib/questions';
+import { getLocalizedQuestion } from '../src/lib/questionLocale';
+import type { Duel, DuelDecision, Notification } from '../src/lib/types';
 import '../src/index.css';
 
 // ── Screens ──────────────────────────────────────────────────────────
-type Render = 'room' | 'home' | 'predictions-locked' | 'duel-play' | 'duel-result' | 'stage' | 'avatars';
+type Render = 'room' | 'home' | 'predictions-locked' | 'duel-play' | 'duel-result' | 'duel-moment' | 'stage' | 'avatars';
 
 interface Scenario {
   id: string;
@@ -49,6 +54,12 @@ interface Scenario {
   pick?: 'none' | 'partial' | 'full' | 'scored';
   /** Click this button (accessible name) once the screen has loaded. */
   autoClick?: string;
+  /** Click the first element matching this selector once it exists. */
+  autoClickSelector?: string;
+  /** Task 7: duel shown in the result moment. */
+  momentDuel?: string;
+  /** Task 7: a duel_challenge notification arrives after this many ms. */
+  incomingAfterMs?: number;
   note?: string;
 }
 
@@ -108,6 +119,20 @@ const SCENARIOS: Scenario[] = [
   { id: 'results-breakdown-25', label: 'Prediction results breakdown (25)', render: 'room', phase: 'final', tab: 'predictions', lineup: 2026, pick: 'scored', dismissCrown: true },
   { id: 'winners-crown', label: 'Winner crown reveal', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED },
   { id: 'winners', label: 'Winners carousel', render: 'room', phase: 'final', tab: 'leaderboard', prediction: F.PREDICTION_SCORED, dismissCrown: true },
+  // ── Task 7: quiz + duels with points motion, avatar viewer ──
+  { id: 'qz-question', label: 'Quiz · question (fresh; wait 11 s for the red last 5″)', render: 'room', phase: 'pre_night', tab: 'quiz', players: () => F.withStageNames(F.makePlayers('pre_night')),
+    quizProgress: (roomId, playerId) => ({ roomId, playerId, phase: 'playing', roundNumber: 1, questionIndex: 3, questionIds: F.QUIZ_QUESTION_IDS, usedQuestionIds: F.QUIZ_QUESTION_IDS, roundAnswers: F.ROUND1_ANSWERS.slice(0, 3) }),
+    note: 'window.__GALLERY_ANSWER__ = { correct, wrong } texts for the shot script.' },
+  { id: 'qz-round-end', label: 'Quiz · round end (motion #3)', render: 'room', phase: 'pre_night', tab: 'quiz', players: F.makeRoundEndPlayers,
+    quizProgress: (roomId, playerId) => ({ roomId, playerId, phase: 'results', roundNumber: 1, questionIndex: 9, questionIds: F.QUIZ_QUESTION_IDS, usedQuestionIds: F.QUIZ_QUESTION_IDS, roundAnswers: F.ROUND1_ANSWERS, roundStartStandings: F.ROUND1_START_STANDINGS }) },
+  { id: 'du-list', label: 'Duels · list (incoming, my turn, results)', render: 'room', phase: 'pre_night', tab: 'duels', players: () => F.withStageNames(F.makePlayers('pre_night')) },
+  { id: 'du-play', label: 'Duels · play', render: 'duel-play', phase: 'pre_night', tab: 'duels', players: () => F.withStageNames(F.makePlayers('pre_night')) },
+  { id: 'du-moment-win', label: 'Duel result moment · win + chooser (motion #4)', render: 'duel-moment', phase: 'pre_night', tab: 'duels', momentDuel: 'duel-won', players: () => F.withStageNames(F.makePlayers('pre_night')) },
+  { id: 'du-moment-lose', label: 'Duel result moment · lose (decided: steal)', render: 'duel-moment', phase: 'pre_night', tab: 'duels', momentDuel: 'duel-lost', players: () => F.withStageNames(F.makePlayers('pre_night')) },
+  { id: 'du-moment-tie', label: 'Duel result moment · tie (no chooser)', render: 'duel-moment', phase: 'pre_night', tab: 'duels', momentDuel: 'duel-tie', players: () => F.withStageNames(F.makePlayers('pre_night')) },
+  { id: 'du-incoming', label: 'Incoming challenge sheet (motion #11)', render: 'room', phase: 'pre_night', tab: 'quiz', incomingAfterMs: 1200, players: () => F.withStageNames(F.makePlayers('pre_night')),
+    quizProgress: (roomId, playerId) => ({ roomId, playerId, phase: 'waiting', roundNumber: 2, questionIndex: 0, questionIds: [], usedQuestionIds: F.QUIZ_QUESTION_IDS, roundAnswers: [] }) },
+  { id: 'avatar-modal', label: 'Avatar viewer modal (from the lobby)', render: 'room', phase: 'lobby', players: () => F.makeLobbyPlayers(6, 'other').map((p, i) => ({ ...p, avatar_id: ['img-02', 'img-01', 'img-11', 'img-25', 'img-37', 'img-29'][i] ?? p.avatar_id })), autoClickSelector: '.lb-tile .avv-btn' },
   { id: 'avatars', label: 'Avatar set (96px, 32px, <Avatar>)', render: 'avatars', phase: 'lobby', note: 'Redesign Task 4: src/components/stage/avatars registry.' },
   { id: 'stage-primitives', label: 'Stage primitives (design system)', render: 'stage', phase: 'lobby', note: 'Redesign Task 1: every src/components/stage primitive, in 390px and 1440px iframes.' },
 ];
@@ -156,7 +181,13 @@ function seed(s: Scenario) {
     compute_winners: () => F.WINNERS.length,
     get_intel_reveal: ({ p_reveal_type }) =>
       p_reveal_type === 'top3' ? { available: true, data: top3 } : { available: false },
-    submit_quiz_answer: () => ({ id: 'fake-answer', points_awarded: 8, response_seconds: 4.2 }),
+    // Mirrors submit_quiz_answer: seconds from p_question_opened_at to now (capped at 16), tiers 12/8/4.
+    submit_quiz_answer: (args) => {
+      const secs = Math.min(16, Math.max(0, (Date.now() - Date.parse(String(args.p_question_opened_at))) / 1000));
+      const ok = !!args.p_is_correct;
+      const points = !ok ? 0 : secs <= 3 ? 12 : secs <= 7 ? 8 : 4;
+      return { id: `fake-${Date.now()}`, points_awarded: points, response_seconds: Math.round(secs * 100) / 100, is_correct: ok };
+    },
     submit_duel_answers: () => null,
     advance_room_phase: () => null,
   });
@@ -170,6 +201,58 @@ function seed(s: Scenario) {
   st.setRoomPassword(F.ROOM_PASSWORD);
   if (s.tab) st.setActiveTab(s.tab);
   if (s.quizProgress) st.setQuizProgress(s.quizProgress(room.id, me.id));
+  if (s.id === 'qz-question') {
+    const q = QUESTIONS.find((x) => x.id === F.QUIZ_QUESTION_IDS[3])!;
+    const { options } = getLocalizedQuestion(q);
+    (window as unknown as { __GALLERY_ANSWER__: object }).__GALLERY_ANSWER__ = { correct: options[q.correct_index], wrong: options[(q.correct_index + 1) % options.length] };
+  }
+}
+
+function IncomingAfter({ ms }: { ms: number }) {
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const n: Notification = { id: `n-in-${Date.now()}`, room_id: F.ROOM_ID, player_id: F.ME_ID, type: 'duel_challenge', payload: { challengerName: 'Key Change', challengerId: 'p-maria' }, is_read: false, created_at: new Date().toISOString(), expires_at: null };
+      useGameStore.getState().addNotification(n);
+    }, ms);
+    return () => clearTimeout(id);
+  }, [ms]);
+  return null;
+}
+
+function AutoClickSel({ sel }: { sel: string }) {
+  useEffect(() => {
+    let tries = 0;
+    const id = setInterval(() => {
+      const el = document.querySelector<HTMLElement>(sel);
+      if (el) { el.click(); clearInterval(id); }
+      if (++tries > 60) clearInterval(id);
+    }, 150);
+    return () => clearInterval(id);
+  }, [sel]);
+  return null;
+}
+
+/** The result moment with a working «Κλέψε / Διπλασίασε»: the fake server applies the
+ *  decision the way apply_duel_decision does, and the store totals move. */
+function MomentDemo({ duelId }: { duelId: string }) {
+  const [duel, setDuel] = useState<Duel>(() => F.duelById(duelId));
+  const [open, setOpen] = useState(true);
+  const decide = async (_id: string, d: DuelDecision) => {
+    await new Promise((r) => setTimeout(r, 250));
+    const st = useGameStore.getState();
+    const winnerId = duel.winner_id!;
+    const loserId = duel.loser_id!;
+    const winnerScore = winnerId === duel.challenger_id ? duel.challenger_score : duel.challenged_score;
+    const loser = st.players.find((p) => p.id === loserId)!;
+    const prev = duelRewardPreview(winnerScore, loser.total_points);
+    const amount = d === 'steal' ? prev.steal : prev.double;
+    setDuel((x) => ({ ...x, winner_decision: d, decision_made_at: new Date().toISOString(), points_transferred: amount }));
+    st.setPlayers(st.players.map((p) => (p.id === winnerId ? { ...p, total_points: p.total_points + amount }
+      : p.id === loserId && d === 'steal' ? { ...p, total_points: p.total_points - amount } : p)));
+  };
+  return open
+    ? <DuelResultMoment duel={duel} onClose={() => setOpen(false)} onDecision={decide} />
+    : <p style={{ color: 'white', padding: 24 }}>Closed. <button type="button" onClick={() => setOpen(true)}>Replay</button></p>;
 }
 
 // ── Views ────────────────────────────────────────────────────────────
@@ -231,7 +314,7 @@ function Screen({ s }: { s: Scenario }): ReactNode {
       return (
         <MemoryRouter initialEntries={['/room/DESIGN']}>
           <Routes>
-            <Route path="/room/:roomCode" element={<><RoomPage />{s.dismissCrown && <DismissCrown />}{s.autoClick && <AutoClick name={s.autoClick} />}{s.phaseChangeTo && <PhaseFlip to={s.phaseChangeTo} afterMs={s.phaseChangeAfterMs ?? 1500} />}</>} />
+            <Route path="/room/:roomCode" element={<><RoomPage />{s.dismissCrown && <DismissCrown />}{s.autoClick && <AutoClick name={s.autoClick} />}{s.autoClickSelector && <AutoClickSel sel={s.autoClickSelector} />}{s.incomingAfterMs && <IncomingAfter ms={s.incomingAfterMs} />}{s.phaseChangeTo && <PhaseFlip to={s.phaseChangeTo} afterMs={s.phaseChangeAfterMs ?? 1500} />}</>} />
             <Route path="*" element={<p style={{ color: 'white', padding: 24 }}>Navigated away from the room (gallery).</p>} />
           </Routes>
         </MemoryRouter>
@@ -254,6 +337,15 @@ function Screen({ s }: { s: Scenario }): ReactNode {
       );
     case 'avatars':
       return <AvatarSheet />;
+    case 'duel-moment':
+      return (
+        <MemoryRouter initialEntries={['/room/DESIGN']}>
+          <AppShell showHeader showNav phase={s.phase} onExitPress={noop}>
+            <div />
+          </AppShell>
+          <MomentDemo duelId={s.momentDuel ?? 'duel-won'} />
+        </MemoryRouter>
+      );
     case 'stage':
       return <StagePrimitives frame={new URLSearchParams(location.search).has('frame')} />;
     case 'duel-result':

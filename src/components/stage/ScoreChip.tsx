@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { motion, useAnimationControls, useReducedMotion } from 'framer-motion';
+import { POINTS_LANDED_EVENT } from './PointsFlight';
 
 /**
  * Animates a displayed integer from its previous value to `target`
@@ -63,6 +64,15 @@ export function ScoreChip({ points, srLabel, className }: ScoreChipProps) {
     prev.current = points;
     if (!reduce) void controls.start({ scale: [1, 1.15, 1], transition: { duration: 0.2, ease: 'easeOut' } });
   }, [points, reduce, controls]);
+
+  // A flying "+N" chip (PointsFlight) landed here: bump even if the store
+  // total has not caught up yet; the count-up follows when it does.
+  useEffect(() => {
+    if (reduce || typeof window === 'undefined') return;
+    const onLand = () => { void controls.start({ scale: [1, 1.15, 1], transition: { duration: 0.2, ease: 'easeOut' } }); };
+    window.addEventListener(POINTS_LANDED_EVENT, onLand);
+    return () => window.removeEventListener(POINTS_LANDED_EVENT, onLand);
+  }, [reduce, controls]);
 
   return (
     <motion.span className={clsx('gs-pts', className)} animate={controls} data-points={points}>

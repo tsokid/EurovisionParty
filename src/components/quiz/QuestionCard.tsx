@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
-import Timer from '../ui/Timer';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import clsx from 'clsx';
+import { Check, Clock, Star, X } from 'lucide-react';
+import TimerRing from './TimerRing';
 import AnswerButton from './AnswerButton';
-import ConfettiOverlay from '../ui/ConfettiOverlay';
-import { TIMER_SECONDS } from '../../lib/constants';
+import { PointsFlight } from '../stage';
+import { TIMER_SECONDS, SCORING } from '../../lib/constants';
 import { getLocalizedQuestion } from '../../lib/questionLocale';
 import type { QuizQuestion } from '../../lib/types';
 
@@ -26,6 +28,12 @@ function shuffleOptions(
   };
 }
 
+/** The chip for the answer just given: points exactly as scored, plus why. */
+export interface AnswerChipView {
+  points: number;
+  reason: string;
+}
+
 interface QuestionCardProps {
   question: QuizQuestion | undefined;
   questionIndex: number;
@@ -35,6 +43,15 @@ interface QuestionCardProps {
    *  Parent uses this to stop the countdown so the clock doesn't keep ticking. */
   onSelect?: (answerIndex: number) => void;
   timeRemaining: number;
+  /** Seconds per question: quiz 15 (default), duels 12. */
+  timerSeconds?: number;
+  mode?: 'quiz' | 'duel';
+  /** Quiz round, for the eyebrow. */
+  roundNumber?: number;
+  /** Outcome of the questions already answered in this set (true = correct). */
+  history?: boolean[];
+  /** Points chip once the parent knows the scored result. */
+  chip?: AnswerChipView | null;
 }
 
 const FEEDBACK_DELAY_MS = 500;
@@ -47,8 +64,14 @@ export default function QuestionCard({
   onAnswer,
   onSelect,
   timeRemaining,
+  timerSeconds = TIMER_SECONDS,
+  mode = 'quiz',
+  roundNumber,
+  history = [],
+  chip = null,
 }: QuestionCardProps) {
   const { t } = useTranslation();
+  const reduce = useReducedMotion() ?? false;
   // Hooks must run in the same order every render — declare them BEFORE any early return
   const { question: localQ, options: rawOptions } = getLocalizedQuestion(question);
   // Shuffle once per question (stable across re-renders for same question.id)
@@ -108,44 +131,93 @@ export default function QuestionCard({
   if (!question) return null;
 
   const answeredCorrectly = revealed && selectedIndex === shuffledCorrectIndex;
+  const timedOut = revealed && (selectedIndex === null || selectedIndex === -1);
+  const verdict: 'ok' | 'bad' | 'time' = answeredCorrectly ? 'ok' : timedOut ? 'time' : 'bad';
+  const { tier1, tier2, tier3 } = SCORING.quiz;
+  const rules = mode === 'duel'
+    ? t('questionCard.rulesDuel')
+    : t('questionCard.rulesQuiz', { t1: tier1.maxSeconds, p1: tier1.points, t2: tier2.maxSeconds, p2: tier2.points, p3: tier3.points });
+  const eyebrow = mode === 'duel'
+    ? t('questionCard.eyebrowDuel')
+    : t('questionCard.eyebrowQuiz', { round: roundNumber ?? 1, max: 3 });
+  const maxPoints = mode === 'duel' ? 12 : tier1.points;
+  const fade = reduce
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 } }
+    : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0 }, transition: { duration: 0.25, ease: 'easeOut' as const } };
+
+  let feedbackIcon: ReactNode = <X strokeWidth={3} aria-hidden="true" />;
+  if (verdict === 'ok') feedbackIcon = <Check strokeWidth={3} aria-hidden="true" />;
+  if (verdict === 'time') feedbackIcon = <Clock strokeWidth={2.6} aria-hidden="true" />;
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={question.id}
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -40 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-        className="flex flex-col h-full"
+        initial={reduce ? { opacity: 0 } : { opacity: 0, x: 40 }}
+        animate={reduce ? { opacity: 1 } : { opacity: 1, x: 0 }}
+        exit={reduce ? { opacity: 0 } : { opacity: 0, x: -40 }}
+        transition={reduce ? { duration: 0.2 } : { type: 'spring', damping: 25, stiffness: 250 }}
+        className="qz-q"
       >
-        {/* Header: progress + timer */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-white/60 font-medium">
-            {t('questionCard.progress', { current: questionIndex + 1, total: totalQuestions })}
-          </span>
-          <Timer seconds={TIMER_SECONDS} remaining={timeRemaining} size={56} />
+        {/* Header: where we are + timer */}
+        <div className="qz-q-head">
+          <div className="qz-q-where">
+            <div className="t-eyebrow">{eyebrow}</div>
+            <div className="qz-q-count">
+              {t('questionCard.progressLead')}{' '}
+              <span className="num">{questionIndex + 1}</span>{' '}
+              {t('questionCard.progressOf')}{' '}
+              <span className="num">{totalQuestions}</span>
+            </div>
+          </div>
+          <TimerRing seconds={timerSeconds} remaining={timeRemaining} />
         </div>
 
-        {/* Progress bar */}
-        <div className="w-full h-1 rounded-full bg-white/10 mb-6">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-euro-purple to-euro-pink"
-            initial={{ width: 0 }}
-            animate={{
-              width: `${((questionIndex + 1) / totalQuestions) * 100}%`,
-            }}
-            transition={{ duration: 0.4 }}
-          />
+        {/* Per-question segments: green right, red wrong, pink now */}
+        <div className="qz-segs" aria-hidden="true">
+          {Array.from({ length: totalQuestions }).map((_, i) => (
+            <i
+              key={i}
+              className={clsx(
+                i < history.length && (history[i] ? 'ok' : 'bad'),
+                i === questionIndex && i >= history.length && 'now',
+              )}
+            />
+          ))}
         </div>
 
-        {/* Question text */}
-        <h2 className="text-lg font-bold text-white mb-6 leading-relaxed">
-          {localQ}
-        </h2>
+        {/* Question, then the verdict card in its place once revealed */}
+        <AnimatePresence mode="wait" initial={false}>
+          {!revealed ? (
+            <motion.section key="q" className="card-hero qz-hero" {...fade}>
+              <span className="chip chip-gold qz-upto">
+                <Star aria-hidden="true" strokeWidth={2.4} />
+                {t('questionCard.upTo', { points: maxPoints })}
+              </span>
+              <h2 className="qz-text">{localQ}</h2>
+            </motion.section>
+          ) : (
+            <motion.section key="v" className={clsx('card qz-verdict', verdict)} role="status" {...fade}>
+              <div className="qz-verdict-h">
+                <span className="qz-verdict-ico">{feedbackIcon}</span>
+                <h2 className="t-h2">
+                  {verdict === 'ok' ? t('questionCard.correct') : verdict === 'time' ? t('questionCard.timeUp') : t('questionCard.wrong')}
+                </h2>
+              </div>
+              <div className="qz-verdict-pts">
+                {chip ? (
+                  <PointsFlight points={chip.points} reason={chip.reason} className="qz-chip" />
+                ) : (
+                  <span className="t-meta">{t('questionCard.scoring')}</span>
+                )}
+              </div>
+              <p className="t-meta qz-q-sub">{localQ}</p>
+            </motion.section>
+          )}
+        </AnimatePresence>
 
         {/* Answer options */}
-        <div className="flex flex-col gap-3 flex-1">
+        <div className="qz-answers">
           {options.map((option, idx) => (
             <AnswerButton
               key={idx}
@@ -160,27 +232,10 @@ export default function QuestionCard({
           ))}
         </div>
 
-        {/* Feedback text */}
-        <AnimatePresence>
-          {revealed && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mt-4 text-center"
-            >
-              {answeredCorrectly ? (
-                <p className="text-euro-green font-bold text-lg">{t('questionCard.correct')}</p>
-              ) : selectedIndex === null || selectedIndex === -1 ? (
-                <p className="text-euro-gold font-bold text-lg">{t('questionCard.timeUp')}</p>
-              ) : (
-                <p className="text-euro-red font-bold text-lg">{t('questionCard.wrong')}</p>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <ConfettiOverlay trigger={answeredCorrectly} variant="correct" />
+        <p className="t-meta qz-rules">
+          {revealed && questionIndex + 1 < totalQuestions ? <>{t('questionCard.nextAuto')} · </> : null}
+          {rules}
+        </p>
       </motion.div>
     </AnimatePresence>
   );

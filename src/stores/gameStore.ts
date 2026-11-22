@@ -12,6 +12,9 @@ export interface QuizProgress {
   questionIds: number[];
   usedQuestionIds: number[];
   roundAnswers: QuizAnswer[];
+  /** Room totals (players.total_points) when this round started, for the
+   *  round-end leaderboard reorder. Presentation only. */
+  roundStartStandings?: { id: string; total: number }[] | null;
 }
 
 interface GameState {

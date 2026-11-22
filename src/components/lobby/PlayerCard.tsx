@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Crown } from 'lucide-react';
 import type { Player } from '../../lib/types';
-import { Avatar } from '../stage';
+import { PlayerAvatar } from '../stage';
 
 interface PlayerCardProps {
   player: Player;
@@ -46,7 +46,7 @@ const PlayerCard = forwardRef<HTMLDivElement, PlayerCardProps>(function PlayerCa
   if (variant === 'row') {
     return (
       <motion.div ref={ref} layout={!reduce} className={clsx('player', isCurrentPlayer && 'me')} data-player-id={player.id} {...motionProps}>
-        <Avatar name={player.name} avatarId={player.avatar_id} />
+        <PlayerAvatar name={player.name} avatarId={player.avatar_id} />
         <span className="lb-row-name">
           {player.name}
           {isCurrentPlayer && <span className="t-meta"> · {t('lobby.you')}</span>}
@@ -65,7 +65,7 @@ const PlayerCard = forwardRef<HTMLDivElement, PlayerCardProps>(function PlayerCa
       data-player-id={player.id}
       {...motionProps}
     >
-      <Avatar name={player.name} avatarId={player.avatar_id} size="lg" />
+      <PlayerAvatar name={player.name} avatarId={player.avatar_id} size="lg" />
       <span className="lb-tile-name" title={player.name}>{player.name}</span>
       {isCurrentPlayer && <span className="t-meta lb-tile-you">{t('lobby.you')}</span>}
       {host}

@@ -166,18 +166,45 @@
     "phasesButton": "All phases of the night"
   },
   "phaseBanner": {
-    "pre_night": { "title": "The party has started!", "body": "Quiz and Duels are open." },
-    "predictions_open": { "title": "Predictions are open!", "body": "The Grand Final lineup is set. Pick your favourites and least favourites before voting starts!" },
-    "voting_live": { "title": "Voting is live!", "body": "Predictions are locked. Quiz and Duels are closed." },
-    "final": { "title": "Results are in!", "body": "See the final leaderboard." },
+    "pre_night": {
+      "title": "The party has started!",
+      "body": "Quiz and Duels are open."
+    },
+    "predictions_open": {
+      "title": "Predictions are open!",
+      "body": "The Grand Final lineup is set. Pick your favourites and least favourites before voting starts!"
+    },
+    "voting_live": {
+      "title": "Voting is live!",
+      "body": "Predictions are locked. Quiz and Duels are closed."
+    },
+    "final": {
+      "title": "Results are in!",
+      "body": "See the final leaderboard."
+    },
     "dismiss": "Close"
   },
   "phases": {
-    "lobby": { "label": "Lobby", "desc": "Players join the room and pick avatars" },
-    "pre_night": { "label": "Warm-up", "desc": "Quiz rounds and duels before the live show" },
-    "predictions_open": { "label": "Predictions open", "desc": "Show is live — submit your Top 5 and Worst 5!" },
-    "voting_live": { "label": "Voting live", "desc": "Voting is underway — buy intel reveals" },
-    "final": { "label": "Final results", "desc": "Official results are in — see the leaderboard" }
+    "lobby": {
+      "label": "Lobby",
+      "desc": "Players join the room and pick avatars"
+    },
+    "pre_night": {
+      "label": "Warm-up",
+      "desc": "Quiz rounds and duels before the live show"
+    },
+    "predictions_open": {
+      "label": "Predictions open",
+      "desc": "Show is live — submit your Top 5 and Worst 5!"
+    },
+    "voting_live": {
+      "label": "Voting live",
+      "desc": "Voting is underway — buy intel reveals"
+    },
+    "final": {
+      "label": "Final results",
+      "desc": "Official results are in — see the leaderboard"
+    }
   },
   "quiz": {
     "title": "Quiz Time",
@@ -233,9 +260,22 @@
   },
   "questionCard": {
     "progress": "Question {{current}} of {{total}}",
-    "correct": "✅ Correct!",
-    "wrong": "❌ Wrong!",
-    "timeUp": "⏰ Time's up!"
+    "correct": "Correct!",
+    "wrong": "Wrong",
+    "timeUp": "Time’s up",
+    "progressLead": "Question",
+    "progressOf": "of",
+    "eyebrowQuiz": "Quiz · round {{round}} of {{max}}",
+    "eyebrowDuel": "Duel · same questions",
+    "upTo": "Up to {{points}} points",
+    "rulesQuiz": "Right answer: within {{t1}}″ = {{p1}} · within {{t2}}″ = {{p2}} · later = {{p3}} · wrong = 0",
+    "rulesDuel": "Right answer: 12 − seconds · wrong = 0",
+    "nextAuto": "The next question starts by itself",
+    "scoring": "Counting your points…",
+    "timerAria": "{{left}} seconds of {{total}}",
+    "reasonCorrect": "correct",
+    "reasonWrong": "wrong",
+    "reasonTimeout": "time"
   },
   "roundIntro": {
     "round": "Round {{num}}",
@@ -255,25 +295,25 @@
     "title": "⚔️ Duels",
     "declinesUsed": "Declines: {{used}}/{{max}} used",
     "challengeBtn": "Challenge",
-    "pendingDecisions": "⏳ Pending Decisions",
-    "incomingChallenges": "📨 Incoming Challenges",
+    "pendingDecisions": "Pick your reward",
+    "incomingChallenges": "Incoming challenges",
     "sentChallenges": "Open Duel Invitations",
     "waitingResponse": "Waiting for response...",
-    "yourTurn": "⚔️ Your Turn",
+    "yourTurn": "Your turn",
     "waitingOpponent": "Waiting for opponent to answer the quiz",
     "opponentAnswering": "Opponent Answering",
-    "doneCheck": "Done ✓",
+    "doneCheck": "done",
     "answering": "Answering...",
-    "resultsSection": "🏁 Results",
+    "resultsSection": "Results",
     "emptyState": "No duels yet! Challenge another player to a 3-question battle.",
     "challengeSomeone": "Challenge Someone",
-    "roomHistory": "📜 Room History",
+    "roomHistory": "Room history",
     "roomHistoryEmpty": "No duels in this room yet.",
     "vsLabel": "vs",
     "stoleAmount": "🔥 Stole {{amount}}pts",
     "doubledAmount": "✨ Doubled +{{amount}}pts",
     "wonNoDecision": "Awaiting reward pick",
-    "tieRow": "🤝 Tie · 0pts",
+    "tieRow": "Tie · 0 points",
     "declinedRow": "Declined",
     "pendingRow": "Pending response",
     "inProgressRow": "In progress",
@@ -282,23 +322,23 @@
     "heroTitleStart": "Step into the",
     "heroTitleAccent": "spotlight",
     "heroTitleEnd": "Pick a rival.",
-    "heroSubtitle": "Challenge anyone in the room to a head-to-head round. Best score wins the points — ties cancel out.",
+    "heroSubtitle": "Pick an opponent for a one-on-one battle. The higher score wins; a tie gives no points.",
     "newChallengeBtn": "New Challenge",
     "randomOpponentBtn": "Random opponent",
     "statWins": "WINS",
     "statStreak": "STREAK",
     "statPointsWon": "POINTS WON",
-    "playersInRoom": "PLAYERS IN THE ROOM",
+    "playersInRoom": "Players in the room",
     "playerReady": "Ready",
     "playerInQuiz": "In quiz",
     "playerActionChallenge": "Challenge",
-    "howDuelsWorkTitle": "HOW DUELS WORK",
+    "howDuelsWorkTitle": "How they work",
     "howDuelsPickTitle": "Pick a rival",
-    "howDuelsPickCopy": "Choose anyone in the room or roll a random opponent.",
+    "howDuelsPickCopy": "Pick from the list or tap “Random opponent”.",
     "howDuelsQuestionsTitle": "Same 3 questions",
-    "howDuelsQuestionsCopy": "Both players answer the same set. Highest score wins.",
-    "howDuelsRewardTitle": "Winner takes points",
-    "howDuelsRewardCopy": "Lose nothing on a tie. Defeats don't cost you points.",
+    "howDuelsQuestionsCopy": "Both sides answer the same questions. The higher score wins.",
+    "howDuelsRewardTitle": "A win brings points",
+    "howDuelsRewardCopy": "Win: Steal or Double. Tie: no points for anyone.",
     "arenaAwaitsPill": "THE ARENA AWAITS",
     "beFirstStart": "Be the first to",
     "beFirstAccent": "strike",
@@ -320,16 +360,24 @@
     "winsLabel": "wins",
     "lossesLabel": "losses",
     "ptsLabel": "pts earned",
-    "ptsSuffix": "pts"
+    "ptsSuffix": "pts",
+    "screenTitle": "Duels",
+    "inProgress": "In progress",
+    "sentBadge": "Sent",
+    "otherAnswering": "The other side is answering",
+    "playerInDuel": "In a duel",
+    "emptyTitle": "Throw the first challenge",
+    "stoleRow": "Steal by: {{name}} · {{amount}} points",
+    "doubledRow": "Double by: {{name}} · +{{amount}}"
   },
   "challengeModal": {
-    "title": "Challenge a Player!",
-    "subtitle": "Pick your opponent for a 3-question duel",
+    "title": "Challenge to a duel",
+    "subtitle": "Pick an opponent for 3 questions",
     "noPlayers": "No other players available",
-    "challengeBtn": "Challenge!",
+    "challengeBtn": "Challenge",
     "duelInProgress": "Duel in progress",
-    "maxDuels": "Max duels reached",
-    "alreadyChallenged": "Already challenged once",
+    "maxDuels": "Duel limit reached",
+    "alreadyChallenged": "Already sent",
     "cancelBtn": "Cancel"
   },
   "duelCard": {
@@ -343,18 +391,24 @@
     "declineBtn": "Decline",
     "noDeclines": "No declines left",
     "acceptBtn": "Accept",
-    "answerNow": "⚔️ Answer Now!",
-    "declinesCount": "{{used}}/{{max}} declines used"
+    "answerNow": "Answer now",
+    "declinesCount": "Declines {{used}}/{{max}}",
+    "incoming": "Incoming challenge",
+    "yourTurn": "Your turn",
+    "challengeFrom": "Challenge from: {{name}}",
+    "rules": "3 questions · 12″ each · right answer = 12 minus the seconds · the winner picks Steal or Double",
+    "open": "See the challenge",
+    "later": "Later"
   },
   "duelResult": {
     "rematchLabel": "🔄 Rematch",
     "duelLabel": "⚔️ Duel",
-    "won": "🏆 Won!",
-    "lost": "Lost",
+    "won": "Win",
+    "lost": "Loss",
     "draw": "Draw",
-    "tie": "🤝 Tie",
-    "tieDesc": "Equal scores · No points awarded",
-    "completed": "Completed",
+    "tie": "Tie",
+    "tieDesc": "Equal scores · no points for anyone",
+    "completed": "Finished",
     "chooseReward": "🎁 Choose your reward!",
     "stealBtn": "🔥 Steal {{amount}}pts",
     "stealDisabled": "🔥 Steal",
@@ -362,18 +416,23 @@
     "doubleBtn": "✨ Double +{{amount}}pts",
     "stealHint": "Steal takes {{amount}}pts from opponent · Double from system",
     "noPointsHint": "Opponent has no points · Double from system",
-    "rematchBtn": "🔄 Request Rematch",
+    "rematchBtn": "Ask for a rematch",
     "rematchRequested": "Rematch requested",
     "decisionMade": "Decision made",
-    "stolePoints": "🔥 Stole {{amount}}pts",
-    "doubledPoints": "✨ Doubled to +{{amount}}pts",
-    "declined": "Declined"
+    "stolePoints": "Steal · +{{amount}} to you",
+    "doubledPoints": "Double · +{{amount}} to you",
+    "declined": "Declined",
+    "duelWith": "Duel with: {{name}}",
+    "rematchWith": "Rematch with: {{name}}",
+    "stolenFromYou": "Steal · −{{amount}} from you",
+    "doubledByOther": "Double · you ±0",
+    "replay": "See the result"
   },
   "duelPlay": {
     "header": "Duel · Q{{current}}/{{total}}",
-    "submitted": "Answers Submitted!",
-    "yourScore": "Your duel score",
-    "waitingOpponent": "Waiting for opponent to answer...",
+    "submitted": "Answers submitted",
+    "yourScore": "Duel score",
+    "waitingOpponent": "Waiting for the other side’s answers…",
     "errorLoading": "Error loading duel questions",
     "goBack": "Go Back"
   },
@@ -526,15 +585,15 @@
     "notReadyBody": "The official Eurovision ranking will appear here as soon as the show finishes and the results parser publishes them.",
     "col": {
       "country": "Country",
-      "total":   "Total",
-      "jury":    "Jury",
-      "tele":    "Tele"
+      "total": "Total",
+      "jury": "Jury",
+      "tele": "Tele"
     },
     "legend": {
-      "topExact":   "Top-5 exact +50",
-      "topIn":      "In top 5 +20",
+      "topExact": "Top-5 exact +50",
+      "topIn": "In top 5 +20",
       "worstExact": "Worst-5 exact +50",
-      "worstIn":    "In worst 5 +20"
+      "worstIn": "In worst 5 +20"
     }
   },
   "winners": {
@@ -571,11 +630,26 @@
       "duel": "<b>Duel</b> shows net balance (won − lost)"
     },
     "cat": {
-      "champion": { "name": "Champion",    "subtitle": "Most Points" },
-      "duelist":  { "name": "The Duelist", "subtitle": "Most Duels Won" },
-      "thief":    { "name": "Thief",       "subtitle": "Most Points Stolen" },
-      "guru":     { "name": "Guru",        "subtitle": "Most Correct Answers" },
-      "oracle":   { "name": "The Oracle",  "subtitle": "Most Prediction Points" }
+      "champion": {
+        "name": "Champion",
+        "subtitle": "Most Points"
+      },
+      "duelist": {
+        "name": "The Duelist",
+        "subtitle": "Most Duels Won"
+      },
+      "thief": {
+        "name": "Thief",
+        "subtitle": "Most Points Stolen"
+      },
+      "guru": {
+        "name": "Guru",
+        "subtitle": "Most Correct Answers"
+      },
+      "oracle": {
+        "name": "The Oracle",
+        "subtitle": "Most Prediction Points"
+      }
     }
   },
   "sd": {
@@ -859,5 +933,65 @@
     "exact": "points for the exact place",
     "listOnly": "right list, wrong place",
     "predictionsLink": "Predictions game"
+  },
+  "motion": {
+    "skip": "Skip"
+  },
+  "avatarViewer": {
+    "open": "View avatar: {{name}}",
+    "dialog": "Avatar: {{name}}",
+    "close": "Close",
+    "noArt": "Initials avatar"
+  },
+  "roundEnd": {
+    "aria": "Round {{num}} result",
+    "eyebrow": "End of round {{num}} of {{max}} · {{count}} questions",
+    "roundPoints": "round points",
+    "srTotal": "{{points}} round points · {{correct}} right of {{total}}",
+    "dotsAria": "This round’s answers",
+    "dotOk": "Question {{n}}: right in {{time}}, +{{points}}",
+    "dotBad": "Question {{n}}: wrong, 0",
+    "dotTime": "Question {{n}}: time’s up, 0",
+    "tiers": "Right in ≤{{t1}}″ = {{p1}} · ≤{{t2}}″ = {{p2}} · later = {{p3}} · wrong = 0",
+    "totalPoints": "Total points",
+    "roomBoard": "Room standings",
+    "live": "Live",
+    "up": "Up {{n}}",
+    "down": "Down {{n}}",
+    "passed": "You passed: {{names}}"
+  },
+  "duelMoment": {
+    "eyebrow": "Duel result",
+    "rematch": "Rematch result",
+    "aria": "Duel: {{a}} – {{b}}",
+    "close": "Continue",
+    "total": "Total",
+    "sameQuestions": "Same 3 questions",
+    "rule": "right: 12 − sec · wrong: 0",
+    "q": "Q{{n}}",
+    "choose": "Steal or double the points you won",
+    "decided": "Choice made",
+    "winnerIs": "Win for: {{name}}",
+    "tie": "Tie",
+    "tieSub": "Equal scores · no points for anyone",
+    "waitChoice": "Waiting for the choice of: {{name}}",
+    "stealCap": "A steal is capped at the other side’s total points.",
+    "steal": "Steal",
+    "double": "Double",
+    "stealNone": "The other side has 0 points",
+    "youPlus": "You +{{points}}",
+    "nameMinus": "{{name}} −{{points}}",
+    "youPlusDouble": "You +{{points}} ({{score}}×2)",
+    "nameZero": "{{name}} ±0",
+    "toastStole": "You stole {{points}} points · {{name}} −{{points}}",
+    "toastDoubled": "Doubled to +{{points}} points · {{name}} ±0",
+    "toastStolenFrom": "Steal by: {{name}} · you −{{points}}",
+    "toastDoubledBy": "Double by: {{name}} · you ±0",
+    "toastOtherSteal": "Steal by: {{name}} · {{points}} points",
+    "toastOtherDouble": "Double by: {{name}} · +{{points}}",
+    "namePlus": "{{name}} +{{points}}",
+    "youMinus": "You −{{points}}",
+    "youZero": "You ±0",
+    "namePlusDouble": "{{name}} +{{points}} ({{score}}×2)"
   }
 }

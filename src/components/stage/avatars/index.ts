@@ -1,4 +1,8 @@
-export { AVATARS, AVATAR_IDS, getAvatar, isAvatarId, randomAvatarId } from './registry';
+export { AVATARS, ALL_AVATARS, SVG_AVATARS, AVATAR_IDS, getAvatar, isAvatarId, randomAvatarId } from './registry';
+export { IMAGE_AVATARS } from './images.generated';
 export { AvatarArt, shade } from './AvatarArt';
 export type { AvatarArtProps } from './AvatarArt';
-export type { AvatarSpec } from './types';
+export { AvatarVisual } from './AvatarVisual';
+export type { AvatarVisualProps } from './AvatarVisual';
+export { isImageAvatar } from './types';
+export type { AvatarSpec, ImageAvatarSpec, AvatarEntry } from './types';

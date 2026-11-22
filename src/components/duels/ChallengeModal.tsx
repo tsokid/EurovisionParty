@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { Swords } from 'lucide-react';
 import Modal from '../ui/Modal';
-import Button from '../ui/Button';
+import { PlayerAvatar } from '../stage';
 import { useGameStore } from '../../stores/gameStore';
 import type { Duel } from '../../lib/types';
 
@@ -79,67 +79,45 @@ export default function ChallengeModal({
 
   return (
     <Modal open={open} onClose={onClose}>
-      {/* Header */}
-      <div className="text-center mb-4">
-        <div className="text-3xl mb-2">{'\u2694\uFE0F'}</div>
-        <h3 className="glow-text text-xl font-bold">{t('challengeModal.title')}</h3>
-        <p className="text-white/50 text-sm mt-1">
-          {t('challengeModal.subtitle')}
-        </p>
-      </div>
-
-      {/* Player list */}
-      {opponents.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-white/40 text-sm">{t('challengeModal.noPlayers')}</p>
+      <div className="du-cm">
+        <div className="du-cm-head">
+          <span className="du-cm-ico" aria-hidden="true"><Swords strokeWidth={2.4} /></span>
+          <h3 className="t-h3">{t('challengeModal.title')}</h3>
+          <p className="t-meta">{t('challengeModal.subtitle')}</p>
         </div>
-      ) : (
-        <div className="space-y-2 max-h-64 overflow-y-auto">
-          {opponents.map((opponent) => {
-            const check = player
-              ? canChallenge(player.id, opponent.id, duels)
-              : { allowed: false, reason: 'Loading...' };
 
-            return (
-              <motion.div
-                key={opponent.id}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-3 glass rounded-xl px-3 py-2"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium text-sm truncate">
-                    {opponent.name}
-                  </p>
-                  <p className="text-white/40 text-xs">
-                    {opponent.total_points} {t('common.pts')}
-                  </p>
-                </div>
-                {check.allowed ? (
-                  <Button
-                    size="sm"
-                    onClick={() => handleChallenge(opponent.id)}
-                    disabled={isLoading && challengingId === opponent.id}
-                    loading={isLoading && challengingId === opponent.id}
-                  >
-                    {t('challengeModal.challengeBtn')}
-                  </Button>
-                ) : (
-                  <span className="text-xs text-white/30 italic whitespace-nowrap">
-                    {t(check.reason!)}
-                  </span>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+        {opponents.length === 0 ? (
+          <p className="t-meta du-cm-empty">{t('challengeModal.noPlayers')}</p>
+        ) : (
+          <ul className="du-cm-list">
+            {opponents.map((opponent) => {
+              const check = player
+                ? canChallenge(player.id, opponent.id, duels)
+                : { allowed: false, reason: 'common.loading' };
+              const busy = isLoading && challengingId === opponent.id;
+              return (
+                <li key={opponent.id} className="player du-cm-row">
+                  <PlayerAvatar name={opponent.name} avatarId={opponent.avatar_id} />
+                  <div className="du-cm-who">
+                    <p className="du-cm-name">{opponent.name}</p>
+                    <p className="t-meta">{t('game.points', { count: opponent.total_points })}</p>
+                  </div>
+                  {check.allowed ? (
+                    <button type="button" className="btn btn-primary btn-sm" onClick={() => handleChallenge(opponent.id)} disabled={busy}>
+                      {busy ? t('common.loading') : t('challengeModal.challengeBtn')}
+                    </button>
+                  ) : (
+                    <span className="t-meta du-cm-why">{t(check.reason!)}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
-      {/* Close button */}
-      <div className="mt-4">
-        <Button variant="ghost" fullWidth onClick={onClose}>
+        <button type="button" className="btn btn-ghost btn-block" onClick={onClose}>
           {t('challengeModal.cancelBtn')}
-        </Button>
+        </button>
       </div>
     </Modal>
   );

@@ -14,6 +14,10 @@ import {
   MAX_ROUNDS,
 } from '../../lib/constants';
 import type { QuizAnswer, QuizQuestion } from '../../lib/types';
+import type { Standing } from '../../lib/roundStandings';
+import { quizAnswerChip } from '../../lib/answerPoints';
+import { quizChipView } from './chipText';
+import type { AnswerChipView } from './QuestionCard';
 import { Trophy, Flame, Zap, Swords, BarChart3, Music, Sparkles, ListChecks, Clock, Activity } from 'lucide-react';
 
 import Button from '../ui/Button';
@@ -24,8 +28,12 @@ import RoundResults from './RoundResults';
 
 type QuizPhase = 'waiting' | 'intro' | 'playing' | 'results' | 'complete';
 
+/** How long the answer's "+N · 2,1″" chip stays before the next question
+ *  (presentation only: the next question's clock starts after it). */
+export const CHIP_HOLD_MS = 900;
+
 export default function QuizScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { room, player, players, setActiveTab, quizProgress, setQuizProgress } = useGameStore();
   const quiz = useQuiz();
 
@@ -39,6 +47,10 @@ export default function QuizScreen() {
   );
   const [usedQuestionIds, setUsedQuestionIds] = useState<number[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Room totals when the round started: the round-end leaderboard reorders from these.
+  const [roundStartStandings, setRoundStartStandings] = useState<Standing[] | null>(null);
+  // The scored chip of the answer on screen (motion map #8).
+  const [answerChip, setAnswerChip] = useState<AnswerChipView | null>(null);
   const restoredRef = useRef(false);
   // Block rendering of the waiting/intro/playing/etc. phases until we've
   // either restored from the store or queried the DB to figure out where
@@ -73,6 +85,7 @@ export default function QuizScreen() {
       setQuestionIndex(stored.questionIndex);
       setUsedQuestionIds(stored.usedQuestionIds);
       setRoundAnswers(stored.roundAnswers);
+      setRoundStartStandings(stored.roundStartStandings ?? null);
       const questions = stored.questionIds
         .map((id) => QUESTIONS.find((q) => q.id === id))
         .filter(Boolean) as QuizQuestion[];
@@ -133,8 +146,9 @@ export default function QuizScreen() {
       questionIds: roundQuestions.map((q) => q.id),
       usedQuestionIds,
       roundAnswers,
+      roundStartStandings,
     });
-  }, [phase, roundNumber, questionIndex, roundQuestions, usedQuestionIds, roundAnswers, player, room, setQuizProgress]);
+  }, [phase, roundNumber, questionIndex, roundQuestions, usedQuestionIds, roundAnswers, roundStartStandings, player, room, setQuizProgress]);
 
   // Build the per-round / best-streak summary when the quiz completes.
   // Primary source: quiz_answers table (authoritative, persisted).
@@ -270,9 +284,10 @@ export default function QuizScreen() {
     setUsedQuestionIds((prev) => [...prev, ...questions.map((q) => q.id)]);
     setQuestionIndex(0);
     setRoundAnswers([]);
+    setRoundStartStandings(players.map((p) => ({ id: p.id, total: p.total_points ?? 0 })));
     setQuestionOpenedAt(new Date().toISOString());
     setPhase('intro');
-  }, [room, player, usedQuestionIds]);
+  }, [room, player, players, usedQuestionIds]);
 
   // Handle intro dismiss
   const handleIntroDismiss = useCallback(() => {
@@ -288,8 +303,9 @@ export default function QuizScreen() {
       const question = roundQuestions[questionIndex];
       setSubmitError(null);
 
+      let recorded: QuizAnswer;
       try {
-        const answer = await quiz.submitAnswer(
+        recorded = await quiz.submitAnswer(
           player.id,
           question.id,
           answerIndex,
@@ -298,30 +314,31 @@ export default function QuizScreen() {
           room?.id,
           roundNumber,
         );
-
-        setRoundAnswers((prev) => [...prev, answer]);
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Failed to submit answer';
         // Show error briefly but still advance
         setSubmitError(msg);
         setTimeout(() => setSubmitError(null), 3000);
-        setRoundAnswers((prev) => [
-          ...prev,
-          {
-            id: `local-${Date.now()}`,
-            room_id: room?.id ?? '',
-            player_id: player.id,
-            round_number: roundNumber,
-            question_id: question.id,
-            answer_index: answerIndex >= 0 ? answerIndex : null,
-            is_correct: false,
-            question_opened_at: questionOpenedAt,
-            answered_at: new Date().toISOString(),
-            response_seconds: null,
-            points_awarded: 0,
-          },
-        ]);
+        recorded = {
+          id: `local-${Date.now()}`,
+          room_id: room?.id ?? '',
+          player_id: player.id,
+          round_number: roundNumber,
+          question_id: question.id,
+          answer_index: answerIndex >= 0 ? answerIndex : null,
+          is_correct: false,
+          question_opened_at: questionOpenedAt,
+          answered_at: new Date().toISOString(),
+          response_seconds: null,
+          points_awarded: 0,
+        };
       }
+
+      // Presentation only: show the server's points for this answer, then move on.
+      setAnswerChip(quizChipView(quizAnswerChip(recorded), t, i18n.language ?? 'el'));
+      await new Promise((resolve) => setTimeout(resolve, CHIP_HOLD_MS));
+      setAnswerChip(null);
+      setRoundAnswers((prev) => [...prev, recorded]);
 
       // Advance to next question or results
       if (questionIndex + 1 < QUESTIONS_PER_ROUND && questionIndex + 1 < roundQuestions.length) {
@@ -331,7 +348,7 @@ export default function QuizScreen() {
         setPhase('results');
       }
     },
-    [player, room, roundNumber, roundQuestions, questionIndex, questionOpenedAt, quiz],
+    [player, room, roundNumber, roundQuestions, questionIndex, questionOpenedAt, quiz, t, i18n.language],
   );
 
   // Keep the ref in sync with the latest handleAnswer
@@ -505,6 +522,9 @@ export default function QuizScreen() {
               onAnswer={handleAnswer}
               onSelect={stopCountdown}
               timeRemaining={countdown}
+              roundNumber={roundNumber}
+              history={roundAnswers.map((a) => !!a.is_correct)}
+              chip={answerChip}
             />
           </motion.div>
         )}
@@ -524,6 +544,7 @@ export default function QuizScreen() {
               questions={roundQuestions}
               onContinue={handleContinue}
               isLastRound={roundNumber >= MAX_ROUNDS}
+              standingsBefore={roundStartStandings}
             />
           </motion.div>
         )}

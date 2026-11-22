@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import Card from '../ui/Card';
-import Badge from '../ui/Badge';
-import Button from '../ui/Button';
+import { motion, useReducedMotion } from 'framer-motion';
+import clsx from 'clsx';
+import { Swords } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
-import type { Duel, Player } from '../../lib/types';
+import { PlayerAvatar } from '../stage';
+import type { Duel } from '../../lib/types';
 
 interface DuelCardProps {
   duel: Duel;
@@ -15,45 +15,23 @@ interface DuelCardProps {
   declineInfo?: { used: number; max: number };
 }
 
-function getPlayerInfo(
-  playerId: string,
-  players: Player[],
-): { name: string; emoji: string } {
-  const p = players.find((pl) => pl.id === playerId);
-  return {
-    name: p?.name ?? 'Player',
-    emoji: p?.avatar_emoji ?? '👤',
-  };
-}
-
-const statusConfig: Record<
-  string,
-  { labelKey: string; variant: 'gold' | 'purple' | 'green' | 'red' }
-> = {
-  pending: { labelKey: 'duelCard.statusPending', variant: 'gold' },
-  accepted: { labelKey: 'duelCard.statusActive', variant: 'purple' },
-  answering: { labelKey: 'duelCard.statusActive', variant: 'purple' },
-  completed: { labelKey: 'duelCard.statusCompleted', variant: 'green' },
-  expired: { labelKey: 'duelCard.statusExpired', variant: 'red' },
-  declined: { labelKey: 'duelCard.statusDeclined', variant: 'red' },
-};
-
-export default function DuelCard({
-  duel,
-  onAccept,
-  onDecline,
-  onAnswer,
-  declineInfo,
-}: DuelCardProps) {
+/**
+ * An open duel: an incoming challenge (board duels-after-m: «Πρόκληση από:
+ * Name», avatars VS, rules, Άρνηση / Αποδοχή) or one waiting for this
+ * player's answers. An incoming challenge slides up from the bottom
+ * (motion map #11); fade only under reduced motion.
+ */
+export default function DuelCard({ duel, onAccept, onDecline, onAnswer, declineInfo }: DuelCardProps) {
   const { t } = useTranslation();
+  const reduce = useReducedMotion() ?? false;
   const { player, players } = useGameStore();
-
-  const challenger = getPlayerInfo(duel.challenger_id, players);
-  const challenged = getPlayerInfo(duel.challenged_id, players);
-  const config = statusConfig[duel.status] ?? statusConfig.pending;
 
   const isChallenged = player?.id === duel.challenged_id;
   const isChallenger = player?.id === duel.challenger_id;
+  const opponentId = isChallenger ? duel.challenged_id : duel.challenger_id;
+  const opponent = players.find((p) => p.id === opponentId);
+  const me = players.find((p) => p.id === player?.id);
+  const incoming = duel.status === 'pending' && isChallenged;
 
   // Check if current player needs to answer (using new multi-answer fields)
   const needsAnswer =
@@ -61,94 +39,62 @@ export default function DuelCard({
     ((isChallenger && (!duel.challenger_answers || duel.challenger_answers.length === 0)) ||
       (isChallenged && (!duel.challenged_answers || duel.challenged_answers.length === 0)));
 
+  const noDeclines = declineInfo !== undefined && declineInfo.used >= declineInfo.max;
+  const opName = opponent?.name ?? '—';
+
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+    <motion.section
+      layout={!reduce}
+      initial={reduce ? { opacity: 0 } : incoming ? { opacity: 0, y: 60 } : { opacity: 0, y: 10 }}
+      animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={reduce ? { duration: 0.2 } : incoming ? { type: 'spring', stiffness: 320, damping: 26 } : { duration: 0.25 }}
+      className={clsx(incoming ? 'card-hero' : 'card', 'du-open')}
     >
-      <Card>
-        {/* Header with status */}
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs text-white/40 font-medium">
-            {duel.is_rematch ? t('duelCard.rematch') : t('duelCard.duel')}
-          </span>
-          <Badge variant={config.variant}>{t(config.labelKey)}</Badge>
+      <div className="du-open-top">
+        <span className={clsx('chip', incoming ? 'chip-pink' : 'chip-live')}>
+          <span className="dot" />
+          {incoming ? t('duelCard.incoming') : duel.is_rematch ? t('duelCard.rematch') : t('duelCard.yourTurn')}
+        </span>
+        <span className="spacer" />
+        {incoming && declineInfo && <span className="t-meta">{t('duelCard.declinesCount', { used: declineInfo.used, max: declineInfo.max })}</span>}
+      </div>
+
+      <h3 className="t-h3 du-open-title">
+        {incoming ? t('duelCard.challengeFrom', { name: opName }) : t('duelResult.duelWith', { name: opName })}
+      </h3>
+
+      <div className="du-open-vs">
+        <div className="du-open-side">
+          <PlayerAvatar name={opName} avatarId={opponent?.avatar_id} size="lg" />
+          <span className="du-open-name">{opName}</span>
         </div>
-
-        {/* VS display */}
-        <div className="flex items-center justify-between">
-          {/* Challenger */}
-          <div className="flex flex-col items-center gap-1 flex-1">
-            <span className="text-sm text-white font-medium truncate max-w-[80px]">
-              {challenger.name}
-            </span>
-            {isChallenger && (
-              <span className="text-[10px] text-euro-purple-light">You</span>
-            )}
-          </div>
-
-          {/* VS */}
-          <div className="flex-shrink-0 px-3">
-            <span className="text-lg font-extrabold glow-text">VS</span>
-          </div>
-
-          {/* Challenged */}
-          <div className="flex flex-col items-center gap-1 flex-1">
-            <span className="text-sm text-white font-medium truncate max-w-[80px]">
-              {challenged.name}
-            </span>
-            {isChallenged && (
-              <span className="text-[10px] text-euro-purple-light">You</span>
-            )}
-          </div>
+        <span className="num du-open-vs-t" aria-hidden="true">VS</span>
+        <div className="du-open-side">
+          <PlayerAvatar name={me?.name ?? '—'} avatarId={me?.avatar_id} size="lg" />
+          <span className="du-open-name">{me?.name}<br /><span className="t-meta">{t('lobby.you')}</span></span>
         </div>
+      </div>
 
-        {/* Action buttons for pending challenges (received) */}
-        {duel.status === 'pending' && isChallenged && (
-          <div className="flex flex-col gap-1.5 mt-3">
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                fullWidth
-                onClick={() => onDecline?.(duel.id)}
-                disabled={declineInfo !== undefined && declineInfo.used >= declineInfo.max}
-              >
-                {declineInfo && declineInfo.used >= declineInfo.max
-                  ? t('duelCard.noDeclines')
-                  : t('duelCard.declineBtn')}
-              </Button>
-              <Button
-                size="sm"
-                fullWidth
-                onClick={() => onAccept?.(duel.id)}
-              >
-                {t('duelCard.acceptBtn')}
-              </Button>
-            </div>
-            {declineInfo && (
-              <p className="text-center text-[10px] text-white/30">
-                {t('duelCard.declinesCount', { used: declineInfo.used, max: declineInfo.max })}
-              </p>
-            )}
-          </div>
-        )}
+      <p className="t-meta du-open-rules">{t('duelCard.rules')}</p>
 
-        {/* Answer button for active duels where it's your turn */}
-        {needsAnswer && (
-          <div className="mt-3">
-            <Button
-              size="sm"
-              fullWidth
-              onClick={() => onAnswer?.(duel.id)}
-              className="animate-pulse"
-            >
-              {t('duelCard.answerNow')}
-            </Button>
-          </div>
-        )}
-      </Card>
-    </motion.div>
+      {incoming && (
+        <div className="du-open-actions">
+          <button type="button" className="btn btn-ghost" onClick={() => onDecline?.(duel.id)} disabled={noDeclines}>
+            {noDeclines ? t('duelCard.noDeclines') : t('duelCard.declineBtn')}
+          </button>
+          <button type="button" className="btn btn-primary" onClick={() => onAccept?.(duel.id)}>
+            {t('duelCard.acceptBtn')}
+          </button>
+        </div>
+      )}
+
+      {needsAnswer && (
+        <button type="button" className="btn btn-primary btn-block" onClick={() => onAnswer?.(duel.id)}>
+          <Swords aria-hidden="true" strokeWidth={2.4} />
+          {t('duelCard.answerNow')}
+        </button>
+      )}
+    </motion.section>
   );
 }

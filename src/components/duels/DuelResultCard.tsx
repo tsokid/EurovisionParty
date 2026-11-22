@@ -1,49 +1,48 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import Card from '../ui/Card';
-import Badge from '../ui/Badge';
-import Button from '../ui/Button';
+import { motion, useReducedMotion } from 'framer-motion';
+import clsx from 'clsx';
+import { Check, Minus, Play, RotateCcw, X } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
-import type { Duel, Player, DuelDecision } from '../../lib/types';
+import { QUESTIONS_BY_ID } from '../../lib/questions';
+import { duelAnswerChip, duelOutcome, duelRewardPreview, needsRewardChoice } from '../../lib/answerPoints';
+import { duelChipView } from '../quiz/chipText';
+import { PlayerAvatar, PointsChip } from '../stage';
+import type { Duel, DuelAnswer, DuelDecision } from '../../lib/types';
 
 interface DuelResultCardProps {
   duel: Duel;
   onDecision?: (duelId: string, decision: DuelDecision) => void;
   onRematch?: (duelId: string) => void;
   hasRematch?: boolean;
+  /** Replays the result moment (DuelResultMoment). */
+  onOpen?: (duelId: string) => void;
 }
 
-function getPlayerInfo(playerId: string, players: Player[]): { name: string; emoji: string; totalPoints: number } {
-  const p = players.find((pl) => pl.id === playerId);
-  return { name: p?.name ?? 'Player', emoji: p?.avatar_emoji ?? '🎤', totalPoints: p?.total_points ?? 0 };
-}
+const correctOf = (a: DuelAnswer) => QUESTIONS_BY_ID.get(a.questionId)?.correct_index === a.answerIndex;
 
-export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch }: DuelResultCardProps) {
+/**
+ * A finished duel in the list (board duels-after-m, state 2): outcome,
+ * both sides with avatar and duel score, this player's "+N · 12−s" chips
+ * adding up to the duel score, and for the winner the two reward cards
+ * («Κλέψε ή διπλασίασε τους πόντους που κέρδισες»). A tie has no chooser.
+ * Amounts mirror apply_duel_decision; after the choice the card shows the
+ * server's points_transferred.
+ */
+export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch, onOpen }: DuelResultCardProps) {
   const { t } = useTranslation();
+  const reduce = useReducedMotion() ?? false;
   const { player, players } = useGameStore();
   const [deciding, setDeciding] = useState(false);
 
-  const isTie = duel.status === 'tie';
-  const isWinner = !isTie && duel.winner_id === player?.id;
-  const isLoser = !isTie && duel.loser_id === player?.id;
-  const isDraw = duel.status === 'completed' && !duel.winner_id;
-  const needsDecision = isWinner && !duel.winner_decision;
-
-  const challenger = getPlayerInfo(duel.challenger_id, players);
-  const challenged = getPlayerInfo(duel.challenged_id, players);
-
-  const challengerWon = duel.winner_id === duel.challenger_id;
-  const challengedWon = duel.winner_id === duel.challenged_id;
-
+  const outcome = duelOutcome(duel, player?.id);
   const isChallenger = player?.id === duel.challenger_id;
-  const myScore = isChallenger ? duel.challenger_score : duel.challenged_score;
-
-  // Get opponent info for steal check
-  const opponentId = isChallenger ? duel.challenged_id : duel.challenger_id;
-  const opponent = getPlayerInfo(opponentId, players);
-  const canSteal = opponent.totalPoints > 0;
-  const stealAmount = Math.min(myScore, opponent.totalPoints);
+  const meSide = { id: isChallenger ? duel.challenger_id : duel.challenged_id, score: (isChallenger ? duel.challenger_score : duel.challenged_score) ?? 0, answers: (isChallenger ? duel.challenger_answers : duel.challenged_answers) ?? [] };
+  const opSide = { id: isChallenger ? duel.challenged_id : duel.challenger_id, score: (isChallenger ? duel.challenged_score : duel.challenger_score) ?? 0 };
+  const me = players.find((p) => p.id === meSide.id);
+  const op = players.find((p) => p.id === opSide.id);
+  const preview = duelRewardPreview(meSide.score, op?.total_points ?? 0);
+  const needsDecision = needsRewardChoice(duel, player?.id) && !!onDecision;
 
   const handleDecision = async (decision: DuelDecision) => {
     if (!onDecision) return;
@@ -55,135 +54,101 @@ export default function DuelResultCard({ duel, onDecision, onRematch, hasRematch
     }
   };
 
+  const markClass = outcome === 'win' ? 'ok' : outcome === 'lose' ? 'bad' : 'tie';
+  const markText = outcome === 'win' ? t('duelResult.won') : outcome === 'lose' ? t('duelResult.lost') : outcome === 'tie' ? t('duelResult.tie') : t('duelResult.completed');
+  const opName = op?.name ?? '—';
+
+  let decisionLine: string | null = null;
+  if (duel.winner_decision) {
+    const pts = duel.points_transferred ?? 0;
+    if (outcome === 'win') decisionLine = duel.winner_decision === 'steal' ? t('duelResult.stolePoints', { amount: pts }) : t('duelResult.doubledPoints', { amount: pts });
+    else decisionLine = duel.winner_decision === 'steal' ? t('duelResult.stolenFromYou', { amount: pts }) : t('duelResult.doubledByOther', { amount: pts });
+  }
+
   return (
-    <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-      <Card className={
-        isTie ? 'border border-white/15' :
-        isWinner ? 'border border-euro-green/30' :
-        isLoser ? 'border border-euro-red/30' :
-        ''
-      }>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs text-white/40 font-medium">
-            {duel.is_rematch ? t('duelResult.rematchLabel') : t('duelResult.duelLabel')}
-          </span>
-          <Badge variant={isTie ? 'gold' : isWinner ? 'green' : isLoser ? 'red' : 'gold'}>
-            {isTie ? t('duelResult.tie')
-              : isWinner ? t('duelResult.won')
-              : isLoser ? t('duelResult.lost')
-              : isDraw ? t('duelResult.draw')
-              : t('duelResult.completed')}
-          </Badge>
+    <motion.section
+      layout={!reduce}
+      initial={{ opacity: 0, y: reduce ? 0 : 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={clsx('card du-res', markClass)}
+    >
+      <div className="du-res-top">
+        <span className={clsx('du-mk', markClass)}>
+          {outcome === 'win' ? <Check aria-hidden="true" strokeWidth={3} /> : outcome === 'lose' ? <X aria-hidden="true" strokeWidth={3} /> : <Minus aria-hidden="true" strokeWidth={3} />}
+          {markText}
+        </span>
+        <span className="spacer" />
+        <span className="t-meta du-res-with">{t(duel.is_rematch ? 'duelResult.rematchWith' : 'duelResult.duelWith', { name: opName })}</span>
+      </div>
+
+      <div className="du-res-vs">
+        <div className="du-res-side">
+          <PlayerAvatar name={me?.name ?? '—'} avatarId={me?.avatar_id} size="lg" />
+          <span className="du-res-name">{me?.name}<br /><span className="t-meta">{t('lobby.you')}</span></span>
+          <span className={clsx('num du-res-score', outcome === 'win' && 'win')}>{meSide.score}</span>
         </div>
-
-        {/* Score comparison - winner highlighted */}
-        <div className="flex items-center justify-between mb-3">
-          {/* Challenger side */}
-          <div className={`flex flex-col items-center gap-1 flex-1 rounded-xl py-2 ${challengerWon ? 'bg-euro-green/10 ring-1 ring-euro-green/30' : ''}`}>
-            {challengerWon && <span className="text-lg">🏆</span>}
-            <span className={`text-sm font-medium truncate max-w-[80px] ${challengerWon ? 'text-euro-green' : 'text-white'}`}>
-              {challenger.name}
-            </span>
-            <span className={`text-xl font-bold ${challengerWon ? 'text-euro-green' : 'text-white/60'}`}>
-              {duel.challenger_score}
-            </span>
-          </div>
-
-          {/* Center divider */}
-          <div className="flex-shrink-0 px-2 text-center">
-            <span className="text-xs font-extrabold text-white/20">VS</span>
-            <p className="text-[10px] text-white/15">/ 36</p>
-          </div>
-
-          {/* Challenged side */}
-          <div className={`flex flex-col items-center gap-1 flex-1 rounded-xl py-2 ${challengedWon ? 'bg-euro-green/10 ring-1 ring-euro-green/30' : ''}`}>
-            {challengedWon && <span className="text-lg">🏆</span>}
-            <span className={`text-sm font-medium truncate max-w-[80px] ${challengedWon ? 'text-euro-green' : 'text-white'}`}>
-              {challenged.name}
-            </span>
-            <span className={`text-xl font-bold ${challengedWon ? 'text-euro-green' : 'text-white/60'}`}>
-              {duel.challenged_score}
-            </span>
-          </div>
+        <span className="num du-res-vs-t" aria-hidden="true">VS</span>
+        <div className="du-res-side">
+          <PlayerAvatar name={opName} avatarId={op?.avatar_id} size="lg" />
+          <span className="du-res-name">{opName}</span>
+          <span className={clsx('num du-res-score', outcome === 'lose' && 'win')}>{opSide.score}</span>
         </div>
+      </div>
 
-        {/* Tie — no winner, no reward */}
-        {isTie && (
-          <div className="text-center py-2 rounded-lg bg-white/5">
-            <p className="text-sm font-semibold text-white/70">{t('duelResult.tie')}</p>
-            <p className="text-xs text-white/45 mt-0.5">{t('duelResult.tieDesc')}</p>
-          </div>
-        )}
+      {meSide.answers.length > 0 && (
+        <div className="du-res-chips">
+          {meSide.answers.map((a, i) => {
+            const v = duelChipView(duelAnswerChip(a, correctOf(a)), t);
+            return <PointsChip key={i} points={v.points} reason={v.reason} />;
+          })}
+          <span className="t-meta">= {t('duelPlay.yourScore')} <span className="num du-res-sum">{meSide.score}</span></span>
+        </div>
+      )}
 
-        {/* Decision already made */}
-        {!isTie && duel.winner_decision && (
-          <div className="text-center py-2 rounded-lg bg-white/5 mb-2">
-            <p className="text-xs text-white/40">{t('duelResult.decisionMade')}</p>
-            <p className="text-sm font-bold text-euro-gold">
-              {duel.winner_decision === 'steal'
-                ? t('duelResult.stolePoints', { amount: duel.points_transferred })
-                : t('duelResult.doubledPoints', { amount: duel.points_transferred })}
-            </p>
-          </div>
-        )}
+      {outcome === 'tie' && <p className="t-meta du-res-note">{t('duelResult.tieDesc')}</p>}
+      {decisionLine && <p className="du-res-decided">{decisionLine}</p>}
+      {outcome === 'lose' && !duel.winner_decision && <p className="t-meta du-res-note">{t('duelMoment.waitChoice', { name: opName })}</p>}
 
-        {/* Pending decision (winner only) */}
-        {needsDecision && onDecision && (
-          <div className="space-y-2 mt-2">
-            <p className="text-xs text-euro-gold text-center font-medium animate-pulse">
-              {t('duelResult.chooseReward')}
-            </p>
-            <div className="flex gap-2">
-              {canSteal ? (
-                <Button
-                  size="sm"
-                  fullWidth
-                  onClick={() => handleDecision('steal')}
-                  loading={deciding}
-                >
-                  {t('duelResult.stealBtn', { amount: stealAmount })}
-                </Button>
-              ) : (
-                <div className="flex-1 text-center py-2.5 rounded-xl bg-white/5 border border-white/10 opacity-40">
-                  <p className="text-xs text-white/40">{t('duelResult.stealDisabled')}</p>
-                  <p className="text-[10px] text-white/25">{t('duelResult.opponentZero')}</p>
-                </div>
-              )}
-              <Button
-                size="sm"
-                variant="ghost"
-                fullWidth
-                onClick={() => handleDecision('double')}
-                loading={deciding}
-              >
-                {t('duelResult.doubleBtn', { amount: myScore * 2 })}
-              </Button>
-            </div>
-            <p className="text-[10px] text-white/30 text-center">
-              {canSteal
-                ? t('duelResult.stealHint', { amount: stealAmount })
-                : t('duelResult.noPointsHint')}
-            </p>
+      {needsDecision && (
+        <div className="du-res-choose">
+          <h3 className="t-h3">{t('duelMoment.choose')}</h3>
+          <div className="du-choices static">
+            <button type="button" className="du-choice steal" onClick={() => handleDecision('steal')} disabled={deciding || !preview.canSteal}>
+              <span className="t-eyebrow">{t('duelMoment.steal')}</span>
+              <span className="num du-choice-n">{preview.steal}</span>
+              <span className="t-meta du-choice-m">
+                {preview.canSteal
+                  ? <>{t('duelMoment.youPlus', { points: preview.steal })}<br />{t('duelMoment.nameMinus', { name: opName, points: preview.steal })}</>
+                  : t('duelMoment.stealNone')}
+              </span>
+            </button>
+            <button type="button" className="du-choice double" onClick={() => handleDecision('double')} disabled={deciding}>
+              <span className="t-eyebrow">{t('duelMoment.double')}</span>
+              <span className="num du-choice-n">{preview.double}</span>
+              <span className="t-meta du-choice-m">
+                {t('duelMoment.youPlusDouble', { points: preview.double, score: meSide.score })}<br />{t('duelMoment.nameZero', { name: opName })}
+              </span>
+            </button>
           </div>
-        )}
+          <p className="t-meta">{t('duelMoment.stealCap')}</p>
+        </div>
+      )}
 
-        {/* Rematch button — prominent CTA for loser, hidden if already requested */}
-        {isLoser && !hasRematch && onRematch && duel.winner_decision && (
-          <div className="mt-3">
-            <Button
-              size="sm"
-              fullWidth
-              onClick={() => onRematch(duel.id)}
-            >
-              {t('duelResult.rematchBtn')}
-            </Button>
-          </div>
+      <div className="du-res-actions">
+        {onOpen && (outcome === 'win' || outcome === 'lose' || outcome === 'tie') && (
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => onOpen(duel.id)}>
+            <Play aria-hidden="true" strokeWidth={2.4} />
+            {t('duelResult.replay')}
+          </button>
         )}
-        {isLoser && hasRematch && (
-          <p className="text-[10px] text-white/25 text-center mt-2">{t('duelResult.rematchRequested')}</p>
+        {outcome === 'lose' && !hasRematch && onRematch && duel.winner_decision && (
+          <button type="button" className="btn btn-primary btn-sm" onClick={() => onRematch(duel.id)}>
+            <RotateCcw aria-hidden="true" strokeWidth={2.4} />
+            {t('duelResult.rematchBtn')}
+          </button>
         )}
-      </Card>
-    </motion.div>
+        {outcome === 'lose' && hasRematch && <span className="t-meta">{t('duelResult.rematchRequested')}</span>}
+      </div>
+    </motion.section>
   );
 }

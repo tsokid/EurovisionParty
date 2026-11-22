@@ -23,6 +23,7 @@ import ExitGameModal from '../components/room/ExitGameModal';
 import ExitChoiceModal from '../components/room/ExitChoiceModal';
 import RoomIntroOverlay from '../components/room/RoomIntroOverlay';
 import PhaseBanner, { usePhaseBanner } from '../components/layout/PhaseBanner';
+import IncomingChallenge from '../components/duels/IncomingChallenge';
 
 const INTRO_SEEN_KEY = (code: string) => `eurovision-games-intro-seen-${code}`;
 
@@ -133,7 +134,7 @@ export function RoomPage() {
   // Phase-change banner (motion map #5): driven by the store's room phase
   // (realtime / polling), never by a click, so every phone plays it together.
   const phaseBanner = usePhaseBanner(storeRoom?.phase);
-  const banner = <PhaseBanner phase={phaseBanner.shown} onDismiss={phaseBanner.dismiss} />;
+  const banner = <><PhaseBanner phase={phaseBanner.shown} onDismiss={phaseBanner.dismiss} /><IncomingChallenge /></>;
 
   // Catch-up fetch: when isReconnecting transitions true→false, refetch all state
   const prevReconnectingRef = useRef(false);

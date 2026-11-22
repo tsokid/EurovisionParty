@@ -1,6 +1,6 @@
 // Contact sheet of the Stage avatar set (?screen=avatars): every avatar at
 // 96px with its titles, then the whole set at 32px and inside <Avatar>.
-import { AVATARS, AvatarArt } from '../src/components/stage/avatars';
+import { AVATARS, AvatarVisual } from '../src/components/stage/avatars';
 import { Avatar } from '../src/components/stage';
 
 export default function AvatarSheet() {
@@ -10,7 +10,7 @@ export default function AvatarSheet() {
       <div id="sheet-96" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 16 }}>
         {AVATARS.map((a) => (
           <figure key={a.id} style={{ margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center' }}>
-            <AvatarArt spec={a} size={96} />
+            <AvatarVisual entry={a} size={96} />
             <figcaption className="t-meta" style={{ lineHeight: 1.3 }}>
               <strong style={{ color: 'var(--color-stage-text)' }}>{a.title.el}</strong>
               <br />
@@ -21,7 +21,7 @@ export default function AvatarSheet() {
       </div>
       <h2 className="t-h3" style={{ margin: '28px 0 12px' }}>32px</h2>
       <div id="sheet-32" style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-        {AVATARS.map((a) => <AvatarArt key={a.id} spec={a} size={32} />)}
+        {AVATARS.map((a) => <AvatarVisual key={a.id} entry={a} size={32} />)}
       </div>
       <h2 className="t-h3" style={{ margin: '28px 0 12px' }}>&lt;Avatar&gt; sm · md · lg · xl + initials fallback</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>

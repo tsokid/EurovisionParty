@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { useGameStore } from '../../stores/gameStore';
 import { PHASES, PHASE_ORDER } from '../../lib/constants';
 import { useInvite } from '../../hooks/useInvite';
-import { Avatar, ScoreChip } from '../stage';
+import { Avatar, ScoreChip, PlayerAvatar } from '../stage';
 import PhaseStrip from './PhaseStrip';
 import NotificationPanel from './NotificationPanel';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
@@ -167,7 +167,7 @@ export default function Header({ onExitPress }: HeaderProps = {}) {
             >
               {/* Player row */}
               <div className="player me gs-menu-me">
-                <Avatar name={name || '?'} avatarId={me?.avatar_id} />
+                <PlayerAvatar name={name || '?'} avatarId={me?.avatar_id} />
                 <div className="min-w-0 flex-1">
                   <p className="gs-menu-name">{name}</p>
                   <p className="t-meta">{pointsLabel}</p>

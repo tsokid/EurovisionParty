@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shuffle } from 'lucide-react';
-import { AVATARS, AvatarArt, getAvatar, randomAvatarId } from '../stage/avatars';
+import { AVATARS, AvatarVisual, getAvatar, randomAvatarId } from '../stage/avatars';
 
 interface AvatarPickerProps {
   value: string;
@@ -10,7 +10,7 @@ interface AvatarPickerProps {
 
 /**
  * Avatar choice from the Stage set: a two-row horizontal swipe strip on
- * mobile, a grid from 768px. The chosen one is previewed large with its
+ * mobile, a grid from 768px. Owner artwork (image entries) comes first. The chosen one is previewed large with its
  * title; «Τυχαίο» shuffles to another one.
  */
 export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
@@ -31,7 +31,7 @@ export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
     <div className="avp">
       <div className="avp-head">
         <div className="avp-preview">
-          <AvatarArt spec={chosen} />
+          <AvatarVisual entry={chosen} variant="full" />
         </div>
         <div className="avp-meta">
           <span className="field-label" id="avatar-label">{t('nameEntry.avatarLabel')}</span>
@@ -56,7 +56,7 @@ export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
               className="avp-item"
               onClick={() => onChange(a.id)}
             >
-              <AvatarArt spec={a} />
+              <AvatarVisual entry={a} />
             </button>
           );
         })}

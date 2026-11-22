@@ -360,3 +360,27 @@ export const OTHER_QUIZ_ANSWERS: QuizAnswer[] = ['p-nikos', 'p-maria'].flatMap((
 );
 
 export { ROOM_ID };
+
+// ── Task 7: stage-name cast for quiz and duels ───────────────────────
+const STAGE_CAST: Record<string, [string, string]> = {
+  'p-me': ['Lady Televote', 'img-02'], 'p-nikos': ['Douze Points', 'img-01'], 'p-maria': ['Key Change', 'img-11'],
+  'p-kostas': ['Disco Μπαμπέσα', 'img-25'], 'p-sofia': ['Glitter Bomb', 'img-37'], 'p-alex': ['Wind Machine', 'img-29'],
+};
+/** The default cast with stage names and owner-art avatars (no real names anywhere). */
+export function withStageNames(players: Player[]): Player[] {
+  return players.map((p) => {
+    const c = STAGE_CAST[p.id];
+    return c ? { ...p, name: c[0], avatar_id: c[1] } : p;
+  });
+}
+
+/** Round end (motion #3): totals after round 1 (+ROUND1_POINTS for me) and the snapshot at the round start. */
+export const ROUND1_POINTS = ROUND1_ANSWERS.reduce((s, a) => s + a.points_awarded, 0);
+export function makeRoundEndPlayers(): Player[] {
+  const totals: Record<string, number> = { 'p-nikos': 214, 'p-maria': 176, 'p-kostas': 168, 'p-me': 141 + ROUND1_POINTS, 'p-sofia': 120, 'p-alex': 98 };
+  return withStageNames(makePlayers('pre_night')).map((p) => ({ ...p, status: 'active', is_active: true, quiz_points: totals[p.id], pred_points: 0, duel_points: 0, total_points: totals[p.id] }));
+}
+export const ROUND1_START_STANDINGS = [
+  { id: 'p-nikos', total: 214 }, { id: 'p-maria', total: 176 }, { id: 'p-kostas', total: 168 },
+  { id: 'p-me', total: 141 }, { id: 'p-sofia', total: 120 }, { id: 'p-alex', total: 98 },
+];

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { AvatarArt } from './avatars/AvatarArt';
+import { AvatarVisual } from './avatars/AvatarVisual';
 import { getAvatar } from './avatars/registry';
 
 /**
@@ -62,7 +62,7 @@ export function Avatar({ name, avatarId, size = 'md', decorative = true, classNa
         data-avatar-id={art.id}
         {...a11y}
       >
-        <AvatarArt spec={art} />
+        <AvatarVisual entry={art} />
       </span>
     );
   }
