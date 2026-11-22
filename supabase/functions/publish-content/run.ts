@@ -214,7 +214,8 @@ const DOC_ID = /^[a-z0-9-]+$/;
  * The options of a request body. `{ cms: false }` skips the CMS drafts;
  * `doc_ids` (a non-empty list of doc ids) ships only those; `target:
  * 'preview'` commits to content-preview; `promote: <run id>` ships a ready
- * preview. An invalid doc id list throws; anything else unknown is ignored.
+ * preview. An invalid doc id list throws, and so does `cms: false` with
+ * any of those; anything else unknown is ignored.
  */
 export function publishOptions(body: unknown): PublishOptions {
   const b = body && typeof body === 'object' ? (body as Record<string, unknown>) : {};
@@ -227,6 +228,10 @@ export function publishOptions(body: unknown): PublishOptions {
   }
   if (b.target === 'preview') out.target = 'preview';
   if (typeof b.promote === 'number' && Number.isInteger(b.promote) && b.promote > 0) out.promote = b.promote;
+  // A contests-only run ships no documents (final review M3; begin_publish refuses it too).
+  if (!out.cms && (out.docIds || out.target || out.promote)) {
+    throw new Error('a contests-only publish (cms: false) ships no documents: no doc_ids, target or promote');
+  }
   return out;
 }
 

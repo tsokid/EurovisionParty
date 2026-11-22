@@ -93,6 +93,12 @@ describe('buildIntentEntry', () => {
 describe('appendIntent / parseIntentFile', () => {
   const entry = (id: string): IntentEntry => ({ id, created_at: 'x', source: 'publish-content', docs: [], data: [] });
 
+  it('final review M5: keeps at least 150 entries, so a long red stretch on main never drops an unseen one', () => {
+    let text: string | null = null;
+    for (let i = 1; i <= 150; i++) text = appendIntent(text, entry(`publish-${i}`));
+    expect(JSON.parse(text!).intents).toHaveLength(150);
+  });
+
   it('appends, replaces the same id and keeps the newest MAX_INTENTS', () => {
     let text: string | null = null;
     for (let i = 1; i <= MAX_INTENTS + 3; i++) text = appendIntent(text, entry(`publish-${i}`));

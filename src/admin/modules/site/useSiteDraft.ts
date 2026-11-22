@@ -42,7 +42,6 @@ export interface SiteDraft {
   cms: CmsDoc;
   discard: () => Promise<void>;
   publishing: boolean;
-  publish: () => Promise<PublishOutcome | null>;
   outcome: PublishOutcome | null;
   /** Other page drafts the publish will ship too. */
   otherDrafts: string[];
@@ -132,20 +131,12 @@ export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
     }
   }, [docId, published, cms]);
 
-  const publish = useCallback(async () => {
-    await cms.flush();
-    if (!validateDocument(docId, latest.current).ok) return null;
-    const o = await publisher.publish();
-    if (o.status === 'ok' || o.status === 'noop') setDraftPublished(true);
-    return o;
-  }, [cms, docId, publisher]);
-
   const status: DraftStatus = dirty ? 'unsaved' : cms.baseUpdatedAt !== null && !draftPublished ? 'draft' : 'live';
   const otherDrafts = (publisher.summary?.changed_docs ?? []).filter((d) => d !== docId);
 
   return {
     docId, loading: !cms.ready && !cms.loadError, loadError: cms.loadError, doc, setDoc, status, dirty, errors, errorAt,
     saving: saving || cms.status === 'saving', saveError: cms.status === 'error' ? cms.error : null, save, discard, cms,
-    publishing: publisher.publishing, publish, outcome: publisher.outcome, otherDrafts,
+    publishing: publisher.publishing, outcome: publisher.outcome, otherDrafts,
   };
 }

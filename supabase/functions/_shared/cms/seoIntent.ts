@@ -36,8 +36,13 @@ export type RouteAllowance = HardField | 'removed';
 /** Repo path of the intent file. */
 export const SEO_INTENT_FILE = 'seo-intent.json';
 
-/** Entries kept in the file (oldest dropped first). */
-export const MAX_INTENTS = 20;
+/**
+ * Entries kept in the file (oldest dropped first). Large enough that a long
+ * red stretch on main (production not advancing while publishes keep
+ * landing) never drops an entry the live snapshot has not seen yet (final
+ * review M5): one entry is a few hundred bytes.
+ */
+export const MAX_INTENTS = 200;
 
 /** The fields a contest-data change may touch on the pages built from that data. */
 export const DATA_FIELDS: readonly HardField[] = ['title', 'description', 'h1', 'jsonLd', 'robots'];

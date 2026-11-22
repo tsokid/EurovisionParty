@@ -56,6 +56,13 @@ describe('publishOptions: per-doc, preview and promote', () => {
     expect(() => publishOptions({ doc_ids: [] })).toThrow(/non-empty/);
     expect(() => publishOptions({ doc_ids: ['../vercel'] })).toThrow(/document ids/);
   });
+
+  it('final review M3: cms: false never comes with doc_ids, a preview target or a promote', () => {
+    expect(publishOptions({ cms: false })).toEqual({ cms: false });
+    for (const body of [{ cms: false, doc_ids: ['faq'] }, { cms: false, promote: 41 }, { cms: false, target: 'preview', doc_ids: ['site-header'] }]) {
+      expect(() => publishOptions(body), JSON.stringify(body)).toThrow(/contests-only publish \(cms: false\) ships no documents/);
+    }
+  });
 });
 
 describe('runPublish, one page', () => {

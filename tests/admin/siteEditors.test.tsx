@@ -2,7 +2,7 @@
 // by picking a page, hide, delete with undo, reorder, inline validation, Save
 // keeps a draft, Publish opens the site-wide publish screen (P5: preview first).
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
+import { render, renderHook, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { ToastHost } from '../../src/admin/ui/kit';
@@ -25,6 +25,7 @@ vi.mock('../../src/admin/modules/contests/publish', () => ({
 }));
 
 import FooterEditor from '../../src/admin/modules/site/FooterEditor';
+import { useSiteDraft } from '../../src/admin/modules/site/useSiteDraft';
 import HeaderEditor from '../../src/admin/modules/site/HeaderEditor';
 
 function Where() {
@@ -38,6 +39,15 @@ const elInputs = () => screen.getAllByRole('textbox', { name: 'Κείμενο ·
 beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
+});
+
+describe('useSiteDraft (final review M4)', () => {
+  it('has no publish of its own: a site-wide doc goes live only through the preview publish screen', async () => {
+    const { result } = renderHook(() => useSiteDraft('site-footer'));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect('publish' in result.current).toBe(false);
+    expect(api.publish).not.toHaveBeenCalled();
+  });
 });
 
 describe('footer editor', () => {
