@@ -10,6 +10,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
+import { useUnsavedGuard } from "../../unsavedGuard";
 import type { JobKind } from "./useParserState";
 
 interface Props {
@@ -34,6 +35,7 @@ export function SourceUrlEditor({ year, kind, currentUrl, onSaved }: Props) {
   }, [currentUrl]);
 
   const dirty = value.trim() !== (currentUrl ?? "").trim();
+  useUnsavedGuard(dirty);
 
   const save = async () => {
     setBusy("save");

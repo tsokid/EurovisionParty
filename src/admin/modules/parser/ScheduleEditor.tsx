@@ -12,6 +12,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
+import { useUnsavedGuard } from "../../unsavedGuard";
 import type { JobKind, ParseJob } from "./useParserState";
 
 interface Props {
@@ -164,6 +165,8 @@ export function ScheduleEditor({ year, kind, job, onSaved }: Props) {
     endDate !== initialEnd.date ||
     endTime !== initialEnd.time ||
     interval !== job.poll_interval_minutes;
+  // Only the user's own edits count (a null interval in the DB reads as 2 here).
+  useUnsavedGuard(userTouched && dirty);
 
   const save = async () => {
     setBusy(true);

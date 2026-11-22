@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
 import { EditorialIndicator } from './EditorialIndicator';
+import { useUnsavedGuard } from '../../unsavedGuard';
 
 /** contests.city_slug check of migration 070. */
 export const CITY_SLUG_RE = /^[a-z]+(-[a-z]+)*$/;
@@ -96,6 +97,7 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
     return out;
   }, [form, original]);
   const dirty = Object.keys(changed).length > 0;
+  useUnsavedGuard(dirty);
 
   const set = <K extends Key>(key: K, value: Details[K]) => {
     setNotice(null);
