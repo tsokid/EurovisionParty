@@ -127,7 +127,7 @@ export function useCmsDoc(opts: CmsDocOptions) {
   sessionRef.current = session;
   useEffect(() => {
     if (!me) return;
-    const ch = channelFactory(docId, { ...me, tab: TAB_ID }, {
+    const ch = channelFactory(docId, { ...me, tab: me.tab ?? TAB_ID }, {
       onPeers: setPeers,
       onRemoteSave: (e) => { void sessionRef.current?.remoteChanged({ updatedAt: e.updatedAt, by: e.by }); },
       onStatus: setLive,

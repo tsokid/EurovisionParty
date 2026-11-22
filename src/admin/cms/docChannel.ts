@@ -12,7 +12,8 @@
 import { createContext } from 'react';
 import { supabase } from '../../lib/supabase';
 
-export type Me = { userId: string; email: string | null };
+/** The signed-in editor; `tab` overrides this tab's id (tests run two "browsers" in one page). */
+export type Me = { userId: string; email: string | null; tab?: string };
 
 /** One open editor tab of someone else. */
 export type Peer = {
