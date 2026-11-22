@@ -405,7 +405,8 @@ describe('077 cms_media', () => {
     expect(media.map((m) => m.id)).not.toContain(unused);
     const p = media.find((m) => m.id === parent)!;
     expect(Object.keys(p).sort()).toEqual(
-      ['bytes', 'height', 'id', 'kind', 'mime', 'published_path', 'sha256', 'storage_path', 'variant_of', 'width'],
+      // alt: 088 (the media row's default alt text).
+      ['alt', 'bytes', 'height', 'id', 'kind', 'mime', 'published_path', 'sha256', 'storage_path', 'variant_of', 'width'],
     );
     expect(p).toMatchObject({ kind: 'image', storage_path: pPath, mime: 'image/webp', bytes: 1000, width: 1600, height: 900, sha256: SHA, published_path: null, variant_of: null });
     expect(media.find((m) => m.id === v)!.variant_of).toBe(parent);
@@ -436,7 +437,8 @@ describe('077 cms_media', () => {
 
 describe('077 migration application', () => {
   it('is idempotent and its Storage block is a no-op without a storage schema', async () => {
-    const db = await createDb();
+    // Up to 077: 088 changes media_list's result type, so 077 reruns on its own schema.
+    const db = await createDb({ upTo: '077' });
     try {
       await applyMigration(db, '077');
       const ns = await db.query(`select 1 from pg_namespace where nspname = 'storage'`);

@@ -321,7 +321,7 @@ function dimension(label: string) {
 export function image(opts: GroupFieldOptions = {}) {
   return groupOfKind('image', {
     media: mediaRef('image', { label: 'Image' }),
-    alt: text({ label: 'Alt text', help: 'Describes the image for people who cannot see it' }),
+    alt: text({ label: 'Alt text', help: 'Describes the image for people who cannot see it. Empty: the alt text of the media library is used', required: false }),
     width: dimension('Width'),
     height: dimension('Height'),
   }, opts);

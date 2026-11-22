@@ -48,11 +48,11 @@ describe('mediaRef', () => {
 });
 
 describe('image()', () => {
-  it('is a strict group of a shared media ref and a required alt', () => {
+  it('is a strict group of a shared media ref and an alt that may be empty (088: the library alt fills it at publish)', () => {
     const f = image();
     expect(fieldMeta(f)).toMatchObject({ kind: 'image' });
     expect(ok(f, img())).toBe(true);
-    expect(ok(f, img(DRAFT, '  '))).toBe(false);
+    expect(ok(f, img(DRAFT, '  '))).toBe(true);
     expect(ok(f, { ...img(), extra: 1 })).toBe(false);
     const metas: Record<string, unknown> = {};
     walkSchema(f, (n) => { metas[n.path] = [n.meta.kind, !!n.meta.shared]; });
@@ -165,7 +165,6 @@ describe('blocks()', () => {
     ['bad tone', [{ type: 'callout', tone: 'danger', body: 'x' }]],
     ['bad cta href', [{ type: 'cta', title: 'a', body: 'b', label: 'c', href: 'javascript:x' }]],
     ['bad rich text', [{ type: 'text', body: '<i>x</i>' }]],
-    ['image without alt', [{ type: 'image', image: { media: DRAFT, alt: '' } }]],
     ['keys of another variant', [{ type: 'text', image: img() }]],
   ])('rejects %s', (_n, v) => {
     expect(ok(b, v)).toBe(false);

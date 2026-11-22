@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import { blocks, group, image, mediaRef, optional, text } from '../../supabase/functions/_shared/cms/fields';
 import { CMS_DOC_TYPES } from '../../supabase/functions/_shared/cms/registry';
 import {
-  collectMediaRefs, collectRegisteredPaths, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, SWEEP_MIN_AGE_MS, type MediaRow,
+  imagesWithoutAlt, collectMediaRefs, collectRegisteredPaths, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, SWEEP_MIN_AGE_MS, type MediaRow,
 } from '../../supabase/functions/publish-content/media';
 import { runPublish, type PublishDeps } from '../../supabase/functions/publish-content/run';
 import { commitFiles as realCommitFiles, gitBlobSha, type FileTransforms } from '../../supabase/functions/publish-content/github';
@@ -621,5 +621,27 @@ describe('runPublish with media', () => {
       expect(b.media.markPublished).toHaveBeenCalledWith(VID, `/media/${bigSha}.mp4`);
       expect(present.calls.filter((c) => c === `POST /repos/${REPO}/git/blobs`)).toHaveLength(5);
     }, 30_000);
+  });
+});
+
+describe('alt text from the media library (088)', () => {
+  it('an image block with an empty alt gets the row alt of its locale; its own alt always wins', async () => {
+    const withAlt = rows.map((r) => (r.id === IMG ? { ...r, alt: { en: 'Library stage', el: 'Σκηνή βιβλιοθήκης' } } : r));
+    const d = { en: locale(''), el: locale('Δική μου') };
+    const out = await publishMedia([draft(d)], withAlt, download);
+    const data = out.drafts[0].data as { en: ReturnType<typeof locale>; el: ReturnType<typeof locale> };
+    expect(data.en.hero.alt).toBe('Library stage');
+    expect(data.en.zone[2]).toMatchObject({ image: { alt: 'Library stage' } });
+    expect(data.el.hero.alt).toBe('Δική μου');
+    expect(imagesWithoutAlt(out.drafts)).toEqual([]);
+  });
+
+  it('an image with no alt in the block or the library is listed (publish refuses it)', async () => {
+    const d = { en: locale(''), el: locale('Σκηνή') };
+    const out = await publishMedia([draft(d)], rows, download);
+    expect(imagesWithoutAlt(out.drafts)).toEqual([
+      `${DOC} hero (en): the image has no alt text; write one in the block or in the media library`,
+      `${DOC} zone.2.image (en): the image has no alt text; write one in the block or in the media library`,
+    ]);
   });
 });

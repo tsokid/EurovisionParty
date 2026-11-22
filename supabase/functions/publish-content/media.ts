@@ -295,6 +295,11 @@ export async function publishMedia(
         const row = used.get(m[1])!;
         if (row.width) edits.push([[...segments, 'width'], row.width]);
         if (row.height) edits.push([[...segments, 'height'], row.height]);
+        // 088: an image block without its own alt gets the library's, per locale.
+        const fallback = row.alt?.[locale];
+        if (kind === 'image' && isBlank(value.alt) && typeof fallback === 'string' && fallback.trim()) {
+          edits.push([[...segments, 'alt'], fallback.trim()]);
+        }
       });
       for (const [segments, value] of edits) setAt(root, segments, value);
     }
@@ -302,6 +307,27 @@ export async function publishMedia(
   });
 
   return { files, drafts: rewritten, rewritten: true, marks };
+}
+
+const isBlank = (v: unknown) => typeof v !== 'string' || v.trim() === '';
+
+/**
+ * `doc_id path (locale)` of every image that has a file but no alt text, its
+ * own or (after publishMedia) the library's (spec §4.1: missing alt blocks).
+ */
+export function imagesWithoutAlt(drafts: readonly CmsDocumentRow[]): string[] {
+  const out: string[] = [];
+  for (const doc of drafts) {
+    if (!isRecord(doc.data)) continue;
+    for (const locale of LOCALES) {
+      visitLocale(doc, doc.data[locale], () => {}, (segments, kind, value) => {
+        if (kind === 'image' && !isBlank(value.media) && isBlank(value.alt)) {
+          out.push(`${doc.doc_id} ${segments.join('.')} (${locale}): the image has no alt text; write one in the block or in the media library`);
+        }
+      });
+    }
+  }
+  return out;
 }
 
 /** Sets `value` at `segments` inside `root` (whose containers exist). */

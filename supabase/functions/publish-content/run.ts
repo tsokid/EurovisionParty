@@ -52,7 +52,7 @@
 import { buildSnapshotFiles, type SnapshotInput } from './snapshot.ts';
 import { cmsFiles, CmsValidationError, type CmsIssue } from './cmsFiles.ts';
 import { generatedRedirects, mergeVercelRedirects } from './redirects.ts';
-import { draftRefsLeft, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
+import { draftRefsLeft, imagesWithoutAlt, MEDIA_MAX_NEW_BYTES, MediaError, publishMedia, sweepStorage, type StorageSweepDeps } from './media.ts';
 import type { BlobRef, CommitResult, DerivedFiles, FileTransforms } from './github.ts';
 import { appendIntent, buildIntentEntry, SEO_INTENT_FILE } from '../_shared/cms/seoIntent.ts';
 
@@ -261,6 +261,9 @@ export async function runPublish(deps: PublishDeps, options: PublishOptions = { 
     if (pages.warnings.length) found = { warnings: pages.warnings };
     const media = await publishMedia(drafts, input.media ?? [], (path) => deps.media.download(path), () => deps.media.publishedPaths());
     if (media.rewritten) pages = cmsFiles(media.drafts, committed);
+    // Every image ships with alt text, its block's or the library's (088).
+    const noAlt = imagesWithoutAlt(media.rewritten ? media.drafts : drafts);
+    if (noAlt.length) throw new MediaError(noAlt);
     marks = media.marks;
     // A doc-scoped run ships those docs only: no contest snapshot.
     const files = { ...(docScoped ? {} : buildSnapshotFiles(input)), ...pages.files, ...media.files };

@@ -78,6 +78,8 @@ export type MediaRow = {
   variant_of: string | null;
   width: number | null;
   height: number | null;
+  /** 088: the default alt text per locale, used where an image block leaves its own empty. */
+  alt?: { en?: string; el?: string } | null;
 };
 
 /** A country page is indexable from this many non-cancelled participations (mirrors src/lib/seo/dynamicPages.ts, which Deno cannot import). */
