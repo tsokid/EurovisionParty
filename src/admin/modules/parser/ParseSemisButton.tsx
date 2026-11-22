@@ -13,6 +13,7 @@
 import { useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
+import { t } from '../../i18n';
 
 interface Props {
   year: number;
@@ -52,8 +53,8 @@ export function ParseSemisButton({ year, onParsed }: Props) {
   const [sf2, setSf2] = useState('');
 
   const send = async (pasted: boolean) => {
-    const what = pasted ? 'the pasted semi-final pages' : 'both semi-final pages from eurovision.com';
-    if (!window.confirm(`Parse ${what} into ${year}? Semi data (running order, place, points, qualified) is overwritten.`)) {
+    const what = pasted ? t.contests.semis.fromPaste : t.contests.semis.fromSite;
+    if (!window.confirm(t.contests.semis.confirm(what, year))) {
       return;
     }
     setBusy(true);
@@ -70,8 +71,8 @@ export function ParseSemisButton({ year, onParsed }: Props) {
       const res = (data ?? {}) as SemisResponse;
       if (res.ok === false) throw new Error(res.error ?? 'semi-final parse failed');
       setNotice(
-        `Semi-finals parsed: ${res.rows ?? 0} entries written.` +
-          (res.sf2 === 'not available' ? ' Semi-final 2 is not available yet.' : ''),
+        t.contests.semis.done(res.rows ?? 0) +
+          (res.sf2 === 'not available' ? t.contests.semis.sf2Missing : ''),
       );
       setShowPaste(false);
       setSf1('');
@@ -93,22 +94,22 @@ export function ParseSemisButton({ year, onParsed }: Props) {
         disabled={busy}
         className="px-3 py-1.5 rounded bg-sky-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
       >
-        {busy ? 'Parsing…' : 'Parse semifinals'}
+        {busy ? t.contests.semis.parsing : t.contests.semis.button}
       </button>
       {notice && <p className="text-sm text-emerald-300">{notice}</p>}
       {err && <p className="text-sm text-red-300">{err}</p>}
       {showPaste && (
         <div className="space-y-2 rounded-lg border border-white/10 p-3">
           <p className="text-xs text-white/60">
-            Open the semi-final page on eurovision.com, press Ctrl+U (view source), then Ctrl+A and Ctrl+C, and paste here.
+            {t.contests.semis.howTo}
           </p>
-          <p className="text-xs text-white/40">Leave a box empty to skip that semi-final.</p>
+          <p className="text-xs text-white/40">{t.contests.semis.skip}</p>
           <label className="block text-xs text-white/70">
-            Paste page HTML for semi-final 1
+            {t.contests.semis.paste(1)}
             <textarea value={sf1} onChange={(e) => setSf1(e.target.value)} className={AREA} />
           </label>
           <label className="block text-xs text-white/70">
-            Paste page HTML for semi-final 2
+            {t.contests.semis.paste(2)}
             <textarea value={sf2} onChange={(e) => setSf2(e.target.value)} className={AREA} />
           </label>
           <button
@@ -117,7 +118,7 @@ export function ParseSemisButton({ year, onParsed }: Props) {
             disabled={busy || (!sf1.trim() && !sf2.trim())}
             className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
           >
-            Parse pasted HTML
+            {t.contests.semis.parsePasted}
           </button>
         </div>
       )}

@@ -4,6 +4,7 @@
 // details form and entries editor below the table.
 
 import { ACTION_LABELS, allowedActions, type ContestAction, type ContestRow, type ContestStage } from './lifecycle';
+import { t } from '../../i18n';
 
 export type ContestSummary = ContestRow & { finalist_count: number };
 
@@ -33,7 +34,7 @@ export function ContestList({ contests, selectedYear, busy, onAction, onSelect }
   const sorted = [...contests].sort((a, b) => b.year - a.year);
 
   if (sorted.length === 0) {
-    return <p className="text-sm text-white/50">No contests yet.</p>;
+    return <p className="text-sm text-white/50">{t.contests.none}</p>;
   }
 
   return (
@@ -41,14 +42,14 @@ export function ContestList({ contests, selectedYear, busy, onAction, onSelect }
       <table className="w-full text-sm">
         <thead>
           <tr className="text-left text-xs text-white/50 uppercase tracking-wide border-b border-white/10">
-            <th className="px-3 py-2">Year</th>
-            <th className="px-3 py-2">City</th>
-            <th className="px-3 py-2">Host</th>
-            <th className="px-3 py-2">Final</th>
-            <th className="px-3 py-2">Stage</th>
-            <th className="px-3 py-2">Entries</th>
-            <th className="px-3 py-2">Finalists</th>
-            <th className="px-3 py-2">Actions</th>
+            <th className="px-3 py-2">{t.contests.cols.year}</th>
+            <th className="px-3 py-2">{t.contests.cols.city}</th>
+            <th className="px-3 py-2">{t.contests.cols.host}</th>
+            <th className="px-3 py-2">{t.contests.cols.final}</th>
+            <th className="px-3 py-2">{t.contests.cols.stage}</th>
+            <th className="px-3 py-2">{t.contests.cols.entries}</th>
+            <th className="px-3 py-2">{t.contests.cols.finalists}</th>
+            <th className="px-3 py-2">{t.contests.cols.actions}</th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +67,7 @@ export function ContestList({ contests, selectedYear, busy, onAction, onSelect }
                 <td className="px-3 py-2 text-white/60">{c.final_date ?? '—'}</td>
                 <td className="px-3 py-2">
                   <span className={`inline-block rounded-full border px-2 py-0.5 text-xs ${STAGE_BADGE[c.stage]}`}>
-                    {c.stage}
+                    {t.contests.stage[c.stage] ?? c.stage}
                   </span>
                 </td>
                 <td className="px-3 py-2 text-white/80">{c.entry_count}</td>
@@ -78,7 +79,7 @@ export function ContestList({ contests, selectedYear, busy, onAction, onSelect }
                       onClick={() => onSelect(c.year)}
                       className="px-2.5 py-1 rounded border border-white/15 text-white/80 text-xs cursor-pointer"
                     >
-                      Edit
+                      {t.contests.edit}
                     </button>
                     {actions.map((a) => (
                       <button

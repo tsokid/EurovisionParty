@@ -4,6 +4,7 @@
 // UI only offers legal buttons. The SQL stays authoritative: anything the
 // UI cannot see (finalize needs at least one final_place) is refused there
 // and surfaces through formatError.
+import { t } from '../../i18n';
 
 export type ContestStage = 'upcoming' | 'current' | 'finalized' | 'archived';
 
@@ -21,10 +22,10 @@ export type ContestRow = {
 export type ContestAction = 'start' | 'finalize' | 'archive' | 'unarchive';
 
 export const ACTION_LABELS: Record<ContestAction, string> = {
-  start: 'Start',
-  finalize: 'Finalize',
-  archive: 'Archive',
-  unarchive: 'Un-archive',
+  start: t.contests.actions.start,
+  finalize: t.contests.actions.finalize,
+  archive: t.contests.actions.archive,
+  unarchive: t.contests.actions.unarchive,
 };
 
 /**
@@ -53,12 +54,12 @@ export function confirmText(action: ContestAction, c: ContestRow): string {
   const y = c.year;
   switch (action) {
     case 'start':
-      return `Start ${y}: ${y} becomes the current contest.`;
+      return t.contests.confirm.start(y);
     case 'finalize':
-      return `Finalize ${y}: ${y} becomes finalized and every ${y} room is scored and gets its winners. Results can no longer be changed. This cannot be undone.`;
+      return t.contests.confirm.finalize(y);
     case 'archive':
-      return `Archive ${y}: ${y} is locked and its page moves to the past contests (the old ${y} address redirects there). Games and the next contest are not affected. You can undo with Un-archive while no other contest is started.`;
+      return t.contests.confirm.archive(y);
     case 'unarchive':
-      return `Un-archive ${y}: ${y} goes back to finalized and its results can be corrected again.`;
+      return t.contests.confirm.unarchive(y);
   }
 }

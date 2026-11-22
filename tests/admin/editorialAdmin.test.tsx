@@ -287,8 +287,8 @@ describe('ContestDetailsForm: editorial indicator', () => {
       h.published['hub-2026'] = { en: editorial({ intro: 'Hub text' }), el: editorial() };
       const nav = NAV();
       render(<AdminNavContext.Provider value={nav}><ContestDetailsForm year={2026} /></AdminNavContext.Provider>);
-      await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Live hub editorial: text'));
-      fireEvent.click(screen.getByRole('button', { name: /Edit live hub editorial/ }));
+      await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Κείμενο ζωντανού διαγωνισμού: κείμενο'));
+      fireEvent.click(screen.getByRole('button', { name: /Επεξεργασία κειμένου/ }));
       expect(nav.openDoc).toHaveBeenCalledWith('hub-2026');
       expect(fetchSpy.mock.calls.map(([u]) => String(u))).not.toContain('/content/pages/archive-2026.json');
       expect(h.rpc.mock.calls.filter(([n, a]) => n === 'cms_get' && (a as { p_doc_id: string }).p_doc_id === 'archive-2026')).toEqual([]);
@@ -299,15 +299,15 @@ describe('ContestDetailsForm: editorial indicator', () => {
     h.index = { editorial: ['archive-2005', 'hub-2005'] };
     h.published['archive-2005'] = { en: editorial({ intro: 'Archive text' }), el: editorial() };
     const nav = show();
-    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Editorial: text'));
-    fireEvent.click(screen.getByRole('button', { name: /Edit editorial/ }));
+    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Κείμενο: κείμενο'));
+    fireEvent.click(screen.getByRole('button', { name: /Επεξεργασία κειμένου/ }));
     expect(nav.openDoc).toHaveBeenCalledWith('archive-2005');
   });
 
   it('none: no draft and not published; the link opens archive-{year}', async () => {
     const nav = show();
-    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Editorial: none'));
-    fireEvent.click(screen.getByRole('button', { name: /Add editorial/ }));
+    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Κείμενο: κανένα'));
+    fireEvent.click(screen.getByRole('button', { name: /Προσθήκη κειμένου/ }));
     expect(nav.openDoc).toHaveBeenCalledWith('archive-2005');
   });
 
@@ -316,23 +316,23 @@ describe('ContestDetailsForm: editorial indicator', () => {
     h.index = { editorial: ['archive-2005'] };
     h.published['archive-2005'] = { en: editorial({ intro: 'Hi', image: IMG }), el: editorial() };
     show();
-    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Editorial: text'));
-    expect(screen.getByRole('button', { name: /Edit editorial/ })).toBeTruthy();
+    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Κείμενο: κείμενο'));
+    expect(screen.getByRole('button', { name: /Επεξεργασία κειμένου/ })).toBeTruthy();
   });
 
   it('text + image: from the published doc when there is no draft', async () => {
     h.index = { editorial: ['archive-2005'] };
     h.published['archive-2005'] = { en: editorial({ blocks: [{ type: 'text', body: 'x' }], image: IMG }), el: editorial({ image: IMG }) };
     show();
-    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Editorial: text + image'));
+    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Κείμενο: κείμενο + εικόνα'));
   });
 
   it('only informs: the indexable switch is unchanged by it', async () => {
     h.index = { editorial: ['archive-2005'] };
     h.published['archive-2005'] = { en: editorial({ intro: 'Hi', image: IMG }), el: editorial() };
     show();
-    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Editorial: text + image'));
-    expect((screen.getByRole('checkbox', { name: 'Indexable' }) as HTMLInputElement).checked).toBe(false);
+    await waitFor(() => expect(screen.getByTestId('editorial-level').textContent).toBe('Κείμενο: κείμενο + εικόνα'));
+    expect((screen.getByRole('checkbox', { name: 'Ορατό στις μηχανές αναζήτησης' }) as HTMLInputElement).checked).toBe(false);
     expect(h.rpc.mock.calls.filter(([n]) => n === 'update_contest')).toEqual([]);
   });
 });

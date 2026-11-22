@@ -25,6 +25,7 @@ import { PublishBar } from './contests/PublishBar';
 import { usePublisher } from './contests/publish';
 import { ParseSemisButton } from './parser/ParseSemisButton';
 import { ACTION_LABELS, confirmText, type ContestAction } from './contests/lifecycle';
+import { t } from '../i18n';
 
 const RPC: Record<ContestAction, string> = {
   start: 'start_contest',
@@ -43,13 +44,13 @@ type Form = typeof EMPTY_FORM;
 
 // `example` is the placeholder; date inputs ignore placeholders, so dates show it as a hint below.
 const FORM_FIELDS: Array<{ key: keyof Form; label: string; type: string; example: string }> = [
-  { key: 'year', label: 'Year', type: 'number', example: 'e.g. 2028' },
-  { key: 'city', label: 'City', type: 'text', example: 'e.g. Burgas' },
-  { key: 'slug', label: 'Slug', type: 'text', example: 'e.g. burgas (lowercase, hyphens)' },
-  { key: 'host', label: 'Host ISO', type: 'text', example: 'e.g. BG' },
-  { key: 'semi1', label: 'Semi 1', type: 'date', example: 'e.g. Tue 11 May 2027' },
-  { key: 'semi2', label: 'Semi 2', type: 'date', example: 'e.g. Thu 13 May 2027' },
-  { key: 'final', label: 'Final', type: 'date', example: 'e.g. Sat 15 May 2027' },
+  { key: 'year', label: t.contests.fields.year, type: 'number', example: t.contests.examples.year },
+  { key: 'city', label: t.contests.fields.city, type: 'text', example: t.contests.examples.city },
+  { key: 'slug', label: t.contests.fields.slug, type: 'text', example: t.contests.examples.slug },
+  { key: 'host', label: t.contests.fields.host, type: 'text', example: t.contests.examples.host },
+  { key: 'semi1', label: t.contests.fields.semi1, type: 'date', example: t.contests.examples.semi1 },
+  { key: 'semi2', label: t.contests.fields.semi2, type: 'date', example: t.contests.examples.semi2 },
+  { key: 'final', label: t.contests.fields.final, type: 'date', example: t.contests.examples.final },
 ];
 
 export interface ContestsProps {
@@ -108,8 +109,8 @@ export default function Contests({ year, section = 'details', iso = null, onSele
       if (error) throw error;
       setNotice(
         action === 'finalize' && typeof data === 'number'
-          ? `${ACTION_LABELS[action]} ${c.year} done. Winners computed for ${data} room${data === 1 ? '' : 's'}.`
-          : `${ACTION_LABELS[action]} ${c.year} done.`,
+          ? t.contests.doneWinners(ACTION_LABELS[action], c.year, Number(data))
+          : t.contests.done(ACTION_LABELS[action], c.year),
       );
       await load();
     } catch (e) {
@@ -127,7 +128,7 @@ export default function Contests({ year, section = 'details', iso = null, onSele
   const create = async () => {
     const year = Number(form.year);
     if (!Number.isInteger(year) || !form.city.trim() || !form.slug.trim()) {
-      setErr('Year, city and slug are required.');
+      setErr(t.contests.required);
       return;
     }
     setBusy(true);
@@ -144,7 +145,7 @@ export default function Contests({ year, section = 'details', iso = null, onSele
         p_final: form.final || null,
       });
       if (error) throw error;
-      setNotice(`Created ${year}.`);
+      setNotice(t.contests.created(year));
       setForm(EMPTY_FORM);
       setShowCreate(false);
       changed();
@@ -173,21 +174,18 @@ export default function Contests({ year, section = 'details', iso = null, onSele
   }, [selectedYear, shown, section, iso]);
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-white">🗓️ Contests</h2>
-          <p className="text-sm text-white/60 mt-1 max-w-2xl">
-            Every contest year and its lifecycle: upcoming → current → finalized → archived.
-            Only the moves the database allows right now are offered.
-          </p>
+          <h2 className="text-2xl font-bold text-stage-text m-0">{t.contests.title}</h2>
+          <p className="t-small mt-1.5 max-w-2xl">{t.contests.lede}</p>
         </div>
         <button
           type="button"
           onClick={() => setShowCreate((v) => !v)}
           className="px-3 py-1.5 rounded bg-amber-500 text-black font-bold text-sm cursor-pointer"
         >
-          Create year
+          {t.contests.create}
         </button>
       </header>
 
@@ -217,7 +215,7 @@ export default function Contests({ year, section = 'details', iso = null, onSele
             disabled={busy}
             className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
           >
-            {busy ? 'Working…' : 'Create'}
+            {busy ? t.contests.working : t.contests.createBtn}
           </button>
         </section>
       )}
@@ -234,15 +232,15 @@ export default function Contests({ year, section = 'details', iso = null, onSele
       />
 
       {selected && (
-        <section ref={editorRef} aria-label={`Edit ${selected.year}`} className="space-y-4 scroll-mt-4">
+        <section ref={editorRef} aria-label={t.contests.editAria(selected.year)} className="space-y-4 scroll-mt-4">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-lg font-bold text-white">Editing {selected.year} · {selected.city}</h3>
+            <h3 className="text-lg font-bold text-white">{t.contests.editing(selected.year, selected.city)}</h3>
             <button
               type="button"
               onClick={() => setSelectedYear(null)}
               className="px-2.5 py-1 rounded border border-white/15 text-white/80 text-xs cursor-pointer"
             >
-              Close
+              {t.contests.close}
             </button>
           </div>
           <ContestDetailsForm key={`details-${selected.year}`} year={selected.year} onSaved={changed} />

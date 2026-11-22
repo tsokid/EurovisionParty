@@ -13,6 +13,7 @@ import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
 import { EditorialIndicator } from './EditorialIndicator';
 import { useUnsavedGuard } from '../../unsavedGuard';
+import { t } from '../../i18n';
 
 /** contests.city_slug check of migration 070. */
 export const CITY_SLUG_RE = /^[a-z]+(-[a-z]+)*$/;
@@ -37,9 +38,9 @@ interface Country {
 const INPUT = 'bg-[#1a0a2e] border border-white/15 text-white rounded px-2 py-1.5';
 
 const DATE_FIELDS: Array<{ key: 'semi1_date' | 'semi2_date' | 'final_date'; label: string }> = [
-  { key: 'semi1_date', label: 'Semi-final 1' },
-  { key: 'semi2_date', label: 'Semi-final 2' },
-  { key: 'final_date', label: 'Final' },
+  { key: 'semi1_date', label: t.contests.dates.semi1_date },
+  { key: 'semi2_date', label: t.contests.dates.semi2_date },
+  { key: 'final_date', label: t.contests.dates.final_date },
 ];
 
 const KEYS: Key[] = ['city', 'city_slug', 'host_iso', 'semi1_date', 'semi2_date', 'final_date', 'indexable'];
@@ -109,18 +110,18 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
     setErr(null);
     setNotice(null);
     if (!form.city.trim()) {
-      setErr('City is required.');
+      setErr(t.contests.cityRequired);
       return;
     }
     if (!CITY_SLUG_RE.test(form.city_slug)) {
-      setErr('City slug: lowercase letters a-z, words joined by single hyphens (e.g. "tel-aviv").');
+      setErr(t.contests.slugInvalid);
       return;
     }
     setBusy(true);
     try {
       const { error } = await supabase.rpc('update_contest', { p_year: year, p_fields: changed });
       if (error) throw error;
-      setNotice(`Saved ${year}. Publish to put it on the site.`);
+      setNotice(t.contests.savedDetails(year));
       await load();
       onSaved?.();
     } catch (e) {
@@ -139,43 +140,43 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
 
   return (
     <section className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
-      <h3 className="text-lg font-bold text-white">Details {year}</h3>
+      <h3 className="text-lg font-bold text-white">{t.contests.details(year)}</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-3xl">
         <label className="text-sm text-white/80 flex flex-col gap-1">
-          <span className="text-xs text-white/50 uppercase tracking-wide">City</span>
+          <span className="text-xs text-white/50 uppercase tracking-wide">{t.contests.city}</span>
           <input
-            aria-label="City"
+            aria-label={t.contests.city}
             value={form.city}
             onChange={(e) => set('city', e.target.value)}
-            placeholder="e.g. Burgas"
+            placeholder={t.contests.eg('Burgas')}
             className={`${INPUT} placeholder:text-white/30`}
           />
         </label>
         <label className="text-sm text-white/80 flex flex-col gap-1">
-          <span className="text-xs text-white/50 uppercase tracking-wide">City slug</span>
+          <span className="text-xs text-white/50 uppercase tracking-wide">{t.contests.citySlug}</span>
           <input
-            aria-label="City slug"
+            aria-label={t.contests.citySlug}
             value={form.city_slug}
             onChange={(e) => set('city_slug', e.target.value)}
             disabled={archived}
-            placeholder="e.g. burgas"
+            placeholder={t.contests.eg('burgas')}
             className={`${INPUT} font-mono disabled:opacity-50 placeholder:text-white/30`}
           />
           {archived && (
             <span className="text-xs text-white/50">
-              City slug is part of the archive page URL and cannot change once the year is archived.
+              {t.contests.slugHelp}
             </span>
           )}
         </label>
         <label className="text-sm text-white/80 flex flex-col gap-1">
-          <span className="text-xs text-white/50 uppercase tracking-wide">Host</span>
+          <span className="text-xs text-white/50 uppercase tracking-wide">{t.contests.host}</span>
           <select
-            aria-label="Host"
+            aria-label={t.contests.host}
             value={form.host_iso ?? ''}
             onChange={(e) => set('host_iso', orNull(e.target.value))}
             className={INPUT}
           >
-            <option value="" className="bg-[#1a0a2e]">— none —</option>
+            <option value="" className="bg-[#1a0a2e]">{t.contests.hostNone}</option>
             {!hostKnown && form.host_iso && (
               <option value={form.host_iso} className="bg-[#1a0a2e]">{form.host_iso}</option>
             )}
@@ -202,13 +203,13 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
         <label className="flex items-center gap-2 text-sm text-white">
           <input
             type="checkbox"
-            aria-label="Indexable"
+            aria-label={t.contests.indexable}
             checked={form.indexable}
             onChange={(e) => set('indexable', e.target.checked)}
           />
-          Indexable
+          {t.contests.indexable}
         </label>
-        <span className="text-xs text-white/50">Turn on after you've added your own text or image for this year.</span>
+        <span className="text-xs text-white/50">{t.contests.indexableHelp}</span>
         <EditorialIndicator year={year} archived={archived} />
       </div>
 
@@ -218,7 +219,7 @@ export function ContestDetailsForm({ year, onSaved }: Props) {
         disabled={busy || !dirty}
         className="px-3 py-1.5 rounded bg-emerald-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
       >
-        {busy ? 'Saving…' : 'Save details'}
+        {busy ? t.contests.saving : t.contests.saveDetails}
       </button>
 
       {notice && <p className="text-sm text-emerald-300">{notice}</p>}

@@ -63,20 +63,20 @@ describe('allowedActions', () => {
 describe('confirmText', () => {
   it('archive sentence', () => {
     expect(confirmText('archive', row(2026, 'finalized', 30))).toBe(
-      'Archive 2026: 2026 is locked and its page moves to the past contests (the old 2026 address redirects there). Games and the next contest are not affected. You can undo with Un-archive while no other contest is started.',
+      'Αρχειοθέτηση 2026: το 2026 κλειδώνει και η σελίδα του πηγαίνει στους παλιούς διαγωνισμούς (η παλιά διεύθυνση του 2026 ανακατευθύνεται εκεί). Τα παιχνίδια και ο επόμενος διαγωνισμός δεν επηρεάζονται. Αναιρείται με «Επαναφορά από αρχείο» όσο δεν έχει ξεκινήσει άλλος διαγωνισμός.',
     );
   });
 
   it('unarchive sentence', () => {
     expect(confirmText('unarchive', row(2026, 'archived', 30))).toBe(
-      'Un-archive 2026: 2026 goes back to finalized and its results can be corrected again.',
+      'Επαναφορά από αρχείο 2026: το 2026 γίνεται ξανά ολοκληρωμένο και τα αποτελέσματά του διορθώνονται ξανά.',
     );
   });
 
   it('start and finalize sentences name the year', () => {
-    expect(confirmText('start', row(2027, 'upcoming'))).toBe('Start 2027: 2027 becomes the current contest.');
+    expect(confirmText('start', row(2027, 'upcoming'))).toBe('Έναρξη 2027: το 2027 γίνεται ο τρέχων διαγωνισμός.');
     expect(confirmText('finalize', row(2026, 'current', 30))).toBe(
-      'Finalize 2026: 2026 becomes finalized and every 2026 room is scored and gets its winners. Results can no longer be changed. This cannot be undone.',
+      'Ολοκλήρωση 2026: το 2026 ολοκληρώνεται και κάθε δωμάτιο του 2026 βαθμολογείται και βγάζει νικητές. Τα αποτελέσματα δεν αλλάζουν πια. Δεν αναιρείται.',
     );
   });
 });

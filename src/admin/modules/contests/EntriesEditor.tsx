@@ -11,6 +11,7 @@ import { useUnsavedGuard } from '../../unsavedGuard';
 import { supabase } from '../../../lib/supabase';
 import { compareText } from '../../../lib/seo/textSort';
 import { formatError } from '../../lib/formatError';
+import { t } from '../../i18n';
 
 interface Entry {
   year: number;
@@ -37,9 +38,9 @@ type EditableKey = Exclude<keyof Entry, 'year' | 'iso'>;
 type Draft = Partial<Pick<Entry, EditableKey>>;
 
 const FINAL_COLS: Array<{ key: 'final_running_order' | 'final_place' | 'total_points'; label: string; example: string }> = [
-  { key: 'final_running_order', label: 'Final RO', example: '12' },
-  { key: 'final_place', label: 'Final place', example: '1' },
-  { key: 'total_points', label: 'Points', example: '436' },
+  { key: 'final_running_order', label: t.contests.ecols.finalRo, example: '12' },
+  { key: 'final_place', label: t.contests.ecols.finalPlace, example: '1' },
+  { key: 'total_points', label: t.contests.ecols.points, example: '436' },
 ];
 
 const INPUT = 'bg-[#1a0a2e] border border-white/15 text-white rounded px-1.5 py-1 text-sm';
@@ -155,7 +156,7 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
   };
 
   const remove = (iso: string) => {
-    if (!window.confirm(`Delete ${nameOf.get(iso) ?? iso} from ${year}? Its semi and final data are removed too.`)) {
+    if (!window.confirm(t.contests.deleteConfirm(nameOf.get(iso) ?? iso, year))) {
       return;
     }
     return run(
@@ -167,14 +168,14 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
   return (
     <section className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
       <header className="flex flex-wrap items-center gap-3">
-        <h3 className="text-lg font-bold text-white">Entries {year}</h3>
-        <span className="text-xs text-white/50">{entries.length} entries</span>
+        <h3 className="text-lg font-bold text-white">{t.contests.entries(year)}</h3>
+        <span className="text-xs text-white/50">{t.contests.entryCount(entries.length)}</span>
         {parseSemisSlot}
       </header>
 
       {archived && (
         <p className="rounded border border-amber-400/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
-          Edits to an archived year go live after Publish.
+          {t.contests.archivedNote}
         </p>
       )}
 
@@ -182,18 +183,18 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-white/50 uppercase tracking-wide border-b border-white/10">
-              <th className="px-2 py-1.5">Country</th>
-              <th className="px-2 py-1.5">Artist</th>
-              <th className="px-2 py-1.5">Song</th>
-              <th className="px-2 py-1.5">Semi</th>
-              <th className="px-2 py-1.5">Semi RO</th>
-              <th className="px-2 py-1.5">Semi place</th>
-              <th className="px-2 py-1.5">Semi points</th>
-              <th className="px-2 py-1.5">Qualified</th>
-              <th className="px-2 py-1.5">In final</th>
-              <th className="px-2 py-1.5">Final RO</th>
-              <th className="px-2 py-1.5">Final place</th>
-              <th className="px-2 py-1.5">Points</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.country}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.artist}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.song}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.semi}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.semiRo}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.semiPlace}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.semiPoints}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.qualified}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.inFinal}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.finalRo}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.finalPlace}</th>
+              <th className="px-2 py-1.5">{t.contests.ecols.points}</th>
               <th className="px-2 py-1.5" />
             </tr>
           </thead>
@@ -217,25 +218,25 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                   </td>
                   <td className="px-2 py-1.5">
                     <input
-                      aria-label={`Artist ${e.iso}`}
+                      aria-label={`${t.contests.ecols.artist} ${e.iso}`}
                       value={valueOf(e, 'artist') ?? ''}
                       onChange={(ev) => edit(e.iso, 'artist', toText(ev.target.value))}
-                      placeholder="Artist name"
+                      placeholder={t.contests.artistPh}
                       className={`${INPUT} w-36 placeholder:text-white/30`}
                     />
                   </td>
                   <td className="px-2 py-1.5">
                     <input
-                      aria-label={`Song ${e.iso}`}
+                      aria-label={`${t.contests.ecols.song} ${e.iso}`}
                       value={valueOf(e, 'song') ?? ''}
                       onChange={(ev) => edit(e.iso, 'song', toText(ev.target.value))}
-                      placeholder="Song title"
+                      placeholder={t.contests.songPh}
                       className={`${INPUT} w-36 placeholder:text-white/30`}
                     />
                   </td>
                   <td className="px-2 py-1.5">
                     <select
-                      aria-label={`Semi ${e.iso}`}
+                      aria-label={`${t.contests.ecols.semi} ${e.iso}`}
                       value={valueOf(e, 'semi') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi', toNum(ev.target.value))}
                       className={INPUT}
@@ -248,7 +249,7 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                   <td className="px-2 py-1.5">
                     <input
                       type="number"
-                      aria-label={`Semi RO ${e.iso}`}
+                      aria-label={`${t.contests.ecols.semiRo} ${e.iso}`}
                       value={valueOf(e, 'semi_running_order') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi_running_order', toNum(ev.target.value))}
                       placeholder="4"
@@ -258,7 +259,7 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                   <td className="px-2 py-1.5">
                     <input
                       type="number"
-                      aria-label={`Semi place ${e.iso}`}
+                      aria-label={`${t.contests.ecols.semiPlace} ${e.iso}`}
                       value={valueOf(e, 'semi_place') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi_place', toNum(ev.target.value))}
                       placeholder="2"
@@ -268,7 +269,7 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                   <td className="px-2 py-1.5">
                     <input
                       type="number"
-                      aria-label={`Semi points ${e.iso}`}
+                      aria-label={`${t.contests.ecols.semiPoints} ${e.iso}`}
                       value={valueOf(e, 'semi_points') ?? ''}
                       onChange={(ev) => edit(e.iso, 'semi_points', toNum(ev.target.value))}
                       placeholder="180"
@@ -277,20 +278,20 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                   </td>
                   <td className="px-2 py-1.5">
                     <select
-                      aria-label={`Qualified ${e.iso}`}
+                      aria-label={`${t.contests.ecols.qualified} ${e.iso}`}
                       value={triState(valueOf(e, 'qualified'))}
                       onChange={(ev) => edit(e.iso, 'qualified', fromTriState(ev.target.value))}
                       className={INPUT}
                     >
                       <option value="" className="bg-[#1a0a2e]">—</option>
-                      <option value="yes" className="bg-[#1a0a2e]">yes</option>
-                      <option value="no" className="bg-[#1a0a2e]">no</option>
+                      <option value="yes" className="bg-[#1a0a2e]">{t.contests.yes}</option>
+                      <option value="no" className="bg-[#1a0a2e]">{t.contests.no}</option>
                     </select>
                   </td>
                   <td className="px-2 py-1.5">
                     <input
                       type="checkbox"
-                      aria-label={`In final ${e.iso}`}
+                      aria-label={`${t.contests.ecols.inFinal} ${e.iso}`}
                       checked={valueOf(e, 'in_final')}
                       onChange={(ev) => edit(e.iso, 'in_final', ev.target.checked)}
                     />
@@ -315,7 +316,7 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                         onClick={() => save(e.iso)}
                         className="px-2.5 py-1 rounded bg-emerald-500 text-black font-bold text-xs disabled:opacity-40 cursor-pointer"
                       >
-                        Save
+                        {t.contests.save}
                       </button>
                       <button
                         type="button"
@@ -323,7 +324,7 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
                         onClick={() => remove(e.iso)}
                         className="px-2.5 py-1 rounded bg-red-500/80 text-white font-bold text-xs disabled:opacity-40 cursor-pointer"
                       >
-                        Delete
+                        {t.contests.delete}
                       </button>
                     </div>
                   </td>
@@ -332,17 +333,17 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
             })}
           </tbody>
         </table>
-        {sorted.length === 0 && <p className="text-sm text-white/50 py-2">No entries yet.</p>}
+        {sorted.length === 0 && <p className="text-sm text-white/50 py-2">{t.contests.noEntries}</p>}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <select
-          aria-label="Add country"
+          aria-label={t.contests.addCountry}
           value={addIso}
           onChange={(ev) => setAddIso(ev.target.value)}
           className={INPUT}
         >
-          <option value="" className="bg-[#1a0a2e]">Choose a country…</option>
+          <option value="" className="bg-[#1a0a2e]">{t.contests.chooseCountry}</option>
           {available.map((c) => (
             <option key={c.iso} value={c.iso} className="bg-[#1a0a2e]">{c.name_en}</option>
           ))}
@@ -353,7 +354,7 @@ export function EntriesEditor({ year, archived = false, onChanged, parseSemisSlo
           onClick={add}
           className="px-3 py-1.5 rounded bg-amber-500 text-black font-bold text-sm disabled:opacity-40 cursor-pointer"
         >
-          Add
+          {t.contests.add}
         </button>
       </div>
 

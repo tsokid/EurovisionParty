@@ -36,7 +36,7 @@ vi.mock('../../src/lib/supabase', () => {
 
 import { ContestDetailsForm } from '../../src/admin/modules/contests/ContestDetailsForm';
 
-const NOTE = "Turn on after you've added your own text or image for this year.";
+const NOTE = 'Ενεργοποιήστε το αφού προσθέσετε δικό σας κείμενο ή εικόνα για αυτή τη χρονιά.';
 
 describe('ContestDetailsForm', () => {
   beforeEach(() => {
@@ -57,44 +57,44 @@ describe('ContestDetailsForm', () => {
   it('loads the contest into the form, with the indexable note', async () => {
     render(<ContestDetailsForm year={2025} />);
     expect(await screen.findByDisplayValue('Basel')).toBeTruthy();
-    expect(field('City slug').value).toBe('basel');
-    expect((screen.getByLabelText('Host') as HTMLSelectElement).value).toBe('CH');
-    expect(field('Semi-final 1').value).toBe('2025-05-13');
-    expect(field('Semi-final 2').value).toBe('2025-05-15');
-    expect(field('Final').value).toBe('2025-05-17');
-    expect(field('Indexable').checked).toBe(false);
+    expect(field('Slug πόλης').value).toBe('basel');
+    expect((screen.getByLabelText('Διοργάνωση') as HTMLSelectElement).value).toBe('CH');
+    expect(field('Ημιτελικός 1').value).toBe('2025-05-13');
+    expect(field('Ημιτελικός 2').value).toBe('2025-05-15');
+    expect(field('Τελικός').value).toBe('2025-05-17');
+    expect(field('Ορατό στις μηχανές αναζήτησης').checked).toBe(false);
     expect(screen.getByText(NOTE)).toBeTruthy();
-    expect((screen.getByRole('button', { name: 'Save details' }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }) as HTMLButtonElement).disabled).toBe(true);
   });
 
   it('locks the city slug of an archived year, with a hint (I3)', async () => {
     h.contest = { ...h.contest, stage: 'archived' };
     render(<ContestDetailsForm year={2025} />);
     await screen.findByDisplayValue('Basel');
-    expect(field('City slug').disabled).toBe(true);
-    expect(screen.getByText(/City slug is part of the archive page URL and cannot change once the year is archived\./)).toBeTruthy();
+    expect(field('Slug πόλης').disabled).toBe(true);
+    expect(screen.getByText(/δεν αλλάζει αφού η χρονιά αρχειοθετηθεί/)).toBeTruthy();
     // Other fields stay editable.
-    expect(field('City').disabled).toBe(false);
+    expect(field('Πόλη').disabled).toBe(false);
   });
 
   it('leaves the city slug editable before the year is archived', async () => {
     h.contest = { ...h.contest, stage: 'finalized' };
     render(<ContestDetailsForm year={2025} />);
     await screen.findByDisplayValue('Basel');
-    expect(field('City slug').disabled).toBe(false);
-    expect(screen.queryByText(/cannot change once the year is archived/)).toBeNull();
+    expect(field('Slug πόλης').disabled).toBe(false);
+    expect(screen.queryByText(/δεν αλλάζει αφού η χρονιά αρχειοθετηθεί/)).toBeNull();
   });
 
   it('saves only the changed fields through update_contest, then calls onSaved', async () => {
     const onSaved = vi.fn();
     render(<ContestDetailsForm year={2025} onSaved={onSaved} />);
     await screen.findByDisplayValue('Basel');
-    fireEvent.change(field('City'), { target: { value: 'Basel-Stadt' } });
-    fireEvent.change(field('City slug'), { target: { value: 'basel-stadt' } });
-    fireEvent.change(screen.getByLabelText('Host'), { target: { value: 'AT' } });
-    fireEvent.change(field('Semi-final 2'), { target: { value: '' } });
-    fireEvent.click(field('Indexable'));
-    fireEvent.click(screen.getByRole('button', { name: 'Save details' }));
+    fireEvent.change(field('Πόλη'), { target: { value: 'Basel-Stadt' } });
+    fireEvent.change(field('Slug πόλης'), { target: { value: 'basel-stadt' } });
+    fireEvent.change(screen.getByLabelText('Διοργάνωση'), { target: { value: 'AT' } });
+    fireEvent.change(field('Ημιτελικός 2'), { target: { value: '' } });
+    fireEvent.click(field('Ορατό στις μηχανές αναζήτησης'));
+    fireEvent.click(screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }));
     await waitFor(() =>
       expect(h.rpc).toHaveBeenCalledWith('update_contest', {
         p_year: 2025,
@@ -102,17 +102,17 @@ describe('ContestDetailsForm', () => {
       }),
     );
     await waitFor(() => expect(onSaved).toHaveBeenCalled());
-    expect(await screen.findByText('Saved 2025. Publish to put it on the site.')).toBeTruthy();
+    expect(await screen.findByText('Το 2025 αποθηκεύτηκε. Κάντε «Δημοσίευση» για να φανεί στο site.')).toBeTruthy();
   });
 
   it('an edit back to the original value is not sent', async () => {
     render(<ContestDetailsForm year={2025} />);
     await screen.findByDisplayValue('Basel');
-    fireEvent.change(field('City'), { target: { value: 'Zurich' } });
-    fireEvent.change(field('City'), { target: { value: 'Basel' } });
-    expect((screen.getByRole('button', { name: 'Save details' }) as HTMLButtonElement).disabled).toBe(true);
-    fireEvent.click(field('Indexable'));
-    fireEvent.click(screen.getByRole('button', { name: 'Save details' }));
+    fireEvent.change(field('Πόλη'), { target: { value: 'Zurich' } });
+    fireEvent.change(field('Πόλη'), { target: { value: 'Basel' } });
+    expect((screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }) as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(field('Ορατό στις μηχανές αναζήτησης'));
+    fireEvent.click(screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }));
     await waitFor(() =>
       expect(h.rpc).toHaveBeenCalledWith('update_contest', { p_year: 2025, p_fields: { indexable: true } }),
     );
@@ -121,8 +121,8 @@ describe('ContestDetailsForm', () => {
   it('a host can be cleared to none', async () => {
     render(<ContestDetailsForm year={2025} />);
     await screen.findByDisplayValue('Basel');
-    fireEvent.change(screen.getByLabelText('Host'), { target: { value: '' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Save details' }));
+    fireEvent.change(screen.getByLabelText('Διοργάνωση'), { target: { value: '' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }));
     await waitFor(() =>
       expect(h.rpc).toHaveBeenCalledWith('update_contest', { p_year: 2025, p_fields: { host_iso: null } }),
     );
@@ -131,15 +131,15 @@ describe('ContestDetailsForm', () => {
   it('refuses a malformed city slug or an empty city without calling the RPC', async () => {
     render(<ContestDetailsForm year={2025} />);
     await screen.findByDisplayValue('Basel');
-    fireEvent.change(field('City slug'), { target: { value: 'Basel 2025' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Save details' }));
+    fireEvent.change(field('Slug πόλης'), { target: { value: 'Basel 2025' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }));
     expect(
-      await screen.findByText('City slug: lowercase letters a-z, words joined by single hyphens (e.g. "tel-aviv").'),
+      await screen.findByText('Slug πόλης: πεζά λατινικά a-z, λέξεις ενωμένες με μία παύλα (π.χ. "tel-aviv").'),
     ).toBeTruthy();
-    fireEvent.change(field('City slug'), { target: { value: 'basel' } });
-    fireEvent.change(field('City'), { target: { value: '  ' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Save details' }));
-    expect(await screen.findByText('City is required.')).toBeTruthy();
+    fireEvent.change(field('Slug πόλης'), { target: { value: 'basel' } });
+    fireEvent.change(field('Πόλη'), { target: { value: '  ' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }));
+    expect(await screen.findByText('Η πόλη είναι υποχρεωτική.')).toBeTruthy();
     expect(h.rpc).not.toHaveBeenCalledWith('update_contest', expect.anything());
   });
 
@@ -147,8 +147,8 @@ describe('ContestDetailsForm', () => {
     h.rpcError = { message: 'new row for relation "contests" violates check constraint', code: '23514' };
     render(<ContestDetailsForm year={2025} />);
     await screen.findByDisplayValue('Basel');
-    fireEvent.change(field('City'), { target: { value: 'Bern' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Save details' }));
+    fireEvent.change(field('Πόλη'), { target: { value: 'Bern' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Αποθήκευση στοιχείων' }));
     expect(
       await screen.findByText('new row for relation "contests" violates check constraint · (23514)'),
     ).toBeTruthy();

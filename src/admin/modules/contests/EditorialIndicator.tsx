@@ -10,6 +10,7 @@ import { formatError } from '../../lib/formatError';
 import { useAdminNav } from '../../adminNav';
 import { loadEditorialLevel, type EditorialLevel } from '../pages/editorialPages';
 import { editorialDocId } from '../../../../supabase/functions/_shared/cms/pagesIndex';
+import { t } from '../../i18n';
 
 /** The answer for one doc id (a year switch shows "…" until its own answer arrives). */
 type Loaded = { docId: string; level: EditorialLevel | null; err: string | null };
@@ -17,7 +18,7 @@ type Loaded = { docId: string; level: EditorialLevel | null; err: string | null 
 export function EditorialIndicator({ year, archived }: { year: number; archived: boolean }) {
   const nav = useAdminNav();
   const docId = editorialDocId(archived ? 'archive' : 'hub', year);
-  const name = archived ? 'Editorial' : 'Live hub editorial';
+  const name = archived ? t.contests.editorial : t.contests.hubEditorial;
   const [loaded, setLoaded] = useState<Loaded | null>(null);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export function EditorialIndicator({ year, archived }: { year: number; archived:
   const level = current?.level ?? null;
   const err = current?.err ?? null;
 
-  const text = err ? 'unknown' : level ?? '…';
+  const text = err ? t.contests.editorialLevel.unknown : level ? t.contests.editorialLevel[level] ?? level : '…';
   return (
     <span className="inline-flex flex-wrap items-center gap-2 text-xs">
       <span
@@ -45,7 +46,7 @@ export function EditorialIndicator({ year, archived }: { year: number; archived:
       </span>
       {nav && (
         <button type="button" onClick={() => nav.openDoc(docId)} className="text-sky-300 hover:underline cursor-pointer">
-          {level === 'none' ? `Add ${name.toLowerCase()}` : `Edit ${name.toLowerCase()}`} →
+          {level === 'none' ? t.contests.addEditorial : t.contests.editEditorial} →
         </button>
       )}
     </span>
