@@ -11,6 +11,7 @@
 // editors against one in-memory hub (tests/admin/cmsTwoEditors.test.tsx).
 import { createContext } from 'react';
 import { supabase } from '../../lib/supabase';
+import { compareText } from '../../lib/seo/textSort';
 
 /** The signed-in editor; `tab` overrides this tab's id (tests run two "browsers" in one page). */
 export type Me = { userId: string; email: string | null; tab?: string };
@@ -54,7 +55,7 @@ export function peersFrom(state: Record<string, PresenceMeta[] | undefined>, myT
     if (!m || key === myTab) continue;
     out.push({ key, userId: m.userId, email: m.email, field: m.field ?? null, fieldLabel: m.fieldLabel ?? null });
   }
-  return out.sort((a, b) => (a.email ?? '').localeCompare(b.email ?? '') || a.key.localeCompare(b.key));
+  return out.sort((a, b) => compareText(a.email ?? '', b.email ?? '') || compareText(a.key, b.key));
 }
 
 /** The Supabase implementation. */
