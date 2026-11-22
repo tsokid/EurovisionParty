@@ -3,7 +3,11 @@
 // baseline, the SEO intent and fail-closed behaviour. The headline case: a
 // commit that changes a page title fails the build step without an intent
 // and passes with the intent publish-content writes for it.
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+// Every test runs the real guard over a built snapshot; under full-suite
+// parallel load that takes longer than the 5 s default.
+vi.setConfig({ testTimeout: 30_000 });
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, copyFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
