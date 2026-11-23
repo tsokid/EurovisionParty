@@ -13,7 +13,7 @@
         }
       },
       {
-        "label": "Eurovision Night",
+        "label": "Βραδιά Eurovision",
         "target": {
           "kind": "page",
           "pageId": "eurovision-night"

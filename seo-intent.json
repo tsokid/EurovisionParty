@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "intents": [
+    {
+      "id": "publish-11",
+      "created_at": "2026-11-23T09:24:28.862Z",
+      "source": "publish-content",
+      "docs": [
+        {
+          "doc_id": "site-header",
+          "locale": "el",
+          "fields": [
+            "h1",
+            "jsonLd"
+          ]
+        }
+      ],
+      "data": []
+    }
+  ]
+}
