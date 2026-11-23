@@ -105,7 +105,7 @@
     "startParty": "Ξεκίνα το πάρτι",
     "waitingHost": "Περιμένουμε την έναρξη του πάρτι…",
     "inviteText": "🎤✨ Έλα στο Eurovision Games! ✨🎤\n\n🔑 Κωδικός: {{code}}{{passwordLine}}\n\n👉 Μπες εδώ:\n{{link}}",
-    "invitePasswordLine": "\n\n🔒 Κωδικός Πρόσβασης: {{password}}",
+    "invitePasswordLine": "\n\n🔒 Τον κωδικό πρόσβασης θα τον πάρεις από όποιον έφτιαξε το δωμάτιο (ή σκάναρε το QR στην οθόνη).",
     "inviteSubject": "🎤 Πρόσκληση Eurovision Games!",
     "title": "Κάλεσε την παρέα και ξεκίνα",
     "codeLabel": "Κωδικός δωματίου",

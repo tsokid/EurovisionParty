@@ -105,7 +105,7 @@
     "startParty": "Start the party",
     "waitingHost": "Waiting for the host to start…",
     "inviteText": "🎤✨ Join my Eurovision Games! ✨🎤\n\n🔑 Room Code: {{code}}{{passwordLine}}\n\n👉 Join here:\n{{link}}",
-    "invitePasswordLine": "\n\n🔒 Password: {{password}}",
+    "invitePasswordLine": "\n\n🔒 Get the password from whoever created the room (or scan the QR on the screen).",
     "inviteSubject": "🎤 Eurovision Games Invite!",
     "title": "Invite your friends and start",
     "codeLabel": "Room code",

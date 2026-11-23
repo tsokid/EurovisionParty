@@ -39,7 +39,9 @@ export function useInvite() {
   }, []);
 
   const inviteText = useCallback(() => {
-    const passwordLine = roomPassword ? t('lobby.invitePasswordLine', { password: roomPassword }) : '';
+    // The password never goes into the invite text (messages get forwarded);
+    // only the host's lobby QR carries it. The text says where to get it.
+    const passwordLine = roomPassword ? t('lobby.invitePasswordLine') : '';
     return t('lobby.inviteText', { code, passwordLine, link: roomJoinUrl(code) });
   }, [t, code, roomPassword]);
 
