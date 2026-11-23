@@ -16,18 +16,10 @@ export function useAuth(): UseAuthReturn {
 
   const ensureSession = useCallback(async () => {
     try {
-      // Check for an existing session first
+      // Only reads the session: a visit creates no account. The anonymous
+      // user is made on create/join (ensureUser), 23 Nov 2026.
       const { data: { session: existing } } = await supabase.auth.getSession();
-
-      if (existing) {
-        setSession(existing);
-        return;
-      }
-
-      // No session - sign in anonymously
-      const { data, error } = await supabase.auth.signInAnonymously();
-      if (error) throw error;
-      setSession(data.session);
+      setSession(existing);
     } catch (err) {
       console.error('[useAuth] Failed to initialise auth:', err);
     } finally {

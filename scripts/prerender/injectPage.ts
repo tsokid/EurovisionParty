@@ -54,6 +54,14 @@ export function injectPage(template: string, page: PrerenderedPage, opts: Inject
   if (!/<html lang="[^"]*">/.test(out)) throw new Error('injectPage: missing marker <html lang="…">');
   out = out.replace(/<html lang="[^"]*">/, () => `<html lang="${page.lang}">`);
 
+  // Greek pages draw their text in the greek Manrope subset: preload it next
+  // to the latin one so it does not wait for the stylesheet (23 Nov 2026).
+  const LATIN = '<link rel="preload" href="/fonts/manrope-v23-latin.woff2" as="font" type="font/woff2" crossorigin />';
+  if (page.lang === 'el' && out.includes(LATIN)) {
+    out = out.replace(LATIN, () => `${LATIN}
+    ${LATIN.replace('latin', 'greek')}`);
+  }
+
   if (!out.includes('<div id="root">')) throw new Error('injectPage: missing marker <div id="root">');
 
   if (page.content && Object.keys(page.content).length > 0) {

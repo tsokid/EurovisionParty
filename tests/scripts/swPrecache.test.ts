@@ -33,8 +33,11 @@ describe.skipIf(!built)('service worker precache (dist/sw.js)', () => {
     return out;
   };
   const entryKeys = Object.keys(manifest).filter((k) => manifest[k].isEntry);
-  const publicKeys = reach(entryKeys);
   const adminKey = Object.keys(manifest).find((k) => /src\/admin\/AdminRoute\.tsx$/.test(k));
+  // Public = the entry plus the lazy public routes (the game, 23 Nov 2026)
+  // and what they import: a chunk the game shares with the admin is public.
+  const publicLazy = Object.keys(manifest).filter((k) => manifest[k].isDynamicEntry && k !== adminKey);
+  const publicKeys = reach([...entryKeys, ...publicLazy]);
   const adminOnly = adminKey ? [...reach([adminKey])].filter((k) => !publicKeys.has(k)).map((k) => manifest[k].file) : [];
 
   it('precaches the public entry chunk', () => {

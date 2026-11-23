@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
@@ -17,6 +17,44 @@ const REPO_ROOT = resolve(__dirname, '../..');
 
 // Build date — fallback when no per-file git history is available
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
+
+/**
+ * Vercel builds from a shallow clone: there `git log -1 -- <file>` answers the
+ * clone's own commit for every file, so all 288 URLs got the build date as
+ * lastmod (23 Nov 2026) and Google learns to ignore it. In a shallow clone we
+ * first try to fetch the full history; if that fails, each URL keeps the
+ * lastmod of the committed public/sitemap.xml (written by a full-history
+ * build), and only new URLs get the build date.
+ */
+const TRACKED = resolve(__dirname, '../../public/sitemap.xml');
+function readPrevious(): Map<string, string> {
+  const map = new Map<string, string>();
+  if (!existsSync(TRACKED)) return map;
+  const xml = readFileSync(TRACKED, 'utf8');
+  for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)) map.set(m[1], m[2]);
+  return map;
+}
+function isShallow(): boolean {
+  try {
+    return execSync('git rev-parse --is-shallow-repository', { cwd: REPO_ROOT, encoding: 'utf8' }).trim() === 'true';
+  } catch {
+    return true; // no git at all: same as no history
+  }
+}
+function historyAvailable(): boolean {
+  if (process.env.SITEMAP_ASSUME_SHALLOW === '1') return false;
+  if (!isShallow()) return true;
+  try {
+    execSync('git fetch --unshallow --quiet', { cwd: REPO_ROOT, stdio: 'ignore', timeout: 60_000 });
+  } catch { /* no credentials or network: fall back below */ }
+  return !isShallow();
+}
+const PREVIOUS = readPrevious();
+const HISTORY = historyAvailable();
+/** lastmod for one URL: from git when history is there, else the committed value. */
+function lastmodFor(loc: string, fromGit: () => string): string {
+  return HISTORY ? fromGit() : PREVIOUS.get(loc) ?? BUILD_DATE;
+}
 
 // Map each pageId to the file paths that determine its `lastmod`. The newest
 // commit across these paths becomes the URL's lastmod. We track:
@@ -42,9 +80,7 @@ const PAGE_FILES: Record<PageId, string[]> = {
   'eurovision-duels': ['src/pages/seo/EurovisionDuelsPage.tsx', 'content/pages/eurovision-duels.json'],
   'dashboard': ['src/pages/seo/DashboardPage.tsx', 'content/pages/dashboard.json'],
   'cookies': ['src/pages/seo/CookiesPage.tsx', 'content/pages/cookies.json'],
-  // Pages from the registry that don't ship as standalone TSX yet — fall back
-  // to BUILD_DATE. These will get real `lastmod` once their TSX/copy ships.
-  'winners': [],
+  'winners': ['src/pages/seo/WinnersPage.tsx', 'content/pages/winners.json'],
 };
 
 function lastModFromGit(paths: string[]): string {
@@ -110,13 +146,14 @@ function buildEntries(): UrlEntry[] {
     if (elUrl) alternates.push({ hreflang: 'el', href: elUrl });
     alternates.push({ hreflang: 'x-default', href: enUrl ?? elUrl! });
 
-    const lastmod = lastModFromGit(PAGE_FILES[page.id] ?? []);
+    let git: string | null = null;
+    const fromGit = () => (git ??= lastModFromGit(PAGE_FILES[page.id] ?? []));
 
     if (enUrl) {
-      entries.push({ loc: enUrl, alternates, priority: page.priority, changefreq: page.changefreq, lastmod });
+      entries.push({ loc: enUrl, alternates, priority: page.priority, changefreq: page.changefreq, lastmod: lastmodFor(enUrl, fromGit) });
     }
     if (elUrl) {
-      entries.push({ loc: elUrl, alternates, priority: page.priority, changefreq: page.changefreq, lastmod });
+      entries.push({ loc: elUrl, alternates, priority: page.priority, changefreq: page.changefreq, lastmod: lastmodFor(elUrl, fromGit) });
     }
   }
   return entries;
@@ -140,8 +177,9 @@ function buildDynamicEntries(): UrlEntry[] {
     const alternates: UrlEntry['alternates'] = pages.map((p) => ({ hreflang: p.locale, href: SITE + p.path }));
     alternates.push({ hreflang: 'x-default', href: (alternates.find((a) => a.hreflang === 'en') ?? alternates[0]).href });
     const { priority, changefreq } = DYNAMIC_META[pages[0].kind];
-    const lastmod = lastModFromGitBatch(pages[0].files);
-    for (const p of pages) entries.push({ loc: SITE + p.path, alternates, priority, changefreq, lastmod });
+    let git: string | null = null;
+    const fromGit = () => (git ??= lastModFromGitBatch(pages[0].files));
+    for (const p of pages) entries.push({ loc: SITE + p.path, alternates, priority, changefreq, lastmod: lastmodFor(SITE + p.path, fromGit) });
   }
   return entries;
 }
@@ -177,4 +215,4 @@ function buildXml(entries: UrlEntry[]): string {
 const entries = [...buildEntries(), ...buildDynamicEntries()];
 const xml = buildXml(entries);
 writeFileSync(OUT, xml, 'utf8');
-console.log(`Sitemap written: ${OUT} (${entries.length} URLs, lastmod from git)`);
+console.log(`Sitemap written: ${OUT} (${entries.length} URLs, lastmod from ${HISTORY ? 'git' : 'the committed sitemap (shallow clone)'})`);

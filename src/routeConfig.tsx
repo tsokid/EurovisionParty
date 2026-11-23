@@ -1,7 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import type { RouteObject } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
-import { RoomPage } from './pages/RoomPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 // NotFoundPage is rendered only inside LocaleRoot (locale child `*` route)
 // so its LocaleLink usage is safe. Unprefixed unknown paths redirect.
@@ -67,7 +66,10 @@ export const DYNAMIC_ROUTE_PATHS = [':slug', 'past-contests', 'past-contests/:sl
 
 export const routes: RouteObject[] = [
   // Game + admin own their own chrome
-  { path: '/room/:roomCode', element: <RoomPage /> },
+  // The game (quiz, duels, predictions, results, animations) is its own chunk:
+  // public pages do not download it (speed plan, 23 Nov 2026). main.tsx waits
+  // for the route's chunk before hydrating.
+  { path: '/room/:roomCode', lazy: async () => ({ Component: (await import('./pages/RoomPage')).RoomPage }) },
   // Every admin screen has its own URL under /admin/* (src/admin/paths.ts);
   // the admin's own <Routes> picks the screen. See ADMIN_ROUTE_PATTERNS.
   ...ADMIN_ROUTE_PATTERNS.map((path) => ({ path, element: <LazyAdminRoute /> })),

@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
-import { router } from './routes';
+import { router, routerReady } from './routes';
 import ErrorBoundary from './components/ErrorBoundary';
 import i18n from './i18n';
 import { localeFromPath } from './lib/seo/locale';
@@ -32,6 +32,9 @@ void startApp(
     if (lang) await i18n.changeLanguage(lang);
     // Content the prerendered page was built from, so hydration renders the same data.
     seedContentFromDom(document);
+    // Lazy routes (the game) load their chunk first: hydrating before that
+    // would render nothing where the server rendered the page.
+    await routerReady(router);
   },
   (mode) => {
     if (mode === 'hydrate') hydrateRoot(root, app);

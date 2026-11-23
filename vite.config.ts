@@ -89,6 +89,9 @@ export default defineConfig(({ isSsrBuild }) => ({
     // The SSR bundle (dist-server) needs no service worker or manifest.
     !isSsrBuild && VitePWA({
       registerType: 'autoUpdate',
+      // registerSW.js loads deferred: a plain script in the head blocked the
+      // first paint by one round trip on mobile (23 Nov 2026).
+      injectRegister: 'script-defer',
       workbox: {
         // No navigation route: every page request goes to the network, so
         // each URL gets its own prerendered HTML. dist/index.html is the

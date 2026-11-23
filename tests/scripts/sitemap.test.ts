@@ -38,4 +38,24 @@ describe('sitemap.xml', () => {
     expect(xml).toContain('https://eurovision.games/el/past-contests/eurovision-1956-lugano</loc>');
     expect(xml.match(/<loc>https:\/\/eurovision\.games\/(en|el)\/past-contests\/eurovision-\d{4}-[a-z-]+<\/loc>/g)).toHaveLength(140);
   }, 120_000); // spawns tsx and ~80 git log calls: slow under full-suite load
+
+  // 23 Nov 2026: on Vercel's shallow clone every URL got the build date.
+  const lastmods = (xml: string) => [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]);
+
+  it('with full git history, lastmod follows each page (not one date for all)', () => {
+    const xml = readFileSync(out, 'utf8');
+    expect(new Set(lastmods(xml)).size).toBeGreaterThan(3);
+  });
+
+  it('in a shallow clone it keeps the committed lastmod of each URL', () => {
+    const shallowOut = join(dir, 'shallow.xml');
+    execSync(`npm run sitemap -- "${shallowOut}"`, { stdio: 'pipe', env: { ...process.env, SITEMAP_ASSUME_SHALLOW: '1' } });
+    const committed = new Map(
+      [...readFileSync(tracked, 'utf8').matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)].map((m) => [m[1], m[2]]),
+    );
+    const xml = readFileSync(shallowOut, 'utf8');
+    for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)) {
+      if (committed.has(m[1])) expect(m[2], m[1]).toBe(committed.get(m[1]));
+    }
+  }, 120_000);
 });

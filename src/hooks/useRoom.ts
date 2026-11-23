@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import { ensureUser } from '../lib/ensureUser';
 import { useGameStore } from '../stores/gameStore';
 import { generateRoomCode } from '../lib/roomCode';
 import type { Room } from '../lib/types';
@@ -213,10 +214,8 @@ export function useRoom(): UseRoomReturn {
       setError(null);
 
       try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        // The anonymous account is made here, not on page load.
+        const user = await ensureUser();
 
         // Retry up to 3 times if room code collides
         let code = '';
@@ -299,10 +298,8 @@ export function useRoom(): UseRoomReturn {
       setError(null);
 
       try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        // The anonymous account is made here, not on page load.
+        const user = await ensureUser();
 
         // Verify room code + password via RPC
         const { data: roomData, error: roomErr } = await supabase

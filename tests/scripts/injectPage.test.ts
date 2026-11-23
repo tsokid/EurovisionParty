@@ -103,3 +103,27 @@ describe('outputPath', () => {
     expect(outputPath('/el/faq')).toBe('el/faq.html');
   });
 });
+
+describe('injectPage font preload', () => {
+  const withPreload = TEMPLATE.replace(
+    '<meta charset="UTF-8" />',
+    '<meta charset="UTF-8" />\n    <link rel="preload" href="/fonts/manrope-v23-latin.woff2" as="font" type="font/woff2" crossorigin />',
+  );
+  // Greek pages draw their text in the greek subset: preloaded too, so it
+  // does not wait for the stylesheet (speed plan, 23 Nov 2026).
+  it('a Greek page also preloads the greek Manrope subset', () => {
+    const out = injectPage(withPreload, { ...page, lang: 'el' });
+    expect(out).toContain('<link rel="preload" href="/fonts/manrope-v23-greek.woff2" as="font" type="font/woff2" crossorigin />');
+    expect(out.indexOf('manrope-v23-greek')).toBeLessThan(out.indexOf('</head>'));
+  });
+  it('an English page does not', () => {
+    expect(injectPage(withPreload, page)).not.toContain('manrope-v23-greek');
+  });
+});
+
+describe('service worker registration', () => {
+  it('does not block rendering (deferred, not a plain script in the head)', async () => {
+    const { readFileSync } = await import('node:fs');
+    expect(readFileSync('vite.config.ts', 'utf8')).toMatch(/injectRegister:\s*'script-defer'/);
+  });
+});
