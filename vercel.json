@@ -1691,7 +1691,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!en/|el/|content/|media/|_seo/).*)",
+      "source": "/((?!en/|el/|content/|media/|_seo/|assets/|fonts/|avatars/).*)",
       "destination": "/"
     }
   ],

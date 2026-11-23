@@ -90,6 +90,13 @@ describe('vercel.json', () => {
     for (const p of ['/media/0123456789ab.webp', '/media/0123456789ab-800.webp', '/media/0123456789ab.mp4']) {
       expect(re.test(p), p).toBe(false)
     }
+    // Missing build assets, fonts and avatars 404 too. The SPA shell under an
+    // /assets/ URL is served as immutable for a year: a browser or the
+    // service worker that asked during a deploy kept HTML as the stylesheet
+    // and showed a blank page (23 Nov 2026).
+    for (const p of ['/assets/index-Dr2oFYNP.css', '/assets/AdminRoute-x.js', '/fonts/manrope-v23-latin.woff2', '/avatars/img-99-96.webp']) {
+      expect(re.test(p), p).toBe(false)
+    }
     for (const p of ['/mediakit', '/media']) {
       expect(re.test(p), p).toBe(true)
     }

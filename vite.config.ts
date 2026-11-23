@@ -99,6 +99,12 @@ export default defineConfig(({ isSsrBuild }) => ({
         // loads on /admin only: not precached for every visitor
         // (tests/scripts/swPrecache.test.ts).
         globIgnores: ['**/*.html', 'content/**', 'assets/AdminRoute-*.js'],
+        // A new cache name (23 Nov 2026): some browsers precached the SPA
+        // shell as /assets/index-*.css during a deploy (missing assets fell
+        // back to HTML; they 404 now). The old cache is dropped by
+        // cleanupOutdatedCaches and every file is fetched again.
+        cacheId: 'eg-2026-11-23',
+        cleanupOutdatedCaches: true,
       },
       manifest: {
         name: 'Eurovision Games',
