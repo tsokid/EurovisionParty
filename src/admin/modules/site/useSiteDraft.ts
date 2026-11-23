@@ -6,6 +6,7 @@
 // then runs the existing publish pipeline (publish-content). Validation
 // runs on every edit, and an invalid doc is kept locally, not sent.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { formatError } from '../../lib/formatError';
 import { cmsDiscard, cmsGet, cmsList, cmsSave, isConflict } from '../pages/cmsApi';
 import { usePublisher, type PublishOutcome } from '../contests/publish';
 import { useCmsDoc, type CmsDoc } from '../../cms/useCmsDoc';
@@ -41,6 +42,8 @@ export interface SiteDraft {
   /** The autosave session: status pill, presence, conflicts. */
   cms: CmsDoc;
   discard: () => Promise<void>;
+  /** Why the last Discard was refused (e.g. another editor saved since); null otherwise. */
+  discardError: string | null;
   publishing: boolean;
   outcome: PublishOutcome | null;
   /** Other page drafts the publish will ship too. */
@@ -68,6 +71,7 @@ export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
   const published = useMemo(() => clone(publishedSiteDoc(docId)) as LooseDoc, [docId]);
   const [draftPublished, setDraftPublished] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [discardError, setDiscardError] = useState<string | null>(null);
   const publisher = usePublisher();
   const alive = useRef(true);
   useEffect(() => () => { alive.current = false; }, []);
@@ -121,11 +125,13 @@ export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
 
   const discard = useCallback(async () => {
     setSaving(true);
+    setDiscardError(null);
     try {
       if (cms.baseUpdatedAt !== null) await cmsDiscard(docId, cms.baseUpdatedAt);
       cms.reset({ value: clone(published), updatedAt: null });
-    } catch {
-      /* the pill keeps showing the draft; Discard can be tried again */
+    } catch (e) {
+      // The draft stays (the pill keeps showing it); say why, so Discard can be retried after a reload.
+      if (alive.current) setDiscardError(formatError(e));
     } finally {
       if (alive.current) setSaving(false);
     }
@@ -136,7 +142,7 @@ export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
 
   return {
     docId, loading: !cms.ready && !cms.loadError, loadError: cms.loadError, doc, setDoc, status, dirty, errors, errorAt,
-    saving: saving || cms.status === 'saving', saveError: cms.status === 'error' ? cms.error : null, save, discard, cms,
+    saving: saving || cms.status === 'saving', saveError: cms.status === 'error' ? cms.error : null, save, discard, discardError, cms,
     publishing: publisher.publishing, outcome: publisher.outcome, otherDrafts,
   };
 }

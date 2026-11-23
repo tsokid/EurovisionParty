@@ -45,13 +45,14 @@ export async function cmsSave(docId: string, docType: string, data: DocValue, ex
 }
 
 /**
- * Deletes the draft. With `expectedUpdatedAt` (the version this editor last
- * saw), refuses with the save conflict when another editor saved since
- * (migration 091, final review M1).
+ * Deletes the draft this editor last saw (`expectedUpdatedAt`); refuses with
+ * the save conflict when another editor saved since (migration 091, final
+ * review M1). With no version seen there is nothing of this editor's to
+ * discard, so no call is made: it never deletes a draft blindly (re-review N3).
  */
-export async function cmsDiscard(docId: string, expectedUpdatedAt?: string | null): Promise<void> {
-  const args = expectedUpdatedAt ? { p_doc_id: docId, p_expected_updated_at: expectedUpdatedAt } : { p_doc_id: docId };
-  const { error } = await supabase.rpc('cms_discard', args);
+export async function cmsDiscard(docId: string, expectedUpdatedAt: string | null | undefined): Promise<void> {
+  if (!expectedUpdatedAt) return;
+  const { error } = await supabase.rpc('cms_discard', { p_doc_id: docId, p_expected_updated_at: expectedUpdatedAt });
   if (error) throw error;
 }
 

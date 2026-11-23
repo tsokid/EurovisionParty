@@ -160,6 +160,7 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
     setDiscarding(false);
     setDiscardErr(null);
     try {
+      if (doc.baseUpdatedAt === null) return; // no draft seen: nothing of this editor's to discard
       await cmsDiscard(docId, doc.baseUpdatedAt);
       const base = await pageBase(docId);
       doc.reset({ value: base.value, updatedAt: null });

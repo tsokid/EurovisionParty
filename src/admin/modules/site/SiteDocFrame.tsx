@@ -111,10 +111,10 @@ export function SiteDocFrame({ draft, title, lede, preview, children }: {
 
       <div className="fixed bottom-0 inset-x-0 lg:left-64 z-40 border-t border-stage-line bg-stage-bg/95 backdrop-blur">
         <div className="max-w-4xl px-4 sm:px-6 py-3 flex flex-wrap items-center gap-2">
-          <p className={`t-meta flex-1 basis-full sm:basis-auto min-w-[12rem] m-0 ${blocked || draft.saveError || draft.outcome ? '' : 'hidden sm:block'}`}>
+          <p role={draft.discardError && !blocked && !draft.saveError ? 'alert' : undefined} className={`t-meta flex-1 basis-full sm:basis-auto min-w-[12rem] m-0 ${blocked || draft.saveError || draft.discardError || draft.outcome ? '' : 'hidden sm:block'}`}>
             {blocked
               ? `Διόρθωσε ${draft.errors.length === 1 ? 'το σημείο' : `τα ${draft.errors.length} σημεία`} με κόκκινο για να γίνει δημοσίευση.`
-              : draft.saveError ?? (draft.outcome ? outcomeText(draft.outcome) : 'Οι αλλαγές αποθηκεύονται μόνες τους ως πρόχειρο· το site αλλάζει μόνο με «Δημοσίευση».')}
+              : draft.saveError ?? (draft.discardError ? `Η απόρριψη δεν έγινε: ${draft.discardError}` : null) ?? (draft.outcome ? outcomeText(draft.outcome) : 'Οι αλλαγές αποθηκεύονται μόνες τους ως πρόχειρο· το site αλλάζει μόνο με «Δημοσίευση».')}
           </p>
           {draft.status !== 'live' && (
             <button type="button" className="btn btn-ghost btn-sm max-sm:flex-1 max-sm:!px-2" disabled={busy} onClick={() => setDiscarding(true)}>

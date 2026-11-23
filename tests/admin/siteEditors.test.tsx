@@ -2,7 +2,7 @@
 // by picking a page, hide, delete with undo, reorder, inline validation, Save
 // keeps a draft, Publish opens the site-wide publish screen (P5: preview first).
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, renderHook, screen, fireEvent, within, waitFor } from '@testing-library/react';
+import { act, render, renderHook, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { ToastHost } from '../../src/admin/ui/kit';
@@ -24,6 +24,7 @@ vi.mock('../../src/admin/modules/contests/publish', () => ({
   outcomeText: () => 'Published',
 }));
 
+import { publishedSiteDoc } from '../../src/lib/cms/siteChrome';
 import FooterEditor from '../../src/admin/modules/site/FooterEditor';
 import { useSiteDraft } from '../../src/admin/modules/site/useSiteDraft';
 import HeaderEditor from '../../src/admin/modules/site/HeaderEditor';
@@ -47,6 +48,20 @@ describe('useSiteDraft (final review M4)', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect('publish' in result.current).toBe(false);
     expect(api.publish).not.toHaveBeenCalled();
+  });
+});
+
+describe('useSiteDraft discard (re-review N4)', () => {
+  it('a refused Discard shows why instead of failing silently, and keeps the draft', async () => {
+    api.cmsGet.mockResolvedValueOnce({ doc_id: 'site-footer', doc_type: 'site-footer', data: JSON.parse(JSON.stringify(publishedSiteDoc('site-footer'))), updated_at: '2026-11-22T12:00:00Z' } as never);
+    api.cmsDiscard.mockRejectedValueOnce(new Error('document changed by someone else; reload'));
+    const { result } = renderHook(() => useSiteDraft('site-footer'));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.status).toBe('draft');
+    await act(async () => { await result.current.discard(); });
+    expect(api.cmsDiscard).toHaveBeenCalledWith('site-footer', '2026-11-22T12:00:00Z');
+    expect(result.current.discardError).toContain('document changed by someone else');
+    expect(result.current.status).toBe('draft');
   });
 });
 
