@@ -45,6 +45,7 @@ import type { RemoteDoc } from '../../cms/docSession';
 import { AdminLink, ConfirmDialog, useToast } from '../../ui/kit';
 import { adminPaths } from '../../paths';
 import { t } from '../../i18n';
+import { fieldChanges } from '../../publish/diff';
 
 export const VALIDATE_DELAY_MS = 300;
 
@@ -137,6 +138,16 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
     [docType, shown, context],
   );
   const duplicates = useMemo(() => (shown ? seoErrors(docId, shown, others) : []), [docId, shown, others]);
+  // The published page, to tell a real draft from one identical to the site (a change typed and then undone).
+  const [published, setPublished] = useState<DocValue | null>(null);
+  const draftBase = doc.baseUpdatedAt;
+  useEffect(() => {
+    let live = true;
+    setPublished(null);
+    if (draftBase === null) return;
+    fetchPublished(docId).then((v) => { if (live) setPublished(v); }, () => {});
+    return () => { live = false; };
+  }, [docId, draftBase]);
   const errors = useMemo(
     () => (validation && (validation.errors.length || duplicates.length) ? [...validation.errors, ...duplicates] : NO_ERRORS),
     [validation, duplicates],
@@ -192,6 +203,7 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
 
   const hasErrors = errors.length > 0;
   const hasDraft = doc.baseUpdatedAt !== null;
+  const sameAsSite = hasDraft && !fresh && published !== null && value !== null && fieldChanges(published, value).length === 0;
   const source = hasDraft
     ? t.editor.sourceDraft(formatRunTime(doc.baseUpdatedAt!))
     : fresh ? t.editor.sourceNew : t.editor.sourcePublished;
@@ -211,7 +223,7 @@ export function PageEditor({ docId, label, previewPath, onChanged, autosaveMs }:
                 {t.editor.discard}
               </button>
             )}
-            {hasDraft && (
+            {hasDraft && !sameAsSite && (
               <AdminLink to={adminPaths.docPublish(docId)} className="btn btn-primary btn-sm">
                 <Rocket size={15} aria-hidden />{t.publishFlow.publishOne}
               </AdminLink>

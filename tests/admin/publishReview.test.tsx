@@ -93,6 +93,12 @@ describe('PublishReview: one page', () => {
     expect(rows[0].textContent).toMatch(/Ο έλεγχος το δέχεται/);
   });
 
+  it('a draft identical to the site says so instead of «Φόρτωση…» forever', async () => {
+    wrap(<PublishReview docIds={['site-footer']} />);
+    await screen.findByTestId('visual-diff');
+    expect(screen.getByTestId('tint-count').textContent).toBe('Ίδιο με το site: δεν υπάρχει κάτι να δημοσιευτεί.');
+  });
+
   it('Publish confirms the single page, ships only it, then follows the build to Live', async () => {
     const run = { id: 77, status: 'ok', commit_sha: 'c0ffee1234', finished_at: NOW(), doc_ids: ['about'], target: 'main', deploy_state: 'building' };
     h.runs = [run];

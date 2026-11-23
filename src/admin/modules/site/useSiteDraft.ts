@@ -11,6 +11,7 @@ import { cmsDiscard, cmsGet, cmsList, cmsSave, isConflict } from '../pages/cmsAp
 import { usePublisher, type PublishOutcome } from '../contests/publish';
 import { useCmsDoc, type CmsDoc } from '../../cms/useCmsDoc';
 import { publishedSiteDoc } from '../../../lib/cms/siteChrome';
+import { fieldChanges } from '../../publish/diff';
 import { validateDocument, type ValidationError } from '../../../../supabase/functions/_shared/cms/validate';
 import type { SiteWideDocId } from '../../../../supabase/functions/_shared/cms/siteLinks';
 import type { DocValue } from '../pages/form/SchemaForm';
@@ -137,7 +138,9 @@ export function useSiteDraft(docId: SiteWideDocId): SiteDraft {
     }
   }, [docId, published, cms]);
 
-  const status: DraftStatus = dirty ? 'unsaved' : cms.baseUpdatedAt !== null && !draftPublished ? 'draft' : 'live';
+  // A saved draft identical to the site (a change typed and then undone) is not a draft: nothing to publish.
+  const sameAsSite = useMemo(() => fieldChanges(published, doc).length === 0, [published, doc]);
+  const status: DraftStatus = dirty ? 'unsaved' : cms.baseUpdatedAt !== null && !draftPublished && !sameAsSite ? 'draft' : 'live';
   const otherDrafts = (publisher.summary?.changed_docs ?? []).filter((d) => d !== docId);
 
   return {

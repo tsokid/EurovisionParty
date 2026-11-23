@@ -150,7 +150,7 @@ export function VisualDiff({ docId, live, draft, changes, path }: {
   return (
     <section className="space-y-3" data-testid="visual-diff">
       <div className="flex flex-wrap items-center gap-2">
-        <p className="t-small m-0 mr-auto" data-testid="tint-count">{count === null ? t.common.loading : t.publishFlow.tinted(count)}</p>
+        <p className="t-small m-0 mr-auto" data-testid="tint-count">{changes.length === 0 ? t.publishFlow.noChange : count === null ? t.common.loading : t.publishFlow.tinted(count)}</p>
         <div role="group" aria-label={t.preview.viewports} className="flex gap-0.5 rounded-stage-sm bg-stage-bg p-0.5 text-xs">
           {VIEWPORTS.map((v) => {
             const Icon = v.icon;

@@ -52,8 +52,17 @@ describe('useSiteDraft (final review M4)', () => {
 });
 
 describe('useSiteDraft discard (re-review N4)', () => {
-  it('a refused Discard shows why instead of failing silently, and keeps the draft', async () => {
+  it('a saved draft identical to the site counts as live (no Publish)', async () => {
     api.cmsGet.mockResolvedValueOnce({ doc_id: 'site-footer', doc_type: 'site-footer', data: JSON.parse(JSON.stringify(publishedSiteDoc('site-footer'))), updated_at: '2026-11-22T12:00:00Z' } as never);
+    const { result } = renderHook(() => useSiteDraft('site-footer'));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.status).toBe('live');
+  });
+
+  it('a refused Discard shows why instead of failing silently, and keeps the draft', async () => {
+    const changed = JSON.parse(JSON.stringify(publishedSiteDoc('site-footer')));
+    changed.en.tagline = `${changed.en.tagline}.`;
+    api.cmsGet.mockResolvedValueOnce({ doc_id: 'site-footer', doc_type: 'site-footer', data: changed, updated_at: '2026-11-22T12:00:00Z' } as never);
     api.cmsDiscard.mockRejectedValueOnce(new Error('document changed by someone else; reload'));
     const { result } = renderHook(() => useSiteDraft('site-footer'));
     await waitFor(() => expect(result.current.loading).toBe(false));

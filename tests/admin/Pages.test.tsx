@@ -187,14 +187,22 @@ describe('Pages module: editor', () => {
     expect(screen.getByRole('link', { name: 'Ιστορικό' }).getAttribute('href')).toBe('/admin/pages/about/history');
   });
 
-  it('loads the saved draft when there is one, without fetching the published file', async () => {
+  it('loads the saved draft when there is one; the published file is read only to compare, and Publish shows', async () => {
     const doc = published('about');
     (doc.en.hero as Record<string, unknown>).title = 'Draft hero from DB';
     h.drafts.about = { doc_id: 'about', doc_type: 'about', data: doc, updated_at: DRAFT_TIME };
     await openEditor();
     expect(screen.getByText(/^Πρόχειρο, αποθήκευση \d{4}-\d{2}-\d{2} \d{2}:\d{2}$/)).toBeTruthy();
-    expect(fetchesOf('about')).toEqual([]);
     expect(within(screen.getByTestId('preview-pane')).getByText('Draft hero from DB')).toBeTruthy();
+    await waitFor(() => expect(fetchesOf('about')).toHaveLength(1));
+    expect(screen.getByRole('link', { name: /^Δημοσίευση$/ })).toBeTruthy();
+  });
+
+  it('a saved draft identical to the published page offers no Publish', async () => {
+    h.drafts.about = { doc_id: 'about', doc_type: 'about', data: published('about'), updated_at: DRAFT_TIME };
+    await openEditor();
+    await waitFor(() => expect(fetchesOf('about')).toHaveLength(1));
+    await waitFor(() => expect(screen.queryByRole('link', { name: /^Δημοσίευση$/ })).toBeNull());
   });
 
   it('typing updates the preview (debounced) and autosaves 1.5 s after the last keystroke', async () => {
