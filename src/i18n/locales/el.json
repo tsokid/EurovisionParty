@@ -728,7 +728,7 @@
     "banner": "Επανασύνδεση… η πρόοδός σου είναι ασφαλής"
   },
   "siteNav": {
-    "homeAria": "eurovision.games — αρχική"
+    "homeAria": "{{siteName}} — αρχική"
   },
   "yourRooms": {
     "title": "Τα Δωμάτιά σου",
