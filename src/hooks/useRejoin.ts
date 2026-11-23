@@ -42,7 +42,11 @@ export function useRejoin(roomCode: string | undefined) {
           .single();
 
         if (roomErr || !roomData) {
-          setStatus('no-room');
+          // Rooms are readable only by their host and members (051): a phone
+          // that is not in the room yet (a QR scan, a shared link) sees no
+          // row even when the room exists. Send it to the join form with the
+          // code filled in; joining checks the code and the password.
+          setStatus('not-member');
           return;
         }
 
