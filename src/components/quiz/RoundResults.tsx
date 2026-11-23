@@ -10,6 +10,7 @@ import { useGameStore } from '../../stores/gameStore';
 import { StageVfx, type StageVfxHandle } from '../stage/vfx';
 import { PlayerAvatar, useCountUp, useTimeline } from '../stage';
 import { quizChipView } from './chipText';
+import { markPlayed, quizEndKey, wasPlayed } from '../../lib/playedOnce';
 import type { QuizAnswer, QuizQuestion } from '../../lib/types';
 
 interface RoundResultsProps {
@@ -87,7 +88,7 @@ export default function RoundResults({
   const { t, i18n } = useTranslation();
   const lang = i18n.language ?? 'el';
   const reduce = useReducedMotion() ?? false;
-  const { player, players } = useGameStore();
+  const { player, players, room } = useGameStore();
   const meId = player?.id ?? '';
   const { at, clear } = useTimeline();
 
@@ -138,8 +139,18 @@ export default function RoundResults({
     });
   }, [clear, chips, roundTotal]);
 
+  // Played once per browser: from the moment it starts, a return to the quiz
+  // (tab switch, refresh) shows the end state, never the animation again.
+  const playedKey = room?.id && meId ? quizEndKey(room.id, meId, roundNumber) : null;
+  const [playedBefore] = useState(() => (playedKey ? wasPlayed(playedKey) : false));
+
   useEffect(() => {
     clear();
+    if (playedBefore) {
+      finish();
+      return clear;
+    }
+    if (playedKey) markPlayed(playedKey);
     setS(initial(chips.length));
     if (reduce) {
       at(R.shown, () => set({ shown: true }));

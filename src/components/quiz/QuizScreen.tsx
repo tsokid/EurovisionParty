@@ -26,6 +26,7 @@ import Card from '../ui/Card';
 import RoundIntro from './RoundIntro';
 import QuestionCard from './QuestionCard';
 import RoundResults from './RoundResults';
+import { markPlayed, quizCompleteKey, wasPlayed } from '../../lib/playedOnce';
 
 type QuizPhase = 'waiting' | 'intro' | 'playing' | 'results' | 'complete';
 
@@ -62,6 +63,18 @@ export default function QuizScreen() {
   // rounds see a "Start Round 1" flash on tab entry while the restoration
   // promise resolves.
   const [restored, setRestored] = useState(false);
+
+  // The «quiz complete» entrance plays once per browser: decided the first
+  // time this mount reaches 'complete', marked seen as soon as it shows.
+  const completeKey = room && player ? quizCompleteKey(room.id, player.id) : null;
+  const completePlayIn = useRef<boolean | null>(null);
+  if (phase === 'complete' && completePlayIn.current === null && completeKey) {
+    completePlayIn.current = !wasPlayed(completeKey);
+  }
+  useEffect(() => {
+    if (phase === 'complete' && completeKey) markPlayed(completeKey);
+  }, [phase, completeKey]);
+  const playIn = completePlayIn.current === true;
 
   // Per-round breakdown + best streak + accuracy + fastest correct
   // answer — populated when quiz completes. Fetches all of this
@@ -578,7 +591,7 @@ export default function QuizScreen() {
           return (
             <motion.div
               key="complete"
-              initial={{ opacity: 0, scale: 0.97 }}
+              initial={playIn ? { opacity: 0, scale: 0.97 } : false}
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col flex-1 gap-5 sm:gap-6 max-w-3xl w-full mx-auto px-3 sm:px-5 lg:px-6 pb-6"
             >
@@ -599,7 +612,7 @@ export default function QuizScreen() {
                   </p>
                   <motion.p
                     className="text-5xl sm:text-7xl font-extrabold tabular-nums mt-2 bg-gradient-to-r from-euro-purple-light to-euro-pink bg-clip-text text-transparent"
-                    initial={{ scale: 0.92, opacity: 0 }}
+                    initial={playIn ? { scale: 0.92, opacity: 0 } : false}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.05, duration: 0.25, ease: 'easeOut' }}
                   >
@@ -628,7 +641,7 @@ export default function QuizScreen() {
                       return (
                         <motion.div
                           key={r.round}
-                          initial={{ opacity: 0, x: -10 }}
+                          initial={playIn ? { opacity: 0, x: -10 } : false}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.2 + i * 0.07 }}
                           className="rounded-xl bg-white/[0.04] border border-white/8 px-3 sm:px-4 py-3"
@@ -644,7 +657,7 @@ export default function QuizScreen() {
                           <div className="mt-2 h-1.5 rounded-full bg-white/8 overflow-hidden">
                             <motion.div
                               className="h-full rounded-full bg-gradient-to-r from-euro-purple to-euro-pink"
-                              initial={{ width: 0 }}
+                              initial={playIn ? { width: 0 } : false}
                               animate={{ width: `${accPct}%` }}
                               transition={{ delay: 0.3 + i * 0.07, duration: 0.6 }}
                             />
