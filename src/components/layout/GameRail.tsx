@@ -18,8 +18,9 @@ export default function GameRail({ phase, onExitPress }: GameRailProps) {
 
   return (
     <aside className="gs-rail" aria-label={t('game.roomAria')}>
-      <span className="gs-logo">
-        <img src="/logo.png" alt="eurovision.games" width={866} height={288} draggable={false} />
+      {/* Same text wordmark as the site header (owner option A); not a link, so it can't pull a player out of the game. */}
+      <span className="gs-logo wordmark" role="img" aria-label="eurovision.games">
+        <span aria-hidden="true">euro<span className="wordmark-grad">vision</span><span className="wordmark-tld">.games</span></span>
       </span>
 
       <div className="gs-room">

@@ -1415,7 +1415,7 @@ body { margin: 0; overscroll-behavior: none; }
 
   /* Desktop rail + top bar (hidden on mobile) */
   .gs-rail, .gs-top { display: none; }
-  .gs-logo img { height: 44px; width: auto; display: block; filter: drop-shadow(0 0 14px rgba(240, 70, 156, .25)); user-select: none; }
+  .gs-logo.wordmark { display: block; font-size: 26px; user-select: none; }
   .gs-room { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: var(--radius-stage-lg); background: linear-gradient(120deg, rgba(163, 91, 255, .18), rgba(240, 70, 156, .14)), var(--color-stage-surface); border: 1px solid rgba(240, 70, 156, .25); }
   .gs-room .t-eyebrow { font-size: 11px; }
   .gs-room-code { font-size: 52px; letter-spacing: .1em; }
