@@ -5,8 +5,10 @@
 //   guard's verdict;
 // - a page publish ships only the reviewed docs (publish-content doc_ids),
 //   after a confirm that names them;
-// - a site-wide doc (header, footer, settings) goes through a Vercel preview
-//   first: «Φτιάξε προεπισκόπηση» → the preview URL → «Βγάλ' το live»;
+// - a site-wide doc (header, footer, settings) can go through a Vercel
+//   preview: «Φτιάξε προεπισκόπηση» → the preview URL → «Βγάλ' το live»;
+//   or, since the owner's option C (23 Nov 2026, migration 092), straight
+//   to main with «Κατευθείαν live» after a confirm;
 // - the run's deploy state follows the build («Χτίζεται…», «Live»,
 //   «Απέτυχε»), with the notice when a failed build was reverted.
 import clsx from 'clsx';
@@ -101,6 +103,21 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
     setBusy(false);
     await reload();
   };
+  // Owner option C (23 Nov 2026, migration 092): the preview is optional.
+  const [direct, setDirect] = useState<PublishRun | null>(null);
+  const [confirmingDirect, setConfirmingDirect] = useState(false);
+  const goDirect = async () => {
+    setConfirmingDirect(false);
+    setBusy(true);
+    setOutcome(null);
+    const o = await invokeScopedPublish({ docIds: [pair.docId] });
+    setOutcome(o);
+    if (o.status === 'ok' && o.run_id) {
+      try { setDirect(await getRun(o.run_id)); } catch { /* the outcome line still says what happened */ }
+    }
+    setBusy(false);
+    await reload();
+  };
   const goLive = async () => {
     if (!p) return;
     setConfirming(false);
@@ -115,8 +132,12 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
   const promoted = p ? promotionOf(runs ?? [], p.id) : null;
   const state = p?.deploy_state ?? (p ? 'building' : null);
   // 0 preview (to make, or building), 1 check it (ready), 2 going live, 3 live.
-  const at: 0 | 1 | 2 | 3 = promoted ? (promoted.deploy_state === 'ready' ? 3 : 2) : p && state === 'ready' && !stale ? 1 : 0;
+  const directWatch = useRunWatch(direct);
+  const directNow = directWatch.run && direct && directWatch.run.id === direct.id ? directWatch.run : direct;
+  const wentLive = promoted ?? directNow;
+  const at: 0 | 1 | 2 | 3 = wentLive ? (wentLive.deploy_state === 'ready' ? 3 : 2) : p && state === 'ready' && !stale ? 1 : 0;
   const canStart = !busy && (changed || stale);
+  const canDirect = changed && !direct && !promoted;
 
   return (
     <div className="space-y-3" data-testid="site-preview-flow" data-step={at}>
@@ -150,6 +171,8 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
         </div>
       )}
       {promoted && <RunCard run={promoted} lead={t.publishFlow.goLiveDone} />}
+      {direct && <RunCard run={direct} lead={t.publishFlow.directDone} />}
+      {canDirect && <p className="t-small m-0">{t.publishFlow.directHint}</p>}
       {outcome && outcome.status !== 'ok' && <p className={clsx('t-small m-0', outcome.status === 'noop' ? '' : 'text-stage-bad')}>{outcomeText(outcome)}</p>}
       {err && <p className="t-small text-stage-bad m-0">{err}</p>}
       <div className="flex flex-wrap gap-2">
@@ -163,7 +186,19 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
             <Rocket size={15} aria-hidden />{t.publishFlow.goLive}
           </button>
         )}
+        {canDirect && (
+          <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => setConfirmingDirect(true)} data-testid="go-direct">
+            <Rocket size={15} aria-hidden />{t.publishFlow.directLive}
+          </button>
+        )}
       </div>
+      <ConfirmDialog open={confirmingDirect} title={t.publishFlow.directTitle} confirmLabel={t.publishFlow.directLive} onCancel={() => setConfirmingDirect(false)} onConfirm={() => { void goDirect(); }}>
+        <p className="flex gap-2 items-start text-stage-text">
+          <Globe2 size={18} aria-hidden className="shrink-0 mt-0.5 text-stage-gold" />
+          <span>{t.publishFlow.directText}</span>
+        </p>
+        <p>{t.publishFlow.eta}</p>
+      </ConfirmDialog>
       <ConfirmDialog open={confirming} title={t.publishFlow.goLiveTitle} confirmLabel={t.publishFlow.goLive} onCancel={() => setConfirming(false)} onConfirm={() => { void goLive(); }}>
         <p className="flex gap-2 items-start text-stage-text">
           <Globe2 size={18} aria-hidden className="shrink-0 mt-0.5 text-stage-gold" />

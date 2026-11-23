@@ -117,9 +117,10 @@ describe('086 cms_publish_per_doc', () => {
     expect((await input(null, false)).cms_documents.map((d) => d.doc_id)).toEqual(['faq', 'site-header']);
   });
 
-  it('site-wide docs are refused straight to main and need a preview; only they may be previewed', async () => {
-    await expect(begin(['site-header'])).rejects.toThrow(/go through a preview first/);
-    await expect(begin(['faq', 'site-footer'])).rejects.toThrow(/go through a preview first/);
+  it('only site-wide docs may be previewed; named site-wide docs may also go straight to main (092)', async () => {
+    const direct = await begin(['site-footer']);
+    expect(direct).toBeGreaterThan(0);
+    await end(direct, 'ok', null);
     await expect(begin(['faq'], 'preview')).rejects.toThrow(/only the site-wide documents/);
     await expect(begin(null, 'preview')).rejects.toThrow(/needs the documents/);
     await expect(begin([], 'main')).rejects.toThrow(/no documents/);

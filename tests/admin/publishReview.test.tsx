@@ -179,6 +179,35 @@ describe('PublishReview: a site-wide doc', () => {
     await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { cms: true, promote: 90 }));
   });
 
+  it('«Κατευθείαν live» skips the preview: after a confirm it ships the doc straight to main and follows the build', async () => {
+    const run = { id: 95, status: 'ok', commit_sha: 'm0000095', finished_at: NOW(), doc_ids: ['site-header'], target: 'main', deploy_state: 'building' };
+    h.invoke.mockImplementationOnce(async (_n: string, body: unknown) => {
+      expect(body).toEqual({ cms: true, doc_ids: ['site-header'], target: 'main' });
+      h.runs = [run];
+      return { data: { status: 'ok', run_id: 95, sha: 'm0000095', files_changed: 1 }, error: null };
+    });
+    h.status = [{ ...run, deploy_state: 'ready' }];
+
+    wrap(<PublishReview docIds={['site-header']} />);
+    const flow = await screen.findByTestId('site-preview-flow');
+    expect(flow.textContent).toMatch(/Ή στείλ' το κατευθείαν live, χωρίς προεπισκόπηση\./);
+    fireEvent.click(within(flow).getByTestId('go-direct'));
+    const dialog = screen.getByRole('alertdialog', { name: 'Κατευθείαν live, χωρίς προεπισκόπηση;' });
+    expect(dialog.textContent).toMatch(/Αν το build αποτύχει, το site μένει όπως ήταν/);
+    await act(async () => { fireEvent.click(within(dialog).getByRole('button', { name: 'Κατευθείαν live' })); });
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-content', { cms: true, doc_ids: ['site-header'], target: 'main' }));
+    expect((await screen.findAllByTestId('run-card')).some((c) => /Στάλθηκε κατευθείαν live/.test(c.textContent ?? ''))).toBe(true);
+    expect(screen.queryByTestId('go-direct')).toBeNull();
+    await waitFor(() => expect(screen.getByTestId('site-preview-flow').getAttribute('data-step')).toBe('3'));
+  });
+
+  it('a site-wide doc identical to the site offers neither a preview nor «Κατευθείαν live»', async () => {
+    wrap(<PublishReview docIds={['site-footer']} />);
+    const flow = await screen.findByTestId('site-preview-flow');
+    expect(within(flow).queryByTestId('go-direct')).toBeNull();
+    expect(within(flow).getByRole('button', { name: 'Φτιάξε προεπισκόπηση' })).toBeDisabled();
+  });
+
   it('a preview older than the draft asks for a new one and cannot go live', async () => {
     h.runs = [{
       id: 92, status: 'ok', commit_sha: 'p2', finished_at: NOW(), doc_ids: ['site-header'], target: 'preview',

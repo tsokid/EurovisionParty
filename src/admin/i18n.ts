@@ -404,6 +404,11 @@ export const t = {
     goLiveText: 'Η εκδοχή της προεπισκόπησης πάει στο site: σε κάθε σελίδα, σε English και Ελληνικά.',
     goLiveDone: 'Η αλλαγή πάει live. Ακολουθεί το build:',
     wentLive: 'Είναι live.',
+    directLive: 'Κατευθείαν live',
+    directHint: 'Ή στείλ\' το κατευθείαν live, χωρίς προεπισκόπηση.',
+    directTitle: 'Κατευθείαν live, χωρίς προεπισκόπηση;',
+    directText: 'Η αλλαγή πάει απευθείας στο site: σε κάθε σελίδα, σε English και Ελληνικά. Αν το build αποτύχει, το site μένει όπως ήταν.',
+    directDone: 'Στάλθηκε κατευθείαν live. Ακολουθεί το build:',
 
     deploy: {
       none: 'Χωρίς build',
