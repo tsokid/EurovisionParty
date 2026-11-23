@@ -201,11 +201,24 @@ describe('PublishReview: a site-wide doc', () => {
     await waitFor(() => expect(screen.getByTestId('site-preview-flow').getAttribute('data-step')).toBe('3'));
   });
 
-  it('a site-wide doc identical to the site offers neither a preview nor «Κατευθείαν live»', async () => {
+  it('a site-wide doc identical to the site says so and offers no buttons', async () => {
     wrap(<PublishReview docIds={['site-footer']} />);
     const flow = await screen.findByTestId('site-preview-flow');
-    expect(within(flow).queryByTestId('go-direct')).toBeNull();
-    expect(within(flow).getByRole('button', { name: 'Φτιάξε προεπισκόπηση' })).toBeDisabled();
+    expect((await within(flow).findByTestId('site-no-change')).textContent).toBe('Ίδιο με το site: δεν υπάρχει κάτι να δημοσιευτεί.');
+    expect(within(flow).queryAllByRole('button')).toHaveLength(0);
+  });
+
+  it('edits undone after a ready preview: no stale warning and no locked «Βγάλ\' το live», just «Ίδιο με το site»', async () => {
+    h.runs = [{
+      id: 96, status: 'ok', commit_sha: 'p96', finished_at: NOW(), doc_ids: ['site-footer'], target: 'preview',
+      deploy_state: 'ready', deploy_url: 'https://x.vercel.app', shipped: [{ doc_id: 'site-footer', updated_at: '2026-11-21T10:00:00.000Z' }],
+    }];
+    wrap(<PublishReview docIds={['site-footer']} />);
+    const flow = await screen.findByTestId('site-preview-flow');
+    await within(flow).findByTestId('site-no-change');
+    expect(within(flow).queryByTestId('preview-stale')).toBeNull();
+    expect(within(flow).queryByTestId('go-live')).toBeNull();
+    expect(within(flow).queryAllByRole('button')).toHaveLength(0);
   });
 
   it('a preview older than the draft asks for a new one and cannot go live', async () => {

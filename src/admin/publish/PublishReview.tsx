@@ -138,6 +138,9 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
   const at: 0 | 1 | 2 | 3 = wentLive ? (wentLive.deploy_state === 'ready' ? 3 : 2) : p && state === 'ready' && !stale ? 1 : 0;
   const canStart = !busy && (changed || stale);
   const canDirect = changed && !direct && !promoted;
+  // The draft equals the site (edits undone, or already live): nothing to do, so no
+  // stale-preview warning and no buttons, only that sentence.
+  const idle = !changed && !promoted && !direct && !busy;
 
   return (
     <div className="space-y-3" data-testid="site-preview-flow" data-step={at}>
@@ -146,13 +149,19 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
       </p>
       <Steps at={at} />
       {runs === null && <p className="t-small m-0">{t.common.loading}</p>}
-      {runs !== null && !p && (
+      {runs !== null && idle && (
+        <>
+          <p className="t-small m-0" data-testid="site-no-change">{t.publishFlow.noChange}</p>
+          {lastPromote && <RunCard run={lastPromote} lead={t.publishFlow.wentLive} />}
+        </>
+      )}
+      {runs !== null && !idle && !p && (
         <>
           <p className="t-small m-0">{t.publishFlow.previewStartText}</p>
           {lastPromote && !changed && <RunCard run={lastPromote} lead={t.publishFlow.wentLive} />}
         </>
       )}
-      {p && (
+      {p && !idle && (
         <div className="rounded-stage border border-stage-line bg-stage-bg-2 p-3 space-y-2">
           <p className="flex flex-wrap items-center gap-2 t-small m-0">
             <span className="font-semibold text-stage-text">{t.publishFlow.previewMade(p.finished_at ? formatRunTime(p.finished_at) : `#${p.id}`)}</span>
@@ -175,7 +184,7 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
       {canDirect && <p className="t-small m-0">{t.publishFlow.directHint}</p>}
       {outcome && outcome.status !== 'ok' && <p className={clsx('t-small m-0', outcome.status === 'noop' ? '' : 'text-stage-bad')}>{outcomeText(outcome)}</p>}
       {err && <p className="t-small text-stage-bad m-0">{err}</p>}
-      <div className="flex flex-wrap gap-2">
+      {!idle && <div className="flex flex-wrap gap-2">
         {(!p || stale || state === 'error') && (
           <button type="button" className={clsx('btn btn-sm', p ? 'btn-ghost' : 'btn-primary')} disabled={!canStart && !(p && state === 'error')} onClick={() => { void start(); }}>
             {busy ? t.publishFlow.publishing : p ? t.publishFlow.previewAgain : t.publishFlow.previewStart}
@@ -191,7 +200,7 @@ function SitePreviewFlow({ pair, changed }: { pair: DocPair; changed: boolean })
             <Rocket size={15} aria-hidden />{t.publishFlow.directLive}
           </button>
         )}
-      </div>
+      </div>}
       <ConfirmDialog open={confirmingDirect} title={t.publishFlow.directTitle} confirmLabel={t.publishFlow.directLive} onCancel={() => setConfirmingDirect(false)} onConfirm={() => { void goDirect(); }}>
         <p className="flex gap-2 items-start text-stage-text">
           <Globe2 size={18} aria-hidden className="shrink-0 mt-0.5 text-stage-gold" />
