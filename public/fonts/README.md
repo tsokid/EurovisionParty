@@ -10,4 +10,4 @@ Self-hosted so the site needs no third-party font host (the CSP allows
 
 Both are licensed under the SIL Open Font License 1.1
 (https://openfontlicense.org). Source: Google Fonts. File names carry the
-font version: a new version gets new names (they are cached as immutable).
+font version: a new version gets new names.

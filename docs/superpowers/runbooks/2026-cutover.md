@@ -643,7 +643,7 @@ Proves the path upload → private bucket → draft → Publish (binary commit t
   ```
 - **Expect:**
   - The `<img>` tag has `src="/media/<sha12>.webp"`, **`width` and `height` attributes**, `loading="lazy"`, `decoding="async"` and the Greek alt text.
-  - The `.webp` response is `200` with `content-type: image/webp` and **`Cache-Control: public, max-age=31536000, immutable`**. `/media/<sha12>-800.webp` is `200` too.
+  - The `.webp` response is `200` with `content-type: image/webp` and **`Cache-Control: public, max-age=600, stale-while-revalidate=86400`**. `/media/<sha12>-800.webp` is `200` too.
   - Newest run `ok`. The GitHub commit adds `content/pages/archive-2005.json`, updates `content/pages/index.json` (lists `archive-2005`) and adds `public/media/<sha12>.webp` and `public/media/<sha12>-800.webp`. The page JSON holds `/media/<sha12>.webp`, never `cms-media/`. The `cms_media` rows show their `published_path`.
   - Every other page is unchanged. The build's validate-content step passed (a `/media/` reference without its file fails the build).
 - **Revert (Επαναφορά):**
@@ -676,7 +676,7 @@ Proves that `publish-content` can download, hash and commit a near-limit video w
   - Newest run `ok`, `files_changed` = 5: `content/pages/archive-2004.json`, `content/pages/index.json`, the `.mp4`, and the poster `.webp` and its `-800.webp`.
   - `duration` well under the edge function's 150 s wall-clock limit. Write the figure in the cutover notes: it is the baseline for the largest video.
   - Logs and Invocations for that call: status `200`, and **no** `WORKER_LIMIT`, "Memory limit exceeded", "CPU time" or early-termination (`shutdown`) lines.
-  - The `.mp4` response is `200`, `content-type: video/mp4`, `content-length` equal to the file's size, and the immutable `Cache-Control` from 9.3. The page plays the video with its poster.
+  - The `.mp4` response is `200`, `content-type: video/mp4`, `content-length` equal to the file's size, and the same `Cache-Control` as 9.3. The page plays the video with its poster.
 - **Revert (Επαναφορά):**
   - **After Publish** (the normal case): revert the Publish commit on GitHub (GitHub → the commit → **Revert** → merge the PR; Vercel rebuilds without the 2004 editorial and its three files). Then Pages → the 2004 editorial → **Discard draft**. Then delete the video and the poster in the picker (**Choose…** → **Delete** → **Delete**), so they leave the private bucket.
   - **Before Publish:** **Discard draft**, then delete the two files in the picker as above.

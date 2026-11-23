@@ -134,7 +134,7 @@ const BRIEF_TOKENS = [
   'public.media_register(uuid,text,text,text,int,int,int,text,uuid)',
   'Add editorial for',
   'eurovision-2005-kyiv',
-  'public, max-age=31536000, immutable',
+  'public, max-age=600, stale-while-revalidate=86400',
   '-800.webp',
   // CMS 3c final fix wave: the near-limit video publish (edge duration and logs) and the picker delete.
   '### 9.3b Media load test',
@@ -284,7 +284,7 @@ describe('cutover runbook coverage', () => {
     for (const t of [
       'Add editorial for', '2005', 'alt text', 'EN and EL', 'Publish',
       '/el/past-contests/eurovision-2005-kyiv', '/media/<sha12>.webp', '/media/<sha12>-800.webp',
-      '`width` and `height`', 'Cache-Control: public, max-age=31536000, immutable',
+      '`width` and `height`', 'Cache-Control: public, max-age=600, stale-while-revalidate=86400',
       'Revert', 'revert the Publish commit on GitHub', 'full revert', 'does **not** restore the original page byte for byte',
     ]) expect(section, `9.3 is missing "${t}"`).toContain(t);
     expect(runbook.split(/\r?\n/).find((l) => l.startsWith('| 9 |'))).toContain('media smoke test');

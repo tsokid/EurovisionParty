@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Bump --eg-css-rev to give the stylesheet a new file name (23 Nov 2026: some browsers had cached
+   the SPA shell as the previous index-*.css during a deploy; a new name makes them fetch it again). */
+:root { --eg-css-rev: 2; }
 /* Fonts (owner, 23 Nov 2026, option A): self-hosted, with Greek. Manrope for
    text (variable 200-800); Sofia Sans Extra Condensed for the scoreboard
    numerals, a single bold (700) face declared for every weight so it reads

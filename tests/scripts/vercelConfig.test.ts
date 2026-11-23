@@ -28,7 +28,14 @@ describe('vercel.json', () => {
     const host = /connect-src 'self' (https:\/\/[^ ;]+)/.exec(csp.value)![1]
     expect(csp.value).toContain(`media-src 'self' ${host};`)
     const assets = cfg.headers.find((h: any) => h.source === '/assets/(.*)')
-    expect(assets.headers[0].value).toBe('public, max-age=31536000, immutable')
+    // Short, revalidated caching, never `immutable` (23 Nov 2026): during a
+    // deploy a request can reach the previous deployment, which answers 404
+    // or the SPA shell; cached for a year, that blanked the page.
+    const SHORT = 'public, max-age=600, stale-while-revalidate=86400'
+    expect(assets.headers[0].value).toBe(SHORT)
+    const fonts = cfg.headers.find((h: any) => h.source === '/fonts/(.*)')
+    expect(fonts.headers[0].value).toBe(SHORT)
+    expect(JSON.stringify(cfg.headers)).not.toContain('immutable')
   })
 
   it('lets only the site itself frame its pages (the admin preview and publish diff are same-origin iframes)', () => {
@@ -55,11 +62,11 @@ describe('vercel.json', () => {
     }
   })
 
-  it('caches /media/ (content-addressed CMS media) as immutable for a year', () => {
+  it('caches /media/ (content-addressed CMS media) briefly and revalidates', () => {
     const headers = cfg.headers as Array<{ source: string; headers: Array<{ key: string; value: string }> }>
     const media = headers.find((h) => h.source === '/media/(.*)')
     expect(media, 'headers entry for /media/(.*)').toBeDefined()
-    expect(media!.headers).toEqual([{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }])
+    expect(media!.headers).toEqual([{ key: 'Cache-Control', value: 'public, max-age=600, stale-while-revalidate=86400' }])
   })
 
   it('keeps /content/ JSON out of search indexes (M5)', () => {
