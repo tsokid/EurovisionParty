@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "intents": [
+    {
+      "id": "publish-10",
+      "created_at": "2026-11-23T08:07:10.230Z",
+      "source": "publish-content",
+      "docs": [
+        {
+          "doc_id": "site-footer",
+          "locale": "en",
+          "fields": [
+            "h1",
+            "jsonLd"
+          ]
+        },
+        {
+          "doc_id": "site-footer",
+          "locale": "el",
+          "fields": [
+            "h1",
+            "jsonLd"
+          ]
+        }
+      ],
+      "data": []
+    }
+  ]
+}

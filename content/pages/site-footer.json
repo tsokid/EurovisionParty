@@ -2,7 +2,7 @@
   "el": {
     "columns": [
       {
-        "heading": "Σχετικά",
+        "heading": "Σχετικά ΜΕ ΤΟ ΠΑΙΧΝΙΔΙ",
         "id": "about",
         "links": [
           {
@@ -175,7 +175,7 @@
   "en": {
     "columns": [
       {
-        "heading": "About",
+        "heading": "About THE GAME",
         "id": "about",
         "links": [
           {
