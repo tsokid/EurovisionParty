@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
 interface State {
@@ -17,8 +18,9 @@ export function useAdminAuth() {
     status: 'loading', email: null, isAdmin: false, error: null,
   });
 
-  const refresh = useCallback(async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+  /** `known`: the session an auth event carried (null = signed out); omitted, it is read. */
+  const refresh = useCallback(async (known?: Session | null) => {
+    const session = known !== undefined ? known : (await supabase.auth.getSession()).data.session;
     if (!session) {
       setState({ status: 'anonymous', email: null, isAdmin: false, error: null });
       return;
@@ -37,9 +39,21 @@ export function useAdminAuth() {
   }, []);
 
   useEffect(() => {
-    refresh();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => refresh());
-    return () => sub.subscription.unsubscribe();
+    void refresh();
+    // supabase-js awaits this callback while it holds its auth lock (token
+    // refresh, tab focus). Calling supabase.auth here, or any query (it reads
+    // the session for its token), waits for that same lock: a deadlock that
+    // left every later request, and the CMS, on «Φόρτωση…» (23 Nov 2026).
+    // So: use the session the event carries, and run the rest after the
+    // callback has returned.
+    let live = true;
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setTimeout(() => { if (live) void refresh(session); }, 0);
+    });
+    return () => {
+      live = false;
+      sub.subscription.unsubscribe();
+    };
   }, [refresh]);
 
   const sendOtp = useCallback(async (email: string) => {

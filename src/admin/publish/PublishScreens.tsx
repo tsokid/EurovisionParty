@@ -16,8 +16,8 @@ import { adminPaths } from '../paths';
 import { t } from '../i18n';
 import { cmsList, type CmsListRow } from '../modules/pages/cmsApi';
 import { COMMIT_URL, formatRunTime, invokePublish, outcomeText, yearRanges, type PublishOutcome, type PublishRun, type UnpublishedSummary } from '../modules/contests/publish';
-import { docTitle, getRun, listRuns, useRunWatch } from './api';
-import { isSiteWide } from './diff';
+import { docTitle, getRun, listRuns, loadDocPair, useRunWatch } from './api';
+import { fieldChanges, isSiteWide } from './diff';
 import { DeployChip, FailureNotice } from './DeployState';
 import { PublishReview, RunCard } from './PublishReview';
 
@@ -64,6 +64,9 @@ export function PublishQueueScreen() {
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState<PublishOutcome | null>(null);
   const [allRun, setAllRun] = useState<PublishRun | null>(null);
+  // Drafts whose content equals the site (edits typed, then undone): the server still
+  // counts them as unpublished, but there is nothing to publish, so they are not listed.
+  const [same, setSame] = useState<string[]>([]);
 
   const load = useCallback(async () => {
     try {
@@ -72,6 +75,15 @@ export function PublishQueueScreen() {
         cmsList(),
         listRuns(12).catch(() => [] as PublishRun[]),
       ]);
+      const equal = await Promise.all((s.changed_docs ?? []).map(async (d) => {
+        try {
+          const p = await loadDocPair(d);
+          return fieldChanges(p.live, p.draft).length === 0 ? d : null;
+        } catch {
+          return null; // cannot compare: keep it listed
+        }
+      }));
+      setSame(equal.filter((d): d is string => d !== null));
       setSummary(s);
       setRows(list);
       setRuns(r);
@@ -82,7 +94,7 @@ export function PublishQueueScreen() {
   }, []);
   useEffect(() => { void load(); }, [load]);
 
-  const changed = summary?.changed_docs ?? [];
+  const changed = (summary?.changed_docs ?? []).filter((d) => !same.includes(d));
   const pages = changed.filter((d) => !isSiteWide(d));
   const siteWide = changed.filter(isSiteWide);
   const years = summary?.changed_years ?? [];
