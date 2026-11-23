@@ -6,7 +6,7 @@ import { PAGE_REGISTRY } from '../../src/lib/seo/registry'
 const cfg = JSON.parse(readFileSync(resolve(process.cwd(), 'vercel.json'), 'utf8'))
 
 const CSP =
-  "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co wss://ameneqrrfdhntfzvchnn.supabase.co; img-src 'self' data: https:; media-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co; font-src 'self'; frame-ancestors 'none';"
+  "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co wss://ameneqrrfdhntfzvchnn.supabase.co; img-src 'self' data: https:; media-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co; font-src 'self'; frame-ancestors 'self';"
 
 describe('vercel.json', () => {
   it('has no legacy routes key', () => {
@@ -29,6 +29,15 @@ describe('vercel.json', () => {
     expect(csp.value).toContain(`media-src 'self' ${host};`)
     const assets = cfg.headers.find((h: any) => h.source === '/assets/(.*)')
     expect(assets.headers[0].value).toBe('public, max-age=31536000, immutable')
+  })
+
+  it('lets only the site itself frame its pages (the admin preview and publish diff are same-origin iframes)', () => {
+    const all = cfg.headers.find((h: any) => h.source === '/(.*)')
+    const xfo = all.headers.find((h: any) => h.key === 'X-Frame-Options')
+    const csp = all.headers.find((h: any) => h.key === 'Content-Security-Policy')
+    expect(xfo.value).toBe('SAMEORIGIN')
+    expect(csp.value).toContain("frame-ancestors 'self';")
+    expect(csp.value).not.toMatch(/frame-ancestors[^;]*(\*|https?:)/)
   })
 
   it('has permanent redirects for renamed pages', () => {
