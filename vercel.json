@@ -1691,7 +1691,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!en/|el/|content/|media/|_seo/|assets/|fonts/|avatars/).*)",
+      "source": "/((?!en/|el/|content/|media/|_seo/|assets/|fonts/|avatars/|flags/).*)",
       "destination": "/"
     }
   ],
@@ -1723,6 +1723,15 @@
     },
     {
       "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/flags/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

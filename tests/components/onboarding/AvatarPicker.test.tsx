@@ -101,10 +101,11 @@ describe('<AvatarPicker>', () => {
     expect(img.getAttribute('srcset')).toMatch(/-96\.webp\S* 96w, .*-512\.webp\S* 512w/);
     expect(img).toHaveAttribute('width', '512');
     expect(img).toHaveAttribute('height', '512');
-    // Only the current page loads eagerly.
-    const lazyOnPage0 = container.querySelectorAll('.avp-page[data-page="0"] img[loading="lazy"]');
-    const lazyOnPage1 = container.querySelectorAll('.avp-page[data-page="1"] img[loading="lazy"]');
-    expect(lazyOnPage0).toHaveLength(0);
-    expect(lazyOnPage1.length).toBeGreaterThan(0);
+    // The current page and the next one load at once (no empty tiles on a swipe).
+    const lazyOn = (p: number) => container.querySelectorAll(`.avp-page[data-page="${p}"] img[loading="lazy"]`).length;
+    const pages = container.querySelectorAll('.avp-page').length;
+    expect(lazyOn(0)).toBe(0);
+    expect(lazyOn(1)).toBe(0);
+    if (pages > 2) expect(lazyOn(2)).toBeGreaterThan(0);
   });
 });

@@ -22,7 +22,9 @@ export function AvatarVisual({ entry, size, variant = 'thumb', title, className 
         src={variant === 'full' ? entry.full : entry.thumb}
         width={size ?? intrinsic}
         height={size ?? intrinsic}
-        loading="lazy"
+        // Thumbs load at once and are precached (158 KB for all): lazy ones
+        // showed up late in the room (23 Nov 2026). The 512px file opens on demand.
+        loading={variant === 'full' ? 'lazy' : undefined}
         decoding="async"
         alt={title ?? ''}
         aria-hidden={title ? undefined : true}

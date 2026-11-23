@@ -180,7 +180,9 @@ export default function AvatarPicker({ value, onChange }: AvatarPickerProps) {
                   <AvatarPop
                     entry={a}
                     sizes="(min-width: 1024px) 210px, 175px"
-                    loading={p === page ? 'eager' : 'lazy'}
+                    // Current page and its neighbours load at once: a swipe never
+                    // lands on empty tiles (23 Nov 2026). The rest (512px art) waits.
+                    loading={Math.abs(p - page) <= 1 ? 'eager' : 'lazy'}
                   />
                 </button>
               );

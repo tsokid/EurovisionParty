@@ -12,19 +12,21 @@ export const FLAG_CODES: ReadonlySet<string> = new Set([
   'RO', 'RS', 'RU', 'SE', 'SI', 'SK', 'SM', 'TR', 'UA', 'YU',
 ]);
 
-/** Historic codes flagcdn.com has no image for: drawn in CSS (`.f-cs`, `.f-yu`). */
+/** Historic codes with no image: drawn in CSS (`.f-cs`, `.f-yu`). */
 export const CSS_ONLY_FLAGS: ReadonlySet<string> = new Set(['CS', 'YU']);
 
 const norm = (iso: string | null | undefined) => (iso ?? '').trim().toUpperCase();
 
 /**
- * flagcdn.com PNG for a known ISO code (any case) at a given width
- * (40 or 80), `null` for unknown and CSS-only codes.
+ * Self-hosted PNG (public/flags, from flagcdn.com) for a known ISO code (any
+ * case) at a given width (40 or 80), `null` for unknown and CSS-only codes.
+ * Same origin on purpose (23 Nov 2026): one flagcdn request per flag, on a
+ * cold third-party connection and lazy-loaded, left flags late or missing.
  */
 export function flagSrc(iso: string | null | undefined, width: 40 | 80 = 40): string | null {
   const code = norm(iso);
   if (!FLAG_CODES.has(code) || CSS_ONLY_FLAGS.has(code)) return null;
-  return `https://flagcdn.com/w${width}/${code.toLowerCase()}.png`;
+  return `/flags/w${width}-${code.toLowerCase()}.png`;
 }
 
 /** `f-xx` for a CSS-only historic code, `null` otherwise. */
@@ -44,8 +46,9 @@ export interface FlagProps {
 }
 
 /**
- * Real flag image (flagcdn.com w40, w80 for 2x) with explicit width/height,
- * lazy-loaded, on the grey `.flag` box that doubles as the placeholder.
+ * Real flag image (w40, w80 for 2x) with explicit width/height, loaded at
+ * once (26 KB for all flags, precached by the service worker), on the grey
+ * `.flag` box that doubles as the placeholder.
  * Decorative (`alt=""` + `aria-hidden`) unless `label` is given.
  * Unknown code → grey box; CS/YU → CSS approximation.
  */
@@ -64,7 +67,6 @@ export function Flag({ iso, size = 'md', label, className }: FlagProps) {
       srcSet={`${src} 1x, ${flagSrc(iso, 80)} 2x`}
       width={w}
       height={h}
-      loading="lazy"
       decoding="async"
       alt={label ?? ''}
       {...(label ? {} : { 'aria-hidden': true as const })}

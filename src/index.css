@@ -380,9 +380,9 @@ body { margin: 0; overscroll-behavior: none; }
   .progress i { display: block; height: 100%; background: var(--stage-gradient); border-radius: 99px; }
 
   /* ---------- Flags ----------
-     Real flag images (flagcdn.com, as the app already uses) on the grey ds box,
+     Real flag images (self-hosted in /flags) on the grey ds box,
      which stays as the placeholder while the image loads or when it fails.
-     CS (Serbia and Montenegro) and YU (Yugoslavia) have no flagcdn image: they
+     CS (Serbia and Montenegro) and YU (Yugoslavia) have no image: they
      keep a CSS approximation. */
   .flag { width: 28px; height: 20px; border-radius: 4px; flex: none; box-shadow: 0 0 0 1px rgba(255, 255, 255, .14); background: #444; overflow: hidden; display: block; object-fit: cover; }
   .flag-sm { width: 18px; height: 12px; border-radius: 2px; }

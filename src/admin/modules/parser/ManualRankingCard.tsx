@@ -27,6 +27,7 @@ import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
 import type { ParseJob } from "./useParserState";
 import { t } from "../../i18n";
+import { flagSrc } from "../../../components/stage/Flag";
 
 const M = t.parserUi.manual;
 
@@ -42,17 +43,16 @@ interface Participant {
   song: string;
 }
 
-// Inline flag image (flagcdn.com w40)
+// Inline flag image (self-hosted w40, see stage/Flag)
 function FlagImg({ iso, size = 22 }: { iso: string; size?: number }) {
   return (
     <img
-      src={`https://flagcdn.com/w40/${iso.toLowerCase()}.png`}
+      src={flagSrc(iso) ?? undefined}
       alt=""
       width={size}
       height={Math.round(size * 0.75)}
       className="rounded-[2px] object-cover shadow-[0_1px_2px_rgba(0,0,0,0.4)] flex-shrink-0"
       style={{ width: size, height: Math.round(size * 0.75) }}
-      loading="lazy"
     />
   );
 }

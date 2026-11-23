@@ -99,6 +99,9 @@ export default defineConfig(({ isSsrBuild }) => ({
         // loads on /admin only: not precached for every visitor
         // (tests/scripts/swPrecache.test.ts).
         globIgnores: ['**/*.html', 'content/**', 'assets/AdminRoute-*.js'],
+        // Default patterns plus the flags (26 KB) and the 96px avatar thumbs
+        // (158 KB): shown at once, offline too (23 Nov 2026).
+        globPatterns: ['**/*.{js,css,html}', 'flags/*.png', 'avatars/*-96.webp'],
         // A new cache name (23 Nov 2026): some browsers precached the SPA
         // shell as /assets/index-*.css during a deploy (missing assets fell
         // back to HTML; they 404 now). The old cache is dropped by

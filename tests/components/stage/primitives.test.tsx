@@ -26,7 +26,7 @@ describe('<EntryRow>', () => {
     expect(li.querySelector('.country')!.textContent).toBe('Βουλγαρία');
     expect(li.querySelector('.song')!.textContent).toBe('DARA · Bangaranga');
     expect(li.querySelector('.pts')!.textContent).toBe('516');
-    expect(li.querySelector('img.flag')!.getAttribute('src')).toBe('https://flagcdn.com/w40/bg.png');
+    expect(li.querySelector('img.flag')!.getAttribute('src')).toBe('/flags/w40-bg.png');
   });
 
   it('highlight adds the .hl class and aria-current', () => {
@@ -141,15 +141,16 @@ describe('<Flag>', () => {
     }
     expect(flagSrc('ZZ')).toBeNull();
   });
-  it('known code → flagcdn image (case-insensitive), w80 for 2x, sized, lazy, decorative', () => {
+  it('known code → self-hosted image (case-insensitive), w80 for 2x, sized, loaded at once, decorative', () => {
     const { container } = render(<Flag iso="gr" />);
     const img = container.querySelector('img')!;
     expect(img.className).toBe('flag');
-    expect(img.getAttribute('src')).toBe('https://flagcdn.com/w40/gr.png');
-    expect(img.getAttribute('srcset')).toBe('https://flagcdn.com/w40/gr.png 1x, https://flagcdn.com/w80/gr.png 2x');
+    expect(img.getAttribute('src')).toBe('/flags/w40-gr.png');
+    expect(img.getAttribute('srcset')).toBe('/flags/w40-gr.png 1x, /flags/w80-gr.png 2x');
     expect(img.getAttribute('width')).toBe('28');
     expect(img.getAttribute('height')).toBe('20');
-    expect(img.getAttribute('loading')).toBe('lazy');
+    // Not lazy: lazy flags appeared late or not at all while scrolling (23 Nov 2026).
+    expect(img.getAttribute('loading')).toBeNull();
     expect(img.getAttribute('alt')).toBe('');
     expect(img.getAttribute('aria-hidden')).toBe('true');
   });

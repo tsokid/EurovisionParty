@@ -31,7 +31,7 @@ function fromDbRow(row: DbRow): Country {
     name: row.name_en,
     name_el: row.name_el,
     // Flag emoji isn't used by the redesigned UIs (we render <img> via
-    // flagcdn.com keyed on iso). Empty string keeps the type happy.
+    // /flags keyed on iso). Empty string keeps the type happy.
     flag: "",
     artist: row.artist ?? "",
     song: row.song ?? "",

@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
 import { t } from "../../i18n";
+import { flagSrc } from "../../../components/stage/Flag";
 
 const TEST_DEFAULT =
   "https://www.eurovision.com/eurovision-song-contest/basel-2025/basel-2025-grand-final/";
@@ -50,13 +51,12 @@ function buildHeaders(rows: Row[]): string[] {
 function FlagImg({ iso }: { iso: string }) {
   return (
     <img
-      src={`https://flagcdn.com/w40/${iso.toLowerCase()}.png`}
+      src={flagSrc(iso) ?? undefined}
       alt=""
       width={28}
       height={21}
       className="rounded-[2px] object-cover shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
       style={{ width: 28, height: 21 }}
-      loading="lazy"
     />
   );
 }
