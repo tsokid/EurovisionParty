@@ -1,5 +1,14 @@
 # Ταχύτητα & SEO — πλάνο (23 Νοε 2026)
 
+## Πρόοδος (23 Νοε, 3ce6d1a)
+- ✅ PageSpeed mobile στο `https://eurovision.games/`: **85 → 96**, FCP/LCP **3,3s → 1,9s**, TBT 20ms, CLS 0.
+- ✅ Βήμα 1: `registerSW.js` με defer · ✅ Βήμα 3: ελληνικό font preload στις `/el` · ✅ Βήμα 5: λογαριασμός μόνο σε create/join · ✅ Βήμα 6 (φάση 1): το παιχνίδι σε δικό του chunk (−100 KB).
+- ⏭ Βήμα 2 (immutable cache): το παραλείπουμε. Ο service worker ήδη κρατά JS/CSS, οπότε το κέρδος είναι σχεδόν μηδέν. Υπάρχει όμως ρίσκο να ξαναγυρίσει η κενή σελίδα.
+- ⏭ Βήμα 4 (preconnect): δεν χρειάζεται πια, αφού η αρχική δεν συνδέεται στο Supabase.
+- ✅ `lastmod` στο sitemap: πραγματικές ημερομηνίες (5 διαφορετικές, όχι μία για όλες).
+- ✅ Search Console: Validate fix για τις 27 «Crawled – currently not indexed».
+- ⏳ Μένουν: φάση 2 του βήματος 6 (Supabase και framer-motion έξω από τις δημόσιες σελίδες, Speed Index 4,3s), βήμα 7, R1 (titles/descriptions στο CMS), Request indexing, R4 (περιεχόμενο 2027), R5 (backlinks). Η «Eurovision simulator» αναβάλλεται (απόφαση 23/11).
+
 ## Πού είμαστε
 
 | Μέτρηση | Desktop | Mobile |
