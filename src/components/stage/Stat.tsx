@@ -9,7 +9,7 @@ export interface StatProps {
   className?: string;
 }
 
-/** Scoreboard tile: Bebas value + small label. */
+/** Scoreboard tile: numeral-font value + small label. */
 export function Stat({ value, label, accent, className }: StatProps) {
   return (
     <div className={clsx('stat', className)}>

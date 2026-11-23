@@ -76,7 +76,7 @@ function CountryBody({ data, locale }: { data: CountryData; locale: Locale }) {
     const row = contests[String(p.year)];
     return row ? cityName(locale, p.city_slug, row.city).name : null;
   };
-  /** "10η" with a small raised suffix (Bebas has no Greek glyphs). */
+  /** "10η" with a small raised suffix (the suffix stays small next to the numeral). */
   const ord = (n: number) => <>{n}<span className="ord">{ordinal(n, locale).slice(String(n).length)}</span></>;
   const out = (p: CountryParticipation) => !p.cancelled && p.final_place === null && k.result(p) !== null;
   // A non-qualifier without a recorded semi-final keeps the full result text ("Out in the semi-finals").

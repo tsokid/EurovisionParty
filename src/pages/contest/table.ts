@@ -34,12 +34,12 @@ export function visibleTable<R>(rows: R[], columns: Column<R>[]): TableProps {
 
 /**
  * Where a column sits in a Stage results row.
- * - pos:  left rail (place or year, Bebas).
+ * - pos:  left rail (place or year, numeral font).
  * - main: the lead cell (flag + title, optional second line).
  * - sub:  its own column from 768px; on phones it joins the second line under
  *         the title (the first two sub columns, "a · b").
  * - num:  numeric column shown from 768px only (jury / televote).
- * - pts:  right rail (points, Bebas).
+ * - pts:  right rail (points, numeral font).
  * - aux:  its own column from 768px; on phones a small line under the rail.
  * - desk: text column shown from 768px only (its data is also in another cell).
  */

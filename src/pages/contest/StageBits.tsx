@@ -32,7 +32,7 @@ export function LinkCard({ to, icon, title, blurb }: { to: string; icon: keyof t
   );
 }
 
-/** One decade block: Bebas heading (h3), a meta line, then its table. */
+/** One decade block: numeral-font heading (h3), a meta line, then its table. */
 export function DecadeBlock({ id, label, meta, children }: { id: string; label: string; meta?: ReactNode; children: ReactNode }) {
   return (
     <section id={id} className="dec" aria-labelledby={`${id}-h`}>

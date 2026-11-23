@@ -168,7 +168,7 @@ export function SideLinks({ label, items }: { label?: string; items: { href: str
   );
 }
 
-/** Hero stat tiles (Bebas value + label), `tone` colours the value. */
+/** Hero stat tiles (numeral-font value + label), `tone` colours the value. */
 export function HeroStats({ items }: { items: { v: ReactNode; k: ReactNode; tone?: 'gold' | 'pink' }[] }) {
   return (
     <dl className="kit-stats">

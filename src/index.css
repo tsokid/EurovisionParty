@@ -1,7 +1,18 @@
 @import "tailwindcss";
+/* Fonts (owner, 23 Nov 2026, option A): self-hosted, with Greek. Manrope for
+   text (variable 200-800); Sofia Sans Extra Condensed for the scoreboard
+   numerals, a single bold (700) face declared for every weight so it reads
+   like a one-weight display face. Files in public/fonts (SIL OFL 1.1). */
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('/fonts/manrope-v23-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('/fonts/manrope-v23-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('/fonts/manrope-v23-greek.woff2') format('woff2'); unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF; }
+@font-face { font-family: 'Sofia Sans Extra Condensed'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/sofia-sans-xc-700-v6-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Sofia Sans Extra Condensed'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/sofia-sans-xc-700-v6-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Sofia Sans Extra Condensed'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/sofia-sans-xc-700-v6-greek.woff2') format('woff2'); unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF; }
+
 
 @theme {
-  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: 'Manrope', system-ui, sans-serif;
 
   --color-euro-deep: #0f0520;
   --color-euro-purple-dark: #1a0533;
@@ -47,9 +58,9 @@
   /* Gradients (no Tailwind namespace; read with var()) */
   --stage-gradient: linear-gradient(120deg, #A35BFF 0%, #F0469C 100%);
   --stage-gradient-soft: linear-gradient(120deg, rgba(163, 91, 255, .18), rgba(240, 70, 156, .14));
-  /* Type: same families as --font-sans; Bebas Neue for scoreboard numerals */
-  --font-stage: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-stage-num: 'Bebas Neue', Impact, sans-serif;
+  /* Type: same families as --font-sans; Sofia Sans Extra Condensed for scoreboard numerals */
+  --font-stage: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-stage-num: 'Sofia Sans Extra Condensed', Impact, sans-serif;
   /* Radius / elevation */
   --radius-stage-sm: 8px;
   --radius-stage: 14px;
@@ -139,7 +150,7 @@ body { margin: 0; overscroll-behavior: none; }
 }
 
 .intro-wordmark {
-  font-family: "Bebas Neue", Impact, sans-serif;
+  font-family: "Sofia Sans Extra Condensed", Impact, sans-serif;
   font-size: clamp(28px, 7.5vw, 40px);
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -151,7 +162,7 @@ body { margin: 0; overscroll-behavior: none; }
 }
 
 .intro-stars {
-  font-family: "Bebas Neue", Impact, sans-serif;
+  font-family: "Sofia Sans Extra Condensed", Impact, sans-serif;
   font-size: clamp(18px, 4.5vw, 26px);
   letter-spacing: 0.35em;
   color: oklch(0.85 0.16 90);
@@ -161,7 +172,7 @@ body { margin: 0; overscroll-behavior: none; }
 }
 
 .intro-bigtext {
-  font-family: "Bebas Neue", Impact, sans-serif;
+  font-family: "Sofia Sans Extra Condensed", Impact, sans-serif;
   font-size: clamp(64px, 15vw, 110px);
   line-height: 0.92;
   letter-spacing: -0.005em;
@@ -179,7 +190,7 @@ body { margin: 0; overscroll-behavior: none; }
 .intro-btn {
   border: none;
   color: #fff;
-  font-family: "Bebas Neue", Impact, sans-serif;
+  font-family: "Sofia Sans Extra Condensed", Impact, sans-serif;
   font-size: clamp(18px, 4.4vw, 24px);
   letter-spacing: 0.12em;
   padding: 18px 32px;
