@@ -6,6 +6,7 @@ import { LocaleProvider } from '../../lib/seo/LocaleContext';
 import SiteHeader from './SiteHeader';
 import BetaBanner from './BetaBanner';
 import ScrollToTop from './ScrollToTop';
+import BackToTop from './BackToTop';
 import CookieConsent from '../cookie/CookieConsent';
 
 export default function LocaleRoot() {
@@ -35,6 +36,7 @@ export default function LocaleRoot() {
         <BetaBanner />
         <SiteHeader />
         <Outlet />
+        <BackToTop />
         <CookieConsent />
       </div>
     </LocaleProvider>

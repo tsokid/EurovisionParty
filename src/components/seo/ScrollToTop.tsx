@@ -11,7 +11,10 @@ export default function ScrollToTop() {
   useEffect(() => {
     const raf = window.requestAnimationFrame(() => {
       if (hash) {
-        const el = document.getElementById(hash.slice(1));
+        // Decode: non-Latin anchors (the Greek A–Ω index) arrive percent-encoded.
+        let id = hash.slice(1);
+        try { id = decodeURIComponent(id); } catch { /* malformed: use as is */ }
+        const el = document.getElementById(id);
         if (el) {
           el.scrollIntoView({ behavior: 'auto', block: 'start' });
           return;

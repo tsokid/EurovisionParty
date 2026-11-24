@@ -5,6 +5,7 @@ import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
+import PageTail from '../../components/seo/PageTail';
 import LocaleLink from '../../components/seo/LocaleLink';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { Button } from '../../components/stage';
@@ -301,17 +302,18 @@ export default function HowToPlayPage() {
           <div className="stage-prose guide-extra">
             <ExtraBlocks value={c.extraBlocks} />
           </div>
-
-          <CtaBanner
-            title={c.cta.title}
-            body={c.cta.body}
-            primary={{ label: c.cta.primary, href: '/?action=create' }}
-            secondary={{ label: c.cta.secondary, href: '/eurovision-night' }}
-          />
-
-          <RelatedCards items={c.related.items} />
         </div>
       </div>
+      <PageTail>
+        <CtaBanner
+          title={c.cta.title}
+          body={c.cta.body}
+          primary={{ label: c.cta.primary, href: '/?action=create' }}
+          secondary={{ label: c.cta.secondary, href: '/eurovision-night' }}
+        />
+
+        <RelatedCards items={c.related.items} />
+      </PageTail>
       <SiteFooter />
     </>
   );

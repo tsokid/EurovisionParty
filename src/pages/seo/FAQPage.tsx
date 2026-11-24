@@ -4,6 +4,7 @@ import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
 import FaqAccordion, { type FaqItem } from '../../components/seo/FaqAccordion';
 import RelatedCards from '../../components/seo/RelatedCards';
+import PageTail from '../../components/seo/PageTail';
 import { Icon, IconBox, SideLinks, TocCard, TocSeg, type IconName, type TocItem } from '../../components/seo/StageKit';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { Button } from '../../components/stage';
@@ -244,10 +245,11 @@ export default function FAQPage() {
           <div className="stage-prose guide-extra">
             <ExtraBlocks value={c.extraBlocks} />
           </div>
-
-          <RelatedCards heading={t('faqPage.related')} items={c.related.items} />
         </div>
       </div>
+      <PageTail>
+        <RelatedCards heading={t('faqPage.related')} items={c.related.items} />
+      </PageTail>
       <SiteFooter />
     </>
   );

@@ -1,5 +1,6 @@
 {
   "common": {
+    "backToTop": "Back to top",
     "loading": "Loading...",
     "justNow": "just now",
     "agoMinutes": "{{minutes}}m ago",
@@ -1006,6 +1007,7 @@
     }
   },
   "countriesPage": {
+    "jumpToLetter": "Jump to letter",
     "statCountries": "countries",
     "statWinners": "with at least one win",
     "statRecord": "wins, the record",

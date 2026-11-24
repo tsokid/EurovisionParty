@@ -101,9 +101,15 @@ function CountriesBody({ index, locale }: { index: CountryIndex; locale: Locale 
             </ul>
           </section>
         )}
+        {/* A–Ω index (owner request): jump straight to a letter. */}
+        <nav className="ctl-az" aria-label={t('countriesPage.jumpToLetter')}>
+          {groups.map((g) => (
+            <a key={g.letter} href={`#ctl-g-${g.letter}`} className="num">{g.letter}</a>
+          ))}
+        </nav>
         <div className="ctl-groups">
           {groups.map((g) => (
-            <section key={g.letter} className="ctl-group" aria-labelledby={`ctl-${g.letter}`}>
+            <section key={g.letter} id={`ctl-g-${g.letter}`} className="ctl-group" aria-labelledby={`ctl-${g.letter}`}>
               <h2 id={`ctl-${g.letter}`} className="num ctl-letter">{g.letter}</h2>
               <ul className="ctl-list">
                 {g.rows.map((r) => (

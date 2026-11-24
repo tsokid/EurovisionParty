@@ -3,6 +3,7 @@ import SiteFooter from '../../components/seo/SiteFooter';
 import { DaysCard, HubPlayCard, HubSubHero } from './HubSubBits';
 import { weekday } from '../seo/content/contestText';
 import RelatedCards from '../../components/seo/RelatedCards';
+import PageTail from '../../components/seo/PageTail';
 import { breadcrumbJsonLd } from '../../components/seo/Breadcrumbs';
 import { countryName, formatDate } from './content/hubCopy';
 import { HubGate } from './HubFrame';
@@ -70,13 +71,14 @@ function ScheduleBody({ hub }: { hub: Hub }) {
               <p className="t-body">{c.schedule.direct(direct.length, direct.map((e) => countryName(e, locale)).join(', '))}</p>
             </section>
           )}
-
-          <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub, 'schedule')} columns={2} />
         </div>
         <aside className="pg-aside">
           <HubPlayCard hub={hub} />
         </aside>
       </div>
+      <PageTail>
+        <RelatedCards heading={c.related.heading(contest.year)} items={hubRelated(hub, 'schedule')} columns={4} />
+      </PageTail>
       <SiteFooter />
     </>
   );

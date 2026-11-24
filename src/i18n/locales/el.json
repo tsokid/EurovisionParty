@@ -1,5 +1,6 @@
 {
   "common": {
+    "backToTop": "Επιστροφή στην αρχή",
     "loading": "Φόρτωση...",
     "justNow": "μόλις τώρα",
     "agoMinutes": "{{minutes}}λ πριν",
@@ -1006,6 +1007,7 @@
     }
   },
   "countriesPage": {
+    "jumpToLetter": "Μετάβαση σε γράμμα",
     "statCountries": "χώρες",
     "statWinners": "με τουλάχιστον μία νίκη",
     "statRecord": "νίκες, το ρεκόρ",

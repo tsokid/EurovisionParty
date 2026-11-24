@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { SCORING } from '../../lib/constants';
 import DataTable from '../../components/seo/DataTable';
 import RelatedCards from '../../components/seo/RelatedCards';
+import PageTail from '../../components/seo/PageTail';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
@@ -174,8 +175,6 @@ export default function ScoringPage() {
           <div className="stage-prose guide-extra">
             <ExtraBlocks value={c.extraBlocks} />
           </div>
-
-          <RelatedCards heading={ui('related')} items={c.related.items} />
         </div>
 
         <aside className="pg-aside sc-aside">
@@ -210,6 +209,9 @@ export default function ScoringPage() {
           <SideLinks items={c.related.items.slice(0, 3).map((r) => ({ href: r.href, title: r.title }))} />
         </aside>
       </div>
+      <PageTail>
+        <RelatedCards heading={ui('related')} items={c.related.items} />
+      </PageTail>
       <SiteFooter />
     </>
   );

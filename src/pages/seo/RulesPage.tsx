@@ -8,6 +8,7 @@ import { PHASE_ORDER, SCORING } from '../../lib/constants';
 import DataTable from '../../components/seo/DataTable';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
+import PageTail from '../../components/seo/PageTail';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
@@ -226,17 +227,18 @@ export default function RulesPage() {
           <div className="stage-prose guide-extra">
             <ExtraBlocks value={c.extraBlocks} />
           </div>
-
-          <CtaBanner
-            title={c.cta.title}
-            body={c.cta.body}
-            primary={{ label: c.cta.primary, href: '/?action=create' }}
-            secondary={{ label: c.cta.secondary, href: '/scoring' }}
-          />
-
-          <RelatedCards heading={ui('related')} items={relatedItems} />
         </div>
       </div>
+      <PageTail>
+        <CtaBanner
+          title={c.cta.title}
+          body={c.cta.body}
+          primary={{ label: c.cta.primary, href: '/?action=create' }}
+          secondary={{ label: c.cta.secondary, href: '/scoring' }}
+        />
+
+        <RelatedCards heading={ui('related')} items={relatedItems} />
+      </PageTail>
       <SiteFooter />
     </>
   );

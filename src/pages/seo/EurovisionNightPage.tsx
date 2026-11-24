@@ -11,6 +11,7 @@ import type { Locale } from '../../lib/seo/locale';
 import FaqAccordion from '../../components/seo/FaqAccordion';
 import CtaBanner from '../../components/seo/CtaBanner';
 import RelatedCards from '../../components/seo/RelatedCards';
+import PageTail from '../../components/seo/PageTail';
 import { breadcrumbJsonLd, type Crumb } from '../../components/seo/Breadcrumbs';
 import { useLocale } from '../../lib/seo/LocaleContext';
 import { pageUrl } from '../../lib/seo/registry';
@@ -218,15 +219,6 @@ export default function EurovisionNightPage() {
           <div className="stage-prose guide-extra">
             <ExtraBlocks value={c.extraBlocks} />
           </div>
-
-          <CtaBanner
-            title={c.cta.title}
-            body={c.cta.body}
-            primary={{ label: c.cta.primary, href: '/?action=create' }}
-            secondary={{ label: c.cta.secondary, href: '/how-to-play' }}
-          />
-
-          <RelatedCards heading={c.related.heading} items={relatedItems} />
         </div>
 
         <aside className="pg-aside">
@@ -251,6 +243,16 @@ export default function EurovisionNightPage() {
           </section>
         </aside>
       </div>
+      <PageTail>
+        <CtaBanner
+          title={c.cta.title}
+          body={c.cta.body}
+          primary={{ label: c.cta.primary, href: '/?action=create' }}
+          secondary={{ label: c.cta.secondary, href: '/how-to-play' }}
+        />
+
+        <RelatedCards heading={c.related.heading} items={relatedItems} />
+      </PageTail>
       <SiteFooter />
     </>
   );

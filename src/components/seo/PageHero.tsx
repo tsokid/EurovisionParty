@@ -62,9 +62,13 @@ export default function PageHero({ crumbs, chip, chipTone = 'pink', title, lede,
     return (
       <header className={(aside ? 'hero hero-split' : 'hero') + extra}>
         <div className="wrap hero-inner">
-          <div className="hero-main">
+          {/* Breadcrumb and chip sit above both columns, so the aside starts
+              level with the H1 (owner, 24 Nov 2026). */}
+          <div className="hero-kicker">
             <Breadcrumbs items={crumbs} />
             {chip && <Chip tone={chipTone}>{chip}</Chip>}
+          </div>
+          <div className="hero-main">
             {titleLead ? <div className="hero-title-row">{titleLead}{h1}</div> : h1}
             <p className="hero-lede" {...at('lede')}>{lede}</p>
             {children}
