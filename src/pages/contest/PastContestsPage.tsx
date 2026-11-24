@@ -138,7 +138,7 @@ function PastContestsBody({ index, locale }: { index: ContestIndex; locale: Loca
         lede={x.lede(facts)}
         aside={featuredCard}
       />
-      <div className="wrap pg-body">
+      <div className="wrap pg-body aside-at-table">
         <div className="pg-main">
           <section id="contests" className="cs" aria-labelledby="contests-h">
             <h2 id="contests-h" className="t-h2 text-stage-text">{x.tableTitle}</h2>
