@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, type ReactNode } fro
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
-import { Check, Clock, Star, X } from 'lucide-react';
+import { Check, Clock, X } from 'lucide-react';
 import TimerRing from './TimerRing';
 import AnswerButton from './AnswerButton';
 import { PointsFlight } from '../stage';
@@ -171,7 +171,6 @@ export default function QuestionCard({
   const eyebrow = mode === 'duel'
     ? t('questionCard.eyebrowDuel')
     : t('questionCard.eyebrowQuiz', { round: roundNumber ?? 1, max: 3 });
-  const maxPoints = mode === 'duel' ? 12 : tier1.points;
   const fade = reduce
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 } }
     : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0 }, transition: { duration: 0.25, ease: 'easeOut' as const } };
@@ -233,10 +232,6 @@ export default function QuestionCard({
         <AnimatePresence mode="wait" initial={false}>
           {!revealed ? (
             <motion.section key="q" className="card-hero qz-hero" {...fade}>
-              <span className="chip chip-gold qz-upto">
-                <Star aria-hidden="true" strokeWidth={2.4} />
-                {t('questionCard.upTo', { points: maxPoints })}
-              </span>
               <h2 className="qz-text">{localQ}</h2>
             </motion.section>
           ) : (
@@ -254,7 +249,6 @@ export default function QuestionCard({
                   <span className="t-meta">{t('questionCard.scoring')}</span>
                 )}
               </div>
-              <p className="t-meta qz-q-sub">{localQ}</p>
             </motion.section>
           )}
         </AnimatePresence>

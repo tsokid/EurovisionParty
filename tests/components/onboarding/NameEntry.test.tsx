@@ -161,3 +161,39 @@ describe('<NameEntry>', () => {
     });
   });
 });
+
+// The form is a modal over the home page (24 Nov 2026): it closes only with
+// ✕, Esc or «Πίσω»; a click on the backdrop keeps it, and what was typed.
+describe('<NameEntry> as a modal', () => {
+  it('✕ and Esc close it, the backdrop does not', () => {
+    const onBack = vi.fn();
+    render(<NameEntry mode="join" onSubmit={vi.fn()} onBack={onBack} initialRoomCode="ABCD" />);
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+
+    const name = screen.getByLabelText('Καλλιτεχνικό όνομα') as HTMLInputElement;
+    fireEvent.change(name, { target: { value: 'Ντίσκο' } });
+    fireEvent.click(screen.getByTestId('onb-backdrop'));
+    expect(onBack).not.toHaveBeenCalled();
+    expect(name.value).toBe('Ντίσκο');
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(onBack).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Κλείσιμο' }));
+    expect(onBack).toHaveBeenCalledTimes(2);
+  });
+
+  it('locks the page behind while open and releases it on close', () => {
+    const topbar = document.createElement('div');
+    topbar.className = 'topbar';
+    document.body.appendChild(topbar);
+    const { unmount } = render(<NameEntry mode="create" onSubmit={vi.fn()} onBack={vi.fn()} />);
+    expect(topbar.hasAttribute('inert')).toBe(true);
+    expect(document.body.style.overflow).toBe('hidden');
+    unmount();
+    expect(topbar.hasAttribute('inert')).toBe(false);
+    expect(document.body.style.overflow).toBe('');
+    topbar.remove();
+  });
+});

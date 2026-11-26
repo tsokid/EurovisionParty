@@ -98,20 +98,15 @@ export default function DuelsScreen() {
 
   const isMine = (d: Duel) => d.challenger_id === player?.id || d.challenged_id === player?.id;
 
+  // A declined duel never happened: it appears nowhere (owner, 24 Nov 2026).
   const completedDuels = duels.filter((d) =>
     isMine(d)
-    && (
-      (d.status === 'completed' && d.winner_decision !== null)
-      || d.status === 'tie'
-      || d.status === 'declined'
-    )
+    && ((d.status === 'completed' && d.winner_decision !== null) || d.status === 'tie')
   ).slice(0, 8);
 
-  // Room-wide history — all terminal duels, including ones I'm not part of.
+  // Room-wide history — all played duels, including ones I'm not part of.
   const roomHistory = duels.filter((d) =>
-    (d.status === 'completed' && d.winner_decision !== null)
-    || d.status === 'tie'
-    || d.status === 'declined'
+    (d.status === 'completed' && d.winner_decision !== null) || d.status === 'tie'
   ).slice(0, 20);
 
   // Check if a rematch already exists for a duel
@@ -363,6 +358,44 @@ export default function DuelsScreen() {
             </section>
           )}
 
+          {/* Players and «New challenge» before the lists (owner, 24 Nov 2026). */}
+          {eligibleOpponents.length > 0 && (
+            <section className="du-sec">
+              {sectionHead(t('duels.playersInRoom'), eligibleOpponents.length)}
+              <div className="card du-list">
+                {eligibleOpponents.map((p: Player) => {
+                  const isBusy = busyPlayerIds.has(p.id);
+                  return (
+                    <div key={p.id} className="du-li">
+                      <PlayerAvatar name={p.name} avatarId={p.avatar_id} />
+                      <div className="du-li-who">
+                        <p className="du-li-name">{p.name}</p>
+                        <p className="t-meta du-li-state">
+                          <span className={clsx('dot', isBusy ? 'busy' : 'ready')} aria-hidden="true" />
+                          {isBusy ? t('duels.playerInDuel') : t('duels.playerReady')}
+                          {' · '}
+                          {t('game.points', { count: p.total_points ?? 0 })}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className={clsx('btn btn-sm', isBusy ? 'btn-ghost' : 'btn-secondary')}
+                        onClick={() => handleChallenge(p.id)}
+                        disabled={isBusy || isCreating}
+                      >
+                        {t('duels.playerActionChallenge')}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              <button type="button" className="btn btn-primary btn-block" onClick={() => setShowChallengeModal(true)}>
+                <Sparkles aria-hidden="true" strokeWidth={2.4} />
+                {t('duels.newChallengeBtn')}
+              </button>
+            </section>
+          )}
+
           {(sentPending.length > 0 || waitingForOpponent.length > 0) && (
             <section className="du-sec">
               {sectionHead(t('duels.inProgress'), sentPending.length + waitingForOpponent.length)}
@@ -402,14 +435,6 @@ export default function DuelsScreen() {
             </section>
           )}
 
-          {completedDuels.length > 0 && (
-            <section className="du-sec">
-              {sectionHead(t('duels.resultsSection'), completedDuels.length)}
-              {completedDuels.map((duel) => (
-                <DuelResultCard key={duel.id} duel={duel} onRematch={handleRematch} hasRematch={hasRematch(duel.id)} onOpen={setMomentId} />
-              ))}
-            </section>
-          )}
 
           {duels.length === 0 && !isLoading && (
             <motion.section className="card-hero du-empty" initial={{ opacity: 0, y: reduce ? 0 : 8 }} animate={{ opacity: 1, y: 0 }}>
@@ -436,42 +461,15 @@ export default function DuelsScreen() {
         </div>
 
         <aside className="du-side">
-          {eligibleOpponents.length > 0 && (
+          {completedDuels.length > 0 && (
             <section className="du-sec">
-              {sectionHead(t('duels.playersInRoom'), eligibleOpponents.length)}
-              <div className="card du-list">
-                {eligibleOpponents.map((p: Player) => {
-                  const isBusy = busyPlayerIds.has(p.id);
-                  return (
-                    <div key={p.id} className="du-li">
-                      <PlayerAvatar name={p.name} avatarId={p.avatar_id} />
-                      <div className="du-li-who">
-                        <p className="du-li-name">{p.name}</p>
-                        <p className="t-meta du-li-state">
-                          <span className={clsx('dot', isBusy ? 'busy' : 'ready')} aria-hidden="true" />
-                          {isBusy ? t('duels.playerInDuel') : t('duels.playerReady')}
-                          {' · '}
-                          {t('game.points', { count: p.total_points ?? 0 })}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        className={clsx('btn btn-sm', isBusy ? 'btn-ghost' : 'btn-secondary')}
-                        onClick={() => handleChallenge(p.id)}
-                        disabled={isBusy || isCreating}
-                      >
-                        {t('duels.playerActionChallenge')}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-              <button type="button" className="btn btn-primary btn-block" onClick={() => setShowChallengeModal(true)}>
-                <Sparkles aria-hidden="true" strokeWidth={2.4} />
-                {t('duels.newChallengeBtn')}
-              </button>
+              {sectionHead(t('duels.resultsSection'), completedDuels.length)}
+              {completedDuels.map((duel) => (
+                <DuelResultCard key={duel.id} duel={duel} onRematch={handleRematch} hasRematch={hasRematch(duel.id)} onOpen={setMomentId} />
+              ))}
             </section>
           )}
+
 
           {roomHistory.length > 0 && (
             <section className="du-sec">
@@ -487,8 +485,7 @@ export default function DuelsScreen() {
                   const pts = duel.points_transferred ?? 0;
                   const winnerName = players.find((p) => p.id === duel.winner_id)?.name ?? '—';
                   let note: string;
-                  if (duel.status === 'declined') note = t('duels.declinedRow');
-                  else if (duel.status === 'tie') note = t('duels.tieRow');
+                  if (duel.status === 'tie') note = t('duels.tieRow');
                   else if (duel.winner_decision === 'steal') note = t('duels.stoleRow', { amount: pts, name: winnerName });
                   else if (duel.winner_decision === 'double') note = t('duels.doubledRow', { amount: pts, name: winnerName });
                   else note = t('duels.wonNoDecision');
@@ -511,7 +508,7 @@ export default function DuelsScreen() {
                         </p>
                         <p className="t-meta">{note}</p>
                       </div>
-                      {duel.status !== 'declined' && (
+                      {(
                         <div className="du-li-score">
                           <span className="num">{mine ? `${myScore ?? 0}–${opScore ?? 0}` : `${duel.challenger_score ?? 0}–${duel.challenged_score ?? 0}`}</span>
                           {out && out !== 'open' && (

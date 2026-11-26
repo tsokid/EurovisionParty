@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Check, Eye, EyeOff, Lock } from 'lucide-react';
+import { ArrowLeft, Check, Eye, EyeOff, Lock, X } from 'lucide-react';
 import {
   checkStageName,
   validateRealName,
@@ -128,12 +128,36 @@ export default function NameEntry({
     });
   };
 
+  // A modal over the home page (owner, 24 Nov 2026): it closes only with ✕,
+  // Esc or «Πίσω». A click on the backdrop does nothing, and the page behind
+  // (header, logo, hero) is inert while it is open.
+  useEffect(() => {
+    const behind = Array.from(document.querySelectorAll<HTMLElement>('.topbar, .betabar, .home-behind'));
+    behind.forEach((el) => el.setAttribute('inert', ''));
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && onBack && !retrying) { e.preventDefault(); onBack(); }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      behind.forEach((el) => el.removeAttribute('inert'));
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [onBack, retrying]);
+
   return (
-    <div className="onb">
-      <form onSubmit={handleSubmit} className="onb-card card" noValidate>
+    <div className="onb" data-testid="onb-backdrop">
+      <form onSubmit={handleSubmit} className="onb-card card" noValidate role="dialog" aria-modal="true" aria-labelledby="onb-title">
+        {onBack && !retrying && (
+          <button type="button" className="iconbtn onb-close" onClick={onBack} aria-label={t('nameEntry.closeBtn')}>
+            <X size={18} aria-hidden />
+          </button>
+        )}
         <header className="onb-head">
           <p className="t-eyebrow">{mode === 'create' ? t('nameEntry.createKicker') : t('nameEntry.joinKicker')}</p>
-          <h2 className="t-h2">{mode === 'create' ? t('nameEntry.createTitle') : t('nameEntry.joinTitle')}</h2>
+          <h2 id="onb-title" className="t-h2">{mode === 'create' ? t('nameEntry.createTitle') : t('nameEntry.joinTitle')}</h2>
           <p className="t-small">{t('nameEntry.subtitle')}</p>
         </header>
 

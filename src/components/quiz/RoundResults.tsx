@@ -306,6 +306,16 @@ export default function RoundResults({
         </div>
       </motion.section>
 
+      <button type="button" className="btn btn-primary btn-lg btn-block" onClick={onContinue}>
+        <Sparkles aria-hidden="true" strokeWidth={2.2} />
+        {isLastRound ? t('roundResults.finalResults') : t('quiz.startRound', { num: roundNumber + 1 })}
+      </button>
+      <p className="t-meta qz-end-foot">
+        {isLastRound
+          ? t('quiz.lastRoundFooter', { questions: QUESTIONS_PER_ROUND, timer: TIMER_SECONDS })
+          : t('quiz.roundsLeftFooter', { remaining: MAX_ROUNDS - roundNumber, questions: QUESTIONS_PER_ROUND, timer: TIMER_SECONDS })}
+      </p>
+
       <div className="qz-lb-head">
         <h2 className="t-h3">{t('roundEnd.roomBoard')}</h2>
         <span className="chip chip-live"><span className="dot" />{t('roundEnd.live')}</span>
@@ -362,15 +372,6 @@ export default function RoundResults({
         {toastOn ? t('roundEnd.passed', { names: overtakenNames.join(', ') }) : ''}
       </motion.div>
 
-      <button type="button" className="btn btn-primary btn-lg btn-block" onClick={onContinue}>
-        <Sparkles aria-hidden="true" strokeWidth={2.2} />
-        {isLastRound ? t('roundResults.finalResults') : t('quiz.startRound', { num: roundNumber + 1 })}
-      </button>
-      <p className="t-meta qz-end-foot">
-        {isLastRound
-          ? t('quiz.lastRoundFooter', { questions: QUESTIONS_PER_ROUND, timer: TIMER_SECONDS })
-          : t('quiz.roundsLeftFooter', { remaining: MAX_ROUNDS - roundNumber, questions: QUESTIONS_PER_ROUND, timer: TIMER_SECONDS })}
-      </p>
     </div>
   );
 }

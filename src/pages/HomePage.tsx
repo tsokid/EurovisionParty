@@ -8,6 +8,7 @@ import YourRoomsPanel from '../components/home/YourRoomsPanel';
 import SiteFooter from '../components/seo/SiteFooter';
 import PageSeo from '../components/seo/PageSeo';
 import { useLocale } from '../lib/seo/LocaleContext';
+import { localizePath } from '../lib/seo/locale';
 import { usePageContent } from '../lib/cms/usePageContent';
 import { mergeFaqJsonLd } from '../components/cms/extraFaq';
 import type { HomeContent } from '../../supabase/functions/_shared/cms/schemas/home';
@@ -74,10 +75,11 @@ export function HomePage() {
   // The Stage home (hero, steps, guides) renders while auth initialises too,
   // so the prerendered HTML is the real page, not a spinner. A deep link to
   // the create/join screen (?action=…, ?join=…) shows it once auth is ready.
-  if (authLoading || mode === 'welcome') {
-    return (
-      <>
-        {seo}
+  // The home page is always rendered; the create/join form is a modal over
+  // it (owner, 24 Nov 2026), so the header and hero stay where they are and
+  // the form closes only with ✕, Esc or «Πίσω».
+  const welcome = (
+    <div className="home-behind">
         <HomeHero
           headline={doc?.seo.headline ?? null}
           onCreate={() => setMode('create')}
@@ -94,8 +96,15 @@ export function HomePage() {
         <HomeSections />
         {seoBlock}
         <SiteFooter />
-      </>
-    );
+    </div>
+  );
+  const closeForm = () => {
+    setMode('welcome');
+    setJoinCode('');
+    if (action || prefillCode) navigate(localizePath(locale, '/'), { replace: true });
+  };
+  if (authLoading || mode === 'welcome') {
+    return <>{seo}{welcome}</>;
   }
 
   const handleSubmit = async (data: NameEntryData) => {
@@ -128,10 +137,11 @@ export function HomePage() {
   return (
     <>
       {seo}
+      {welcome}
       <NameEntry
         mode={mode}
         onSubmit={handleSubmit}
-        onBack={() => setMode('welcome')}
+        onBack={closeForm}
         isLoading={isLoading}
         error={secretPending ? t('nameEntry.secretFailed') : error}
         initialRoomCode={joinCode || prefillCode}
