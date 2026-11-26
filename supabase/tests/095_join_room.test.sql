@@ -77,7 +77,7 @@ select pg_temp.expect(
 select pg_temp.expect_error($q$
   insert into public.players (room_id, user_id, name, is_host)
   values ('10000000-0000-4000-8000-000000000095', 'b0000000-0000-4000-8000-0000000000b5', 'Boss', true)
-$q$, 'duplicate|unique', 'second row for the same user');
+$q$, 'duplicate|unique|row-level security', 'second row for the same user');
 
 -- Promote self by update: refused.
 select pg_temp.expect_error($q$
@@ -89,15 +89,17 @@ select pg_temp.as_user('c0000000-0000-4000-8000-0000000000c5');
 select public.join_room('JRM095', 'g' || n, 'Guesser', '🎤') from generate_series(1, 5) n;
 select pg_temp.expect(public.join_room('JRM095', 'secret1', 'Guesser', '🎤')->>'error', 'too_many_attempts', 'locked after 5 failures');
 
--- Direct insert with is_host = true by a fresh user: the guard clears it.
--- (Expand step: guests may still insert directly; 096 removes this.)
+-- A fresh user can't insert directly any more (096); join_room decides is_host.
 select pg_temp.as_user('d0000000-0000-4000-8000-0000000000d5');
-insert into public.players (room_id, user_id, name, is_host)
-values ('10000000-0000-4000-8000-000000000095', 'd0000000-0000-4000-8000-0000000000d5', 'Sneaky', true);
+select pg_temp.expect_error($q$
+  insert into public.players (room_id, user_id, name, is_host)
+  values ('10000000-0000-4000-8000-000000000095', 'd0000000-0000-4000-8000-0000000000d5', 'Sneaky', true)
+$q$, 'row-level security|permission denied', 'guest direct insert refused');
+select public.join_room('JRM095', 'secret1', 'Sneaky', '🎤');
 reset role;
 select pg_temp.expect(
   (select is_host::text from public.players where user_id = 'd0000000-0000-4000-8000-0000000000d5'),
-  'false', 'guard sets is_host from the room');
+  'false', 'join_room sets is_host from the room');
 select pg_temp.expect(
   (select count(*)::text from public.room_join_failures where user_id = 'c0000000-0000-4000-8000-0000000000c5'),
   '5', 'failures are kept');

@@ -129,13 +129,13 @@ select set_config('request.jwt.claims', '{"sub":"d0000000-0000-4000-8000-0000000
 select pg_temp.expect_rows($q$select 1 from public.player_secrets where player_id in ('aaaaaaaa-0000-4000-8000-00000000000a', 'bbbbbbbb-0000-4000-8000-00000000000b')$q$, 0,
   'late joiner D reads R1 at final');
 
--- E joins after the end as a client and backdates joined_at to pass the
--- member arm. 084 forces joined_at = now() on a client insert.
+-- E joins after the end as a client. Since 096 a guest can only come in
+-- through join_room, which never takes joined_at: it is now().
 select set_config('request.jwt.claims', '{"sub":"e0000000-0000-4000-8000-00000000000e"}', true);
-insert into public.players (id, room_id, user_id, name, joined_at, is_active) values
-  ('eeeeeeee-0000-4000-8000-00000000000e', '10000000-0000-4000-8000-000000000001', 'e0000000-0000-4000-8000-00000000000e', 'Πίσω', '2000-01-01', true);
-select pg_temp.expect_rows($q$select 1 from public.players where id = 'eeeeeeee-0000-4000-8000-00000000000e' and joined_at = now()$q$, 1,
-  'E''s backdated joined_at was replaced by now()');
+select pg_temp.expect_rows($q$select 1 from public.join_room('RLS082', '', 'Πίσω', '🎤') j where j->>'error' is null$q$, 1,
+  'E joins through join_room');
+select pg_temp.expect_rows($q$select 1 from public.players where user_id = 'e0000000-0000-4000-8000-00000000000e' and joined_at = now()$q$, 1,
+  'E''s joined_at is now()');
 select pg_temp.expect_rows($q$select 1 from public.player_secrets where player_id in ('aaaaaaaa-0000-4000-8000-00000000000a', 'bbbbbbbb-0000-4000-8000-00000000000b')$q$, 0,
   'late joiner E with a backdated joined_at reads R1 at final');
 

@@ -298,16 +298,20 @@ update public.players set last_seen_at = now(), is_active = false, status = 'awa
  where id = 'aaaaaaaa-0000-4000-8000-0000000000a4';
 update public.players set is_active = true, status = 'active' where id = 'aaaaaaaa-0000-4000-8000-0000000000a4';
 
--- A new player cannot choose joined_at or points on INSERT.
+-- A new player cannot choose joined_at or points: since 096 a guest can't
+-- insert at all, and join_room takes neither.
 select pg_temp.as_user('e0000000-0000-4000-8000-0000000000e4');
-insert into public.players (id, room_id, user_id, name, joined_at, quiz_points, duel_points)
-values ('eeeeeeee-0000-4000-8000-0000000000e4', '10000000-0000-4000-8000-000000000084',
-        'e0000000-0000-4000-8000-0000000000e4', 'Νέο', '2000-01-01', 999, 999);
+select pg_temp.expect_denied($q$
+  insert into public.players (id, room_id, user_id, name, joined_at, quiz_points, duel_points)
+  values ('eeeeeeee-0000-4000-8000-0000000000e4', '10000000-0000-4000-8000-000000000084',
+          'e0000000-0000-4000-8000-0000000000e4', 'Νέο', '2000-01-01', 999, 999)
+$q$, 'players: guest direct insert (096)');
+select public.join_room('SEC084', '', 'Νέο', '🎤');
 reset role;
 select pg_temp.expect(
   (select (joined_at = now())::text || ' ' || quiz_points || ' ' || duel_points
-     from public.players where id = 'eeeeeeee-0000-4000-8000-0000000000e4'),
-  'true 0 0', 'players: client insert gets joined_at = now() and 0 points');
+     from public.players where user_id = 'e0000000-0000-4000-8000-0000000000e4'),
+  'true 0 0', 'players: join_room gives joined_at = now() and 0 points');
 select pg_temp.expect(
   (select is_active || ' ' || status || ' ' || (left_at is null) from public.players where id = 'aaaaaaaa-0000-4000-8000-0000000000a4'),
   'true active true', 'players: legitimate client updates applied');
