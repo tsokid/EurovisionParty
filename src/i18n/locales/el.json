@@ -746,7 +746,15 @@
     "deleteConfirm": "Διαγραφή του δωματίου; Αυτή η ενέργεια είναι μη αναστρέψιμη.",
     "endedLabel": "Έληξε",
     "roomCount_one": "{{count}} δωμάτιο",
-    "roomCount_other": "{{count}} δωμάτια"
+    "roomCount_other": "{{count}} δωμάτια",
+    "oldRooms": "Παλιά δωμάτια",
+    "newRoom": "Νέο δωμάτιο",
+    "joinWithCode": "Μπες με κωδικό",
+    "enter": "Μπες",
+    "hostYou": "Host: εσύ",
+    "hostLine": "Host: {{name}}",
+    "more": "Επιλογές για το δωμάτιο {{code}}",
+    "deleteRoom": "Διαγραφή δωματίου"
   },
   "betaBanner": {
     "label": "Beta",

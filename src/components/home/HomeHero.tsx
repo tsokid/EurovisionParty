@@ -7,6 +7,8 @@ import { contestTexts } from '../../pages/seo/content/contestText';
 import { formatDay } from '../../pages/contest/content/hubCopy';
 import { useDaysUntil } from '../../hooks/useDaysUntil';
 import LivePreview from './LivePreview';
+import RoomsHome from './RoomsHome';
+import { useUserRooms } from '../../hooks/useUserRooms';
 
 interface Props {
   onCreate: () => void;
@@ -32,6 +34,11 @@ export default function HomeHero({ onCreate, onJoin, headline }: Props) {
   const live = contestTexts(contest)[locale];
   const days = useDaysUntil(contest.finalDate);
   const [code, setCode] = useState('');
+  // Players who already have rooms get them in place of the tagline and the
+  // big CTAs (option A). Client-only: the prerendered HTML has
+  // no rooms, so Google always sees the normal hero.
+  const { rooms, loaded } = useUserRooms();
+  const hasRooms = loaded && rooms.length > 0;
   const ref = useRef<HTMLElement>(null);
 
   // The stage-light drift (desktop CSS animation) pauses while the hero is off-screen.
@@ -63,50 +70,56 @@ export default function HomeHero({ onCreate, onJoin, headline }: Props) {
             )}
           </span>
           {headline && <h1 className="home-h1">{headline}</h1>}
-          <p className="home-title">
-            {t('welcome.headlineLine1')}
-            <br />
-            {t('welcome.headlineLine2')}
-            <br />
-            <span className="grad">{t('welcome.headlineAccent')}</span>
-          </p>
-          <p className="home-lede">{t('home.hero.lede')}</p>
+          {hasRooms ? (
+            <RoomsHome rooms={rooms} onCreate={onCreate} onJoinWithCode={() => onJoin('')} />
+          ) : (
+            <>
+            <p className="home-title">
+              {t('welcome.headlineLine1')}
+              <br />
+              {t('welcome.headlineLine2')}
+              <br />
+              <span className="grad">{t('welcome.headlineAccent')}</span>
+            </p>
+            <p className="home-lede">{t('home.hero.lede')}</p>
 
-          <div className="home-actions">
-            <button type="button" className="btn btn-primary btn-lg home-cta" onClick={onCreate}>
-              {t('home.hero.create')}
-            </button>
-            <div className="home-or" aria-hidden>
-              <span className="t-meta">{t('home.hero.or')}</span>
-            </div>
-            <form className="join" onSubmit={submit}>
-              <label htmlFor="home-join-code" className="join-label">
-                <span className="lg:hidden">{t('home.join.label')}</span>
-                <span className="hidden lg:inline">{t('home.join.labelShort')}</span>
-                <span className="join-hint t-meta">
-                  <span className="lg:hidden">{t('home.join.hint')}</span>
-                  <span className="hidden lg:inline">{t('home.join.hintShort')}</span>
-                </span>
-              </label>
-              <div className="join-row">
-                <input
-                  id="home-join-code"
-                  name="code"
-                  className="join-input"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 6))}
-                  placeholder={t('home.join.placeholder')}
-                  maxLength={6}
-                  autoComplete="off"
-                  autoCapitalize="characters"
-                  spellCheck={false}
-                />
-                <button type="submit" className="btn btn-secondary btn-lg join-submit">
-                  {t('home.join.submit')}
-                </button>
+            <div className="home-actions">
+              <button type="button" className="btn btn-primary btn-lg home-cta" onClick={onCreate}>
+                {t('home.hero.create')}
+              </button>
+              <div className="home-or" aria-hidden>
+                <span className="t-meta">{t('home.hero.or')}</span>
               </div>
-            </form>
-          </div>
+              <form className="join" onSubmit={submit}>
+                <label htmlFor="home-join-code" className="join-label">
+                  <span className="lg:hidden">{t('home.join.label')}</span>
+                  <span className="hidden lg:inline">{t('home.join.labelShort')}</span>
+                  <span className="join-hint t-meta">
+                    <span className="lg:hidden">{t('home.join.hint')}</span>
+                    <span className="hidden lg:inline">{t('home.join.hintShort')}</span>
+                  </span>
+                </label>
+                <div className="join-row">
+                  <input
+                    id="home-join-code"
+                    name="code"
+                    className="join-input"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 6))}
+                    placeholder={t('home.join.placeholder')}
+                    maxLength={6}
+                    autoComplete="off"
+                    autoCapitalize="characters"
+                    spellCheck={false}
+                  />
+                  <button type="submit" className="btn btn-secondary btn-lg join-submit">
+                    {t('home.join.submit')}
+                  </button>
+                </div>
+              </form>
+            </div>
+            </>
+          )}
 
           <dl className="home-stats">
             <div>

@@ -443,7 +443,7 @@ export function useRoom(): UseRoomReturn {
           await supabase.from('players').update(leavePayload).eq('id', currentPlayer.id);
         }
 
-        // Keep localStorage entry so YourRoomsPanel can show the room with AWAY/ENDED badge
+        // Keep localStorage entry so the home rooms list can show the room with AWAY/ENDED badge
 
         if (channelRef.current) {
           supabase.removeChannel(channelRef.current);

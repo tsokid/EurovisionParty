@@ -4,7 +4,6 @@ import NameEntry, { type NameEntryData } from '../components/onboarding/NameEntr
 import HomeSeoBlock from '../components/seo/HomeSeoBlock';
 import HomeHero from '../components/home/HomeHero';
 import HomeSections from '../components/home/HomeSections';
-import YourRoomsPanel from '../components/home/YourRoomsPanel';
 import SiteFooter from '../components/seo/SiteFooter';
 import PageSeo from '../components/seo/PageSeo';
 import { useLocale } from '../lib/seo/LocaleContext';
@@ -76,7 +75,7 @@ export function HomePage() {
   // so the prerendered HTML is the real page, not a spinner. A deep link to
   // the create/join screen (?action=…, ?join=…) shows it once auth is ready.
   // The home page is always rendered; the create/join form is a modal over
-  // it (owner, 24 Nov 2026), so the header and hero stay where they are and
+  // it (owner's request), so the header and hero stay where they are and
   // the form closes only with ✕, Esc or «Πίσω».
   const welcome = (
     <div className="home-behind">
@@ -88,11 +87,6 @@ export function HomePage() {
             setMode('join');
           }}
         />
-        {!authLoading && (
-          <div className="wrap home-rooms">
-            <YourRoomsPanel />
-          </div>
-        )}
         <HomeSections />
         {seoBlock}
         <SiteFooter />

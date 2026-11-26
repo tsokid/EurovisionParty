@@ -746,7 +746,15 @@
     "deleteConfirm": "Delete this room? This cannot be undone.",
     "endedLabel": "Ended",
     "roomCount_one": "{{count}} room",
-    "roomCount_other": "{{count}} rooms"
+    "roomCount_other": "{{count}} rooms",
+    "oldRooms": "Past rooms",
+    "newRoom": "New room",
+    "joinWithCode": "Join with a code",
+    "enter": "Enter",
+    "hostYou": "Host: you",
+    "hostLine": "Host: {{name}}",
+    "more": "Options for room {{code}}",
+    "deleteRoom": "Delete room"
   },
   "betaBanner": {
     "label": "Beta",

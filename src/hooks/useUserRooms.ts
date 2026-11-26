@@ -15,6 +15,10 @@ export interface RoomEntry {
   leftAt: string | null;
   phase: string;
   isHost: boolean;
+  /** When this player joined the room (ISO). Newest first within a group. */
+  joinedAt: string | null;
+  /** The room's last activity (ISO); folds idle rooms under «Παλιά δωμάτια». */
+  lastActivityAt: string | null;
 }
 
 export function getBadge(entry: RoomEntry): RoomBadge {
@@ -31,7 +35,30 @@ export function removeFromStorage(roomCode: string) {
   } catch { /* ignore */ }
 }
 
+/** Rooms idle this long fold under «Παλιά δωμάτια» on the home page. */
+export const OLD_AFTER_DAYS = 30;
+
+/**
+ * Old = ended, or no activity for OLD_AFTER_DAYS. The schema has no
+ * 'finished' phase today, so idleness is what separates last month's party
+ * from tonight's (all rooms carry the same contest year between contests).
+ */
+export function isOldRoom(entry: RoomEntry, now = Date.now()): boolean {
+  if (getBadge(entry) === 'ENDED') return true;
+  if (!entry.lastActivityAt) return false;
+  return now - Date.parse(entry.lastActivityAt) > OLD_AFTER_DAYS * 86_400_000;
+}
+
 const ORDER: Record<RoomBadge, number> = { LIVE: 0, AWAY: 1, ENDED: 2 };
+
+const joinedMs = (r: RoomEntry) => (r.joinedAt ? Date.parse(r.joinedAt) : 0);
+
+/** Live, then away, then ended; newest joined first inside each group. */
+export function sortRooms(entries: RoomEntry[]): RoomEntry[] {
+  return [...entries].sort((a, b) =>
+    ORDER[getBadge(a)] - ORDER[getBadge(b)]
+    || joinedMs(b) - joinedMs(a));
+}
 
 interface CacheState {
   rooms: RoomEntry[];
@@ -72,14 +99,14 @@ async function loadOnce(force = false): Promise<void> {
 
   const { data, error } = await supabase
     .from('players')
-    .select('id, status, left_at, total_points, is_host, rooms!inner(id, code, phase, host_name)')
+    .select('id, status, left_at, joined_at, total_points, is_host, rooms!inner(id, code, phase, host_name, last_activity_at)')
     .in('id', playerIds);
 
   if (error) {
     console.error('[useUserRooms] query failed:', error.message);
     const { data: fallback, error: fbErr } = await supabase
       .from('players')
-      .select('id, is_active, total_points, is_host, rooms!inner(id, code, phase, host_name)')
+      .select('id, is_active, joined_at, total_points, is_host, rooms!inner(id, code, phase, host_name, last_activity_at)')
       .in('id', playerIds);
     if (fbErr) {
       console.error('[useUserRooms] fallback failed:', fbErr.message);
@@ -107,9 +134,10 @@ async function loadOnce(force = false): Promise<void> {
         leftAt: null,
         phase: p.rooms.phase,
         isHost: p.is_host ?? false,
+        joinedAt: p.joined_at ?? null,
+        lastActivityAt: p.rooms.last_activity_at ?? null,
       }));
-    fallbackEntries.sort((a, b) => ORDER[getBadge(a)] - ORDER[getBadge(b)]);
-    cache.rooms = fallbackEntries;
+    cache.rooms = sortRooms(fallbackEntries);
     cache.loading = false;
     cache.loaded = true;
     notify();
@@ -136,10 +164,11 @@ async function loadOnce(force = false): Promise<void> {
       leftAt: p.left_at,
       phase: p.rooms.phase,
       isHost: p.is_host ?? false,
+      joinedAt: p.joined_at ?? null,
+      lastActivityAt: p.rooms.last_activity_at ?? null,
     }));
 
-  entries.sort((a, b) => ORDER[getBadge(a)] - ORDER[getBadge(b)]);
-  cache.rooms = entries;
+  cache.rooms = sortRooms(entries);
   cache.loading = false;
   cache.loaded = true;
   notify();
@@ -168,5 +197,26 @@ export function useUserRooms() {
 
   const refresh = useCallback(() => loadOnce(true), []);
 
-  return { rooms, loaded, updateRooms, refresh };
+  /** Leave a room: the player row becomes 'exited' (the room stays listed). */
+  const leave = useCallback(async (entry: RoomEntry) => {
+    const now = new Date().toISOString();
+    const { error } = await supabase
+      .from('players')
+      .update({ is_active: false, status: 'exited', left_at: now })
+      .eq('id', entry.playerId);
+    if (error?.message?.includes('status')) {
+      await supabase.from('players').update({ is_active: false }).eq('id', entry.playerId);
+    }
+    updateRooms((prev) => sortRooms(prev.map((r) =>
+      r.playerId === entry.playerId ? { ...r, status: 'exited', leftAt: now } : r)));
+  }, [updateRooms]);
+
+  /** Delete a room the player hosts, and forget it in this browser. */
+  const remove = useCallback(async (entry: RoomEntry) => {
+    await supabase.from('rooms').delete().eq('id', entry.roomId);
+    removeFromStorage(entry.roomCode);
+    updateRooms((prev) => prev.filter((r) => r.roomId !== entry.roomId));
+  }, [updateRooms]);
+
+  return { rooms, loaded, updateRooms, refresh, leave, remove };
 }

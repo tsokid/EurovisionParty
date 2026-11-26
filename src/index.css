@@ -554,6 +554,40 @@ body { margin: 0; overscroll-behavior: none; }
   .home-lede { margin: 0; font-size: 17px; line-height: 1.6; color: var(--color-stage-text-2); }
   .home-actions { display: flex; flex-direction: column; gap: 18px; }
   .home-cta { width: 100%; }
+  /* Rooms in the hero (players who already have rooms, option A) */
+  .rh { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 560px; }
+  .rh-group { display: flex; flex-direction: column; gap: 8px; }
+  .rh-group-h { display: flex; align-items: center; gap: 8px; }
+  .rh-count { margin-left: auto; font-size: 13px; color: var(--color-stage-text-3); font-variant-numeric: tabular-nums; }
+  .rh-badge { font-size: 11px; font-weight: 800; letter-spacing: .1em; padding: 3px 9px; border-radius: 999px; border: 1px solid; }
+  .rh-badge.live { color: var(--color-stage-ok); border-color: rgba(62, 224, 143, .35); background: rgba(62, 224, 143, .14); }
+  .rh-badge.away { color: var(--color-stage-gold-2); border-color: rgba(255, 197, 61, .25); background: rgba(255, 197, 61, .1); }
+  .rh-list { display: flex; flex-direction: column; gap: 8px; }
+  .rh-row { position: relative; display: flex; align-items: center; gap: 10px; min-height: 60px; padding: 8px 8px 8px 14px; border-radius: 16px; border: 1px solid var(--color-stage-line); background: var(--color-stage-surface); }
+  .rh-row.live { border-color: rgba(46, 230, 214, .4); background: linear-gradient(120deg, rgba(46, 230, 214, .1), rgba(163, 91, 255, .08)), var(--color-stage-surface); }
+  .rh-row.old { background: transparent; }
+  .rh-row.first { min-height: 72px; padding: 12px 10px 12px 16px; }
+  .rh-who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .rh-top { display: flex; align-items: baseline; gap: 8px; }
+  .rh-code { font-size: 24px; letter-spacing: .06em; color: var(--color-stage-text); }
+  .rh-row.first .rh-code { font-size: 30px; }
+  .rh-row.old .rh-code { color: var(--color-stage-text-2); }
+  .rh-host { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--color-stage-gold); }
+  .rh-sub { font-size: 13px; color: var(--color-stage-text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rh-go { flex: none; min-height: 44px; }
+  .rh-menu-wrap { position: relative; flex: none; }
+  .rh-more, .rh-more-spacer { width: 40px; height: 40px; flex: none; }
+  .rh-more { display: grid; place-items: center; border-radius: 12px; border: 1px solid var(--color-stage-line); background: transparent; color: var(--color-stage-text-2); font-size: 18px; line-height: 1; cursor: pointer; }
+  .rh-more:hover:not(:disabled) { border-color: var(--color-stage-line-2); color: var(--color-stage-text); }
+  .rh-more:focus-visible, .rh-mi:focus-visible, .rh-old:focus-visible { outline: 2px solid var(--color-stage-pink-2); outline-offset: 2px; }
+  .rh-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; min-width: 180px; padding: 4px; border-radius: 14px; background: var(--color-stage-surface-3); border: 1px solid var(--color-stage-line-2); box-shadow: 0 16px 30px -10px rgba(0, 0, 0, .9); display: flex; flex-direction: column; }
+  .rh-mi { display: block; width: 100%; min-height: 44px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; text-align: left; font: 700 14px/1.2 var(--font-stage); cursor: pointer; }
+  .rh-mi:hover { background: rgba(255, 255, 255, .06); }
+  .rh-mi.warn { color: var(--color-stage-gold); }
+  .rh-mi.bad { color: var(--color-stage-bad); }
+  .rh-old { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 48px; padding: 0 14px; border-radius: 16px; border: 1px dashed var(--color-stage-line-2); background: transparent; color: var(--color-stage-text-2); font: 700 14px/1.2 var(--font-stage); cursor: pointer; }
+  .rh-old-n { color: var(--color-stage-text-3); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .rh-new { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .home-or { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
   .home-or::before, .home-or::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, .12); }
   .join { display: flex; flex-direction: column; gap: 10px; margin: 0; }
@@ -566,8 +600,6 @@ body { margin: 0; overscroll-behavior: none; }
   .join-submit { padding: 0 20px; }
   .home-stats { display: none; }
   .home-preview { display: none; }
-  .home-rooms { padding-top: 20px; }
-  .home-rooms:empty { display: none; }
   .home-block { display: flex; flex-direction: column; gap: 14px; padding-top: 20px; padding-bottom: 20px; color: var(--color-stage-text); }
   .home-countdown { padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
   .home-countdown-days { flex: none; width: 76px; text-align: center; }
@@ -617,7 +649,6 @@ body { margin: 0; overscroll-behavior: none; }
     .home-preview-row { padding-top: 4px; padding-bottom: 6px; }
     .home-preview .avpop.home-preview-av { width: 44px; flex: none; }
     .home-preview-event { margin: 14px 12px 0; padding: 14px 16px; border-radius: 14px; background: var(--color-stage-surface-2); display: flex; align-items: center; gap: 12px; }
-    .home-rooms { padding-top: 40px; }
     .home-block { padding-top: 0; padding-bottom: 0; }
     .home-steps-block { padding-top: 72px; padding-bottom: 24px; }
     .home-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 0; background: none; border: 0; box-shadow: none; }
