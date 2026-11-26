@@ -685,6 +685,7 @@
     "newNotification": "New notification"
   },
   "errors": {
+    "tooManyAttempts": "Too many attempts. Wait a few minutes and try again.",
     "tooManyRooms": "Too many rooms created. Please wait an hour.",
     "nameTaken": "That name is taken in this room. Choose another.",
     "roomFull": "Room is full. No more players can join.",

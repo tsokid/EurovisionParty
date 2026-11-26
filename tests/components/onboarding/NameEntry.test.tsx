@@ -147,7 +147,7 @@ describe('<NameEntry>', () => {
       const { rerender } = render(qr());
       expect(screen.queryByLabelText(PASSWORD)).toBeNull();
       rerender(qr({ error: 'Wrong password. Try again.', passwordRejected: true }));
-      expect(screen.getByRole('alert')).toHaveTextContent('Wrong password. Try again.');
+      expect(screen.getByRole('alert')).toHaveTextContent('Λάθος κωδικός. Δοκίμασε ξανά.'); // shown in the reader's language (095)
       expect(screen.getByLabelText(PASSWORD)).toBeInTheDocument();
       rerender(qr({ error: null, passwordRejected: false }));
       expect(screen.getByLabelText(PASSWORD)).toBeInTheDocument(); // stays open

@@ -10,6 +10,7 @@ import {
 } from '../../lib/nameFilter';
 import { randomAvatarId, randomFrom, usePickerAvatars } from '../stage/avatars';
 import AvatarPicker from './AvatarPicker';
+import { ROOM_ERROR_KEYS } from '../../hooks/useRoom';
 
 export interface NameEntryData {
   /** Stage name (players.name): shown everywhere, unique per room, used to rejoin. */
@@ -265,7 +266,7 @@ export default function NameEntry({
         </div>
         )}
 
-        {error && <p className="onb-error" role="alert">{error}</p>}
+        {error && <p className="onb-error" role="alert">{ROOM_ERROR_KEYS[error] ? t(ROOM_ERROR_KEYS[error]) : error}</p>}
 
         <button
           type="submit"

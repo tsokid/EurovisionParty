@@ -3,11 +3,24 @@ import { supabase } from '../lib/supabase';
 import { ensureUser } from '../lib/ensureUser';
 import { useGameStore } from '../stores/gameStore';
 import { generateRoomCode } from '../lib/roomCode';
-import type { Room } from '../lib/types';
+import type { Player, Room } from '../lib/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 /** joinRoom's error for a wrong room password (the join form keys off it). */
 export const WRONG_PASSWORD_ERROR = 'Wrong password. Try again.';
+/** joinRoom's error after too many failed attempts (095 join_room). */
+export const TOO_MANY_ATTEMPTS_ERROR = 'Too many attempts. Wait a few minutes and try again.';
+
+/** Known room errors (English, as thrown) → i18n keys, so the join form shows them in the reader's language. */
+export const ROOM_ERROR_KEYS: Record<string, string> = {
+  [WRONG_PASSWORD_ERROR]: 'errors.wrongPassword',
+  [TOO_MANY_ATTEMPTS_ERROR]: 'errors.tooManyAttempts',
+  'Room not found. Check the code.': 'errors.roomNotFound',
+  'Room is full. No more players can join.': 'errors.roomFull',
+  'That name is taken in this room. Choose another.': 'errors.nameTaken',
+  'Failed to join room': 'errors.failedJoinRoom',
+  'Failed to create room': 'errors.failedCreateRoom',
+};
 
 // --- localStorage helpers for multi-room rejoin ---
 const STORAGE_KEY = 'europarty_rooms';
@@ -299,57 +312,33 @@ export function useRoom(): UseRoomReturn {
 
       try {
         // The anonymous account is made here, not on page load.
-        const user = await ensureUser();
+        await ensureUser();
 
-        // Verify room code + password via RPC
-        const { data: roomData, error: roomErr } = await supabase
-          .rpc('verify_room_password', {
-            p_code: code.toUpperCase(),
-            p_password: password,
-          })
-          .single();
+        // One server call (095): password, capacity, attempt limit and the
+        // player row are all decided on the server. A returning player gets
+        // their own row back. The room comes back without its password hash.
+        const { data: joined, error: joinErr } = await supabase.rpc('join_room', {
+          p_code: code.toUpperCase(),
+          p_password: password,
+          p_name: name,
+          p_emoji: emoji,
+          p_avatar_id: identity?.avatarId ?? null,
+        });
+        if (joinErr) throw joinErr;
 
-        if (roomErr) {
-          // Map Postgres exceptions to user-friendly messages
-          const msg = roomErr.message || '';
-          if (msg.includes('Incorrect password')) throw new Error(WRONG_PASSWORD_ERROR);
-          if (msg.includes('Room not found')) throw new Error('Room not found. Check the code.');
-          throw roomErr;
+        const result = joined as { error?: string; room?: Room; player?: Player } | null;
+        switch (result?.error) {
+          case undefined: break;
+          case 'wrong_password': throw new Error(WRONG_PASSWORD_ERROR);
+          case 'room_not_found': throw new Error('Room not found. Check the code.');
+          case 'room_full': throw new Error('Room is full. No more players can join.');
+          case 'name_taken': throw new Error('That name is taken in this room. Choose another.');
+          case 'too_many_attempts': throw new Error(TOO_MANY_ATTEMPTS_ERROR);
+          default: throw new Error('Failed to join room');
         }
-        if (!roomData) throw new Error('Room not found');
-        const typedRoomData = roomData as unknown as Room;
-
-        // Check if user already has an active player in this room (prevents double-join)
-        // Capacity check is handled server-side in verify_room_password (SECURITY DEFINER)
-        const { data: existingPlayer } = await supabase
-          .from('players')
-          .select('*')
-          .eq('room_id', typedRoomData.id)
-          .eq('user_id', user.id)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        let playerData;
-        if (existingPlayer) {
-          // Already in the room — rejoin with existing player
-          playerData = existingPlayer;
-        } else {
-          // Insert new player
-          const { data: newPlayer, error: playerErr } = await supabase
-            .from('players')
-            .insert({
-              room_id: typedRoomData.id,
-              user_id: user.id,
-              name,
-              avatar_emoji: emoji,
-              ...(identity ? { avatar_id: identity.avatarId } : {}),
-            })
-            .select()
-            .single();
-
-          if (playerErr) throw playerErr;
-          playerData = newPlayer;
-        }
+        if (!result?.room || !result.player) throw new Error('Failed to join room');
+        const typedRoomData = result.room;
+        const playerData = result.player;
 
         setRoom(typedRoomData);
         setPlayer(playerData);
