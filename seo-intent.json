@@ -16,6 +16,24 @@
         }
       ],
       "data": []
+    },
+    {
+      "id": "publish-12",
+      "created_at": "2026-11-27T11:55:55.536Z",
+      "source": "publish-content",
+      "docs": [],
+      "data": [
+        {
+          "file": "content/site.json",
+          "fields": [
+            "title",
+            "description",
+            "h1",
+            "jsonLd",
+            "robots"
+          ]
+        }
+      ]
     }
   ]
 }
