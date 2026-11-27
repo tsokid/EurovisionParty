@@ -6,7 +6,7 @@ import { PAGE_REGISTRY } from '../../src/lib/seo/registry'
 const cfg = JSON.parse(readFileSync(resolve(process.cwd(), 'vercel.json'), 'utf8'))
 
 const CSP =
-  "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co wss://ameneqrrfdhntfzvchnn.supabase.co; img-src 'self' data: https:; media-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co; font-src 'self'; frame-ancestors 'self';"
+  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co wss://ameneqrrfdhntfzvchnn.supabase.co; img-src 'self' data: https:; media-src 'self' https://ameneqrrfdhntfzvchnn.supabase.co; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self';"
 
 describe('vercel.json', () => {
   it('has no legacy routes key', () => {

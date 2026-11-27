@@ -1,3 +1,4 @@
+import { ROOM_COLUMNS } from '../lib/roomColumns';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
@@ -114,7 +115,7 @@ export function RoomPage() {
     const id = setInterval(async () => {
       const { data } = await supabase
         .from('rooms')
-        .select('*')
+        .select(ROOM_COLUMNS)
         .eq('id', storeRoom.id)
         .single();
       if (data && (data as Room).phase !== currentPhase) {

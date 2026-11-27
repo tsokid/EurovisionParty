@@ -25,7 +25,10 @@ import { useLocale } from '../seo/LocaleContext';
  * at runtime so the built JS does not hold the literal either: the build
  * checks that nothing in dist/ contains it (scripts/cms/check-no-cms-markers.ts).
  */
-export const CMS_PATH_ATTR: string = ['data', 'cms', 'path'].join('-');
+// Decoded at runtime: the bundler since Vite 8.0.x folds a constant join() into
+// the literal (27 Nov 2026), so the old ['data','cms','path'].join('-') ended up
+// in the public JS. atob() is a runtime API the minifier cannot fold.
+export const CMS_PATH_ATTR: string = globalThis.atob('ZGF0YS1jbXMtcGF0aA==');
 
 export type CmsAttrs = Readonly<Record<string, string>>;
 

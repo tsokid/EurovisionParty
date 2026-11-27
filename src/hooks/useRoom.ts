@@ -1,3 +1,4 @@
+import { ROOM_COLUMNS } from '../lib/roomColumns';
 import { useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { ensureUser } from '../lib/ensureUser';
@@ -28,15 +29,28 @@ const STORAGE_KEY = 'europarty_rooms';
 interface RoomSession {
   playerId: string;
   roomId: string;
-  password?: string;
 }
 
-export function saveRoomSession(roomCode: string, playerId: string, roomId: string, password?: string) {
+/**
+ * Remembers the room on this device for a rejoin (by the player's own id).
+ * The room password is never stored (security pack 2d): a plain password in
+ * localStorage outlives the party and is readable by anything on the page.
+ */
+export function saveRoomSession(roomCode: string, playerId: string, roomId: string) {
   try {
     const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    const session: RoomSession = { playerId, roomId };
-    if (password) session.password = password;
-    existing[roomCode.toUpperCase()] = session;
+    existing[roomCode.toUpperCase()] = { playerId, roomId } satisfies RoomSession;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+  } catch { /* ignore */ }
+}
+
+/** Removes passwords that older versions stored with the room sessions. */
+export function dropStoredPasswords() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw || !raw.includes('"password"')) return;
+    const existing = JSON.parse(raw) as Record<string, RoomSession & { password?: string }>;
+    for (const k of Object.keys(existing)) delete existing[k].password;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
   } catch { /* ignore */ }
 }
@@ -52,6 +66,7 @@ export function getRoomSession(roomCode: string): RoomSession | null {
 
 /** Clean up stale localStorage entries (keep only last 10) */
 export function cleanupStaleSessions() {
+  dropStoredPasswords();
   try {
     const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     const keys = Object.keys(existing);
@@ -278,7 +293,7 @@ export function useRoom(): UseRoomReturn {
         subscribeToRoom(typedRoom.id as string);
 
         // Save session to localStorage for rejoin support
-        saveRoomSession(code, playerData.id, typedRoom.id, password || undefined);
+        saveRoomSession(code, playerData.id, typedRoom.id);
 
         // Real name right after the player row; the room is already usable,
         // so a failure here is retried on its own (retryRealName).
@@ -346,7 +361,7 @@ export function useRoom(): UseRoomReturn {
         subscribeToRoom(typedRoomData.id);
 
         // Save session to localStorage for rejoin support
-        saveRoomSession(typedRoomData.code, playerData.id, typedRoomData.id, password || undefined);
+        saveRoomSession(typedRoomData.code, playerData.id, typedRoomData.id);
 
         // Also for an existing player row: fills a missing secret, keeps an existing one.
         if (identity) await storeSecret(playerData.id, identity.realName, typedRoomData.code);
@@ -405,7 +420,7 @@ export function useRoom(): UseRoomReturn {
         // Immediately refetch room so host transitions without waiting for Realtime
         const { data: updatedRoom } = await supabase
           .from('rooms')
-          .select('*')
+          .select(ROOM_COLUMNS)
           .eq('id', roomId)
           .single();
         if (updatedRoom) useGameStore.getState().setRoom(updatedRoom as Room);
@@ -464,7 +479,7 @@ export function useRoom(): UseRoomReturn {
     if (!currentRoom) return;
     const { data } = await supabase
       .from('rooms')
-      .select('*')
+      .select(ROOM_COLUMNS)
       .eq('id', currentRoom.id)
       .single();
     if (data) setRoom(data as Room);

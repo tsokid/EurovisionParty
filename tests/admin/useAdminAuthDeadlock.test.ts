@@ -41,7 +41,7 @@ vi.mock('../../src/lib/supabase', () => {
 
 import { useAdminAuth } from '../../src/admin/useAdminAuth';
 
-const session = (email: string) => ({ user: { id: 'u1', email } });
+const session = (email: string, id = 'u1') => ({ user: { id, email } });
 
 /** Like supabase-js: the callback runs, and is awaited, inside the auth lock. */
 async function emit(event: string, s: unknown) {
@@ -86,7 +86,9 @@ describe('useAdminAuth and the supabase auth lock', () => {
     const { result } = renderHook(() => useAdminAuth());
     await waitFor(() => expect(result.current.status).toBe('authenticated'));
     h.isAdmin = false;
-    await act(async () => { await emit('SIGNED_IN', session('b@x.test')); });
+    // Another account signs in on this tab (the same account coming back to
+    // the tab is not checked again).
+    await act(async () => { await emit('SIGNED_IN', session('b@x.test', 'u2')); });
     await waitFor(() => expect(result.current.status).toBe('denied'));
     expect(h.calledInside).toEqual([]);
     expect(h.signOut).toHaveBeenCalled();

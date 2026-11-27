@@ -1,3 +1,4 @@
+import { ROOM_COLUMNS } from '../lib/roomColumns';
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useGameStore } from '../stores/gameStore';
@@ -16,7 +17,7 @@ export type RejoinStatus =
 export function useRejoin(roomCode: string | undefined) {
   const [status, setStatus] = useState<RejoinStatus>('loading');
   const attempted = useRef(false);
-  const { room, player, setRoom, setPlayer, setRoomPassword } = useGameStore();
+  const { room, player, setRoom, setPlayer } = useGameStore();
 
   useEffect(() => {
     if (room && player) {
@@ -37,7 +38,7 @@ export function useRejoin(roomCode: string | undefined) {
         // 1. Look up room by code
         const { data: roomData, error: roomErr } = await supabase
           .from('rooms')
-          .select('*')
+          .select(ROOM_COLUMNS)
           .eq('code', roomCode!.toUpperCase())
           .single();
 
@@ -169,8 +170,6 @@ export function useRejoin(roomCode: string | undefined) {
         // 5. Hydrate store
         setRoom(roomData as Room);
         setPlayer(playerData);
-        const saved = getRoomSession(roomCode!);
-        if (saved?.password) setRoomPassword(saved.password);
 
         setStatus('rejoined');
       } catch (err) {

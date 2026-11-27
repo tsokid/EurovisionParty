@@ -63,6 +63,7 @@ create or replace function cron.unschedule(job_id bigint)
 returns boolean language sql as $$ select true $$;
 
 create table if not exists cron.job_run_details (end_time timestamptz);
+create table if not exists cron.job (jobid bigint, jobname text, schedule text, command text, active boolean default true);
 
 -- ── vault ───────────────────────────────────────────────────────────────
 create schema if not exists vault;

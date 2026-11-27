@@ -13,7 +13,7 @@
 // so zod stays out of the client bundle (tests/scripts/bundleSize.test.ts).
 //
 // Deno-free. Bare "zod" specifier: Node/Vite resolve it from node_modules; an
-// edge function that imports this needs "zod": "npm:zod@4.3.6" in its
+// edge function that imports this needs "zod": "npm:zod@4.6.7" in its
 // deno.json import map.
 import { z } from 'zod';
 import { placeholdersIn } from './placeholders.ts';
