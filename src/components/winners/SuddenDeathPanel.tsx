@@ -27,7 +27,9 @@ import { useGameStore } from '../../stores/gameStore';
 import { Avatar } from '../stage';
 // Question bank is shipped as static JSON, not a Postgres table — same
 // source the regular Quiz tab uses, so SD inherits the same 500-Q pool.
-import { QUESTIONS, QUESTIONS_BY_ID } from '../../lib/questions';
+import { suddenDeathQuestion } from '../../lib/servedQuestions';
+import { getLocalizedQuestion } from '../../lib/questionLocale';
+import type { QuizQuestion } from '../../lib/types';
 
 const REVEAL_MS = 2000;     // how long to show the correct answer
 // Per-round duration is owned by migration 031 (15 s baked into closes_at).
@@ -79,9 +81,9 @@ export default function SuddenDeathPanel({
 
   const [rounds, setRounds] = useState<RoundRow[]>([]);
   const [answers, setAnswers]   = useState<AnswerRow[]>([]);
-  // Question lookup is derived from the static bank — the only DB call
-  // we do for questions is via question_id stored on each round row.
-  const questions = QUESTIONS_BY_ID;
+  // Each round's question comes from the server (099): its text while the
+  // round is open, and its correct option only once the round has closed.
+  const [served, setServed] = useState<Record<string, { question: QuizQuestion; correctIndex: number | null }>>({});
   const [busy, setBusy]         = useState(false);
   const [err, setErr]           = useState<string | null>(null);
   const [now, setNow]           = useState(Date.now());
@@ -190,6 +192,18 @@ export default function SuddenDeathPanel({
   }, [rounds, now]);
 
   const isAfterAllRounds = rounds.length > 0 && !activeRound;
+  const activeId = activeRound?.id ?? null;
+  const activeClosed = activeRound ? now >= new Date(activeRound.closes_at).getTime() : false;
+  const haveActive = activeId ? served[activeId] : undefined;
+  const needFetch = !!activeId && (!haveActive || (activeClosed && haveActive.correctIndex == null));
+  useEffect(() => {
+    if (!activeId || !needFetch) return;
+    let live = true;
+    suddenDeathQuestion(activeId)
+      .then((r) => { if (live) setServed((prev) => ({ ...prev, [activeId]: r })); })
+      .catch((e) => { if (live) setErr(errMsg(e)); });
+    return () => { live = false; };
+  }, [activeId, needFetch]);
 
   // ── Auto-fire resolve once all rounds + reveal time have passed ────────
   useEffect(() => {
@@ -205,16 +219,12 @@ export default function SuddenDeathPanel({
   }, [isAfterAllRounds, matchId, onResolved]);
 
   // ── Host: open the match ───────────────────────────────────────────────
-  // Pick 3 random IDs from the static question bank (no DB table for
-  // questions in this project — they live in src/lib/questions.ts).
+  // The server draws the three questions, unseen by every tied player (099).
   const startMatch = async () => {
     setBusy(true); setErr(null);
     try {
-      if (QUESTIONS.length < 3) throw new Error('Not enough questions in pool');
-      const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5);
-      const ids = shuffled.slice(0, 3).map((q) => q.id);
       const { error: openErr } = await supabase.rpc('open_sudden_death_match', {
-        p_room_id: roomId, p_category: 'champion', p_question_ids: ids,
+        p_room_id: roomId, p_category: 'champion', p_question_ids: [],
       });
       if (openErr) throw openErr;
       resolveFiredRef.current = false;
@@ -228,13 +238,13 @@ export default function SuddenDeathPanel({
     if (localPicks[round.id] !== undefined) return; // already picked
 
     setLocalPicks(prev => ({ ...prev, [round.id]: idx }));
-    const q = questions.get(round.question_id);
-    if (!q) return;
+    if (!served[round.id]) return;
     try {
+      // The server scores it (097); p_is_correct is ignored.
       await supabase.rpc('submit_sudden_death_answer', {
         p_round_id: round.id,
         p_answer_index: idx,
-        p_is_correct: idx === q.correct_index,
+        p_is_correct: false,
       });
     } catch (e) { setErr(errMsg(e)); }
   };
@@ -260,7 +270,9 @@ export default function SuddenDeathPanel({
 
   // ── Match in progress ──────────────────────────────────────────────────
   if (activeRound) {
-    const q = questions.get(activeRound.question_id);
+    const sq = served[activeRound.id];
+    const q = sq ? getLocalizedQuestion(sq.question) : null;
+    const correctIdx = sq?.correctIndex ?? null;
     const closesAt = new Date(activeRound.closes_at).getTime();
     const remainingMs = Math.max(0, closesAt - now);
     const isReveal = remainingMs === 0;
@@ -288,7 +300,7 @@ export default function SuddenDeathPanel({
           {q && (
             <div className="tv-ans">
               {options.map((opt, idx) => {
-                const isCorrect = idx === q.correct_index;
+                const isCorrect = correctIdx != null && idx === correctIdx;
                 const isMine    = myPick === idx;
                 return (
                   <button

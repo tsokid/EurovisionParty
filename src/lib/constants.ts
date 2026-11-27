@@ -58,22 +58,8 @@ export const EMOJI_OPTIONS = [
   '\u{1F3C6}', // trophy
 ] as const
 
-// ── Round composition (10 questions per round) ───────────────────────
-export const ROUND_COMPOSITION: { category: string; difficulty: string; count: number }[] = [
-  { category: '2026',      difficulty: 'easy',   count: 1 },
-  { category: '2026',      difficulty: 'medium', count: 2 },
-  { category: '2026',      difficulty: 'hard',   count: 1 },
-  { category: 'history',   difficulty: 'medium', count: 1 },
-  { category: 'history',   difficulty: 'hard',   count: 1 },
-  { category: 'trivia',    difficulty: 'easy',   count: 1 },
-  { category: 'trivia',    difficulty: 'medium', count: 1 },
-  { category: 'lyrics',    difficulty: 'medium', count: 1 },
-  // 1 hard from a rotating "wildcard" pool
-  { category: '_wildcard', difficulty: 'hard',   count: 1 },
-]
-
-/** Categories that feed the wildcard slot */
-export const WILDCARD_CATEGORIES = ['records', 'geography', 'staging'] as const
+// Round composition: the server draws each question (099) by era, from
+// the mix in /admin → Ερωτήσεις (quiz_settings).
 
 // ── Intel reveal costs ───────────────────────────────────────────────
 export const INTEL_COSTS = {

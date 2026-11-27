@@ -1,145 +1,121 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Swords } from 'lucide-react';
-import { QUESTIONS_BY_ID } from '../../lib/questions';
-import { getLocalizedQuestion } from '../../lib/questionLocale';
-import { calcDuelPoints } from '../../hooks/useDuels';
 import { duelAnswerChip } from '../../lib/answerPoints';
-import { createReactionTimer } from '../../lib/reactionTimer';
+import { duelAnswer, duelNext, secondsLeft, type Serve } from '../../lib/servedQuestions';
 import QuestionCard, { type AnswerChipView } from '../quiz/QuestionCard';
 import { duelChipView } from '../quiz/chipText';
 import { PointsChip } from '../stage';
-import type { Duel, DuelAnswer, QuizQuestion } from '../../lib/types';
+import type { Duel, DuelAnswer } from '../../lib/types';
 
 /** How long the "+N · 12−s" chip stays before the next duel question
- *  (presentation only: the next question's clock starts only once its
- *  answers are tappable, see QuestionCard onInteractive). */
+ *  (presentation only). */
 export const DUEL_CHIP_HOLD_MS = 900;
 
 const DUEL_TIMER = 12; // 12 seconds per question
+const DUEL_QUESTIONS = 3;
 
 interface DuelPlayScreenProps {
   duel: Duel;
   playerId: string;
+  /** The server has scored and recorded every answer (099); this only closes the screen. */
   onComplete: (answers: DuelAnswer[]) => void;
   onCancel: () => void;
 }
 
+// The server serves the three duel questions one at a time and keeps the
+// clock (099): the same three for both players, drawn when the duel was
+// accepted. The browser never holds the answers; each verdict comes back
+// with the answer, and the third one decides the duel on the server.
 export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayScreenProps) {
   const { t } = useTranslation();
   const reduce = useReducedMotion() ?? false;
-  const questions: QuizQuestion[] = (duel.question_ids ?? [])
-    .map((id) => QUESTIONS_BY_ID.get(id))
-    .filter(Boolean) as QuizQuestion[];
 
-  // Localize questions for the current language
-  const localizedQuestions = useMemo(
-    () => questions.map((q) => {
-      const loc = getLocalizedQuestion(q);
-      return { ...q, question: loc.question, options: loc.options };
-    }),
-    [questions],
-  );
-
-  const [questionIndex, setQuestionIndex] = useState(0);
+  const [serve, setServe] = useState<Serve | null>(null);
+  const [verdictIndex, setVerdictIndex] = useState<number | null>(null);
   const [answers, setAnswers] = useState<DuelAnswer[]>([]);
   const [countdown, setCountdown] = useState(DUEL_TIMER);
-  // Reaction time on this device: from "answers tappable" to the tap.
-  const reactionRef = useRef(createReactionTimer());
   const [finished, setFinished] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [chip, setChip] = useState<AnswerChipView | null>(null);
-  const holdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => { if (holdRef.current) clearTimeout(holdRef.current); }, []);
-  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const autoSubmittedRef = useRef(false);
+  const pendingRef = useRef<DuelAnswer | null>(null);
+  const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Mirrors answers for the async next(); updated with each answer.
+  const answersRef = useRef<DuelAnswer[]>([]);
 
   const stopCountdown = useCallback(() => {
-    reactionRef.current.stop();
-    if (countdownRef.current) {
-      clearInterval(countdownRef.current);
-      countdownRef.current = null;
-    }
-    autoSubmittedRef.current = true;
+    if (tickRef.current) clearInterval(tickRef.current);
+    tickRef.current = null;
   }, []);
 
-  // New question: full timer, nothing running until its answers are tappable.
-  useEffect(() => {
-    if (finished) return;
-
-    autoSubmittedRef.current = false;
-    reactionRef.current.reset();
-    setCountdown(DUEL_TIMER);
-
-    return () => {
-      if (countdownRef.current) clearInterval(countdownRef.current);
-      countdownRef.current = null;
-    };
-  }, [questionIndex, finished]);
-
-  // QuestionCard: the answers are visible and enabled. Start the reaction
-  // timer and the 12″ ring together.
-  const handleQuestionInteractive = useCallback(() => {
-    if (reactionRef.current.started) return;
-    reactionRef.current.start();
-    if (countdownRef.current) clearInterval(countdownRef.current);
-    countdownRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          if (countdownRef.current) clearInterval(countdownRef.current);
-          countdownRef.current = null;
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }, []);
-
-  const handleAnswer = useCallback((answerIndex: number, isCorrect: boolean) => {
-    const currentQuestion = questions[questionIndex];
-    if (!currentQuestion) return; // guard against bounds / missing-ID edge cases
-
-    // Frozen at the tap (onSelect); a timeout stops it here. The 2.5 s
-    // reveal / advance before this call is not reaction time.
-    const responseMs = reactionRef.current.stop() ?? DUEL_TIMER * 1000;
-    const points = calcDuelPoints(responseMs, isCorrect);
-
-    const answer: DuelAnswer = {
-      questionId: currentQuestion.id,
-      answerIndex,
-      answeredAt: new Date().toISOString(),
-      responseMs,
-      points,
-    };
-
-    const updatedAnswers = [...answers, answer];
-
-    // Presentation only: show "+N · 12−s" for this answer, then move on.
-    setChip(duelChipView(duelAnswerChip(answer, isCorrect), t));
-    if (holdRef.current) clearTimeout(holdRef.current);
-    holdRef.current = setTimeout(() => {
-      setChip(null);
-      setAnswers(updatedAnswers);
-      if (questionIndex + 1 < questions.length) {
-        setQuestionIndex((prev) => prev + 1);
-      } else {
-        // All questions answered
+  const next = useCallback(async () => {
+    try {
+      const step = await duelNext(duel.id);
+      if (step.finished) {
+        setServe(null);
         setFinished(true);
-        if (countdownRef.current) clearInterval(countdownRef.current);
-        onComplete(updatedAnswers);
+        onComplete(answersRef.current);
+        return;
       }
-    }, DUEL_CHIP_HOLD_MS);
-  }, [questionIndex, questions, answers, onComplete, t]);
-
-  // Auto-submit wrong answer when timer hits 0
-  useEffect(() => {
-    if (countdown === 0 && !finished && !autoSubmittedRef.current) {
-      autoSubmittedRef.current = true;
-      handleAnswer(-1, false); // -1 = timeout, 0 points
+      setVerdictIndex(null);
+      setChip(null);
+      pendingRef.current = null;
+      setServe(step);
+    } catch {
+      setLoadError(true);
     }
-  }, [countdown, finished, handleAnswer]);
+  }, [duel.id, onComplete]);
 
-  if (questions.length === 0 || questionIndex >= localizedQuestions.length) {
+  // First question once mounted (a remount in strict mode asks once).
+  useEffect(() => {
+    let live = true;
+    void Promise.resolve().then(() => { if (live) void next(); });
+    return () => { live = false; };
+  }, [next]);
+
+  // Countdown from the server's deadline, recomputed from the clock.
+  useEffect(() => {
+    if (!serve) return;
+    const update = () => setCountdown(secondsLeft(serve.deadlineMs));
+    update();
+    tickRef.current = setInterval(update, 250);
+    return stopCountdown;
+  }, [serve, stopCountdown]);
+
+  const handlePick = useCallback(async (original: number | null) => {
+    if (!serve) return;
+    stopCountdown();
+    let answer: DuelAnswer;
+    try {
+      const v = await duelAnswer(serve.serveId, original);
+      answer = {
+        questionId: serve.question.id,
+        answerIndex: v.timedOut || original == null ? -1 : original,
+        answeredAt: new Date().toISOString(),
+        responseMs: v.responseMs,
+        points: v.points,
+        correct: v.isCorrect,
+      };
+      setVerdictIndex(v.correctIndex);
+    } catch {
+      answer = { questionId: serve.question.id, answerIndex: -1, answeredAt: new Date().toISOString(), responseMs: DUEL_TIMER * 1000, points: 0, correct: false };
+      setVerdictIndex(-1);
+    }
+    pendingRef.current = answer;
+    setChip(duelChipView(duelAnswerChip(answer, !!answer.correct), t));
+  }, [serve, stopCountdown, t]);
+
+  const handleAnswer = useCallback(() => {
+    const answer = pendingRef.current;
+    if (!answer) return;
+    pendingRef.current = null;
+    setAnswers((prev) => [...prev, answer]);
+    answersRef.current = [...answersRef.current, answer];
+    void next();
+  }, [next]);
+
+  if (loadError) {
     return (
       <div className="du-play-empty">
         <p className="t-meta">{t('duelPlay.errorLoading')}</p>
@@ -147,8 +123,6 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
       </div>
     );
   }
-
-  const correctOf = (a: DuelAnswer) => QUESTIONS_BY_ID.get(a.questionId)?.correct_index === a.answerIndex;
 
   if (finished) {
     const totalScore = answers.reduce((s, a) => s + a.points, 0);
@@ -163,7 +137,7 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
           <h2 className="t-h2">{t('duelPlay.submitted')}</h2>
           <div className="du-done-chips">
             {answers.map((a, i) => {
-              const v = duelChipView(duelAnswerChip(a, correctOf(a)), t);
+              const v = duelChipView(duelAnswerChip(a, !!a.correct), t);
               return <PointsChip key={i} points={v.points} reason={v.reason} />;
             })}
           </div>
@@ -176,19 +150,28 @@ export default function DuelPlayScreen({ duel, onComplete, onCancel }: DuelPlayS
     );
   }
 
+  if (!serve) {
+    return (
+      <div className="du-play-empty">
+        <p className="t-meta">{t('common.loading')}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="du-play">
       <QuestionCard
-        question={localizedQuestions[questionIndex]}
-        questionIndex={questionIndex}
-        totalQuestions={localizedQuestions.length}
+        question={serve.question}
+        questionIndex={serve.position - 1}
+        totalQuestions={DUEL_QUESTIONS}
         onAnswer={handleAnswer}
         onSelect={stopCountdown}
-        onInteractive={handleQuestionInteractive}
+        onPick={handlePick}
+        correctIndex={verdictIndex}
         timeRemaining={countdown}
         timerSeconds={DUEL_TIMER}
         mode="duel"
-        history={answers.map(correctOf)}
+        history={answers.map((a) => !!a.correct)}
         chip={chip}
       />
     </div>

@@ -41,7 +41,7 @@ export default function DuelsScreen() {
   const { room, player, players } = useGameStore();
   const {
     duels, pendingDuels, activeDuels, pendingDecisions,
-    createDuel, acceptDuel, declineDuel, submitDuelAnswers,
+    createDuel, acceptDuel, declineDuel, refetchDuels,
     makeDecision, requestRematch, fetchPlayerDuels, isLoading,
   } = useDuels(room?.id);
 
@@ -256,13 +256,16 @@ export default function DuelsScreen() {
 
   const handleDuelComplete = useCallback(async (answers: DuelAnswer[]) => {
     if (!playingDuel || !player) return;
+    // The server recorded and scored each answer as it was given (099); the
+    // duel row now carries the result.
+    void answers;
     try {
-      await submitDuelAnswers(playingDuel.id, player.id, answers);
+      await refetchDuels();
     } catch (err) {
-      console.error('[DuelsScreen] Submit answers failed:', err);
+      console.error('[DuelsScreen] Refresh after the duel failed:', err);
     }
     setPlayingDuel(null);
-  }, [playingDuel, player, submitDuelAnswers]);
+  }, [playingDuel, player, refetchDuels]);
 
   const handleDecision = useCallback(async (duelId: string, decision: DuelDecision) => {
     if (!player) return;

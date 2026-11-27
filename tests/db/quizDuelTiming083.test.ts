@@ -10,7 +10,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { PGlite } from '@electric-sql/pglite';
 import { createDb, asUser } from './harness';
-import { QUESTIONS } from '../../src/lib/questions';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const SQL_TEST = path.resolve(here, '../../supabase/tests/083_quiz_duel_client_elapsed.test.sql');
@@ -19,7 +18,9 @@ describe('083 quiz / duel client elapsed time', () => {
   let db: PGlite;
 
   beforeAll(async () => {
-    db = await createDb();
+    // Up to 098: 099 draws duel questions on the server (client ids are cleared)
+    // and 100 closes these pre-099 answer paths; both on purpose.
+    db = await createDb({ upTo: '098' });
     await asUser(db, null); // auth.uid() then reads request.jwt.claims
   }, 60_000);
 
@@ -57,15 +58,6 @@ describe('083 quiz / duel client elapsed time', () => {
     expect(r.rows[1].args).toMatch(/p_question_opened_at timestamp with time zone, p_response_ms integer$/);
   });
 
-  it('every question in the client bank has the same correct index on the server', async () => {
-    // Duel points are now scored against quiz_questions; a mismatch would make
-    // the server disagree with the "+N" chip the player saw.
-    const r = await db.query<{ id: number; correct_index: number }>(`select id, correct_index from public.quiz_questions`);
-    const server = new Map(r.rows.map((x) => [x.id, x.correct_index]));
-    const mismatched = QUESTIONS.filter((q) => server.get(q.id) !== q.correct_index).map((q) => q.id);
-    // 27 Nov 2026: the fact check corrected these five flags. Production got
-    // them with the question-bank load (098, data kept outside git); the
-    // migrations here still seed the old values. Any other mismatch fails.
-    expect(mismatched).toEqual([115, 124, 461]);
-  });
+  // The bundle with the answer key is gone (099): the server serves every
+  // question, so there is no client bank to compare with the server any more.
 });

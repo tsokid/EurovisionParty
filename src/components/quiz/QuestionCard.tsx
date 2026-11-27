@@ -56,6 +56,12 @@ interface QuestionCardProps {
   history?: boolean[];
   /** Points chip once the parent knows the scored result. */
   chip?: AnswerChipView | null;
+  /** Server mode (099): the card does not know the answer. It reports the
+   *  pick as the server's (unshuffled) option index, or null on timeout; the
+   *  parent asks the server and passes the correct option back in
+   *  correctIndex, and only then does the card reveal. */
+  onPick?: (originalIndex: number | null) => void;
+  correctIndex?: number | null;
 }
 
 const FEEDBACK_DELAY_MS = 500;
@@ -80,18 +86,28 @@ export default function QuestionCard({
   roundNumber,
   history = [],
   chip = null,
+  onPick,
+  correctIndex = null,
 }: QuestionCardProps) {
+  const serverMode = onPick !== undefined;
   const { t } = useTranslation();
   const reduce = useReducedMotion() ?? false;
   // Hooks must run in the same order every render — declare them BEFORE any early return
   const { question: localQ, options: rawOptions } = getLocalizedQuestion(question);
   // Shuffle once per question (stable across re-renders for same question.id)
-  const { options, correctIndex: shuffledCorrectIndex, originalIndexAt } = useMemo<{ options: string[]; correctIndex: number; originalIndexAt: number[] }>(
+  const { options, correctIndex: localCorrectIndex, originalIndexAt } = useMemo<{ options: string[]; correctIndex: number; originalIndexAt: number[] }>(
     () => question ? shuffleOptions(rawOptions, question.correct_index) : { options: rawOptions, correctIndex: 0, originalIndexAt: rawOptions.map((_, i) => i) },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [question?.id],
   );
+  const shuffledCorrectIndex = serverMode
+    ? (correctIndex == null ? -1 : originalIndexAt.indexOf(correctIndex))
+    : localCorrectIndex;
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const onPickRef = useRef(onPick);
+  onPickRef.current = onPick;
+  const onAnswerRef = useRef(onAnswer);
+  onAnswerRef.current = onAnswer;
   const [revealed, setRevealed] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
   // Answers stay disabled until the question has finished entering, so the
@@ -125,9 +141,25 @@ export default function QuestionCard({
   useEffect(() => {
     if (timeRemaining <= 0 && !hasAnswered) {
       setHasAnswered(true);
-      setRevealed(true);
+      if (serverMode) onPickRef.current?.(null);
+      else setRevealed(true);
     }
-  }, [timeRemaining, hasAnswered]);
+  }, [timeRemaining, hasAnswered, serverMode]);
+
+  // Server mode: reveal once the server has said which option was right,
+  // then hand the result to the parent after the same pause as before.
+  useEffect(() => {
+    if (!serverMode || correctIndex == null || !hasAnswered || revealed) return;
+    setRevealed(true);
+  }, [serverMode, correctIndex, hasAnswered, revealed]);
+  useEffect(() => {
+    if (!serverMode || !revealed || correctIndex == null) return;
+    const picked = selectedIndex;
+    const original = picked == null ? -1 : (originalIndexAt[picked] ?? picked);
+    const ok = picked != null && original === correctIndex;
+    const id = setTimeout(() => onAnswerRef.current(original, ok), ADVANCE_DELAY_MS);
+    return () => clearTimeout(id);
+  }, [serverMode, revealed, correctIndex, selectedIndex, originalIndexAt]);
 
   const handleSelect = useCallback(
     (index: number) => {
@@ -138,6 +170,10 @@ export default function QuestionCard({
       // Tell parent immediately so it can stop the timer at the moment of click,
       // not 2.5s later after the reveal+advance delay.
       onSelect?.(index);
+      if (serverMode) {
+        onPickRef.current?.(originalIndexAt[index] ?? index);
+        return;
+      }
 
       // Short delay before revealing correct answer
       setTimeout(() => {
@@ -153,7 +189,7 @@ export default function QuestionCard({
         }, ADVANCE_DELAY_MS);
       }, FEEDBACK_DELAY_MS);
     },
-    [hasAnswered, revealed, question, interactive, onAnswer, onSelect, shuffledCorrectIndex, originalIndexAt],
+    [hasAnswered, revealed, question, interactive, onAnswer, onSelect, shuffledCorrectIndex, originalIndexAt, serverMode],
   );
 
   // Nothing to render if the parent hasn't provided a question (transient state,

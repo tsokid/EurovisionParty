@@ -29,6 +29,8 @@ export interface DuelAnswer {
   answeredAt: string;
   responseMs: number;
   points: number;
+  /** Set by the server (099): whether the answer was right. */
+  correct?: boolean | null;
 }
 
 export type IntelRevealType = 'top3' | 'top10' | 'worst3';

@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
 import { Check, Minus, Play, RotateCcw, X } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
-import { QUESTIONS_BY_ID } from '../../lib/questions';
 import { duelAnswerChip, duelOutcome, duelRewardPreview, needsRewardChoice } from '../../lib/answerPoints';
 import { duelChipView } from '../quiz/chipText';
 import { PlayerAvatar, PointsChip } from '../stage';
@@ -19,7 +18,8 @@ interface DuelResultCardProps {
   onOpen?: (duelId: string) => void;
 }
 
-const correctOf = (a: DuelAnswer) => QUESTIONS_BY_ID.get(a.questionId)?.correct_index === a.answerIndex;
+/** Right or wrong, as the server recorded it (099); older duels carry only points. */
+const correctOf = (a: DuelAnswer) => a.correct ?? a.points > 0;
 
 /**
  * A finished duel in the list (board duels-after-m, state 2): outcome,

@@ -2,21 +2,17 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
-import { useQuiz } from '../../hooks/useQuiz';
 import { useGameStore } from '../../stores/gameStore';
-import { selectRoundQuestions } from '../../lib/questionRandomizer';
-import { QUESTIONS } from '../../lib/questions';
 import { supabase } from '../../lib/supabase';
-import { fetchSeenQuestionIds } from '../../lib/usedQuestions';
+import { quizAnswer, quizNext, quizState, secondsLeft, type Serve } from '../../lib/servedQuestions';
 import {
   TIMER_SECONDS,
   QUESTIONS_PER_ROUND,
   MAX_ROUNDS,
 } from '../../lib/constants';
-import type { QuizAnswer, QuizQuestion } from '../../lib/types';
+import type { QuizAnswer } from '../../lib/types';
 import type { Standing } from '../../lib/roundStandings';
 import { quizAnswerChip } from '../../lib/answerPoints';
-import { createReactionTimer } from '../../lib/reactionTimer';
 import { quizChipView } from './chipText';
 import type { AnswerChipView } from './QuestionCard';
 import { Trophy, Flame, Zap, Swords, BarChart3, Music, Sparkles, ListChecks, Clock, Activity } from 'lucide-react';
@@ -31,37 +27,35 @@ import { markPlayed, quizCompleteKey, wasPlayed } from '../../lib/playedOnce';
 type QuizPhase = 'waiting' | 'intro' | 'playing' | 'results' | 'complete';
 
 /** How long the answer's "+N · 2,1″" chip stays before the next question
- *  (presentation only: the next question's clock starts only once its
- *  answers are tappable, see QuestionCard onInteractive). */
+ *  (presentation only). Kept for the duel screen and tests. */
 export const CHIP_HOLD_MS = 900;
 
+// The server serves each question and keeps its clock (099): a question's
+// time runs from the moment it is served, even if the player leaves the
+// tab or the app (owner decision 1a). On return the player sees the round
+// and question they are at and presses Start (resume). The browser never
+// holds the correct answer: it arrives with the verdict.
 export default function QuizScreen() {
   const { t, i18n } = useTranslation();
-  const { room, player, players, setActiveTab, quizProgress, setQuizProgress } = useGameStore();
-  const quiz = useQuiz();
+  const { room, player, players, setActiveTab } = useGameStore();
 
   const [phase, setPhase] = useState<QuizPhase>('waiting');
   const [roundNumber, setRoundNumber] = useState(1);
+  // 0-based position of the question on screen (or next to serve).
   const [questionIndex, setQuestionIndex] = useState(0);
   const [roundAnswers, setRoundAnswers] = useState<QuizAnswer[]>([]);
-  const [roundQuestions, setRoundQuestions] = useState<QuizQuestion[]>([]);
-  // Wall-clock moment the answers became tappable. Still sent as
-  // p_question_opened_at (the row needs it); the score uses p_response_ms.
-  const questionOpenedAtRef = useRef<string>(new Date().toISOString());
-  // Reaction time on this device: from "answers tappable" to the tap.
-  const reactionRef = useRef(createReactionTimer());
-  const [usedQuestionIds, setUsedQuestionIds] = useState<number[]>([]);
+  const [serve, setServe] = useState<Serve | null>(null);
+  // The server's correct option for the question on screen, once answered.
+  const [verdictIndex, setVerdictIndex] = useState<number | null>(null);
+  const pendingRef = useRef<QuizAnswer | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   // Room totals when the round started: the round-end leaderboard reorders from these.
   const [roundStartStandings, setRoundStartStandings] = useState<Standing[] | null>(null);
   // The scored chip of the answer on screen (motion map #8).
   const [answerChip, setAnswerChip] = useState<AnswerChipView | null>(null);
-  const restoredRef = useRef(false);
-  // Block rendering of the waiting/intro/playing/etc. phases until we've
-  // either restored from the store or queried the DB to figure out where
-  // this player actually is. Otherwise users who already finished all
-  // rounds see a "Start Round 1" flash on tab entry while the restoration
-  // promise resolves.
+  // The player is mid-round (came back): the waiting card says where.
+  const [resuming, setResuming] = useState(false);
   const [restored, setRestored] = useState(false);
 
   // The «quiz complete» entrance plays once per browser: decided the first
@@ -87,85 +81,41 @@ export default function QuizScreen() {
     fastestSeconds: number | null;
   } | null>(null);
 
-  // --- Restore quiz progress on mount ---
-  // Tab switch: restore from Zustand store (instant, no network)
-  // Page refresh: derive from DB answers to find the correct round
+  // --- Where the player is: asked from the server on every mount ---
   useEffect(() => {
-    if (restoredRef.current || !player || !room) return;
-    restoredRef.current = true;
-
-    const stored = quizProgress;
-    if (stored && stored.roomId === room.id && stored.playerId === player.id) {
-      // Restore from store (tab switch)
-      setPhase(stored.phase);
-      setRoundNumber(stored.roundNumber);
-      setQuestionIndex(stored.questionIndex);
-      setUsedQuestionIds(stored.usedQuestionIds);
-      setRoundAnswers(stored.roundAnswers);
-      setRoundStartStandings(stored.roundStartStandings ?? null);
-      const questions = stored.questionIds
-        .map((id) => QUESTIONS.find((q) => q.id === id))
-        .filter(Boolean) as QuizQuestion[];
-      setRoundQuestions(questions);
-      setRestored(true);
-      return;
-    }
-
-    // No valid store — derive from DB (page refresh)
-    // Fetch quiz answers to determine round progress, and ALL seen question IDs
-    // (quiz + duels) so no question is repeated regardless of game mode.
-    Promise.all([
-      supabase
-        .from('quiz_answers')
-        .select('round_number, question_id')
-        .eq('player_id', player.id),
-      fetchSeenQuestionIds(player.id, room.id),
-    ]).then(([{ data: answers }, allSeenIds]) => {
-      if (!answers?.length) {
-        // No quiz answers yet — but might have duel question IDs to exclude
-        if (allSeenIds.length) setUsedQuestionIds(allSeenIds);
-        setRestored(true);
-        return;
-      }
-
-      const countByRound: Record<number, number> = {};
-      for (const a of answers) {
-        countByRound[a.round_number] = (countByRound[a.round_number] ?? 0) + 1;
-      }
-
-      // allSeenIds already includes quiz + duel questions
-      setUsedQuestionIds(allSeenIds);
-
-      for (let r = 1; r <= MAX_ROUNDS; r++) {
-        if ((countByRound[r] ?? 0) < QUESTIONS_PER_ROUND) {
-          setRoundNumber(r);
-          setPhase('waiting');
+    if (!player || !room) return;
+    let live = true;
+    void (async () => {
+      try {
+        const s = await quizState(room.id);
+        if (!live) return;
+        if (s.done) {
+          setRoundNumber(MAX_ROUNDS);
+          setPhase('complete');
           setRestored(true);
           return;
         }
+        setRoundNumber(s.round);
+        setQuestionIndex(s.position - 1);
+        setResuming(s.answered > 0 || s.open != null);
+        if (s.answered > 0) {
+          const { data } = await supabase
+            .from('quiz_answers')
+            .select('*')
+            .eq('player_id', player.id)
+            .eq('room_id', room.id)
+            .eq('round_number', s.round)
+            .order('answered_at', { ascending: true });
+          if (live) setRoundAnswers((data ?? []) as QuizAnswer[]);
+        }
+      } catch (err) {
+        if (live) setSubmitError(err instanceof Error ? err.message : String(err));
+      } finally {
+        if (live) setRestored(true);
       }
-      setRoundNumber(MAX_ROUNDS);
-      setPhase('complete');
-      setRestored(true);
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player?.id, room?.id]);
-
-  // --- Sync quiz state to store (for tab switch persistence) ---
-  useEffect(() => {
-    if (!player || !room || !restoredRef.current) return;
-    setQuizProgress({
-      roomId: room.id,
-      playerId: player.id,
-      phase,
-      roundNumber,
-      questionIndex,
-      questionIds: roundQuestions.map((q) => q.id),
-      usedQuestionIds,
-      roundAnswers,
-      roundStartStandings,
-    });
-  }, [phase, roundNumber, questionIndex, roundQuestions, usedQuestionIds, roundAnswers, roundStartStandings, player, room, setQuizProgress]);
+    })();
+    return () => { live = false; };
+  }, [player?.id, room?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Build the per-round / best-streak summary when the quiz completes.
   // Primary source: quiz_answers table (authoritative, persisted).
@@ -234,155 +184,114 @@ export default function QuizScreen() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, player, room, completionSummary]);
 
-  // Track active countdown per question
+  // The countdown follows the server's deadline. It is recomputed from the
+  // clock (not decremented), so a hidden tab or a minimised app comes back
+  // showing the real time left.
   const [countdown, setCountdown] = useState(TIMER_SECONDS);
-  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const autoSubmittedRef = useRef(false);
-
-  // Use a ref for handleAnswer to avoid stale closures in the timer effect
-  const handleAnswerRef = useRef<(answerIndex: number, isCorrect: boolean) => void>(() => {});
-
-  // Stop the running countdown without resetting its displayed value, and
-  // freeze the reaction time. Used by onSelect (the tap) and on unmount.
+  const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stopCountdown = useCallback(() => {
-    reactionRef.current.stop();
-    if (countdownRef.current) {
-      clearInterval(countdownRef.current);
-      countdownRef.current = null;
-    }
-    // Block the auto-submit-on-zero effect from firing for this question.
-    autoSubmittedRef.current = true;
+    if (tickRef.current) clearInterval(tickRef.current);
+    tickRef.current = null;
   }, []);
-
-  // New question: full timer, nothing running until its answers are tappable.
   useEffect(() => {
-    if (phase !== 'playing') {
-      if (countdownRef.current) clearInterval(countdownRef.current);
-      countdownRef.current = null;
+    if (phase !== 'playing' || !serve) return;
+    const update = () => setCountdown(secondsLeft(serve.deadlineMs));
+    update();
+    tickRef.current = setInterval(update, 250);
+    const onVisible = () => { if (document.visibilityState === 'visible' && tickRef.current) update(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      stopCountdown();
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [phase, serve, stopCountdown]);
+
+  // Ask the server for the next question of this round.
+  const serveNext = useCallback(async () => {
+    if (!room) return;
+    setSubmitError(null);
+    setBusy(true);
+    try {
+      const s = await quizNext(room.id, roundNumber);
+      setVerdictIndex(null);
+      setAnswerChip(null);
+      pendingRef.current = null;
+      setServe(s);
+      setQuestionIndex(s.position - 1);
+      setResuming(false);
+      setPhase('playing');
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Failed to load the question');
+    } finally {
+      setBusy(false);
+    }
+  }, [room, roundNumber]);
+
+  // Start (or resume) the round. A fresh round shows its intro first and is
+  // served after it, so the first question's clock does not run during it.
+  const handleStartRound = useCallback(() => {
+    if (!room || !player || busy) return;
+    if (questionIndex === 0 && !resuming) {
+      setRoundAnswers([]);
+      setRoundStartStandings(players.map((p) => ({ id: p.id, total: p.total_points ?? 0 })));
+      setPhase('intro');
       return;
     }
+    void serveNext();
+  }, [room, player, players, busy, questionIndex, resuming, serveNext]);
 
-    autoSubmittedRef.current = false;
-    reactionRef.current.reset();
-    setCountdown(TIMER_SECONDS);
+  const handleIntroDismiss = useCallback(() => { void serveNext(); }, [serveNext]);
 
-    return () => {
-      if (countdownRef.current) clearInterval(countdownRef.current);
-      countdownRef.current = null;
-    };
-  }, [phase, questionIndex]);
-
-  // QuestionCard: the answers are now visible and enabled. Start the reaction
-  // timer and the visible countdown together, so the 15″ ring and the score
-  // measure the same span.
-  const handleQuestionInteractive = useCallback(() => {
-    if (reactionRef.current.started) return;
-    reactionRef.current.start();
-    questionOpenedAtRef.current = new Date().toISOString();
-    if (countdownRef.current) clearInterval(countdownRef.current);
-    countdownRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          if (countdownRef.current) clearInterval(countdownRef.current);
-          countdownRef.current = null;
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }, []);
-
-  // Auto-submit wrong answer when timer hits 0 (uses ref to avoid stale closure)
-  useEffect(() => {
-    if (countdown === 0 && phase === 'playing' && !autoSubmittedRef.current) {
-      autoSubmittedRef.current = true;
-      handleAnswerRef.current(-1, false);
+  // The pick (or the timeout) goes to the server, which answers with the
+  // verdict and the correct option; the card then reveals.
+  const handlePick = useCallback(async (original: number | null) => {
+    if (!serve || !player) return;
+    stopCountdown();
+    let recorded: QuizAnswer;
+    try {
+      const v = await quizAnswer(serve.serveId, original);
+      recorded = {
+        id: v.answerId ?? `served-${serve.serveId}`,
+        room_id: room?.id ?? '',
+        player_id: player.id,
+        round_number: roundNumber,
+        question_id: serve.question.id,
+        answer_index: v.timedOut ? null : original,
+        is_correct: v.isCorrect,
+        question_opened_at: new Date(serve.deadlineMs - serve.timerMs).toISOString(),
+        answered_at: new Date().toISOString(),
+        response_seconds: v.responseSeconds,
+        points_awarded: v.points,
+      };
+      setVerdictIndex(v.correctIndex);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Failed to submit answer');
+      recorded = {
+        id: `local-${Date.now()}`, room_id: room?.id ?? '', player_id: player.id, round_number: roundNumber,
+        question_id: serve.question.id, answer_index: null, is_correct: false,
+        question_opened_at: new Date().toISOString(), answered_at: new Date().toISOString(),
+        response_seconds: null, points_awarded: 0,
+      };
+      setVerdictIndex(-1);
     }
-  }, [countdown, phase]);
+    pendingRef.current = recorded;
+    setAnswerChip(quizChipView(quizAnswerChip(recorded), t, i18n.language ?? 'el'));
+  }, [serve, player, room, roundNumber, stopCountdown, t, i18n.language]);
 
-  // Start a round
-  const handleStartRound = useCallback(() => {
-    if (!room || !player) return;
-    setSubmitError(null);
-
-    const questions = selectRoundQuestions(usedQuestionIds);
-    setRoundQuestions(questions);
-    setUsedQuestionIds((prev) => [...prev, ...questions.map((q) => q.id)]);
-    setQuestionIndex(0);
-    setRoundAnswers([]);
-    setRoundStartStandings(players.map((p) => ({ id: p.id, total: p.total_points ?? 0 })));
-    setPhase('intro');
-  }, [room, player, players, usedQuestionIds]);
-
-  // Handle intro dismiss
-  const handleIntroDismiss = useCallback(() => {
-    setPhase('playing');
-  }, []);
-
-  // Handle answer submission
-  const handleAnswer = useCallback(
-    async (answerIndex: number, isCorrect: boolean) => {
-      if (!player || !roundQuestions[questionIndex]) return;
-
-      const question = roundQuestions[questionIndex];
-      setSubmitError(null);
-      // Tap → reveal → advance takes 2.5 s before we get here; the reaction
-      // time was frozen at the tap (onSelect). A timeout stops it now.
-      const responseMs = reactionRef.current.stop();
-      const questionOpenedAt = questionOpenedAtRef.current;
-
-      let recorded: QuizAnswer;
-      try {
-        recorded = await quiz.submitAnswer(
-          player.id,
-          question.id,
-          answerIndex,
-          isCorrect,
-          questionOpenedAt,
-          room?.id,
-          roundNumber,
-          responseMs,
-        );
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Failed to submit answer';
-        // Show error briefly but still advance
-        setSubmitError(msg);
-        setTimeout(() => setSubmitError(null), 3000);
-        recorded = {
-          id: `local-${Date.now()}`,
-          room_id: room?.id ?? '',
-          player_id: player.id,
-          round_number: roundNumber,
-          question_id: question.id,
-          answer_index: answerIndex >= 0 ? answerIndex : null,
-          is_correct: false,
-          question_opened_at: questionOpenedAt,
-          answered_at: new Date().toISOString(),
-          response_seconds: null,
-          points_awarded: 0,
-        };
-      }
-
-      // Presentation only: show the server's points for this answer, then move on.
-      setAnswerChip(quizChipView(quizAnswerChip(recorded), t, i18n.language ?? 'el'));
-      await new Promise((resolve) => setTimeout(resolve, CHIP_HOLD_MS));
-      setAnswerChip(null);
-      setRoundAnswers((prev) => [...prev, recorded]);
-
-      // Advance to next question or results
-      if (questionIndex + 1 < QUESTIONS_PER_ROUND && questionIndex + 1 < roundQuestions.length) {
-        setQuestionIndex((prev) => prev + 1);
-      } else {
-        setPhase('results');
-      }
-    },
-    [player, room, roundNumber, roundQuestions, questionIndex, quiz, t, i18n.language],
-  );
-
-  // Keep the ref in sync with the latest handleAnswer
-  useEffect(() => {
-    handleAnswerRef.current = handleAnswer;
-  }, [handleAnswer]);
+  // After the reveal: next question, or the round's results.
+  const handleAnswer = useCallback(() => {
+    const recorded = pendingRef.current;
+    if (!recorded || !serve) return;
+    pendingRef.current = null;
+    setRoundAnswers((prev) => [...prev, recorded]);
+    setAnswerChip(null);
+    if (serve.position < QUESTIONS_PER_ROUND) {
+      void serveNext();
+    } else {
+      setServe(null);
+      setPhase('results');
+    }
+  }, [serve, serveNext]);
 
   // Handle continue from results
   const handleContinue = useCallback(() => {
@@ -390,6 +299,8 @@ export default function QuizScreen() {
       setPhase('complete');
     } else {
       setRoundNumber((prev) => prev + 1);
+      setQuestionIndex(0);
+      setResuming(false);
       setPhase('waiting');
     }
   }, [roundNumber]);
@@ -490,9 +401,14 @@ export default function QuizScreen() {
 
               {/* Primary CTA */}
               <div className="mt-6 sm:mt-7">
-                <Button size="lg" fullWidth onClick={handleStartRound}>
+                {resuming && (
+                  <p className="mb-3 text-center text-sm sm:text-base font-semibold text-white/80" data-testid="quiz-resume">
+                    {t('quiz.resumeAt', { round: roundNumber, num: questionIndex + 1, max: QUESTIONS_PER_ROUND })}
+                  </p>
+                )}
+                <Button size="lg" fullWidth onClick={handleStartRound} disabled={busy}>
                   <Sparkles className="w-4 h-4" strokeWidth={2.2} />
-                  {t('quiz.startRound', { num: roundNumber })}
+                  {resuming ? t('quiz.resumeStart') : t('quiz.startRound', { num: roundNumber })}
                 </Button>
               </div>
 
@@ -535,7 +451,7 @@ export default function QuizScreen() {
         )}
 
         {/* PLAYING PHASE */}
-        {phase === 'playing' && roundQuestions[questionIndex] && (
+        {phase === 'playing' && serve && (
           <motion.div
             key={`playing-${questionIndex}`}
             initial={{ opacity: 0 }}
@@ -544,12 +460,13 @@ export default function QuizScreen() {
             className="flex-1"
           >
             <QuestionCard
-              question={roundQuestions[questionIndex]}
+              question={serve.question}
               questionIndex={questionIndex}
-              totalQuestions={roundQuestions.length}
+              totalQuestions={QUESTIONS_PER_ROUND}
               onAnswer={handleAnswer}
               onSelect={stopCountdown}
-              onInteractive={handleQuestionInteractive}
+              onPick={handlePick}
+              correctIndex={verdictIndex}
               timeRemaining={countdown}
               roundNumber={roundNumber}
               history={roundAnswers.map((a) => !!a.is_correct)}
@@ -570,7 +487,7 @@ export default function QuizScreen() {
             <RoundResults
               roundNumber={roundNumber}
               answers={roundAnswers}
-              questions={roundQuestions}
+              questions={[]}
               onContinue={handleContinue}
               isLastRound={roundNumber >= MAX_ROUNDS}
               standingsBefore={roundStartStandings}
@@ -750,14 +667,14 @@ export default function QuizScreen() {
 
       {/* Error display — auto-dismisses after 3s */}
       <AnimatePresence>
-        {(submitError || quiz.error) && (
+        {submitError && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             className="mt-4 p-3 rounded-xl bg-euro-red/20 border border-euro-red/30 text-euro-red text-sm text-center"
           >
-            {submitError || quiz.error}
+            {submitError}
           </motion.div>
         )}
       </AnimatePresence>

@@ -218,6 +218,8 @@
     "title": "Ώρα για Κουίζ",
     "roundOf": "Γύρος {{current}} από {{max}}",
     "startRound": "Ξεκίνα τον Γύρο {{num}}",
+    "resumeAt": "Είσαι στον Γύρο {{round}}, ερώτηση {{num}} από {{max}}. Ο χρόνος μιας ερώτησης που άνοιξε συνεχίζει να τρέχει.",
+    "resumeStart": "Έναρξη",
     "startRoundShort": "Ξεκίνα τον Γύρο {{num}}",
     "hint": "{{count}} ερωτήσεις · {{timer}}\" η καθεμία · Στον ρυθμό σου",
     "roundIndicator": "ΓΥΡΟΣ {{current}} ΑΠΟ {{max}} · LIVE",

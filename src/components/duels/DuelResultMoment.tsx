@@ -6,7 +6,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
 import { Check, Clock, Coins, X } from 'lucide-react';
 import { useGameStore } from '../../stores/gameStore';
-import { QUESTIONS_BY_ID } from '../../lib/questions';
 import {
   duelAnswerChip, duelOutcome, duelRewardPreview, formatSeconds, needsRewardChoice, type DuelChip,
 } from '../../lib/answerPoints';
@@ -47,7 +46,8 @@ function sides(duel: Duel, meId: string | undefined): [Side, Side] {
 
 function chipFor(a: DuelAnswer | undefined): DuelChip | null {
   if (!a) return null;
-  return duelAnswerChip(a, QUESTIONS_BY_ID.get(a.questionId)?.correct_index === a.answerIndex);
+  // Right or wrong as the server recorded it (099); older duels carry only points.
+  return duelAnswerChip(a, a.correct ?? a.points > 0);
 }
 
 /** Coins from one pill to another (steal) or from the top into the winner (double). */

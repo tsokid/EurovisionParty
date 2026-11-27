@@ -218,6 +218,8 @@
     "title": "Quiz Time",
     "roundOf": "Round {{current}} of {{max}}",
     "startRound": "Start Round {{num}}",
+    "resumeAt": "You are at Round {{round}}, question {{num}} of {{max}}. An opened question keeps its clock running.",
+    "resumeStart": "Start",
     "startRoundShort": "Start Round {{num}}",
     "hint": "{{count}} questions · {{timer}}s each · Play at your own pace",
     "roundIndicator": "ROUND {{current}} OF {{max}} · LIVE",

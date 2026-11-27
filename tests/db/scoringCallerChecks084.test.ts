@@ -17,7 +17,9 @@ describe('084 scoring RPC caller checks', () => {
   let db: PGlite;
 
   beforeAll(async () => {
-    db = await createDb();
+    // Up to 098: 099 draws duel questions on the server (client ids are cleared)
+    // and 100 closes these pre-099 answer paths; both on purpose.
+    db = await createDb({ upTo: '098' });
     await asUser(db, null); // auth.uid() then reads request.jwt.claims
   }, 60_000);
 

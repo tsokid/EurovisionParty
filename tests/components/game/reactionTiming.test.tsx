@@ -1,16 +1,20 @@
-// Quiz and duel answers are timed from "answers tappable" to the tap, on the
-// device (performance.now), not from when the question was scheduled to the
-// moment the answer reached the server 2.5 s after the tap.
+// The reaction timer and the question card. Since 099 the server serves
+// every question and keeps the clock: the card in server mode reports the
+// pick and reveals only when the server says which option was right.
 import type React from 'react';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import i18n from '../../../src/i18n';
 import { createReactionTimer, isMissingRpcSignature } from '../../../src/lib/reactionTimer';
 import QuestionCard, { ENTRANCE_FALLBACK_MS } from '../../../src/components/quiz/QuestionCard';
-import DuelPlayScreen, { DUEL_CHIP_HOLD_MS } from '../../../src/components/duels/DuelPlayScreen';
-import { QUESTIONS_BY_ID, QUESTIONS } from '../../../src/lib/questions';
-import { getLocalizedQuestion } from '../../../src/lib/questionLocale';
-import type { Duel, DuelAnswer } from '../../../src/lib/types';
+import DuelPlayScreen from '../../../src/components/duels/DuelPlayScreen';
+import type { Duel, DuelAnswer, QuizQuestion } from '../../../src/lib/types';
+
+const h = vi.hoisted(() => ({ next: vi.fn(), answer: vi.fn() }));
+vi.mock('../../../src/lib/servedQuestions', async (orig) => {
+  const mod = await orig<typeof import('../../../src/lib/servedQuestions')>();
+  return { ...mod, duelNext: h.next, duelAnswer: h.answer };
+});
 
 // framer's frame loop does not advance under jsdom + fake timers, so enter /
 // exit animations never report completion here. AnimatePresence becomes a
@@ -92,8 +96,12 @@ function useFakeClock() {
   });
 }
 
-const Q = QUESTIONS[20];
-const rightText = () => getLocalizedQuestion(Q).options[Q.correct_index];
+const Q: QuizQuestion = {
+  id: 9001, question: 'Which city?', question_el: 'Ποια πόλη;',
+  options: ['Vienna', 'Basel', 'Malmö', 'Turin'], options_el: ['Βιέννη', 'Βασιλεία', 'Μάλμε', 'Τορίνο'],
+  correct_index: 1, category: 'history', difficulty: 'easy',
+};
+const SERVED: QuizQuestion = { ...Q, correct_index: -1 };
 const answerButtons = () => screen.getAllByRole('button').filter((b) => b.classList.contains('qz-ans'));
 
 describe('QuestionCard: answers unlock only after the entrance', () => {
@@ -107,9 +115,9 @@ describe('QuestionCard: answers unlock only after the entrance', () => {
       <QuestionCard question={Q} questionIndex={0} totalQuestions={3} onAnswer={onAnswer}
         onSelect={onSelect} onInteractive={onInteractive} timeRemaining={15} />,
     );
-    expect(answerButtons()).toHaveLength(Q.options.length);
+    expect(answerButtons()).toHaveLength(4);
     for (const b of answerButtons()) expect(b).toBeDisabled();
-    fireEvent.click(screen.getByText(rightText()));
+    fireEvent.click(screen.getByText('Βασιλεία'));
     expect(onSelect).not.toHaveBeenCalled();
     expect(onInteractive).not.toHaveBeenCalled();
 
@@ -117,52 +125,94 @@ describe('QuestionCard: answers unlock only after the entrance', () => {
     expect(onInteractive).toHaveBeenCalledTimes(1);
     for (const b of answerButtons()) expect(b).toBeEnabled();
 
-    fireEvent.click(screen.getByText(rightText()));
+    fireEvent.click(screen.getByText('Βασιλεία'));
     expect(onSelect).toHaveBeenCalledTimes(1);
     act(() => { vi.advanceTimersByTime(5000); });
     expect(onInteractive).toHaveBeenCalledTimes(1);
-    expect(onAnswer).toHaveBeenCalledWith(Q.correct_index, true);
+    expect(onAnswer).toHaveBeenCalledWith(1, true);
   });
 });
 
-describe('DuelPlayScreen: points use the tap time, not the 2.5 s reveal', () => {
+describe('QuestionCard in server mode: no answer in the browser', () => {
   useFakeClock();
 
-  const duel = {
-    id: 'd1', room_id: 'r1', challenger_id: 'a', challenged_id: 'me', status: 'accepted',
-    question_ids: [QUESTIONS[20].id, QUESTIONS[21].id, QUESTIONS[22].id],
-  } as unknown as Duel;
+  it('reports the pick as the server option index and reveals only when the server answers', () => {
+    const onPick = vi.fn();
+    const onAnswer = vi.fn();
+    const { rerender } = render(
+      <QuestionCard question={SERVED} questionIndex={0} totalQuestions={10} onAnswer={onAnswer}
+        onPick={onPick} correctIndex={null} timeRemaining={15} />,
+    );
+    act(() => { vi.advanceTimersByTime(ENTRANCE_FALLBACK_MS); });
+    fireEvent.click(screen.getByText('Μάλμε'));
+    expect(onPick).toHaveBeenCalledWith(2);
+    act(() => { vi.advanceTimersByTime(5000); });
+    // No verdict yet: nothing is revealed and nothing moves on.
+    expect(screen.queryByRole('status')).toBeNull();
+    expect(onAnswer).not.toHaveBeenCalled();
 
-  it('2.1 s after the answers unlock → responseMs 2100, 12 − 2 = 10; the delays before do not count', () => {
-    const onComplete = vi.fn<(a: DuelAnswer[]) => void>();
-    render(<DuelPlayScreen duel={duel} playerId="me" onComplete={onComplete} onCancel={() => {}} />);
-
-    for (const [i, reactMs] of [[0, 2100], [1, 400], [2, 11_200]] as const) {
-      const q = QUESTIONS_BY_ID.get(duel.question_ids[i])!;
-      // The question is on screen but still entering: no clock yet.
-      act(() => { vi.advanceTimersByTime(ENTRANCE_FALLBACK_MS); });
-      act(() => { vi.advanceTimersByTime(reactMs); });
-      fireEvent.click(screen.getByText(getLocalizedQuestion(q).options[q.correct_index]));
-      // reveal 500 + advance 2000 + chip hold
-      act(() => { vi.advanceTimersByTime(500); });
-      act(() => { vi.advanceTimersByTime(2000); });
-      act(() => { vi.advanceTimersByTime(DUEL_CHIP_HOLD_MS); });
-    }
-
-    expect(onComplete).toHaveBeenCalledTimes(1);
-    const answers = onComplete.mock.calls[0][0];
-    expect(answers.map((a) => a.responseMs)).toEqual([2100, 400, 11_200]);
-    expect(answers.map((a) => a.points)).toEqual([10, 12, 1]);
+    rerender(
+      <QuestionCard question={SERVED} questionIndex={0} totalQuestions={10} onAnswer={onAnswer}
+        onPick={onPick} correctIndex={1} timeRemaining={15} />,
+    );
+    expect(screen.getByRole('status').textContent).toMatch(/Λάθος|Λαθος|wrong/i);
+    act(() => { vi.advanceTimersByTime(2000); });
+    expect(onAnswer).toHaveBeenCalledWith(2, false);
   });
 
-  it('a timeout is scored as the full 12 s and 0 points', () => {
+  it('a timeout reports null and reveals the server answer', () => {
+    const onPick = vi.fn();
+    const onAnswer = vi.fn();
+    const { rerender } = render(
+      <QuestionCard question={SERVED} questionIndex={0} totalQuestions={10} onAnswer={onAnswer}
+        onPick={onPick} correctIndex={null} timeRemaining={0} />,
+    );
+    expect(onPick).toHaveBeenCalledWith(null);
+    rerender(
+      <QuestionCard question={SERVED} questionIndex={0} totalQuestions={10} onAnswer={onAnswer}
+        onPick={onPick} correctIndex={1} timeRemaining={0} />,
+    );
+    act(() => { vi.advanceTimersByTime(2000); });
+    expect(onAnswer).toHaveBeenCalledWith(-1, false);
+  });
+});
+
+describe('DuelPlayScreen: the server serves and scores each question', () => {
+  useFakeClock();
+
+  const duel = { id: 'd1', room_id: 'r1', challenger_id: 'a', challenged_id: 'me', status: 'accepted', question_ids: [] } as unknown as Duel;
+  const serveAt = (position: number) => ({
+    finished: false as const, serveId: `s${position}`, position,
+    question: { ...SERVED, id: 9000 + position },
+    deadlineMs: Date.now() + 12_000, timerMs: 12_000,
+  });
+
+  beforeEach(() => {
+    h.next.mockReset();
+    h.answer.mockReset();
+    let pos = 0;
+    h.next.mockImplementation(async () => (pos >= 3 ? { finished: true } : serveAt(++pos)));
+    h.answer.mockImplementation(async (_serve: string, idx: number | null) => ({
+      isCorrect: idx === 1, timedOut: idx == null, correctIndex: 1,
+      points: idx === 1 ? 10 : 0, responseSeconds: 2.1, responseMs: 2100,
+    }));
+  });
+
+  it('sends each pick to the server and finishes after the third, with the server points', async () => {
     const onComplete = vi.fn<(a: DuelAnswer[]) => void>();
     render(<DuelPlayScreen duel={duel} playerId="me" onComplete={onComplete} onCancel={() => {}} />);
-    act(() => { vi.advanceTimersByTime(ENTRANCE_FALLBACK_MS); });
-    for (let s = 0; s < 12; s++) act(() => { vi.advanceTimersByTime(1000); });
-    act(() => { vi.advanceTimersByTime(DUEL_CHIP_HOLD_MS); });
-    // The second question is now entering; its clock has not started.
-    expect(screen.getAllByRole('button').filter((b) => b.classList.contains('qz-ans')).every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
-    expect(onComplete).not.toHaveBeenCalled();
+    for (const pick of ['Βασιλεία', 'Βιέννη', 'Βασιλεία']) {
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      await act(async () => { await vi.advanceTimersByTimeAsync(ENTRANCE_FALLBACK_MS); });
+      fireEvent.click(screen.getByText(pick));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      await act(async () => { await vi.advanceTimersByTimeAsync(2000); });
+    }
+    await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+    expect(h.answer.mock.calls.map((c) => c[1])).toEqual([1, 0, 1]);
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    const answers = onComplete.mock.calls[0][0];
+    expect(answers.map((a) => a.points)).toEqual([10, 0, 10]);
+    expect(answers.map((a) => a.correct)).toEqual([true, false, true]);
   });
 });
