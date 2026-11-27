@@ -941,26 +941,6 @@
       ]
     },
     {
-      "id": 76,
-      "category": "geography",
-      "difficulty": "hard",
-      "question": "Which Dutch city hosted Eurovision 2021?",
-      "options": [
-        "Amsterdam",
-        "The Hague",
-        "Rotterdam",
-        "Utrecht"
-      ],
-      "correct": 2,
-      "question_el": "Ποια ολλανδική πόλη φιλοξένησε τη Eurovision 2021;",
-      "options_el": [
-        "Άμστερνταμ",
-        "Χάγη",
-        "Ρότερνταμ",
-        "Ουτρέχτη"
-      ]
-    },
-    {
       "id": 78,
       "category": "lyrics",
       "difficulty": "medium",
@@ -1741,26 +1721,6 @@
       ]
     },
     {
-      "id": 131,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "As of 2026, which country has competed in Eurovision the most times without ever winning?",
-      "options": [
-        "Iceland",
-        "Malta",
-        "Cyprus",
-        "Norway"
-      ],
-      "correct": 2,
-      "question_el": "Μέχρι και το 2026, ποια χώρα έχει συμμετάσχει στη Eurovision τις περισσότερες φορές χωρίς να έχει κερδίσει ποτέ;",
-      "options_el": [
-        "Ισλανδία",
-        "Μάλτα",
-        "Κύπρος",
-        "Νορβηγία"
-      ]
-    },
-    {
       "id": 133,
       "category": "history",
       "difficulty": "easy",
@@ -2284,7 +2244,7 @@
       "id": 167,
       "category": "2026",
       "difficulty": "easy",
-      "question": "Who represents Australia at Eurovision 2026?",
+      "question": "Who represented Australia at Eurovision 2026?",
       "options": [
         "Kylie Minogue",
         "Tina Arena",
@@ -2292,7 +2252,7 @@
         "Jessica Mauboy"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί την Αυστραλία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Αυστραλίας στη Eurovision 2026;",
       "options_el": [
         "Kylie Minogue",
         "Tina Arena",
@@ -2324,7 +2284,7 @@
       "id": 169,
       "category": "2026",
       "difficulty": "easy",
-      "question": "Who represents Austria at Eurovision 2026?",
+      "question": "Who represented Austria at Eurovision 2026?",
       "options": [
         "JJ",
         "Cesár Sampson",
@@ -2332,7 +2292,7 @@
         "Thomas Neuwirth"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί την Αυστρία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Αυστρίας στη Eurovision 2026;",
       "options_el": [
         "JJ",
         "Cesár Sampson",
@@ -2424,7 +2384,7 @@
       "id": 174,
       "category": "2026",
       "difficulty": "easy",
-      "question": "Who represents Estonia at Eurovision 2026?",
+      "question": "Who represented Estonia at Eurovision 2026?",
       "options": [
         "Kerli",
         "Elina Nechayeva",
@@ -2432,7 +2392,7 @@
         "Ott Lepland"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί την Εσθονία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Εσθονίας στη Eurovision 2026;",
       "options_el": [
         "Kerli",
         "Elina Nechayeva",
@@ -2504,7 +2464,7 @@
       "id": 179,
       "category": "2026",
       "difficulty": "easy",
-      "question": "Who represents Germany at Eurovision 2026?",
+      "question": "Who represented Germany at Eurovision 2026?",
       "options": [
         "Lena",
         "Malik Harris",
@@ -2512,7 +2472,7 @@
         "S!sters"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τη Γερμανία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Γερμανίας στη Eurovision 2026;",
       "options_el": [
         "Lena",
         "Malik Harris",
@@ -2624,7 +2584,7 @@
       "id": 186,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Croatia at Eurovision 2026?",
+      "question": "Who represented Croatia at Eurovision 2026?",
       "options": [
         "Marko Bošnjak",
         "Jacques Houdek",
@@ -2632,7 +2592,7 @@
         "Franka"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί την Κροατία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Κροατίας στη Eurovision 2026;",
       "options_el": [
         "Marko Bošnjak",
         "Jacques Houdek",
@@ -2644,7 +2604,7 @@
       "id": 187,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Cyprus at Eurovision 2026?",
+      "question": "Who represented Cyprus at Eurovision 2026?",
       "options": [
         "Shansea",
         "Tamta",
@@ -2652,7 +2612,7 @@
         "Antigoni"
       ],
       "correct": 3,
-      "question_el": "Ποιος εκπροσωπεί την Κύπρο στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Κύπρου στη Eurovision 2026;",
       "options_el": [
         "Shansea",
         "Tamta",
@@ -2684,7 +2644,7 @@
       "id": 189,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Denmark at Eurovision 2026?",
+      "question": "Who represented Denmark at Eurovision 2026?",
       "options": [
         "Leonora",
         "Jesper Groth",
@@ -2692,7 +2652,7 @@
         "Reiley"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τη Δανία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Δανίας στη Eurovision 2026;",
       "options_el": [
         "Leonora",
         "Jesper Groth",
@@ -2704,7 +2664,7 @@
       "id": 190,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Finland at Eurovision 2026?",
+      "question": "Who represented Finland at Eurovision 2026?",
       "options": [
         "Käärijä",
         "Erika Vikman",
@@ -2712,7 +2672,7 @@
         "Uuden Musiikin"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τη Φινλανδία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Φινλανδίας στη Eurovision 2026;",
       "options_el": [
         "Käärijä",
         "Erika Vikman",
@@ -2724,7 +2684,7 @@
       "id": 191,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Italy at Eurovision 2026?",
+      "question": "Who represented Italy at Eurovision 2026?",
       "options": [
         "Mahmood",
         "Blanco",
@@ -2732,7 +2692,7 @@
         "Marco Mengoni"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί την Ιταλία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Ιταλίας στη Eurovision 2026;",
       "options_el": [
         "Mahmood",
         "Blanco",
@@ -2744,7 +2704,7 @@
       "id": 193,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Latvia at Eurovision 2026?",
+      "question": "Who represented Latvia at Eurovision 2026?",
       "options": [
         "Sudden Lights",
         "Citi Zēni",
@@ -2752,7 +2712,7 @@
         "Aminata"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τη Λετονία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Λετονίας στη Eurovision 2026;",
       "options_el": [
         "Sudden Lights",
         "Citi Zēni",
@@ -2784,7 +2744,7 @@
       "id": 195,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Lithuania at Eurovision 2026?",
+      "question": "Who represented Lithuania at Eurovision 2026?",
       "options": [
         "Monika Liu",
         "Silvester Belt",
@@ -2792,7 +2752,7 @@
         "IEVA"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τη Λιθουανία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Λιθουανίας στη Eurovision 2026;",
       "options_el": [
         "Monika Liu",
         "Silvester Belt",
@@ -2824,7 +2784,7 @@
       "id": 197,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Moldova at Eurovision 2026?",
+      "question": "Who represented Moldova at Eurovision 2026?",
       "options": [
         "Pasha Parfeni",
         "Zdob și Zdub",
@@ -2832,7 +2792,7 @@
         "Aliona Moon"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τη Μολδαβία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Μολδαβίας στη Eurovision 2026;",
       "options_el": [
         "Pasha Parfeni",
         "Zdob și Zdub",
@@ -2924,7 +2884,7 @@
       "id": 202,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Serbia at Eurovision 2026?",
+      "question": "Who represented Serbia at Eurovision 2026?",
       "options": [
         "Princ",
         "LAVINA",
@@ -2932,7 +2892,7 @@
         "Teya Dora"
       ],
       "correct": 1,
-      "question_el": "Ποιος εκπροσωπεί τη Σερβία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Σερβίας στη Eurovision 2026;",
       "options_el": [
         "Princ",
         "LAVINA",
@@ -3004,7 +2964,7 @@
       "id": 206,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents Ukraine at Eurovision 2026?",
+      "question": "Who represented Ukraine at Eurovision 2026?",
       "options": [
         "Kalush Orchestra",
         "Ziferblat",
@@ -3012,7 +2972,7 @@
         "Go-A"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί την Ουκρανία στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Ουκρανίας στη Eurovision 2026;",
       "options_el": [
         "Kalush Orchestra",
         "Ziferblat",
@@ -3024,7 +2984,7 @@
       "id": 207,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Who represents the UK at Eurovision 2026?",
+      "question": "Who represented the UK at Eurovision 2026?",
       "options": [
         "Sam Ryder",
         "Mae Muller",
@@ -3032,7 +2992,7 @@
         "LOOK MUM NO COMPUTER"
       ],
       "correct": 3,
-      "question_el": "Ποιος εκπροσωπεί το Ηνωμένο Βασίλειο στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή του Ηνωμένου Βασιλείου στη Eurovision 2026;",
       "options_el": [
         "Sam Ryder",
         "Mae Muller",
@@ -3584,7 +3544,7 @@
       "id": 266,
       "category": "trivia",
       "difficulty": "medium",
-      "question": "Eurovision 2026 hosts are Victoria Swarovski and who else?",
+      "question": "Who presented Eurovision 2026 alongside Victoria Swarovski?",
       "options": [
         "Thomas Thurner",
         "Michael Ostrowski",
@@ -3592,7 +3552,7 @@
         "Conchita Wurst"
       ],
       "correct": 1,
-      "question_el": "Οι παρουσιαστές της Eurovision 2026 είναι η Victoria Swarovski και ποιος άλλος;",
+      "question_el": "Ποιος/ποια παρουσίασε τη Eurovision 2026 μαζί με τη Victoria Swarovski;",
       "options_el": [
         "Thomas Thurner",
         "Michael Ostrowski",
@@ -3818,26 +3778,6 @@
         "Ηνωμένο Βασίλειο",
         "Σουηδία",
         "Μολδαβία"
-      ]
-    },
-    {
-      "id": 288,
-      "category": "records",
-      "difficulty": "hard",
-      "question": "Who has won Eurovision three times: twice as a singer and once more as a songwriter?",
-      "options": [
-        "ABBA",
-        "Johnny Logan",
-        "Ralph Siegel",
-        "Brendan Graham"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο πρόσωπο έχει κερδίσει τη Eurovision τρεις φορές: δύο ως ερμηνευτής και μία ακόμη ως δημιουργός τραγουδιού;",
-      "options_el": [
-        "ABBA",
-        "Johnny Logan",
-        "Ralph Siegel",
-        "Brendan Graham"
       ]
     },
     {
@@ -4521,26 +4461,6 @@
       ]
     },
     {
-      "id": 345,
-      "category": "geography",
-      "difficulty": "medium",
-      "question": "Thanks to Mozart, Beethoven and Strauss, Vienna is famously known as the City of what?",
-      "options": [
-        "Light",
-        "Music",
-        "Canals",
-        "Love"
-      ],
-      "correct": 1,
-      "question_el": "Χάρη στους Μότσαρτ, Μπετόβεν και Στράους, η Βιέννη είναι γνωστή ως η Πόλη τίνος;",
-      "options_el": [
-        "Του Φωτός",
-        "Της Μουσικής",
-        "Των Καναλιών",
-        "Του Έρωτα"
-      ]
-    },
-    {
       "id": 347,
       "category": "staging",
       "difficulty": "easy",
@@ -4624,7 +4544,7 @@
       "id": 354,
       "category": "2026",
       "difficulty": "easy",
-      "question": "Who represents Greece at Eurovision 2026?",
+      "question": "Who represented Greece at Eurovision 2026?",
       "options": [
         "Klavdia",
         "Stefania",
@@ -4632,7 +4552,7 @@
         "Elena Paparizou"
       ],
       "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί την Ελλάδα στη Eurovision 2026;",
+      "question_el": "Ποια ήταν η συμμετοχή της Ελλάδας στη Eurovision 2026;",
       "options_el": [
         "Klavdia",
         "Stefania",
@@ -4738,46 +4658,6 @@
         "Vienna 2026",
         "ivie",
         "Eurovision Go"
-      ]
-    },
-    {
-      "id": 360,
-      "category": "geography",
-      "difficulty": "easy",
-      "question": "Which Austrian city submitted the only rival bid to Vienna to host Eurovision 2026?",
-      "options": [
-        "Salzburg",
-        "Graz",
-        "Innsbruck",
-        "Linz"
-      ],
-      "correct": 2,
-      "question_el": "Ποια αυστριακή πόλη υπέβαλε τη μοναδική αντίπαλη υποψηφιότητα απέναντι στη Βιέννη για τη Eurovision 2026;",
-      "options_el": [
-        "Σάλτσμπουργκ",
-        "Γκρατς",
-        "Ίνσμπρουκ",
-        "Λιντς"
-      ]
-    },
-    {
-      "id": 362,
-      "category": "records",
-      "difficulty": "medium",
-      "question": "Since 2016, who reads out each country's top jury score (12 points) in the final?",
-      "options": [
-        "The hosts",
-        "The national spokesperson",
-        "The EBU executive supervisor",
-        "The jury chairperson"
-      ],
-      "correct": 1,
-      "question_el": "Από το 2016, ποιος ανακοινώνει τους 12 βαθμούς της κριτικής επιτροπής κάθε χώρας στον τελικό;",
-      "options_el": [
-        "Οι παρουσιαστές",
-        "Ο/Η εθνικός/ή εκπρόσωπος",
-        "Ο/Η επόπτης/τρια της EBU",
-        "Ο/Η πρόεδρος της κριτικής επιτροπής"
       ]
     },
     {
@@ -4944,7 +4824,7 @@
       "id": 377,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Which 2026 country performs a song in the Cypriot dialect?",
+      "question": "Which country performed a song in the Cypriot dialect at Eurovision 2026?",
       "options": [
         "Greece",
         "Cyprus",
@@ -4952,7 +4832,7 @@
         "Albania"
       ],
       "correct": 1,
-      "question_el": "Ποια χώρα του 2026 ερμηνεύει τραγούδι στην κυπριακή διάλεκτο;",
+      "question_el": "Ποια χώρα ερμήνευσε τραγούδι στην κυπριακή διάλεκτο στη Eurovision 2026;",
       "options_el": [
         "Ελλάδα",
         "Κύπρος",
@@ -5038,46 +4918,6 @@
         "10",
         "14",
         "20"
-      ]
-    },
-    {
-      "id": 385,
-      "category": "2026",
-      "difficulty": "medium",
-      "question": "Which 2026 Eurovision entry is classed as electro dance and dance-pop?",
-      "options": [
-        "Albania — Nân",
-        "Bulgaria — Bangaranga",
-        "Croatia — Andromeda",
-        "Moldova — Viva, Moldova!"
-      ],
-      "correct": 1,
-      "question_el": "Ποια συμμετοχή της Eurovision 2026 κατατάσσεται στην electro dance και στην dance-pop;",
-      "options_el": [
-        "Αλβανία — Nân",
-        "Βουλγαρία — Bangaranga",
-        "Κροατία — Andromeda",
-        "Μολδαβία — Viva, Moldova!"
-      ]
-    },
-    {
-      "id": 387,
-      "category": "history",
-      "difficulty": "hard",
-      "question": "As of 2026, in which year did Russia last compete at Eurovision?",
-      "options": [
-        "2019",
-        "2020",
-        "2021",
-        "2022"
-      ],
-      "correct": 2,
-      "question_el": "Μέχρι το 2026, ποια χρονιά διαγωνίστηκε τελευταία φορά η Ρωσία στη Eurovision;",
-      "options_el": [
-        "2019",
-        "2020",
-        "2021",
-        "2022"
       ]
     },
     {
@@ -5241,30 +5081,10 @@
       ]
     },
     {
-      "id": 401,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "Which of these is an EBU requirement for a Eurovision host venue?",
-      "options": [
-        "A retractable roof",
-        "Capacity of at least 10,000 spectators",
-        "At least 50,000 seats",
-        "A location outside the national capital"
-      ],
-      "correct": 1,
-      "question_el": "Ποια από αυτές είναι απαίτηση της EBU για τον χώρο που φιλοξενεί τη Eurovision;",
-      "options_el": [
-        "Συρόμενη οροφή",
-        "Χωρητικότητα τουλάχιστον 10.000 θεατών",
-        "Τουλάχιστον 50.000 θέσεις",
-        "Τοποθεσία εκτός της πρωτεύουσας"
-      ]
-    },
-    {
       "id": 402,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Which Eurovision 2026 act performs in a massive black cloak with silver face paint?",
+      "question": "Which Eurovision 2026 act performed in a huge hooded cloak with silver face paint?",
       "options": [
         "Albania — Alis",
         "Lithuania — Lion Ceccah",
@@ -5272,7 +5092,7 @@
         "Serbia — LAVINA"
       ],
       "correct": 1,
-      "question_el": "Ποια συμμετοχή Eurovision 2026 εμφανίζεται με τεράστιο μαύρο μανδύα και ασημένιο face paint;",
+      "question_el": "Ποια συμμετοχή της Eurovision 2026 εμφανίστηκε με τεράστιο μανδύα με κουκούλα και ασημί μακιγιάζ στο πρόσωπο;",
       "options_el": [
         "Αλβανία — Alis",
         "Λιθουανία — Lion Ceccah",
@@ -5681,26 +5501,6 @@
       ]
     },
     {
-      "id": 441,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "Amanda Tenfjord, who represented Greece at Eurovision 2022, has a Greek father. Which country is her mother from?",
-      "options": [
-        "Greece",
-        "Norway",
-        "Sweden",
-        "Australia"
-      ],
-      "correct": 1,
-      "question_el": "Η Amanda Tenfjord, που εκπροσώπησε την Ελλάδα στη Eurovision 2022, έχει Έλληνα πατέρα. Από ποια χώρα είναι η μητέρα της;",
-      "options_el": [
-        "Ελλάδα",
-        "Νορβηγία",
-        "Σουηδία",
-        "Αυστραλία"
-      ]
-    },
-    {
       "id": 443,
       "category": "trivia",
       "difficulty": "medium",
@@ -5758,26 +5558,6 @@
         "Σάκης Ρουβάς",
         "Νίκος Παπαδόπουλος",
         "Travis Payne"
-      ]
-    },
-    {
-      "id": 449,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "Who wrote the lyrics of 'My Number One', the winning Greek entry at Eurovision 2005?",
-      "options": [
-        "Helena Paparizou",
-        "Christos Dantis and Natalia Germanou",
-        "Nikos Karvelas",
-        "Phoebus"
-      ],
-      "correct": 1,
-      "question_el": "Ποιοι έγραψαν τους στίχους του 'My Number One', του νικητήριου ελληνικού τραγουδιού στη Eurovision 2005;",
-      "options_el": [
-        "Έλενα Παπαρίζου",
-        "Χρήστος Δάντης και Ναταλία Γερμανού",
-        "Νίκος Καρβέλας",
-        "Φοίβος"
       ]
     },
     {
@@ -6178,46 +5958,6 @@
         "Δυναμική χορογραφία με ελληνική αισθητική",
         "Έπαιξε μπουζούκι",
         "Πλήρης ορχήστρα τη συνόδευε"
-      ]
-    },
-    {
-      "id": 478,
-      "category": "staging",
-      "difficulty": "easy",
-      "question": "What was distinctive about Koza Mostra's outfits at Eurovision 2013?",
-      "options": [
-        "Formal suits",
-        "Kilts worn over shorts, in black and white",
-        "Ancient Greek togas",
-        "Sequinned jumpsuits"
-      ],
-      "correct": 1,
-      "question_el": "Τι ξεχωριστό είχαν τα ρούχα των Koza Mostra στη Eurovision 2013;",
-      "options_el": [
-        "Επίσημα κοστούμια",
-        "Κιλτ πάνω από σορτς, σε ασπρόμαυρο",
-        "Αρχαιοελληνικές τήβεννοι",
-        "Ολόσωμες φόρμες με πούλιες"
-      ]
-    },
-    {
-      "id": 481,
-      "category": "staging",
-      "difficulty": "medium",
-      "question": "Which traditional Greek string instrument did Agathonas Iakovidis play on stage during 'Alcohol Is Free' in 2013?",
-      "options": [
-        "Piano",
-        "Baglamas",
-        "Violin",
-        "Accordion"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο παραδοσιακό ελληνικό έγχορδο έπαιξε ο Αγάθωνας Ιακωβίδης στη σκηνή στο 'Alcohol Is Free' το 2013;",
-      "options_el": [
-        "Πιάνο",
-        "Μπαγλαμάς",
-        "Βιολί",
-        "Ακορντεόν"
       ]
     },
     {

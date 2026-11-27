@@ -66,6 +66,6 @@ describe('083 quiz / duel client elapsed time', () => {
     // 27 Nov 2026: the fact check corrected these five flags. Production got
     // them with the question-bank load (098, data kept outside git); the
     // migrations here still seed the old values. Any other mismatch fails.
-    expect(mismatched).toEqual([115, 124, 387, 401, 461]);
+    expect(mismatched).toEqual([115, 124, 461]);
   });
 });
