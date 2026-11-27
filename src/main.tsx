@@ -1,5 +1,14 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
+
+// Open tabs ask for a new version of the site every 5 minutes and whenever
+// they come back to the front; the new service worker then reloads them
+// (public/sw-reload.js).
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  const check = () => { void navigator.serviceWorker.getRegistration().then((r) => r?.update()).catch(() => undefined); };
+  window.setInterval(check, 5 * 60 * 1000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+}
 import { RouterProvider } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
 import { router, routerReady } from './routes';

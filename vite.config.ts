@@ -111,6 +111,11 @@ export default defineConfig(({ isSsrBuild }) => ({
         // cleanupOutdatedCaches and every file is fetched again.
         cacheId: 'eg-2026-11-23',
         cleanupOutdatedCaches: true,
+        // A new version reloads every open tab (public/sw-reload.js), so no
+        // one keeps playing on old code after a deploy (27 Nov 2026).
+        skipWaiting: true,
+        clientsClaim: true,
+        importScripts: ['/sw-reload.js'],
       },
       manifest: {
         name: 'Eurovision Games',
