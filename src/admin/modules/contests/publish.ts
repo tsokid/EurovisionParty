@@ -330,7 +330,20 @@ export function usePublisher(): Publisher {
   useEffect(() => { refresh(); }, [refresh]);
 
   // The last run's deploy, while it builds (publish-status; the auto-revert runs there).
-  const watchId = deployPending(lastRun) && lastRun?.finished_at && Date.now() - Date.parse(lastRun.finished_at) < DEPLOY_WATCH_MS ? lastRun.id : null;
+  // A run still recorded as building after the watch window (nobody had the
+  // admin open while it built) is checked once on load, so it never stays
+  // «Χτίζεται…» for good (27 Nov 2026).
+  const pendingId = deployPending(lastRun) ? lastRun!.id : null;
+  const staleBuilding = lastRun?.deploy_state === 'building';
+  const watchId = pendingId !== null && lastRun?.finished_at && Date.now() - Date.parse(lastRun.finished_at) < DEPLOY_WATCH_MS ? pendingId : null;
+  useEffect(() => {
+    if (pendingId === null || watchId !== null || !staleBuilding) return;
+    let off = false;
+    void checkDeploys([pendingId])
+      .then(([next]) => { if (!off && next) setLastRun((r) => (r && r.id === next.id ? { ...r, ...next } : r)); })
+      .catch(() => { /* offline: the run line keeps its last state */ });
+    return () => { off = true; };
+  }, [pendingId, watchId, staleBuilding]);
   useEffect(() => {
     if (watchId === null) return;
     let off = false;

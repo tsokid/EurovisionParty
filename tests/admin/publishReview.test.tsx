@@ -248,6 +248,16 @@ describe('RunScreen', () => {
     expect(h.invoke).not.toHaveBeenCalled();
   });
 
+  it('a build still recorded as building after the watch window is checked once on load, not left «Χτίζεται…»', async () => {
+    const old = new Date(Date.now() - 3 * 60 * 60_000).toISOString();
+    h.runs = [{ id: 12, status: 'ok', commit_sha: '7d50592000', finished_at: old, started_at: old, doc_ids: ['faq'], target: 'main', deploy_state: 'building' }];
+    h.status = [{ ...h.runs[0], deploy_state: 'ready', deploy_url: 'https://eurovision.games' }];
+    wrap(<RunScreen runId={12} />);
+    await waitFor(() => expect(h.invoke).toHaveBeenCalledWith('publish-status', { run_ids: [12] }));
+    await waitFor(() => expect(screen.getByTestId('deploy-chip').getAttribute('data-state')).toBe('ready'));
+    expect(h.invoke).toHaveBeenCalledTimes(1);
+  });
+
   it('a blocked revert raises the alert', async () => {
     h.runs = [{ id: 61, status: 'ok', commit_sha: 'fa11ed0001', finished_at: NOW(), doc_ids: ['faq'], target: 'main', deploy_state: 'revert_blocked', deploy_note: 'main moved on to abc1234' }];
     wrap(<RunScreen runId={61} />);

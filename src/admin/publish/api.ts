@@ -80,6 +80,16 @@ export function useRunWatch(initial: PublishRun | null) {
   const fresh = !!run?.finished_at && Date.now() - Date.parse(run.finished_at) < DEPLOY_WATCH_MS;
   const watching = deployPending(run) && (fresh || !run?.finished_at);
   const id = watching ? run!.id : null;
+  // Past the watch window but still recorded as building: one check on load.
+  const staleId = run?.deploy_state === 'building' && !watching ? run.id : null;
+  useEffect(() => {
+    if (staleId === null) return;
+    let off = false;
+    void checkDeploys([staleId])
+      .then(([next]) => { if (!off && next && latest.current?.id === next.id) setRun((r) => ({ ...(r ?? next), ...next })); })
+      .catch(() => { /* offline: keep the last state */ });
+    return () => { off = true; };
+  }, [staleId]);
   useEffect(() => {
     if (id === null) return;
     let off = false;
