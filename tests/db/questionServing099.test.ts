@@ -81,3 +81,29 @@ describe('100 question serving contract', () => {
     expect(await canRun(DUEL)).toBe(true);
   });
 });
+
+describe('101 question review status', () => {
+  let db: PGlite;
+  beforeAll(async () => {
+    db = await createDb({ upTo: '100' });
+    await db.exec(`insert into public.quiz_questions (id, correct_index, topic, difficulty, question_en, question_el,
+      options_en, options_el, fact, status, lyric_check) values
+      (97001, 0, 'lyrics', 'easy', 'Q?', 'Ε;', '{a,b,c,d}', '{α,β,γ,δ}', 'lyric fact', 'draft', true),
+      (97002, 0, 'song', 'easy', 'Q2?', 'Ε2;', '{a,b,c,d}', '{α,β,γ,δ}', 'other fact', 'draft', false)`);
+    await db.exec(read('supabase/migrations/101_question_review_status.sql'));
+  }, 120_000);
+  afterAll(async () => { await db?.close(); });
+
+  it('lyric drafts move to review; other drafts stay; review is a valid state', async () => {
+    const r = await db.query<{ id: number; status: string }>(`select id, status from public.quiz_questions where id in (97001, 97002) order by id`);
+    expect(r.rows.map((x) => x.status)).toEqual(['review', 'draft']);
+    await db.exec(`update public.quiz_questions set status = 'review' where id = 97002`);
+    await expect(db.exec(`update public.quiz_questions set status = 'gone' where id = 97002`)).rejects.toThrow(/status_check/);
+  });
+
+  it('the rollback turns review back into draft', async () => {
+    await db.exec(read('supabase/rollbacks/101_question_review_status_rollback.sql'));
+    const r = await db.query<{ n: number }>(`select count(*)::int n from public.quiz_questions where status = 'review'`);
+    expect(r.rows[0].n).toBe(0);
+  });
+});

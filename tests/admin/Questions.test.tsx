@@ -8,6 +8,7 @@ const h = vi.hoisted(() => ({
   settings: { era_current: 30, era_previous: 30, era_recent: 20, era_classic: 20 } as Row,
   updates: [] as Array<{ table: string; values: Row }>,
   inserts: [] as Array<{ table: string; values: Row }>,
+  ins: [] as Array<{ col: string; ids: unknown[] }>,
   writeError: null as { message: string } | null,
 }));
 
@@ -24,6 +25,7 @@ vi.mock('../../src/lib/supabase', () => {
       maybeSingle: () => Promise.resolve({ data: h.settings, error: null }),
       single: () => Promise.resolve(h.writeError ? { data: null, error: h.writeError } : { data: { id: 77 }, error: null }),
       update: (values: Row) => { h.updates.push({ table: name, values }); return chain; },
+      in: (col: string, ids: unknown[]) => { h.ins.push({ col, ids }); return chain; },
       insert: (values: Row) => { h.inserts.push({ table: name, values }); return chain; },
       then: (ok: (v: unknown) => unknown, bad?: (e: unknown) => unknown) =>
         Promise.resolve({ data: result(), error: null }).then(ok, bad),
@@ -52,7 +54,7 @@ const q = (over: Row): Row => ({
 describe('Questions admin', () => {
   beforeEach(() => {
     h.questions = [q({}), q({ id: 21, contest_year: 1974, iso: 'SE', topic: 'lyrics', question_el: 'Συμπλήρωσε', status: 'draft', lyric_check: true, fact: 'x' })];
-    h.updates = []; h.inserts = []; h.writeError = null;
+    h.updates = []; h.inserts = []; h.ins = []; h.writeError = null;
   });
 
   it('shows the round mix first, with per-round counts and stock per era', async () => {
@@ -61,7 +63,7 @@ describe('Questions admin', () => {
     expect(mix).toBeTruthy();
     await screen.findByText(/Ανά γύρο: 3 φέτος · 3 πέρυσι · 2 2–5 χρόνια · 2 5\+ χρόνια/);
     expect(screen.getByText(/Χρονιά παιχνιδιού σήμερα: 2026/)).toBeTruthy();
-    expect(screen.getByText(/η χρονιά του δωματίου · 1 ελεγμένες/)).toBeTruthy();
+    expect(screen.getByText(/η χρονιά του δωματίου · 1 ενεργές/)).toBeTruthy();
   });
 
   it('refuses a mix that does not add up to 100, saves one that does', async () => {
@@ -107,5 +109,45 @@ describe('Questions admin', () => {
     fireEvent.click(screen.getAllByRole('button', { name: 'Αποθήκευση' })[1]);
     await screen.findByText('Γράψε την ερώτηση και στις δύο γλώσσες.');
     expect(h.inserts).toHaveLength(0);
+  });
+
+  it('opens the editor over the list, and a second question replaces it', async () => {
+    render(<Questions />);
+    fireEvent.click(await screen.findByText('Ποια χώρα κέρδισε το 2026;'));
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    await screen.findByRole('region', { name: 'Ερώτηση #5' });
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    fireEvent.click(screen.getByText('Συμπλήρωσε'));
+    await screen.findByRole('region', { name: 'Ερώτηση #21' });
+  });
+
+  it('selects all shown questions and changes their status together', async () => {
+    render(<Questions />);
+    await screen.findByText('2 από 2');
+    fireEvent.click(screen.getByLabelText('Επιλογή όλων (2)'));
+    expect(screen.getByText('2 επιλεγμένες')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Αποσυρμένη' }));
+    await waitFor(() => expect(h.updates.at(-1)).toEqual({ table: 'quiz_questions', values: { status: 'retired' } }));
+    expect(h.ins.at(-1)).toEqual({ col: 'id', ids: [5, 21] });
+  });
+
+  it('activating leaves out questions without a source and says which', async () => {
+    h.questions = [q({}), q({ id: 21, source: null, status: 'review', fact: 'x' })];
+    render(<Questions />);
+    await screen.findByText('2 από 2');
+    fireEvent.click(screen.getByLabelText('Επιλογή όλων (2)'));
+    fireEvent.click(screen.getByRole('button', { name: 'Ενεργή' }));
+    await screen.findByText(/Δεν έγιναν ενεργές όσες δεν έχουν πηγή: #21/);
+    expect(h.ins.at(-1)).toEqual({ col: 'id', ids: [5] });
+  });
+
+  it('adds a flag to the selected questions', async () => {
+    render(<Questions />);
+    await screen.findByText('2 από 2');
+    fireEvent.click(screen.getByLabelText('Επιλογή ερώτησης #5'));
+    fireEvent.click(screen.getByRole('button', { name: '+ Μπορεί να αλλάξει' }));
+    await waitFor(() => expect(h.updates.at(-1)).toEqual({ table: 'quiz_questions', values: { time_sensitive: true } }));
+    expect(h.ins.at(-1)).toEqual({ col: 'id', ids: [5] });
   });
 });

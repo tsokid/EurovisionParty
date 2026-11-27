@@ -12,7 +12,8 @@ export type Topic = (typeof TOPICS)[number];
 export const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];
 
-export const STATUSES = ['draft', 'verified', 'retired'] as const;
+// verified = Ενεργή (the only state served to players); review = Για έλεγχο.
+export const STATUSES = ['verified', 'review', 'draft', 'retired'] as const;
 export type Status = (typeof STATUSES)[number];
 
 export const ERAS = ['current', 'previous', 'recent', 'classic'] as const;

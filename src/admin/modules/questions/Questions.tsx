@@ -3,7 +3,8 @@
 // (year, country, topic, status, era, flags, free text) and the editor.
 // Super admins only (RLS, 098); players never read this table.
 import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { t } from '../../i18n';
@@ -17,7 +18,7 @@ import {
 
 const T = t.questions;
 const PAGE = 50;
-const STATUS_TONE: Record<Status, ChipTone> = { draft: 'gold', verified: 'ok', retired: 'muted' };
+const STATUS_TONE: Record<Status, ChipTone> = { draft: 'gold', review: 'pink', verified: 'ok', retired: 'muted' };
 const SELECT = clsx(INPUT, 'pr-8');
 
 interface Country { iso: string; name_el: string }
@@ -246,6 +247,95 @@ function Editor({ initial, countries, years, onDone, onCancel }: {
   );
 }
 
+// ── Editor dialog ───────────────────────────────────────────────────────
+// The editor opens over the list (owner, 27 Nov: opened above the list it
+// was off screen once the list was scrolled, so a second question seemed
+// not to open). Esc and the backdrop close it.
+function EditorDialog({ onClose, children }: { onClose: () => void; children: ReactNode }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [onClose]);
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:p-8"
+      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div role="dialog" aria-modal="true" className="w-full max-w-5xl">{children}</div>
+    </div>,
+    document.body,
+  );
+}
+
+// ── Bulk actions ────────────────────────────────────────────────────────
+type BulkAction =
+  | { kind: 'status'; status: Status }
+  | { kind: 'flag'; flag: 'lyric_check' | 'time_sensitive'; on: boolean };
+
+function BulkBar({ count, rows, onClear, onDone }: {
+  count: number; rows: QuestionRow[]; onClear: () => void; onDone: () => void;
+}) {
+  const toast = useToast();
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  async function run(a: BulkAction) {
+    setBusy(true); setMsg(null);
+    let targets = rows;
+    const skipped: number[] = [];
+    if (a.kind === 'status' && a.status === 'verified') {
+      // An active question needs a source (098); those without one are left as they are.
+      targets = rows.filter((r) => (r.source ?? '').trim() !== '');
+      skipped.push(...rows.filter((r) => !targets.includes(r)).map((r) => r.id));
+    }
+    const patch = a.kind === 'status' ? { status: a.status } : { [a.flag]: a.on };
+    const ids = targets.map((r) => r.id);
+    const failed: number[] = [];
+    if (ids.length) {
+      const { error } = await supabase.from('quiz_questions').update(patch).in('id', ids);
+      if (error) {
+        // One row broke a rule (e.g. two live questions for one fact): apply row by row and report.
+        for (const id of ids) {
+          const r = await supabase.from('quiz_questions').update(patch).eq('id', id);
+          if (r.error) failed.push(id);
+        }
+      }
+    }
+    setBusy(false);
+    const done = ids.length - failed.length;
+    const notes = [
+      skipped.length ? T.bulkNoSource(skipped) : '',
+      failed.length ? T.bulkFailed(failed) : '',
+    ].filter(Boolean).join(' ');
+    if (notes) setMsg(notes);
+    toast.show(T.bulkDone(done));
+    if (!notes) onDone();
+  }
+
+  const btn = 'rounded-stage-sm border border-stage-line-2 px-3 min-h-9 text-sm text-stage-text hover:bg-stage-surface-2 disabled:opacity-40';
+  return (
+    <div className="sticky top-2 z-10 rounded-stage border border-stage-pink/50 bg-stage-surface p-3 space-y-2" role="region" aria-label={T.bulkTitle}>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="font-semibold text-stage-text mr-2">{T.selected(count)}</span>
+        <span className="t-meta">{T.bulkStatus}</span>
+        {(['verified', 'review', 'draft', 'retired'] as Status[]).map((s) => (
+          <button key={s} type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'status', status: s })}>
+            {T.status[s]}
+          </button>
+        ))}
+        <span className="t-meta ml-2">{T.bulkFlags}</span>
+        <button type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'flag', flag: 'lyric_check', on: true })}>+ {T.flagLyric}</button>
+        <button type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'flag', flag: 'lyric_check', on: false })}>− {T.flagLyric}</button>
+        <button type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'flag', flag: 'time_sensitive', on: true })}>+ {T.flagTime}</button>
+        <button type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'flag', flag: 'time_sensitive', on: false })}>− {T.flagTime}</button>
+        <button type="button" className={clsx(btn, 'ml-auto')} onClick={onClear}>{T.clearSelection}</button>
+      </div>
+      {msg && <p className="text-sm text-stage-bad m-0" role="alert">{msg} <button type="button" className="underline" onClick={onDone}>{t.common.close}</button></p>}
+    </div>
+  );
+}
+
 // ── Screen ──────────────────────────────────────────────────────────────
 export default function Questions() {
   const [rows, setRows] = useState<QuestionRow[] | null>(null);
@@ -256,6 +346,7 @@ export default function Questions() {
   const [f, setF] = useState<Filters>(NO_FILTERS);
   const [shown, setShown] = useState(PAGE);
   const [editing, setEditing] = useState<Draft | null>(null);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
 
   const [tick, setTick] = useState(0);
   const reload = () => setTick((n) => n + 1);
@@ -303,12 +394,14 @@ export default function Questions() {
       <MixCard liveYear={liveYear} stock={stock} />
 
       {editing && (
-        <Editor
-          key={editing.id ?? 'new'}
-          initial={editing} countries={countries} years={years}
-          onCancel={() => setEditing(null)}
-          onDone={() => { setEditing(null); reload(); }}
-        />
+        <EditorDialog onClose={() => setEditing(null)}>
+          <Editor
+            key={editing.id ?? 'new'}
+            initial={editing} countries={countries} years={years}
+            onCancel={() => setEditing(null)}
+            onDone={() => { setEditing(null); reload(); }}
+          />
+        </EditorDialog>
       )}
 
       <section className="space-y-3" aria-label={T.title}>
@@ -372,11 +465,33 @@ export default function Questions() {
         {!rows && !loadErr && <p className="t-meta">{t.common.loading}</p>}
         {rows && filtered.length === 0 && <p className="t-meta">{T.none}</p>}
 
+        {selected.size > 0 && (
+          <BulkBar
+            count={selected.size}
+            rows={(rows ?? []).filter((r) => selected.has(r.id))}
+            onClear={() => setSelected(new Set())}
+            onDone={() => { setSelected(new Set()); reload(); }}
+          />
+        )}
+
         {filtered.length > 0 && (
           <div className="overflow-x-auto rounded-stage border border-stage-line">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-stage-text-3 uppercase tracking-wide border-b border-stage-line">
+                  <th className="px-3 py-2 w-8">
+                    <input
+                      type="checkbox" className="size-4"
+                      aria-label={T.selectAll(filtered.length)}
+                      checked={filtered.length > 0 && filtered.every((r) => selected.has(r.id))}
+                      ref={(el) => { if (el) el.indeterminate = filtered.some((r) => selected.has(r.id)) && !filtered.every((r) => selected.has(r.id)); }}
+                      onChange={(e) => setSelected((prev) => {
+                        const next = new Set(prev);
+                        for (const r of filtered) { if (e.target.checked) next.add(r.id); else next.delete(r.id); }
+                        return next;
+                      })}
+                    />
+                  </th>
                   <th className="px-3 py-2">{T.cols.id}</th>
                   <th className="px-3 py-2">{T.cols.year}</th>
                   <th className="px-3 py-2">{T.cols.country}</th>
@@ -388,7 +503,18 @@ export default function Questions() {
               </thead>
               <tbody>
                 {filtered.slice(0, shown).map((r) => (
-                  <tr key={r.id} className={clsx('border-b border-stage-line/50 last:border-0', editing?.id === r.id && 'bg-stage-surface-2')}>
+                  <tr key={r.id} className={clsx('border-b border-stage-line/50 last:border-0', (editing?.id === r.id || selected.has(r.id)) && 'bg-stage-surface-2')}>
+                    <td className="px-3 py-2">
+                      <input
+                        type="checkbox" className="size-4" aria-label={T.selectOne(r.id)}
+                        checked={selected.has(r.id)}
+                        onChange={(e) => setSelected((prev) => {
+                          const next = new Set(prev);
+                          if (e.target.checked) next.add(r.id); else next.delete(r.id);
+                          return next;
+                        })}
+                      />
+                    </td>
                     <td className="px-3 py-2 text-stage-text-3 tabular-nums">{r.id}</td>
                     <td className="px-3 py-2 tabular-nums">{r.contest_year ?? T.general.split(' ')[0]}</td>
                     <td className="px-3 py-2 text-stage-text-2">{r.iso ? countryName.get(r.iso) ?? r.iso : t.common.none}</td>
