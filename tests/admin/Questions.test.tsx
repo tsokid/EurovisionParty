@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 
 type Row = Record<string, unknown>;
 
@@ -9,6 +9,8 @@ const h = vi.hoisted(() => ({
   updates: [] as Array<{ table: string; values: Row }>,
   inserts: [] as Array<{ table: string; values: Row }>,
   ins: [] as Array<{ col: string; ids: unknown[] }>,
+  deletes: 0,
+  deleteError: null as { message: string } | null,
   writeError: null as { message: string } | null,
 }));
 
@@ -26,6 +28,7 @@ vi.mock('../../src/lib/supabase', () => {
       single: () => Promise.resolve(h.writeError ? { data: null, error: h.writeError } : { data: { id: 77 }, error: null }),
       update: (values: Row) => { h.updates.push({ table: name, values }); return chain; },
       in: (col: string, ids: unknown[]) => { h.ins.push({ col, ids }); return chain; },
+      delete: () => { h.deletes += 1; const d: Record<string, unknown> = { in: (col: string, ids: unknown[]) => { h.ins.push({ col, ids }); return d; }, eq: () => d, then: (ok: (v: unknown) => unknown) => Promise.resolve({ data: null, error: h.deleteError }).then(ok) }; return d; },
       insert: (values: Row) => { h.inserts.push({ table: name, values }); return chain; },
       then: (ok: (v: unknown) => unknown, bad?: (e: unknown) => unknown) =>
         Promise.resolve({ data: result(), error: null }).then(ok, bad),
@@ -54,7 +57,7 @@ const q = (over: Row): Row => ({
 describe('Questions admin', () => {
   beforeEach(() => {
     h.questions = [q({}), q({ id: 21, contest_year: 1974, iso: 'SE', topic: 'lyrics', question_el: 'Συμπλήρωσε', status: 'draft', lyric_check: true, fact: 'x' })];
-    h.updates = []; h.inserts = []; h.ins = []; h.writeError = null;
+    h.updates = []; h.inserts = []; h.ins = []; h.writeError = null; h.deletes = 0; h.deleteError = null;
   });
 
   it('shows the round mix first, with per-round counts and stock per era', async () => {
@@ -149,5 +152,28 @@ describe('Questions admin', () => {
     fireEvent.click(screen.getByRole('button', { name: '+ Μπορεί να αλλάξει' }));
     await waitFor(() => expect(h.updates.at(-1)).toEqual({ table: 'quiz_questions', values: { time_sensitive: true } }));
     expect(h.ins.at(-1)).toEqual({ col: 'id', ids: [5] });
+  });
+
+  it('deletes the selected questions for good after a confirmation', async () => {
+    render(<Questions />);
+    await screen.findByText('2 από 2');
+    fireEvent.click(screen.getByLabelText('Επιλογή ερώτησης #21'));
+    fireEvent.click(screen.getByRole('button', { name: 'Οριστική διαγραφή' }));
+    expect(h.deletes).toBe(0);
+    const dialog = await screen.findByRole('alertdialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Οριστική διαγραφή' }));
+    await waitFor(() => expect(h.deletes).toBe(1));
+    expect(h.ins.at(-1)).toEqual({ col: 'id', ids: [21] });
+  });
+
+  it('a played question is not deleted, and the message says to retire it', async () => {
+    h.deleteError = { message: 'question_played: question 5 was already shown to players' };
+    render(<Questions />);
+    fireEvent.click(await screen.findByText('Ποια χώρα κέρδισε το 2026;'));
+    await screen.findByRole('region', { name: 'Ερώτηση #5' });
+    fireEvent.click(screen.getByRole('button', { name: 'Οριστική διαγραφή' }));
+    const dialog = await screen.findByRole('alertdialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Οριστική διαγραφή' }));
+    await screen.findByText(/έχουν ήδη εμφανιστεί σε παίκτες/);
   });
 });

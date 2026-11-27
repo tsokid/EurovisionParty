@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
@@ -18,19 +18,38 @@ export function useAdminAuth() {
     status: 'loading', email: null, isAdmin: false, error: null,
   });
 
+  // The user already confirmed as admin in this tab. supabase-js announces a
+  // sign-in every time the tab comes back to the front; for the same user
+  // there is nothing to check again (27 Nov 2026: it re-ran on every return).
+  const confirmedRef = useRef<string | null>(null);
+
   /** `known`: the session an auth event carried (null = signed out); omitted, it is read. */
   const refresh = useCallback(async (known?: Session | null) => {
     const session = known !== undefined ? known : (await supabase.auth.getSession()).data.session;
     if (!session) {
+      confirmedRef.current = null;
       setState({ status: 'anonymous', email: null, isAdmin: false, error: null });
       return;
     }
-    const { data: row } = await supabase
-      .from('super_admins')
-      .select('user_id')
-      .eq('user_id', session.user.id)
-      .maybeSingle();
+    if (confirmedRef.current === session.user.id) return;
+    // A failed request (the network often is not back yet when a tab wakes)
+    // is not a "no": try again, and never sign out on it.
+    let row: { user_id: string } | null = null;
+    for (let attempt = 0; ; attempt++) {
+      const { data, error } = await supabase
+        .from('super_admins')
+        .select('user_id')
+        .eq('user_id', session.user.id)
+        .maybeSingle();
+      if (!error) { row = data; break; }
+      if (attempt >= 4) {
+        setState((s) => ({ ...s, error: error.message }));
+        return;
+      }
+      await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+    }
     if (row) {
+      confirmedRef.current = session.user.id;
       setState({ status: 'authenticated', email: session.user.email ?? null, userId: session.user.id, isAdmin: true, error: null });
     } else {
       await supabase.auth.signOut();
@@ -82,6 +101,7 @@ export function useAdminAuth() {
   }, []);
 
   const logout = useCallback(async () => {
+    confirmedRef.current = null;
     await supabase.auth.signOut();
     setState({ status: 'anonymous', email: null, isAdmin: false, error: null });
   }, []);

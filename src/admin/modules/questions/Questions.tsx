@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom';
 import { Plus } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { t } from '../../i18n';
-import { Field, StatusChip, TextInput, INPUT, useToast, type ChipTone } from '../../ui/kit';
+import { ConfirmDialog, Field, StatusChip, TextInput, INPUT, useToast, type ChipTone } from '../../ui/kit';
 import {
   DEFAULT_MIX, DIFFICULTIES, ERAS, QUESTION_COLUMNS, STATUSES, TOPICS,
   NO_FILTERS, eraOf, filterQuestions, mixTotal, questionProblem, roundMix,
@@ -115,6 +115,18 @@ function Editor({ initial, countries, years, onDone, onCancel }: {
   const [d, setD] = useState<Draft>(initial);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  async function remove() {
+    if (d.id == null) return;
+    setConfirmDelete(false);
+    setBusy(true); setErr(null);
+    const { deleted } = await deleteQuestions([d.id]);
+    setBusy(false);
+    if (!deleted) { setErr(T.deletePlayed([d.id])); return; }
+    toast.show(T.deleted(1));
+    onDone(d.id);
+  }
 
   const problem = questionProblem({ ...d, source: d.source ?? '' });
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => setD((x) => ({ ...x, [k]: v }));
@@ -238,6 +250,19 @@ function Editor({ initial, countries, years, onDone, onCancel }: {
 
       {err && <p className="text-sm text-stage-bad m-0" role="alert">{err}</p>}
       <div className="flex gap-2 justify-end">
+        {d.id != null && (
+          <button type="button" onClick={() => setConfirmDelete(true)} disabled={busy}
+            className="mr-auto rounded-stage-sm border border-stage-bad px-4 min-h-10 text-stage-bad disabled:opacity-40">
+            {T.deleteForever}
+          </button>
+        )}
+        <ConfirmDialog
+          open={confirmDelete} danger
+          title={T.deleteTitle(1)} confirmLabel={T.deleteForever}
+          onConfirm={() => { void remove(); }} onCancel={() => setConfirmDelete(false)}
+        >
+          {T.deleteBody}
+        </ConfirmDialog>
         <button type="button" onClick={onCancel} className="rounded-stage-sm border border-stage-line-2 px-4 min-h-10 text-stage-text-2">{t.common.cancel}</button>
         <button type="button" onClick={save} disabled={busy} className="rounded-stage-sm bg-stage-pink px-4 min-h-10 font-semibold text-white disabled:opacity-40">
           {busy ? t.common.saving : t.common.save}
@@ -269,6 +294,20 @@ function EditorDialog({ onClose, children }: { onClose: () => void; children: Re
 }
 
 // ── Bulk actions ────────────────────────────────────────────────────────
+/** Deletes questions for good. The database refuses one that was ever shown
+ *  to a player (102); those are reported, the rest are deleted. */
+async function deleteQuestions(ids: number[]): Promise<{ deleted: number; played: number[] }> {
+  const played: number[] = [];
+  let deleted = 0;
+  const { error } = await supabase.from('quiz_questions').delete().in('id', ids);
+  if (!error) return { deleted: ids.length, played };
+  for (const id of ids) {
+    const r = await supabase.from('quiz_questions').delete().eq('id', id);
+    if (r.error) played.push(id); else deleted += 1;
+  }
+  return { deleted, played };
+}
+
 type BulkAction =
   | { kind: 'status'; status: Status }
   | { kind: 'flag'; flag: 'lyric_check' | 'time_sensitive'; on: boolean };
@@ -279,6 +318,16 @@ function BulkBar({ count, rows, onClear, onDone }: {
   const toast = useToast();
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  async function removeAll() {
+    setConfirmDelete(false);
+    setBusy(true); setMsg(null);
+    const { deleted, played } = await deleteQuestions(rows.map((r) => r.id));
+    setBusy(false);
+    toast.show(T.deleted(deleted));
+    if (played.length) setMsg(T.deletePlayed(played)); else onDone();
+  }
 
   async function run(a: BulkAction) {
     setBusy(true); setMsg(null);
@@ -329,8 +378,18 @@ function BulkBar({ count, rows, onClear, onDone }: {
         <button type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'flag', flag: 'lyric_check', on: false })}>− {T.flagLyric}</button>
         <button type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'flag', flag: 'time_sensitive', on: true })}>+ {T.flagTime}</button>
         <button type="button" disabled={busy} className={btn} onClick={() => run({ kind: 'flag', flag: 'time_sensitive', on: false })}>− {T.flagTime}</button>
+        <button type="button" disabled={busy} className={clsx(btn, 'border-stage-bad text-stage-bad')} onClick={() => setConfirmDelete(true)}>
+          {T.deleteForever}
+        </button>
         <button type="button" className={clsx(btn, 'ml-auto')} onClick={onClear}>{T.clearSelection}</button>
       </div>
+      <ConfirmDialog
+        open={confirmDelete} danger
+        title={T.deleteTitle(count)} confirmLabel={T.deleteForever}
+        onConfirm={() => { void removeAll(); }} onCancel={() => setConfirmDelete(false)}
+      >
+        {T.deleteBody}
+      </ConfirmDialog>
       {msg && <p className="text-sm text-stage-bad m-0" role="alert">{msg} <button type="button" className="underline" onClick={onDone}>{t.common.close}</button></p>}
     </div>
   );

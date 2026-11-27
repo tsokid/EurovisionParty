@@ -107,3 +107,35 @@ describe('101 question review status', () => {
     expect(r.rows[0].n).toBe(0);
   });
 });
+
+describe('102 question delete guard', () => {
+  let db: PGlite;
+  beforeAll(async () => {
+    db = await createDb({ upTo: '101' });
+    await db.exec(`insert into public.quiz_questions (id, correct_index, topic, difficulty, question_en, question_el,
+      options_en, options_el, fact, status) values
+      (98001, 0, 'song', 'easy', 'Q1?', 'Ε1;', '{a,b,c,d}', '{α,β,γ,δ}', 'played fact', 'draft'),
+      (98002, 0, 'song', 'easy', 'Q2?', 'Ε2;', '{a,b,c,d}', '{α,β,γ,δ}', 'unplayed fact', 'draft')`);
+    await db.exec(`insert into auth.users (id) values ('a0000000-0000-4000-8000-000000000102');
+      insert into public.rooms (id, code, host_id, host_name, phase, password_hash) values
+        ('10000000-0000-4000-8000-000000000102', 'DEL102', 'a0000000-0000-4000-8000-000000000102', 'Α', 'lobby', '');
+      insert into public.players (id, room_id, user_id, name, is_host) values
+        ('aaaaaaaa-0000-4000-8000-000000000102', '10000000-0000-4000-8000-000000000102', 'a0000000-0000-4000-8000-000000000102', 'Α', true);
+      insert into public.quiz_answers (room_id, player_id, round_number, question_id, answer_index, is_correct, question_opened_at, answered_at, points_awarded)
+        values ('10000000-0000-4000-8000-000000000102', 'aaaaaaaa-0000-4000-8000-000000000102', 1, 98001, 0, true, now(), now(), 12);`);
+    await db.exec(read('supabase/migrations/102_question_delete_guard.sql'));
+  }, 120_000);
+  afterAll(async () => { await db?.close(); });
+
+  it('a question never shown can be deleted; a played one cannot', async () => {
+    await db.exec(`delete from public.quiz_questions where id = 98002`);
+    await expect(db.exec(`delete from public.quiz_questions where id = 98001`)).rejects.toThrow(/question_played/);
+    const r = await db.query<{ n: number }>(`select count(*)::int n from public.quiz_questions where id in (98001, 98002)`);
+    expect(r.rows[0].n).toBe(1);
+  });
+
+  it('the rollback removes the guard', async () => {
+    await db.exec(read('supabase/rollbacks/102_question_delete_guard_rollback.sql'));
+    await db.exec(`delete from public.quiz_answers where question_id = 98001; delete from public.quiz_questions where id = 98001`);
+  });
+});
