@@ -21,30 +21,10 @@
       ]
     },
     {
-      "id": 2,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "ABBA represented Sweden with which Eurovision-winning song in 1974?",
-      "options": [
-        "Fernando",
-        "Waterloo",
-        "Dancing Queen",
-        "Mamma Mia"
-      ],
-      "correct": 1,
-      "question_el": "Οι ABBA εκπροσώπησαν τη Σουηδία με ποιο νικητήριο τραγούδι στη Eurovision το 1974;",
-      "options_el": [
-        "Fernando",
-        "Waterloo",
-        "Dancing Queen",
-        "Mamma Mia"
-      ]
-    },
-    {
       "id": 3,
       "category": "history",
       "difficulty": "easy",
-      "question": "Which country has won Eurovision the most times?",
+      "question": "As of 2026, which country or countries hold the record for most Eurovision wins?",
       "options": [
         "Sweden",
         "Luxembourg",
@@ -52,7 +32,7 @@
         "Ireland and Sweden"
       ],
       "correct": 3,
-      "question_el": "Ποια χώρα έχει κερδίσει τη Eurovision τις περισσότερες φορές;",
+      "question_el": "Μέχρι και το 2026, ποια χώρα ή ποιες χώρες έχουν τις περισσότερες νίκες στη Eurovision;",
       "options_el": [
         "Σουηδία",
         "Λουξεμβούργο",
@@ -81,26 +61,6 @@
       ]
     },
     {
-      "id": 5,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "In what year was the first Eurovision Song Contest held?",
-      "options": [
-        "1950",
-        "1956",
-        "1960",
-        "1963"
-      ],
-      "correct": 1,
-      "question_el": "Ποια χρονιά πραγματοποιήθηκε ο πρώτος Διαγωνισμός Τραγουδιού της Eurovision;",
-      "options_el": [
-        "1950",
-        "1956",
-        "1960",
-        "1963"
-      ]
-    },
-    {
       "id": 6,
       "category": "history",
       "difficulty": "medium",
@@ -118,26 +78,6 @@
         "Ρότερνταμ",
         "Λίβερπουλ",
         "Λισαβόνα"
-      ]
-    },
-    {
-      "id": 7,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Loreen won Eurovision twice — in 2012 and which other year?",
-      "options": [
-        "2019",
-        "2021",
-        "2023",
-        "2022"
-      ],
-      "correct": 2,
-      "question_el": "Η Loreen κέρδισε τη Eurovision δύο φορές — το 2012 και ποια άλλη χρονιά;",
-      "options_el": [
-        "2019",
-        "2021",
-        "2023",
-        "2022"
       ]
     },
     {
@@ -161,50 +101,10 @@
       ]
     },
     {
-      "id": 9,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Ukraine won Eurovision 2022 with Kalush Orchestra. What was their song?",
-      "options": [
-        "Shum",
-        "Stefania",
-        "1944",
-        "Suitcase"
-      ],
-      "correct": 1,
-      "question_el": "Η Ουκρανία κέρδισε τη Eurovision 2022 με την Kalush Orchestra. Ποιο ήταν το τραγούδι τους;",
-      "options_el": [
-        "Shum",
-        "Stefania",
-        "1944",
-        "Suitcase"
-      ]
-    },
-    {
-      "id": 10,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Which country hosted Eurovision 2021 after the 2020 contest was cancelled?",
-      "options": [
-        "Israel",
-        "Netherlands",
-        "Italy",
-        "Portugal"
-      ],
-      "correct": 1,
-      "question_el": "Ποια χώρα φιλοξένησε τη Eurovision 2021 μετά την ακύρωση του διαγωνισμού του 2020;",
-      "options_el": [
-        "Ισραήλ",
-        "Ολλανδία",
-        "Ιταλία",
-        "Πορτογαλία"
-      ]
-    },
-    {
       "id": 12,
       "category": "history",
       "difficulty": "hard",
-      "question": "How many times has Norway received nul points in a Eurovision final?",
+      "question": "As of 2026, how many times has Norway received nul points in a Eurovision final?",
       "options": [
         "3",
         "4",
@@ -212,7 +112,7 @@
         "6"
       ],
       "correct": 1,
-      "question_el": "Πόσες φορές έχει πάρει η Νορβηγία nul points σε τελικό της Eurovision;",
+      "question_el": "Μέχρι και το 2026, πόσες φορές έχει πάρει η Νορβηγία nul points σε τελικό της Eurovision;",
       "options_el": [
         "3",
         "4",
@@ -281,26 +181,6 @@
       ]
     },
     {
-      "id": 16,
-      "category": "geography",
-      "difficulty": "easy",
-      "question": "Which non-European country competes in Eurovision?",
-      "options": [
-        "Japan",
-        "Australia",
-        "Brazil",
-        "Canada"
-      ],
-      "correct": 1,
-      "question_el": "Ποια μη ευρωπαϊκή χώρα συμμετέχει στη Eurovision;",
-      "options_el": [
-        "Ιαπωνία",
-        "Αυστραλία",
-        "Βραζιλία",
-        "Καναδάς"
-      ]
-    },
-    {
       "id": 17,
       "category": "geography",
       "difficulty": "easy",
@@ -352,7 +232,7 @@
         "Switzerland"
       ],
       "correct": 2,
-      "question_el": "Ο Σαν Μαρίνο είναι ένα μικροσκοπικό κράτος — ποια μεγαλύτερη χώρα το περιβάλλει πλήρως;",
+      "question_el": "Το Σαν Μαρίνο είναι ένα μικροσκοπικό κράτος — ποια μεγαλύτερη χώρα το περικλείει πλήρως;",
       "options_el": [
         "Γαλλία",
         "Αυστρία",
@@ -418,26 +298,6 @@
         "we are one",
         "only you and I",
         "until i die"
-      ]
-    },
-    {
-      "id": 23,
-      "category": "lyrics",
-      "difficulty": "easy",
-      "question": "Complete the lyric — Dana International, Diva 1998: 'Veni, vidi, vici — she's the ...'",
-      "options": [
-        "Queen",
-        "Goddess",
-        "Diva",
-        "Winner"
-      ],
-      "correct": 2,
-      "question_el": "Συμπληρώστε τον στίχο — Dana International, Diva 1998: 'Veni, vidi, vici — she's the ...'",
-      "options_el": [
-        "Queen",
-        "Goddess",
-        "Diva",
-        "Winner"
       ]
     },
     {
@@ -761,26 +621,6 @@
       ]
     },
     {
-      "id": 41,
-      "category": "2025",
-      "difficulty": "hard",
-      "question": "Gabry Ponte represents which country at Eurovision 2025?",
-      "options": [
-        "Italy",
-        "San Marino",
-        "Malta",
-        "Switzerland"
-      ],
-      "correct": 1,
-      "question_el": "Ο Gabry Ponte εκπροσωπεί ποια χώρα στη Eurovision 2025;",
-      "options_el": [
-        "Ιταλία",
-        "Σαν Μαρίνο",
-        "Μάλτα",
-        "Ελβετία"
-      ]
-    },
-    {
       "id": 43,
       "category": "records",
       "difficulty": "easy",
@@ -798,26 +638,6 @@
         "Δώδεκα βαθμοί",
         "Δύο βαθμοί",
         "Μπόνους βαθμοί"
-      ]
-    },
-    {
-      "id": 45,
-      "category": "records",
-      "difficulty": "medium",
-      "question": "Johnny Logan won Eurovision three times — as performer and once as what?",
-      "options": [
-        "Host",
-        "Songwriter",
-        "Jury member",
-        "Conductor"
-      ],
-      "correct": 1,
-      "question_el": "Ο Johnny Logan κέρδισε τη Eurovision τρεις φορές — ως ερμηνευτής και μία ως τι;",
-      "options_el": [
-        "Παρουσιαστής",
-        "Τραγουδοποιός",
-        "Μέλος κριτικής επιτροπής",
-        "Μαέστρος"
       ]
     },
     {
@@ -864,7 +684,7 @@
       "id": 48,
       "category": "trivia",
       "difficulty": "easy",
-      "question": "What language is most commonly used in Eurovision winning entries?",
+      "question": "As of 2026, which language has been used most often in Eurovision-winning songs?",
       "options": [
         "French",
         "English",
@@ -872,7 +692,7 @@
         "German"
       ],
       "correct": 1,
-      "question_el": "Ποια γλώσσα χρησιμοποιείται πιο συχνά στις νικητήριες συμμετοχές της Eurovision;",
+      "question_el": "Μέχρι και το 2026, ποια γλώσσα έχει χρησιμοποιηθεί πιο συχνά στα νικητήρια τραγούδια της Eurovision;",
       "options_el": [
         "Γαλλικά",
         "Αγγλικά",
@@ -884,20 +704,20 @@
       "id": 49,
       "category": "trivia",
       "difficulty": "easy",
-      "question": "Who is allowed to vote in the Eurovision Grand Final?",
+      "question": "As of 2026, whose votes count in the Eurovision Grand Final?",
       "options": [
-        "All competing countries",
+        "All competing countries, plus a 'Rest of the World' online vote",
         "Only qualifying countries",
         "Only EBU member countries",
-        "All countries plus diaspora"
+        "Only the jury of the host country"
       ],
       "correct": 0,
-      "question_el": "Ποιοι έχουν δικαίωμα ψήφου στον Μεγάλο Τελικό της Eurovision;",
+      "question_el": "Μέχρι και το 2026, ποιανών οι ψήφοι μετράνε στον Μεγάλο Τελικό της Eurovision;",
       "options_el": [
-        "Όλες οι συμμετέχουσες χώρες",
-        "Μόνο οι χώρες που προκρίθηκαν",
-        "Μόνο οι χώρες-μέλη της EBU",
-        "Όλες οι χώρες συν η διασπορά"
+        "Όλων των συμμετεχουσών χωρών, συν μια διαδικτυακή ψήφος «Υπόλοιπος Κόσμος»",
+        "Μόνο των χωρών που προκρίθηκαν",
+        "Μόνο των χωρών-μελών της EBU",
+        "Μόνο της κριτικής επιτροπής της χώρας-οικοδέσποινας"
       ]
     },
     {
@@ -921,66 +741,6 @@
       ]
     },
     {
-      "id": 51,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "Which famous rock band won Eurovision in 2006 for Finland?",
-      "options": [
-        "Nightwish",
-        "HIM",
-        "Lordi",
-        "Apocalyptica"
-      ],
-      "correct": 2,
-      "question_el": "Ποιο διάσημο ροκ συγκρότημα κέρδισε τη Eurovision το 2006 για τη Φινλανδία;",
-      "options_el": [
-        "Nightwish",
-        "HIM",
-        "Lordi",
-        "Apocalyptica"
-      ]
-    },
-    {
-      "id": 53,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "Which country CANNOT host Eurovision even if they win?",
-      "options": [
-        "Andorra",
-        "Kosovo",
-        "Kazakhstan",
-        "All of the above"
-      ],
-      "correct": 3,
-      "question_el": "Ποια χώρα ΔΕΝ μπορεί να φιλοξενήσει τη Eurovision ακόμα κι αν κερδίσει;",
-      "options_el": [
-        "Ανδόρρα",
-        "Κόσοβο",
-        "Καζακστάν",
-        "Όλες οι παραπάνω"
-      ]
-    },
-    {
-      "id": 55,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "What was unusual about the 1969 Eurovision result that led to rule changes?",
-      "options": [
-        "A country withdrew after winning",
-        "Four countries tied for first",
-        "The winner was disqualified",
-        "Votes were lost in transmission"
-      ],
-      "correct": 1,
-      "question_el": "Τι ήταν ασυνήθιστο στο αποτέλεσμα της Eurovision 1969 που οδήγησε σε αλλαγή κανόνων;",
-      "options_el": [
-        "Μια χώρα αποσύρθηκε μετά τη νίκη",
-        "Τέσσερις χώρες ισοβάθμισαν στην πρώτη θέση",
-        "Ο νικητής αποκλείστηκε",
-        "Ψήφοι χάθηκαν κατά τη μετάδοση"
-      ]
-    },
-    {
       "id": 56,
       "category": "trivia",
       "difficulty": "hard",
@@ -1001,26 +761,6 @@
       ]
     },
     {
-      "id": 58,
-      "category": "staging",
-      "difficulty": "easy",
-      "question": "Which of these are classic Eurovision staging clichés?",
-      "options": [
-        "Pyrotechnics",
-        "Wind machines",
-        "Giant LED screens",
-        "All of the above"
-      ],
-      "correct": 3,
-      "question_el": "Ποια από τα παρακάτω θεωρούνται κλασικά σκηνικά κλισέ της Eurovision;",
-      "options_el": [
-        "Πυροτεχνήματα",
-        "Ανεμομηχανές",
-        "Γιγαντοοθόνες LED",
-        "Όλα τα παραπάνω"
-      ]
-    },
-    {
       "id": 60,
       "category": "staging",
       "difficulty": "medium",
@@ -1038,26 +778,6 @@
         "Εισβολέα που άρπαξε το μικρόφωνό της",
         "Διακοπή ρεύματος",
         "Διαδηλωτή στο κοινό"
-      ]
-    },
-    {
-      "id": 61,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Which country won Eurovision 2024?",
-      "options": [
-        "Croatia",
-        "Israel",
-        "Switzerland",
-        "Ukraine"
-      ],
-      "correct": 2,
-      "question_el": "Ποια χώρα κέρδισε τη Eurovision 2024;",
-      "options_el": [
-        "Κροατία",
-        "Ισραήλ",
-        "Ελβετία",
-        "Ουκρανία"
       ]
     },
     {
@@ -1121,46 +841,6 @@
       ]
     },
     {
-      "id": 66,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Duncan Laurence won Eurovision 2019 for the Netherlands. What was his song?",
-      "options": [
-        "Calm After the Storm",
-        "Arcade",
-        "The Netherlands",
-        "Beautiful Mess"
-      ],
-      "correct": 1,
-      "question_el": "Ο Duncan Laurence κέρδισε τη Eurovision 2019 για την Ολλανδία. Ποιο ήταν το τραγούδι του;",
-      "options_el": [
-        "Calm After the Storm",
-        "Arcade",
-        "The Netherlands",
-        "Beautiful Mess"
-      ]
-    },
-    {
-      "id": 67,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Portugal ended a 49-year Eurovision drought by winning in 2017. Who was the artist?",
-      "options": [
-        "Diogo Piçarra",
-        "Salvador Sobral",
-        "Conan Osiris",
-        "Elisa"
-      ],
-      "correct": 1,
-      "question_el": "Η Πορτογαλία έσπασε μια ξηρασία 49 ετών κερδίζοντας το 2017. Ποιος ήταν ο καλλιτέχνης;",
-      "options_el": [
-        "Diogo Piçarra",
-        "Salvador Sobral",
-        "Conan Osiris",
-        "Elisa"
-      ]
-    },
-    {
       "id": 68,
       "category": "history",
       "difficulty": "hard",
@@ -1184,7 +864,7 @@
       "id": 69,
       "category": "records",
       "difficulty": "easy",
-      "question": "How many semifinal rounds does Eurovision have?",
+      "question": "As of 2026, how many semi-finals does each Eurovision contest have?",
       "options": [
         "1",
         "2",
@@ -1192,7 +872,7 @@
         "4"
       ],
       "correct": 1,
-      "question_el": "Πόσους ημιτελικούς γύρους έχει η Eurovision;",
+      "question_el": "Μέχρι και το 2026, πόσους ημιτελικούς έχει κάθε διαγωνισμός της Eurovision;",
       "options_el": [
         "1",
         "2",
@@ -1204,7 +884,7 @@
       "id": 70,
       "category": "records",
       "difficulty": "medium",
-      "question": "How many countries qualify from each Eurovision semifinal to the grand final?",
+      "question": "As of 2026, how many countries qualify from each Eurovision semi-final to the grand final?",
       "options": [
         "8",
         "10",
@@ -1212,32 +892,12 @@
         "15"
       ],
       "correct": 1,
-      "question_el": "Πόσες χώρες προκρίνονται από κάθε ημιτελικό της Eurovision στον μεγάλο τελικό;",
+      "question_el": "Μέχρι και το 2026, πόσες χώρες προκρίνονται από κάθε ημιτελικό της Eurovision στον μεγάλο τελικό;",
       "options_el": [
         "8",
         "10",
         "12",
         "15"
-      ]
-    },
-    {
-      "id": 71,
-      "category": "trivia",
-      "difficulty": "easy",
-      "question": "Eurovision is organized by which broadcasting union?",
-      "options": [
-        "EBU",
-        "BBC",
-        "UER",
-        "ABU"
-      ],
-      "correct": 0,
-      "question_el": "Η Eurovision διοργανώνεται από ποια ραδιοτηλεοπτική ένωση;",
-      "options_el": [
-        "EBU",
-        "BBC",
-        "UER",
-        "ABU"
       ]
     },
     {
@@ -1258,26 +918,6 @@
         "Γενεύη",
         "Βέρνη",
         "Βασιλεία"
-      ]
-    },
-    {
-      "id": 74,
-      "category": "geography",
-      "difficulty": "medium",
-      "question": "Which Eurovision host city is located in Ukraine?",
-      "options": [
-        "Odessa",
-        "Kyiv",
-        "Lviv",
-        "Kharkiv"
-      ],
-      "correct": 1,
-      "question_el": "Ποια πόλη-οικοδέσποινα της Eurovision βρίσκεται στην Ουκρανία;",
-      "options_el": [
-        "Οδησσός",
-        "Κίεβο",
-        "Λβιβ",
-        "Χάρκοβο"
       ]
     },
     {
@@ -1304,7 +944,7 @@
       "id": 76,
       "category": "geography",
       "difficulty": "hard",
-      "question": "Which Eurovision host city is located in the Netherlands?",
+      "question": "Which Dutch city hosted Eurovision 2021?",
       "options": [
         "Amsterdam",
         "The Hague",
@@ -1312,7 +952,7 @@
         "Utrecht"
       ],
       "correct": 2,
-      "question_el": "Ποια πόλη-οικοδέσποινα της Eurovision βρίσκεται στην Ολλανδία;",
+      "question_el": "Ποια ολλανδική πόλη φιλοξένησε τη Eurovision 2021;",
       "options_el": [
         "Άμστερνταμ",
         "Χάγη",
@@ -1358,26 +998,6 @@
         "boy",
         "clown",
         "fool"
-      ]
-    },
-    {
-      "id": 80,
-      "category": "2025",
-      "difficulty": "easy",
-      "question": "Which is the host country for Eurovision 2025?",
-      "options": [
-        "Sweden",
-        "Italy",
-        "Switzerland",
-        "Netherlands"
-      ],
-      "correct": 2,
-      "question_el": "Ποια είναι η χώρα-οικοδέσποινα της Eurovision 2025;",
-      "options_el": [
-        "Σουηδία",
-        "Ιταλία",
-        "Ελβετία",
-        "Ολλανδία"
       ]
     },
     {
@@ -1461,26 +1081,6 @@
       ]
     },
     {
-      "id": 85,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Alexander Rybak scored the then-record points winning for Norway. In what year?",
-      "options": [
-        "2007",
-        "2008",
-        "2009",
-        "2010"
-      ],
-      "correct": 2,
-      "question_el": "Ο Alexander Rybak σημείωσε τη ρεκόρ βαθμολογία κερδίζοντας για τη Νορβηγία. Ποια χρονιά;",
-      "options_el": [
-        "2007",
-        "2008",
-        "2009",
-        "2010"
-      ]
-    },
-    {
       "id": 86,
       "category": "history",
       "difficulty": "medium",
@@ -1501,43 +1101,23 @@
       ]
     },
     {
-      "id": 87,
-      "category": "history",
-      "difficulty": "hard",
-      "question": "Which Croatian entry at Eurovision 1999 featured an iconic key change and wind machine combo?",
-      "options": [
-        "Marija Magdalena",
-        "Everything I Want",
-        "Nostalgija",
-        "Oro"
-      ],
-      "correct": 0,
-      "question_el": "Ποια κροατική συμμετοχή στη Eurovision 1999 περιείχε μια εμβληματική αλλαγή τονικότητας και ανεμομηχανή;",
-      "options_el": [
-        "Marija Magdalena",
-        "Everything I Want",
-        "Nostalgija",
-        "Oro"
-      ]
-    },
-    {
       "id": 88,
       "category": "trivia",
       "difficulty": "medium",
-      "question": "What rule prevents countries from singing in their national language — or does it?",
+      "question": "Since 1999, what is the rule on the language of Eurovision songs?",
       "options": [
-        "Entries must be in national language",
-        "Entries can be in any language since 1999",
+        "Entries must be in a national language",
+        "Entries can be in any language",
         "Entries must be in English or French",
         "Entries must be in an EBU-approved language"
       ],
       "correct": 1,
-      "question_el": "Ποιος κανόνας εμποδίζει τις χώρες να τραγουδούν στην εθνική τους γλώσσα — ή μήπως όχι;",
+      "question_el": "Από το 1999, τι ισχύει για τη γλώσσα των τραγουδιών της Eurovision;",
       "options_el": [
-        "Οι συμμετοχές πρέπει να είναι στην εθνική γλώσσα",
-        "Οι συμμετοχές μπορούν να είναι σε οποιαδήποτε γλώσσα από το 1999",
-        "Οι συμμετοχές πρέπει να είναι στα αγγλικά ή γαλλικά",
-        "Οι συμμετοχές πρέπει να είναι σε εγκεκριμένη γλώσσα της EBU"
+        "Πρέπει να είναι σε εθνική γλώσσα",
+        "Μπορούν να είναι σε οποιαδήποτε γλώσσα",
+        "Πρέπει να είναι στα αγγλικά ή στα γαλλικά",
+        "Πρέπει να είναι σε γλώσσα εγκεκριμένη από την EBU"
       ]
     },
     {
@@ -1621,26 +1201,6 @@
       ]
     },
     {
-      "id": 93,
-      "category": "geography",
-      "difficulty": "easy",
-      "question": "Eurovision 2015 was held in Vienna. What country is Vienna in?",
-      "options": [
-        "Germany",
-        "Switzerland",
-        "Austria",
-        "Netherlands"
-      ],
-      "correct": 2,
-      "question_el": "Η Eurovision 2015 πραγματοποιήθηκε στη Βιέννη. Σε ποια χώρα βρίσκεται η Βιέννη;",
-      "options_el": [
-        "Γερμανία",
-        "Ελβετία",
-        "Αυστρία",
-        "Ολλανδία"
-      ]
-    },
-    {
       "id": 94,
       "category": "history",
       "difficulty": "medium",
@@ -1658,26 +1218,6 @@
         "Ιρλανδία",
         "Τσεχία",
         "Αυστρία"
-      ]
-    },
-    {
-      "id": 95,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Israel's Netta won in 2018 with which song?",
-      "options": [
-        "Golden Boy",
-        "Toy",
-        "A Million Voices",
-        "Replay"
-      ],
-      "correct": 1,
-      "question_el": "Η Netta του Ισραήλ κέρδισε το 2018 με ποιο τραγούδι;",
-      "options_el": [
-        "Golden Boy",
-        "Toy",
-        "A Million Voices",
-        "Replay"
       ]
     },
     {
@@ -1821,26 +1361,6 @@
       ]
     },
     {
-      "id": 105,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Which artist won Eurovision 2004 with “Wild Dances”?",
-      "options": [
-        "Ruslana",
-        "Elena Paparizou",
-        "Tatu",
-        "Sertab Erener"
-      ],
-      "correct": 0,
-      "question_el": "Ποια καλλιτέχνιδα κέρδισε τη Eurovision 2004 με το «Wild Dances»;",
-      "options_el": [
-        "Ruslana",
-        "Elena Paparizou",
-        "Tatu",
-        "Sertab Erener"
-      ]
-    },
-    {
       "id": 106,
       "category": "trivia",
       "difficulty": "medium",
@@ -1901,26 +1421,6 @@
       ]
     },
     {
-      "id": 109,
-      "category": "records",
-      "difficulty": "medium",
-      "question": "Ireland won three consecutive Eurovisions in which years?",
-      "options": [
-        "1989–1991",
-        "1990–1992",
-        "1992–1994",
-        "1993–1995"
-      ],
-      "correct": 2,
-      "question_el": "Η Ιρλανδία κέρδισε τρεις διαδοχικές Eurovision σε ποιες χρονιές;",
-      "options_el": [
-        "1989–1991",
-        "1990–1992",
-        "1992–1994",
-        "1993–1995"
-      ]
-    },
-    {
       "id": 110,
       "category": "geography",
       "difficulty": "medium",
@@ -1938,46 +1438,6 @@
         "Δανία",
         "Σουηδία",
         "Φινλανδία"
-      ]
-    },
-    {
-      "id": 112,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "Which country is famously associated with often giving Cyprus high Eurovision points?",
-      "options": [
-        "Turkey",
-        "Greece",
-        "Israel",
-        "Bulgaria"
-      ],
-      "correct": 1,
-      "question_el": "Ποια χώρα συνδέεται συχνά με υψηλές βαθμολογίες προς την Κύπρο στη Eurovision;",
-      "options_el": [
-        "Τουρκία",
-        "Ελλάδα",
-        "Ισραήλ",
-        "Βουλγαρία"
-      ]
-    },
-    {
-      "id": 113,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "Which country's Eurovision win prompted the phrase 'douze points' to become mainstream?",
-      "options": [
-        "France",
-        "Ireland",
-        "Sweden",
-        "None — it was always the phrase"
-      ],
-      "correct": 3,
-      "question_el": "Ποιας χώρας η νίκη στη Eurovision έκανε τη φράση 'douze points' mainstream;",
-      "options_el": [
-        "Γαλλία",
-        "Ιρλανδία",
-        "Σουηδία",
-        "Καμίας — ήταν πάντα η φράση"
       ]
     },
     {
@@ -2004,15 +1464,15 @@
       "id": 115,
       "category": "trivia",
       "difficulty": "medium",
-      "question": "How many members does the jury panel have per country in Eurovision?",
+      "question": "Under the 2026 rules, how many members does each country's national jury have?",
       "options": [
         "3",
         "5",
         "7",
         "10"
       ],
-      "correct": 1,
-      "question_el": "Πόσα μέλη έχει η κριτική επιτροπή ανά χώρα στη Eurovision;",
+      "correct": 2,
+      "question_el": "Σύμφωνα με τους κανόνες του 2026, πόσα μέλη έχει η εθνική κριτική επιτροπή κάθε χώρας;",
       "options_el": [
         "3",
         "5",
@@ -2161,43 +1621,23 @@
       ]
     },
     {
-      "id": 123,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Satellite by Lena won Eurovision 2010 for which country?",
-      "options": [
-        "Austria",
-        "Germany",
-        "Switzerland",
-        "Netherlands"
-      ],
-      "correct": 1,
-      "question_el": "Το Satellite της Lena κέρδισε τη Eurovision 2010 για ποια χώρα;",
-      "options_el": [
-        "Αυστρία",
-        "Γερμανία",
-        "Ελβετία",
-        "Ολλανδία"
-      ]
-    },
-    {
       "id": 124,
       "category": "history",
       "difficulty": "hard",
-      "question": "Which country withdrew from Eurovision 2023 after concerns about show content?",
+      "question": "Which of these countries withdrew from Eurovision 2023, citing financial reasons?",
       "options": [
-        "Russia",
-        "Belarus",
-        "Hungary",
-        "No country withdrew"
+        "Bulgaria",
+        "Greece",
+        "Croatia",
+        "Romania"
       ],
-      "correct": 3,
-      "question_el": "Ποια χώρα αποσύρθηκε από τη Eurovision 2023 λόγω ανησυχιών για το περιεχόμενο του σόου;",
+      "correct": 0,
+      "question_el": "Ποια από αυτές τις χώρες αποσύρθηκε από τη Eurovision 2023, επικαλούμενη οικονομικούς λόγους;",
       "options_el": [
-        "Ρωσία",
-        "Λευκορωσία",
-        "Ουγγαρία",
-        "Καμία χώρα δεν αποσύρθηκε"
+        "Βουλγαρία",
+        "Ελλάδα",
+        "Κροατία",
+        "Ρουμανία"
       ]
     },
     {
@@ -2304,40 +1744,20 @@
       "id": 131,
       "category": "trivia",
       "difficulty": "hard",
-      "question": "Which country has participated in Eurovision the most times without ever winning?",
+      "question": "As of 2026, which country has competed in Eurovision the most times without ever winning?",
       "options": [
-        "Portugal (before 2017)",
+        "Iceland",
         "Malta",
         "Cyprus",
         "Norway"
       ],
       "correct": 2,
-      "question_el": "Ποια χώρα έχει συμμετάσχει στη Eurovision τις περισσότερες φορές χωρίς να κερδίσει ποτέ;",
+      "question_el": "Μέχρι και το 2026, ποια χώρα έχει συμμετάσχει στη Eurovision τις περισσότερες φορές χωρίς να έχει κερδίσει ποτέ;",
       "options_el": [
-        "Πορτογαλία (πριν το 2017)",
+        "Ισλανδία",
         "Μάλτα",
         "Κύπρος",
         "Νορβηγία"
-      ]
-    },
-    {
-      "id": 132,
-      "category": "geography",
-      "difficulty": "easy",
-      "question": "Eurovision 2022 was held in Turin. In which country is Turin?",
-      "options": [
-        "France",
-        "Spain",
-        "Italy",
-        "Switzerland"
-      ],
-      "correct": 2,
-      "question_el": "Η Eurovision 2022 πραγματοποιήθηκε στο Τορίνο. Σε ποια χώρα βρίσκεται το Τορίνο;",
-      "options_el": [
-        "Γαλλία",
-        "Ισπανία",
-        "Ιταλία",
-        "Ελβετία"
       ]
     },
     {
@@ -2521,43 +1941,23 @@
       ]
     },
     {
-      "id": 142,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "What was Måneskin's song at Eurovision 2021?",
-      "options": [
-        "Beggin'",
-        "Zitti e buoni",
-        "MAMMAMIA",
-        "I Wanna Be Your Slave"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο ήταν το τραγούδι των Måneskin στη Eurovision 2021;",
-      "options_el": [
-        "Beggin'",
-        "Zitti e buoni",
-        "MAMMAMIA",
-        "I Wanna Be Your Slave"
-      ]
-    },
-    {
       "id": 143,
       "category": "trivia",
       "difficulty": "medium",
-      "question": "What happens if the televote results are not received in time from a country?",
+      "question": "Under the 2023–2025 rules, what was used in the Grand Final if a country's televote result could not be used?",
       "options": [
-        "That country is disqualified",
-        "An aggregate backup vote is used",
-        "No points are given",
-        "Extra time is granted"
+        "That country was disqualified",
+        "An aggregated substitute result",
+        "No points were given",
+        "Extra time was granted"
       ],
       "correct": 1,
-      "question_el": "Τι συμβαίνει αν τα αποτελέσματα τηλεψηφοφορίας δεν ληφθούν εγκαίρως από μια χώρα;",
+      "question_el": "Σύμφωνα με τους κανόνες 2023–2025, τι χρησιμοποιούνταν στον τελικό αν το αποτέλεσμα της τηλεψηφοφορίας μιας χώρας δεν μπορούσε να χρησιμοποιηθεί;",
       "options_el": [
-        "Η χώρα αποκλείεται",
-        "Χρησιμοποιείται εφεδρική συγκεντρωτική ψήφος",
-        "Δεν δίνονται βαθμοί",
-        "Δίνεται επιπλέον χρόνος"
+        "Η χώρα αποκλειόταν",
+        "Ένα υποκατάστατο συγκεντρωτικό αποτέλεσμα",
+        "Δεν δίνονταν βαθμοί",
+        "Δινόταν επιπλέον χρόνος"
       ]
     },
     {
@@ -2661,26 +2061,6 @@
       ]
     },
     {
-      "id": 150,
-      "category": "2025",
-      "difficulty": "hard",
-      "question": "What does 'Asteromata' — Greece's Eurovision 2025 song — mean in Greek?",
-      "options": [
-        "Starry eyes",
-        "Golden hair",
-        "Broken heart",
-        "Night sky"
-      ],
-      "correct": 0,
-      "question_el": "Τι σημαίνει 'Asteromata' — το τραγούδι της Ελλάδας στη Eurovision 2025 — στα ελληνικά;",
-      "options_el": [
-        "Αστερομάτα",
-        "Χρυσά μαλλιά",
-        "Ραγισμένη καρδιά",
-        "Νυχτερινός ουρανός"
-      ]
-    },
-    {
       "id": 151,
       "category": "history",
       "difficulty": "medium",
@@ -2764,20 +2144,20 @@
       "id": 155,
       "category": "staging",
       "difficulty": "hard",
-      "question": "Verka Serduchka's 2007 staging featured performers in what kind of costumes?",
+      "question": "What look dominated Verka Serduchka's staging at Eurovision 2007?",
       "options": [
         "Space suits",
-        "Star-shaped silver hats and outfits",
+        "Silver costumes, with a silver star hat for Verka",
         "Traditional Ukrainian folk dress",
         "Black feathered wings"
       ],
       "correct": 1,
-      "question_el": "Η σκηνική παρουσία της Verka Serduchka το 2007 περιλάμβανε ερμηνευτές με τι είδους κοστούμια;",
+      "question_el": "Ποιο στυλ κυριαρχούσε στη σκηνική παρουσία της Verka Serduchka στη Eurovision 2007;",
       "options_el": [
         "Διαστημικές στολές",
-        "Αστεροειδή ασημένια καπέλα και ρούχα",
+        "Ασημένια κοστούμια, με ασημένιο καπέλο-αστέρι για τη Verka",
         "Παραδοσιακή ουκρανική φορεσιά",
-        "Μαύρα φτερωτά φτερά"
+        "Μαύρα φτερά με πούπουλα"
       ]
     },
     {
@@ -2861,26 +2241,6 @@
       ]
     },
     {
-      "id": 163,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "Which country's national selection is called 'Melodifestivalen'?",
-      "options": [
-        "Norway",
-        "Denmark",
-        "Finland",
-        "Sweden"
-      ],
-      "correct": 3,
-      "question_el": "Ποιας χώρας η εθνική επιλογή ονομάζεται 'Melodifestivalen';",
-      "options_el": [
-        "Νορβηγία",
-        "Δανία",
-        "Φινλανδία",
-        "Σουηδία"
-      ]
-    },
-    {
       "id": 164,
       "category": "trivia",
       "difficulty": "medium",
@@ -2898,26 +2258,6 @@
         "Melodifestivalen",
         "Uuden Musiikin Kilpailu",
         "Eesti Laul"
-      ]
-    },
-    {
-      "id": 165,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "Which country performs 'Nân' at Eurovision 2026?",
-      "options": [
-        "Cyprus",
-        "Albania",
-        "Georgia",
-        "Croatia"
-      ],
-      "correct": 1,
-      "question_el": "Ποια χώρα ερμηνεύει το 'Nân' στη Eurovision 2026;",
-      "options_el": [
-        "Κύπρος",
-        "Αλβανία",
-        "Γεωργία",
-        "Κροατία"
       ]
     },
     {
@@ -3141,26 +2481,6 @@
       ]
     },
     {
-      "id": 177,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "Who represents France at Eurovision 2026?",
-      "options": [
-        "Louane",
-        "Zaz",
-        "Monroe",
-        "Angèle"
-      ],
-      "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τη Γαλλία στη Eurovision 2026;",
-      "options_el": [
-        "Louane",
-        "Zaz",
-        "Monroe",
-        "Angèle"
-      ]
-    },
-    {
       "id": 178,
       "category": "2026",
       "difficulty": "easy",
@@ -3301,26 +2621,6 @@
       ]
     },
     {
-      "id": 185,
-      "category": "2026",
-      "difficulty": "medium",
-      "question": "Who represents Belgium at Eurovision 2026?",
-      "options": [
-        "Loïc Nottet",
-        "Hooverphonic",
-        "Essyla",
-        "Tom Dice"
-      ],
-      "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί το Βέλγιο στη Eurovision 2026;",
-      "options_el": [
-        "Loïc Nottet",
-        "Hooverphonic",
-        "Essyla",
-        "Tom Dice"
-      ]
-    },
-    {
       "id": 186,
       "category": "2026",
       "difficulty": "medium",
@@ -3438,26 +2738,6 @@
         "Blanco",
         "Sal Da Vinci",
         "Marco Mengoni"
-      ]
-    },
-    {
-      "id": 192,
-      "category": "2026",
-      "difficulty": "medium",
-      "question": "Who represents Luxembourg at Eurovision 2026?",
-      "options": [
-        "Lion Ceccah",
-        "Eva Marija",
-        "Atvara",
-        "Essyla"
-      ],
-      "correct": 1,
-      "question_el": "Ποιος εκπροσωπεί το Λουξεμβούργο στη Eurovision 2026;",
-      "options_el": [
-        "Lion Ceccah",
-        "Eva Marija",
-        "Atvara",
-        "Essyla"
       ]
     },
     {
@@ -3761,26 +3041,6 @@
       ]
     },
     {
-      "id": 208,
-      "category": "2026",
-      "difficulty": "hard",
-      "question": "What does 'JALLA' mean in Cypriot dialect?",
-      "options": [
-        "Dance",
-        "More",
-        "Love",
-        "Joy"
-      ],
-      "correct": 1,
-      "question_el": "Τι σημαίνει 'JALLA' στην κυπριακή διάλεκτο;",
-      "options_el": [
-        "Χορός",
-        "Περισσότερο",
-        "Αγάπη",
-        "Χαρά"
-      ]
-    },
-    {
       "id": 209,
       "category": "2026",
       "difficulty": "hard",
@@ -3844,7 +3104,7 @@
       "id": 212,
       "category": "history",
       "difficulty": "easy",
-      "question": "ABBA's Waterloo was performed in which language?",
+      "question": "At Eurovision 1974, ABBA performed 'Waterloo' in which language?",
       "options": [
         "Swedish",
         "Norwegian",
@@ -3852,7 +3112,7 @@
         "Danish"
       ],
       "correct": 2,
-      "question_el": "Το Waterloo των ABBA ερμηνεύτηκε σε ποια γλώσσα;",
+      "question_el": "Στη Eurovision του 1974, οι ABBA ερμήνευσαν το 'Waterloo' σε ποια γλώσσα;",
       "options_el": [
         "Σουηδικά",
         "Νορβηγικά",
@@ -3918,26 +3178,6 @@
         "Εμφανίστηκε ξυπόλητη",
         "Είχε ζωντανή μπάντα",
         "Φορούσε στολή"
-      ]
-    },
-    {
-      "id": 218,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "Which country won Eurovision 2022?",
-      "options": [
-        "Poland",
-        "Ukraine",
-        "Russia",
-        "Moldova"
-      ],
-      "correct": 1,
-      "question_el": "Ποια χώρα κέρδισε τη Eurovision 2022;",
-      "options_el": [
-        "Πολωνία",
-        "Ουκρανία",
-        "Ρωσία",
-        "Μολδαβία"
       ]
     },
     {
@@ -4021,26 +3261,6 @@
       ]
     },
     {
-      "id": 230,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Jamala won Eurovision 2016 for Ukraine with which song?",
-      "options": [
-        "Wild Dances",
-        "Stefania",
-        "1944",
-        "Shum"
-      ],
-      "correct": 2,
-      "question_el": "Η Jamala κέρδισε τη Eurovision 2016 για την Ουκρανία με ποιο τραγούδι;",
-      "options_el": [
-        "Wild Dances",
-        "Stefania",
-        "1944",
-        "Shum"
-      ]
-    },
-    {
       "id": 231,
       "category": "history",
       "difficulty": "medium",
@@ -4081,26 +3301,6 @@
       ]
     },
     {
-      "id": 235,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Dana International won Eurovision 1998 for Israel with which song?",
-      "options": [
-        "Toy",
-        "Golden Boy",
-        "Diva",
-        "Hurricane"
-      ],
-      "correct": 2,
-      "question_el": "Η Dana International κέρδισε τη Eurovision 1998 για το Ισραήλ με ποιο τραγούδι;",
-      "options_el": [
-        "Toy",
-        "Golden Boy",
-        "Diva",
-        "Hurricane"
-      ]
-    },
-    {
       "id": 236,
       "category": "history",
       "difficulty": "medium",
@@ -4118,26 +3318,6 @@
         "Wild Dances",
         "1944",
         "Hey Mister"
-      ]
-    },
-    {
-      "id": 239,
-      "category": "history",
-      "difficulty": "hard",
-      "question": "In the 1969 Eurovision four-way tie — which country was NOT one of the winners?",
-      "options": [
-        "Spain",
-        "UK",
-        "France",
-        "Sweden"
-      ],
-      "correct": 3,
-      "question_el": "Στην τετραπλή ισοβαθμία της Eurovision 1969 — ποια χώρα ΔΕΝ ήταν μεταξύ των νικητών;",
-      "options_el": [
-        "Ισπανία",
-        "Ηνωμένο Βασίλειο",
-        "Γαλλία",
-        "Σουηδία"
       ]
     },
     {
@@ -4184,7 +3364,7 @@
       "id": 243,
       "category": "history",
       "difficulty": "hard",
-      "question": "Austria hosted Eurovision in 1967 and 2015 — in which palace was the 1967 contest held?",
+      "question": "Austria has hosted Eurovision in 1967, 2015 and 2026 — in which palace was the 1967 contest held?",
       "options": [
         "Schönbrunn",
         "Belvedere",
@@ -4192,7 +3372,7 @@
         "Prater"
       ],
       "correct": 2,
-      "question_el": "Η Αυστρία φιλοξένησε τη Eurovision το 1967 και το 2015 — σε ποιο παλάτι πραγματοποιήθηκε ο διαγωνισμός του 1967;",
+      "question_el": "Η Αυστρία έχει φιλοξενήσει τη Eurovision το 1967, το 2015 και το 2026 — σε ποιο παλάτι πραγματοποιήθηκε ο διαγωνισμός του 1967;",
       "options_el": [
         "Σένμπρουν",
         "Μπελβεντέρε",
@@ -4424,7 +3604,7 @@
       "id": 269,
       "category": "trivia",
       "difficulty": "hard",
-      "question": "Which 2024 Eurovision winner returned their trophy to protest Israel's 2026 inclusion?",
+      "question": "Which Eurovision winner returned their trophy in December 2025 to protest Israel's participation in 2026?",
       "options": [
         "Loreen",
         "JJ",
@@ -4432,32 +3612,12 @@
         "Kalush Orchestra"
       ],
       "correct": 2,
-      "question_el": "Ποιος νικητής της Eurovision 2024 επέστρεψε το τρόπαιό του διαμαρτυρόμενος για τη συμμετοχή του Ισραήλ το 2026;",
+      "question_el": "Ποιο πρόσωπο ή συγκρότημα που έχει κερδίσει τη Eurovision επέστρεψε το τρόπαιο τον Δεκέμβριο του 2025, σε διαμαρτυρία για τη συμμετοχή του Ισραήλ το 2026;",
       "options_el": [
         "Loreen",
         "JJ",
         "Nemo",
         "Kalush Orchestra"
-      ]
-    },
-    {
-      "id": 270,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "How many countries boycotted Eurovision 2026 over Israel's inclusion?",
-      "options": [
-        "2",
-        "3",
-        "5",
-        "7"
-      ],
-      "correct": 2,
-      "question_el": "Πόσες χώρες μποϊκόταραν τη Eurovision 2026 λόγω της συμμετοχής του Ισραήλ;",
-      "options_el": [
-        "2",
-        "3",
-        "5",
-        "7"
       ]
     },
     {
@@ -4472,32 +3632,12 @@
         "Conchita Wurst"
       ],
       "correct": 1,
-      "question_el": "Ποιος νικητής της Eurovision έγινε στη συνέχεια μέλος του κοινοβουλίου;",
+      "question_el": "Ποιο πρόσωπο που κέρδισε τη Eurovision εξελέγη αργότερα μέλος του κοινοβουλίου;",
       "options_el": [
         "Lordi",
         "Ruslana",
         "Dana International",
         "Conchita Wurst"
-      ]
-    },
-    {
-      "id": 273,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "What year did the separate jury/televote announcement system begin?",
-      "options": [
-        "2013",
-        "2014",
-        "2015",
-        "2016"
-      ],
-      "correct": 3,
-      "question_el": "Ποια χρονιά ξεκίνησε το σύστημα ξεχωριστής ανακοίνωσης κριτικής επιτροπής/τηλεψηφοφορίας;",
-      "options_el": [
-        "2013",
-        "2014",
-        "2015",
-        "2016"
       ]
     },
     {
@@ -4564,7 +3704,7 @@
       "id": 277,
       "category": "trivia",
       "difficulty": "hard",
-      "question": "Austria's 'Vienna Calling' national final selected their 2026 act. What is the format called?",
+      "question": "What was the name of the national final Austria used to choose its 2026 entry?",
       "options": [
         "Österreich entscheidet",
         "Vienna Calling",
@@ -4572,92 +3712,32 @@
         "Grand Prix Austria"
       ],
       "correct": 1,
-      "question_el": "Η εθνική επιλογή 'Vienna Calling' της Αυστρίας επέλεξε τη συμμετοχή τους για το 2026. Πώς ονομάζεται;",
+      "question_el": "Πώς ονομαζόταν ο εθνικός τελικός με τον οποίο η Αυστρία επέλεξε τη συμμετοχή της για το 2026;",
       "options_el": [
         "Österreich entscheidet",
         "Vienna Calling",
         "ORF Final",
         "Grand Prix Austria"
-      ]
-    },
-    {
-      "id": 278,
-      "category": "records",
-      "difficulty": "easy",
-      "question": "How many times has Ireland won Eurovision — the joint record with Sweden?",
-      "options": [
-        "5",
-        "6",
-        "7",
-        "8"
-      ],
-      "correct": 2,
-      "question_el": "Πόσες φορές έχει κερδίσει η Ιρλανδία τη Eurovision — ισοβαθμία ρεκόρ με τη Σουηδία;",
-      "options_el": [
-        "5",
-        "6",
-        "7",
-        "8"
-      ]
-    },
-    {
-      "id": 279,
-      "category": "records",
-      "difficulty": "easy",
-      "question": "How many times has Sweden won Eurovision — the joint record with Ireland?",
-      "options": [
-        "5",
-        "6",
-        "7",
-        "8"
-      ],
-      "correct": 2,
-      "question_el": "Πόσες φορές έχει κερδίσει η Σουηδία τη Eurovision — ισοβαθμία ρεκόρ με την Ιρλανδία;",
-      "options_el": [
-        "5",
-        "6",
-        "7",
-        "8"
       ]
     },
     {
       "id": 280,
       "category": "records",
       "difficulty": "easy",
-      "question": "What is 'nul points' in Eurovision?",
+      "question": "What does \"nul points\" mean at Eurovision?",
       "options": [
         "Getting exactly 1 point",
-        "Getting zero points in the final",
+        "Finishing with a score of zero",
         "Not qualifying from the semi",
         "Being disqualified"
       ],
       "correct": 1,
-      "question_el": "Τι είναι τα 'nul points' στη Eurovision;",
+      "question_el": "Τι σημαίνει \"nul points\" στη Eurovision;",
       "options_el": [
         "Ακριβώς 1 βαθμός",
-        "Μηδέν βαθμοί στον τελικό",
+        "Τελική βαθμολογία μηδέν",
         "Μη πρόκριση από τον ημιτελικό",
         "Αποκλεισμός"
-      ]
-    },
-    {
-      "id": 281,
-      "category": "records",
-      "difficulty": "easy",
-      "question": "How many 'Big Five' countries automatically qualify for the Grand Final?",
-      "options": [
-        "4",
-        "5",
-        "6",
-        "7"
-      ],
-      "correct": 1,
-      "question_el": "Πόσες χώρες 'Big Five' προκρίνονται αυτόματα στον Μεγάλο Τελικό;",
-      "options_el": [
-        "4",
-        "5",
-        "6",
-        "7"
       ]
     },
     {
@@ -4744,7 +3824,7 @@
       "id": 288,
       "category": "records",
       "difficulty": "hard",
-      "question": "Who holds the record for winning Eurovision most times as a SONGWRITER?",
+      "question": "Who has won Eurovision three times: twice as a singer and once more as a songwriter?",
       "options": [
         "ABBA",
         "Johnny Logan",
@@ -4752,7 +3832,7 @@
         "Brendan Graham"
       ],
       "correct": 1,
-      "question_el": "Ποιος κατέχει το ρεκόρ νίκης στη Eurovision τις περισσότερες φορές ως ΤΡΑΓΟΥΔΟΠΟΙΟΣ;",
+      "question_el": "Ποιο πρόσωπο έχει κερδίσει τη Eurovision τρεις φορές: δύο ως ερμηνευτής και μία ακόμη ως δημιουργός τραγουδιού;",
       "options_el": [
         "ABBA",
         "Johnny Logan",
@@ -4784,7 +3864,7 @@
       "id": 290,
       "category": "geography",
       "difficulty": "easy",
-      "question": "Albania's capital city — where Eurovision artist Alis is from — is called what?",
+      "question": "Alis represented Albania at Eurovision 2026. What is Albania's capital city?",
       "options": [
         "Skopje",
         "Tirana",
@@ -4792,7 +3872,7 @@
         "Sofia"
       ],
       "correct": 1,
-      "question_el": "Η πρωτεύουσα της Αλβανίας — απ' όπου κατάγεται ο Eurovision καλλιτέχνης Alis — ονομάζεται πώς;",
+      "question_el": "Ο Alis εκπροσώπησε την Αλβανία στη Eurovision 2026. Ποια είναι η πρωτεύουσα της Αλβανίας;",
       "options_el": [
         "Σκόπια",
         "Τίρανα",
@@ -4961,41 +4041,21 @@
       ]
     },
     {
-      "id": 306,
-      "category": "staging",
-      "difficulty": "easy",
-      "question": "What is a 'key change' meant to create in a Eurovision performance?",
-      "options": [
-        "Comedy effect",
-        "Dramatic emotional peak",
-        "Technical complexity",
-        "Cultural reference"
-      ],
-      "correct": 1,
-      "question_el": "Τι σκοπεύει να δημιουργήσει μια 'αλλαγή τονικότητας' σε μια Eurovision εμφάνιση;",
-      "options_el": [
-        "Κωμικό αποτέλεσμα",
-        "Δραματική συναισθηματική κορύφωση",
-        "Τεχνική πολυπλοκότητα",
-        "Πολιτιστική αναφορά"
-      ]
-    },
-    {
       "id": 307,
       "category": "staging",
       "difficulty": "easy",
-      "question": "What is the 'Turquoise Carpet' event at Eurovision?",
+      "question": "What is the \"Turquoise Carpet\" at Eurovision?",
       "options": [
         "The green room party",
-        "The opening ceremony",
+        "The artists' arrival parade before the opening ceremony",
         "The winner's photo call",
         "The rehearsal run"
       ],
       "correct": 1,
-      "question_el": "Τι είναι η εκδήλωση 'Turquoise Carpet' στη Eurovision;",
+      "question_el": "Τι είναι το \"Turquoise Carpet\" στη Eurovision;",
       "options_el": [
         "Το πάρτι του green room",
-        "Η τελετή έναρξης",
+        "Η παρέλαση των καλλιτεχνών πριν από την τελετή έναρξης",
         "Η φωτογράφιση του νικητή",
         "Η γενική πρόβα"
       ]
@@ -5041,42 +4101,22 @@
       ]
     },
     {
-      "id": 311,
-      "category": "staging",
-      "difficulty": "medium",
-      "question": "What musical instrument featured prominently in Luxembourg's 2026 act by Eva Marija?",
-      "options": [
-        "Piano",
-        "Harp",
-        "Violin",
-        "Cello"
-      ],
-      "correct": 2,
-      "question_el": "Ποιο μουσικό όργανο πρωταγωνίστησε στη συμμετοχή του Λουξεμβούργου 2026 με την Eva Marija;",
-      "options_el": [
-        "Πιάνο",
-        "Άρπα",
-        "Βιολί",
-        "Τσέλο"
-      ]
-    },
-    {
       "id": 313,
       "category": "staging",
       "difficulty": "hard",
       "question": "What was controversial about Madonna's interval act at Eurovision 2019?",
       "options": [
         "She performed in Hebrew",
-        "She wore a Palestinian flag",
-        "She showed Palestine flag imagery and sang out of tune",
+        "She wore a Palestinian flag herself",
+        "Two dancers displayed Israeli and Palestinian flags, and her vocals were criticised",
         "She refused to take the stage"
       ],
       "correct": 2,
       "question_el": "Τι ήταν αμφιλεγόμενο στο interval act της Madonna στη Eurovision 2019;",
       "options_el": [
         "Ερμήνευσε στα εβραϊκά",
-        "Φόρεσε παλαιστινιακή σημαία",
-        "Έδειξε εικόνες σημαίας Παλαιστίνης και τραγούδησε φάλτσα",
+        "Φόρεσε η ίδια παλαιστινιακή σημαία",
+        "Δύο χορευτές έδειξαν ισραηλινή και παλαιστινιακή σημαία και τα φωνητικά της επικρίθηκαν",
         "Αρνήθηκε να ανέβει στη σκηνή"
       ]
     },
@@ -5181,26 +4221,6 @@
       ]
     },
     {
-      "id": 319,
-      "category": "lyrics",
-      "difficulty": "easy",
-      "question": "Complete: Netta, Toy 2018 — 'I'm not your toy, you stupid ...'",
-      "options": [
-        "man",
-        "boy",
-        "clown",
-        "fool"
-      ],
-      "correct": 1,
-      "question_el": "Συμπληρώστε: Netta, Toy 2018 — 'I'm not your toy, you stupid ...'",
-      "options_el": [
-        "man",
-        "boy",
-        "clown",
-        "fool"
-      ]
-    },
-    {
       "id": 320,
       "category": "lyrics",
       "difficulty": "easy",
@@ -5218,26 +4238,6 @@
         "Diva",
         "Goddess",
         "Star"
-      ]
-    },
-    {
-      "id": 322,
-      "category": "lyrics",
-      "difficulty": "medium",
-      "question": "Complete: Alexander Rybak, Fairytale 2009 — 'I'm in love with a fairytale, even though it ...'",
-      "options": [
-        "hurts",
-        "fades away",
-        "breaks my heart",
-        "isn't real"
-      ],
-      "correct": 0,
-      "question_el": "Συμπληρώστε: Alexander Rybak, Fairytale 2009 — 'I'm in love with a fairytale, even though it ...'",
-      "options_el": [
-        "hurts",
-        "fades away",
-        "breaks my heart",
-        "isn't real"
       ]
     },
     {
@@ -5298,66 +4298,6 @@
         "oy u luzi kalyna",
         "hey my dear mother",
         "polia zelenyi"
-      ]
-    },
-    {
-      "id": 326,
-      "category": "lyrics",
-      "difficulty": "hard",
-      "question": "Complete: Jamala, 1944 — 'When strangers are coming — they come to your house, they ...'",
-      "options": [
-        "take your gold",
-        "kill you all",
-        "burn your home",
-        "steal your soul"
-      ],
-      "correct": 1,
-      "question_el": "Συμπληρώστε: Jamala, 1944 — 'When strangers are coming — they come to your house, they ...'",
-      "options_el": [
-        "take your gold",
-        "kill you all",
-        "burn your home",
-        "steal your soul"
-      ]
-    },
-    {
-      "id": 328,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "How many countries participate in Eurovision 2026?",
-      "options": [
-        "33",
-        "34",
-        "35",
-        "36"
-      ],
-      "correct": 2,
-      "question_el": "Πόσες χώρες συμμετέχουν στη Eurovision 2026;",
-      "options_el": [
-        "33",
-        "34",
-        "35",
-        "36"
-      ]
-    },
-    {
-      "id": 329,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "Which country won Eurovision 2025 prompting Austria to host 2026?",
-      "options": [
-        "Switzerland",
-        "Italy",
-        "Austria",
-        "France"
-      ],
-      "correct": 2,
-      "question_el": "Ποια χώρα κέρδισε τη Eurovision 2025 οδηγώντας την Αυστρία να φιλοξενήσει το 2026;",
-      "options_el": [
-        "Ελβετία",
-        "Ιταλία",
-        "Αυστρία",
-        "Γαλλία"
       ]
     },
     {
@@ -5484,60 +4424,20 @@
       "id": 336,
       "category": "2026",
       "difficulty": "hard",
-      "question": "Which 2026 Eurovision act describes their performance genre as 'hip hop meets folk'?",
+      "question": "Which 2026 Eurovision entry mixes rap with folk music?",
       "options": [
-        "Kalush Orchestra (2022 flashback)",
-        "LELEK Croatia",
-        "Satoshi Moldova",
-        "LAVINA Serbia"
+        "Croatia — Lelek",
+        "Finland — Lampenius & Parkkonen",
+        "Moldova — Satoshi",
+        "Bulgaria — Dara"
       ],
       "correct": 2,
-      "question_el": "Ποια συμμετοχή Eurovision 2026 περιγράφει το είδος της ως 'hip hop meets folk';",
+      "question_el": "Ποια συμμετοχή της Eurovision 2026 συνδυάζει ραπ με παραδοσιακή μουσική;",
       "options_el": [
-        "Kalush Orchestra (αναδρομή 2022)",
-        "LELEK Κροατία",
-        "Satoshi Μολδαβία",
-        "LAVINA Σερβία"
-      ]
-    },
-    {
-      "id": 337,
-      "category": "2026",
-      "difficulty": "hard",
-      "question": "Which is the ONLY 2026 Eurovision song performed in German?",
-      "options": [
-        "Austria's Tanzschein",
-        "Germany's Fire",
-        "UK's Eins Zwei Drei",
-        "Moldova's Viva Moldova"
-      ],
-      "correct": 0,
-      "question_el": "Ποιο είναι το ΜΟΝΟ τραγούδι Eurovision 2026 που ερμηνεύεται στα γερμανικά;",
-      "options_el": [
-        "Tanzschein της Αυστρίας",
-        "Fire της Γερμανίας",
-        "Eins Zwei Drei του Ηνωμένου Βασιλείου",
-        "Viva Moldova της Μολδαβίας"
-      ]
-    },
-    {
-      "id": 339,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "The Will Ferrell film 'The Story of Fire Saga' is set in which country?",
-      "options": [
-        "Norway",
-        "Sweden",
-        "Denmark",
-        "Iceland"
-      ],
-      "correct": 3,
-      "question_el": "Η ταινία του Will Ferrell 'The Story of Fire Saga' διαδραματίζεται σε ποια χώρα;",
-      "options_el": [
-        "Νορβηγία",
-        "Σουηδία",
-        "Δανία",
-        "Ισλανδία"
+        "Κροατία — Lelek",
+        "Φινλανδία — Lampenius & Parkkonen",
+        "Μολδαβία — Satoshi",
+        "Βουλγαρία — Dara"
       ]
     },
     {
@@ -5612,7 +4512,7 @@
         "Duncan Laurence"
       ],
       "correct": 1,
-      "question_el": "Ποιος νικητής της Eurovision ήταν ο πρώτος ανοιχτά μη δυαδικός νικητής;",
+      "question_el": "Ποιο ήταν το πρώτο ανοιχτά μη δυαδικό πρόσωπο που κέρδισε τη Eurovision;",
       "options_el": [
         "Conchita Wurst",
         "Nemo",
@@ -5624,19 +4524,19 @@
       "id": 345,
       "category": "geography",
       "difficulty": "medium",
-      "question": "Vienna is nicknamed the City of what?",
+      "question": "Thanks to Mozart, Beethoven and Strauss, Vienna is famously known as the City of what?",
       "options": [
         "Light",
         "Music",
-        "Dreams",
+        "Canals",
         "Love"
       ],
       "correct": 1,
-      "question_el": "Η Βιέννη αποκαλείται η Πόλη τίνος;",
+      "question_el": "Χάρη στους Μότσαρτ, Μπετόβεν και Στράους, η Βιέννη είναι γνωστή ως η Πόλη τίνος;",
       "options_el": [
         "Του Φωτός",
         "Της Μουσικής",
-        "Των Ονείρων",
+        "Των Καναλιών",
         "Του Έρωτα"
       ]
     },
@@ -5698,26 +4598,6 @@
         "2",
         "3",
         "4"
-      ]
-    },
-    {
-      "id": 352,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "Who represents San Marino at Eurovision 2026?",
-      "options": [
-        "Valentina Monetta",
-        "Serhat",
-        "Senhit",
-        "Gabry Ponte"
-      ],
-      "correct": 2,
-      "question_el": "Ποιος εκπροσωπεί τον Σαν Μαρίνο στη Eurovision 2026;",
-      "options_el": [
-        "Valentina Monetta",
-        "Serhat",
-        "Senhit",
-        "Gabry Ponte"
       ]
     },
     {
@@ -5844,7 +4724,7 @@
       "id": 359,
       "category": "trivia",
       "difficulty": "easy",
-      "question": "What is the name of the Eurovision app for Vienna 2026?",
+      "question": "What is the name of the official Host City app for Eurovision 2026 in Vienna?",
       "options": [
         "EuroApp",
         "Vienna 2026",
@@ -5852,7 +4732,7 @@
         "Eurovision Go"
       ],
       "correct": 2,
-      "question_el": "Ποιο είναι το όνομα της εφαρμογής Eurovision για τη Βιέννη 2026;",
+      "question_el": "Ποιο είναι το όνομα της επίσημης εφαρμογής της πόλης υποδοχής για τη Eurovision 2026 στη Βιέννη;",
       "options_el": [
         "EuroApp",
         "Vienna 2026",
@@ -5864,7 +4744,7 @@
       "id": 360,
       "category": "geography",
       "difficulty": "easy",
-      "question": "Which Austrian city bid against Vienna to host Eurovision 2026?",
+      "question": "Which Austrian city submitted the only rival bid to Vienna to host Eurovision 2026?",
       "options": [
         "Salzburg",
         "Graz",
@@ -5872,7 +4752,7 @@
         "Linz"
       ],
       "correct": 2,
-      "question_el": "Ποια αυστριακή πόλη διεκδίκησε τη φιλοξενία της Eurovision 2026 ενάντια στη Βιέννη;",
+      "question_el": "Ποια αυστριακή πόλη υπέβαλε τη μοναδική αντίπαλη υποψηφιότητα απέναντι στη Βιέννη για τη Eurovision 2026;",
       "options_el": [
         "Σάλτσμπουργκ",
         "Γκρατς",
@@ -5884,20 +4764,20 @@
       "id": 362,
       "category": "records",
       "difficulty": "medium",
-      "question": "Since 2016, jury points and televote points are announced separately. Who announces jury points first?",
+      "question": "Since 2016, who reads out each country's top jury score (12 points) in the final?",
       "options": [
-        "The televote",
+        "The hosts",
         "The national spokesperson",
-        "The EBU representative",
+        "The EBU executive supervisor",
         "The jury chairperson"
       ],
       "correct": 1,
-      "question_el": "Από το 2016, οι βαθμοί κριτικής και τηλεψηφοφορίας ανακοινώνονται ξεχωριστά. Ποιος ανακοινώνει πρώτα τους βαθμούς κριτικής;",
+      "question_el": "Από το 2016, ποιος ανακοινώνει τους 12 βαθμούς της κριτικής επιτροπής κάθε χώρας στον τελικό;",
       "options_el": [
-        "Η τηλεψηφοφορία",
-        "Ο εθνικός εκπρόσωπος",
-        "Ο αντιπρόσωπος της EBU",
-        "Ο πρόεδρος κριτικής επιτροπής"
+        "Οι παρουσιαστές",
+        "Ο/Η εθνικός/ή εκπρόσωπος",
+        "Ο/Η επόπτης/τρια της EBU",
+        "Ο/Η πρόεδρος της κριτικής επιτροπής"
       ]
     },
     {
@@ -5944,7 +4824,7 @@
       "id": 366,
       "category": "history",
       "difficulty": "medium",
-      "question": "The Eurovision Song Contest always begins with which fanfare?",
+      "question": "Which piece is the Eurovision theme heard at the start of the Song Contest broadcast?",
       "options": [
         "Ode to Joy",
         "Prélude du Te Deum",
@@ -5952,19 +4832,19 @@
         "La Marseillaise"
       ],
       "correct": 1,
-      "question_el": "Ο Διαγωνισμός Τραγουδιού Eurovision αρχίζει πάντα με ποια φανφάρα;",
+      "question_el": "Ποιο κομμάτι είναι το θέμα της Eurovision που ακούγεται στην αρχή της μετάδοσης του Διαγωνισμού;",
       "options_el": [
         "Ωδή στη Χαρά",
         "Prélude du Te Deum",
-        "Θριαμβευτική Πορεία",
-        "La Marseillaise"
+        "Θριαμβικό Εμβατήριο",
+        "Μασσαλιώτιδα"
       ]
     },
     {
       "id": 367,
       "category": "trivia",
       "difficulty": "medium",
-      "question": "How many volunteer staff did ORF recruit for Eurovision 2026?",
+      "question": "How many volunteers did ORF set out to recruit for Eurovision 2026?",
       "options": [
         "300",
         "500",
@@ -5972,72 +4852,12 @@
         "1200"
       ],
       "correct": 2,
-      "question_el": "Πόσο εθελοντικό προσωπικό στρατολόγησε η ORF για τη Eurovision 2026;",
+      "question_el": "Πόσους εθελοντές και εθελόντριες επιδίωξε να στρατολογήσει η ORF για τη Eurovision 2026;",
       "options_el": [
         "300",
         "500",
         "800",
         "1200"
-      ]
-    },
-    {
-      "id": 369,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "Which country performs 'Fire' at Eurovision 2026?",
-      "options": [
-        "Austria",
-        "Australia",
-        "Germany",
-        "Greece"
-      ],
-      "correct": 2,
-      "question_el": "Ποια χώρα ερμηνεύει το 'Fire' στη Eurovision 2026;",
-      "options_el": [
-        "Αυστρία",
-        "Αυστραλία",
-        "Γερμανία",
-        "Ελλάδα"
-      ]
-    },
-    {
-      "id": 370,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "Which country performs 'Bella' at Eurovision 2026?",
-      "options": [
-        "Italy",
-        "Moldova",
-        "Malta",
-        "Luxembourg"
-      ],
-      "correct": 2,
-      "question_el": "Ποια χώρα ερμηνεύει το 'Bella' στη Eurovision 2026;",
-      "options_el": [
-        "Ιταλία",
-        "Μολδαβία",
-        "Μάλτα",
-        "Λουξεμβούργο"
-      ]
-    },
-    {
-      "id": 371,
-      "category": "2026",
-      "difficulty": "easy",
-      "question": "Which country performs 'Andromeda' at Eurovision 2026?",
-      "options": [
-        "Serbia",
-        "Bulgaria",
-        "Croatia",
-        "Montenegro"
-      ],
-      "correct": 2,
-      "question_el": "Ποια χώρα ερμηνεύει το 'Andromeda' στη Eurovision 2026;",
-      "options_el": [
-        "Σερβία",
-        "Βουλγαρία",
-        "Κροατία",
-        "Μαυροβούνιο"
       ]
     },
     {
@@ -6097,47 +4917,27 @@
         "Έπαιξε πιάνο",
         "Τραγούδησε ντουέτο με τον εαυτό του σε δύο φωνητικά στυλ",
         "Ερμήνευσε σε τρεις γλώσσες",
-        "Είχε surprise καλεσμένο"
-      ]
-    },
-    {
-      "id": 375,
-      "category": "staging",
-      "difficulty": "medium",
-      "question": "Which Eurovision 2026 entry features BDSM-inspired leather costumes?",
-      "options": [
-        "Serbia — LAVINA",
-        "Romania — Choke Me",
-        "Montenegro — Nova Zora",
-        "Lithuania — Lion Ceccah"
-      ],
-      "correct": 1,
-      "question_el": "Ποια συμμετοχή Eurovision 2026 περιλαμβάνει κοστούμια εμπνευσμένα από BDSM δέρμα;",
-      "options_el": [
-        "Σερβία — LAVINA",
-        "Ρουμανία — Choke Me",
-        "Μαυροβούνιο — Nova Zora",
-        "Λιθουανία — Lion Ceccah"
+        "Είχε καλεσμένο-έκπληξη"
       ]
     },
     {
       "id": 376,
       "category": "trivia",
       "difficulty": "hard",
-      "question": "What does the Eurovision 2026 logo 'Chameleon Heart' consist of?",
+      "question": "Eurovision's 'Chameleon Heart' logo, launched for the 70th contest in Vienna 2026, is built from how many layers?",
       "options": [
-        "50 layers of the Eurovision heart",
-        "60 layers of the Eurovision heart",
-        "70 layers of the Eurovision heart",
-        "80 layers of the Eurovision heart"
+        "50",
+        "60",
+        "70",
+        "80"
       ],
       "correct": 2,
-      "question_el": "Τι αποτελεί το λογότυπο 'Chameleon Heart' της Eurovision 2026;",
+      "question_el": "Το λογότυπο 'Chameleon Heart' της Eurovision, που παρουσιάστηκε για τον 70ό διαγωνισμό στη Βιέννη το 2026, αποτελείται από πόσες στρώσεις;",
       "options_el": [
-        "50 στρώσεις της καρδιάς Eurovision",
-        "60 στρώσεις της καρδιάς Eurovision",
-        "70 στρώσεις της καρδιάς Eurovision",
-        "80 στρώσεις της καρδιάς Eurovision"
+        "50",
+        "60",
+        "70",
+        "80"
       ]
     },
     {
@@ -6221,46 +5021,6 @@
       ]
     },
     {
-      "id": 382,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "Which Eurovision winner later ran for political office in their country?",
-      "options": [
-        "Conchita Wurst",
-        "Ruslana",
-        "Lordi",
-        "Alexander Rybak"
-      ],
-      "correct": 1,
-      "question_el": "Ποιος νικητής της Eurovision στη συνέχεια κατέβηκε σε πολιτικό αξίωμα στη χώρα του;",
-      "options_el": [
-        "Conchita Wurst",
-        "Ruslana",
-        "Lordi",
-        "Alexander Rybak"
-      ]
-    },
-    {
-      "id": 383,
-      "category": "trivia",
-      "difficulty": "easy",
-      "question": "Eurovision is broadcast in approximately how many countries worldwide?",
-      "options": [
-        "50",
-        "100",
-        "160",
-        "200"
-      ],
-      "correct": 2,
-      "question_el": "Η Eurovision μεταδίδεται σε περίπου πόσες χώρες παγκοσμίως;",
-      "options_el": [
-        "50",
-        "100",
-        "160",
-        "200"
-      ]
-    },
-    {
       "id": 384,
       "category": "records",
       "difficulty": "medium",
@@ -6284,60 +5044,40 @@
       "id": 385,
       "category": "2026",
       "difficulty": "medium",
-      "question": "Which 2026 Eurovision entry is described as mixing pop and upbeat dance music?",
+      "question": "Which 2026 Eurovision entry is classed as electro dance and dance-pop?",
       "options": [
         "Albania — Nân",
         "Bulgaria — Bangaranga",
-        "Cyprus — JALLA",
-        "Norway — YA YA YA"
+        "Croatia — Andromeda",
+        "Moldova — Viva, Moldova!"
       ],
       "correct": 1,
-      "question_el": "Ποια συμμετοχή Eurovision 2026 περιγράφεται ως μίξη ποπ και ζωηρής χορευτικής μουσικής;",
+      "question_el": "Ποια συμμετοχή της Eurovision 2026 κατατάσσεται στην electro dance και στην dance-pop;",
       "options_el": [
         "Αλβανία — Nân",
         "Βουλγαρία — Bangaranga",
-        "Κύπρος — JALLA",
-        "Νορβηγία — YA YA YA"
+        "Κροατία — Andromeda",
+        "Μολδαβία — Viva, Moldova!"
       ]
     },
     {
       "id": 387,
       "category": "history",
       "difficulty": "hard",
-      "question": "In which year was Russia last allowed to compete in Eurovision?",
+      "question": "As of 2026, in which year did Russia last compete at Eurovision?",
       "options": [
+        "2019",
         "2020",
         "2021",
-        "2022 semi-final",
-        "They were excluded before competing in 2022"
+        "2022"
       ],
-      "correct": 3,
-      "question_el": "Ποια χρονιά επιτράπηκε τελευταία φορά στη Ρωσία να συμμετάσχει στη Eurovision;",
+      "correct": 2,
+      "question_el": "Μέχρι το 2026, ποια χρονιά διαγωνίστηκε τελευταία φορά η Ρωσία στη Eurovision;",
       "options_el": [
+        "2019",
         "2020",
         "2021",
-        "Ημιτελικός 2022",
-        "Αποκλείστηκε πριν αγωνιστεί το 2022"
-      ]
-    },
-    {
-      "id": 388,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "What is the name of the official Eurovision nightclub during the contest week?",
-      "options": [
-        "EuroNight",
-        "EuroClub",
-        "EuroBar",
-        "EuroParty"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο είναι το όνομα του επίσημου νυχτερινού κέντρου της Eurovision κατά τη διάρκεια της εβδομάδας του διαγωνισμού;",
-      "options_el": [
-        "EuroNight",
-        "EuroClub",
-        "EuroBar",
-        "EuroParty"
+        "2022"
       ]
     },
     {
@@ -6358,26 +5098,6 @@
         "Rathausplatz",
         "Prater Dome",
         "Δημαρχείο Βιέννης"
-      ]
-    },
-    {
-      "id": 390,
-      "category": "records",
-      "difficulty": "easy",
-      "question": "How many points does a country get for coming first in a jury vote?",
-      "options": [
-        "10",
-        "12",
-        "15",
-        "25"
-      ],
-      "correct": 1,
-      "question_el": "Πόσους βαθμούς παίρνει μια χώρα για την πρώτη θέση σε μια ψηφοφορία κριτικής;",
-      "options_el": [
-        "10",
-        "12",
-        "15",
-        "25"
       ]
     },
     {
@@ -6472,32 +5192,12 @@
         "2012"
       ],
       "correct": 1,
-      "question_el": "Ο Σαν Μαρίνο συμμετείχε πρώτη φορά στη Eurovision ποια χρονιά;",
+      "question_el": "Ποια χρονιά συμμετείχε πρώτη φορά το Σαν Μαρίνο στη Eurovision;",
       "options_el": [
         "2006",
         "2008",
         "2010",
         "2012"
-      ]
-    },
-    {
-      "id": 397,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "Which broadcaster controls the Eurovision Song Contest format and rules?",
-      "options": [
-        "ORF",
-        "BBC",
-        "EBU",
-        "RAI"
-      ],
-      "correct": 2,
-      "question_el": "Ποιος ραδιοτηλεοπτικός φορέας ελέγχει τη μορφή και τους κανόνες του Διαγωνισμού Eurovision;",
-      "options_el": [
-        "ORF",
-        "BBC",
-        "EBU",
-        "RAI"
       ]
     },
     {
@@ -6544,20 +5244,20 @@
       "id": 401,
       "category": "trivia",
       "difficulty": "hard",
-      "question": "What does the EBU require host broadcasters to guarantee to host Eurovision?",
+      "question": "Which of these is an EBU requirement for a Eurovision host venue?",
       "options": [
-        "50,000 hotel beds",
-        "Venue capacity over 10,000",
-        "Full nationwide broadcast",
-        "All three of these"
+        "A retractable roof",
+        "Capacity of at least 10,000 spectators",
+        "At least 50,000 seats",
+        "A location outside the national capital"
       ],
-      "correct": 3,
-      "question_el": "Τι απαιτεί η EBU από τους ραδιοτηλεοπτικούς φορείς-οικοδεσπότες για να φιλοξενήσουν τη Eurovision;",
+      "correct": 1,
+      "question_el": "Ποια από αυτές είναι απαίτηση της EBU για τον χώρο που φιλοξενεί τη Eurovision;",
       "options_el": [
-        "50.000 ξενοδοχειακές κλίνες",
-        "Χωρητικότητα χώρου πάνω από 10.000",
-        "Πλήρης εθνική μετάδοση",
-        "Και τα τρία αυτά"
+        "Συρόμενη οροφή",
+        "Χωρητικότητα τουλάχιστον 10.000 θεατών",
+        "Τουλάχιστον 50.000 θέσεις",
+        "Τοποθεσία εκτός της πρωτεύουσας"
       ]
     },
     {
@@ -6581,66 +5281,6 @@
       ]
     },
     {
-      "id": 403,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "In what year did Greece win the Eurovision Song Contest for the first time?",
-      "options": [
-        "2001",
-        "2003",
-        "2005",
-        "2007"
-      ],
-      "correct": 2,
-      "question_el": "Ποια χρονιά κέρδισε η Ελλάδα τον Διαγωνισμό Τραγουδιού της Eurovision για πρώτη φορά;",
-      "options_el": [
-        "2001",
-        "2003",
-        "2005",
-        "2007"
-      ]
-    },
-    {
-      "id": 404,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "Who won Eurovision 2005 for Greece with 'My Number One'?",
-      "options": [
-        "Despina Vandi",
-        "Helena Paparizou",
-        "Kalomira",
-        "Anna Vissi"
-      ],
-      "correct": 1,
-      "question_el": "Ποια κέρδισε τη Eurovision 2005 για την Ελλάδα με το 'My Number One';",
-      "options_el": [
-        "Δέσποινα Βανδή",
-        "Έλενα Παπαρίζου",
-        "Καλομοίρα",
-        "Άννα Βίσση"
-      ]
-    },
-    {
-      "id": 405,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "In what year did Greece first participate in the Eurovision Song Contest?",
-      "options": [
-        "1970",
-        "1974",
-        "1976",
-        "1980"
-      ],
-      "correct": 1,
-      "question_el": "Ποια χρονιά συμμετείχε η Ελλάδα για πρώτη φορά στη Eurovision;",
-      "options_el": [
-        "1970",
-        "1974",
-        "1976",
-        "1980"
-      ]
-    },
-    {
       "id": 406,
       "category": "history",
       "difficulty": "easy",
@@ -6658,46 +5298,6 @@
         "MEGA",
         "ΕΡΤ",
         "SKAI"
-      ]
-    },
-    {
-      "id": 407,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "In which city did Greece host the Eurovision Song Contest in 2006?",
-      "options": [
-        "Thessaloniki",
-        "Athens",
-        "Patras",
-        "Heraklion"
-      ],
-      "correct": 1,
-      "question_el": "Σε ποια πόλη φιλοξένησε η Ελλάδα τη Eurovision το 2006;",
-      "options_el": [
-        "Θεσσαλονίκη",
-        "Αθήνα",
-        "Πάτρα",
-        "Ηράκλειο"
-      ]
-    },
-    {
-      "id": 408,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "Which duo represented Greece at Eurovision 2001 with the song 'Die for You'?",
-      "options": [
-        "Antique",
-        "Koza Mostra",
-        "Argo",
-        "Fly"
-      ],
-      "correct": 0,
-      "question_el": "Ποιο ντουέτο εκπροσώπησε την Ελλάδα στη Eurovision 2001 με το τραγούδι 'Die for You';",
-      "options_el": [
-        "Antique",
-        "Koza Mostra",
-        "Argo",
-        "Fly"
       ]
     },
     {
@@ -6741,26 +5341,6 @@
       ]
     },
     {
-      "id": 412,
-      "category": "history",
-      "difficulty": "easy",
-      "question": "Which singer performed 'Secret Combination' for Greece at Eurovision 2008?",
-      "options": [
-        "Helena Paparizou",
-        "Kalomira",
-        "Demy",
-        "Stefania"
-      ],
-      "correct": 1,
-      "question_el": "Ποια τραγουδίστρια ερμήνευσε το 'Secret Combination' για την Ελλάδα στη Eurovision 2008;",
-      "options_el": [
-        "Έλενα Παπαρίζου",
-        "Καλομοίρα",
-        "Demy",
-        "Stefania"
-      ]
-    },
-    {
       "id": 413,
       "category": "history",
       "difficulty": "medium",
@@ -6801,26 +5381,6 @@
       ]
     },
     {
-      "id": 415,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "What was the name of Sakis Rouvas's entry at Eurovision 2004?",
-      "options": [
-        "This Is Our Night",
-        "Shake It",
-        "My Number One",
-        "Secret Combination"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο ήταν το τραγούδι του Σάκη Ρουβά στη Eurovision 2004;",
-      "options_el": [
-        "This Is Our Night",
-        "Shake It",
-        "My Number One",
-        "Secret Combination"
-      ]
-    },
-    {
       "id": 416,
       "category": "history",
       "difficulty": "medium",
@@ -6838,26 +5398,6 @@
         "3η",
         "5η",
         "7η"
-      ]
-    },
-    {
-      "id": 417,
-      "category": "history",
-      "difficulty": "medium",
-      "question": "What was the name of Sakis Rouvas's Eurovision 2009 entry?",
-      "options": [
-        "Shake It",
-        "This Is Our Night",
-        "My Number One",
-        "Yassou Maria"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο ήταν το τραγούδι του Σάκη Ρουβά στη Eurovision 2009;",
-      "options_el": [
-        "Shake It",
-        "This Is Our Night",
-        "My Number One",
-        "Γεια σου Μαρία"
       ]
     },
     {
@@ -6978,26 +5518,6 @@
         "Μαρίζα Κωχ",
         "Πασχάλης",
         "Τόλης Βοσκόπουλος"
-      ]
-    },
-    {
-      "id": 427,
-      "category": "history",
-      "difficulty": "hard",
-      "question": "Who represented Greece at Eurovision 2021 in Rotterdam with 'Last Dance'?",
-      "options": [
-        "Amanda Tenfjord",
-        "Stefania",
-        "Demy",
-        "Katerine Duska"
-      ],
-      "correct": 1,
-      "question_el": "Ποια εκπροσώπησε την Ελλάδα στη Eurovision 2021 στο Ρότερνταμ με το 'Last Dance';",
-      "options_el": [
-        "Amanda Tenfjord",
-        "Stefania",
-        "Demy",
-        "Katerine Duska"
       ]
     },
     {
@@ -7141,70 +5661,10 @@
       ]
     },
     {
-      "id": 436,
-      "category": "trivia",
-      "difficulty": "easy",
-      "question": "Amanda Tenfjord represented Greece at Eurovision 2022 with which song?",
-      "options": [
-        "Last Dance",
-        "Die Together",
-        "Oniro Mou",
-        "Better Love"
-      ],
-      "correct": 1,
-      "question_el": "Η Amanda Tenfjord εκπροσώπησε την Ελλάδα στη Eurovision 2022 με ποιο τραγούδι;",
-      "options_el": [
-        "Last Dance",
-        "Die Together",
-        "Oniro Mou",
-        "Better Love"
-      ]
-    },
-    {
-      "id": 438,
-      "category": "trivia",
-      "difficulty": "easy",
-      "question": "What was the band name that performed 'Alcohol Is Free' for Greece in 2013?",
-      "options": [
-        "Koza Mostra",
-        "Antique",
-        "Argo",
-        "Fly"
-      ],
-      "correct": 0,
-      "question_el": "Ποιο ήταν το συγκρότημα που ερμήνευσε το 'Alcohol Is Free' για την Ελλάδα το 2013;",
-      "options_el": [
-        "Koza Mostra",
-        "Antique",
-        "Argo",
-        "Fly"
-      ]
-    },
-    {
-      "id": 439,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "Koza Mostra featured which singer as a collaborator on 'Alcohol Is Free' at Eurovision 2013?",
-      "options": [
-        "Sakis Rouvas",
-        "Agathon Iakovidis",
-        "Giorgos Alkaios",
-        "Michalis Hatzigiannis"
-      ],
-      "correct": 1,
-      "question_el": "Οι Koza Mostra συνεργάστηκαν με ποιον τραγουδιστή στο 'Alcohol Is Free' στη Eurovision 2013;",
-      "options_el": [
-        "Σάκης Ρουβάς",
-        "Αγάθωνας Ιακωβίδης",
-        "Γιώργος Αλκαίος",
-        "Μιχάλης Χατζηγιάννης"
-      ]
-    },
-    {
       "id": 440,
       "category": "trivia",
       "difficulty": "medium",
-      "question": "Nana Mouskouri has a connection to early Greek Eurovision history. What was her role?",
+      "question": "Greek singer Nana Mouskouri took part in Eurovision before Greece ever competed. What was her role?",
       "options": [
         "She represented Luxembourg in 1963",
         "She represented Greece in 1974",
@@ -7212,7 +5672,7 @@
         "She won for Greece in 1970"
       ],
       "correct": 0,
-      "question_el": "Η Νάνα Μούσχουρη έχει σχέση με την πρώιμη ιστορία της Ελλάδας στη Eurovision. Ποιος ήταν ο ρόλος της;",
+      "question_el": "Η Νάνα Μούσχουρη πήρε μέρος στη Eurovision πριν συμμετάσχει ποτέ η Ελλάδα. Ποιος ήταν ο ρόλος της;",
       "options_el": [
         "Εκπροσώπησε το Λουξεμβούργο το 1963",
         "Εκπροσώπησε την Ελλάδα το 1974",
@@ -7224,40 +5684,20 @@
       "id": 441,
       "category": "trivia",
       "difficulty": "medium",
-      "question": "What nationality is Amanda Tenfjord, who represented Greece at Eurovision 2022?",
+      "question": "Amanda Tenfjord, who represented Greece at Eurovision 2022, has a Greek father. Which country is her mother from?",
       "options": [
-        "Greek",
-        "Norwegian-Greek",
-        "Swedish-Greek",
-        "Australian-Greek"
+        "Greece",
+        "Norway",
+        "Sweden",
+        "Australia"
       ],
       "correct": 1,
-      "question_el": "Ποια είναι η εθνικότητα της Amanda Tenfjord, που εκπροσώπησε την Ελλάδα στη Eurovision 2022;",
+      "question_el": "Η Amanda Tenfjord, που εκπροσώπησε την Ελλάδα στη Eurovision 2022, έχει Έλληνα πατέρα. Από ποια χώρα είναι η μητέρα της;",
       "options_el": [
-        "Ελληνική",
-        "Νορβηγο-ελληνική",
-        "Σουηδο-ελληνική",
-        "Αυστραλο-ελληνική"
-      ]
-    },
-    {
-      "id": 442,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "Who represented Greece at Eurovision 2018 with 'Oniro Mou'?",
-      "options": [
-        "Demy",
-        "Yianna Terzi",
-        "Stefania",
-        "Amanda Tenfjord"
-      ],
-      "correct": 1,
-      "question_el": "Ποια εκπροσώπησε την Ελλάδα στη Eurovision 2018 με το 'Oniro Mou';",
-      "options_el": [
-        "Demy",
-        "Γιάννα Τερζή",
-        "Stefania",
-        "Amanda Tenfjord"
+        "Ελλάδα",
+        "Νορβηγία",
+        "Σουηδία",
+        "Αυστραλία"
       ]
     },
     {
@@ -7278,26 +5718,6 @@
         "Ολλανδία",
         "Γερμανία",
         "Βέλγιο"
-      ]
-    },
-    {
-      "id": 444,
-      "category": "trivia",
-      "difficulty": "medium",
-      "question": "How many times did Sakis Rouvas present the Eurovision Song Contest?",
-      "options": [
-        "Never",
-        "Once (2006)",
-        "Twice",
-        "Three times"
-      ],
-      "correct": 1,
-      "question_el": "Πόσες φορές παρουσίασε ο Σάκης Ρουβάς τη Eurovision;",
-      "options_el": [
-        "Ποτέ",
-        "Μία φορά (2006)",
-        "Δύο φορές",
-        "Τρεις φορές"
       ]
     },
     {
@@ -7341,50 +5761,10 @@
       ]
     },
     {
-      "id": 447,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "What did Fokas Evangelinos, a key figure in Greek Eurovision history, specialize in?",
-      "options": [
-        "Songwriting",
-        "Staging and choreography",
-        "Vocal coaching",
-        "Costume design"
-      ],
-      "correct": 1,
-      "question_el": "Σε τι ειδικεύεται ο Φωκάς Ευαγγελινός, βασική μορφή της ελληνικής ιστορίας στη Eurovision;",
-      "options_el": [
-        "Τραγουδοποιία",
-        "Σκηνοθεσία και χορογραφία",
-        "Φωνητική διδασκαλία",
-        "Σχεδιασμός κοστουμιών"
-      ]
-    },
-    {
-      "id": 448,
-      "category": "trivia",
-      "difficulty": "hard",
-      "question": "Which Greek entry at Eurovision was notably sung entirely in the Greek language after the free language rule was introduced in 1999?",
-      "options": [
-        "Shake It (2004)",
-        "My Number One (2005)",
-        "Oniro Mou (Yianna Terzi, 2018)",
-        "Alcohol Is Free (2013)"
-      ],
-      "correct": 2,
-      "question_el": "Ποια ελληνική συμμετοχή στη Eurovision τραγουδήθηκε εξ ολοκλήρου στα ελληνικά μετά την ελεύθερη επιλογή γλώσσας το 1999;",
-      "options_el": [
-        "Shake It (2004)",
-        "My Number One (2005)",
-        "Oniro Mou (Γιάννα Τερζή, 2018)",
-        "Alcohol Is Free (2013)"
-      ]
-    },
-    {
       "id": 449,
       "category": "trivia",
       "difficulty": "hard",
-      "question": "Who wrote 'My Number One', the winning Greek entry at Eurovision 2005?",
+      "question": "Who wrote the lyrics of 'My Number One', the winning Greek entry at Eurovision 2005?",
       "options": [
         "Helena Paparizou",
         "Christos Dantis and Natalia Germanou",
@@ -7392,7 +5772,7 @@
         "Phoebus"
       ],
       "correct": 1,
-      "question_el": "Ποιος έγραψε το 'My Number One', το νικητήριο ελληνικό τραγούδι στη Eurovision 2005;",
+      "question_el": "Ποιοι έγραψαν τους στίχους του 'My Number One', του νικητήριου ελληνικού τραγουδιού στη Eurovision 2005;",
       "options_el": [
         "Έλενα Παπαρίζου",
         "Χρήστος Δάντης και Ναταλία Γερμανού",
@@ -7404,7 +5784,7 @@
       "id": 450,
       "category": "records",
       "difficulty": "easy",
-      "question": "How many times has Greece won the Eurovision Song Contest?",
+      "question": "As of 2026, how many times has Greece won the Eurovision Song Contest?",
       "options": [
         "0",
         "1",
@@ -7412,32 +5792,12 @@
         "3"
       ],
       "correct": 1,
-      "question_el": "Πόσες φορές έχει κερδίσει η Ελλάδα τη Eurovision;",
+      "question_el": "Μέχρι και το 2026, πόσες φορές έχει κερδίσει η Ελλάδα τη Eurovision;",
       "options_el": [
         "0",
         "1",
         "2",
         "3"
-      ]
-    },
-    {
-      "id": 451,
-      "category": "records",
-      "difficulty": "easy",
-      "question": "What is Greece's best ever placement at Eurovision?",
-      "options": [
-        "1st",
-        "2nd",
-        "3rd",
-        "5th"
-      ],
-      "correct": 0,
-      "question_el": "Ποια είναι η καλύτερη θέση της Ελλάδας στη Eurovision;",
-      "options_el": [
-        "1η",
-        "2η",
-        "3η",
-        "5η"
       ]
     },
     {
@@ -7544,7 +5904,7 @@
       "id": 457,
       "category": "records",
       "difficulty": "medium",
-      "question": "How many times has Greece finished in the top 3 at Eurovision?",
+      "question": "As of 2026, how many times has Greece finished in the top 3 at Eurovision?",
       "options": [
         "2",
         "3",
@@ -7552,7 +5912,7 @@
         "5"
       ],
       "correct": 2,
-      "question_el": "Πόσες φορές τερμάτισε η Ελλάδα στο top 3 στη Eurovision;",
+      "question_el": "Μέχρι και το 2026, πόσες φορές έχει τερματίσει η Ελλάδα στο top 3 στη Eurovision;",
       "options_el": [
         "2",
         "3",
@@ -7604,7 +5964,7 @@
       "id": 460,
       "category": "records",
       "difficulty": "hard",
-      "question": "In how many Eurovision contests has Greece failed to qualify for the Grand Final from the semi-finals?",
+      "question": "As of 2026, how many times has Greece failed to qualify for the Grand Final from a semi-final?",
       "options": [
         "1",
         "2",
@@ -7612,7 +5972,7 @@
         "4"
       ],
       "correct": 2,
-      "question_el": "Σε πόσους διαγωνισμούς Eurovision δεν κατάφερε η Ελλάδα να προκριθεί στον τελικό από τους ημιτελικούς;",
+      "question_el": "Μέχρι και το 2026, πόσες φορές δεν κατάφερε η Ελλάδα να προκριθεί στον τελικό από ημιτελικό;",
       "options_el": [
         "1",
         "2",
@@ -7624,20 +5984,20 @@
       "id": 461,
       "category": "records",
       "difficulty": "hard",
-      "question": "How many consecutive years did Greece qualify for the Grand Final from 2004 to 2013?",
+      "question": "Greece reached every Eurovision Grand Final from 2004 onwards until its first failure to qualify. In which year did that happen?",
       "options": [
-        "7",
-        "8",
-        "9",
-        "10"
+        "2012",
+        "2014",
+        "2016",
+        "2018"
       ],
-      "correct": 3,
-      "question_el": "Πόσα συνεχόμενα χρόνια προκρίθηκε η Ελλάδα στον τελικό από το 2004 έως το 2013;",
+      "correct": 2,
+      "question_el": "Η Ελλάδα έφτανε σε κάθε τελικό της Eurovision από το 2004 μέχρι την πρώτη φορά που δεν προκρίθηκε. Ποια χρονιά συνέβη αυτό;",
       "options_el": [
-        "7",
-        "8",
-        "9",
-        "10"
+        "2012",
+        "2014",
+        "2016",
+        "2018"
       ]
     },
     {
@@ -7681,26 +6041,6 @@
       ]
     },
     {
-      "id": 464,
-      "category": "lyrics",
-      "difficulty": "easy",
-      "question": "What language is 'My Number One' by Helena Paparizou primarily sung in?",
-      "options": [
-        "Greek",
-        "English",
-        "French",
-        "Swedish"
-      ],
-      "correct": 1,
-      "question_el": "Σε ποια γλώσσα τραγουδιέται κυρίως το 'My Number One' της Έλενας Παπαρίζου;",
-      "options_el": [
-        "Ελληνικά",
-        "Αγγλικά",
-        "Γαλλικά",
-        "Σουηδικά"
-      ]
-    },
-    {
       "id": 465,
       "category": "lyrics",
       "difficulty": "easy",
@@ -7734,30 +6074,10 @@
       "correct": 1,
       "question_el": "Τι σημαίνει το 'Oniro Mou' στα αγγλικά;",
       "options_el": [
-        "Αγάπη Μου",
-        "Όνειρό Μου",
-        "Καρδιά Μου",
-        "Τραγούδι Μου"
-      ]
-    },
-    {
-      "id": 467,
-      "category": "lyrics",
-      "difficulty": "easy",
-      "question": "In 'Die for You' by Antique, what is the song about?",
-      "options": [
-        "A horror story",
-        "An intense love declaration",
-        "A travel adventure",
-        "A farewell to friends"
-      ],
-      "correct": 1,
-      "question_el": "Στο 'Die for You' των Antique, ποιο είναι το θέμα του τραγουδιού;",
-      "options_el": [
-        "Ιστορία τρόμου",
-        "Μια έντονη ερωτική δήλωση",
-        "Μια ταξιδιωτική περιπέτεια",
-        "Αποχαιρετισμός σε φίλους"
+        "My Love",
+        "My Dream",
+        "My Heart",
+        "My Song"
       ]
     },
     {
@@ -7821,26 +6141,6 @@
       ]
     },
     {
-      "id": 474,
-      "category": "lyrics",
-      "difficulty": "hard",
-      "question": "Which of these Greek Eurovision songs contained lyrics in both Greek and English?",
-      "options": [
-        "Oniro Mou (2018)",
-        "Alcohol Is Free (2013)",
-        "My Number One (2005)",
-        "Socrates (1979)"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο από αυτά τα ελληνικά τραγούδια της Eurovision περιείχε στίχους και στα ελληνικά και στα αγγλικά;",
-      "options_el": [
-        "Oniro Mou (2018)",
-        "Alcohol Is Free (2013)",
-        "My Number One (2005)",
-        "Socrates (1979)"
-      ]
-    },
-    {
       "id": 475,
       "category": "lyrics",
       "difficulty": "hard",
@@ -7858,26 +6158,6 @@
         "Προθυμία να θυσιάσει τα πάντα για την αγάπη",
         "Αποχαιρετισμός σε φίλο που πεθαίνει",
         "Πολεμικό τραγούδι"
-      ]
-    },
-    {
-      "id": 476,
-      "category": "lyrics",
-      "difficulty": "hard",
-      "question": "Which Greek Eurovision song referenced the ancient Greek philosopher in its title?",
-      "options": [
-        "Plato's Dream (1990)",
-        "Socrates (1979)",
-        "Aristotle (1985)",
-        "Homer's Odyssey (1988)"
-      ],
-      "correct": 1,
-      "question_el": "Ποιο ελληνικό τραγούδι της Eurovision αναφέρεται σε αρχαίο Έλληνα φιλόσοφο στον τίτλο του;",
-      "options_el": [
-        "Το Όνειρο του Πλάτωνα (1990)",
-        "Σωκράτης (1979)",
-        "Αριστοτέλης (1985)",
-        "Η Οδύσσεια του Ομήρου (1988)"
       ]
     },
     {
@@ -7904,60 +6184,40 @@
       "id": 478,
       "category": "staging",
       "difficulty": "easy",
-      "question": "What was distinctive about Koza Mostra's appearance at Eurovision 2013?",
+      "question": "What was distinctive about Koza Mostra's outfits at Eurovision 2013?",
       "options": [
         "Formal suits",
-        "Kilts and mohawks, blending punk with Greek folk",
-        "Traditional Greek costumes",
-        "All-white outfits"
+        "Kilts worn over shorts, in black and white",
+        "Ancient Greek togas",
+        "Sequinned jumpsuits"
       ],
       "correct": 1,
-      "question_el": "Τι ξεχωριστό είχε η εμφάνιση των Koza Mostra στη Eurovision 2013;",
+      "question_el": "Τι ξεχωριστό είχαν τα ρούχα των Koza Mostra στη Eurovision 2013;",
       "options_el": [
         "Επίσημα κοστούμια",
-        "Κιλτ και μοϊκάνες, μείγμα πανκ και ελληνικού παραδοσιακού",
-        "Παραδοσιακά ελληνικά κοστούμια",
-        "Ολόλευκα ρούχα"
-      ]
-    },
-    {
-      "id": 480,
-      "category": "staging",
-      "difficulty": "medium",
-      "question": "Which Greek staging director became famous for creating spectacular Eurovision performances for multiple countries?",
-      "options": [
-        "Nikos Karvelas",
-        "Fokas Evangelinos",
-        "Giorgos Lanthimos",
-        "Yorgos Theofanous"
-      ],
-      "correct": 1,
-      "question_el": "Ποιος Έλληνας σκηνοθέτης έγινε διάσημος για τη δημιουργία θεαματικών εμφανίσεων στη Eurovision για πολλές χώρες;",
-      "options_el": [
-        "Νίκος Καρβέλας",
-        "Φωκάς Ευαγγελινός",
-        "Γιώργος Λάνθιμος",
-        "Γιώργος Θεοφάνους"
+        "Κιλτ πάνω από σορτς, σε ασπρόμαυρο",
+        "Αρχαιοελληνικές τήβεννοι",
+        "Ολόσωμες φόρμες με πούλιες"
       ]
     },
     {
       "id": 481,
       "category": "staging",
       "difficulty": "medium",
-      "question": "What instrument was featured on stage during 'Alcohol Is Free' by Koza Mostra?",
+      "question": "Which traditional Greek string instrument did Agathonas Iakovidis play on stage during 'Alcohol Is Free' in 2013?",
       "options": [
         "Piano",
-        "Bouzouki",
+        "Baglamas",
         "Violin",
-        "Drums"
+        "Accordion"
       ],
       "correct": 1,
-      "question_el": "Ποιο μουσικό όργανο εμφανίστηκε στη σκηνή κατά τη διάρκεια του 'Alcohol Is Free' των Koza Mostra;",
+      "question_el": "Ποιο παραδοσιακό ελληνικό έγχορδο έπαιξε ο Αγάθωνας Ιακωβίδης στη σκηνή στο 'Alcohol Is Free' το 2013;",
       "options_el": [
         "Πιάνο",
-        "Μπουζούκι",
+        "Μπαγλαμάς",
         "Βιολί",
-        "Τύμπανα"
+        "Ακορντεόν"
       ]
     },
     {
@@ -7978,66 +6238,6 @@
         "Ρωσία",
         "Γαλλία",
         "Ιταλία"
-      ]
-    },
-    {
-      "id": 483,
-      "category": "geography",
-      "difficulty": "easy",
-      "question": "In which European country is Athens, the host city of Eurovision 2006?",
-      "options": [
-        "Italy",
-        "Greece",
-        "Turkey",
-        "Cyprus"
-      ],
-      "correct": 1,
-      "question_el": "Σε ποια ευρωπαϊκή χώρα βρίσκεται η Αθήνα, η πόλη που φιλοξένησε τη Eurovision 2006;",
-      "options_el": [
-        "Ιταλία",
-        "Ελλάδα",
-        "Τουρκία",
-        "Κύπρος"
-      ]
-    },
-    {
-      "id": 484,
-      "category": "geography",
-      "difficulty": "easy",
-      "question": "Cyprus, Greece's traditional Eurovision voting ally, is located in which sea?",
-      "options": [
-        "Black Sea",
-        "Adriatic Sea",
-        "Mediterranean Sea",
-        "North Sea"
-      ],
-      "correct": 2,
-      "question_el": "Η Κύπρος, ο παραδοσιακός σύμμαχος της Ελλάδας στη Eurovision, βρίσκεται σε ποια θάλασσα;",
-      "options_el": [
-        "Μαύρη Θάλασσα",
-        "Αδριατική Θάλασσα",
-        "Μεσόγειος Θάλασσα",
-        "Βόρεια Θάλασσα"
-      ]
-    },
-    {
-      "id": 485,
-      "category": "geography",
-      "difficulty": "medium",
-      "question": "In which city was the Eurovision 2005 held, where Helena Paparizou won for Greece?",
-      "options": [
-        "Istanbul",
-        "Kyiv",
-        "Athens",
-        "Copenhagen"
-      ],
-      "correct": 1,
-      "question_el": "Σε ποια πόλη διεξήχθη η Eurovision 2005, όπου η Έλενα Παπαρίζου κέρδισε για την Ελλάδα;",
-      "options_el": [
-        "Κωνσταντινούπολη",
-        "Κίεβο",
-        "Αθήνα",
-        "Κοπεγχάγη"
       ]
     }
   ]

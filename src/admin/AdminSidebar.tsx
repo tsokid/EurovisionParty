@@ -8,7 +8,7 @@ import { useState, type ComponentType } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Activity, Award, CalendarDays, ChevronRight, FileText, Image, LayoutDashboard,
-  PanelBottom, PanelTop, Radar, Rocket, Settings, Shield, Smile,
+  MessageCircleQuestionMark, PanelBottom, PanelTop, Radar, Rocket, Settings, Shield, Smile,
 } from 'lucide-react';
 import { adminPaths } from './paths';
 import { docLabel, footerColumns, pageGroups } from './siteStructure';
@@ -49,6 +49,7 @@ const SECTIONS: Array<{ title: string; items: Item[] }> = [
     title: t.nav.game,
     items: [
       { label: t.nav.monitor, to: adminPaths.monitor(), icon: Activity },
+      { label: t.nav.questions, to: adminPaths.questions(), icon: MessageCircleQuestionMark },
       { label: t.nav.parser, to: adminPaths.parser(), icon: Radar },
       { label: t.nav.winners, to: adminPaths.winners(), icon: Award },
       { label: t.nav.avatars, to: adminPaths.avatars(), icon: Smile },

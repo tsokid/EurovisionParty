@@ -35,6 +35,7 @@ export const adminPaths = {
   parser: (year?: number | null) => (year == null ? `${ADMIN_ROOT}/game/parser` : `${ADMIN_ROOT}/game/parser/${year}`),
   winners: (roomId?: string | null) => (roomId ? `${ADMIN_ROOT}/game/winners/${seg(roomId)}` : `${ADMIN_ROOT}/game/winners`),
   avatars: () => `${ADMIN_ROOT}/game/avatars`,
+  questions: () => `${ADMIN_ROOT}/game/questions`,
   media: (id?: string | null) => (id ? `${ADMIN_ROOT}/media/${seg(id)}` : `${ADMIN_ROOT}/media`),
   settings: () => `${ADMIN_ROOT}/settings`,
   admins: () => `${ADMIN_ROOT}/system/admins`,

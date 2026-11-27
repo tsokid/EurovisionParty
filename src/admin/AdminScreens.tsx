@@ -15,6 +15,7 @@ import Pages from './modules/Pages';
 import Winners from './modules/Winners';
 import EurovisionParser from './modules/EurovisionParser';
 import PhaseMonitor from './modules/PhaseMonitor';
+import Questions from './modules/questions/Questions';
 import SuperAdmins from './modules/SuperAdmins';
 import { PublishBar } from './modules/contests/PublishBar';
 import { usePublisher } from './modules/contests/publish';
@@ -298,6 +299,11 @@ function WinnersScreen({ splat }: ScreenProps) {
   return <Winners roomId={roomId} onSelectRoom={(id) => navigate(adminPaths.winners(id))} />;
 }
 
+function QuestionsScreen() {
+  useAdminCrumbs([{ label: t.nav.game }, { label: t.nav.questions }]);
+  return <Questions />;
+}
+
 function AvatarsScreen() {
   useAdminCrumbs([{ label: t.nav.game }, { label: t.nav.avatars }]);
   return <AvatarsLibrary />;
@@ -360,6 +366,7 @@ const SCREENS: Array<{ pattern: string; Screen: ComponentType<ScreenProps> }> = 
   { pattern: '/admin/game/monitor', Screen: MonitorScreen },
   { pattern: '/admin/game/parser/*', Screen: ParserScreen },
   { pattern: '/admin/game/winners/*', Screen: WinnersScreen },
+  { pattern: '/admin/game/questions', Screen: QuestionsScreen },
   { pattern: '/admin/game/avatars', Screen: AvatarsScreen },
   { pattern: '/admin/media/*', Screen: MediaScreen },
   { pattern: '/admin/settings/*', Screen: SettingsScreen },
