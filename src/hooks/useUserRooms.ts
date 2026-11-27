@@ -213,7 +213,13 @@ export function useUserRooms() {
 
   /** Delete a room the player hosts, and forget it in this browser. */
   const remove = useCallback(async (entry: RoomEntry) => {
-    await supabase.from('rooms').delete().eq('id', entry.roomId);
+    // 097: a host deletes their own room through the server (the table
+    // itself only lets admins delete).
+    const { error } = await supabase.rpc('delete_room', { p_room_id: entry.roomId });
+    if (error) {
+      console.error('[useUserRooms] delete failed:', error.message);
+      return;
+    }
     removeFromStorage(entry.roomCode);
     updateRooms((prev) => prev.filter((r) => r.roomId !== entry.roomId));
   }, [updateRooms]);

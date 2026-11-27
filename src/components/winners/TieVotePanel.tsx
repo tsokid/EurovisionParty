@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crown } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { callWhenDue } from '../../lib/callWhenDue';
 import { useGameStore } from '../../stores/gameStore';
 import type { WinnerCategory } from '../../lib/winners';
 import { useTranslation } from 'react-i18next';
@@ -98,7 +99,7 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
   useEffect(() => {
     if (!vote || vote.status !== 'active' || remaining > 0 || tallyFiredRef.current) return;
     tallyFiredRef.current = true;
-    void supabase.rpc('tally_tie_vote', { p_vote_id: vote.id });
+    void callWhenDue(() => supabase.rpc('tally_tie_vote', { p_vote_id: vote.id }));
   }, [remaining, vote]);
 
   // Robust error → string. Supabase RPC errors are PostgrestError objects

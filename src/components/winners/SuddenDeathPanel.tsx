@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { supabase } from '../../lib/supabase';
+import { callWhenDue } from '../../lib/callWhenDue';
 import { useGameStore } from '../../stores/gameStore';
 import { Avatar } from '../stage';
 // Question bank is shipped as static JSON, not a Postgres table — same
@@ -196,7 +197,8 @@ export default function SuddenDeathPanel({
     resolveFiredRef.current = true;
     void (async () => {
       try {
-        await supabase.rpc('resolve_sudden_death_match', { p_match_id: matchId });
+        const { error } = await callWhenDue(() => supabase.rpc('resolve_sudden_death_match', { p_match_id: matchId }));
+        if (error) throw error;
         onResolved();
       } catch (e) { setErr(errMsg(e)); }
     })();
