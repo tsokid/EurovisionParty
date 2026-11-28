@@ -84,16 +84,6 @@ export function RoomPage() {
   const { refetchPlayers } = useLeaderboard(roomId);
   const { refetchNotifications } = useNotifications(playerId);
 
-  // Heartbeat: update last_seen_at every 5 minutes (for ghost cleanup)
-  const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  useEffect(() => {
-    if (!playerId) return;
-    heartbeatRef.current = setInterval(() => {
-      supabase.from('players').update({ last_seen_at: new Date().toISOString() }).eq('id', playerId).then(() => {});
-    }, 5 * 60 * 1000); // every 5 min
-    return () => { if (heartbeatRef.current) clearInterval(heartbeatRef.current); };
-  }, [playerId]);
-
   // Play Eurovision intro once when the game enters the 'final' phase
   const finalPlayedRef = useRef(false);
   useEffect(() => {
