@@ -62,6 +62,19 @@ export function archiveFacts(contest: ContestSnapshot, locale: Locale): ArchiveF
 // ─── Sentence helpers ───────────────────────────────────────────────────────
 
 /** "A, B and C" / "Α, Β και Γ". */
+/** Search results show about 60 characters of a title and 155 of a description. */
+export const TITLE_MAX = 60;
+export const DESCRIPTION_MAX = 155;
+
+/**
+ * The first wording that fits `max` characters, else the last (shortest)
+ * one: a long city or country name drops the trailing words instead of being
+ * cut off mid-word by the search engine (28 Nov 2026).
+ */
+export function fit(max: number, ...candidates: string[]): string {
+  return candidates.find((c) => c.length <= max) ?? candidates[candidates.length - 1];
+}
+
 export function joinList(items: string[], locale: Locale): string {
   const and = locale === 'el' ? 'και' : 'and';
   if (items.length <= 1) return items.join('');
@@ -154,14 +167,16 @@ const en: ArchiveCopy = {
   crumbs: { home: 'Home', archive: 'Past contests', year: (y) => `Eurovision ${y}` },
   chip: { archive: 'Archive', cancelled: 'Cancelled' },
   year: {
-    title: (f) =>
-      f.cancelled
-        ? `Eurovision ${f.year} ${f.cityIn}: the cancelled contest and its ${f.entries} entries`
-        : f.semis > 1
-          ? `Eurovision ${f.year} ${f.cityIn}: final results, semi-finals & winner`
-          : f.semis === 1
-          ? `Eurovision ${f.year} ${f.cityIn}: final results, semi-final & winner`
-          : `Eurovision ${f.year} ${f.cityIn}: final results & winner`,
+    title: (f) => {
+      const base = `Eurovision ${f.year} ${f.cityIn}`;
+      if (f.cancelled) return fit(TITLE_MAX, `${base}: the cancelled contest and its ${f.entries} entries`, `${base}: the cancelled contest`, base);
+      const full = f.semis > 1
+        ? `${base}: final results, semi-finals & winner`
+        : f.semis === 1
+          ? `${base}: final results, semi-final & winner`
+          : `${base}: final results & winner`;
+      return fit(TITLE_MAX, full, `${base}: results & winner`, `${base}: results`, base);
+    },
     description: (f) => {
       const where = `Eurovision Song Contest ${f.year} ${f.cityIn}${f.host ? `, ${f.host}` : ''}`;
       if (f.cancelled) {
@@ -169,14 +184,16 @@ const en: ArchiveCopy = {
       }
       const shows = f.semis > 0 ? `${f.entries} countries, ${f.semis === 1 ? 'one semi-final' : `${f.semis} semi-finals`} and the grand final` : `${f.entries} countries in one show`;
       let won = '';
+      let wonShort = '';
       if (f.winners.length === 1) {
         const w = f.winners[0];
         won = ` ${w.country} won${songBy(w, 'en')}${w.points !== null ? ` and ${w.points} points` : ''}.`;
+        wonShort = ` ${w.country} won.`;
       } else if (f.winners.length > 1) {
         const p = sharedPoints(f.winners);
         won = ` ${joinList(f.winners.map((w) => w.country), 'en')} shared first place${p !== null ? ` with ${p} points each` : ''}.`;
       }
-      return `${where}: ${shows}.${won} Full ranking with every artist, song and score.`;
+      return fit(DESCRIPTION_MAX, `${where}: ${shows}.${won} Full ranking with every artist, song and score.`, `${where}: ${shows}.${won} Full ranking.`, `${where}: ${shows}.${won}`, `${where}: ${shows}.${wonShort || won} Full ranking with every artist, song and score.`, `${where}: ${shows}.${wonShort || won}`);
     },
     h1: (f) => `Eurovision ${f.year} ${f.cityIn}`,
     lede: (f) => {
@@ -236,14 +253,16 @@ const el: ArchiveCopy = {
   crumbs: { home: 'Αρχική', archive: 'Προηγούμενοι διαγωνισμοί', year: (y) => `Eurovision ${y}` },
   chip: { archive: 'Αρχείο', cancelled: 'Ακυρώθηκε' },
   year: {
-    title: (f) =>
-      f.cancelled
-        ? `Eurovision ${f.year} ${f.cityIn}: ο διαγωνισμός που ακυρώθηκε και οι ${f.entries} συμμετοχές`
-        : f.semis > 1
-          ? `Eurovision ${f.year} ${f.cityIn}: αποτελέσματα, ημιτελικοί και νικητής`
-          : f.semis === 1
-          ? `Eurovision ${f.year} ${f.cityIn}: αποτελέσματα, ημιτελικός και νικητής`
-          : `Eurovision ${f.year} ${f.cityIn}: αποτελέσματα και νικητής`,
+    title: (f) => {
+      const base = `Eurovision ${f.year} ${f.cityIn}`;
+      if (f.cancelled) return fit(TITLE_MAX, `${base}: ο διαγωνισμός που ακυρώθηκε και οι ${f.entries} συμμετοχές`, `${base}: ο διαγωνισμός που ακυρώθηκε`, base);
+      const full = f.semis > 1
+        ? `${base}: αποτελέσματα, ημιτελικοί και νικητής`
+        : f.semis === 1
+          ? `${base}: αποτελέσματα, ημιτελικός και νικητής`
+          : `${base}: αποτελέσματα και νικητής`;
+      return fit(TITLE_MAX, full, `${base}: αποτελέσματα και νικητής`, `${base}: αποτελέσματα`, base);
+    },
     description: (f) => {
       const where = `Eurovision ${f.year} ${f.cityIn}${f.host ? ` (${f.host})` : ''}`;
       if (f.cancelled) {
@@ -251,14 +270,16 @@ const el: ArchiveCopy = {
       }
       const shows = f.semis > 0 ? `${f.entries} χώρες, ${f.semis === 1 ? 'ένας ημιτελικός' : `${f.semis} ημιτελικοί`} και ο μεγάλος τελικός` : `${f.entries} χώρες σε μία βραδιά`;
       let won = '';
+      let wonShort = '';
       if (f.winners.length === 1) {
         const w = f.winners[0];
         won = ` ${greekCountrySubject(w.iso, w.country)} κέρδισε${songBy(w, 'el')}${w.points !== null ? ` και ${w.points} βαθμούς` : ''}.`;
+        wonShort = ` ${greekCountrySubject(w.iso, w.country)} κέρδισε.`;
       } else if (f.winners.length > 1) {
         const p = sharedPoints(f.winners);
         won = ` ${elWinnerList(f.winners, true)} μοιράστηκαν την πρώτη θέση${p !== null ? ` με ${p} βαθμούς η κάθε χώρα` : ''}.`;
       }
-      return `${where}: ${shows}.${won} Η πλήρης κατάταξη με καλλιτέχνες, τραγούδια και βαθμούς.`;
+      return fit(DESCRIPTION_MAX, `${where}: ${shows}.${won} Η πλήρης κατάταξη με καλλιτέχνες, τραγούδια και βαθμούς.`, `${where}: ${shows}.${won} Η πλήρης κατάταξη.`, `${where}: ${shows}.${won}`, `${where}: ${shows}.${wonShort || won} Η πλήρης κατάταξη με καλλιτέχνες, τραγούδια και βαθμούς.`, `${where}: ${shows}.${wonShort || won}`);
     },
     h1: (f) => `Eurovision ${f.year} ${f.cityIn}`,
     lede: (f) => {

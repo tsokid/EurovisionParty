@@ -159,7 +159,8 @@ describe('archive year pages (SSR)', () => {
   it('/en/past-contests/eurovision-2019-tel-aviv: winner, final, both semis, nav', async () => {
     const r = await render('/en/past-contests/eurovision-2019-tel-aviv');
     expect(r.status).toBe(200);
-    expect(r.head?.title).toBe('Eurovision 2019 in Tel Aviv: final results, semi-finals & winner');
+    // Titles fit 60 characters (28 Nov 2026): the long wording steps down.
+    expect(r.head?.title).toBe('Eurovision 2019 in Tel Aviv: results & winner');
     expect(r.head?.canonical).toBe(`${ORIGIN}/en/past-contests/eurovision-2019-tel-aviv`);
     expect(h1(r.html)).toBe('Eurovision 2019 in Tel Aviv');
     expect(r.html).toContain('Netherlands won Eurovision 2019 with 498 points');
@@ -186,7 +187,7 @@ describe('archive year pages (SSR)', () => {
 
   it('/el/past-contests/eurovision-2019-tel-aviv has the Greek title', async () => {
     const r = await render('/el/past-contests/eurovision-2019-tel-aviv');
-    expect(r.head?.title).toBe('Eurovision 2019 στο Τελ Αβίβ: αποτελέσματα, ημιτελικοί και νικητής');
+    expect(r.head?.title).toBe('Eurovision 2019 στο Τελ Αβίβ: αποτελέσματα και νικητής');
     expect(r.html).toContain('Η Ολλανδία κέρδισε τη Eurovision 2019 με 498 βαθμούς');
   });
 
@@ -397,7 +398,7 @@ describe('review round 1', () => {
 
   it('2005 (one semi-final) in EL: singular title, lede and heading', async () => {
     const r = await render('/el/past-contests/eurovision-2005-kyiv');
-    expect(r.head?.title).toBe('Eurovision 2005 στο Κίεβο: αποτελέσματα, ημιτελικός και νικητής');
+    expect(r.head?.title).toBe('Eurovision 2005 στο Κίεβο: αποτελέσματα και νικητής');
     expect(h2s(r.html)).toContain('Ημιτελικός · 19 Μαΐου 2005');
     expect(r.html).toContain('και ο ημιτελικός');
     expect(r.html).not.toContain('οι δύο ημιτελικοί');
@@ -457,7 +458,8 @@ describe('review round 1', () => {
     const en = await render('/en/countries/morocco');
     expect(en.head?.title).toBe('Morocco at Eurovision: every entry and result');
     const el = await render('/el/countries/morocco');
-    expect(el.head?.title).toBe('Μαρόκο στη Eurovision: όλες οι συμμετοχές και τα αποτελέσματα');
+    expect(el.head?.title).toBe('Μαρόκο στη Eurovision: συμμετοχές και αποτελέσματα');
+    for (const t of [en.head?.title, el.head?.title]) expect(t!.length).toBeLessThanOrEqual(60);
     const gr = await render('/en/countries/greece');
     expect(gr.head?.title).toBe('Greece at Eurovision: every entry, result and win');
   });

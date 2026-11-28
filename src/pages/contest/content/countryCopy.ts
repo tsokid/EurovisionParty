@@ -8,7 +8,7 @@
 import type { CountryParticipation, CountrySnapshot } from '../../../content/contests/types';
 import type { Locale } from '../../../lib/seo/locale';
 import { FIRST_SEMI_YEAR, greekCountrySubject } from './hubCopy';
-import { joinList, ordinal } from './archiveCopy';
+import { DESCRIPTION_MAX, TITLE_MAX, fit, joinList, ordinal } from './archiveCopy';
 
 // ─── Facts ──────────────────────────────────────────────────────────────────
 
@@ -87,14 +87,17 @@ const en: CountryCopy = {
   crumbs: { home: 'Home', countries: 'Countries' },
   chip: 'Countries',
   country: {
-    title: (f) => (f.wins > 0
-      ? `${f.name} at Eurovision: every entry, result and win`
-      : `${f.name} at Eurovision: every entry and result`),
+    title: (f) => fit(TITLE_MAX,
+      f.wins > 0 ? `${f.name} at Eurovision: every entry, result and win` : `${f.name} at Eurovision: every entry and result`,
+      `${f.name} at Eurovision: every entry and result`,
+      `${f.name} at Eurovision: entries and results`,
+      `${f.name} at Eurovision`),
     description: (f) => {
       const record = f.wins > 0
         ? `, ${winsEn(f.wins)} (${joinList(f.winYears.map(String), 'en')})`
         : f.bestPlace !== null ? `, best result ${ordinal(f.bestPlace, 'en')} place` : '';
-      return `${f.name} at the Eurovision Song Contest: ${participationsEn(f.participations)} ${spanEn(f)}${record}. Artist, song, place and points for every year.`;
+      const head = `${f.name} at the Eurovision Song Contest: ${participationsEn(f.participations)} ${spanEn(f)}${record}.`;
+      return fit(DESCRIPTION_MAX, `${head} Artist, song, place and points for every year.`, `${head} Every entry, year by year.`, head);
     },
     h1: (f) => `${f.name} at Eurovision`,
     lede: (f) => {
@@ -138,14 +141,17 @@ const el: CountryCopy = {
   crumbs: { home: 'Αρχική', countries: 'Χώρες' },
   chip: 'Χώρες',
   country: {
-    title: (f) => (f.wins > 0
-      ? `${f.name} στη Eurovision: όλες οι συμμετοχές, τα αποτελέσματα και οι νίκες`
-      : `${f.name} στη Eurovision: όλες οι συμμετοχές και τα αποτελέσματα`),
+    title: (f) => fit(TITLE_MAX,
+      f.wins > 0 ? `${f.name} στη Eurovision: όλες οι συμμετοχές, τα αποτελέσματα και οι νίκες` : `${f.name} στη Eurovision: όλες οι συμμετοχές και τα αποτελέσματα`,
+      f.wins > 0 ? `${f.name} στη Eurovision: συμμετοχές, αποτελέσματα και νίκες` : `${f.name} στη Eurovision: συμμετοχές και αποτελέσματα`,
+      `${f.name} στη Eurovision: συμμετοχές και αποτελέσματα`,
+      `${f.name} στη Eurovision`),
     description: (f) => {
       const record = f.wins > 0
         ? `, ${winsEl(f.wins)} (${joinList(f.winYears.map(String), 'el')})`
         : f.bestPlace !== null ? `, καλύτερη θέση η ${ordinal(f.bestPlace, 'el')}` : '';
-      return `${f.name} στη Eurovision: ${participationsEl(f.participations)} ${spanEl(f)}${record}. Καλλιτέχνης, τραγούδι, θέση και βαθμοί για κάθε χρονιά.`;
+      const head = `${f.name} στη Eurovision: ${participationsEl(f.participations)} ${spanEl(f)}${record}.`;
+      return fit(DESCRIPTION_MAX, `${head} Καλλιτέχνης, τραγούδι, θέση και βαθμοί για κάθε χρονιά.`, `${head} Όλες οι συμμετοχές ανά χρονιά.`, head);
     },
     h1: (f) => `${f.name} στη Eurovision`,
     lede: (f) => {

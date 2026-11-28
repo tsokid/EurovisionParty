@@ -75,7 +75,8 @@ describe('entry-server render', () => {
       for (const [k, v] of Object.entries(node)) {
         if ((k === '@id' || k === 'url' || k === 'item') && typeof v === 'string' && v.startsWith(ORIGIN)) {
           // Site-level identity (Organization url) and static assets (logo.png) are not pages.
-          if (v === ORIGIN || /\.[a-z0-9]+$/i.test(v)) continue;
+          // Fragment ids (#organization, #website) name the site, not a page.
+          if (v === ORIGIN || v.startsWith(`${ORIGIN}#`) || /\.[a-z0-9]+$/i.test(v)) continue;
           if (!new RegExp(`^${ORIGIN}/${locale}(/|$)`).test(v)) bad.push(`${path} ${k}=${v}`);
         } else {
           walk(v, path, locale);

@@ -2015,6 +2015,1640 @@
         }
       ],
       "note": "The static Organization block leaves the page template (it duplicated the CMS settings with a stale copy); the home page carries Organization + WebSite from the CMS settings, without the SearchAction to the non-existent /search. Article publisher logo = organization.logo."
+    },
+    {
+      "id": "manual-2026-11-28-title-lengths",
+      "created_at": "2026-11-28T17:29:40.371Z",
+      "source": "manual",
+      "docs": [],
+      "data": [],
+      "routes": [
+        {
+          "route": "/el/past-contests/eurovision-1956-lugano",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1957-frankfurt",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1958-hilversum",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1959-cannes",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1960-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1961-cannes",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1962-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1963-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1964-copenhagen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1965-naples",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1966-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1967-vienna",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1968-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1969-madrid",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1970-amsterdam",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1971-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1972-edinburgh",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1973-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1974-brighton",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1975-stockholm",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1976-the-hague",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1977-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1978-paris",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1979-jerusalem",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1980-the-hague",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1981-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1982-harrogate",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1983-munich",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1984-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1985-gothenburg",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1986-bergen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1987-brussels",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1988-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1989-lausanne",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1990-zagreb",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1991-rome",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1992-malmo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1993-millstreet",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1994-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1995-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1996-oslo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1997-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1998-birmingham",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-1999-jerusalem",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2000-stockholm",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2001-copenhagen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2002-tallinn",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2003-riga",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2004-istanbul",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2005-kyiv",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2006-athens",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2007-helsinki",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2008-belgrade",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2009-moscow",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2010-oslo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2011-dusseldorf",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2012-baku",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2013-malmo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2014-copenhagen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2015-vienna",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2016-stockholm",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2017-kyiv",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2018-lisbon",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2019-tel-aviv",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2021-rotterdam",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2022-turin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2023-liverpool",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2024-malmo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2025-basel",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2026-vienna",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1956-lugano",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1957-frankfurt",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1958-hilversum",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1959-cannes",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1960-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1961-cannes",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1962-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1963-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1964-copenhagen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1965-naples",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1966-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1967-vienna",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1968-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1969-madrid",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1970-amsterdam",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1971-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1972-edinburgh",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1973-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1974-brighton",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1975-stockholm",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1976-the-hague",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1977-london",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1978-paris",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1979-jerusalem",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1980-the-hague",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1981-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1982-harrogate",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1983-munich",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1984-luxembourg-city",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1985-gothenburg",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1986-bergen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1987-brussels",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1988-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1989-lausanne",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1990-zagreb",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1991-rome",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1992-malmo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1993-millstreet",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1994-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1995-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1996-oslo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1997-dublin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1998-birmingham",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-1999-jerusalem",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2000-stockholm",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2001-copenhagen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2002-tallinn",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2003-riga",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2004-istanbul",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2005-kyiv",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2006-athens",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2007-helsinki",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2008-belgrade",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2009-moscow",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2010-oslo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2011-dusseldorf",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2012-baku",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2013-malmo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2014-copenhagen",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2015-vienna",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2016-stockholm",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2017-kyiv",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2018-lisbon",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2019-tel-aviv",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2021-rotterdam",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2022-turin",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2023-liverpool",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2024-malmo",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2025-basel",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2026-vienna",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/albania",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/andorra",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/armenia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/australia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/austria",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/azerbaijan",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/belarus",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/belgium",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/bosnia-and-herzegovina",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/bulgaria",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/croatia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/cyprus",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/czechia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/denmark",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/estonia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/finland",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/france",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/georgia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/germany",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/greece",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/hungary",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/iceland",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/ireland",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/israel",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/italy",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/latvia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/lithuania",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/luxembourg",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/moldova",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/monaco",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/montenegro",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/morocco",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/netherlands",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/north-macedonia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/norway",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/poland",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/portugal",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/romania",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/russia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/san-marino",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/serbia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/serbia-and-montenegro",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/slovakia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/slovenia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/spain",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/sweden",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/switzerland",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/turkey",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/ukraine",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/united-kingdom",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/countries/yugoslavia",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/past-contests/eurovision-2020-rotterdam",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/bosnia-and-herzegovina",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/france",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/ireland",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/israel",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/luxembourg",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/netherlands",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/serbia-and-montenegro",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/sweden",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/switzerland",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/countries/united-kingdom",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/past-contests/eurovision-2020-rotterdam",
+          "fields": [
+            "title",
+            "description",
+            "jsonLd"
+          ]
+        }
+      ],
+      "note": "Country and archive title/description templates fit search-result lengths (titles 60, descriptions 155): a long name drops trailing words instead of being cut off."
     }
   ]
 }
