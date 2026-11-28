@@ -64,7 +64,7 @@ export default function EurovisionPartyPage() {
       acceptedAnswer: { '@type': 'Answer', text: f.a },
     })),
   };
-  // No Event markup (28 Nov 2026): a watch party is not a scheduled public
+  // No Event markup: a watch party is not a scheduled public
   // event under Google's event policy; Article + FAQ describe the page.
   return (
     <>

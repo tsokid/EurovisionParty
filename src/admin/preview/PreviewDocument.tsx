@@ -110,7 +110,7 @@ function PageChrome({ children }: { children: ReactNode }) {
     <div className="stage-root">
       <BetaBanner />
       <SiteHeader />
-      {children}
+      <main id="main">{children}</main>
     </div>
   );
 }

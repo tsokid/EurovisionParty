@@ -171,8 +171,8 @@
         "topic": "results"
       },
       {
-        "q": "Άλλαξε η πολιτική απορρήτου;",
         "a": "28 Νοεμβρίου 2026: μόνο διορθώσεις. Οι γραμματοσειρές και οι σημαίες φορτώνουν πλέον από τον δικό μας server, και αναφέρουμε το Resend, που στέλνει τον κωδικό σύνδεσης μόνο στους διαχειριστές. Τα δεδομένα των παικτών δεν άλλαξαν.",
+        "q": "Άλλαξε η πολιτική απορρήτου;",
         "topic": "results"
       },
       {
@@ -393,8 +393,8 @@
         "topic": "results"
       },
       {
-        "q": "Has the privacy policy changed?",
         "a": "28 November 2026: corrections only. Fonts and flags now load from our own server, and we name Resend, which sends the sign-in code to administrators only. Nothing changed for players' data.",
+        "q": "Has the privacy policy changed?",
         "topic": "results"
       },
       {

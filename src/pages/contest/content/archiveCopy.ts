@@ -69,7 +69,7 @@ export const DESCRIPTION_MAX = 155;
 /**
  * The first wording that fits `max` characters, else the last (shortest)
  * one: a long city or country name drops the trailing words instead of being
- * cut off mid-word by the search engine (28 Nov 2026).
+ * cut off mid-word by the search engine.
  */
 export function fit(max: number, ...candidates: string[]): string {
   return candidates.find((c) => c.length <= max) ?? candidates[candidates.length - 1];

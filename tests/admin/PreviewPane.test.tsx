@@ -116,7 +116,7 @@ describe('PreviewPane', () => {
 
   it('swallows plain <a href> clicks too (they would load a new document)', () => {
     inAdmin(<PreviewPane docId="privacy" doc={published('privacy')} />);
-    const raw = screen.getByTestId('preview-pane').querySelector('a[href="/cookies"]') as HTMLAnchorElement;
+    const raw = screen.getByTestId('preview-pane').querySelector('a[href$="/cookies"]') as HTMLAnchorElement;
     expect(raw).not.toBeNull();
     expect(fireEvent.click(raw)).toBe(false);
   });
