@@ -5,7 +5,7 @@ import { ensureUser } from '../lib/ensureUser';
 import { useGameStore } from '../stores/gameStore';
 import { generateRoomCode } from '../lib/roomCode';
 import type { Player, Room } from '../lib/types';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import { onLive, onLiveStatus, roomTopic } from '../lib/liveChannel';
 
 /** joinRoom's error for a wrong room password (the join form keys off it). */
 export const WRONG_PASSWORD_ERROR = 'Wrong password. Try again.';
@@ -139,7 +139,7 @@ interface UseRoomReturn {
 export function useRoom(): UseRoomReturn {
   const { room, setRoom, setPlayer, setRoomPassword, setLoading, setError, isLoading, error } =
     useGameStore();
-  const channelRef = useRef<RealtimeChannel | null>(null);
+  const channelRef = useRef<(() => void) | null>(null);
   const subscribedRoomIdRef = useRef<string | null>(null);
   // Real name still to be stored after a SecretSaveError.
   const pendingSecretRef = useRef<{ playerId: string; realName: string; roomCode: string } | null>(null);
@@ -161,59 +161,42 @@ export function useRoom(): UseRoomReturn {
       // Avoid duplicate subscriptions (use ref, not state, to avoid stale closures)
       if (subscribedRoomIdRef.current === roomId) return;
 
-      // Tear down previous channel
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-      }
+      // Tear down the previous room's listeners
+      channelRef.current?.();
 
-      const channel = supabase
-        .channel(`room:${roomId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: 'UPDATE',
-            schema: 'public',
-            table: 'rooms',
-            filter: `id=eq.${roomId}`,
-          },
-          (payload) => {
-            const updated = payload.new as Room;
-            setRoom(updated);
-          }
-        )
-        .subscribe((status, err) => {
-          if (err) console.error('[useRoom] Realtime error:', status, err);
-
-          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-            // Debounce: only show the banner if the error persists for 3s.
-            // This prevents flashing on transient blips or slow initial connect.
-            const debounceTimer = setTimeout(() => {
-              // Only raise the flag if still in an error state (not yet SUBSCRIBED)
-              if (!useGameStore.getState().isReconnecting) {
-                useGameStore.getState().setIsReconnecting(true);
-              }
-              // Safety valve: auto-clear after 10s in case SUBSCRIBED never fires
-              setTimeout(() => {
-                if (useGameStore.getState().isReconnecting) {
-                  useGameStore.getState().setIsReconnecting(false);
-                }
-              }, 10_000);
-            }, 3_000);
-            // Store timer id on the channel so SUBSCRIBED can cancel it
-            (channel as any)._reconnectDebounce = debounceTimer;
-          }
-
-          if (status === 'SUBSCRIBED') {
-            // Cancel pending debounce — connection recovered before banner showed
-            if ((channel as any)._reconnectDebounce) {
-              clearTimeout((channel as any)._reconnectDebounce);
-              (channel as any)._reconnectDebounce = null;
+      // Phase changes arrive as a server push on the room's private channel
+      // (105). The reconnect banner follows that channel's status.
+      let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+      const offRoom = onLive<Room>(roomTopic(roomId), 'rooms', (change) => {
+        if (change.eventType === 'UPDATE') setRoom(change.new);
+      });
+      const offStatus = onLiveStatus(roomTopic(roomId), (status) => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          if (debounceTimer) return;
+          // Debounce: only show the banner if the error persists for 3s.
+          debounceTimer = setTimeout(() => {
+            debounceTimer = null;
+            if (!useGameStore.getState().isReconnecting) {
+              useGameStore.getState().setIsReconnecting(true);
             }
-            useGameStore.getState().setIsReconnecting(false);
-          }
-        });
-
-      channelRef.current = channel;
+            // Safety valve: auto-clear after 10s in case SUBSCRIBED never fires
+            setTimeout(() => {
+              if (useGameStore.getState().isReconnecting) {
+                useGameStore.getState().setIsReconnecting(false);
+              }
+            }, 10_000);
+          }, 3_000);
+        }
+        if (status === 'SUBSCRIBED') {
+          if (debounceTimer) { clearTimeout(debounceTimer); debounceTimer = null; }
+          useGameStore.getState().setIsReconnecting(false);
+        }
+      });
+      channelRef.current = () => {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        offRoom();
+        offStatus();
+      };
       subscribedRoomIdRef.current = roomId;
     },
     [setRoom]
@@ -222,9 +205,8 @@ export function useRoom(): UseRoomReturn {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-      }
+      channelRef.current?.();
+      channelRef.current = null;
     };
   }, []);
 
@@ -460,10 +442,8 @@ export function useRoom(): UseRoomReturn {
 
         // Keep localStorage entry so the home rooms list can show the room with AWAY/ENDED badge
 
-        if (channelRef.current) {
-          supabase.removeChannel(channelRef.current);
-          channelRef.current = null;
-        }
+        channelRef.current?.();
+        channelRef.current = null;
         subscribedRoomIdRef.current = null;
 
         reset();

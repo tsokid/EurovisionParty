@@ -1,7 +1,8 @@
 // The realtime side of one open CMS document (spec §4 "Two editors at
 // once"): Supabase Realtime presence on the private channel cms:doc:{id}
 // (who else is here, and which field they are in), a "saved" broadcast after
-// every autosave, and postgres_changes on the doc's cms_documents row (087)
+// every autosave, and the same 'saved' event pushed by the database on every
+// cms_documents write (087, 105)
 // as a second source of the other editor's saves. Only super admins may join
 // (087's realtime.messages policies). When the channel cannot be joined
 // (087 not applied, offline) the editor keeps working without presence; a
@@ -75,13 +76,6 @@ export const supabaseDocChannel: DocChannelFactory = (docId, me, handlers) => {
   ch.on('broadcast', { event: 'saved' }, (msg: { payload?: { updatedAt?: string; by?: string } }) => {
     handlers.onRemoteSave({ updatedAt: msg.payload?.updatedAt ?? null, by: msg.payload?.by ?? null });
   });
-  ch.on(
-    'postgres_changes' as never,
-    { event: '*', schema: 'public', table: 'cms_documents', filter: `doc_id=eq.${docId}` } as never,
-    (p: { new?: { updated_at?: string } }) => {
-      handlers.onRemoteSave({ updatedAt: p.new?.updated_at ?? null, by: null });
-    },
-  );
   ch.subscribe((status: string) => {
     if (status === 'SUBSCRIBED') {
       joined = true;

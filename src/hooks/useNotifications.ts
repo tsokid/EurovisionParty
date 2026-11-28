@@ -2,8 +2,8 @@ import { useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useGameStore } from '../stores/gameStore';
 import type { Notification } from '../lib/types';
-import type { RealtimeChannel } from '@supabase/supabase-js';
-import { visibleInterval } from '../lib/visibleInterval';
+import { onLive, playerTopic } from '../lib/liveChannel';
+import { onResync } from '../lib/resync';
 
 interface UseNotificationsReturn {
   notifications: Notification[];
@@ -15,7 +15,6 @@ interface UseNotificationsReturn {
 
 export function useNotifications(playerId: string | null | undefined): UseNotificationsReturn {
   const { notifications, addNotification, markNotificationRead } = useGameStore();
-  const channelRef = useRef<RealtimeChannel | null>(null);
   const fetchedRef = useRef(false);
 
   // Fetch existing notifications on mount (supports rejoin)
@@ -43,32 +42,11 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
   useEffect(() => {
     if (!playerId) return;
 
-    const channel = supabase
-      .channel(`notifications:${playerId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `player_id=eq.${playerId}`,
-        },
-        (payload) => {
-          addNotification(payload.new as Notification);
-        }
-      )
-      .subscribe((status, err) => {
-        if (err) console.error('[useNotifications] Realtime error:', status, err);
-      });
-
-    channelRef.current = channel;
-
-    return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-        channelRef.current = null;
-      }
-    };
+    // A new notification arrives as a server push on the player's own
+    // private channel (105).
+    return onLive<Notification>(playerTopic(playerId), 'notifications', (change) => {
+      if (change.eventType === 'INSERT') addNotification(change.new);
+    });
   }, [playerId, addNotification]);
 
   const refetchNotifications = useCallback(async () => {
@@ -84,12 +62,10 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
     }
   }, [playerId, addNotification]);
 
-  // Fallback for a missed live notification: refetch every 2 min (with
-  // jitter) and on return to the tab, only while the tab is visible
-  // (28 Nov 2026; was every 30 s, also in the background).
+  // After the phone was away (locked, offline), fetch what was missed once.
   useEffect(() => {
     if (!playerId) return;
-    return visibleInterval(() => { void refetchNotifications(); }, 120_000, { jitter: 0.5 });
+    return onResync(() => { void refetchNotifications(); });
   }, [playerId, refetchNotifications]);
 
   const markAsRead = useCallback(

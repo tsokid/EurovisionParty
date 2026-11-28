@@ -1,16 +1,13 @@
-import { ROOM_COLUMNS } from '../lib/roomColumns';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
-import { visibleInterval } from '../lib/visibleInterval';
+import { onResync } from '../lib/resync';
 import { useRoom } from '../hooks/useRoom';
 import { useRejoin } from '../hooks/useRejoin';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { useNotifications } from '../hooks/useNotifications';
-import { supabase } from '../lib/supabase';
 import { playIntro } from '../lib/audio';
 import { captureQrPassword, clearQrPassword } from '../lib/qrJoin';
-import type { Room } from '../lib/types';
 import AppShell from '../components/layout/AppShell';
 import LobbyScreen from '../components/lobby/LobbyScreen';
 import QuizScreen from '../components/quiz/QuizScreen';
@@ -34,7 +31,7 @@ export function RoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
   const { room, advancePhase, refetchRoom, leaveRoom } = useRoom();
-  const { room: storeRoom, player, players, activeTab, setActiveTab, setRoom, isReconnecting } = useGameStore();
+  const { room: storeRoom, player, players, activeTab, setActiveTab, isReconnecting } = useGameStore();
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
 
@@ -97,23 +94,13 @@ export function RoomPage() {
     }
   }, [storeRoom?.phase]);
 
-  // Fallback for a missed live phase change: re-read the room every 60 s
-  // (with jitter) and on return to the tab, only while the tab is visible.
-  // A minimised tab sends nothing (28 Nov 2026; was every 3 s, always).
-  const roomIdForPoll = storeRoom?.id;
+  // Phase changes are pushed live by the server (105); nothing polls. After
+  // the phone was away (locked, hidden, offline), the room is read once.
+  const roomIdForResync = storeRoom?.id;
   useEffect(() => {
-    if (!roomIdForPoll) return;
-    return visibleInterval(async () => {
-      const { data } = await supabase
-        .from('rooms')
-        .select(ROOM_COLUMNS)
-        .eq('id', roomIdForPoll)
-        .single();
-      if (data && (data as Room).phase !== useGameStore.getState().room?.phase) {
-        setRoom(data as Room);
-      }
-    }, 60_000, { jitter: 0.5 });
-  }, [roomIdForPoll, setRoom]);
+    if (!roomIdForResync) return;
+    return onResync(() => { void refetchRoom(); });
+  }, [roomIdForResync, refetchRoom]);
 
   // When the phase transitions from pre_night → predictions_open, auto-switch
   // the active tab so no user misses it (unchanged rule).

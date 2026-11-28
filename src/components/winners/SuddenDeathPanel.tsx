@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { supabase } from '../../lib/supabase';
+import { onLive, roomTopic } from '../../lib/liveChannel';
 import { callWhenDue } from '../../lib/callWhenDue';
 import { useGameStore } from '../../stores/gameStore';
 import { Avatar } from '../stage';
@@ -121,10 +122,7 @@ export default function SuddenDeathPanel({
       setRounds((data ?? []) as RoundRow[]);
     })();
 
-    const ch = supabase
-      .channel(`sd_rounds:${roomId}:champion`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'sudden_death_rounds', filter: `room_id=eq.${roomId}` },
-        () => {
+    const off = onLive(roomTopic(roomId), 'sudden_death_rounds', () => {
           // Easiest: just refetch the latest match.
           supabase
             .from('sudden_death_rounds')
@@ -144,8 +142,8 @@ export default function SuddenDeathPanel({
                 .order('question_index', { ascending: true });
               setRounds((data ?? []) as RoundRow[]);
             });
-        }).subscribe();
-    return () => { mounted = false; supabase.removeChannel(ch); };
+        });
+    return () => { mounted = false; off(); };
   }, [roomId]);
 
   // ── Subscribe to answers for this match ────────────────────────────────
@@ -160,21 +158,18 @@ export default function SuddenDeathPanel({
       .in('round_id', roundIds)
       .then(({ data }) => { if (mounted) setAnswers((data ?? []) as AnswerRow[]); });
 
-    const ch = supabase
-      .channel(`sd_answers:${matchId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'sudden_death_answers' },
-        (payload) => {
-          if (payload.eventType === 'DELETE') return;
-          const row = payload.new as AnswerRow;
+    const off = onLive<AnswerRow>(roomTopic(roomId), 'sudden_death_answers', (change) => {
+          if (change.eventType === 'DELETE') return;
+          const row = change.new;
           if (!roundIds.includes(row.round_id)) return;
           setAnswers(prev => {
             const next = prev.filter(a => !(a.round_id === row.round_id && a.player_id === row.player_id));
             next.push(row);
             return next;
           });
-        }).subscribe();
-    return () => { mounted = false; supabase.removeChannel(ch); };
-  }, [matchId, rounds]);
+        });
+    return () => { mounted = false; off(); };
+  }, [matchId, rounds, roomId]);
 
   // ── Heartbeat for time-based UI (timer + active round) ─────────────────
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { onLive, roomTopic } from '../lib/liveChannel';
 
 export type ChampionVoteStatus = 'active' | 'accept' | 'sudden_death' | null;
 
@@ -20,16 +21,12 @@ export function useChampionVote(roomId: string | null | undefined): ChampionVote
         .maybeSingle();
       if (mounted) setStatus(((data as { status?: string } | null)?.status as ChampionVoteStatus) ?? null);
     })();
-    const ch = supabase
-      .channel(`tie_votes_status:${roomId}:champion:${Math.random().toString(36).slice(2, 8)}`)
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'tie_votes', filter: `room_id=eq.${roomId}` },
-        (payload: { eventType: string; new: { category?: string; status?: string } }) => {
-          if (payload.eventType === 'DELETE') { setStatus(null); return; }
-          const row = payload.new;
-          if (row.category === 'champion' && row.status) setStatus(row.status as ChampionVoteStatus);
-        }).subscribe();
-    return () => { mounted = false; supabase.removeChannel(ch); };
+    const off = onLive<{ category?: string; status?: string }>(roomTopic(roomId), 'tie_votes', (change) => {
+      if (change.eventType === 'DELETE') { setStatus(null); return; }
+      const row = change.new;
+      if (row.category === 'champion' && row.status) setStatus(row.status as ChampionVoteStatus);
+    });
+    return () => { mounted = false; off(); };
   }, [roomId]);
   return status;
 }

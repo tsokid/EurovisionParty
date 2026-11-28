@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crown } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { onLive, roomTopic } from '../../lib/liveChannel';
 import { callWhenDue } from '../../lib/callWhenDue';
 import { useGameStore } from '../../stores/gameStore';
 import type { WinnerCategory } from '../../lib/winners';
@@ -60,16 +61,15 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
         .order('opened_at', { ascending: false }).limit(1);
       if (mounted && data?.[0]) setVote(data[0] as ActiveVote);
     })();
-    const ch = supabase.channel(`tie_votes:${roomId}:${category}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tie_votes', filter: `room_id=eq.${roomId}` },
-        (payload) => {
-          const row = payload.new as ActiveVote | undefined;
-          if (row && (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE')) {
-            setVote(row);
-            if (row.status === 'accept' || row.status === 'sudden_death') onResolved(row.status);
-          }
-        }).subscribe();
-    return () => { mounted = false; supabase.removeChannel(ch); };
+    const off = onLive<ActiveVote & { category?: string }>(roomTopic(roomId), 'tie_votes', (change) => {
+      const row = change.new;
+      if (row.category !== category) return;
+      if (change.eventType === 'INSERT' || change.eventType === 'UPDATE') {
+        setVote(row);
+        if (row.status === 'accept' || row.status === 'sudden_death') onResolved(row.status);
+      }
+    });
+    return () => { mounted = false; off(); };
   }, [roomId, category, onResolved]);
 
   useEffect(() => {
@@ -80,14 +80,13 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
         .select('vote_id, player_id, choice').eq('vote_id', vote.id);
       if (mounted) setChoices((data ?? []) as Choice[]);
     })();
-    const ch = supabase.channel(`tie_vote_choices:${vote.id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tie_vote_choices', filter: `vote_id=eq.${vote.id}` },
-        (payload) => {
-          if (payload.eventType === 'DELETE') return;
-          const row = payload.new as Choice;
-          setChoices((prev) => { const next = prev.filter((c) => c.player_id !== row.player_id); next.push(row); return next; });
-        }).subscribe();
-    return () => { mounted = false; supabase.removeChannel(ch); };
+    const voteId = vote.id;
+    const off = onLive<Choice>(roomTopic(roomId), 'tie_vote_choices', (change) => {
+      if (change.eventType === 'DELETE' || change.new.vote_id !== voteId) return;
+      const row = change.new;
+      setChoices((prev) => { const next = prev.filter((c) => c.player_id !== row.player_id); next.push(row); return next; });
+    });
+    return () => { mounted = false; off(); };
   }, [vote?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

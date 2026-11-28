@@ -1,8 +1,9 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useGameStore } from '../stores/gameStore';
 import type { Duel, DuelDecision } from '../lib/types';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import { onLive, roomTopic } from '../lib/liveChannel';
+import { onResync } from '../lib/resync';
 
 /** Calculate points for a duel answer: 12pts at 0s, 11pts at 1s, ..., 1pt at 11s, 0 if wrong/timeout */
 export function calcDuelPoints(responseMs: number, isCorrect: boolean): number {
@@ -31,33 +32,23 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
   const [duels, setDuels] = useState<Duel[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const channelRef = useRef<RealtimeChannel | null>(null);
-
-  // Realtime subscription
+  // Live updates
   useEffect(() => {
     if (!roomId) return;
 
-    const channel = supabase
-      .channel('duels:' + roomId)
-      .on('postgres_changes', {
-        event: '*', schema: 'public', table: 'duels', filter: 'room_id=eq.' + roomId,
-      }, (payload) => {
-        if (payload.eventType === 'INSERT') {
-          setDuels((prev) => [payload.new as Duel, ...prev]);
-        } else if (payload.eventType === 'UPDATE') {
-          setDuels((prev) => prev.map((d) => d.id === (payload.new as Duel).id ? (payload.new as Duel) : d));
-        } else if (payload.eventType === 'DELETE') {
-          setDuels((prev) => prev.filter((d) => d.id !== (payload.old as { id: string }).id));
-        }
-      })
-      .subscribe((status, err) => {
-        if (err) console.error('[useDuels] Realtime error:', status, err);
-      });
-
-    channelRef.current = channel;
-    return () => {
-      if (channelRef.current) { supabase.removeChannel(channelRef.current); channelRef.current = null; }
-    };
+    // Invitations, answers and results arrive as a server push on the room's
+    // private channel (105).
+    return onLive<Duel>(roomTopic(roomId), 'duels', (change) => {
+      if (change.eventType === 'INSERT') {
+        setDuels((prev) => [change.new, ...prev.filter((d) => d.id !== change.new.id)]);
+      } else if (change.eventType === 'UPDATE') {
+        setDuels((prev) => prev.some((d) => d.id === change.new.id)
+          ? prev.map((d) => (d.id === change.new.id ? change.new : d))
+          : [change.new, ...prev]);
+      } else if (change.eventType === 'DELETE') {
+        setDuels((prev) => prev.filter((d) => d.id !== change.old.id));
+      }
+    });
   }, [roomId]);
 
   const refetchDuels = useCallback(async (): Promise<void> => {
@@ -69,6 +60,12 @@ export function useDuels(roomId: string | null | undefined): UseDuelsReturn {
       .order('created_at', { ascending: false });
     if (data) setDuels(data as Duel[]);
   }, [roomId]);
+
+  // After the phone was away (locked, offline), fetch what was missed once.
+  useEffect(() => {
+    if (!roomId) return;
+    return onResync(() => { void refetchDuels(); });
+  }, [roomId, refetchDuels]);
 
   // Fetch ALL duels in the current room — needed so the Room History
   // section can show activity from other players too. The realtime
