@@ -18,7 +18,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // https://github.com/supabase/auth-js/issues/762
 const noopLock = async <R>(_name: string, _acquireTimeout: number, fn: () => Promise<R>): Promise<R> => fn()
 
+/**
+ * After a Realtime drop every phone reconnects. Without jitter they all
+ * retry on the same beat (1 s, 2 s, 5 s, 10 s) and hit the server together;
+ * each wait is spread over half to one and a half times its length (F10).
+ */
+export function reconnectAfterMs(tries: number): number {
+  const base = [1_000, 2_000, 5_000, 10_000][tries - 1] ?? 10_000
+  return Math.round(base * (0.5 + Math.random()))
+}
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  realtime: { reconnectAfterMs },
   auth: {
     lock: noopLock,
     persistSession: true,

@@ -168,6 +168,7 @@ select pg_temp.expect_denied($q$delete from public.cms_revisions where doc_id = 
 select pg_temp.expect_denied($q$insert into public.cms_revisions (doc_id, doc_type, data, kind) values ('t085-x', 'faq', '{}', 'seed')$q$, 'an admin inserts a revision directly');
 reset role;
 
-select pg_temp.expect_rows($q$select 1 from pg_publication_tables where pubname = 'supabase_realtime' and tablename = 'cms_documents'$q$, 1, 'cms_documents is in the realtime publication');
+-- Since 105 a save is pushed by a trigger (Broadcast), not read from the change log.
+select pg_temp.expect_rows($q$select 1 from pg_trigger where tgrelid = 'public.cms_documents'::regclass and tgname = 'rt_push'$q$, 1, 'a cms_documents save is pushed to the editors');
 
 rollback;

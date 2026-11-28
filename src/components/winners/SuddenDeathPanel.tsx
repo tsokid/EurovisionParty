@@ -23,7 +23,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { supabase } from '../../lib/supabase';
 import { onLive, roomTopic } from '../../lib/liveChannel';
-import { callWhenDue } from '../../lib/callWhenDue';
+import { callWhenDue, resolverDelayMs } from '../../lib/callWhenDue';
 import { useGameStore } from '../../stores/gameStore';
 import { Avatar } from '../stage';
 // Question bank is shipped as static JSON, not a Postgres table — same
@@ -200,18 +200,30 @@ export default function SuddenDeathPanel({
     return () => { live = false; };
   }, [activeId, needFetch]);
 
-  // ── Auto-fire resolve once all rounds + reveal time have passed ────────
+  // ── Resolve once all rounds + reveal time have passed ──────────────────
+  // The host's phone resolves at once; the others wait for the result to be
+  // pushed (the rounds turn 'completed') and resolve themselves only if it
+  // has not come by resolverDelayMs (F12).
   useEffect(() => {
     if (!isAfterAllRounds || resolveFiredRef.current) return;
-    resolveFiredRef.current = true;
-    void (async () => {
-      try {
-        const { error } = await callWhenDue(() => supabase.rpc('resolve_sudden_death_match', { p_match_id: matchId }));
-        if (error) throw error;
-        onResolved();
-      } catch (e) { setErr(errMsg(e)); }
-    })();
-  }, [isAfterAllRounds, matchId, onResolved]);
+    if (rounds.length > 0 && rounds.every((r) => r.status === 'completed')) {
+      resolveFiredRef.current = true;
+      onResolved();
+      return;
+    }
+    const timer = setTimeout(() => {
+      if (resolveFiredRef.current) return;
+      resolveFiredRef.current = true;
+      void (async () => {
+        try {
+          const { error } = await callWhenDue(() => supabase.rpc('resolve_sudden_death_match', { p_match_id: matchId }));
+          if (error) throw error;
+          onResolved();
+        } catch (e) { setErr(errMsg(e)); }
+      })();
+    }, resolverDelayMs(isHost));
+    return () => clearTimeout(timer);
+  }, [isAfterAllRounds, matchId, onResolved, isHost, rounds]);
 
   // ── Host: open the match ───────────────────────────────────────────────
   // The server draws the three questions, unseen by every tied player (099).

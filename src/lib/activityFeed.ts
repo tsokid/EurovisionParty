@@ -82,3 +82,18 @@ export function feedAge(at: string, now: number): { unit: 'now' | 'min' | 'hour'
   if (s < 3600) return { unit: 'min', n: Math.floor(s / 60) };
   return { unit: 'hour', n: Math.floor(s / 3600) };
 }
+
+/**
+ * When the feed must be reread (F11): it holds the viewer's own trivia and
+ * prediction points and every room duel decision. So it changes only when
+ * the viewer's total moves or anyone's duel points move — not on every
+ * other player's quiz answer, which used to make every phone in the room
+ * reread the feed on every answer.
+ */
+export function feedRefreshKey(
+  players: ReadonlyArray<{ id: string; total_points: number; duel_points: number }>,
+  myPlayerId: string | null | undefined,
+): string {
+  const mine = players.find((p) => p.id === myPlayerId)?.total_points ?? '';
+  return `${mine}#${players.map((p) => `${p.id}:${p.duel_points}`).join('|')}`;
+}

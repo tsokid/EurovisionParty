@@ -10,7 +10,7 @@ vi.mock('../../src/lib/supabase', () => ({
     from: () => ({
       select: () => ({ eq: () => ({ single: async () => ({ data: null, error: { code: 'PGRST116', message: '0 rows' } }) }) }),
     }),
-    auth: { getUser: async () => ({ data: { user: null } }) },
+    auth: { getSession: async () => ({ data: { session: null } }) },
   },
 }));
 

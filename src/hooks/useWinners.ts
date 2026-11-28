@@ -2,15 +2,20 @@ import { useCallback, useEffect, useState } from 'react';
 import { computeWinners, fetchWinners, type WinnerRow } from '../lib/winners';
 
 // One load per room for the session, shared by the final sequence, the final
-// screen and the reel: the host recomputes once (compute_winners deletes and
-// rewrites the rows, so two concurrent calls could read an empty table).
+// screen and the reel (the host computes only when there are none yet;
+// compute_winners deletes and rewrites the rows).
 const cache = new Map<string, Promise<WinnerRow[]>>();
 
 function load(roomId: string, isHost: boolean, force = false): Promise<WinnerRow[]> {
   const hit = cache.get(roomId);
   if (hit && !force) return hit;
   const p = (async () => {
-    if (isHost) await computeWinners(roomId).catch(() => {});
+    // Finalize already writes every room's winners (108), so the host
+    // computes them only when none exist yet (F9): recomputing would rewrite
+    // rows a tie vote or a sudden death has already settled.
+    const rows = await fetchWinners(roomId);
+    if (rows.length > 0 || !isHost) return rows;
+    await computeWinners(roomId).catch(() => {});
     return fetchWinners(roomId);
   })();
   cache.set(roomId, p);

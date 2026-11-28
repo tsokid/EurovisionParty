@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Room, Player, Notification, TabId, QuizAnswer } from '../lib/types';
+import { mergeNotification } from '../lib/phaseNotifications';
 
 /** Persisted quiz progress — survives tab switches (in-memory) */
 export interface QuizProgress {
@@ -82,11 +83,10 @@ export const useGameStore = create<GameState>()((set) => ({
 
   addNotification: (notif) =>
     set((state) => {
-      // Deduplication: skip if already exists
-      if (state.notifications.some((n) => n.id === notif.id)) return state;
-      // Cap at 100 notifications
-      const updated = [notif, ...state.notifications].slice(0, 100);
-      return { notifications: updated };
+      // Deduplicates, swaps the app's own phase entry for the stored row,
+      // caps at 100 (src/lib/phaseNotifications.ts).
+      const updated = mergeNotification(state.notifications, notif);
+      return updated === state.notifications ? state : { notifications: updated };
     }),
 
   markNotificationRead: (id) =>

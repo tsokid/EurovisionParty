@@ -2,7 +2,7 @@
 // and reload restore it, the breadcrumb and "View live" follow the screen,
 // and the unsaved-edits guard asks before a route change, sign-out or unload.
 // The modules are stand-ins that show the selection the route passes in.
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act, within } from '@testing-library/react';
 import { useState } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
@@ -90,6 +90,14 @@ const crumbs = () => within(screen.getByRole('navigation', { name: 'Διαδρο
 
 afterEach(() => {
   vi.restoreAllMocks();
+});
+
+// The menu's sections open and close (28 Nov 2026); these tests click links
+// in every section, so they start as a user who has opened them all.
+beforeEach(() => {
+  localStorage.setItem('admin-nav-open', JSON.stringify({
+    site: true, pages: true, contests: true, game: true, media: true, settings: true,
+  }));
 });
 
 describe('admin URLs', () => {

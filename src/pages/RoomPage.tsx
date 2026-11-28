@@ -31,7 +31,7 @@ export function RoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
   const { room, advancePhase, refetchRoom, leaveRoom } = useRoom();
-  const { room: storeRoom, player, players, activeTab, setActiveTab, isReconnecting } = useGameStore();
+  const { room: storeRoom, player, players, activeTab, setActiveTab } = useGameStore();
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
 
@@ -79,8 +79,8 @@ export function RoomPage() {
   // Subscribe to leaderboard and notifications when in a room
   const roomId = storeRoom?.id ?? '';
   const playerId = player?.id ?? '';
-  const { refetchPlayers } = useLeaderboard(roomId);
-  const { refetchNotifications } = useNotifications(playerId);
+  useLeaderboard(roomId);
+  useNotifications(playerId);
 
   // Play Eurovision intro once when the game enters the 'final' phase
   const finalPlayedRef = useRef(false);
@@ -119,14 +119,9 @@ export function RoomPage() {
   const phaseBanner = usePhaseBanner(storeRoom?.phase);
   const banner = <><PhaseBanner phase={phaseBanner.shown} onDismiss={phaseBanner.dismiss} /><IncomingChallenge /></>;
 
-  // Catch-up fetch: when isReconnecting transitions true→false, refetch all state
-  const prevReconnectingRef = useRef(false);
-  useEffect(() => {
-    if (prevReconnectingRef.current && !isReconnecting) {
-      Promise.all([refetchRoom(), refetchPlayers(), refetchNotifications()]);
-    }
-    prevReconnectingRef.current = isReconnecting;
-  }, [isReconnecting, refetchRoom, refetchPlayers, refetchNotifications]);
+  // After a drop, the catch-up runs once from the channel's rejoin
+  // (resync.ts: room, standings, notifications, duels), spread over a few
+  // seconds across phones.
 
   // Redirect based on rejoin status
   useEffect(() => {

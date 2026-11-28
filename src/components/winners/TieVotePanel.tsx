@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Crown } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { onLive, roomTopic } from '../../lib/liveChannel';
-import { callWhenDue } from '../../lib/callWhenDue';
+import { callWhenDue, resolverDelayMs } from '../../lib/callWhenDue';
 import { useGameStore } from '../../stores/gameStore';
 import type { WinnerCategory } from '../../lib/winners';
 import { useTranslation } from 'react-i18next';
@@ -95,11 +95,19 @@ export default function TieVotePanel({ roomId, isHost, category, tiedPlayerNames
     return () => { if (tickRef.current) clearInterval(tickRef.current); };
   }, [vote?.id, vote?.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // The host's phone counts the vote when it closes; the others count it
+  // only if no result has been pushed by resolverDelayMs (F12). A pushed
+  // result changes `vote`, which cancels the wait.
   useEffect(() => {
     if (!vote || vote.status !== 'active' || remaining > 0 || tallyFiredRef.current) return;
-    tallyFiredRef.current = true;
-    void callWhenDue(() => supabase.rpc('tally_tie_vote', { p_vote_id: vote.id }));
-  }, [remaining, vote]);
+    const voteId = vote.id;
+    const timer = setTimeout(() => {
+      if (tallyFiredRef.current) return;
+      tallyFiredRef.current = true;
+      void callWhenDue(() => supabase.rpc('tally_tie_vote', { p_vote_id: voteId }));
+    }, resolverDelayMs(isHost));
+    return () => clearTimeout(timer);
+  }, [remaining, vote, isHost]);
 
   // Robust error → string. Supabase RPC errors are PostgrestError objects
   // (plain objects, NOT Error instances) so the previous

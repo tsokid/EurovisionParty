@@ -52,7 +52,10 @@ export function useRejoin(roomCode: string | undefined) {
         }
 
         // 2. Try auth-based lookup first
-        const { data: { user } } = await supabase.auth.getUser();
+        // The session already on the phone: no auth request (F7). Row
+        // security on the server still checks it on every read.
+        const { data: { session } } = await supabase.auth.getSession();
+        const user = session?.user ?? null;
         let playerData: Player | null = null;
         let statusColumnExists = true;
 
@@ -115,15 +118,10 @@ export function useRejoin(roomCode: string | undefined) {
               fbData = data as Player | null;
             }
 
-            playerData = fbData;
-
-            if (playerData && user && playerData.user_id !== user.id) {
-              await supabase
-                .from('players')
-                .update({ user_id: user.id })
-                .eq('id', playerData.id);
-              playerData.user_id = user.id;
-            }
+            // A saved player of another account is never taken over: the
+            // database refuses to move a player row to a new user (051), so
+            // such a row is treated as not this phone's.
+            playerData = fbData && user && fbData.user_id === user.id ? fbData : null;
           }
         }
 

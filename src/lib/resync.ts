@@ -21,22 +21,29 @@ let hiddenAt: number | null = null;
 let pending: ReturnType<typeof setTimeout> | null = null;
 let wired = false;
 
-export function triggerResync(): void {
+/**
+ * A rejoin after a drop happens on every phone at once (a Realtime restart),
+ * so its catch-up is spread over this window; a phone coming back on its
+ * own catches up at once.
+ */
+const REJOIN_SPREAD_MS = 3_000;
+
+export function triggerResync(delayMs = 0): void {
   if (pending !== null) return;
   pending = setTimeout(() => {
     pending = null;
     for (const fn of [...listeners]) {
       try { fn(); } catch (err) { console.error('[resync]', err); }
     }
-  }, 0);
+  }, delayMs);
 }
 
 let lastRun = 0;
-function trigger(): void {
+function trigger(delayMs = 0): void {
   const now = Date.now();
   if (now - lastRun < MERGE_MS) return;
   lastRun = now;
-  triggerResync();
+  triggerResync(delayMs);
 }
 
 function wire(): void {
@@ -48,7 +55,7 @@ function wire(): void {
     hiddenAt = null;
     if (away >= HIDDEN_MIN_MS) trigger();
   });
-  window.addEventListener('online', trigger);
+  window.addEventListener('online', () => trigger());
 }
 
 /** Runs `fn` on every catch-up. Returns the cleanup for a useEffect. */
@@ -66,7 +73,7 @@ export function rejoinWatcher(): (status: string) => void {
   let joinedOnce = false;
   return (status: string) => {
     if (status !== 'SUBSCRIBED') return;
-    if (joinedOnce) trigger();
+    if (joinedOnce) trigger(Math.floor(Math.random() * REJOIN_SPREAD_MS));
     joinedOnce = true;
   };
 }

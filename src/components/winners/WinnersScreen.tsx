@@ -28,6 +28,7 @@ import { useLeaderboard } from '../../hooks/useLeaderboard';
 import { useWinners } from '../../hooks/useWinners';
 import { useChampionVote } from '../../hooks/useChampionVote';
 import { useActivityFeed } from '../../hooks/useActivityFeed';
+import { feedRefreshKey } from '../../lib/activityFeed';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { Avatar, PlayerAvatar } from '../stage';
 import type { Player } from '../../lib/types';
@@ -47,7 +48,7 @@ export default function WinnersScreen({ roomId, isHost, playerNameById }: Props)
   const championVote = useChampionVote(roomId);
   const desktop = useMediaQuery('(min-width: 1024px)');
   const ranked = rankOrder(players);
-  const feed = useActivityFeed(roomId, me?.id, ranked.map((p) => `${p.id}:${p.total_points}`).join('|'));
+  const feed = useActivityFeed(roomId, me?.id, feedRefreshKey(players, me?.id));
   const now = useNow();
   const [reelFor, setReelFor] = useState<Player | null>(null);
   const [tv, setTv] = useState(false);

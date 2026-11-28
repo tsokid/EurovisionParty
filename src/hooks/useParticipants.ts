@@ -50,6 +50,42 @@ export interface UseParticipants {
 
 const COLUMNS = "iso, name_en, name_el, artist, song, final_running_order";
 
+/**
+ * One read per year per page load (F13): the line-up is the same for every
+ * player and every screen of the night, so the screens share it instead of
+ * each asking the database. An empty or failed read is not kept, so the
+ * next screen tries again.
+ */
+const cache = new Map<number | "live", Promise<DbRow[] | null>>();
+
+function lineup(year: number | undefined): Promise<DbRow[] | null> {
+  const key = year ?? "live";
+  const hit = cache.get(key);
+  if (hit) return hit;
+  const query =
+    year === undefined
+      ? supabase.from("current_participants").select(COLUMNS).order("name_en")
+      : supabase
+          .from("entries_with_names")
+          .select(COLUMNS)
+          .eq("year", year)
+          .eq("in_final", true)
+          .order("name_en");
+  const p = Promise.resolve(query).then(
+    ({ data, error }) => {
+      const rows = !error && Array.isArray(data) && data.length > 0 ? (data as DbRow[]) : null;
+      if (!rows) cache.delete(key);
+      return rows;
+    },
+    () => { cache.delete(key); return null; },
+  );
+  cache.set(key, p);
+  return p;
+}
+
+/** Tests only. */
+export function __resetParticipantsCache(): void { cache.clear(); }
+
 export function useParticipants(year?: number): UseParticipants {
   // The loaded lineup, tagged with the year it was loaded for, so a year
   // change reads as loading until the new lineup arrives.
@@ -62,20 +98,11 @@ export function useParticipants(year?: number): UseParticipants {
 
   useEffect(() => {
     let cancelled = false;
-    const query =
-      year === undefined
-        ? supabase.from("current_participants").select(COLUMNS).order("name_en")
-        : supabase
-            .from("entries_with_names")
-            .select(COLUMNS)
-            .eq("year", year)
-            .eq("in_final", true)
-            .order("name_en");
-    query.then(({ data, error }) => {
+    void lineup(year).then((rows) => {
       if (cancelled) return;
       const k = year ?? "live";
-      if (!error && Array.isArray(data) && data.length > 0) {
-        setLoaded({ key: k, participants: (data as DbRow[]).map(fromDbRow), source: "db" });
+      if (rows) {
+        setLoaded({ key: k, participants: rows.map(fromDbRow), source: "db" });
       } else if (year === undefined || year === 2026) {
         // Empty or query error — fall back so 2026 flows still work
         // while the parser hasn't published yet.

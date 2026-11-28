@@ -24,7 +24,8 @@ export type LiveTable =
   | 'tie_votes' | 'tie_vote_choices' | 'sudden_death_rounds' | 'sudden_death_answers';
 
 export interface LiveChange<T = Record<string, unknown>> {
-  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+  /** REFRESH: a bulk job (Finalize, 108) changed many rows; reread them. */
+  eventType: 'INSERT' | 'UPDATE' | 'DELETE' | 'REFRESH';
   new: T;
   old: Partial<T>;
 }

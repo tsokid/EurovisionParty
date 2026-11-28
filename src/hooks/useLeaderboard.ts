@@ -49,13 +49,18 @@ export function useLeaderboard(roomId: string | null | undefined): UseLeaderboar
   useEffect(() => {
     if (!roomId) return;
 
-    fetchPlayers();
+    // Screens that mount together (room page, board) share one first read.
+    scheduleFetch(roomId, () => { void fetchPlayers(); }, 0);
 
     // Scores, joins and leaves arrive as a server push on the room's private
     // channel (105). A catch-up refetch runs after the phone was away.
     const offLive = onLive<Player>(roomTopic(roomId), 'players', (change) => {
       const current = useGameStore.getState().players;
-      if (change.eventType === 'UPDATE' && change.new.is_active && current.some((p) => p.id === change.new.id)) {
+      if (change.eventType === 'REFRESH') {
+        // Finalize scored the whole room at once (108). Every phone of every
+        // room gets this together, so spread the rereads over 3 s.
+        scheduleFetch(roomId, () => { void fetchPlayers(); }, Math.floor(Math.random() * 3_000));
+      } else if (change.eventType === 'UPDATE' && change.new.is_active && current.some((p) => p.id === change.new.id)) {
         // Incremental update: replace the changed player in-place
         setPlayers(current.map((p) => (p.id === change.new.id ? change.new : p)));
       } else {

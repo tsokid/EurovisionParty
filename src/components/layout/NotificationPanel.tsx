@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../stores/gameStore';
-import { useNotifications } from '../../hooks/useNotifications';
+import { useNotificationActions } from '../../hooks/useNotifications';
 
 interface NotificationPanelProps {
   open: boolean;
@@ -98,8 +98,9 @@ function useTimeAgo() {
 
 export default function NotificationPanel({ open, onClose }: NotificationPanelProps) {
   const { t } = useTranslation();
-  const { notifications, player, setActiveTab } = useGameStore();
-  const { markAsRead, markAllRead } = useNotifications(player?.id);
+  const { notifications, setActiveTab } = useGameStore();
+  // The room page runs the one notification feed; the panel only marks read.
+  const { markAsRead, markAllRead } = useNotificationActions();
   const formatNotification = useFormatNotification();
   const timeAgo = useTimeAgo();
 

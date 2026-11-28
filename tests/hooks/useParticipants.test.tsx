@@ -33,11 +33,12 @@ vi.mock('../../src/lib/supabase', () => ({
   },
 }));
 
-import { useParticipants } from '../../src/hooks/useParticipants';
+import { useParticipants, __resetParticipantsCache } from '../../src/hooks/useParticipants';
 
 describe('useParticipants', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    __resetParticipantsCache();
   });
 
   it('maps view rows to Country with Greek names', async () => {

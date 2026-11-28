@@ -18,7 +18,7 @@ import { useLeaderboard } from '../../hooks/useLeaderboard';
 import { useActivityFeed } from '../../hooks/useActivityFeed';
 import { useGameStore } from '../../stores/gameStore';
 import { rankOrder, diffRanks } from '../../lib/rankMoves';
-import { feedAge, type FeedEvent } from '../../lib/activityFeed';
+import { feedAge, feedRefreshKey, type FeedEvent } from '../../lib/activityFeed';
 import { PlayerAvatar, useCountUp } from '../stage';
 import { StageVfx, type StageVfxHandle } from '../stage/vfx';
 import type { Player } from '../../lib/types';
@@ -74,10 +74,9 @@ export default function LeaderboardScreen() {
   const ranked = useMemo(() => rankOrder(players), [players]);
   const order = ranked.map((p) => p.id);
   const orderKey = order.join('|');
-  const totalsKey = ranked.map((p) => `${p.id}:${p.total_points}`).join('|');
   const nameOf = (id: string | null | undefined) => players.find((p) => p.id === id)?.name ?? '—';
 
-  const feed = useActivityFeed(room?.id, me?.id, totalsKey);
+  const feed = useActivityFeed(room?.id, me?.id, feedRefreshKey(players, me?.id));
 
   // ── Movement: ↑↓ chips, overtake toast + spark ──
   const prevOrder = useRef<string[] | null>(null);

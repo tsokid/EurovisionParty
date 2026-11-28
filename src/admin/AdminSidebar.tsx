@@ -3,8 +3,13 @@
 // Game, Media, Settings. Screens whose content is not CMS-backed yet carry
 // the phase they arrive in. Every entry is a link, so it opens in a new tab,
 // and the active one follows the URL.
+//
+// Every section, and the Pages list, opens and closes (28 Nov 2026, the
+// owner: "I can't have them all open all the time"). The section of the
+// open screen starts open; what the owner opens or closes is remembered on
+// this browser.
 import clsx from 'clsx';
-import { useState, type ComponentType } from 'react';
+import { useCallback, useState, type ComponentType, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Activity, Award, CalendarDays, ChevronRight, FileText, Image, LayoutDashboard,
@@ -40,12 +45,14 @@ interface Item {
   later?: string;
 }
 
-const SECTIONS: Array<{ title: string; items: Item[] }> = [
+const SECTIONS: Array<{ key: string; title: string; items: Item[] }> = [
   {
+    key: 'contests',
     title: t.nav.contests,
     items: [{ label: t.nav.yearsEntries, to: adminPaths.contests(), icon: CalendarDays }],
   },
   {
+    key: 'game',
     title: t.nav.game,
     items: [
       { label: t.nav.monitor, to: adminPaths.monitor(), icon: Activity },
@@ -56,10 +63,12 @@ const SECTIONS: Array<{ title: string; items: Item[] }> = [
     ],
   },
   {
+    key: 'media',
     title: t.nav.media,
     items: [{ label: t.nav.mediaLibrary, to: adminPaths.media(), icon: Image }],
   },
   {
+    key: 'settings',
     title: t.nav.settings,
     items: [
       { label: t.nav.siteSettings, to: adminPaths.settings(), icon: Settings, end: true, docId: 'site-settings' },
@@ -98,8 +107,46 @@ function NavItem({ item }: { item: Item }) {
   );
 }
 
-function SectionTitle({ children }: { children: string }) {
-  return <h2 className="t-eyebrow px-2.5 pt-5 pb-1.5 text-[11px]">{children}</h2>;
+// ── Open / closed, remembered per browser ──────────────────────────────
+const STORE_KEY = 'admin-nav-open';
+function readOpen(): Record<string, boolean> {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) ?? '{}') as Record<string, boolean>; } catch { return {}; }
+}
+function useOpenState() {
+  const [open, setOpen] = useState<Record<string, boolean>>(readOpen);
+  const isOpen = useCallback((key: string, fallback: boolean) => open[key] ?? fallback, [open]);
+  const toggle = useCallback((key: string, fallback: boolean) => {
+    setOpen((prev) => {
+      const next = { ...prev, [key]: !(prev[key] ?? fallback) };
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(next)); } catch { /* private mode */ }
+      return next;
+    });
+  }, []);
+  return { isOpen, toggle };
+}
+
+/** A section heading that opens and closes its list. */
+function Section({ id, title, expanded, onToggle, children }: {
+  id: string; title: string; expanded: boolean; onToggle: () => void; children: ReactNode;
+}) {
+  const listId = `admin-nav-${id}`;
+  return (
+    <div>
+      <h2 className="pt-5 pb-1.5">
+        <button
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={listId}
+          onClick={onToggle}
+          className="t-eyebrow flex w-full items-center gap-1.5 rounded-stage-sm px-2.5 text-left text-[11px] hover:text-stage-text cursor-pointer"
+        >
+          <ChevronRight size={12} aria-hidden className={clsx('shrink-0 transition-transform', expanded && 'rotate-90')} />
+          {title}
+        </button>
+      </h2>
+      {expanded && <div id={listId}>{children}</div>}
+    </div>
+  );
 }
 
 /** Pages, grouped by where they appear; the group of the open page starts expanded. */
@@ -153,9 +200,16 @@ function PagesTree() {
   );
 }
 
+const under = (pathname: string, base: string) => pathname === base || pathname.startsWith(`${base}/`);
+
 export default function AdminSidebar() {
   const { pathname } = useLocation();
-  const inFooter = pathname === adminPaths.footer() || pathname.startsWith(`${adminPaths.footer()}/`);
+  const inFooter = under(pathname, adminPaths.footer());
+  const inPages = under(pathname, adminPaths.pages());
+  const inSite = inFooter || inPages || under(pathname, adminPaths.header());
+  const { isOpen, toggle } = useOpenState();
+  const siteOpen = isOpen('site', inSite);
+  const pagesOpen = isOpen('pages', inPages);
 
   return (
     <nav aria-label={t.shell.nav} className="px-3 pb-6">
@@ -164,7 +218,7 @@ export default function AdminSidebar() {
         <NavItem item={{ label: t.nav.publish, to: adminPaths.publish(), icon: Rocket }} />
       </div>
 
-      <SectionTitle>{t.nav.site}</SectionTitle>
+      <Section id="site" title={t.nav.site} expanded={siteOpen} onToggle={() => toggle('site', inSite)}>
       <ul className="space-y-0.5">
         <li><NavItem item={{ label: t.nav.header, to: adminPaths.header(), icon: PanelTop, docId: 'site-header' }} /></li>
         <li>
@@ -182,21 +236,38 @@ export default function AdminSidebar() {
           )}
         </li>
         <li>
-          <NavItem item={{ label: t.nav.pages, to: adminPaths.pages(), icon: FileText, end: true }} />
-          <PagesTree />
+          <div className="flex items-center">
+            <div className="min-w-0 flex-1">
+              <NavItem item={{ label: t.nav.pages, to: adminPaths.pages(), icon: FileText, end: true }} />
+            </div>
+            <button
+              type="button"
+              aria-expanded={pagesOpen}
+              aria-controls="admin-nav-pages-tree"
+              aria-label={t.nav.pages}
+              onClick={() => toggle('pages', inPages)}
+              className="grid size-9 shrink-0 place-items-center rounded-stage-sm text-stage-text-3 hover:bg-stage-surface hover:text-stage-text cursor-pointer"
+            >
+              <ChevronRight size={14} aria-hidden className={clsx('transition-transform', pagesOpen && 'rotate-90')} />
+            </button>
+          </div>
+          {pagesOpen && <div id="admin-nav-pages-tree"><PagesTree /></div>}
         </li>
       </ul>
+      </Section>
 
-      {SECTIONS.map((s) => (
-        <div key={s.title}>
-          <SectionTitle>{s.title}</SectionTitle>
-          <ul className="space-y-0.5">
-            {s.items.map((item) => (
-              <li key={item.to}><NavItem item={item} /></li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {SECTIONS.map((s) => {
+        const here = s.items.some((item) => under(pathname, item.to));
+        return (
+          <Section key={s.key} id={s.key} title={s.title} expanded={isOpen(s.key, here)} onToggle={() => toggle(s.key, here)}>
+            <ul className="space-y-0.5">
+              {s.items.map((item) => (
+                <li key={item.to}><NavItem item={item} /></li>
+              ))}
+            </ul>
+          </Section>
+        );
+      })}
     </nav>
   );
 }
