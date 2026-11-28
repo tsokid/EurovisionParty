@@ -10,6 +10,7 @@ import { useLocale } from '../lib/seo/LocaleContext';
 import { localizePath } from '../lib/seo/locale';
 import { usePageContent } from '../lib/cms/usePageContent';
 import { mergeFaqJsonLd } from '../components/cms/extraFaq';
+import { buildOrganization, buildWebSite } from '../lib/seo/schema';
 import type { HomeContent } from '../../supabase/functions/_shared/cms/schemas/home';
 import { interpolate } from '../../supabase/functions/_shared/cms/placeholders';
 import { useCurrentYear } from '../lib/currentContest';
@@ -49,8 +50,9 @@ export function HomePage() {
   // Rendered in every state so the prerendered (auth-loading) HTML carries
   // the home page's head tags too.
   // Only the FAQ blocks of extraBlocks add JSON-LD; without them there is none, as before.
-  const faqLd = doc ? mergeFaqJsonLd([], doc.extraBlocks) : [];
-  const homeJsonLd = faqLd.length ? faqLd : undefined;
+  // The home page carries the site's Organization and WebSite (from the CMS
+  // settings), plus the FAQ blocks of extraBlocks.
+  const homeJsonLd = doc ? mergeFaqJsonLd([buildOrganization(), buildWebSite()], doc.extraBlocks) : undefined;
   const seo = doc && (
     <PageSeo
       pageId="home"

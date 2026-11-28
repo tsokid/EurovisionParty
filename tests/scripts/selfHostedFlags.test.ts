@@ -42,8 +42,10 @@ describe('self-hosted flags', () => {
 
   it('vercel answers a missing flag with a 404, not the SPA shell', () => {
     const cfg = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8'));
-    const spa = cfg.rewrites.find((r: { destination: string }) => r.destination === '/index.html' || r.destination === '/');
-    expect(spa.source).toContain('flags/');
+    // Only /room and /admin get the SPA shell (28 Nov 2026); nothing else does.
+    for (const r of cfg.rewrites as Array<{ source: string }>) {
+      expect(new RegExp('^' + r.source + '$').test('/flags/xx.png'), r.source).toBe(false);
+    }
   });
 });
 

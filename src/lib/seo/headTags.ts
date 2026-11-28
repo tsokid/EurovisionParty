@@ -61,12 +61,19 @@ export function headTagsHtml(input: HeadInput): string {
     metaProp('og:title', title),
     metaProp('og:description', description),
     metaProp('og:type', ogType ?? 'website'),
+    metaProp('og:site_name', siteSettings().siteName),
     metaProp('og:image', image),
     metaName('twitter:image', image),
     metaName('twitter:card', 'summary_large_image'),
     metaName('twitter:title', twitterTitle ?? title),
     metaName('twitter:description', twitterDescription ?? description),
   ];
+  // The default share image is 1200×630 (public/share.jpg); networks lay it
+  // out without fetching it first when they know its size.
+  if (image === siteSettings().defaultOgImage && image.endsWith('/share.jpg')) {
+    out.push(metaProp('og:image:width', '1200'), metaProp('og:image:height', '630'),
+      metaProp('og:image:alt', siteSettings().siteName));
+  }
   if (canonical) out.push(metaProp('og:url', canonical));
   if (robots) out.push(metaName('robots', robots));
   if (ogLocale) out.push(metaProp('og:locale', ogLocale));

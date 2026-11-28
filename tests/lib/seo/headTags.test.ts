@@ -23,8 +23,11 @@ describe('headTagsHtml', () => {
   it('defaults og:type and og:image', () => {
     const html = headTagsHtml(base);
     expect(html).toContain('<meta property="og:type" content="website">');
-    expect(html).toContain('<meta property="og:image" content="https://eurovision.games/logo.png">');
-    expect(html).toContain('<meta name="twitter:image" content="https://eurovision.games/logo.png">');
+    expect(html).toContain('<meta property="og:image" content="https://eurovision.games/share.jpg">');
+    expect(html).toContain('<meta name="twitter:image" content="https://eurovision.games/share.jpg">');
+    expect(html).toContain('<meta property="og:image:width" content="1200">');
+    expect(html).toContain('<meta property="og:image:height" content="630">');
+    expect(html).toContain('<meta property="og:site_name" content="Eurovision Games">');
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image">');
     expect(html).toContain('<link rel="canonical" href="https://eurovision.games/en/x">');
   });

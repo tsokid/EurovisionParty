@@ -76,15 +76,16 @@ describe('vercel.json', () => {
     expect(content!.headers).toEqual([{ key: 'X-Robots-Tag', value: 'noindex' }])
   })
 
-  it('SPA rewrite falls back outside locale prefixes only', () => {
-    expect(cfg.rewrites).toHaveLength(1)
-    const rw = cfg.rewrites[0]
-    expect(rw.destination).toBe('/')
-    const re = new RegExp('^' + rw.source + '$')
-    for (const p of ['/room/ABCD', '/admin', '/how-to-play', '/online-games', '/']) {
+  it('only the app routes (/room, /admin) get the SPA shell; any other unknown URL is a real 404', () => {
+    // 28 Nov 2026: an unknown unprefixed URL used to get the shell with a 200
+    // (a soft 404 with the old 2026 meta). Now it falls through to 404.html.
+    for (const rw of cfg.rewrites) expect(rw.destination).toBe('/')
+    const res = cfg.rewrites.map((rw: { source: string }) => new RegExp('^' + rw.source + '$'))
+    const re = { test: (p: string) => res.some((r: RegExp) => r.test(p)) }
+    for (const p of ['/room/ABCD', '/admin', '/admin/game/questions']) {
       expect(re.test(p), p).toBe(true)
     }
-    for (const p of ['/en/no-such-page', '/el/faq']) {
+    for (const p of ['/en/no-such-page', '/el/faq', '/no-such-page', '/how-to-play', '/', '/rooms', '/administrator']) {
       expect(re.test(p), p).toBe(false)
     }
     // Missing content files 404 instead of falling back to the SPA shell,
@@ -104,13 +105,8 @@ describe('vercel.json', () => {
     for (const p of ['/assets/index-Dr2oFYNP.css', '/assets/AdminRoute-x.js', '/fonts/manrope-v23-latin.woff2', '/avatars/img-99-96.webp']) {
       expect(re.test(p), p).toBe(false)
     }
-    for (const p of ['/mediakit', '/media']) {
-      expect(re.test(p), p).toBe(true)
-    }
-    // Exact /en and /el match the rewrite, which is fine: Vercel checks the
-    // filesystem before rewrites, so the prerendered en.html / el.html wins.
-    for (const p of ['/en', '/el']) {
-      expect(re.test(p), p).toBe(true)
+    for (const p of ['/mediakit', '/media', '/en', '/el']) {
+      expect(re.test(p), p).toBe(false)
     }
   })
 

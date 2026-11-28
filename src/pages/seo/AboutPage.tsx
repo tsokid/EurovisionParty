@@ -31,7 +31,7 @@ export default function AboutPage() {
     '@type': 'Organization',
     name: settings.organization.name,
     url: 'https://eurovision.games',
-    logo: settings.defaultOgImage,
+    logo: settings.organization.logo,
     description: c.meta.organizationDescription,
     sameAs: sameAsOf(settings),
   };

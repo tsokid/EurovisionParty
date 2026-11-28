@@ -1,9 +1,9 @@
 {
   "el": {
     "contactEmail": "hello@eurovision.games",
-    "defaultOgImage": "https://eurovision.games/logo.png",
+    "defaultOgImage": "https://eurovision.games/share.jpg",
     "organization": {
-      "logo": "https://eurovision.games/icon-512.png",
+      "logo": "https://eurovision.games/logo.png",
       "name": "Eurovision Games"
     },
     "siteName": "Eurovision Games",
@@ -11,9 +11,9 @@
   },
   "en": {
     "contactEmail": "hello@eurovision.games",
-    "defaultOgImage": "https://eurovision.games/logo.png",
+    "defaultOgImage": "https://eurovision.games/share.jpg",
     "organization": {
-      "logo": "https://eurovision.games/icon-512.png",
+      "logo": "https://eurovision.games/logo.png",
       "name": "Eurovision Games"
     },
     "siteName": "Eurovision Games",

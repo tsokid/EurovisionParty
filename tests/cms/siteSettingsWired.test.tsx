@@ -44,8 +44,10 @@ describe('site settings are read by the site', { timeout: 60_000 }, () => {
   it('the committed values are the ones the pages always rendered', () => {
     expect(committed.en).toMatchObject({
       siteName: 'Eurovision Games',
-      defaultOgImage: 'https://eurovision.games/logo.png',
-      organization: { name: 'Eurovision Games', logo: 'https://eurovision.games/icon-512.png' },
+      // 28 Nov 2026: the 1200×630 share image, and the logo that exists
+      // (icon-512.png never did).
+      defaultOgImage: 'https://eurovision.games/share.jpg',
+      organization: { name: 'Eurovision Games', logo: 'https://eurovision.games/logo.png' },
       socialProfiles: [],
     });
   });
@@ -56,7 +58,8 @@ describe('site settings are read by the site', { timeout: 60_000 }, () => {
       const about = await page('/en/about');
       expect(about.head).toContain('<meta property="og:image" content="https://cdn.example.org/share.png"');
       const org = about.jsonLd.find((j) => j['@type'] === 'Organization')!;
-      expect(org).toMatchObject({ name: 'Party Org', sameAs: ['https://instagram.com/europarty'], logo: 'https://cdn.example.org/share.png' });
+      // The Organization logo is the logo setting, not the share image (28 Nov 2026).
+      expect(org).toMatchObject({ name: 'Party Org', sameAs: ['https://instagram.com/europarty'], logo: 'https://cdn.example.org/square.png' });
       expect(about.html).toContain('aria-label="Euro Party Games — home"');
       expect(about.html).not.toContain('Eurovision Games — home');
 
@@ -65,7 +68,7 @@ describe('site settings are read by the site', { timeout: 60_000 }, () => {
       expect(article).toMatchObject({
         image: 'https://cdn.example.org/share.png',
         author: { name: 'Party Org' },
-        publisher: { name: 'Party Org', logo: { url: 'https://cdn.example.org/share.png' } },
+        publisher: { name: 'Party Org', logo: { url: 'https://cdn.example.org/square.png' } },
       });
     } finally {
       use(committed.en);

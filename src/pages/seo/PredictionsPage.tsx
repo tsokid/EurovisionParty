@@ -375,7 +375,7 @@ export default function PredictionsPage() {
     publisher: {
       '@type': 'Organization',
       name: settings.organization.name,
-      logo: { '@type': 'ImageObject', url: settings.defaultOgImage },
+      logo: { '@type': 'ImageObject', url: settings.organization.logo },
     },
     datePublished: PUBLISHED,
     dateModified: MODIFIED,

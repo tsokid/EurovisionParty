@@ -1691,7 +1691,11 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!en/|el/|content/|media/|_seo/|assets/|fonts/|avatars/|flags/).*)",
+      "source": "/(room|admin)",
+      "destination": "/"
+    },
+    {
+      "source": "/(room|admin)/(.*)",
       "destination": "/"
     }
   ],

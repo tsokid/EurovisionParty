@@ -108,8 +108,9 @@ describe('schema builders', () => {
     expect(i.itemListElement[1].position).toBe(2);
   });
 
-  it('buildWebSite includes SearchAction', () => {
+  it('buildWebSite has no SearchAction (the site has no search page)', () => {
     const w = buildWebSite();
-    expect(w.potentialAction['@type']).toBe('SearchAction');
+    expect(w).not.toHaveProperty('potentialAction');
+    expect(w.publisher).toEqual({ '@id': 'https://eurovision.games#organization' });
   });
 });
