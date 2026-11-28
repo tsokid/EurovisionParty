@@ -17,6 +17,7 @@ import EurovisionParser from './modules/EurovisionParser';
 import PhaseMonitor from './modules/PhaseMonitor';
 import Questions from './modules/questions/Questions';
 import SuperAdmins from './modules/SuperAdmins';
+import DbSize from './modules/overview/DbSize';
 import { PublishBar } from './modules/contests/PublishBar';
 import { usePublisher } from './modules/contests/publish';
 import { PUBLISH_PAGES_TEXT, SITE_PAGES } from './modules/pages/sitePages';
@@ -79,6 +80,7 @@ function Overview() {
           </li>
         ))}
       </ul>
+      <DbSize />
     </div>
   );
 }

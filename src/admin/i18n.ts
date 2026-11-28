@@ -107,6 +107,12 @@ export const t = {
 
   overview: {
     title: 'Επισκόπηση',
+    dbSize: {
+      title: 'Μέγεθος βάσης δεδομένων',
+      loading: 'Υπολογίζεται…',
+      value: (size: string) => `Τώρα: ${size}`,
+      limits: 'Όριο: 500 MB στο Free, 8 GB στο Pro.',
+    },
     start: [
       { key: 'pages', title: 'Σελίδες', text: 'Τα κείμενα κάθε σελίδας του site, σε English και Ελληνικά.' },
       { key: 'contests', title: 'Διαγωνισμοί', text: 'Οι χρονιές του διαγωνισμού, η πορεία τους και οι συμμετοχές.' },
