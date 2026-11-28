@@ -171,6 +171,11 @@
         "topic": "results"
       },
       {
+        "q": "Άλλαξε η πολιτική απορρήτου;",
+        "a": "28 Νοεμβρίου 2026: μόνο διορθώσεις. Οι γραμματοσειρές και οι σημαίες φορτώνουν πλέον από τον δικό μας server, και αναφέρουμε το Resend, που στέλνει τον κωδικό σύνδεσης μόνο στους διαχειριστές. Τα δεδομένα των παικτών δεν άλλαξαν.",
+        "topic": "results"
+      },
+      {
         "a": "Ναι. Μπορείς να φτιάξεις έως 10 δωμάτια την ώρα και καθένα εμφανίζεται στην ενότητα \"Τα Δωμάτιά σου\" στην αρχική σελίδα.",
         "q": "Μπορώ να φιλοξενήσω παραπάνω από ένα δωμάτιο;",
         "topic": "start"
@@ -385,6 +390,11 @@
       {
         "a": "Stored on Supabase (Postgres + auth). See the Privacy page for retention details.",
         "q": "Where does my data go?",
+        "topic": "results"
+      },
+      {
+        "q": "Has the privacy policy changed?",
+        "a": "28 November 2026: corrections only. Fonts and flags now load from our own server, and we name Resend, which sends the sign-in code to administrators only. Nothing changed for players' data.",
         "topic": "results"
       },
       {

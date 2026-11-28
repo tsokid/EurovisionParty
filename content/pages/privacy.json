@@ -36,7 +36,7 @@
     },
     "hero": {
       "chip": "Απόρρητο",
-      "lede": "Το Eurovision Games είναι ένα δωρεάν party game μέσα στον browser. Δεν πουλάμε δεδομένα, δεν προβάλλουμε διαφημίσεις τρίτων και συλλέγουμε το ελάχιστο που χρειάζεται για να δουλεύει το παιχνίδι. Τελευταία ενημέρωση: 2 Νοεμβρίου 2026.",
+      "lede": "Το Eurovision Games είναι ένα δωρεάν party game μέσα στον browser. Δεν πουλάμε δεδομένα, δεν προβάλλουμε διαφημίσεις τρίτων και συλλέγουμε το ελάχιστο που χρειάζεται για να δουλεύει το παιχνίδι. Τελευταία ενημέρωση: 28 Νοεμβρίου 2026.",
       "title": "Πολιτική απορρήτου"
     },
     "meta": {
@@ -166,7 +166,7 @@
       "title": "Τι συλλέγουμε"
     },
     "whoHasAccess": {
-      "intro": "Το Eurovision Games τρέχει σε δύο παρόχους υποδομής. Είναι οι μόνοι τρίτοι που διατηρούν δεδομένα σου.",
+      "intro": "Το Eurovision Games τρέχει σε δύο παρόχους υποδομής, και ένας τρίτος στέλνει τα email σύνδεσης των διαχειριστών. Είναι οι μόνοι τρίτοι που διατηρούν δεδομένα σου.",
       "items": [
         {
           "bold": "Supabase (Postgres database, auth)",
@@ -177,8 +177,12 @@
           "rest": " — εξυπηρετεί την εφαρμογή και διατηρεί βραχυπρόθεσμα request logs για ασφάλεια και πρόληψη κατάχρησης."
         },
         {
+          "bold": "Resend (email)",
+          "rest": " — στέλνει μόνο τον κωδικό σύνδεσης στους διαχειριστές του ιστότοπου. Οι παίκτες δεν δίνουν ποτέ email."
+        },
+        {
           "bold": "Κανείς άλλος δεν διατηρεί δεδομένα σου.",
-          "rest": " Κανένας μεσάζοντας στατιστικών, κανένα διαφημιστικό δίκτυο, κανένα CRM, κανένα data warehouse, κανένα διαφημιστικό email. Για να εμφανιστεί ο ιστότοπος, ο browser σου μπορεί επίσης να συνδεθεί στο Google Fonts και φορτώνει εικόνες σημαιών από το flagcdn.com· όπως κάθε αίτημα στο διαδίκτυο, αυτά περιέχουν τη διεύθυνση IP σου, αλλά κανένα δεδομένο παιχνιδιού."
+          "rest": " Κανένας μεσάζοντας στατιστικών, κανένα διαφημιστικό δίκτυο, κανένα CRM, κανένα data warehouse, κανένα διαφημιστικό email. Οι γραμματοσειρές και οι σημαίες φορτώνουν από τον δικό μας server, όχι από τρίτους."
         }
       ],
       "title": "Ποιος έχει πρόσβαση"
@@ -221,7 +225,7 @@
     },
     "hero": {
       "chip": "Privacy",
-      "lede": "Eurovision Games is a free browser-based party game. We do not sell data, we do not run third-party advertising, and we collect the minimum needed for the game to work. Last updated 2 November 2026.",
+      "lede": "Eurovision Games is a free browser-based party game. We do not sell data, we do not run third-party advertising, and we collect the minimum needed for the game to work. Last updated 28 November 2026.",
       "title": "Privacy policy"
     },
     "meta": {
@@ -351,7 +355,7 @@
       "title": "What we collect"
     },
     "whoHasAccess": {
-      "intro": "Eurovision Games runs on two infrastructure providers. They are the only third parties that hold your data.",
+      "intro": "Eurovision Games runs on two infrastructure providers, and a third sends the administrators' sign-in emails. They are the only third parties that hold your data.",
       "items": [
         {
           "bold": "Supabase (Postgres database, auth)",
@@ -362,8 +366,12 @@
           "rest": " — serves the app and retains short-term request logs for security and abuse prevention."
         },
         {
+          "bold": "Resend (email)",
+          "rest": " — sends only the sign-in code to site administrators. Players never give an email address."
+        },
+        {
           "bold": "No-one else holds your data.",
-          "rest": " No analytics broker, no advertising network, no CRM, no data warehouse, no marketing email. To display the site, your browser may also connect to Google Fonts and load flag images from flagcdn.com; like any web request, these carry your IP address, but no game data."
+          "rest": " No analytics broker, no advertising network, no CRM, no data warehouse, no marketing email. Fonts and flag images load from our own server, not from third parties."
         }
       ],
       "title": "Who has access"

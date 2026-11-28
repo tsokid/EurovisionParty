@@ -1,3 +1,4 @@
+import { pageModified } from '../../lib/seo/pageDates';
 import { useTranslation } from 'react-i18next';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -46,7 +47,7 @@ export default function FAQPage() {
   ];
 
   const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
-  const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
+  const MODIFIED = pageModified('faq'); // the page's last change, from git (sitemap lastmod)
 
   // FAQPage schema must include every Q&A — anchored + accordion combined.
   const allFaq = [...c.anchored.map((a) => ({ q: a.q, a: a.a })), ...c.more];

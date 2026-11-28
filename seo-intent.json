@@ -34,6 +34,225 @@
           ]
         }
       ]
+    },
+    {
+      "id": "manual-2026-11-28-page-dates",
+      "created_at": "2026-11-28T16:45:18.911Z",
+      "source": "manual",
+      "docs": [
+        {
+          "doc_id": "faq",
+          "locale": "en",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "doc_id": "faq",
+          "locale": "el",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "doc_id": "privacy",
+          "locale": "en",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "doc_id": "privacy",
+          "locale": "el",
+          "fields": [
+            "jsonLd"
+          ]
+        }
+      ],
+      "data": [],
+      "routes": [
+        {
+          "route": "/en/how-to-play",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/how-to-play",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/eurovision-night",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/eurovision-night",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/eurovision-games",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/eurovision-games",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/eurovision-party",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/eurovision-party",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/eurovision-trivia",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/eurovision-trivia",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/eurovision-predictions",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/eurovision-predictions",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/faq",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/faq",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/rules",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/rules",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/scoring",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/scoring",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/privacy",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/privacy",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/terms",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/terms",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/duels",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/duels",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/dashboard",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/dashboard",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/cookies",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/cookies",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/winners",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/winners",
+          "fields": [
+            "jsonLd"
+          ]
+        }
+      ],
+      "note": "dateModified in the Article/WebPage JSON-LD comes from the real last change (git, the sitemap lastmod), not the fixed 2026-04-30 or the build date; privacy facts corrected and the promised FAQ note added."
     }
   ]
 }

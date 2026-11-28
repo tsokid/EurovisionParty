@@ -70,7 +70,8 @@ const PAGE_FILES: Record<PageId, string[]> = {
   'eurovision-games': ['src/pages/seo/EurovisionGamesPage.tsx', 'content/pages/eurovision-games.json'],
   'eurovision-party': ['src/pages/seo/EurovisionPartyPage.tsx', 'content/pages/eurovision-party.json'],
   'eurovision-trivia': ['src/pages/seo/EurovisionTriviaPage.tsx', 'content/pages/eurovision-trivia.json'],
-  'eurovision-predictions': ['src/pages/seo/PredictionsPage.tsx', 'content/pages/eurovision-predictions.json'],
+  // The predictions page also shows the live year's line-up (content/contests).
+  'eurovision-predictions': ['src/pages/seo/PredictionsPage.tsx', 'content/pages/eurovision-predictions.json', 'content/contests'],
   'faq': ['src/pages/seo/FAQPage.tsx', 'content/pages/faq.json'],
   'rules': ['src/pages/seo/RulesPage.tsx', 'content/pages/rules.json'],
   'scoring': ['src/pages/seo/ScoringPage.tsx', 'content/pages/scoring.json'],
@@ -136,6 +137,9 @@ interface UrlEntry {
   lastmod: string;
 }
 
+/** Each page's last change (YYYY-MM-DD), the same date its sitemap entry carries. */
+const PAGE_DATES: Partial<Record<PageId, string>> = {};
+
 function buildEntries(): UrlEntry[] {
   const entries: UrlEntry[] = [];
   for (const page of PAGE_REGISTRY) {
@@ -155,6 +159,8 @@ function buildEntries(): UrlEntry[] {
     if (elUrl) {
       entries.push({ loc: elUrl, alternates, priority: page.priority, changefreq: page.changefreq, lastmod: lastmodFor(elUrl, fromGit) });
     }
+    const dates = entries.filter((e) => e.loc === enUrl || e.loc === elUrl).map((e) => e.lastmod).sort();
+    if (dates.length) PAGE_DATES[page.id] = dates[dates.length - 1];
   }
   return entries;
 }
@@ -215,4 +221,13 @@ function buildXml(entries: UrlEntry[]): string {
 const entries = [...buildEntries(), ...buildDynamicEntries()];
 const xml = buildXml(entries);
 writeFileSync(OUT, xml, 'utf8');
+
+// The pages' Article/WebPage dateModified (28 Nov 2026): the same real date,
+// written next to the code so the build bundles it. Only the real build
+// writes it (a test passes its own sitemap path).
+if (!process.argv[2]) {
+  const DATES_OUT = resolve(__dirname, '../../src/generated/pageDates.json');
+  const sorted = Object.fromEntries(Object.entries(PAGE_DATES).sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(DATES_OUT, `${JSON.stringify(sorted, null, 2)}\n`, 'utf8');
+}
 console.log(`Sitemap written: ${OUT} (${entries.length} URLs, lastmod from ${HISTORY ? 'git' : 'the committed sitemap (shallow clone)'})`);

@@ -1,3 +1,4 @@
+import { pageModified } from '../../lib/seo/pageDates';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageSeo from '../../components/seo/PageSeo';
@@ -76,7 +77,7 @@ export default function HowToPlayPage() {
   ];
 
   const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
-  const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
+  const MODIFIED = pageModified('how-to-play'); // the page's last change, from git (sitemap lastmod)
 
   const article = {
     '@context': 'https://schema.org',

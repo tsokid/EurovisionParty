@@ -1,3 +1,4 @@
+import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import Breadcrumbs from '../../components/seo/Breadcrumbs';
@@ -38,8 +39,8 @@ import { useSiteSettings } from '../../lib/cms/siteSettings';
 
 // fact: date the page was first published
 const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
-/** The build day (shared by both builds, see vite.config.ts): the line-up block changes with every content publish. */
-const MODIFIED = `${import.meta.env.VITE_BUILD_DATE ?? new Date().toISOString().slice(0, 10)}T00:00:00Z`;
+/** The page's last change, its line-up included (content/contests), from git: the sitemap's lastmod. */
+const MODIFIED = pageModified('eurovision-predictions');
 
 const reload = () => window.location.reload();
 

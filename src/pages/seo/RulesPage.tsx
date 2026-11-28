@@ -1,3 +1,4 @@
+import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import PageHero from '../../components/seo/PageHero';
@@ -56,7 +57,7 @@ export default function RulesPage() {
   const nOf = (id: string) => toc.findIndex((x) => x.id === id) + 1;
 
   const PUBLISHED = '2026-04-30T00:00:00Z'; // fact: date the page was first published
-  const MODIFIED = '2026-04-30T00:00:00Z'; // fact: date the page copy was last edited
+  const MODIFIED = pageModified('rules'); // the page's last change, from git (sitemap lastmod)
 
   const article = {
     '@context': 'https://schema.org',
