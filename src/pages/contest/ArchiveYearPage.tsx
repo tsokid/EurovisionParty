@@ -265,7 +265,7 @@ function ArchiveYearBody({ data, locale }: { data: ArchiveYearData; locale: Loca
         ogType="website"
         jsonLd={mergeFaqJsonLd<object>([
           ...(event ? [event] : []),
-          songsItemList(ranking, contest.cancelled ? a.year.entriesListName(contest.year) : a.year.listName(contest.year)),
+          ...[songsItemList(ranking, contest.cancelled ? a.year.entriesListName(contest.year) : a.year.listName(contest.year))].filter((x) => x !== null),
           breadcrumbJsonLd(crumbs, locale),
         ], editorial?.blocks)}
       />

@@ -21,12 +21,6 @@ import { contestTexts } from './content/contestText';
 import { useCurrentContest } from '../../lib/currentContest';
 import { useSiteSettings } from '../../lib/cms/siteSettings';
 
-/** `YYYY-MM-DD` + 1 day (UTC). */
-function nextDay(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10);
-}
-
 export default function EurovisionPartyPage() {
   const locale = useLocale();
   const settings = useSiteSettings();
@@ -70,28 +64,8 @@ export default function EurovisionPartyPage() {
       acceptedAnswer: { '@type': 'Answer', text: f.a },
     })),
   };
-  // The watch party runs 20:00–00:30 (CEST) on the live contest's final night.
-  const final = cc.finalDate;
-  const event = final && {
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: interpolate(c.meta.eventName, vars),
-    startDate: `${final}T20:00:00+02:00`,
-    endDate: `${nextDay(final)}T00:30:00+02:00`,
-    eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
-    eventStatus: 'https://schema.org/EventScheduled',
-    description: interpolate(c.meta.eventDescription, vars),
-    location: {
-      '@type': 'VirtualLocation',
-      url: 'https://eurovision.games',
-    },
-    organizer: {
-      '@type': 'Organization',
-      name: settings.organization.name,
-      url: 'https://eurovision.games',
-    },
-  };
-
+  // No Event markup (28 Nov 2026): a watch party is not a scheduled public
+  // event under Google's event policy; Article + FAQ describe the page.
   return (
     <>
       <PageSeo
@@ -104,7 +78,7 @@ export default function EurovisionPartyPage() {
         articlePublishedTime={PUBLISHED}
         articleModifiedTime={MODIFIED}
         keywords={c.meta.keywords}
-        jsonLd={mergeFaqJsonLd([article, faqJsonLd, ...(event ? [event] : []), breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
+        jsonLd={mergeFaqJsonLd([article, faqJsonLd, breadcrumbJsonLd(crumbs, locale)], layoutBlocks(c.layout))}
       />
 
       <ArticleFrame

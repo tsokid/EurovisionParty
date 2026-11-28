@@ -84,9 +84,14 @@ export function byCountry(entries: EntrySnapshot[], locale: Locale): EntrySnapsh
   return [...entries].sort((a, b) => compareText(countryName(a, locale), countryName(b, locale)));
 }
 
-/** schema.org ItemList of MusicRecording; entries without a song title are skipped. */
+/**
+ * schema.org ItemList of MusicRecording; entries without a song title are
+ * skipped. No songs yet (a contest before its songs are announced): no list
+ * at all, never an empty one (28 Nov 2026).
+ */
 export function songsItemList(entries: EntrySnapshot[], name: string) {
   const songs = entries.filter((e): e is EntrySnapshot & { song: string } => e.song != null);
+  if (songs.length === 0) return null;
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',

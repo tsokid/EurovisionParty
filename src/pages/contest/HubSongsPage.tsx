@@ -32,7 +32,7 @@ function SongsBody({ hub }: { hub: Hub }) {
         title={c.songs.title(f)}
         description={c.songs.description(f)}
         ogType="website"
-        jsonLd={[itemList, breadcrumbJsonLd(crumbs, locale)]}
+        jsonLd={[...(itemList ? [itemList] : []), breadcrumbJsonLd(crumbs, locale)]}
       />
 
       <HubSubHero hub={hub} crumbs={crumbs} title={c.songs.h1(f)} lede={c.songs.lede(f)} aside={<ShowDates hub={hub} />} />

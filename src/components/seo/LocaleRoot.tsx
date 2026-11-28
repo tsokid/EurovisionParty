@@ -35,7 +35,11 @@ export default function LocaleRoot() {
         <ScrollToTop />
         <BetaBanner />
         <SiteHeader />
-        <Outlet />
+        {/* The page's own content is the main landmark (28 Nov 2026). The
+            footer each page renders inside it keeps role="contentinfo". */}
+        <main id="main">
+          <Outlet />
+        </main>
         <BackToTop />
         <CookieConsent />
       </div>

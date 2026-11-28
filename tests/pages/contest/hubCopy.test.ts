@@ -30,10 +30,15 @@ describe('CITY_EL', () => {
 describe('songsItemList', () => {
   it('skips entries without a song title', () => {
     const entries = c2026.entries.slice(0, 3).map((e, i) => (i === 1 ? { ...e, song: null } : e));
-    const list = songsItemList(entries, 'Songs');
+    const list = songsItemList(entries, 'Songs')!;
     expect(list.numberOfItems).toBe(2);
     expect(list.itemListElement.map((i) => i.position)).toEqual([1, 2]);
     expect(list.itemListElement.map((i) => i.item.name)).toEqual([entries[0].song, entries[2].song]);
+  });
+
+  it('gives no list at all before any song is known (no empty ItemList)', () => {
+    const entries = c2026.entries.slice(0, 3).map((e) => ({ ...e, song: null }));
+    expect(songsItemList(entries, 'Songs')).toBeNull();
   });
 });
 

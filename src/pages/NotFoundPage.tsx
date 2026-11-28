@@ -33,10 +33,10 @@ function MinimalNotFound({ locale }: { locale: Locale }) {
   const f = FALLBACK[locale];
   return (
     <>
-      <main className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4">
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4">
         <h1 className="t-h1 text-stage-text">{f.title}</h1>
         <LocaleLink to="/" className="btn btn-primary">{f.home}</LocaleLink>
-      </main>
+      </div>
       <SiteFooter />
     </>
   );

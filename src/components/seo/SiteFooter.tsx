@@ -39,7 +39,7 @@ export default function SiteFooter() {
   const attrs = useCmsAttrs('site-footer');
 
   return (
-    <footer className="footer">
+    <footer className="footer" role="contentinfo">
       <div className="wrap footer-inner">
         <div className="fcols">
           <div className="fbrand">

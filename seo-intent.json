@@ -3649,6 +3649,40 @@
         }
       ],
       "note": "Country and archive title/description templates fit search-result lengths (titles 60, descriptions 155): a long name drops trailing words instead of being cut off."
+    },
+    {
+      "id": "manual-2026-11-28-event-itemlist",
+      "created_at": "2026-11-28T17:45:55.392Z",
+      "source": "manual",
+      "docs": [],
+      "data": [],
+      "routes": [
+        {
+          "route": "/en/eurovision-party",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/eurovision-party",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/en/eurovision-2027/songs",
+          "fields": [
+            "jsonLd"
+          ]
+        },
+        {
+          "route": "/el/eurovision-2027/songs",
+          "fields": [
+            "jsonLd"
+          ]
+        }
+      ],
+      "note": "Watch-party Event markup removed (not a scheduled public event under Google policy); no empty song ItemList before the songs are known."
     }
   ]
 }
