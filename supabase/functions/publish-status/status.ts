@@ -74,7 +74,6 @@ function client(gh: GitHubConfig) {
   };
 }
 
-const BUILDING = new Set(['queued', 'pending', 'in_progress']);
 const READY = new Set(['success', 'inactive']);
 const FAILED = new Set(['failure', 'error']);
 

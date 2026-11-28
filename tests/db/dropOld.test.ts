@@ -24,7 +24,7 @@ describe('migration 072: old 2026 tables dropped', () => {
     const r = await db.query<{ proname: string }>(
       `select p.proname from pg_proc p
          join pg_namespace n on n.oid = p.pronamespace
-        where n.nspname = 'public' and p.prosrc like '%eurovision\_2026\_%'`,
+        where n.nspname = 'public' and p.prosrc like '%eurovision_2026_%'`,
     );
     expect(r.rows.map((x) => x.proname)).toEqual([]);
   });

@@ -12,12 +12,12 @@ const committed = JSON.parse(readFileSync(resolve(__dirname, '../../content/page
 // The settings file the site imports; each test swaps its values in place.
 const settings = vi.hoisted(() => ({ doc: { en: {} as Record<string, unknown>, el: {} as Record<string, unknown> } }));
 vi.mock('../../content/pages/site-settings.json', () => ({ default: settings.doc }));
-const use = (v: Record<string, unknown>) => {
+const applySettings = (v: Record<string, unknown>) => {
   settings.doc.en = v;
   settings.doc.el = v;
 };
 
-use(committed.en);
+applySettings(committed.en);
 const other = {
   siteName: 'Euro Party Games',
   defaultOgImage: 'https://cdn.example.org/share.png',
@@ -53,7 +53,7 @@ describe('site settings are read by the site', { timeout: 60_000 }, () => {
   });
 
   it('other values flow into og:image, the Article publisher and author, the About Organization and the logo label', async () => {
-    use(other);
+    applySettings(other);
     try {
       const about = await page('/en/about');
       expect(about.head).toContain('<meta property="og:image" content="https://cdn.example.org/share.png"');
@@ -71,18 +71,18 @@ describe('site settings are read by the site', { timeout: 60_000 }, () => {
         publisher: { name: 'Party Org', logo: { url: 'https://cdn.example.org/square.png' } },
       });
     } finally {
-      use(committed.en);
+      applySettings(committed.en);
     }
   });
 
   it('the site-wide Organization and WebSite schema builders read them too', async () => {
-    use(other);
+    applySettings(other);
     try {
       const { buildOrganization, buildWebSite } = await import('../../src/lib/seo/schema');
       expect(buildOrganization()).toMatchObject({ name: 'Party Org', logo: 'https://cdn.example.org/square.png', sameAs: ['https://instagram.com/europarty'] });
       expect(buildWebSite()).toMatchObject({ name: 'Euro Party Games' });
     } finally {
-      use(committed.en);
+      applySettings(committed.en);
     }
   });
 });

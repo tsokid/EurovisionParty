@@ -186,7 +186,7 @@ async function handleParticipants(): Promise<Response> {
   // is required: there is no hardcoded fallback URL any more.
   let entries: ParsedEntry[] = [];
   let httpStatus = 0;
-  let source: "eurovision" = "eurovision";
+  let source = "eurovision" as const;
   let runStatus: "ok" | "error" | "blocked" = "ok";
   let err: string | null = null;
   let payloadHash: string | null = null;

@@ -27,7 +27,7 @@ const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'svg', 'SVG', '
 const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'" };
 
 /** Whitespace collapsed, trimmed, NFC. */
-export const normText = (s: string): string => s.normalize('NFC').replace(/[\s ]+/g, ' ').trim();
+export const normText = (s: string): string => s.normalize('NFC').replace(/\s+/g, ' ').trim();
 
 /** The text a Markdown or inline-HTML string renders (one chunk). */
 export function plainText(s: string): string {

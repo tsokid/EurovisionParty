@@ -36,7 +36,6 @@ const PLACEHOLDER_VALUES = ['todo', 'tbd', 'image', 'photo', 'picture', 'icon', 
 // Decorative <img alt=""> is allowed (semantic — tells screen readers to skip).
 function scanFile(file: string): Finding[] {
   const src = readFileSync(file, 'utf8');
-  const lines = src.split('\n');
   const out: Finding[] = [];
 
   // Match <img ...>  (greedy across newlines but capped to 800 chars to avoid runaway)

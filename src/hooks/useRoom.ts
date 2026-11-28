@@ -287,7 +287,7 @@ export function useRoom(): UseRoomReturn {
           setError(null); // the caller shows the localized retry message
           throw err;
         }
-        let message = err instanceof Error ? err.message : ((err as any)?.message ?? 'Failed to create room');
+        let message = err instanceof Error ? err.message : ((err as { message?: string } | null)?.message ?? 'Failed to create room');
         // Map server errors to friendly messages
         if (message.includes('Rate limit')) message = 'Too many rooms created. Please wait an hour.';
         if (message.includes('already taken')) message = 'That name is taken in this room. Choose another.';
@@ -354,7 +354,7 @@ export function useRoom(): UseRoomReturn {
           setError(null);
           throw err;
         }
-        let message = err instanceof Error ? err.message : ((err as any)?.message ?? 'Failed to join room');
+        let message = err instanceof Error ? err.message : ((err as { message?: string } | null)?.message ?? 'Failed to join room');
         // Map server errors to friendly messages
         if (message.includes('already taken')) message = 'That name is taken in this room. Choose another.';
         if (message.includes('Room is full') || message.includes('max')) message = 'Room is full. No more players can join.';

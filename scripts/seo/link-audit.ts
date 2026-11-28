@@ -23,7 +23,7 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-const files = walk(DIST).filter((f) => !/[\/](index|404)\.html$/.test(f) || /[\/](en|el)[\/]/.test(f));
+const files = walk(DIST).filter((f) => !/[\\/](index|404)\.html$/.test(f) || /[\\/](en|el)[\\/]/.test(f));
 const built = new Set<string>();
 for (const f of files) {
   const rel = relative(DIST, f).split(sep).join('/');

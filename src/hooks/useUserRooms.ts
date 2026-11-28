@@ -21,6 +21,20 @@ export interface RoomEntry {
   lastActivityAt: string | null;
 }
 
+/** A player row with its room, as the home page's room list reads it. */
+interface PlayerRoomRow {
+  id: string;
+  status?: RoomEntry['status'];
+  left_at?: string | null;
+  is_active?: boolean;
+  joined_at: string | null;
+  total_points: number;
+  is_host: boolean | null;
+  rooms: { id: string; code: string; phase: string; host_name: string; last_activity_at: string | null } | null;
+}
+type WithRoom = PlayerRoomRow & { rooms: NonNullable<PlayerRoomRow['rooms']> };
+const hasRoom = (p: PlayerRoomRow): p is WithRoom => p.rooms !== null;
+
 export function getBadge(entry: RoomEntry): RoomBadge {
   if (entry.phase === 'finished') return 'ENDED';
   if (entry.status === 'active') return 'LIVE';
@@ -122,8 +136,8 @@ async function loadOnce(force = false): Promise<void> {
       notify();
       return;
     }
-    const fallbackEntries: RoomEntry[] = (fallback as any[])
-      .filter((p) => p.rooms)
+    const fallbackEntries: RoomEntry[] = (fallback as unknown as PlayerRoomRow[])
+      .filter(hasRoom)
       .map((p) => ({
         playerId: p.id,
         roomId: p.rooms.id,
@@ -152,16 +166,16 @@ async function loadOnce(force = false): Promise<void> {
     return;
   }
 
-  const entries: RoomEntry[] = (data as any[])
-    .filter((p) => p.rooms)
+  const entries: RoomEntry[] = (data as unknown as PlayerRoomRow[])
+    .filter(hasRoom)
     .map((p) => ({
       playerId: p.id,
       roomId: p.rooms.id,
       roomCode: p.rooms.code,
       hostName: p.rooms.host_name,
       totalPoints: p.total_points,
-      status: p.status,
-      leftAt: p.left_at,
+      status: p.status ?? 'active',
+      leftAt: p.left_at ?? null,
       phase: p.rooms.phase,
       isHost: p.is_host ?? false,
       joinedAt: p.joined_at ?? null,

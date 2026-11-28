@@ -8,7 +8,7 @@ const BLOCKED_PATTERNS: RegExp[] = [
   // English profanity (common)
   /\b(f+u+c+k+|sh+i+t+|a+s+s+h+o+l+e|b+i+t+c+h|d+i+c+k|c+u+n+t|n+i+g+g+|f+a+g+|r+e+t+a+r+d|w+h+o+r+e|s+l+u+t)\b/i,
   // Leet speak variants
-  /\b(f[u\*@]ck|sh[i1!]t|b[i1!]tch|d[i1!]ck|a[s\$]{2})\b/i,
+  /\b(f[u*@]ck|sh[i1!]t|b[i1!]tch|d[i1!]ck|a[s$]{2})\b/i,
   // Slurs and hate speech
   /\b(nazi|hitler|kkk|jihad)\b/i,
   // Sexual content
@@ -25,7 +25,7 @@ const BLOCKED_PATTERNS: RegExp[] = [
  */
 export function isNameClean(name: string): boolean {
   const normalized = name
-    .replace(/[_\-\.]/g, '') // Remove separators that might break up words
+    .replace(/[_\-.]/g, '') // Remove separators that might break up words
     .replace(/0/g, 'o')
     .replace(/1/g, 'i')
     .replace(/3/g, 'e')

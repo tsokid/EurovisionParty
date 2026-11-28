@@ -13,7 +13,7 @@ if (!live) throw new Error(`validate-schema: no content/contests/${content.site.
 interface Issue { builder: string; field: string; message: string }
 const issues: Issue[] = [];
 
-function check(builder: string, obj: any, required: string[]) {
+function check(builder: string, obj: Record<string, unknown>, required: string[]) {
   if (!obj['@context']) issues.push({ builder, field: '@context', message: 'missing' });
   if (!obj['@type']) issues.push({ builder, field: '@type', message: 'missing' });
   for (const r of required) {
