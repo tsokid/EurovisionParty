@@ -8,11 +8,13 @@ Everything happens in `/admin`. Button names are written as they appear in the a
 | When | Action | Check |
 |---|---|---|
 | When the line-up is announced (~Jan–Mar) | Re-enable the `parser-tick` cron: re-run migration **047** (it was stopped by 068 on 30 Oct 2026 because the logs grew to 1.33 GB). `purge-cron-logs` keeps 7 days, so the DB does not fill up again. | `select jobname from cron.job` shows `parser-tick`. |
-| Same day | **Parser συμμετοχών** → let it run, then check the entries in Contests → Edit (there is no Approve step yet; it is a Track 1 item). | Every entry has an artist **and** a song. Until then the game does not switch to 2027 (migration 078). |
+| Same day | **Parser συμμετοχών** → let it run and read its report. There is no Approve step: a parse writes straight to the game data, and is **blocked with nothing written** if any entry lacks an artist or a song, a country is unknown, or the finalists are not 20–27 (write rule C). Re-run it as often as needed. | The report says written, not blocked, and every entry has an artist **and** a song. Until then the game does not switch to 2027 (migration 078). |
 | After that | Contests → 2027 → **Δημοσίευση**. | The 2027 hub on the site shows the entries. |
 | April | Do a test run in a test room: **Άνοιγμα προβλέψεων** → **Κλείσιμο προβλέψεων** → **Δοκιμή των parser (2025)** (no-write) → **↺ Επαναφορά ολοκλήρωσης**. | Nothing reached the public pages (tests never publish). |
 | April | Check the Supabase plan's edge function wall clock. A results publish may wait up to ~100 s for a running page publish. The browser waits 150 s. | The limit is greater than 150 s. |
 | April | Test the VFX at 60fps on a mid-range Android (open item from Track 2). | No stutter in the reel or the winners. |
+| ~20 April (owner, decided 28 Nov 2026) | Supabase → Organization → Billing: upgrade to **Pro**, before the rehearsals. Free allows only 200 phones on Realtime at once and has no backups; the night expects 1,000–2,500 players (200–500 rooms × ~5). | The plan shows Pro; Database → Backups lists a daily backup. |
+| Before each April rehearsal and from 11 May | Supabase → Authentication → Rate Limits → **anonymous sign-ins per hour per IP: 1000** (from 30). Players share Wi-Fi in cafés and homes, and 5G carriers put many phones behind one address. | A 31st phone on the same Wi-Fi can still join. |
 
 ## B. The day of the final
 
@@ -57,3 +59,5 @@ Trivia and duels run in parallel; nothing needs doing from the admin.
 - Refresh the SEO baseline: `npm run seo:baseline`.
 - Unfreeze page publishes.
 - `send-email-drain` stays off (nothing calls `queue_email`).
+- Supabase → Authentication → Rate Limits → anonymous sign-ins per hour per IP back to **30**.
+- After the last migration of the season: reset the database password and delete `cutover.env` (O4).
