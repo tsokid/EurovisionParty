@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { formatError } from "../../lib/formatError";
 import { t } from "../../i18n";
+import { visibleInterval } from "../../../lib/visibleInterval";
 
 type GamePhase = "pre_night" | "predictions_open" | "voting_live" | "final";
 type Target = "pre_night" | "predictions_open" | "voting_live";
@@ -55,8 +56,8 @@ export function GamePhaseCard({ year, pollMs = 5000 }: Props) {
     setMoved(null);
     setConfirm(null);
     load();
-    const id = setInterval(load, pollMs);
-    return () => clearInterval(id);
+    // Only while the admin tab is visible (28 Nov 2026).
+    return visibleInterval(() => { void load(); }, pollMs);
   }, [load, pollMs]);
 
   const run = async (target: Target) => {

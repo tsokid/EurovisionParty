@@ -34,6 +34,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { formatError } from '../../lib/formatError';
 import { t } from '../../i18n';
+import { visibleInterval } from '../../../lib/visibleInterval';
 
 export const COMMIT_URL = 'https://github.com/tsokid/EurovisionParty/commit/';
 export const BUSY_TEXT: string = t.publish.busy;
@@ -356,8 +357,9 @@ export function usePublisher(): Publisher {
       }
     };
     void tick();
-    const timer = setInterval(tick, DEPLOY_POLL_MS);
-    return () => { off = true; clearInterval(timer); };
+    // Only while the admin tab is visible; once at once on return (28 Nov 2026).
+    const stop = visibleInterval(() => { void tick(); }, DEPLOY_POLL_MS);
+    return () => { off = true; stop(); };
   }, [watchId]);
 
   // A call during a run waits for the trailing run (invokePublish). Only a

@@ -9,6 +9,7 @@ import { supabase } from "../../lib/supabase";
 import { formatError } from "../lib/formatError";
 import { fetchLiveContestYear } from "../../lib/liveContestYear";
 import { t } from '../i18n';
+import { visibleInterval } from '../../lib/visibleInterval';
 
 const PHASES = [
   { id: "lobby", label: t.monitor.phases.lobby, color: "bg-white/15 text-white" },
@@ -105,8 +106,8 @@ export default function PhaseMonitor() {
 
   useEffect(() => {
     refresh();
-    const id = setInterval(refresh, 15_000);
-    return () => clearInterval(id);
+    // Only while the admin tab is visible (28 Nov 2026).
+    return visibleInterval(() => { void refresh(); }, 15_000);
   }, [refresh]);
 
   const toggleSelect = (id: string) => {

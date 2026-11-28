@@ -1,13 +1,23 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 
-// Open tabs ask for a new version of the site every 5 minutes and whenever
-// they come back to the front; the new service worker then reloads them
-// (public/sw-reload.js).
+// A tab asks for a new version of the site only when it comes back to the
+// front (no timer: a background tab does nothing). A new service worker
+// reloads the tab in front; a hidden tab is told and reloads when it comes
+// back to the front (public/sw-reload.js, 28 Nov 2026).
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  let newVersion = false;
   const check = () => { void navigator.serviceWorker.getRegistration().then((r) => r?.update()).catch(() => undefined); };
-  window.setInterval(check, 5 * 60 * 1000);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+  navigator.serviceWorker.addEventListener('message', (e: MessageEvent) => {
+    if ((e.data as { type?: string } | null)?.type !== 'new-version') return;
+    if (document.visibilityState === 'visible') location.reload();
+    else newVersion = true;
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    if (newVersion) location.reload();
+    else check();
+  });
 }
 import { RouterProvider } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';

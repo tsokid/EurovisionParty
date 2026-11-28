@@ -5,6 +5,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../../../lib/supabase";
+import { visibleInterval } from "../../../lib/visibleInterval";
 
 // ── Module-level cache ────────────────────────────────────────────────
 // Persists the last good fetch across component remounts (e.g. when the
@@ -188,18 +189,8 @@ export function useParserState(requestedYear: number | null = null, pollMs = 500
 
   useEffect(() => {
     refresh();
-    const id = setInterval(refresh, pollMs);
-
-    // Browsers throttle background-tab timers. Re-fetch immediately when
-    // the admin switches back so status changes (e.g. cron → running) are
-    // visible without a manual page refresh.
-    const onVisible = () => { if (document.visibilityState === "visible") refresh(); };
-    document.addEventListener("visibilitychange", onVisible);
-
-    return () => {
-      clearInterval(id);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
+    // Only while the admin tab is visible; once at once on return (28 Nov 2026).
+    return visibleInterval(() => { void refresh(); }, pollMs);
   }, [refresh, pollMs]);
 
   return { jobs, runs, year, years, loading, error, refresh };

@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useGameStore } from '../stores/gameStore';
 import type { Notification } from '../lib/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { visibleInterval } from '../lib/visibleInterval';
 
 interface UseNotificationsReturn {
   notifications: Notification[];
@@ -83,21 +84,12 @@ export function useNotifications(playerId: string | null | undefined): UseNotifi
     }
   }, [playerId, addNotification]);
 
-  // Polling fallback: refetch every 30s + on tab focus so the badge updates
-  // even when Realtime drops or the tab was in the background.
+  // Fallback for a missed live notification: refetch every 2 min (with
+  // jitter) and on return to the tab, only while the tab is visible
+  // (28 Nov 2026; was every 30 s, also in the background).
   useEffect(() => {
     if (!playerId) return;
-
-    const poll = () => refetchNotifications();
-    const id = setInterval(poll, 30_000);
-
-    const onVisible = () => { if (document.visibilityState === 'visible') refetchNotifications(); };
-    document.addEventListener('visibilitychange', onVisible);
-
-    return () => {
-      clearInterval(id);
-      document.removeEventListener('visibilitychange', onVisible);
-    };
+    return visibleInterval(() => { void refetchNotifications(); }, 120_000, { jitter: 0.5 });
   }, [playerId, refetchNotifications]);
 
   const markAsRead = useCallback(

@@ -2,6 +2,7 @@ import { ROOM_COLUMNS } from '../lib/roomColumns';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameStore } from '../stores/gameStore';
+import { visibleInterval } from '../lib/visibleInterval';
 import { useRoom } from '../hooks/useRoom';
 import { useRejoin } from '../hooks/useRejoin';
 import { useLeaderboard } from '../hooks/useLeaderboard';
@@ -96,24 +97,23 @@ export function RoomPage() {
     }
   }, [storeRoom?.phase]);
 
-  // Polling fallback: check room phase every 3 s while in lobby or pre_night.
-  // Covers Realtime lag/drop for all users — critical for the participants-parser
-  // → predictions_open transition which not all clients receive via Realtime.
-  const currentPhase = storeRoom?.phase;
+  // Fallback for a missed live phase change: re-read the room every 60 s
+  // (with jitter) and on return to the tab, only while the tab is visible.
+  // A minimised tab sends nothing (28 Nov 2026; was every 3 s, always).
+  const roomIdForPoll = storeRoom?.id;
   useEffect(() => {
-    if (!storeRoom || (currentPhase !== 'lobby' && currentPhase !== 'pre_night')) return;
-    const id = setInterval(async () => {
+    if (!roomIdForPoll) return;
+    return visibleInterval(async () => {
       const { data } = await supabase
         .from('rooms')
         .select(ROOM_COLUMNS)
-        .eq('id', storeRoom.id)
+        .eq('id', roomIdForPoll)
         .single();
-      if (data && (data as Room).phase !== currentPhase) {
+      if (data && (data as Room).phase !== useGameStore.getState().room?.phase) {
         setRoom(data as Room);
       }
-    }, 3000);
-    return () => clearInterval(id);
-  }, [storeRoom?.id, currentPhase, setRoom]);
+    }, 60_000, { jitter: 0.5 });
+  }, [roomIdForPoll, setRoom]);
 
   // When the phase transitions from pre_night → predictions_open, auto-switch
   // the active tab so no user misses it (unchanged rule).

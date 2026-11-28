@@ -13,6 +13,7 @@ import { isEditorialDocId } from '../../../supabase/functions/_shared/cms/pagesI
 import type { SiteWideDocId } from '../../../supabase/functions/_shared/cms/siteLinks';
 import { checkDeploys, deployPending, DEPLOY_POLL_MS, DEPLOY_WATCH_MS, type PublishRun } from '../modules/contests/publish';
 import { isSiteWide } from './diff';
+import { visibleInterval } from '../../lib/visibleInterval';
 
 /** One doc as the site shows it now and as the next publish would ship it. */
 export type DocPair = {
@@ -103,8 +104,9 @@ export function useRunWatch(initial: PublishRun | null) {
       }
     };
     void tick();
-    const timer = setInterval(tick, DEPLOY_POLL_MS);
-    return () => { off = true; clearInterval(timer); };
+    // Only while the admin tab is visible; once at once on return (28 Nov 2026).
+    const stop = visibleInterval(() => { void tick(); }, DEPLOY_POLL_MS);
+    return () => { off = true; stop(); };
   }, [id]);
 
   const set = useCallback((next: PublishRun | null) => setRun(next), []);
