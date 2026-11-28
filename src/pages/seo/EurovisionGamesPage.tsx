@@ -95,13 +95,13 @@ export default function EurovisionGamesPage() {
                   headers={c.sections.inside.tableHeaders}
                   align={['left', 'left', 'left']}
                   rows={c.sections.inside.rows.map((r) => [
-                    <a
+                    <LocaleLink
                       key={`g-${r.href}`}
-                      href={r.href}
+                      to={r.href}
                
                     >
                       <strong>{r.game}</strong>
-                    </a>,
+                    </LocaleLink>,
                     r.when,
                     r.scoring,
                   ])}

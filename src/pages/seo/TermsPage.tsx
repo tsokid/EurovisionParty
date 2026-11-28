@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -126,9 +127,9 @@ export default function TermsPage() {
                   <li>
                     <strong>{c.account.deletionItem.bold}</strong>
                     {c.account.deletionItem.lead}
-                    <a href="/privacy">
+                    <LocaleLink to="/privacy">
                       {c.account.deletionItem.linkLabel}
-                    </a>
+                    </LocaleLink>
                     {c.account.deletionItem.tail}
                   </li>
                 </ul>
@@ -138,9 +139,9 @@ export default function TermsPage() {
               <Section cms="userContent.title" title={c.userContent.title}>
                 <p>
                   {c.userContent.lead}
-                  <a href="/privacy">
+                  <LocaleLink to="/privacy">
                     {c.userContent.linkLabel}
-                  </a>
+                  </LocaleLink>
                   {c.userContent.tail}
                 </p>
               </Section>

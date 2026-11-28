@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
 import LegalFrame from '../../components/seo/LegalFrame';
@@ -107,12 +108,12 @@ export default function AboutPage() {
                       <strong>{item.bold}</strong>
                       {item.lead}
                       {item.linkLabel && item.linkHref && (
-                        <a
-                          href={item.linkHref}
+                        <LocaleLink
+                          to={item.linkHref}
                    
                         >
                           {item.linkLabel}
-                        </a>
+                        </LocaleLink>
                       )}
                       {item.tail}
                     </li>

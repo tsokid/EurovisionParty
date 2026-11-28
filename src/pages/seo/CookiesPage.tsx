@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -141,9 +142,9 @@ export default function CookiesPage() {
               <Section cms="whereDataLives.title" title={c.whereDataLives.title}>
                 <p>
                   {c.whereDataLives.intro.lead}
-                  <a href="/privacy">
+                  <LocaleLink to="/privacy">
                     {c.whereDataLives.intro.linkLabel}
-                  </a>
+                  </LocaleLink>
                   {c.whereDataLives.intro.tail}
                 </p>
                 <ul className="legal-list">

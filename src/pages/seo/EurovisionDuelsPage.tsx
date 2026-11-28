@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -191,9 +192,9 @@ export default function EurovisionDuelsPage() {
                 </ul>
                 <p>
                   {c.sections.trophies.seePre}
-                  <a href="/scoring">{c.sections.trophies.scoringLink}</a>
+                  <LocaleLink to="/scoring">{c.sections.trophies.scoringLink}</LocaleLink>
                   {c.sections.trophies.seeMid}
-                  <a href="/rules">{c.sections.trophies.rulesLink}</a>
+                  <LocaleLink to="/rules">{c.sections.trophies.rulesLink}</LocaleLink>
                   {c.sections.trophies.seePost}
                 </p>
               </Section>

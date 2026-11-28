@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && npm run typecheck:shared && tsx scripts/cms/validate-content.ts && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts && tsx scripts/seo/check-prerender.ts && tsx scripts/cms/check-no-cms-markers.ts && tsx scripts/seo/guard.ts && tsx scripts/move-build-manifest.ts",
+    "build": "tsc -b && npm run typecheck:shared && tsx scripts/cms/validate-content.ts && vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && tsx scripts/prerender.ts && tsx scripts/seo/check-prerender.ts && tsx scripts/cms/check-no-cms-markers.ts && tsx scripts/seo/guard.ts && tsx scripts/seo/link-audit.ts && tsx scripts/move-build-manifest.ts",
     "typecheck:shared": "tsc -p tsconfig.shared.json --noEmit",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -20,7 +20,8 @@
     "prebuild": "npm run sitemap && npm run llms-txt",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "seo:links": "tsx scripts/seo/link-audit.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

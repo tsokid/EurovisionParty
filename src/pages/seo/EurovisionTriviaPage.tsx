@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -149,7 +150,7 @@ export default function EurovisionTriviaPage() {
                 </p>
                 <p>
                   {c.sections.duels.body2Pre}
-                  <a href="/duels">{c.sections.duels.body2LinkLabel}</a>
+                  <LocaleLink to="/duels">{c.sections.duels.body2LinkLabel}</LocaleLink>
                   {c.sections.duels.body2Post}
                 </p>
               </Section>
@@ -158,7 +159,7 @@ export default function EurovisionTriviaPage() {
               <Section cms="sections.play.title" title={c.sections.play.title}>
                 <p>
                   {c.sections.play.pre}
-                  <a href="/">{c.sections.play.linkLabel}</a>
+                  <LocaleLink to="/">{c.sections.play.linkLabel}</LocaleLink>
                   {c.sections.play.post}
                 </p>
               </Section>

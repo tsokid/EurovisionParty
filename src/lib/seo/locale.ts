@@ -23,6 +23,9 @@ export function oppositeLocale(l: Locale): Locale {
 
 export function localizePath(locale: Locale, path: string): string {
   if (path === '' || path === '/') return `/${locale}`;
+  // The home page with a query or hash: /en?action=create, not /en/?action=create
+  // (trailingSlash is off, so the slash would cost a redirect).
+  if (/^\/[?#]/.test(path)) return `/${locale}${path.slice(1)}`;
   const clean = path.startsWith('/') ? path : `/${path}`;
   return `/${locale}${clean}`;
 }

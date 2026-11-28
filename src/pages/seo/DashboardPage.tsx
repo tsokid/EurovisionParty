@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -114,9 +115,9 @@ export default function DashboardPage() {
                 />
                 <p>
                   {c.sections.sources.footer.before}
-                  <a href="/scoring">
+                  <LocaleLink to="/scoring">
                     {c.sections.sources.footer.linkLabel}
-                  </a>
+                  </LocaleLink>
                   {c.sections.sources.footer.after}
                 </p>
               </Section>

@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -154,9 +155,9 @@ export default function PrivacyPage() {
               <Section cms="cookies.title" title={c.cookies.title}>
                 <p>
                   {c.cookies.lead}
-                  <a href="/cookies">
+                  <LocaleLink to="/cookies">
                     {c.cookies.linkLabel}
-                  </a>
+                  </LocaleLink>
                   {c.cookies.tail}
                 </p>
               </Section>

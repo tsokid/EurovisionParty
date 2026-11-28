@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -138,12 +139,12 @@ export default function EurovisionPartyPage() {
                       {b.rest}
                       {b.link && (
                         <>
-                          <a
-                            href="/dashboard"
+                          <LocaleLink
+                            to="/dashboard"
                      
                           >
                             {b.link.label}
-                          </a>
+                          </LocaleLink>
                           {b.link.after}
                         </>
                       )}
@@ -192,21 +193,21 @@ export default function EurovisionPartyPage() {
               <Section cms="sections.games.title" title={c.sections.games.title}>
                 <p>
                   {c.sections.games.introBefore}
-                  <a
-                    href="/eurovision-games"
+                  <LocaleLink
+                    to="/eurovision-games"
              
                   >
                     {c.sections.games.introLink}
-                  </a>
+                  </LocaleLink>
                   {c.sections.games.introAfter}
                 </p>
                 <ul className="legal-list">
                   {c.sections.games.bullets.map((b) => (
                     <li key={b.href}>
                       <strong>
-                        <a href={b.href}>
+                        <LocaleLink to={b.href}>
                           {b.label}
-                        </a>
+                        </LocaleLink>
                       </strong>
                       {b.rest}
                     </li>

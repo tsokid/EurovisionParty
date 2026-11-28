@@ -37,6 +37,10 @@ describe('locale helpers', () => {
     expect(localizePath('en', '/eurovision-night')).toBe('/en/eurovision-night');
     expect(localizePath('el', '/')).toBe('/el');
     expect(localizePath('en', '')).toBe('/en');
+    // The home page with a query or hash keeps no trailing slash (it would cost a redirect).
+    expect(localizePath('en', '/?action=create')).toBe('/en?action=create');
+    expect(localizePath('el', '/#play')).toBe('/el#play');
+    expect(localizePath('el', '/faq?x=1')).toBe('/el/faq?x=1');
   });
 
   it('stripLocaleFromPath removes locale prefix', () => {

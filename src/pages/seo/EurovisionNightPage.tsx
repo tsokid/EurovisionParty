@@ -1,3 +1,4 @@
+import LocaleLink from '../../components/seo/LocaleLink';
 import { pageModified } from '../../lib/seo/pageDates';
 import PageSeo from '../../components/seo/PageSeo';
 import SiteFooter from '../../components/seo/SiteFooter';
@@ -186,7 +187,7 @@ export default function EurovisionNightPage() {
                       </h3>
                       <p className="t-small m-0">
                         {fill(s.rest)}
-                        {s.href && s.linkLabel && <a href={s.href}>{s.linkLabel}</a>}
+                        {s.href && s.linkLabel && <LocaleLink to={s.href}>{s.linkLabel}</LocaleLink>}
                         {s.restAfter}
                       </p>
                     </div>
